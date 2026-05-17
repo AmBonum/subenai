@@ -35,6 +35,7 @@ import { Route as SponzoriVsetciRouteImport } from './routes/sponzori.vsetci'
 import { Route as SkoleniaSlugRouteImport } from './routes/skolenia.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as PodakovanieSessionIdRouteImport } from './routes/podakovanie.$sessionId'
+import { Route as AppTemplatesRouteImport } from './routes/app.templates'
 import { Route as AppTeamsRouteImport } from './routes/app.teams'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
 import { Route as AppLibraryRouteImport } from './routes/app.library'
@@ -191,6 +192,11 @@ const PodakovanieSessionIdRoute = PodakovanieSessionIdRouteImport.update({
   id: '/podakovanie/$sessionId',
   path: '/podakovanie/$sessionId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppTemplatesRoute = AppTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppTeamsRoute = AppTeamsRouteImport.update({
   id: '/teams',
@@ -353,6 +359,7 @@ export interface FileRoutesByFullPath {
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
+  '/app/templates': typeof AppTemplatesRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/skolenia/$slug': typeof SkoleniaSlugRoute
@@ -404,6 +411,7 @@ export interface FileRoutesByTo {
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
+  '/app/templates': typeof AppTemplatesRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/skolenia/$slug': typeof SkoleniaSlugRoute
@@ -459,6 +467,7 @@ export interface FileRoutesById {
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
+  '/app/templates': typeof AppTemplatesRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/skolenia/$slug': typeof SkoleniaSlugRoute
@@ -515,6 +524,7 @@ export interface FileRouteTypes {
     | '/app/library'
     | '/app/notifications'
     | '/app/teams'
+    | '/app/templates'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/skolenia/$slug'
@@ -566,6 +576,7 @@ export interface FileRouteTypes {
     | '/app/library'
     | '/app/notifications'
     | '/app/teams'
+    | '/app/templates'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/skolenia/$slug'
@@ -620,6 +631,7 @@ export interface FileRouteTypes {
     | '/app/library'
     | '/app/notifications'
     | '/app/teams'
+    | '/app/templates'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/skolenia/$slug'
@@ -854,6 +866,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/podakovanie/$sessionId'
       preLoaderRoute: typeof PodakovanieSessionIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/templates': {
+      id: '/app/templates'
+      path: '/templates'
+      fullPath: '/app/templates'
+      preLoaderRoute: typeof AppTemplatesRouteImport
+      parentRoute: typeof AppRoute
     }
     '/app/teams': {
       id: '/app/teams'
@@ -1090,6 +1109,7 @@ interface AppRouteChildren {
   AppLibraryRoute: typeof AppLibraryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppTeamsRoute: typeof AppTeamsRoute
+  AppTemplatesRoute: typeof AppTemplatesRoute
   AppIndexRoute: typeof AppIndexRoute
   AppAccountProfileRoute: typeof AppAccountProfileRoute
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
@@ -1106,6 +1126,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLibraryRoute: AppLibraryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppTeamsRoute: AppTeamsRoute,
+  AppTemplatesRoute: AppTemplatesRoute,
   AppIndexRoute: AppIndexRoute,
   AppAccountProfileRoute: AppAccountProfileRoute,
   AppAccountSecurityRoute: AppAccountSecurityRoute,
