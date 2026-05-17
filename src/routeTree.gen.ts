@@ -40,6 +40,7 @@ import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
+import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
 import { Route as TestZostavaIdVysledkyRouteImport } from './routes/test.zostava.$id.vysledky'
 
 const ZmenyRoute = ZmenyRouteImport.update({
@@ -197,6 +198,11 @@ const AppAccountProfileRoute = AppAccountProfileRouteImport.update({
   path: '/account/profile',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminAnswerSetsSetIdRoute = AdminAnswerSetsSetIdRouteImport.update({
+  id: '/$setId',
+  path: '/$setId',
+  getParentRoute: () => AdminAnswerSetsRoute,
+} as any)
 const TestZostavaIdVysledkyRoute = TestZostavaIdVysledkyRouteImport.update({
   id: '/vysledky',
   path: '/vysledky',
@@ -216,7 +222,7 @@ export interface FileRoutesByFullPath {
   '/sponzori': typeof SponzoriRouteWithChildren
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
-  '/admin/answer-sets': typeof AdminAnswerSetsRoute
+  '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -232,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/sponzori/': typeof SponzoriIndexRoute
   '/test/': typeof TestIndexRoute
   '/testy/': typeof TestyIndexRoute
+  '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
@@ -248,7 +255,7 @@ export interface FileRoutesByTo {
   '/skoly': typeof SkolyRoute
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
-  '/admin/answer-sets': typeof AdminAnswerSetsRoute
+  '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/sponzori': typeof SponzoriIndexRoute
   '/test': typeof TestIndexRoute
   '/testy': typeof TestyIndexRoute
+  '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
@@ -283,7 +291,7 @@ export interface FileRoutesById {
   '/sponzori': typeof SponzoriRouteWithChildren
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
-  '/admin/answer-sets': typeof AdminAnswerSetsRoute
+  '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -299,6 +307,7 @@ export interface FileRoutesById {
   '/sponzori/': typeof SponzoriIndexRoute
   '/test/': typeof TestIndexRoute
   '/testy/': typeof TestyIndexRoute
+  '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/sponzori/'
     | '/test/'
     | '/testy/'
+    | '/admin/answer-sets/$setId'
     | '/app/account/profile'
     | '/app/account/security'
     | '/test/zostava/$id'
@@ -367,6 +377,7 @@ export interface FileRouteTypes {
     | '/sponzori'
     | '/test'
     | '/testy'
+    | '/admin/answer-sets/$setId'
     | '/app/account/profile'
     | '/app/account/security'
     | '/test/zostava/$id'
@@ -401,6 +412,7 @@ export interface FileRouteTypes {
     | '/sponzori/'
     | '/test/'
     | '/testy/'
+    | '/admin/answer-sets/$setId'
     | '/app/account/profile'
     | '/app/account/security'
     | '/test/zostava/$id'
@@ -420,7 +432,7 @@ export interface RootRouteChildren {
   SponzoriRoute: typeof SponzoriRouteWithChildren
   SpravovatPodporuRoute: typeof SpravovatPodporuRoute
   ZmenyRoute: typeof ZmenyRoute
-  AdminAnswerSetsRoute: typeof AdminAnswerSetsRoute
+  AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
   AdminQuestionsRoute: typeof AdminQuestionsRoute
   PodakovanieSessionIdRoute: typeof PodakovanieSessionIdRoute
   RShareIdRoute: typeof RShareIdRoute
@@ -652,6 +664,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountProfileRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/answer-sets/$setId': {
+      id: '/admin/answer-sets/$setId'
+      path: '/$setId'
+      fullPath: '/admin/answer-sets/$setId'
+      preLoaderRoute: typeof AdminAnswerSetsSetIdRouteImport
+      parentRoute: typeof AdminAnswerSetsRoute
+    }
     '/test/zostava/$id/vysledky': {
       id: '/test/zostava/$id/vysledky'
       path: '/vysledky'
@@ -696,6 +715,18 @@ const SponzoriRouteWithChildren = SponzoriRoute._addFileChildren(
   SponzoriRouteChildren,
 )
 
+interface AdminAnswerSetsRouteChildren {
+  AdminAnswerSetsSetIdRoute: typeof AdminAnswerSetsSetIdRoute
+}
+
+const AdminAnswerSetsRouteChildren: AdminAnswerSetsRouteChildren = {
+  AdminAnswerSetsSetIdRoute: AdminAnswerSetsSetIdRoute,
+}
+
+const AdminAnswerSetsRouteWithChildren = AdminAnswerSetsRoute._addFileChildren(
+  AdminAnswerSetsRouteChildren,
+)
+
 interface TestZostavaIdRouteChildren {
   TestZostavaIdVysledkyRoute: typeof TestZostavaIdVysledkyRoute
 }
@@ -721,7 +752,7 @@ const rootRouteChildren: RootRouteChildren = {
   SponzoriRoute: SponzoriRouteWithChildren,
   SpravovatPodporuRoute: SpravovatPodporuRoute,
   ZmenyRoute: ZmenyRoute,
-  AdminAnswerSetsRoute: AdminAnswerSetsRoute,
+  AdminAnswerSetsRoute: AdminAnswerSetsRouteWithChildren,
   AdminQuestionsRoute: AdminQuestionsRoute,
   PodakovanieSessionIdRoute: PodakovanieSessionIdRoute,
   RShareIdRoute: RShareIdRoute,

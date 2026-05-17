@@ -38,7 +38,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/admin/users.tsx` | `src/routes/admin/users.tsx` | AH-10.3 | Backlog | |
 | `routes/admin/questions.tsx` | `src/routes/admin/questions.tsx` | AH-4.1 | Done | see `git log` |
 | `routes/admin/answer-sets.tsx` | `src/routes/admin/answer-sets.tsx` | AH-4.4 | Done | see `git log` |
-| `routes/admin/answer-sets.$setId.tsx` | `src/routes/admin/answer-sets.$setId.tsx` | AH-4.5 | Backlog | |
+| `routes/admin/answer-sets.$setId.tsx` | `src/routes/admin/answer-sets.$setId.tsx` | AH-4.5 | Done | see `git log` |
 | `routes/admin/tests.tsx` | `src/routes/admin/tests.tsx` | AH-5.7 | Backlog | |
 | `routes/admin/tests.$testId.tsx` | `src/routes/admin/tests.$testId.tsx` | AH-5.8 | Backlog | |
 | `routes/admin/trainings.tsx` | `src/routes/admin/trainings.tsx` | AH-6.1 | Backlog | |
