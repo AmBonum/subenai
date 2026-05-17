@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin testy** (`/admin/tests`) — platformový prehľad všetkých testov s filtrami podľa stavu, obťažnosti, branže a vlastníka, hromadným označením a hromadným mazaním cez potvrdzovací dialóg.
 - **Moja história** (`/app/history`) — chronologická časová os tvojich testov, sedení a publikovaných verzií. Filtre podľa testu, časového rozsahu a typu udalosti (sedenie / verzia / zmena stavu).
 - **Šablóny testov** (`/app/templates`) — prehľadávateľná knižnica predpripravených šablón s vyhľadávaním a filtrom podľa kategórie. Tlačidlo *Použiť šablónu* otvorí sprievodcu novým testom s prednastavenými otázkami.
 - **Skupiny respondentov** (`/app/audiences`) — CRUD pre tagované cohorty s editorom (názov + tagy) a potvrdzovacím dialógom pri mazaní. Tlačidlo na hromadný import e-mailov je zatiaľ vypnuté s tooltipom „Pripravujeme" — funkciu doplníme v ďalšej iterácii.
