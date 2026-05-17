@@ -34,6 +34,7 @@ import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as PodakovanieSessionIdRouteImport } from './routes/podakovanie.$sessionId'
 import { Route as AppTeamsRouteImport } from './routes/app.teams'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
+import { Route as AppLibraryRouteImport } from './routes/app.library'
 import { Route as AppHelpRouteImport } from './routes/app.help'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
@@ -168,6 +169,11 @@ const AppNotificationsRoute = AppNotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLibraryRoute = AppLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppHelpRoute = AppHelpRouteImport.update({
   id: '/help',
   path: '/help',
@@ -225,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
+  '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByTo {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
+  '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
@@ -294,6 +302,7 @@ export interface FileRoutesById {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
+  '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
@@ -331,6 +340,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/questions'
     | '/app/help'
+    | '/app/library'
     | '/app/notifications'
     | '/app/teams'
     | '/podakovanie/$sessionId'
@@ -364,6 +374,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/questions'
     | '/app/help'
+    | '/app/library'
     | '/app/notifications'
     | '/app/teams'
     | '/podakovanie/$sessionId'
@@ -399,6 +410,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/questions'
     | '/app/help'
+    | '/app/library'
     | '/app/notifications'
     | '/app/teams'
     | '/podakovanie/$sessionId'
@@ -622,6 +634,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNotificationsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/library': {
+      id: '/app/library'
+      path: '/library'
+      fullPath: '/app/library'
+      preLoaderRoute: typeof AppLibraryRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/help': {
       id: '/app/help'
       path: '/help'
@@ -683,6 +702,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppHelpRoute: typeof AppHelpRoute
+  AppLibraryRoute: typeof AppLibraryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppTeamsRoute: typeof AppTeamsRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -692,6 +712,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppHelpRoute: AppHelpRoute,
+  AppLibraryRoute: AppLibraryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppTeamsRoute: AppTeamsRoute,
   AppIndexRoute: AppIndexRoute,
