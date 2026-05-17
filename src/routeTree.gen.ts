@@ -36,6 +36,7 @@ import { Route as AppTeamsRouteImport } from './routes/app.teams'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
 import { Route as AppHelpRouteImport } from './routes/app.help'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
+import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
@@ -176,6 +177,11 @@ const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
   path: '/admin/questions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAnswerSetsRoute = AdminAnswerSetsRouteImport.update({
+  id: '/admin/answer-sets',
+  path: '/admin/answer-sets',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
   id: '/test/zostava/$id',
   path: '/test/zostava/$id',
@@ -210,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/sponzori': typeof SponzoriRouteWithChildren
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
+  '/admin/answer-sets': typeof AdminAnswerSetsRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   '/skoly': typeof SkolyRoute
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
+  '/admin/answer-sets': typeof AdminAnswerSetsRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/sponzori': typeof SponzoriRouteWithChildren
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
+  '/admin/answer-sets': typeof AdminAnswerSetsRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -310,6 +319,7 @@ export interface FileRouteTypes {
     | '/sponzori'
     | '/spravovat-podporu'
     | '/zmeny'
+    | '/admin/answer-sets'
     | '/admin/questions'
     | '/app/help'
     | '/app/notifications'
@@ -341,6 +351,7 @@ export interface FileRouteTypes {
     | '/skoly'
     | '/spravovat-podporu'
     | '/zmeny'
+    | '/admin/answer-sets'
     | '/admin/questions'
     | '/app/help'
     | '/app/notifications'
@@ -374,6 +385,7 @@ export interface FileRouteTypes {
     | '/sponzori'
     | '/spravovat-podporu'
     | '/zmeny'
+    | '/admin/answer-sets'
     | '/admin/questions'
     | '/app/help'
     | '/app/notifications'
@@ -408,6 +420,7 @@ export interface RootRouteChildren {
   SponzoriRoute: typeof SponzoriRouteWithChildren
   SpravovatPodporuRoute: typeof SpravovatPodporuRoute
   ZmenyRoute: typeof ZmenyRoute
+  AdminAnswerSetsRoute: typeof AdminAnswerSetsRoute
   AdminQuestionsRoute: typeof AdminQuestionsRoute
   PodakovanieSessionIdRoute: typeof PodakovanieSessionIdRoute
   RShareIdRoute: typeof RShareIdRoute
@@ -611,6 +624,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminQuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/answer-sets': {
+      id: '/admin/answer-sets'
+      path: '/admin/answer-sets'
+      fullPath: '/admin/answer-sets'
+      preLoaderRoute: typeof AdminAnswerSetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/test/zostava/$id': {
       id: '/test/zostava/$id'
       path: '/test/zostava/$id'
@@ -701,6 +721,7 @@ const rootRouteChildren: RootRouteChildren = {
   SponzoriRoute: SponzoriRouteWithChildren,
   SpravovatPodporuRoute: SpravovatPodporuRoute,
   ZmenyRoute: ZmenyRoute,
+  AdminAnswerSetsRoute: AdminAnswerSetsRoute,
   AdminQuestionsRoute: AdminQuestionsRoute,
   PodakovanieSessionIdRoute: PodakovanieSessionIdRoute,
   RShareIdRoute: RShareIdRoute,

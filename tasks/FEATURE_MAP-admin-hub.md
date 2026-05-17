@@ -37,7 +37,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/admin/index.tsx` | `src/routes/admin/index.tsx` | AH-10.2 | Backlog | |
 | `routes/admin/users.tsx` | `src/routes/admin/users.tsx` | AH-10.3 | Backlog | |
 | `routes/admin/questions.tsx` | `src/routes/admin/questions.tsx` | AH-4.1 | Done | see `git log` |
-| `routes/admin/answer-sets.tsx` | `src/routes/admin/answer-sets.tsx` | AH-4.4 | Backlog | |
+| `routes/admin/answer-sets.tsx` | `src/routes/admin/answer-sets.tsx` | AH-4.4 | Done | see `git log` |
 | `routes/admin/answer-sets.$setId.tsx` | `src/routes/admin/answer-sets.$setId.tsx` | AH-4.5 | Backlog | |
 | `routes/admin/tests.tsx` | `src/routes/admin/tests.tsx` | AH-5.7 | Backlog | |
 | `routes/admin/tests.$testId.tsx` | `src/routes/admin/tests.$testId.tsx` | AH-5.8 | Backlog | |
@@ -92,7 +92,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `lib/platform/store.ts` | `src/lib/platform/mock-store.ts` (deleted in AH-11) | AH-3.1 | Done | see `git log` |
 | `lib/admin-mock-data.ts` | `src/lib/admin/mock-data.ts` (deleted in AH-11) | AH-3.1 | Done | see `git log` |
 | `lib/user-mock-data.ts` | `src/lib/platform/mock-user-data.ts` (deleted in AH-11) | AH-3.1 | Done | see `git log` |
-| `lib/admin/answer-sets-store.ts` | `src/lib/admin/answer-sets-mock-store.ts` (deleted in AH-11) | AH-4.4 | Backlog | |
+| `lib/admin/answer-sets-store.ts` | `src/lib/admin/answer-sets-mock-store.ts` (deleted in AH-11) | AH-4.4 | Done | see `git log` |
 | `lib/admin/cms-store.ts` | `src/lib/admin/cms-mock-store.ts` (deleted in AH-11) | AH-9.1 | Backlog | |
 | `lib/admin/cms-hooks.ts` | `src/lib/admin/cms-hooks.ts` (wired in AH-11) | AH-9.1 | Backlog | |
 | `lib/admin/export.ts` | `src/lib/admin/export.ts` (deferred — not wired) | AH-11 | Backlog | |

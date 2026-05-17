@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin sady odpovedí** (`/admin/answer-sets`) — zoznam zdieľaných sád správnych a nesprávnych odpovedí, ktoré sa pripájajú k viacerým otázkam naraz. Hľadanie podľa názvu, duplikácia jedným klikom a mazanie s potvrdením.
 - **Admin knižnica otázok** (`/admin/questions`) — CRUD pre otázky s vyhľadávaním, filtrovaním podľa branže, stavu, autora a počtu hlasov; hromadné akcie (publikovať, archivovať, vymazať) a export do CSV. Editor otázky vyžaduje priradenú sadu odpovedí a aspoň jednu správnu + dve nesprávne odpovede.
 - Nový **autentifikovaný workspace** na `/app` — prihlásení používatelia majú vlastný panel s prehľadom, navigáciou na testy, tímy, notifikácie a účet. Prístup len pre prihlásených, zatiaľ s demo obsahom.
 - **Dashboard na `/app`** — štyri prehľadové karty (aktívne testy, sedenia, respondenti, miera dokončenia) s demo dátami.
