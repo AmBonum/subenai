@@ -50,6 +50,7 @@ import { Route as AdminDsrRouteImport } from './routes/admin/dsr'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
+import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
 import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
 import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
@@ -263,6 +264,11 @@ const AdminAnswerSetsRoute = AdminAnswerSetsRouteImport.update({
   path: '/answer-sets',
   getParentRoute: () => AdminRoute,
 } as any)
+const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
+  id: '/tests/',
+  path: '/tests/',
+  getParentRoute: () => AppRoute,
+} as any)
 const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
   id: '/test/zostava/$id',
   path: '/test/zostava/$id',
@@ -347,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/app/tests/': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
 export interface FileRoutesByTo {
@@ -394,6 +401,7 @@ export interface FileRoutesByTo {
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/app/tests': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
 export interface FileRoutesById {
@@ -445,6 +453,7 @@ export interface FileRoutesById {
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/app/tests/': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
 export interface FileRouteTypes {
@@ -497,6 +506,7 @@ export interface FileRouteTypes {
     | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/test/zostava/$id'
+    | '/app/tests/'
     | '/test/zostava/$id/vysledky'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -544,6 +554,7 @@ export interface FileRouteTypes {
     | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/test/zostava/$id'
+    | '/app/tests'
     | '/test/zostava/$id/vysledky'
   id:
     | '__root__'
@@ -594,6 +605,7 @@ export interface FileRouteTypes {
     | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/test/zostava/$id'
+    | '/app/tests/'
     | '/test/zostava/$id/vysledky'
   fileRoutesById: FileRoutesById
 }
@@ -912,6 +924,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnswerSetsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/app/tests/': {
+      id: '/app/tests/'
+      path: '/tests'
+      fullPath: '/app/tests/'
+      preLoaderRoute: typeof AppTestsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/test/zostava/$id': {
       id: '/test/zostava/$id'
       path: '/test/zostava/$id'
@@ -1018,6 +1037,7 @@ interface AppRouteChildren {
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
   AppLegalDsrRoute: typeof AppLegalDsrRoute
   AppSetsSetIdRoute: typeof AppSetsSetIdRoute
+  AppTestsIndexRoute: typeof AppTestsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -1030,6 +1050,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountSecurityRoute: AppAccountSecurityRoute,
   AppLegalDsrRoute: AppLegalDsrRoute,
   AppSetsSetIdRoute: AppSetsSetIdRoute,
+  AppTestsIndexRoute: AppTestsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
