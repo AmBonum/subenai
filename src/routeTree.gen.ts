@@ -64,6 +64,7 @@ import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
 import { Route as AdminTestsTestIdRouteImport } from './routes/admin/tests.$testId'
+import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$pageId'
 import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
 import { Route as TestZostavaIdVysledkyRouteImport } from './routes/test.zostava.$id.vysledky'
 
@@ -342,6 +343,11 @@ const AdminTestsTestIdRoute = AdminTestsTestIdRouteImport.update({
   path: '/$testId',
   getParentRoute: () => AdminTestsRoute,
 } as any)
+const AdminPagesPageIdRoute = AdminPagesPageIdRouteImport.update({
+  id: '/$pageId',
+  path: '/$pageId',
+  getParentRoute: () => AdminPagesRoute,
+} as any)
 const AdminAnswerSetsSetIdRoute = AdminAnswerSetsSetIdRouteImport.update({
   id: '/$setId',
   path: '/$setId',
@@ -371,7 +377,7 @@ export interface FileRoutesByFullPath {
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dsr': typeof AdminDsrRoute
-  '/admin/pages': typeof AdminPagesRoute
+  '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
@@ -401,6 +407,7 @@ export interface FileRoutesByFullPath {
   '/test/': typeof TestIndexRoute
   '/testy/': typeof TestyIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
+  '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
@@ -427,7 +434,7 @@ export interface FileRoutesByTo {
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dsr': typeof AdminDsrRoute
-  '/admin/pages': typeof AdminPagesRoute
+  '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
@@ -457,6 +464,7 @@ export interface FileRoutesByTo {
   '/test': typeof TestIndexRoute
   '/testy': typeof TestyIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
+  '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
@@ -487,7 +495,7 @@ export interface FileRoutesById {
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dsr': typeof AdminDsrRoute
-  '/admin/pages': typeof AdminPagesRoute
+  '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
@@ -517,6 +525,7 @@ export interface FileRoutesById {
   '/test/': typeof TestIndexRoute
   '/testy/': typeof TestyIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
+  '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
@@ -578,6 +587,7 @@ export interface FileRouteTypes {
     | '/test/'
     | '/testy/'
     | '/admin/answer-sets/$setId'
+    | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
     | '/app/account/profile'
     | '/app/account/security'
@@ -634,6 +644,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/testy'
     | '/admin/answer-sets/$setId'
+    | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
     | '/app/account/profile'
     | '/app/account/security'
@@ -693,6 +704,7 @@ export interface FileRouteTypes {
     | '/test/'
     | '/testy/'
     | '/admin/answer-sets/$setId'
+    | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
     | '/app/account/profile'
     | '/app/account/security'
@@ -1118,6 +1130,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTestsTestIdRouteImport
       parentRoute: typeof AdminTestsRoute
     }
+    '/admin/pages/$pageId': {
+      id: '/admin/pages/$pageId'
+      path: '/$pageId'
+      fullPath: '/admin/pages/$pageId'
+      preLoaderRoute: typeof AdminPagesPageIdRouteImport
+      parentRoute: typeof AdminPagesRoute
+    }
     '/admin/answer-sets/$setId': {
       id: '/admin/answer-sets/$setId'
       path: '/$setId'
@@ -1147,6 +1166,18 @@ const AdminAnswerSetsRouteWithChildren = AdminAnswerSetsRoute._addFileChildren(
   AdminAnswerSetsRouteChildren,
 )
 
+interface AdminPagesRouteChildren {
+  AdminPagesPageIdRoute: typeof AdminPagesPageIdRoute
+}
+
+const AdminPagesRouteChildren: AdminPagesRouteChildren = {
+  AdminPagesPageIdRoute: AdminPagesPageIdRoute,
+}
+
+const AdminPagesRouteWithChildren = AdminPagesRoute._addFileChildren(
+  AdminPagesRouteChildren,
+)
+
 interface AdminTestsRouteChildren {
   AdminTestsTestIdRoute: typeof AdminTestsTestIdRoute
 }
@@ -1164,7 +1195,7 @@ interface AdminRouteChildren {
   AdminAuditRoute: typeof AdminAuditRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminDsrRoute: typeof AdminDsrRoute
-  AdminPagesRoute: typeof AdminPagesRoute
+  AdminPagesRoute: typeof AdminPagesRouteWithChildren
   AdminQuestionsRoute: typeof AdminQuestionsRoute
   AdminReportsRoute: typeof AdminReportsRoute
   AdminRespondentsRoute: typeof AdminRespondentsRoute
@@ -1181,7 +1212,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAuditRoute: AdminAuditRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminDsrRoute: AdminDsrRoute,
-  AdminPagesRoute: AdminPagesRoute,
+  AdminPagesRoute: AdminPagesRouteWithChildren,
   AdminQuestionsRoute: AdminQuestionsRoute,
   AdminReportsRoute: AdminReportsRoute,
   AdminRespondentsRoute: AdminRespondentsRoute,

@@ -50,7 +50,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/admin/quick-test.tsx` | `src/routes/admin/quick-test.tsx` | AH-9.5 | Backlog | |
 | `routes/admin/share-card.tsx` | `src/routes/admin/share-card.tsx` | AH-9.6 | Backlog | |
 | `routes/admin/pages.tsx` | `src/routes/admin/pages.tsx` | AH-9.1 | Backlog | |
-| `routes/admin/pages.$pageId.tsx` | `src/routes/admin/pages.$pageId.tsx` | AH-9.2 | Backlog | |
+| `routes/admin/pages.$pageId.tsx` | `src/routes/admin/pages.$pageId.tsx` | AH-9.2 | Done | see `git log` |
 | `routes/admin/header.tsx` | `src/routes/admin/header.tsx` | AH-9.3 | Backlog | |
 | `routes/admin/footer.tsx` | `src/routes/admin/footer.tsx` | AH-9.3 | Backlog | |
 | `routes/admin/navigation.tsx` | `src/routes/admin/navigation.tsx` | AH-9.4 | Backlog | |
