@@ -39,6 +39,7 @@ import { Route as AppNotificationsRouteImport } from './routes/app.notifications
 import { Route as AppLibraryRouteImport } from './routes/app.library'
 import { Route as AppHelpRouteImport } from './routes/app.help'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminTrainingsRouteImport } from './routes/admin/trainings'
 import { Route as AdminSupportRouteImport } from './routes/admin/support'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
@@ -200,6 +201,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminTrainingsRoute = AdminTrainingsRouteImport.update({
+  id: '/trainings',
+  path: '/trainings',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSupportRoute = AdminSupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -269,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
+  '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/help': typeof AppHelpRoute
   '/app/library': typeof AppLibraryRoute
@@ -308,6 +315,7 @@ export interface FileRoutesByTo {
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
+  '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/help': typeof AppHelpRoute
   '/app/library': typeof AppLibraryRoute
@@ -351,6 +359,7 @@ export interface FileRoutesById {
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
+  '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/help': typeof AppHelpRoute
   '/app/library': typeof AppLibraryRoute
@@ -395,6 +404,7 @@ export interface FileRouteTypes {
     | '/admin/questions'
     | '/admin/settings'
     | '/admin/support'
+    | '/admin/trainings'
     | '/admin/users'
     | '/app/help'
     | '/app/library'
@@ -434,6 +444,7 @@ export interface FileRouteTypes {
     | '/admin/questions'
     | '/admin/settings'
     | '/admin/support'
+    | '/admin/trainings'
     | '/admin/users'
     | '/app/help'
     | '/app/library'
@@ -476,6 +487,7 @@ export interface FileRouteTypes {
     | '/admin/questions'
     | '/admin/settings'
     | '/admin/support'
+    | '/admin/trainings'
     | '/admin/users'
     | '/app/help'
     | '/app/library'
@@ -738,6 +750,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/trainings': {
+      id: '/admin/trainings'
+      path: '/trainings'
+      fullPath: '/admin/trainings'
+      preLoaderRoute: typeof AdminTrainingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/support': {
       id: '/admin/support'
       path: '/support'
@@ -828,6 +847,7 @@ interface AdminRouteChildren {
   AdminQuestionsRoute: typeof AdminQuestionsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSupportRoute: typeof AdminSupportRoute
+  AdminTrainingsRoute: typeof AdminTrainingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -837,6 +857,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminQuestionsRoute: AdminQuestionsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSupportRoute: AdminSupportRoute,
+  AdminTrainingsRoute: AdminTrainingsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }

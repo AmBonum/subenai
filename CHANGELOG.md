@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin školenia** (`/admin/trainings`) — CRUD pre školenia s vyhľadávaním, editorom (názov, branža, témy, moduly, stav), duplikovaním (sufix „kópia") a mazaním cez potvrdzovací dialóg.
 - **Admin nastavenia** (`/admin/settings`) — UI pre funkčné prepínače, predvolenú retenciu údajov a branding tokeny. *Pozor:* zatiaľ iba dočasné nastavenie v pamäti, server-side perzistencia (`app_settings`) je odložená do ďalšej iterácie.
 - **Admin podpora** (`/admin/support`) — formulár na úpravu kontaktných kanálov (e-mail, telefón, pracovné hodiny) s validáciou v reálnom čase. Zmeny sa zatiaľ ukladajú do dočasnej pamäte, plnú perzistenciu doplníme v ďalšej iterácii.
 - **Admin používatelia** (`/admin/users`) — tabuľka profilov s vyhľadávaním podľa mena/e-mailu, filtrom podľa roly a značkami rolí. Akcia úpravy roly je zatiaľ placeholder, plný backend pripravujeme.
