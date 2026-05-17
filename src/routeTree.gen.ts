@@ -49,6 +49,7 @@ import { Route as AdminSupportRouteImport } from './routes/admin/support'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminRespondentsRouteImport } from './routes/admin/respondents'
 import { Route as AdminReportsRouteImport } from './routes/admin/reports'
+import { Route as AdminQuickTestRouteImport } from './routes/admin/quick-test'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
 import { Route as AdminPagesRouteImport } from './routes/admin/pages'
 import { Route as AdminNavigationRouteImport } from './routes/admin/navigation'
@@ -271,6 +272,11 @@ const AdminReportsRoute = AdminReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminQuickTestRoute = AdminQuickTestRouteImport.update({
+  id: '/quick-test',
+  path: '/quick-test',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
   id: '/questions',
   path: '/questions',
@@ -400,6 +406,7 @@ export interface FileRoutesByFullPath {
   '/admin/navigation': typeof AdminNavigationRoute
   '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
+  '/admin/quick-test': typeof AdminQuickTestRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -460,6 +467,7 @@ export interface FileRoutesByTo {
   '/admin/navigation': typeof AdminNavigationRoute
   '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
+  '/admin/quick-test': typeof AdminQuickTestRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -524,6 +532,7 @@ export interface FileRoutesById {
   '/admin/navigation': typeof AdminNavigationRoute
   '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
+  '/admin/quick-test': typeof AdminQuickTestRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -589,6 +598,7 @@ export interface FileRouteTypes {
     | '/admin/navigation'
     | '/admin/pages'
     | '/admin/questions'
+    | '/admin/quick-test'
     | '/admin/reports'
     | '/admin/respondents'
     | '/admin/settings'
@@ -649,6 +659,7 @@ export interface FileRouteTypes {
     | '/admin/navigation'
     | '/admin/pages'
     | '/admin/questions'
+    | '/admin/quick-test'
     | '/admin/reports'
     | '/admin/respondents'
     | '/admin/settings'
@@ -712,6 +723,7 @@ export interface FileRouteTypes {
     | '/admin/navigation'
     | '/admin/pages'
     | '/admin/questions'
+    | '/admin/quick-test'
     | '/admin/reports'
     | '/admin/respondents'
     | '/admin/settings'
@@ -1061,6 +1073,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminReportsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/quick-test': {
+      id: '/admin/quick-test'
+      path: '/quick-test'
+      fullPath: '/admin/quick-test'
+      preLoaderRoute: typeof AdminQuickTestRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/questions': {
       id: '/admin/questions'
       path: '/questions'
@@ -1257,6 +1276,7 @@ interface AdminRouteChildren {
   AdminNavigationRoute: typeof AdminNavigationRoute
   AdminPagesRoute: typeof AdminPagesRouteWithChildren
   AdminQuestionsRoute: typeof AdminQuestionsRoute
+  AdminQuickTestRoute: typeof AdminQuickTestRoute
   AdminReportsRoute: typeof AdminReportsRoute
   AdminRespondentsRoute: typeof AdminRespondentsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
@@ -1277,6 +1297,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminNavigationRoute: AdminNavigationRoute,
   AdminPagesRoute: AdminPagesRouteWithChildren,
   AdminQuestionsRoute: AdminQuestionsRoute,
+  AdminQuickTestRoute: AdminQuickTestRoute,
   AdminReportsRoute: AdminReportsRoute,
   AdminRespondentsRoute: AdminRespondentsRoute,
   AdminSettingsRoute: AdminSettingsRoute,

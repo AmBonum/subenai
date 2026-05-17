@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin konfigurácia rýchleho testu** (`/admin/quick-test`) — admin UI na nastavenie viditeľnosti, názvu, popisu, branže, časového limitu, hranice úspechu, obťažnosti a zoznamu otázok rýchleho testu. Mock-only; pripravujeme prepojenie na databázu.
 - **Admin navigácia** (`/admin/navigation`) — CRUD pre položky hlavnej navigácie. Pridávanie, úprava, mazanie, preusporiadanie šípkami, prepínače *Viditeľné* a *Iba pre prihlásených*. Editor v modálnom okne s validáciou URL (relatívna alebo https).
 - **Admin hlavička webu** (`/admin/header`) — formulár na konfiguráciu loga, CTA tlačidla a štítku mobilného menu verejnej hlavičky.
 - **Admin päta webu** (`/admin/footer`) — editor stĺpcov a odkazov v päte, plus sekcia sociálnych sietí. Stĺpce a odkazy možno pridávať a odstraňovať jedným klikom.
