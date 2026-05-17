@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Sprievodca novým testom** (`/app/tests/new`) — štvorkrokový wizard: základné údaje, cieľová skupina, otázky, zdieľanie. Každý krok má vlastnú URL (`?step=1..4`) takže návrat tlačidlom prehliadača funguje. Po publikovaní dostaneš verejný odkaz `/t/<id>` na rozposlanie respondentom.
 - **Moje testy** (`/app/tests`) — prehľad všetkých tvojich testov s vyhľadávaním, filtrom podľa stavu (draft / publikované / archív) a vetiev. Každý riadok ponúka rýchle otvorenie editora alebo zdieľanie. Nový test sa vytvára cez tlačidlo *Nový test*.
 - **Verejné vypĺňanie testu cez odkaz** (`/t/<id>`) — anonymný respondent dostane odkaz, vyplní vstupné údaje (s GDPR súhlasom verzia 1.4.0) a odpovedá na otázky. Žiadne prihlásenie sa nepoužíva, dáta z testu sú obmedzené na bezpečnú projekciu (žiadne `owner_id`, heslá ani interná segmentácia neopustia server). Skutočnú perzistenciu a rate-limit doplníme v ďalšej iterácii.
 - **Admin DSR fronta** (`/admin/dsr`) — spracovanie GDPR žiadostí s 30-dňovým SLA timerom (zelená > 14 dní, oranžová 3–14, červená < 3 dní alebo po termíne). Akcie *Uzavrieť* a *Zamietnuť* sa zapisujú do audit logu.

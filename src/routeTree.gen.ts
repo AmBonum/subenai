@@ -52,6 +52,7 @@ import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
+import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
 import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
 import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
@@ -274,6 +275,11 @@ const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
   path: '/test/zostava/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppTestsNewRoute = AppTestsNewRouteImport.update({
+  id: '/tests/new',
+  path: '/tests/new',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSetsSetIdRoute = AppSetsSetIdRouteImport.update({
   id: '/sets/$setId',
   path: '/sets/$setId',
@@ -352,6 +358,7 @@ export interface FileRoutesByFullPath {
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
+  '/app/tests/new': typeof AppTestsNewRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
@@ -400,6 +407,7 @@ export interface FileRoutesByTo {
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
+  '/app/tests/new': typeof AppTestsNewRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/app/tests': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
@@ -452,6 +460,7 @@ export interface FileRoutesById {
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
+  '/app/tests/new': typeof AppTestsNewRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
@@ -505,6 +514,7 @@ export interface FileRouteTypes {
     | '/app/account/security'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
+    | '/app/tests/new'
     | '/test/zostava/$id'
     | '/app/tests/'
     | '/test/zostava/$id/vysledky'
@@ -553,6 +563,7 @@ export interface FileRouteTypes {
     | '/app/account/security'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
+    | '/app/tests/new'
     | '/test/zostava/$id'
     | '/app/tests'
     | '/test/zostava/$id/vysledky'
@@ -604,6 +615,7 @@ export interface FileRouteTypes {
     | '/app/account/security'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
+    | '/app/tests/new'
     | '/test/zostava/$id'
     | '/app/tests/'
     | '/test/zostava/$id/vysledky'
@@ -938,6 +950,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestZostavaIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/tests/new': {
+      id: '/app/tests/new'
+      path: '/tests/new'
+      fullPath: '/app/tests/new'
+      preLoaderRoute: typeof AppTestsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/sets/$setId': {
       id: '/app/sets/$setId'
       path: '/sets/$setId'
@@ -1037,6 +1056,7 @@ interface AppRouteChildren {
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
   AppLegalDsrRoute: typeof AppLegalDsrRoute
   AppSetsSetIdRoute: typeof AppSetsSetIdRoute
+  AppTestsNewRoute: typeof AppTestsNewRoute
   AppTestsIndexRoute: typeof AppTestsIndexRoute
 }
 
@@ -1050,6 +1070,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountSecurityRoute: AppAccountSecurityRoute,
   AppLegalDsrRoute: AppLegalDsrRoute,
   AppSetsSetIdRoute: AppSetsSetIdRoute,
+  AppTestsNewRoute: AppTestsNewRoute,
   AppTestsIndexRoute: AppTestsIndexRoute,
 }
 
