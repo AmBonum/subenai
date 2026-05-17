@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin share karta** (`/admin/share-card`) — konfigurácia predvolených Open Graph hodnôt pre zdieľanie (URL šablóny obrázka, predvolený názov, predvolený popis) s živým náhľadom. Existujúce zdieľanie výsledkov testu cez `/zdielanie/*` a `/podakovanie/*` ostáva nedotknuté.
 - **Admin konfigurácia rýchleho testu** (`/admin/quick-test`) — admin UI na nastavenie viditeľnosti, názvu, popisu, branže, časového limitu, hranice úspechu, obťažnosti a zoznamu otázok rýchleho testu. Mock-only; pripravujeme prepojenie na databázu.
 - **Admin navigácia** (`/admin/navigation`) — CRUD pre položky hlavnej navigácie. Pridávanie, úprava, mazanie, preusporiadanie šípkami, prepínače *Viditeľné* a *Iba pre prihlásených*. Editor v modálnom okne s validáciou URL (relatívna alebo https).
 - **Admin hlavička webu** (`/admin/header`) — formulár na konfiguráciu loga, CTA tlačidla a štítku mobilného menu verejnej hlavičky.
