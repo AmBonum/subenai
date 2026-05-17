@@ -46,7 +46,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/admin/reports.tsx` | `src/routes/admin/reports.tsx` | AH-7.2 | Done | see `git log` |
 | `routes/admin/respondents.tsx` | `src/routes/admin/respondents.tsx` | AH-7.3 | Done | see `git log` |
 | `routes/admin/audit.tsx` | `src/routes/admin/audit.tsx` | AH-7.4 | Done | see `git log` |
-| `routes/admin/dsr.tsx` | `src/routes/admin/dsr.tsx` | AH-7.5 | Backlog | |
+| `routes/admin/dsr.tsx` | `src/routes/admin/dsr.tsx` | AH-7.5 | Done | see `git log` |
 | `routes/admin/quick-test.tsx` | `src/routes/admin/quick-test.tsx` | AH-9.5 | Backlog | |
 | `routes/admin/share-card.tsx` | `src/routes/admin/share-card.tsx` | AH-9.6 | Backlog | |
 | `routes/admin/pages.tsx` | `src/routes/admin/pages.tsx` | AH-9.1 | Backlog | |

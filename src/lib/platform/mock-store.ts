@@ -336,18 +336,28 @@ export const updateDSR = (id: string, status: DSRRequest["status"]) => {
       ? {
           ...d,
           status,
-          resolved_at: status === "completed" ? new Date().toISOString() : d.resolved_at,
+          resolved_at:
+            status === "completed" || status === "rejected"
+              ? new Date().toISOString()
+              : d.resolved_at,
         }
       : d,
   );
-  if (status === "completed")
-    log({
-      action: "dsr.complete",
-      target_type: "dsr",
-      target_id: id,
-      pii_access: false,
-      details: "DSR uzavreté.",
-    });
+  const action =
+    status === "completed"
+      ? "dsr.complete"
+      : status === "rejected"
+        ? "dsr.reject"
+        : status === "in_progress"
+          ? "dsr.pick_up"
+          : "dsr.update";
+  log({
+    action,
+    target_type: "dsr",
+    target_id: id,
+    pii_access: false,
+    details: `DSR ${status}.`,
+  });
   emit();
 };
 

@@ -45,6 +45,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminRespondentsRouteImport } from './routes/admin/respondents'
 import { Route as AdminReportsRouteImport } from './routes/admin/reports'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
+import { Route as AdminDsrRouteImport } from './routes/admin/dsr'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
@@ -236,6 +237,11 @@ const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
   path: '/questions',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminDsrRoute = AdminDsrRouteImport.update({
+  id: '/dsr',
+  path: '/dsr',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
@@ -304,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/dsr': typeof AdminDsrRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
@@ -349,6 +356,7 @@ export interface FileRoutesByTo {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/dsr': typeof AdminDsrRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
@@ -398,6 +406,7 @@ export interface FileRoutesById {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/dsr': typeof AdminDsrRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
@@ -448,6 +457,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
+    | '/admin/dsr'
     | '/admin/questions'
     | '/admin/reports'
     | '/admin/respondents'
@@ -493,6 +503,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
+    | '/admin/dsr'
     | '/admin/questions'
     | '/admin/reports'
     | '/admin/respondents'
@@ -541,6 +552,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
+    | '/admin/dsr'
     | '/admin/questions'
     | '/admin/reports'
     | '/admin/respondents'
@@ -852,6 +864,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminQuestionsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/dsr': {
+      id: '/admin/dsr'
+      path: '/dsr'
+      fullPath: '/admin/dsr'
+      preLoaderRoute: typeof AdminDsrRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/categories': {
       id: '/admin/categories'
       path: '/categories'
@@ -941,6 +960,7 @@ interface AdminRouteChildren {
   AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
   AdminAuditRoute: typeof AdminAuditRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminDsrRoute: typeof AdminDsrRoute
   AdminQuestionsRoute: typeof AdminQuestionsRoute
   AdminReportsRoute: typeof AdminReportsRoute
   AdminRespondentsRoute: typeof AdminRespondentsRoute
@@ -955,6 +975,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAnswerSetsRoute: AdminAnswerSetsRouteWithChildren,
   AdminAuditRoute: AdminAuditRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminDsrRoute: AdminDsrRoute,
   AdminQuestionsRoute: AdminQuestionsRoute,
   AdminReportsRoute: AdminReportsRoute,
   AdminRespondentsRoute: AdminRespondentsRoute,

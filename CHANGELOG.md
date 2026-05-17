@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin DSR fronta** (`/admin/dsr`) — spracovanie GDPR žiadostí s 30-dňovým SLA timerom (zelená > 14 dní, oranžová 3–14, červená < 3 dní alebo po termíne). Akcie *Uzavrieť* a *Zamietnuť* sa zapisujú do audit logu.
 - **Admin audit log** (`/admin/audit`) — read-only prehliadač systémových udalostí s filtrami podľa aktora, akcie, PII flagu a časového rozsahu. Stránkovanie po 25 záznamoch. Otvorenie tohto prehliadača sa zámerne neloguje, aby nevznikol cyklus.
 - **Admin respondenti** (`/admin/respondents`) — zoznam respondentov s vyhľadávaním, filtrami podľa testu a statusu (aktívny / anonymizovaný). Každé otvorenie zoznamu sa zapíše do audit logu (PII prístup). Detail jedného respondenta sa loguje samostatne.
 - **Admin reporty** (`/admin/reports`) — fronta nahlásení obsahu s filtrom podľa statusu a dôvodu, akcie posúdiť / vyriešiť / zamietnuť. Mock-only, plnú perzistenciu doplníme v ďalšej iterácii.
