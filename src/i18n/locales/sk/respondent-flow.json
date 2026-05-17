@@ -1,0 +1,34 @@
+{
+  "root": {
+    "brand": "SubenAI",
+    "page_title": "SubenAI — vypĺňanie testu"
+  },
+  "intake": {
+    "title": "Pred začiatkom",
+    "consent_label": "Súhlasím so spracovaním údajov pre uvedený účel (verzia 1.4.0).",
+    "consent_required": "Pre pokračovanie udeľ súhlas s GDPR.",
+    "name_label": "Meno",
+    "email_label": "E-mail",
+    "submit_button": "Pokračovať na otázky",
+    "missing_required": "Vyplň povinné polia: {fields}"
+  },
+  "questions": {
+    "progress": "Otázka {n} z {total}",
+    "free_answer_placeholder": "Tvoja odpoveď...",
+    "free_answer_hint": "Stlač Enter pre odoslanie",
+    "next_button": "Ďalej",
+    "prev_button": "Späť",
+    "submit_button": "Odoslať"
+  },
+  "thank_you": {
+    "title": "Hotovo!",
+    "subtitle": "Tvoje odpovede boli odoslané. Ďakujeme za účasť.",
+    "close_button": "Zatvoriť"
+  },
+  "errors": {
+    "not_found": "Test nebol nájdený alebo už nie je dostupný.",
+    "not_published": "Tento test ešte nie je publikovaný.",
+    "rate_limited": "Príliš veľa pokusov z tejto IP. Skús to neskôr.",
+    "back_home": "Späť na úvod"
+  }
+}

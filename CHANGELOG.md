@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Verejné vypĺňanie testu cez odkaz** (`/t/<id>`) — anonymný respondent dostane odkaz, vyplní vstupné údaje (s GDPR súhlasom verzia 1.4.0) a odpovedá na otázky. Žiadne prihlásenie sa nepoužíva, dáta z testu sú obmedzené na bezpečnú projekciu (žiadne `owner_id`, heslá ani interná segmentácia neopustia server). Skutočnú perzistenciu a rate-limit doplníme v ďalšej iterácii.
 - **Admin DSR fronta** (`/admin/dsr`) — spracovanie GDPR žiadostí s 30-dňovým SLA timerom (zelená > 14 dní, oranžová 3–14, červená < 3 dní alebo po termíne). Akcie *Uzavrieť* a *Zamietnuť* sa zapisujú do audit logu.
 - **Admin audit log** (`/admin/audit`) — read-only prehliadač systémových udalostí s filtrami podľa aktora, akcie, PII flagu a časového rozsahu. Stránkovanie po 25 záznamoch. Otvorenie tohto prehliadača sa zámerne neloguje, aby nevznikol cyklus.
 - **Admin respondenti** (`/admin/respondents`) — zoznam respondentov s vyhľadávaním, filtrami podľa testu a statusu (aktívny / anonymizovaný). Každé otvorenie zoznamu sa zapíše do audit logu (PII prístup). Detail jedného respondenta sa loguje samostatne.
