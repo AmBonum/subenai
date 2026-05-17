@@ -33,6 +33,7 @@ import { Route as TestZostavRouteImport } from './routes/test.zostav'
 import { Route as TShareIdRouteImport } from './routes/t.$shareId'
 import { Route as SponzoriVsetciRouteImport } from './routes/sponzori.vsetci'
 import { Route as SkoleniaSlugRouteImport } from './routes/skolenia.$slug'
+import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as PodakovanieSessionIdRouteImport } from './routes/podakovanie.$sessionId'
 import { Route as AppTemplatesRouteImport } from './routes/app.templates'
@@ -191,6 +192,11 @@ const SponzoriVsetciRoute = SponzoriVsetciRouteImport.update({
 const SkoleniaSlugRoute = SkoleniaSlugRouteImport.update({
   id: '/skolenia/$slug',
   path: '/skolenia/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SSlugRoute = SSlugRouteImport.update({
+  id: '/s/$slug',
+  path: '/s/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RShareIdRoute = RShareIdRouteImport.update({
@@ -430,6 +436,7 @@ export interface FileRoutesByFullPath {
   '/app/templates': typeof AppTemplatesRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
+  '/s/$slug': typeof SSlugRoute
   '/skolenia/$slug': typeof SkoleniaSlugRoute
   '/sponzori/vsetci': typeof SponzoriVsetciRoute
   '/t/$shareId': typeof TShareIdRoute
@@ -492,6 +499,7 @@ export interface FileRoutesByTo {
   '/app/templates': typeof AppTemplatesRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
+  '/s/$slug': typeof SSlugRoute
   '/skolenia/$slug': typeof SkoleniaSlugRoute
   '/sponzori/vsetci': typeof SponzoriVsetciRoute
   '/t/$shareId': typeof TShareIdRoute
@@ -558,6 +566,7 @@ export interface FileRoutesById {
   '/app/templates': typeof AppTemplatesRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
+  '/s/$slug': typeof SSlugRoute
   '/skolenia/$slug': typeof SkoleniaSlugRoute
   '/sponzori/vsetci': typeof SponzoriVsetciRoute
   '/t/$shareId': typeof TShareIdRoute
@@ -625,6 +634,7 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
+    | '/s/$slug'
     | '/skolenia/$slug'
     | '/sponzori/vsetci'
     | '/t/$shareId'
@@ -687,6 +697,7 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
+    | '/s/$slug'
     | '/skolenia/$slug'
     | '/sponzori/vsetci'
     | '/t/$shareId'
@@ -752,6 +763,7 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
+    | '/s/$slug'
     | '/skolenia/$slug'
     | '/sponzori/vsetci'
     | '/t/$shareId'
@@ -793,6 +805,7 @@ export interface RootRouteChildren {
   ZmenyRoute: typeof ZmenyRoute
   PodakovanieSessionIdRoute: typeof PodakovanieSessionIdRoute
   RShareIdRoute: typeof RShareIdRoute
+  SSlugRoute: typeof SSlugRoute
   SkoleniaSlugRoute: typeof SkoleniaSlugRoute
   TShareIdRoute: typeof TShareIdRoute
   TestZostavRoute: typeof TestZostavRoute
@@ -971,6 +984,13 @@ declare module '@tanstack/react-router' {
       path: '/skolenia/$slug'
       fullPath: '/skolenia/$slug'
       preLoaderRoute: typeof SkoleniaSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/$slug': {
+      id: '/s/$slug'
+      path: '/s/$slug'
+      fullPath: '/s/$slug'
+      preLoaderRoute: typeof SSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/r/$shareId': {
@@ -1411,6 +1431,7 @@ const rootRouteChildren: RootRouteChildren = {
   ZmenyRoute: ZmenyRoute,
   PodakovanieSessionIdRoute: PodakovanieSessionIdRoute,
   RShareIdRoute: RShareIdRoute,
+  SSlugRoute: SSlugRoute,
   SkoleniaSlugRoute: SkoleniaSlugRoute,
   TShareIdRoute: TShareIdRoute,
   TestZostavRoute: TestZostavRoute,
