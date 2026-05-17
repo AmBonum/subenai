@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /app/
+Disallow: /admin/
+Disallow: /t/
 
 Sitemap: https://subenai.sk/sitemap.xml

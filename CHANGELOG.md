@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Aktualizovaná sitemap a robots.txt** — verejné CMS stránky (`/s/<slug>`) sú v sitemape; autentifikované cesty `/app/`, `/admin/` a respondentské odkazy `/t/` sú v `robots.txt` zakázané pre indexovanie.
 - **Odkaz "Moje testy" v hlavičke a stĺpec "Platforma" v päte** — pre prihlásených používateľov sa v hlavičke webu zobrazí odkaz *Moje testy* na pracovný panel (`/app`). V päte pribudol stĺpec *Platforma* s odkazom *Tvorba testov*; administrátori v ňom navyše vidia odkaz *Administrácia* (`/admin`). Neprihlásení návštevníci nevidia ani jedno.
 - **Verejné CMS stránky** (`/s/<slug>`) — administrátorom vytvorené stránky sa zobrazia na verejnej URL `/s/<slug>` po publikovaní. Koncepty a neexistujúce slugy vrátia 404. Renderujú sa rovnaké typy blokov ako v editore (nadpis, odsek, obrázok, CTA).
 - **Admin share karta** (`/admin/share-card`) — konfigurácia predvolených Open Graph hodnôt pre zdieľanie (URL šablóny obrázka, predvolený názov, predvolený popis) s živým náhľadom. Existujúce zdieľanie výsledkov testu cez `/zdielanie/*` a `/podakovanie/*` ostáva nedotknuté.

@@ -59,6 +59,23 @@ async function loadSlugs(dirRel) {
 const courses = await loadSlugs("src/content/courses");
 const packs = await loadSlugs("src/content/test-packs");
 
+async function loadCmsPublishedSlugs() {
+  // AH-9.9: enumerate published CMS slugs for the sitemap. In the
+  // mock-only AH-9 phase, parse the seed array in cms-mock-store.ts.
+  // AH-11 swaps this for a Supabase query at build time.
+  const { readFile } = await import("node:fs/promises");
+  const src = await readFile(resolve(ROOT, "src/lib/admin/cms-mock-store.ts"), "utf8");
+  const blockRe = /slug:\s*"([a-z0-9-]+)"[\s\S]*?status:\s*"(published|draft)"/g;
+  const slugs = [];
+  let m;
+  while ((m = blockRe.exec(src)) !== null) {
+    if (m[2] === "published") slugs.push(m[1]);
+  }
+  return slugs;
+}
+
+const cmsSlugs = await loadCmsPublishedSlugs();
+
 const urls = [
   ...STATIC_ROUTES.map((r) => ({ ...r, lastmod: TODAY })),
   ...courses.map((c) => ({
@@ -72,6 +89,12 @@ const urls = [
     priority: "0.85",
     changefreq: "monthly",
     lastmod: p.lastmod,
+  })),
+  ...cmsSlugs.map((slug) => ({
+    loc: `/s/${slug}`,
+    priority: "0.5",
+    changefreq: "monthly",
+    lastmod: TODAY,
   })),
 ];
 
@@ -92,7 +115,7 @@ ${urls
 
 await writeFile(resolve(ROOT, "public/sitemap.xml"), xml, "utf8");
 console.log(
-  `Sitemap written: ${urls.length} URLs (${courses.length} courses, ${packs.length} packs)`,
+  `Sitemap written: ${urls.length} URLs (${courses.length} courses, ${packs.length} packs, ${cmsSlugs.length} cms)`,
 );
 
 // Allow being invoked via `node scripts/generate-sitemap.mjs` directly
