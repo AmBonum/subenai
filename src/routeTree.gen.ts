@@ -53,6 +53,7 @@ import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
 import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
+import { Route as AppTestsTestIdRouteImport } from './routes/app.tests.$testId'
 import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
 import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
@@ -280,6 +281,11 @@ const AppTestsNewRoute = AppTestsNewRouteImport.update({
   path: '/tests/new',
   getParentRoute: () => AppRoute,
 } as any)
+const AppTestsTestIdRoute = AppTestsTestIdRouteImport.update({
+  id: '/tests/$testId',
+  path: '/tests/$testId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSetsSetIdRoute = AppSetsSetIdRouteImport.update({
   id: '/sets/$setId',
   path: '/sets/$setId',
@@ -358,6 +364,7 @@ export interface FileRoutesByFullPath {
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
+  '/app/tests/$testId': typeof AppTestsTestIdRoute
   '/app/tests/new': typeof AppTestsNewRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/app/tests/': typeof AppTestsIndexRoute
@@ -407,6 +414,7 @@ export interface FileRoutesByTo {
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
+  '/app/tests/$testId': typeof AppTestsTestIdRoute
   '/app/tests/new': typeof AppTestsNewRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/app/tests': typeof AppTestsIndexRoute
@@ -460,6 +468,7 @@ export interface FileRoutesById {
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
+  '/app/tests/$testId': typeof AppTestsTestIdRoute
   '/app/tests/new': typeof AppTestsNewRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/app/tests/': typeof AppTestsIndexRoute
@@ -514,6 +523,7 @@ export interface FileRouteTypes {
     | '/app/account/security'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
+    | '/app/tests/$testId'
     | '/app/tests/new'
     | '/test/zostava/$id'
     | '/app/tests/'
@@ -563,6 +573,7 @@ export interface FileRouteTypes {
     | '/app/account/security'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
+    | '/app/tests/$testId'
     | '/app/tests/new'
     | '/test/zostava/$id'
     | '/app/tests'
@@ -615,6 +626,7 @@ export interface FileRouteTypes {
     | '/app/account/security'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
+    | '/app/tests/$testId'
     | '/app/tests/new'
     | '/test/zostava/$id'
     | '/app/tests/'
@@ -957,6 +969,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTestsNewRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/tests/$testId': {
+      id: '/app/tests/$testId'
+      path: '/tests/$testId'
+      fullPath: '/app/tests/$testId'
+      preLoaderRoute: typeof AppTestsTestIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/sets/$setId': {
       id: '/app/sets/$setId'
       path: '/sets/$setId'
@@ -1056,6 +1075,7 @@ interface AppRouteChildren {
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
   AppLegalDsrRoute: typeof AppLegalDsrRoute
   AppSetsSetIdRoute: typeof AppSetsSetIdRoute
+  AppTestsTestIdRoute: typeof AppTestsTestIdRoute
   AppTestsNewRoute: typeof AppTestsNewRoute
   AppTestsIndexRoute: typeof AppTestsIndexRoute
 }
@@ -1070,6 +1090,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountSecurityRoute: AppAccountSecurityRoute,
   AppLegalDsrRoute: AppLegalDsrRoute,
   AppSetsSetIdRoute: AppSetsSetIdRoute,
+  AppTestsTestIdRoute: AppTestsTestIdRoute,
   AppTestsNewRoute: AppTestsNewRoute,
   AppTestsIndexRoute: AppTestsIndexRoute,
 }

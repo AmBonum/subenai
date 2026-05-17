@@ -1,0 +1,68 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+
+const params: { testId: string } = { testId: "tst_unknown" };
+const searchState: { tab: "results" | "analytics" | "settings"; share?: string } = {
+  tab: "results",
+};
+
+vi.mock("@tanstack/react-router", async () => {
+  const actual =
+    await vi.importActual<typeof import("@tanstack/react-router")>("@tanstack/react-router");
+  return {
+    ...actual,
+    createFileRoute: () => (config: unknown) => config,
+    useParams: () => params,
+    useSearch: () => searchState,
+    useNavigate: () => (arg: { search?: unknown }) => {
+      if (typeof arg.search === "function") {
+        const next = (arg.search as (p: typeof searchState) => typeof searchState)(searchState);
+        searchState.tab = next.tab;
+      }
+    },
+    Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => (
+      <a {...(rest as Record<string, string>)}>{children}</a>
+    ),
+  };
+});
+
+import { Route } from "@/routes/app.tests.$testId";
+
+type RouteConfig = { component: () => JSX.Element };
+const Page = (Route as unknown as RouteConfig).component;
+
+describe("/app/tests/$testId (AH-5.3 editor)", () => {
+  beforeEach(() => {
+    searchState.tab = "results";
+    searchState.share = undefined;
+  });
+
+  it("renders the not-found state for an unknown id", () => {
+    params.testId = "tst_does_not_exist_xyz";
+    render(<Page />);
+    expect(screen.getByTestId("test-editor-not-found")).toBeInTheDocument();
+  });
+
+  it("renders the editor with tabs for a real test", () => {
+    // tst_001 is the first SEED_TESTS row owned by usr_me.
+    params.testId = "tst_002";
+    render(<Page />);
+    expect(screen.getByTestId("test-editor-root")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-tabs-results")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-tabs-analytics")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-tabs-settings")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-share-button")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-publish-button")).toBeInTheDocument();
+  });
+
+  it("settings tab exposes title input + save button", () => {
+    params.testId = "tst_002";
+    searchState.tab = "settings";
+    render(<Page />);
+    expect(screen.getByTestId("test-editor-title-input")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-save-button")).toBeInTheDocument();
+    const titleInput = screen.getByTestId("test-editor-title-input") as HTMLInputElement;
+    fireEvent.change(titleInput, { target: { value: "Updated title" } });
+    fireEvent.click(screen.getByTestId("test-editor-save-button"));
+  });
+});

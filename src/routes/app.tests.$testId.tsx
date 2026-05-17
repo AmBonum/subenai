@@ -1,0 +1,213 @@
+import { createFileRoute, Link, useNavigate, useParams, useSearch } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { z } from "zod";
+import { ArrowLeft, Archive, BarChart3, Save, Send, Settings, Share2 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PageHeader } from "@/components/app/page-header";
+import { StatusBadge } from "@/components/admin/StatusBadge";
+import { ShareDialog } from "@/components/user/ShareDialog";
+import {
+  archiveTest,
+  getTest,
+  publishTest,
+  updateTest,
+  useSessions,
+  useTests,
+} from "@/lib/platform/mock-store";
+import { tFor } from "@/i18n/tests";
+
+const editorSearch = z.object({
+  tab: z.enum(["results", "analytics", "settings"]).catch("results"),
+  share: z.string().optional(),
+});
+
+export const Route = createFileRoute("/app/tests/$testId")({
+  validateSearch: editorSearch,
+  head: () => ({
+    meta: [{ title: "Editor testu · SubenAI" }, { name: "robots", content: "noindex" }],
+  }),
+  component: TestEditorPage,
+});
+
+function TestEditorPage() {
+  const t = tFor("editor");
+  const { testId } = useParams({ from: "/app/tests/$testId" });
+  const search = useSearch({ from: "/app/tests/$testId" });
+  const nav = useNavigate({ from: "/app/tests/$testId" });
+  useTests();
+  const test = getTest(testId);
+  const sessions = useSessions().filter((s) => s.test_id === testId);
+
+  const [title, setTitle] = useState(test?.title ?? "");
+  const [description, setDescription] = useState(test?.description ?? "");
+  const [shareOpen, setShareOpen] = useState(search.share === "1");
+
+  const completed = useMemo(() => sessions.filter((s) => s.status === "completed"), [sessions]);
+  const avgScore =
+    completed.length > 0
+      ? Math.round(completed.reduce((a, s) => a + (s.score ?? 0), 0) / completed.length)
+      : 0;
+
+  if (!test) {
+    return (
+      <div
+        className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground"
+        data-testid="test-editor-not-found"
+      >
+        <p className="font-medium text-foreground">{t("not_found_title")}</p>
+        <p className="mt-1">{t("not_found_body")}</p>
+        <Link
+          to="/app/tests"
+          className="mt-3 inline-flex items-center gap-1 text-xs text-primary underline"
+        >
+          <ArrowLeft className="h-3 w-3" />
+          {t("back_to_list")}
+        </Link>
+      </div>
+    );
+  }
+
+  const onSave = () => {
+    updateTest(test.id, { title: title.trim(), description: description.trim() });
+  };
+
+  const onArchive = () => {
+    archiveTest(test.id);
+  };
+
+  const onPublish = () => {
+    publishTest(test.id);
+  };
+
+  const setTab = (tab: "results" | "analytics" | "settings") => {
+    nav({ search: (prev) => ({ ...prev, tab }), replace: true });
+  };
+
+  return (
+    <div className="space-y-6" data-testid="test-editor-root">
+      <PageHeader
+        eyebrow={t("page_eyebrow")}
+        title={test.title}
+        accentWords={1}
+        subtitle={
+          <span className="flex items-center gap-2">
+            <StatusBadge status={test.status} />
+            <span>v{test.version}</span>
+          </span>
+        }
+        actions={
+          <div className="flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShareOpen(true)}
+              data-testid="test-editor-share-button"
+            >
+              <Share2 className="mr-2 h-3 w-3" />
+              {t("share_button")}
+            </Button>
+            {test.status !== "archived" && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={onArchive}
+                data-testid="test-editor-archive-button"
+              >
+                <Archive className="mr-2 h-3 w-3" />
+                {t("archive_button")}
+              </Button>
+            )}
+            <Button size="sm" onClick={onPublish} data-testid="test-editor-publish-button">
+              <Send className="mr-2 h-3 w-3" />
+              {t("publish_button")}
+            </Button>
+          </div>
+        }
+      />
+
+      <Tabs value={search.tab ?? "results"} onValueChange={(v) => setTab(v as "results")}>
+        <TabsList>
+          <TabsTrigger value="results" data-testid="test-editor-tabs-results">
+            <BarChart3 className="mr-1 h-3 w-3" />
+            {t("tab_results")}
+          </TabsTrigger>
+          <TabsTrigger value="analytics" data-testid="test-editor-tabs-analytics">
+            <BarChart3 className="mr-1 h-3 w-3" />
+            {t("tab_analytics")}
+          </TabsTrigger>
+          <TabsTrigger value="settings" data-testid="test-editor-tabs-settings">
+            <Settings className="mr-1 h-3 w-3" />
+            {t("tab_settings")}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="results" className="mt-4">
+          <Card data-testid="test-editor-results-panel">
+            <CardHeader>
+              <CardTitle>{t("tab_results")}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm text-muted-foreground">
+              <p>Dokončené: {completed.length}</p>
+              <p>Priemerné skóre: {avgScore}%</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="mt-4">
+          <Card data-testid="test-editor-analytics-panel">
+            <CardHeader>
+              <CardTitle>{t("tab_analytics")}</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              <p>Sessions: {sessions.length}</p>
+              <p>Otázok: {test.question_ids.length}</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="settings" className="mt-4">
+          <Card data-testid="test-editor-settings-panel">
+            <CardHeader>
+              <CardTitle>{t("tab_settings")}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="ed-title">{t("title_input_label")}</Label>
+                <Input
+                  id="ed-title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  data-testid="test-editor-title-input"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="ed-desc">{t("description_input_label")}</Label>
+                <Textarea
+                  id="ed-desc"
+                  rows={3}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  data-testid="test-editor-description-input"
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button onClick={onSave} data-testid="test-editor-save-button">
+                  <Save className="mr-2 h-3 w-3" />
+                  {t("save_button")}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      <ShareDialog open={shareOpen} onOpenChange={setShareOpen} shareId={test.share_id} />
+    </div>
+  );
+}

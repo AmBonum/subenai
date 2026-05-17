@@ -21,7 +21,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/app.index.tsx` | `src/routes/app.index.tsx` | AH-3.2 | Done | see `git log` |
 | `routes/app.tests.index.tsx` | `src/routes/app.tests.index.tsx` | AH-5.1 | Done | see `git log` |
 | `routes/app.tests.new.tsx` | `src/routes/app.tests.new.tsx` | AH-5.2 | Done | see `git log` |
-| `routes/app.tests.$testId.tsx` | `src/routes/app.tests.$testId.tsx` | AH-5.3 | Backlog | |
+| `routes/app.tests.$testId.tsx` | `src/routes/app.tests.$testId.tsx` | AH-5.3 | Done | see `git log` |
 | `routes/app.sets.$setId.tsx` | `src/routes/app.sets.$setId.tsx` | AH-4.3 | Done | see `git log` |
 | `routes/app.audiences.tsx` | `src/routes/app.audiences.tsx` | AH-5.4 | Backlog | |
 | `routes/app.teams.tsx` | `src/routes/app.teams.tsx` | AH-3.3 | Done | see `git log` |
@@ -86,7 +86,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `components/app/page-header.tsx` | `src/components/app/page-header.tsx` | AH-3.1 | Done | see `git log` |
 | `components/auth/AuthShell.tsx` | NOT PORTED — replaced by `requireSupabaseAuth` middleware | — | N/A | |
 | `components/user/AppShell.tsx` | `src/components/user/AppShell.tsx` | AH-3.1 | Done | see `git log` |
-| `components/user/ShareDialog.tsx` | `src/components/user/ShareDialog.tsx` | AH-5.3 | Backlog | |
+| `components/user/ShareDialog.tsx` | `src/components/user/ShareDialog.tsx` | AH-5.3 | Done | see `git log` |
 | `lib/platform/types.ts` | `src/lib/platform/types.ts` | AH-1.1 | Done | see `git log` |
 | `lib/admin/store.ts` | `src/lib/admin/mock-store.ts` (deleted in AH-11) | AH-3.1 | Done | see `git log` |
 | `lib/platform/store.ts` | `src/lib/platform/mock-store.ts` (deleted in AH-11) | AH-3.1 | Done | see `git log` |
