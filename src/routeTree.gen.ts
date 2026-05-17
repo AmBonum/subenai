@@ -51,6 +51,7 @@ import { Route as AdminRespondentsRouteImport } from './routes/admin/respondents
 import { Route as AdminReportsRouteImport } from './routes/admin/reports'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
 import { Route as AdminPagesRouteImport } from './routes/admin/pages'
+import { Route as AdminNavigationRouteImport } from './routes/admin/navigation'
 import { Route as AdminHeaderRouteImport } from './routes/admin/header'
 import { Route as AdminFooterRouteImport } from './routes/admin/footer'
 import { Route as AdminDsrRouteImport } from './routes/admin/dsr'
@@ -280,6 +281,11 @@ const AdminPagesRoute = AdminPagesRouteImport.update({
   path: '/pages',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminNavigationRoute = AdminNavigationRouteImport.update({
+  id: '/navigation',
+  path: '/navigation',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminHeaderRoute = AdminHeaderRouteImport.update({
   id: '/header',
   path: '/header',
@@ -391,6 +397,7 @@ export interface FileRoutesByFullPath {
   '/admin/dsr': typeof AdminDsrRoute
   '/admin/footer': typeof AdminFooterRoute
   '/admin/header': typeof AdminHeaderRoute
+  '/admin/navigation': typeof AdminNavigationRoute
   '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -450,6 +457,7 @@ export interface FileRoutesByTo {
   '/admin/dsr': typeof AdminDsrRoute
   '/admin/footer': typeof AdminFooterRoute
   '/admin/header': typeof AdminHeaderRoute
+  '/admin/navigation': typeof AdminNavigationRoute
   '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -513,6 +521,7 @@ export interface FileRoutesById {
   '/admin/dsr': typeof AdminDsrRoute
   '/admin/footer': typeof AdminFooterRoute
   '/admin/header': typeof AdminHeaderRoute
+  '/admin/navigation': typeof AdminNavigationRoute
   '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -577,6 +586,7 @@ export interface FileRouteTypes {
     | '/admin/dsr'
     | '/admin/footer'
     | '/admin/header'
+    | '/admin/navigation'
     | '/admin/pages'
     | '/admin/questions'
     | '/admin/reports'
@@ -636,6 +646,7 @@ export interface FileRouteTypes {
     | '/admin/dsr'
     | '/admin/footer'
     | '/admin/header'
+    | '/admin/navigation'
     | '/admin/pages'
     | '/admin/questions'
     | '/admin/reports'
@@ -698,6 +709,7 @@ export interface FileRouteTypes {
     | '/admin/dsr'
     | '/admin/footer'
     | '/admin/header'
+    | '/admin/navigation'
     | '/admin/pages'
     | '/admin/questions'
     | '/admin/reports'
@@ -1063,6 +1075,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPagesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/navigation': {
+      id: '/admin/navigation'
+      path: '/navigation'
+      fullPath: '/admin/navigation'
+      preLoaderRoute: typeof AdminNavigationRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/header': {
       id: '/admin/header'
       path: '/header'
@@ -1235,6 +1254,7 @@ interface AdminRouteChildren {
   AdminDsrRoute: typeof AdminDsrRoute
   AdminFooterRoute: typeof AdminFooterRoute
   AdminHeaderRoute: typeof AdminHeaderRoute
+  AdminNavigationRoute: typeof AdminNavigationRoute
   AdminPagesRoute: typeof AdminPagesRouteWithChildren
   AdminQuestionsRoute: typeof AdminQuestionsRoute
   AdminReportsRoute: typeof AdminReportsRoute
@@ -1254,6 +1274,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDsrRoute: AdminDsrRoute,
   AdminFooterRoute: AdminFooterRoute,
   AdminHeaderRoute: AdminHeaderRoute,
+  AdminNavigationRoute: AdminNavigationRoute,
   AdminPagesRoute: AdminPagesRouteWithChildren,
   AdminQuestionsRoute: AdminQuestionsRoute,
   AdminReportsRoute: AdminReportsRoute,

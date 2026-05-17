@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin navigácia** (`/admin/navigation`) — CRUD pre položky hlavnej navigácie. Pridávanie, úprava, mazanie, preusporiadanie šípkami, prepínače *Viditeľné* a *Iba pre prihlásených*. Editor v modálnom okne s validáciou URL (relatívna alebo https).
 - **Admin hlavička webu** (`/admin/header`) — formulár na konfiguráciu loga, CTA tlačidla a štítku mobilného menu verejnej hlavičky.
 - **Admin päta webu** (`/admin/footer`) — editor stĺpcov a odkazov v päte, plus sekcia sociálnych sietí. Stĺpce a odkazy možno pridávať a odstraňovať jedným klikom.
 - **Admin editor podstránky** (`/admin/pages/<id>`) — editor jednej CMS stránky s úpravou názvu, URL slug, SEO popisu a usporiadaného zoznamu blokov (nadpis, odsek, obrázok, CTA tlačidlo). Bloky možno pridávať, preusporiadať šípkami a odstrániť. Slug má validáciu (malé písmená, čísla, pomlčky). Publikovanie / vrátenie do konceptu jedným klikom. Mock-only zatiaľ; reálne ukladanie doplníme v ďalšej iterácii.

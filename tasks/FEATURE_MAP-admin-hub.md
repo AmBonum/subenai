@@ -53,7 +53,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/admin/pages.$pageId.tsx` | `src/routes/admin/pages.$pageId.tsx` | AH-9.2 | Done | see `git log` |
 | `routes/admin/header.tsx` | `src/routes/admin/header.tsx` | AH-9.3 | Done | see `git log` |
 | `routes/admin/footer.tsx` | `src/routes/admin/footer.tsx` | AH-9.3 | Done | see `git log` |
-| `routes/admin/navigation.tsx` | `src/routes/admin/navigation.tsx` | AH-9.4 | Backlog | |
+| `routes/admin/navigation.tsx` | `src/routes/admin/navigation.tsx` | AH-9.4 | Done | see `git log` |
 | `routes/admin/support.tsx` | `src/routes/admin/support.tsx` | AH-10.4 | Done | see `git log` |
 | `routes/admin/settings.tsx` | `src/routes/admin/settings.tsx` | AH-10.5 | Done | see `git log` |
 | `routes/t.$shareId.tsx` | `src/routes/t.$shareId.tsx` | AH-8.1 | Done | see `git log` |
