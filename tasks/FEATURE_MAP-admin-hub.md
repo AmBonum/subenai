@@ -16,8 +16,8 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 
 | admin-hub source | proposed subenai path | epic.story | Status | Commit SHA |
 |---|---|---|---|---|
-| `routes/__root.tsx` | extend `src/routes/__root.tsx` (not replaced) | AH-3.1 | Backlog | |
-| `routes/app.tsx` | `src/routes/app.tsx` | AH-3.1 | Backlog | |
+| `routes/__root.tsx` | extend `src/routes/__root.tsx` (not replaced) | AH-3.1 | Done | see `git log` |
+| `routes/app.tsx` | `src/routes/app.tsx` | AH-3.1 | Done | see `git log` |
 | `routes/app.index.tsx` | `src/routes/app.index.tsx` | AH-3.2 | Backlog | |
 | `routes/app.tests.index.tsx` | `src/routes/app.tests.index.tsx` | AH-5.1 | Backlog | |
 | `routes/app.tests.new.tsx` | `src/routes/app.tests.new.tsx` | AH-5.2 | Backlog | |
@@ -76,22 +76,22 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `components/admin/AiQuestionGenerator.tsx` | `src/components/admin/AiQuestionGenerator.tsx` (feature-flagged off) | AH-4.1 | Backlog | |
 | `components/admin/AnswerSetEditor.tsx` | `src/components/admin/AnswerSetEditor.tsx` | AH-4.5 | Backlog | |
 | `components/admin/CategoryMultiSelect.tsx` | `src/components/admin/CategoryMultiSelect.tsx` | AH-6.2 | Backlog | |
-| `components/admin/ConfirmDialog.tsx` | `src/components/admin/ConfirmDialog.tsx` | AH-3.1 | Backlog | |
+| `components/admin/ConfirmDialog.tsx` | `src/components/admin/ConfirmDialog.tsx` | AH-3.1 | Done | see `git log` |
 | `components/admin/PageHeader.tsx` | `src/components/admin/PageHeader.tsx` | AH-10.2 | Backlog | |
 | `components/admin/QuestionEditor.tsx` | `src/components/admin/QuestionEditor.tsx` | AH-4.1 | Backlog | |
 | `components/admin/StatCard.tsx` | `src/components/admin/StatCard.tsx` | AH-3.2 | Backlog | |
 | `components/admin/StatusBadge.tsx` | `src/components/admin/StatusBadge.tsx` | AH-4.1 | Pilot | see `git log` |
 | `components/admin/TestEditor.tsx` | `src/components/admin/TestEditor.tsx` | AH-5.8 | Backlog | |
 | `components/admin/TrainingEditor.tsx` | `src/components/admin/TrainingEditor.tsx` | AH-6.1 | Backlog | |
-| `components/app/page-header.tsx` | `src/components/app/page-header.tsx` | AH-3.1 | Backlog | |
+| `components/app/page-header.tsx` | `src/components/app/page-header.tsx` | AH-3.1 | Done | see `git log` |
 | `components/auth/AuthShell.tsx` | NOT PORTED — replaced by `requireSupabaseAuth` middleware | — | N/A | |
-| `components/user/AppShell.tsx` | `src/components/user/AppShell.tsx` | AH-3.1 | Backlog | |
+| `components/user/AppShell.tsx` | `src/components/user/AppShell.tsx` | AH-3.1 | Done | see `git log` |
 | `components/user/ShareDialog.tsx` | `src/components/user/ShareDialog.tsx` | AH-5.3 | Backlog | |
-| `lib/platform/types.ts` | `src/lib/platform/types.ts` | AH-1.1 | Backlog | |
-| `lib/admin/store.ts` | `src/lib/admin/mock-store.ts` (deleted in AH-11) | AH-3.1 | Backlog | |
-| `lib/platform/store.ts` | `src/lib/platform/mock-store.ts` (deleted in AH-11) | AH-3.1 | Backlog | |
-| `lib/admin-mock-data.ts` | `src/lib/admin/mock-data.ts` (deleted in AH-11) | AH-3.1 | Backlog | |
-| `lib/user-mock-data.ts` | `src/lib/platform/mock-user-data.ts` (deleted in AH-11) | AH-3.1 | Backlog | |
+| `lib/platform/types.ts` | `src/lib/platform/types.ts` | AH-1.1 | Done | see `git log` |
+| `lib/admin/store.ts` | `src/lib/admin/mock-store.ts` (deleted in AH-11) | AH-3.1 | Done | see `git log` |
+| `lib/platform/store.ts` | `src/lib/platform/mock-store.ts` (deleted in AH-11) | AH-3.1 | Done | see `git log` |
+| `lib/admin-mock-data.ts` | `src/lib/admin/mock-data.ts` (deleted in AH-11) | AH-3.1 | Done | see `git log` |
+| `lib/user-mock-data.ts` | `src/lib/platform/mock-user-data.ts` (deleted in AH-11) | AH-3.1 | Done | see `git log` |
 | `lib/admin/answer-sets-store.ts` | `src/lib/admin/answer-sets-mock-store.ts` (deleted in AH-11) | AH-4.4 | Backlog | |
 | `lib/admin/cms-store.ts` | `src/lib/admin/cms-mock-store.ts` (deleted in AH-11) | AH-9.1 | Backlog | |
 | `lib/admin/cms-hooks.ts` | `src/lib/admin/cms-hooks.ts` (wired in AH-11) | AH-9.1 | Backlog | |

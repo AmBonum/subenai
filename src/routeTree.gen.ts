@@ -16,8 +16,10 @@ import { Route as SkolyRouteImport } from './routes/skoly'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PodporaRouteImport } from './routes/podpora'
 import { Route as OProjekteRouteImport } from './routes/o-projekte'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestyIndexRouteImport } from './routes/testy.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
@@ -67,6 +69,11 @@ const OProjekteRoute = OProjekteRouteImport.update({
   path: '/o-projekte',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KontaktRoute = KontaktRouteImport.update({
   id: '/kontakt',
   path: '/kontakt',
@@ -75,6 +82,11 @@ const KontaktRoute = KontaktRouteImport.update({
 const CookiesRoute = CookiesRouteImport.update({
   id: '/cookies',
   path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -145,8 +157,10 @@ const TestZostavaIdVysledkyRoute = TestZostavaIdVysledkyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/cookies': typeof CookiesRoute
   '/kontakt': typeof KontaktRoute
+  '/login': typeof LoginRoute
   '/o-projekte': typeof OProjekteRoute
   '/podpora': typeof PodporaRoute
   '/privacy': typeof PrivacyRoute
@@ -169,8 +183,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/cookies': typeof CookiesRoute
   '/kontakt': typeof KontaktRoute
+  '/login': typeof LoginRoute
   '/o-projekte': typeof OProjekteRoute
   '/podpora': typeof PodporaRoute
   '/privacy': typeof PrivacyRoute
@@ -193,8 +209,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/cookies': typeof CookiesRoute
   '/kontakt': typeof KontaktRoute
+  '/login': typeof LoginRoute
   '/o-projekte': typeof OProjekteRoute
   '/podpora': typeof PodporaRoute
   '/privacy': typeof PrivacyRoute
@@ -219,8 +237,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/app'
     | '/cookies'
     | '/kontakt'
+    | '/login'
     | '/o-projekte'
     | '/podpora'
     | '/privacy'
@@ -243,8 +263,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/app'
     | '/cookies'
     | '/kontakt'
+    | '/login'
     | '/o-projekte'
     | '/podpora'
     | '/privacy'
@@ -266,8 +288,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/app'
     | '/cookies'
     | '/kontakt'
+    | '/login'
     | '/o-projekte'
     | '/podpora'
     | '/privacy'
@@ -291,8 +315,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRoute
   CookiesRoute: typeof CookiesRoute
   KontaktRoute: typeof KontaktRoute
+  LoginRoute: typeof LoginRoute
   OProjekteRoute: typeof OProjekteRoute
   PodporaRoute: typeof PodporaRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -362,6 +388,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OProjekteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kontakt': {
       id: '/kontakt'
       path: '/kontakt'
@@ -374,6 +407,13 @@ declare module '@tanstack/react-router' {
       path: '/cookies'
       fullPath: '/cookies'
       preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -498,8 +538,10 @@ const TestZostavaIdRouteWithChildren = TestZostavaIdRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRoute,
   CookiesRoute: CookiesRoute,
   KontaktRoute: KontaktRoute,
+  LoginRoute: LoginRoute,
   OProjekteRoute: OProjekteRoute,
   PodporaRoute: PodporaRoute,
   PrivacyRoute: PrivacyRoute,
