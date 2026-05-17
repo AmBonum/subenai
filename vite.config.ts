@@ -62,7 +62,18 @@ export default defineConfig({
           if (id.includes("lucide-react")) return "vendor-icons";
           if (id.includes("zod") || id.includes("react-hook-form") || id.includes("@hookform/"))
             return "vendor-forms";
-          return "vendor-misc";
+          // No `vendor-misc` catch-all. The catch-all caused a circular
+          // chunk (vendor-misc -> vendor-react -> vendor-misc) because some
+          // React-adjacent modules (transitively imported by libraries we
+          // didn't explicitly bucket) ended up in vendor-misc with
+          // top-level `useLayoutEffect`-type calls, racing the vendor-react
+          // chunk at runtime and throwing
+          // `Cannot read properties of undefined (reading 'useLayoutEffect')`.
+          // Returning undefined lets Rollup decide — per-route async
+          // chunks remain async, and any remaining vendor dependency lands
+          // in the route entry that imports it. Trade-off: slightly larger
+          // initial bundle when many small libs flow into the main chunk.
+          return undefined;
         },
       },
     },
