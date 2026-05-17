@@ -46,6 +46,7 @@ import { Route as AdminRespondentsRouteImport } from './routes/admin/respondents
 import { Route as AdminReportsRouteImport } from './routes/admin/reports'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
+import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
 import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
@@ -240,6 +241,11 @@ const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   path: '/categories',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAnswerSetsRoute = AdminAnswerSetsRouteImport.update({
   id: '/answer-sets',
   path: '/answer-sets',
@@ -296,6 +302,7 @@ export interface FileRoutesByFullPath {
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -340,6 +347,7 @@ export interface FileRoutesByTo {
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -388,6 +396,7 @@ export interface FileRoutesById {
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -437,6 +446,7 @@ export interface FileRouteTypes {
     | '/spravovat-podporu'
     | '/zmeny'
     | '/admin/answer-sets'
+    | '/admin/audit'
     | '/admin/categories'
     | '/admin/questions'
     | '/admin/reports'
@@ -481,6 +491,7 @@ export interface FileRouteTypes {
     | '/spravovat-podporu'
     | '/zmeny'
     | '/admin/answer-sets'
+    | '/admin/audit'
     | '/admin/categories'
     | '/admin/questions'
     | '/admin/reports'
@@ -528,6 +539,7 @@ export interface FileRouteTypes {
     | '/spravovat-podporu'
     | '/zmeny'
     | '/admin/answer-sets'
+    | '/admin/audit'
     | '/admin/categories'
     | '/admin/questions'
     | '/admin/reports'
@@ -847,6 +859,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCategoriesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/answer-sets': {
       id: '/admin/answer-sets'
       path: '/answer-sets'
@@ -920,6 +939,7 @@ const AdminAnswerSetsRouteWithChildren = AdminAnswerSetsRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
+  AdminAuditRoute: typeof AdminAuditRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminQuestionsRoute: typeof AdminQuestionsRoute
   AdminReportsRoute: typeof AdminReportsRoute
@@ -933,6 +953,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnswerSetsRoute: AdminAnswerSetsRouteWithChildren,
+  AdminAuditRoute: AdminAuditRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminQuestionsRoute: AdminQuestionsRoute,
   AdminReportsRoute: AdminReportsRoute,

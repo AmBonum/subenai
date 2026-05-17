@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin audit log** (`/admin/audit`) — read-only prehliadač systémových udalostí s filtrami podľa aktora, akcie, PII flagu a časového rozsahu. Stránkovanie po 25 záznamoch. Otvorenie tohto prehliadača sa zámerne neloguje, aby nevznikol cyklus.
 - **Admin respondenti** (`/admin/respondents`) — zoznam respondentov s vyhľadávaním, filtrami podľa testu a statusu (aktívny / anonymizovaný). Každé otvorenie zoznamu sa zapíše do audit logu (PII prístup). Detail jedného respondenta sa loguje samostatne.
 - **Admin reporty** (`/admin/reports`) — fronta nahlásení obsahu s filtrom podľa statusu a dôvodu, akcie posúdiť / vyriešiť / zamietnuť. Mock-only, plnú perzistenciu doplníme v ďalšej iterácii.
 - **GDPR žiadosť priamo v aplikácii** (`/app/legal/dsr`) — prihlásený používateľ môže podať žiadosť podľa GDPR (prístup čl. 15, oprava čl. 16, výmaz čl. 17, obmedzenie čl. 18, portabilita čl. 20, námietka čl. 21) priamo z účtu. Odpovedáme do 30 dní. Banner súhlasu sa raz znova zobrazí (verzia 1.4.0) — pridali sme platformu pre tvorbu vlastných testov a zdieľanie cez odkaz, čo zahŕňa dve nové kategórie údajov: profily používateľov platformy a vstupné údaje respondentov.
