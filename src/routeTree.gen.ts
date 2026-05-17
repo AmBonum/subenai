@@ -25,13 +25,19 @@ import { Route as TestyIndexRouteImport } from './routes/testy.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
 import { Route as SponzoriIndexRouteImport } from './routes/sponzori.index'
 import { Route as SkoleniaIndexRouteImport } from './routes/skolenia.index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as TestySlugRouteImport } from './routes/testy.$slug'
 import { Route as TestZostavRouteImport } from './routes/test.zostav'
 import { Route as SponzoriVsetciRouteImport } from './routes/sponzori.vsetci'
 import { Route as SkoleniaSlugRouteImport } from './routes/skolenia.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as PodakovanieSessionIdRouteImport } from './routes/podakovanie.$sessionId'
+import { Route as AppTeamsRouteImport } from './routes/app.teams'
+import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
+import { Route as AppHelpRouteImport } from './routes/app.help'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
+import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
+import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
 import { Route as TestZostavaIdVysledkyRouteImport } from './routes/test.zostava.$id.vysledky'
 
 const ZmenyRoute = ZmenyRouteImport.update({
@@ -114,6 +120,11 @@ const SkoleniaIndexRoute = SkoleniaIndexRouteImport.update({
   path: '/skolenia/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
 const TestySlugRoute = TestySlugRouteImport.update({
   id: '/testy/$slug',
   path: '/testy/$slug',
@@ -144,10 +155,35 @@ const PodakovanieSessionIdRoute = PodakovanieSessionIdRouteImport.update({
   path: '/podakovanie/$sessionId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppTeamsRoute = AppTeamsRouteImport.update({
+  id: '/teams',
+  path: '/teams',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppHelpRoute = AppHelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => AppRoute,
+} as any)
 const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
   id: '/test/zostava/$id',
   path: '/test/zostava/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
+  id: '/account/security',
+  path: '/account/security',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountProfileRoute = AppAccountProfileRouteImport.update({
+  id: '/account/profile',
+  path: '/account/profile',
+  getParentRoute: () => AppRoute,
 } as any)
 const TestZostavaIdVysledkyRoute = TestZostavaIdVysledkyRouteImport.update({
   id: '/vysledky',
@@ -157,7 +193,7 @@ const TestZostavaIdVysledkyRoute = TestZostavaIdVysledkyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
@@ -168,22 +204,27 @@ export interface FileRoutesByFullPath {
   '/sponzori': typeof SponzoriRouteWithChildren
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
+  '/app/help': typeof AppHelpRoute
+  '/app/notifications': typeof AppNotificationsRoute
+  '/app/teams': typeof AppTeamsRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/skolenia/$slug': typeof SkoleniaSlugRoute
   '/sponzori/vsetci': typeof SponzoriVsetciRoute
   '/test/zostav': typeof TestZostavRoute
   '/testy/$slug': typeof TestySlugRoute
+  '/app/': typeof AppIndexRoute
   '/skolenia/': typeof SkoleniaIndexRoute
   '/sponzori/': typeof SponzoriIndexRoute
   '/test/': typeof TestIndexRoute
   '/testy/': typeof TestyIndexRoute
+  '/app/account/profile': typeof AppAccountProfileRoute
+  '/app/account/security': typeof AppAccountSecurityRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
   '/cookies': typeof CookiesRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
@@ -193,23 +234,29 @@ export interface FileRoutesByTo {
   '/skoly': typeof SkolyRoute
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
+  '/app/help': typeof AppHelpRoute
+  '/app/notifications': typeof AppNotificationsRoute
+  '/app/teams': typeof AppTeamsRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/skolenia/$slug': typeof SkoleniaSlugRoute
   '/sponzori/vsetci': typeof SponzoriVsetciRoute
   '/test/zostav': typeof TestZostavRoute
   '/testy/$slug': typeof TestySlugRoute
+  '/app': typeof AppIndexRoute
   '/skolenia': typeof SkoleniaIndexRoute
   '/sponzori': typeof SponzoriIndexRoute
   '/test': typeof TestIndexRoute
   '/testy': typeof TestyIndexRoute
+  '/app/account/profile': typeof AppAccountProfileRoute
+  '/app/account/security': typeof AppAccountSecurityRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
@@ -220,16 +267,22 @@ export interface FileRoutesById {
   '/sponzori': typeof SponzoriRouteWithChildren
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
+  '/app/help': typeof AppHelpRoute
+  '/app/notifications': typeof AppNotificationsRoute
+  '/app/teams': typeof AppTeamsRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/skolenia/$slug': typeof SkoleniaSlugRoute
   '/sponzori/vsetci': typeof SponzoriVsetciRoute
   '/test/zostav': typeof TestZostavRoute
   '/testy/$slug': typeof TestySlugRoute
+  '/app/': typeof AppIndexRoute
   '/skolenia/': typeof SkoleniaIndexRoute
   '/sponzori/': typeof SponzoriIndexRoute
   '/test/': typeof TestIndexRoute
   '/testy/': typeof TestyIndexRoute
+  '/app/account/profile': typeof AppAccountProfileRoute
+  '/app/account/security': typeof AppAccountSecurityRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
@@ -248,22 +301,27 @@ export interface FileRouteTypes {
     | '/sponzori'
     | '/spravovat-podporu'
     | '/zmeny'
+    | '/app/help'
+    | '/app/notifications'
+    | '/app/teams'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/skolenia/$slug'
     | '/sponzori/vsetci'
     | '/test/zostav'
     | '/testy/$slug'
+    | '/app/'
     | '/skolenia/'
     | '/sponzori/'
     | '/test/'
     | '/testy/'
+    | '/app/account/profile'
+    | '/app/account/security'
     | '/test/zostava/$id'
     | '/test/zostava/$id/vysledky'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/app'
     | '/cookies'
     | '/kontakt'
     | '/login'
@@ -273,16 +331,22 @@ export interface FileRouteTypes {
     | '/skoly'
     | '/spravovat-podporu'
     | '/zmeny'
+    | '/app/help'
+    | '/app/notifications'
+    | '/app/teams'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/skolenia/$slug'
     | '/sponzori/vsetci'
     | '/test/zostav'
     | '/testy/$slug'
+    | '/app'
     | '/skolenia'
     | '/sponzori'
     | '/test'
     | '/testy'
+    | '/app/account/profile'
+    | '/app/account/security'
     | '/test/zostava/$id'
     | '/test/zostava/$id/vysledky'
   id:
@@ -299,23 +363,29 @@ export interface FileRouteTypes {
     | '/sponzori'
     | '/spravovat-podporu'
     | '/zmeny'
+    | '/app/help'
+    | '/app/notifications'
+    | '/app/teams'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/skolenia/$slug'
     | '/sponzori/vsetci'
     | '/test/zostav'
     | '/testy/$slug'
+    | '/app/'
     | '/skolenia/'
     | '/sponzori/'
     | '/test/'
     | '/testy/'
+    | '/app/account/profile'
+    | '/app/account/security'
     | '/test/zostava/$id'
     | '/test/zostava/$id/vysledky'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRoute
+  AppRoute: typeof AppRouteWithChildren
   CookiesRoute: typeof CookiesRoute
   KontaktRoute: typeof KontaktRoute
   LoginRoute: typeof LoginRoute
@@ -451,6 +521,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SkoleniaIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/testy/$slug': {
       id: '/testy/$slug'
       path: '/testy/$slug'
@@ -493,12 +570,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PodakovanieSessionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/teams': {
+      id: '/app/teams'
+      path: '/teams'
+      fullPath: '/app/teams'
+      preLoaderRoute: typeof AppTeamsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/notifications': {
+      id: '/app/notifications'
+      path: '/notifications'
+      fullPath: '/app/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/help': {
+      id: '/app/help'
+      path: '/help'
+      fullPath: '/app/help'
+      preLoaderRoute: typeof AppHelpRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/test/zostava/$id': {
       id: '/test/zostava/$id'
       path: '/test/zostava/$id'
       fullPath: '/test/zostava/$id'
       preLoaderRoute: typeof TestZostavaIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/account/security': {
+      id: '/app/account/security'
+      path: '/account/security'
+      fullPath: '/app/account/security'
+      preLoaderRoute: typeof AppAccountSecurityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/account/profile': {
+      id: '/app/account/profile'
+      path: '/account/profile'
+      fullPath: '/app/account/profile'
+      preLoaderRoute: typeof AppAccountProfileRouteImport
+      parentRoute: typeof AppRoute
     }
     '/test/zostava/$id/vysledky': {
       id: '/test/zostava/$id/vysledky'
@@ -509,6 +621,26 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AppRouteChildren {
+  AppHelpRoute: typeof AppHelpRoute
+  AppNotificationsRoute: typeof AppNotificationsRoute
+  AppTeamsRoute: typeof AppTeamsRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppAccountProfileRoute: typeof AppAccountProfileRoute
+  AppAccountSecurityRoute: typeof AppAccountSecurityRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppHelpRoute: AppHelpRoute,
+  AppNotificationsRoute: AppNotificationsRoute,
+  AppTeamsRoute: AppTeamsRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppAccountProfileRoute: AppAccountProfileRoute,
+  AppAccountSecurityRoute: AppAccountSecurityRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface SponzoriRouteChildren {
   SponzoriVsetciRoute: typeof SponzoriVsetciRoute
@@ -538,7 +670,7 @@ const TestZostavaIdRouteWithChildren = TestZostavaIdRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRoute,
+  AppRoute: AppRouteWithChildren,
   CookiesRoute: CookiesRoute,
   KontaktRoute: KontaktRoute,
   LoginRoute: LoginRoute,

@@ -16,6 +16,8 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ### Pridané
 - Nový **autentifikovaný workspace** na `/app` — prihlásení používatelia majú vlastný panel s prehľadom, navigáciou na testy, tímy, notifikácie a účet. Prístup len pre prihlásených, zatiaľ s demo obsahom.
 - **Dashboard na `/app`** — štyri prehľadové karty (aktívne testy, sedenia, respondenti, miera dokončenia) s demo dátami.
+- **Účet** (`/app/account/profile`, `/app/account/security`) — úprava mena, e-mailu a iniciálov avatara; politika hesla a zoznam aktívnych sedení. Dvojfaktorové overenie je viditeľné, ale neaktívne — backend pripravujeme.
+- **Tímy, notifikácie, help centrum** v `/app` — demo zoznamy, akcie a FAQ vyhľadávanie.
 - **Prihlasovacia stránka** na `/login` — e-mail + heslo cez Supabase Auth. Slúži ako vstup do `/app` workspace.
 - Možnosť **podporiť projekt** jednorazovo alebo mesačne. Faktúru dostaneš e-mailom; mesačný odber zrušíš kedykoľvek jediným klikom v Stripe Customer Portal.
 - Stránka **O projekte** — cieľ, prečo sponsorship namiesto členstva, kam idú peniaze.
