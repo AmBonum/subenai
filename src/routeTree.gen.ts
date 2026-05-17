@@ -42,6 +42,7 @@ import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminTrainingsRouteImport } from './routes/admin/trainings'
 import { Route as AdminSupportRouteImport } from './routes/admin/support'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminReportsRouteImport } from './routes/admin/reports'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
@@ -218,6 +219,11 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
   id: '/questions',
   path: '/questions',
@@ -286,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/questions': typeof AdminQuestionsRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/trainings': typeof AdminTrainingsRoute
@@ -328,6 +335,7 @@ export interface FileRoutesByTo {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/questions': typeof AdminQuestionsRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/trainings': typeof AdminTrainingsRoute
@@ -374,6 +382,7 @@ export interface FileRoutesById {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/questions': typeof AdminQuestionsRoute
+  '/admin/reports': typeof AdminReportsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/trainings': typeof AdminTrainingsRoute
@@ -421,6 +430,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/categories'
     | '/admin/questions'
+    | '/admin/reports'
     | '/admin/settings'
     | '/admin/support'
     | '/admin/trainings'
@@ -463,6 +473,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/categories'
     | '/admin/questions'
+    | '/admin/reports'
     | '/admin/settings'
     | '/admin/support'
     | '/admin/trainings'
@@ -508,6 +519,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/categories'
     | '/admin/questions'
+    | '/admin/reports'
     | '/admin/settings'
     | '/admin/support'
     | '/admin/trainings'
@@ -795,6 +807,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/questions': {
       id: '/admin/questions'
       path: '/questions'
@@ -884,6 +903,7 @@ interface AdminRouteChildren {
   AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminQuestionsRoute: typeof AdminQuestionsRoute
+  AdminReportsRoute: typeof AdminReportsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSupportRoute: typeof AdminSupportRoute
   AdminTrainingsRoute: typeof AdminTrainingsRoute
@@ -895,6 +915,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAnswerSetsRoute: AdminAnswerSetsRouteWithChildren,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminQuestionsRoute: AdminQuestionsRoute,
+  AdminReportsRoute: AdminReportsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSupportRoute: AdminSupportRoute,
   AdminTrainingsRoute: AdminTrainingsRoute,
