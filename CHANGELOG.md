@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin používatelia** (`/admin/users`) — tabuľka profilov s vyhľadávaním podľa mena/e-mailu, filtrom podľa roly a značkami rolí. Akcia úpravy roly je zatiaľ placeholder, plný backend pripravujeme.
 - **Admin dashboard** (`/admin`) — úvodná stránka s prehľadom kľúčových metrík (používatelia, testy, sedenia, čakajúce DSR) a najnovšími udalosťami.
 - **Admin shell + role-gate** — `/admin/*` má vlastný layout s bočným panelom a chránený je novou kontrolou roly (`requireRole("admin")` cez `has_role()`). Bežní používatelia sú presmerovaní späť do svojho workspace, neprihlásení na prihlásenie.
 - **Detail sady odpovedí** (`/app/sets/$setId`) — read-only náhľad jednej sady odpovedí pre tvorcov testov. Oddelené stĺpce *Správne odpovede* a *Nesprávne odpovede*, voliteľné vysvetlenia. Neexistujúce ID zobrazí jasnú prázdnu stránku so spätným odkazom.

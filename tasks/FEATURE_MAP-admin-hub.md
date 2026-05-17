@@ -35,7 +35,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/app.legal.dsr.tsx` | `src/routes/app.legal.dsr.tsx` | AH-7.1 | Backlog | |
 | `routes/admin.tsx` | `src/routes/admin.tsx` | AH-10.1 | Done | see `git log` |
 | `routes/admin/index.tsx` | `src/routes/admin/index.tsx` | AH-10.2 | Done | see `git log` |
-| `routes/admin/users.tsx` | `src/routes/admin/users.tsx` | AH-10.3 | Backlog | |
+| `routes/admin/users.tsx` | `src/routes/admin/users.tsx` | AH-10.3 | Done | see `git log` |
 | `routes/admin/questions.tsx` | `src/routes/admin/questions.tsx` | AH-4.1 | Done | see `git log` |
 | `routes/admin/answer-sets.tsx` | `src/routes/admin/answer-sets.tsx` | AH-4.4 | Done | see `git log` |
 | `routes/admin/answer-sets.$setId.tsx` | `src/routes/admin/answer-sets.$setId.tsx` | AH-4.5 | Done | see `git log` |
