@@ -51,6 +51,8 @@ import { Route as AdminRespondentsRouteImport } from './routes/admin/respondents
 import { Route as AdminReportsRouteImport } from './routes/admin/reports'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
 import { Route as AdminPagesRouteImport } from './routes/admin/pages'
+import { Route as AdminHeaderRouteImport } from './routes/admin/header'
+import { Route as AdminFooterRouteImport } from './routes/admin/footer'
 import { Route as AdminDsrRouteImport } from './routes/admin/dsr'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
@@ -278,6 +280,16 @@ const AdminPagesRoute = AdminPagesRouteImport.update({
   path: '/pages',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminHeaderRoute = AdminHeaderRouteImport.update({
+  id: '/header',
+  path: '/header',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFooterRoute = AdminFooterRouteImport.update({
+  id: '/footer',
+  path: '/footer',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminDsrRoute = AdminDsrRouteImport.update({
   id: '/dsr',
   path: '/dsr',
@@ -377,6 +389,8 @@ export interface FileRoutesByFullPath {
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dsr': typeof AdminDsrRoute
+  '/admin/footer': typeof AdminFooterRoute
+  '/admin/header': typeof AdminHeaderRoute
   '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -434,6 +448,8 @@ export interface FileRoutesByTo {
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dsr': typeof AdminDsrRoute
+  '/admin/footer': typeof AdminFooterRoute
+  '/admin/header': typeof AdminHeaderRoute
   '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -495,6 +511,8 @@ export interface FileRoutesById {
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dsr': typeof AdminDsrRoute
+  '/admin/footer': typeof AdminFooterRoute
+  '/admin/header': typeof AdminHeaderRoute
   '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -557,6 +575,8 @@ export interface FileRouteTypes {
     | '/admin/audit'
     | '/admin/categories'
     | '/admin/dsr'
+    | '/admin/footer'
+    | '/admin/header'
     | '/admin/pages'
     | '/admin/questions'
     | '/admin/reports'
@@ -614,6 +634,8 @@ export interface FileRouteTypes {
     | '/admin/audit'
     | '/admin/categories'
     | '/admin/dsr'
+    | '/admin/footer'
+    | '/admin/header'
     | '/admin/pages'
     | '/admin/questions'
     | '/admin/reports'
@@ -674,6 +696,8 @@ export interface FileRouteTypes {
     | '/admin/audit'
     | '/admin/categories'
     | '/admin/dsr'
+    | '/admin/footer'
+    | '/admin/header'
     | '/admin/pages'
     | '/admin/questions'
     | '/admin/reports'
@@ -1039,6 +1063,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPagesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/header': {
+      id: '/admin/header'
+      path: '/header'
+      fullPath: '/admin/header'
+      preLoaderRoute: typeof AdminHeaderRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/footer': {
+      id: '/admin/footer'
+      path: '/footer'
+      fullPath: '/admin/footer'
+      preLoaderRoute: typeof AdminFooterRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/dsr': {
       id: '/admin/dsr'
       path: '/dsr'
@@ -1195,6 +1233,8 @@ interface AdminRouteChildren {
   AdminAuditRoute: typeof AdminAuditRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminDsrRoute: typeof AdminDsrRoute
+  AdminFooterRoute: typeof AdminFooterRoute
+  AdminHeaderRoute: typeof AdminHeaderRoute
   AdminPagesRoute: typeof AdminPagesRouteWithChildren
   AdminQuestionsRoute: typeof AdminQuestionsRoute
   AdminReportsRoute: typeof AdminReportsRoute
@@ -1212,6 +1252,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAuditRoute: AdminAuditRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminDsrRoute: AdminDsrRoute,
+  AdminFooterRoute: AdminFooterRoute,
+  AdminHeaderRoute: AdminHeaderRoute,
   AdminPagesRoute: AdminPagesRouteWithChildren,
   AdminQuestionsRoute: AdminQuestionsRoute,
   AdminReportsRoute: AdminReportsRoute,

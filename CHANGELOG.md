@@ -14,6 +14,8 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin hlavička webu** (`/admin/header`) — formulár na konfiguráciu loga, CTA tlačidla a štítku mobilného menu verejnej hlavičky.
+- **Admin päta webu** (`/admin/footer`) — editor stĺpcov a odkazov v päte, plus sekcia sociálnych sietí. Stĺpce a odkazy možno pridávať a odstraňovať jedným klikom.
 - **Admin editor podstránky** (`/admin/pages/<id>`) — editor jednej CMS stránky s úpravou názvu, URL slug, SEO popisu a usporiadaného zoznamu blokov (nadpis, odsek, obrázok, CTA tlačidlo). Bloky možno pridávať, preusporiadať šípkami a odstrániť. Slug má validáciu (malé písmená, čísla, pomlčky). Publikovanie / vrátenie do konceptu jedným klikom. Mock-only zatiaľ; reálne ukladanie doplníme v ďalšej iterácii.
 - **Admin detail testu** (`/admin/tests/<id>`) — editor jedného testu s úpravou názvu, popisu, stavu, obťažnosti a vetiev. Otázky možno preusporiadať šípkami hore/dole (klávesnicovo prístupné) a odstrániť. Pri opustení s neuloženými zmenami sa zobrazí potvrdzovací dialóg.
 - **Admin testy** (`/admin/tests`) — platformový prehľad všetkých testov s filtrami podľa stavu, obťažnosti, branže a vlastníka, hromadným označením a hromadným mazaním cez potvrdzovací dialóg.
