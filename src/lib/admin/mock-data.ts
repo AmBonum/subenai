@@ -527,7 +527,50 @@ export const dashboardStats = {
   open_reports: mockReports.filter((r) => r.status === "open").length,
   total_trainings: mockTrainings.length,
   training_views: mockTrainings.reduce((acc, t) => acc + t.views, 0),
+  // AH-10.2 dashboard tiles
+  total_tests: 42,
+  total_sessions: 1284,
+  pending_dsr: 3,
 };
+
+export interface AdminActivityEvent {
+  id: string;
+  type: "question_created" | "test_published" | "report_filed" | "user_signup";
+  actor: string;
+  summary: string;
+  created_at: string;
+}
+
+export const mockAdminActivity: AdminActivityEvent[] = [
+  {
+    id: "act-1",
+    type: "question_created",
+    actor: "Jana H.",
+    summary: "Pridala novú otázku: Phishing v e-shope",
+    created_at: new Date(Date.now() - 5 * 3600 * 1000).toISOString(),
+  },
+  {
+    id: "act-2",
+    type: "test_published",
+    actor: "Peter S.",
+    summary: "Publikoval test: Bezpečnosť pre seniorov",
+    created_at: new Date(Date.now() - 12 * 3600 * 1000).toISOString(),
+  },
+  {
+    id: "act-3",
+    type: "report_filed",
+    actor: "Anonym",
+    summary: "Nahlásil otázku ako duplikát",
+    created_at: new Date(Date.now() - 26 * 3600 * 1000).toISOString(),
+  },
+  {
+    id: "act-4",
+    type: "user_signup",
+    actor: "noemi.kr@example.sk",
+    summary: "Nový používateľ sa zaregistroval",
+    created_at: new Date(Date.now() - 36 * 3600 * 1000).toISOString(),
+  },
+];
 
 export const activityData = Array.from({ length: 14 }, (_, i) => ({
   date: new Date(Date.now() - (13 - i) * 86400000).toLocaleDateString("sk-SK", {

@@ -34,7 +34,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/app.account.security.tsx` | `src/routes/app.account.security.tsx` | AH-3.7 | Done | see `git log` |
 | `routes/app.legal.dsr.tsx` | `src/routes/app.legal.dsr.tsx` | AH-7.1 | Backlog | |
 | `routes/admin.tsx` | `src/routes/admin.tsx` | AH-10.1 | Done | see `git log` |
-| `routes/admin/index.tsx` | `src/routes/admin/index.tsx` | AH-10.2 | Backlog | |
+| `routes/admin/index.tsx` | `src/routes/admin/index.tsx` | AH-10.2 | Done | see `git log` |
 | `routes/admin/users.tsx` | `src/routes/admin/users.tsx` | AH-10.3 | Backlog | |
 | `routes/admin/questions.tsx` | `src/routes/admin/questions.tsx` | AH-4.1 | Done | see `git log` |
 | `routes/admin/answer-sets.tsx` | `src/routes/admin/answer-sets.tsx` | AH-4.4 | Done | see `git log` |
@@ -77,7 +77,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `components/admin/AnswerSetEditor.tsx` | `src/components/admin/AnswerSetEditor.tsx` | AH-4.5 | Backlog | |
 | `components/admin/CategoryMultiSelect.tsx` | `src/components/admin/CategoryMultiSelect.tsx` | AH-6.2 | Backlog | |
 | `components/admin/ConfirmDialog.tsx` | `src/components/admin/ConfirmDialog.tsx` | AH-3.1 | Done | see `git log` |
-| `components/admin/PageHeader.tsx` | `src/components/admin/PageHeader.tsx` | AH-10.2 | Backlog | |
+| `components/admin/PageHeader.tsx` | `src/components/admin/PageHeader.tsx` | AH-10.2 | Done | see `git log` |
 | `components/admin/QuestionEditor.tsx` | `src/components/admin/QuestionEditor.tsx` | AH-4.1 | Done | see `git log` |
 | `components/admin/StatCard.tsx` | `src/components/admin/StatCard.tsx` | AH-3.2 | Done | see `git log` |
 | `components/admin/StatusBadge.tsx` | `src/components/admin/StatusBadge.tsx` | AH-4.1 | Done | see `git log` |

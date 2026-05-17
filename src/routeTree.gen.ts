@@ -27,6 +27,7 @@ import { Route as TestIndexRouteImport } from './routes/test.index'
 import { Route as SponzoriIndexRouteImport } from './routes/sponzori.index'
 import { Route as SkoleniaIndexRouteImport } from './routes/skolenia.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as TestySlugRouteImport } from './routes/testy.$slug'
 import { Route as TestZostavRouteImport } from './routes/test.zostav'
 import { Route as SponzoriVsetciRouteImport } from './routes/sponzori.vsetci'
@@ -135,6 +136,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const TestySlugRoute = TestySlugRouteImport.update({
   id: '/testy/$slug',
@@ -253,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/sponzori/vsetci': typeof SponzoriVsetciRoute
   '/test/zostav': typeof TestZostavRoute
   '/testy/$slug': typeof TestySlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/skolenia/': typeof SkoleniaIndexRoute
   '/sponzori/': typeof SponzoriIndexRoute
@@ -267,7 +274,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
@@ -289,6 +295,7 @@ export interface FileRoutesByTo {
   '/sponzori/vsetci': typeof SponzoriVsetciRoute
   '/test/zostav': typeof TestZostavRoute
   '/testy/$slug': typeof TestySlugRoute
+  '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/skolenia': typeof SkoleniaIndexRoute
   '/sponzori': typeof SponzoriIndexRoute
@@ -328,6 +335,7 @@ export interface FileRoutesById {
   '/sponzori/vsetci': typeof SponzoriVsetciRoute
   '/test/zostav': typeof TestZostavRoute
   '/testy/$slug': typeof TestySlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/skolenia/': typeof SkoleniaIndexRoute
   '/sponzori/': typeof SponzoriIndexRoute
@@ -368,6 +376,7 @@ export interface FileRouteTypes {
     | '/sponzori/vsetci'
     | '/test/zostav'
     | '/testy/$slug'
+    | '/admin/'
     | '/app/'
     | '/skolenia/'
     | '/sponzori/'
@@ -382,7 +391,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/cookies'
     | '/kontakt'
     | '/login'
@@ -404,6 +412,7 @@ export interface FileRouteTypes {
     | '/sponzori/vsetci'
     | '/test/zostav'
     | '/testy/$slug'
+    | '/admin'
     | '/app'
     | '/skolenia'
     | '/sponzori'
@@ -442,6 +451,7 @@ export interface FileRouteTypes {
     | '/sponzori/vsetci'
     | '/test/zostav'
     | '/testy/$slug'
+    | '/admin/'
     | '/app/'
     | '/skolenia/'
     | '/sponzori/'
@@ -608,6 +618,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/testy/$slug': {
       id: '/testy/$slug'
       path: '/testy/$slug'
@@ -752,11 +769,13 @@ const AdminAnswerSetsRouteWithChildren = AdminAnswerSetsRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
   AdminQuestionsRoute: typeof AdminQuestionsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnswerSetsRoute: AdminAnswerSetsRouteWithChildren,
   AdminQuestionsRoute: AdminQuestionsRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
