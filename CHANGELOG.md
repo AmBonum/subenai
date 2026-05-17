@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Admin shell + role-gate** — `/admin/*` má vlastný layout s bočným panelom a chránený je novou kontrolou roly (`requireRole("admin")` cez `has_role()`). Bežní používatelia sú presmerovaní späť do svojho workspace, neprihlásení na prihlásenie.
 - **Detail sady odpovedí** (`/app/sets/$setId`) — read-only náhľad jednej sady odpovedí pre tvorcov testov. Oddelené stĺpce *Správne odpovede* a *Nesprávne odpovede*, voliteľné vysvetlenia. Neexistujúce ID zobrazí jasnú prázdnu stránku so spätným odkazom.
 - **Knižnica otázok** (`/app/library`) — read-only prehliadač globálnej knižnice otázok pre tvorcov testov. Hľadanie podľa textu otázky, filtrovanie podľa branže a obtiažnosti, prehľadné karty s typom otázky.
 - **Admin sady odpovedí** (`/admin/answer-sets`) — zoznam zdieľaných sád správnych a nesprávnych odpovedí, ktoré sa pripájajú k viacerým otázkam naraz. Hľadanie podľa názvu, duplikácia jedným klikom a mazanie s potvrdením.

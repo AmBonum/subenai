@@ -33,7 +33,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/app.account.profile.tsx` | `src/routes/app.account.profile.tsx` | AH-3.6 | Done | see `git log` |
 | `routes/app.account.security.tsx` | `src/routes/app.account.security.tsx` | AH-3.7 | Done | see `git log` |
 | `routes/app.legal.dsr.tsx` | `src/routes/app.legal.dsr.tsx` | AH-7.1 | Backlog | |
-| `routes/admin.tsx` | `src/routes/admin.tsx` | AH-10.1 | Backlog | |
+| `routes/admin.tsx` | `src/routes/admin.tsx` | AH-10.1 | Done | see `git log` |
 | `routes/admin/index.tsx` | `src/routes/admin/index.tsx` | AH-10.2 | Backlog | |
 | `routes/admin/users.tsx` | `src/routes/admin/users.tsx` | AH-10.3 | Backlog | |
 | `routes/admin/questions.tsx` | `src/routes/admin/questions.tsx` | AH-4.1 | Done | see `git log` |
@@ -72,7 +72,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 
 | admin-hub source | proposed subenai path | epic.story | Status | Commit SHA |
 |---|---|---|---|---|
-| `components/admin/AdminSidebar.tsx` | `src/components/admin/AdminSidebar.tsx` | AH-10.1 | Backlog | |
+| `components/admin/AdminSidebar.tsx` | `src/components/admin/AdminSidebar.tsx` | AH-10.1 | Done | see `git log` |
 | `components/admin/AiQuestionGenerator.tsx` | `src/components/admin/AiQuestionGenerator.tsx` (feature-flagged off) | AH-4.1 | Done | see `git log` |
 | `components/admin/AnswerSetEditor.tsx` | `src/components/admin/AnswerSetEditor.tsx` | AH-4.5 | Backlog | |
 | `components/admin/CategoryMultiSelect.tsx` | `src/components/admin/CategoryMultiSelect.tsx` | AH-6.2 | Backlog | |

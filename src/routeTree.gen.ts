@@ -20,6 +20,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestyIndexRouteImport } from './routes/testy.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
@@ -98,6 +99,11 @@ const CookiesRoute = CookiesRouteImport.update({
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -181,14 +187,14 @@ const AppHelpRoute = AppHelpRouteImport.update({
   getParentRoute: () => AppRoute,
 } as any)
 const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
-  id: '/admin/questions',
-  path: '/admin/questions',
-  getParentRoute: () => rootRouteImport,
+  id: '/questions',
+  path: '/questions',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminAnswerSetsRoute = AdminAnswerSetsRouteImport.update({
-  id: '/admin/answer-sets',
-  path: '/admin/answer-sets',
-  getParentRoute: () => rootRouteImport,
+  id: '/answer-sets',
+  path: '/answer-sets',
+  getParentRoute: () => AdminRoute,
 } as any)
 const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
   id: '/test/zostava/$id',
@@ -223,6 +229,7 @@ const TestZostavaIdVysledkyRoute = TestZostavaIdVysledkyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/kontakt': typeof KontaktRoute
@@ -260,6 +267,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
@@ -296,6 +304,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/cookies': typeof CookiesRoute
   '/kontakt': typeof KontaktRoute
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/app'
     | '/cookies'
     | '/kontakt'
@@ -372,6 +382,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/cookies'
     | '/kontakt'
     | '/login'
@@ -407,6 +418,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/app'
     | '/cookies'
     | '/kontakt'
@@ -445,6 +457,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
   CookiesRoute: typeof CookiesRoute
   KontaktRoute: typeof KontaktRoute
@@ -456,8 +469,6 @@ export interface RootRouteChildren {
   SponzoriRoute: typeof SponzoriRouteWithChildren
   SpravovatPodporuRoute: typeof SpravovatPodporuRoute
   ZmenyRoute: typeof ZmenyRoute
-  AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
-  AdminQuestionsRoute: typeof AdminQuestionsRoute
   PodakovanieSessionIdRoute: typeof PodakovanieSessionIdRoute
   RShareIdRoute: typeof RShareIdRoute
   SkoleniaSlugRoute: typeof SkoleniaSlugRoute
@@ -546,6 +557,13 @@ declare module '@tanstack/react-router' {
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -662,17 +680,17 @@ declare module '@tanstack/react-router' {
     }
     '/admin/questions': {
       id: '/admin/questions'
-      path: '/admin/questions'
+      path: '/questions'
       fullPath: '/admin/questions'
       preLoaderRoute: typeof AdminQuestionsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/answer-sets': {
       id: '/admin/answer-sets'
-      path: '/admin/answer-sets'
+      path: '/answer-sets'
       fullPath: '/admin/answer-sets'
       preLoaderRoute: typeof AdminAnswerSetsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/test/zostava/$id': {
       id: '/test/zostava/$id'
@@ -719,6 +737,30 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminAnswerSetsRouteChildren {
+  AdminAnswerSetsSetIdRoute: typeof AdminAnswerSetsSetIdRoute
+}
+
+const AdminAnswerSetsRouteChildren: AdminAnswerSetsRouteChildren = {
+  AdminAnswerSetsSetIdRoute: AdminAnswerSetsSetIdRoute,
+}
+
+const AdminAnswerSetsRouteWithChildren = AdminAnswerSetsRoute._addFileChildren(
+  AdminAnswerSetsRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
+  AdminQuestionsRoute: typeof AdminQuestionsRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnswerSetsRoute: AdminAnswerSetsRouteWithChildren,
+  AdminQuestionsRoute: AdminQuestionsRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface AppRouteChildren {
   AppHelpRoute: typeof AppHelpRoute
   AppLibraryRoute: typeof AppLibraryRoute
@@ -757,18 +799,6 @@ const SponzoriRouteWithChildren = SponzoriRoute._addFileChildren(
   SponzoriRouteChildren,
 )
 
-interface AdminAnswerSetsRouteChildren {
-  AdminAnswerSetsSetIdRoute: typeof AdminAnswerSetsSetIdRoute
-}
-
-const AdminAnswerSetsRouteChildren: AdminAnswerSetsRouteChildren = {
-  AdminAnswerSetsSetIdRoute: AdminAnswerSetsSetIdRoute,
-}
-
-const AdminAnswerSetsRouteWithChildren = AdminAnswerSetsRoute._addFileChildren(
-  AdminAnswerSetsRouteChildren,
-)
-
 interface TestZostavaIdRouteChildren {
   TestZostavaIdVysledkyRoute: typeof TestZostavaIdVysledkyRoute
 }
@@ -783,6 +813,7 @@ const TestZostavaIdRouteWithChildren = TestZostavaIdRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
   CookiesRoute: CookiesRoute,
   KontaktRoute: KontaktRoute,
@@ -794,8 +825,6 @@ const rootRouteChildren: RootRouteChildren = {
   SponzoriRoute: SponzoriRouteWithChildren,
   SpravovatPodporuRoute: SpravovatPodporuRoute,
   ZmenyRoute: ZmenyRoute,
-  AdminAnswerSetsRoute: AdminAnswerSetsRouteWithChildren,
-  AdminQuestionsRoute: AdminQuestionsRoute,
   PodakovanieSessionIdRoute: PodakovanieSessionIdRoute,
   RShareIdRoute: RShareIdRoute,
   SkoleniaSlugRoute: SkoleniaSlugRoute,
