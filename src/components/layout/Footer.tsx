@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useConsent } from "@/hooks/useConsent";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import changelog from "@/content/changelog.generated.json";
 import { ROUTES } from "@/config/routes";
@@ -87,6 +88,7 @@ function loadFooterSponsors(): Promise<FooterSponsor[]> {
 
 export function Footer() {
   const { openPreferences } = useConsent();
+  const { isAuthenticated, isAdmin } = useAuth();
   const [sponsors, setSponsors] = useState<FooterSponsor[]>([]);
 
   useEffect(() => {
@@ -143,6 +145,36 @@ export function Footer() {
         {COLUMNS.map((col) => (
           <FooterColumn key={col.title} title={col.title} testid={col.testid} links={col.links} />
         ))}
+
+        {isAuthenticated && (
+          <div data-testid="footer-platform-column" className="space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+              Platforma
+            </h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  data-testid="footer-platform-link-app"
+                  to="/app"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Tvorba testov
+                </Link>
+              </li>
+              {isAdmin && (
+                <li>
+                  <Link
+                    data-testid="footer-platform-link-admin"
+                    to="/admin"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    Administrácia
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
       </div>
 
       {sponsors.length > 0 ? (

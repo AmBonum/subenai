@@ -3,6 +3,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from "@/components/ui/sheet";
 import { ROUTES } from "@/config/routes";
+import { useAuth } from "@/hooks/useAuth";
 
 const NAV_ITEMS = [
   { to: ROUTES.testy, label: "Testy", slug: "testy" },
@@ -20,6 +21,7 @@ const CTA_ITEM = {
 export function SiteHeader() {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     setOpen(false);
@@ -68,6 +70,15 @@ export function SiteHeader() {
               active={activeTo === item.to}
             />
           ))}
+          {isAuthenticated && (
+            <Link
+              to="/app"
+              data-testid="site-header-nav-link-app"
+              className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Moje testy
+            </Link>
+          )}
           <CtaPill />
         </div>
 
@@ -120,6 +131,17 @@ export function SiteHeader() {
                   </Link>
                 </li>
               ))}
+              {isAuthenticated && (
+                <li>
+                  <Link
+                    to="/app"
+                    data-testid="site-header-mobile-nav-link-app"
+                    className="block rounded-xl px-4 py-4 text-base font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+                  >
+                    Moje testy
+                  </Link>
+                </li>
+              )}
             </ul>
 
             <div className="border-t border-border/40 px-5 py-5">
