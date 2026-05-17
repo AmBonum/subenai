@@ -39,6 +39,7 @@ import { Route as AppHelpRouteImport } from './routes/app.help'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
+import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
 import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
@@ -194,6 +195,11 @@ const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
   path: '/test/zostava/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppSetsSetIdRoute = AppSetsSetIdRouteImport.update({
+  id: '/sets/$setId',
+  path: '/sets/$setId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
   id: '/account/security',
   path: '/account/security',
@@ -248,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
@@ -282,6 +289,7 @@ export interface FileRoutesByTo {
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
@@ -319,6 +327,7 @@ export interface FileRoutesById {
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
@@ -357,6 +366,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets/$setId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/sets/$setId'
     | '/test/zostava/$id'
     | '/test/zostava/$id/vysledky'
   fileRoutesByTo: FileRoutesByTo
@@ -391,6 +401,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets/$setId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/sets/$setId'
     | '/test/zostava/$id'
     | '/test/zostava/$id/vysledky'
   id:
@@ -427,6 +438,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets/$setId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/sets/$setId'
     | '/test/zostava/$id'
     | '/test/zostava/$id/vysledky'
   fileRoutesById: FileRoutesById
@@ -669,6 +681,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestZostavaIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/sets/$setId': {
+      id: '/app/sets/$setId'
+      path: '/sets/$setId'
+      fullPath: '/app/sets/$setId'
+      preLoaderRoute: typeof AppSetsSetIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/account/security': {
       id: '/app/account/security'
       path: '/account/security'
@@ -708,6 +727,7 @@ interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppAccountProfileRoute: typeof AppAccountProfileRoute
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
+  AppSetsSetIdRoute: typeof AppSetsSetIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -718,6 +738,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppAccountProfileRoute: AppAccountProfileRoute,
   AppAccountSecurityRoute: AppAccountSecurityRoute,
+  AppSetsSetIdRoute: AppSetsSetIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
