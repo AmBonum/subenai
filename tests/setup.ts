@@ -15,6 +15,30 @@ if (typeof window !== "undefined") {
   // "Not implemented" to stderr — overwrite unconditionally so QuestionCard's
   // scroll-reset effect (and similar UX hooks) doesn't pollute test output.
   window.scrollTo = (() => {}) as typeof window.scrollTo;
+
+  // Radix Popover / Select pull in @radix-ui/react-use-size which observes its
+  // target via ResizeObserver. jsdom does not implement it, so any test that
+  // renders a Select/Popover (e.g. QuestionEditor, library filters) throws on
+  // layout commit. A no-op stub is enough for unit tests.
+  if (typeof globalThis.ResizeObserver === "undefined") {
+    globalThis.ResizeObserver = class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    } as unknown as typeof ResizeObserver;
+  }
+
+  // Radix Select also calls hasPointerCapture on the trigger; jsdom Elements
+  // don't implement Pointer Events. Stub the methods used by Radix.
+  if (typeof Element.prototype.hasPointerCapture === "undefined") {
+    Element.prototype.hasPointerCapture = () => false;
+  }
+  if (typeof Element.prototype.releasePointerCapture === "undefined") {
+    Element.prototype.releasePointerCapture = () => {};
+  }
+  if (typeof Element.prototype.setPointerCapture === "undefined") {
+    Element.prototype.setPointerCapture = () => {};
+  }
 }
 
 afterEach(() => {

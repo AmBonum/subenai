@@ -36,7 +36,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/admin.tsx` | `src/routes/admin.tsx` | AH-10.1 | Backlog | |
 | `routes/admin/index.tsx` | `src/routes/admin/index.tsx` | AH-10.2 | Backlog | |
 | `routes/admin/users.tsx` | `src/routes/admin/users.tsx` | AH-10.3 | Backlog | |
-| `routes/admin/questions.tsx` | `src/routes/admin/questions.tsx` | AH-4.1 | Backlog | |
+| `routes/admin/questions.tsx` | `src/routes/admin/questions.tsx` | AH-4.1 | Done | see `git log` |
 | `routes/admin/answer-sets.tsx` | `src/routes/admin/answer-sets.tsx` | AH-4.4 | Backlog | |
 | `routes/admin/answer-sets.$setId.tsx` | `src/routes/admin/answer-sets.$setId.tsx` | AH-4.5 | Backlog | |
 | `routes/admin/tests.tsx` | `src/routes/admin/tests.tsx` | AH-5.7 | Backlog | |
@@ -73,14 +73,14 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | admin-hub source | proposed subenai path | epic.story | Status | Commit SHA |
 |---|---|---|---|---|
 | `components/admin/AdminSidebar.tsx` | `src/components/admin/AdminSidebar.tsx` | AH-10.1 | Backlog | |
-| `components/admin/AiQuestionGenerator.tsx` | `src/components/admin/AiQuestionGenerator.tsx` (feature-flagged off) | AH-4.1 | Backlog | |
+| `components/admin/AiQuestionGenerator.tsx` | `src/components/admin/AiQuestionGenerator.tsx` (feature-flagged off) | AH-4.1 | Done | see `git log` |
 | `components/admin/AnswerSetEditor.tsx` | `src/components/admin/AnswerSetEditor.tsx` | AH-4.5 | Backlog | |
 | `components/admin/CategoryMultiSelect.tsx` | `src/components/admin/CategoryMultiSelect.tsx` | AH-6.2 | Backlog | |
 | `components/admin/ConfirmDialog.tsx` | `src/components/admin/ConfirmDialog.tsx` | AH-3.1 | Done | see `git log` |
 | `components/admin/PageHeader.tsx` | `src/components/admin/PageHeader.tsx` | AH-10.2 | Backlog | |
-| `components/admin/QuestionEditor.tsx` | `src/components/admin/QuestionEditor.tsx` | AH-4.1 | Backlog | |
+| `components/admin/QuestionEditor.tsx` | `src/components/admin/QuestionEditor.tsx` | AH-4.1 | Done | see `git log` |
 | `components/admin/StatCard.tsx` | `src/components/admin/StatCard.tsx` | AH-3.2 | Done | see `git log` |
-| `components/admin/StatusBadge.tsx` | `src/components/admin/StatusBadge.tsx` | AH-4.1 | Pilot | see `git log` |
+| `components/admin/StatusBadge.tsx` | `src/components/admin/StatusBadge.tsx` | AH-4.1 | Done | see `git log` |
 | `components/admin/TestEditor.tsx` | `src/components/admin/TestEditor.tsx` | AH-5.8 | Backlog | |
 | `components/admin/TrainingEditor.tsx` | `src/components/admin/TrainingEditor.tsx` | AH-6.1 | Backlog | |
 | `components/app/page-header.tsx` | `src/components/app/page-header.tsx` | AH-3.1 | Done | see `git log` |
@@ -98,7 +98,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `lib/admin/export.ts` | `src/lib/admin/export.ts` (deferred — not wired) | AH-11 | Backlog | |
 | `lib/platform/exports.ts` | `src/lib/platform/exports.ts` (deferred — not wired) | AH-11 | Backlog | |
 | `lib/admin/support-config.ts` | `src/lib/admin/support-config.ts` | AH-10.4 | Backlog | |
-| `lib/ai-generate.functions.ts` | `src/lib/admin/ai-generate.functions.ts` (feature-flagged off) | AH-4.1 | Backlog | |
+| `lib/ai-generate.functions.ts` | `src/lib/admin/ai-generate.functions.ts` (feature-flagged off) | AH-4.1 | Done | see `git log` |
 | `lib/utils.ts` | identical to existing `src/lib/utils.ts` (no merge needed) | AH-2.1 | Done | see `git log` |
 
 ---

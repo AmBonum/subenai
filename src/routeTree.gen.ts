@@ -35,6 +35,7 @@ import { Route as PodakovanieSessionIdRouteImport } from './routes/podakovanie.$
 import { Route as AppTeamsRouteImport } from './routes/app.teams'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
 import { Route as AppHelpRouteImport } from './routes/app.help'
+import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
@@ -170,6 +171,11 @@ const AppHelpRoute = AppHelpRouteImport.update({
   path: '/help',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
+  id: '/admin/questions',
+  path: '/admin/questions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
   id: '/test/zostava/$id',
   path: '/test/zostava/$id',
@@ -204,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/sponzori': typeof SponzoriRouteWithChildren
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
+  '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
@@ -234,6 +241,7 @@ export interface FileRoutesByTo {
   '/skoly': typeof SkolyRoute
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
+  '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
@@ -267,6 +275,7 @@ export interface FileRoutesById {
   '/sponzori': typeof SponzoriRouteWithChildren
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
+  '/admin/questions': typeof AdminQuestionsRoute
   '/app/help': typeof AppHelpRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
@@ -301,6 +310,7 @@ export interface FileRouteTypes {
     | '/sponzori'
     | '/spravovat-podporu'
     | '/zmeny'
+    | '/admin/questions'
     | '/app/help'
     | '/app/notifications'
     | '/app/teams'
@@ -331,6 +341,7 @@ export interface FileRouteTypes {
     | '/skoly'
     | '/spravovat-podporu'
     | '/zmeny'
+    | '/admin/questions'
     | '/app/help'
     | '/app/notifications'
     | '/app/teams'
@@ -363,6 +374,7 @@ export interface FileRouteTypes {
     | '/sponzori'
     | '/spravovat-podporu'
     | '/zmeny'
+    | '/admin/questions'
     | '/app/help'
     | '/app/notifications'
     | '/app/teams'
@@ -396,6 +408,7 @@ export interface RootRouteChildren {
   SponzoriRoute: typeof SponzoriRouteWithChildren
   SpravovatPodporuRoute: typeof SpravovatPodporuRoute
   ZmenyRoute: typeof ZmenyRoute
+  AdminQuestionsRoute: typeof AdminQuestionsRoute
   PodakovanieSessionIdRoute: typeof PodakovanieSessionIdRoute
   RShareIdRoute: typeof RShareIdRoute
   SkoleniaSlugRoute: typeof SkoleniaSlugRoute
@@ -591,6 +604,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHelpRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/questions': {
+      id: '/admin/questions'
+      path: '/admin/questions'
+      fullPath: '/admin/questions'
+      preLoaderRoute: typeof AdminQuestionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/test/zostava/$id': {
       id: '/test/zostava/$id'
       path: '/test/zostava/$id'
@@ -681,6 +701,7 @@ const rootRouteChildren: RootRouteChildren = {
   SponzoriRoute: SponzoriRouteWithChildren,
   SpravovatPodporuRoute: SpravovatPodporuRoute,
   ZmenyRoute: ZmenyRoute,
+  AdminQuestionsRoute: AdminQuestionsRoute,
   PodakovanieSessionIdRoute: PodakovanieSessionIdRoute,
   RShareIdRoute: RShareIdRoute,
   SkoleniaSlugRoute: SkoleniaSlugRoute,
