@@ -50,6 +50,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminRespondentsRouteImport } from './routes/admin/respondents'
 import { Route as AdminReportsRouteImport } from './routes/admin/reports'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
+import { Route as AdminPagesRouteImport } from './routes/admin/pages'
 import { Route as AdminDsrRouteImport } from './routes/admin/dsr'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
@@ -271,6 +272,11 @@ const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
   path: '/questions',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPagesRoute = AdminPagesRouteImport.update({
+  id: '/pages',
+  path: '/pages',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminDsrRoute = AdminDsrRouteImport.update({
   id: '/dsr',
   path: '/dsr',
@@ -365,6 +371,7 @@ export interface FileRoutesByFullPath {
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dsr': typeof AdminDsrRoute
+  '/admin/pages': typeof AdminPagesRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
@@ -420,6 +427,7 @@ export interface FileRoutesByTo {
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dsr': typeof AdminDsrRoute
+  '/admin/pages': typeof AdminPagesRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
@@ -479,6 +487,7 @@ export interface FileRoutesById {
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dsr': typeof AdminDsrRoute
+  '/admin/pages': typeof AdminPagesRoute
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
@@ -539,6 +548,7 @@ export interface FileRouteTypes {
     | '/admin/audit'
     | '/admin/categories'
     | '/admin/dsr'
+    | '/admin/pages'
     | '/admin/questions'
     | '/admin/reports'
     | '/admin/respondents'
@@ -594,6 +604,7 @@ export interface FileRouteTypes {
     | '/admin/audit'
     | '/admin/categories'
     | '/admin/dsr'
+    | '/admin/pages'
     | '/admin/questions'
     | '/admin/reports'
     | '/admin/respondents'
@@ -652,6 +663,7 @@ export interface FileRouteTypes {
     | '/admin/audit'
     | '/admin/categories'
     | '/admin/dsr'
+    | '/admin/pages'
     | '/admin/questions'
     | '/admin/reports'
     | '/admin/respondents'
@@ -1008,6 +1020,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminQuestionsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/pages': {
+      id: '/admin/pages'
+      path: '/pages'
+      fullPath: '/admin/pages'
+      preLoaderRoute: typeof AdminPagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/dsr': {
       id: '/admin/dsr'
       path: '/dsr'
@@ -1145,6 +1164,7 @@ interface AdminRouteChildren {
   AdminAuditRoute: typeof AdminAuditRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminDsrRoute: typeof AdminDsrRoute
+  AdminPagesRoute: typeof AdminPagesRoute
   AdminQuestionsRoute: typeof AdminQuestionsRoute
   AdminReportsRoute: typeof AdminReportsRoute
   AdminRespondentsRoute: typeof AdminRespondentsRoute
@@ -1161,6 +1181,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAuditRoute: AdminAuditRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminDsrRoute: AdminDsrRoute,
+  AdminPagesRoute: AdminPagesRoute,
   AdminQuestionsRoute: AdminQuestionsRoute,
   AdminReportsRoute: AdminReportsRoute,
   AdminRespondentsRoute: AdminRespondentsRoute,
