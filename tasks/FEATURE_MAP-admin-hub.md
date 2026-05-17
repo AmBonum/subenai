@@ -42,7 +42,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/admin/tests.tsx` | `src/routes/admin/tests.tsx` | AH-5.7 | Backlog | |
 | `routes/admin/tests.$testId.tsx` | `src/routes/admin/tests.$testId.tsx` | AH-5.8 | Backlog | |
 | `routes/admin/trainings.tsx` | `src/routes/admin/trainings.tsx` | AH-6.1 | Done | see `git log` |
-| `routes/admin/categories.tsx` | `src/routes/admin/categories.tsx` | AH-6.2 | Backlog | |
+| `routes/admin/categories.tsx` | `src/routes/admin/categories.tsx` | AH-6.2 | Done | see `git log` |
 | `routes/admin/reports.tsx` | `src/routes/admin/reports.tsx` | AH-7.2 | Backlog | |
 | `routes/admin/respondents.tsx` | `src/routes/admin/respondents.tsx` | AH-7.3 | Backlog | |
 | `routes/admin/audit.tsx` | `src/routes/admin/audit.tsx` | AH-7.4 | Backlog | |
@@ -75,7 +75,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `components/admin/AdminSidebar.tsx` | `src/components/admin/AdminSidebar.tsx` | AH-10.1 | Done | see `git log` |
 | `components/admin/AiQuestionGenerator.tsx` | `src/components/admin/AiQuestionGenerator.tsx` (feature-flagged off) | AH-4.1 | Done | see `git log` |
 | `components/admin/AnswerSetEditor.tsx` | `src/components/admin/AnswerSetEditor.tsx` | AH-4.5 | Backlog | |
-| `components/admin/CategoryMultiSelect.tsx` | `src/components/admin/CategoryMultiSelect.tsx` | AH-6.2 | Backlog | |
+| `components/admin/CategoryMultiSelect.tsx` | `src/components/admin/CategoryMultiSelect.tsx` | AH-6.2 | Done | see `git log` |
 | `components/admin/ConfirmDialog.tsx` | `src/components/admin/ConfirmDialog.tsx` | AH-3.1 | Done | see `git log` |
 | `components/admin/PageHeader.tsx` | `src/components/admin/PageHeader.tsx` | AH-10.2 | Done | see `git log` |
 | `components/admin/QuestionEditor.tsx` | `src/components/admin/QuestionEditor.tsx` | AH-4.1 | Done | see `git log` |
