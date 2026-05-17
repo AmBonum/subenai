@@ -14,6 +14,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > kompletne otestovaný v reálnej prevádzke.
 
 ### Pridané
+- **Skupiny respondentov** (`/app/audiences`) — CRUD pre tagované cohorty s editorom (názov + tagy) a potvrdzovacím dialógom pri mazaní. Tlačidlo na hromadný import e-mailov je zatiaľ vypnuté s tooltipom „Pripravujeme" — funkciu doplníme v ďalšej iterácii.
 - **Detail testu** (`/app/tests/<id>`) — editor jedného testu s tabmi *Výsledky*, *Analytika* a *Nastavenia*, akciami *Uložiť*, *Publikovať* a *Archivovať*. Dialóg *Zdieľať* zobrazí verejný odkaz `/t/<id>` s tlačidlom na skopírovanie do schránky.
 - **Sprievodca novým testom** (`/app/tests/new`) — štvorkrokový wizard: základné údaje, cieľová skupina, otázky, zdieľanie. Každý krok má vlastnú URL (`?step=1..4`) takže návrat tlačidlom prehliadača funguje. Po publikovaní dostaneš verejný odkaz `/t/<id>` na rozposlanie respondentom.
 - **Moje testy** (`/app/tests`) — prehľad všetkých tvojich testov s vyhľadávaním, filtrom podľa stavu (draft / publikované / archív) a vetiev. Každý riadok ponúka rýchle otvorenie editora alebo zdieľanie. Nový test sa vytvára cez tlačidlo *Nový test*.

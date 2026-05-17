@@ -23,7 +23,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/app.tests.new.tsx` | `src/routes/app.tests.new.tsx` | AH-5.2 | Done | see `git log` |
 | `routes/app.tests.$testId.tsx` | `src/routes/app.tests.$testId.tsx` | AH-5.3 | Done | see `git log` |
 | `routes/app.sets.$setId.tsx` | `src/routes/app.sets.$setId.tsx` | AH-4.3 | Done | see `git log` |
-| `routes/app.audiences.tsx` | `src/routes/app.audiences.tsx` | AH-5.4 | Backlog | |
+| `routes/app.audiences.tsx` | `src/routes/app.audiences.tsx` | AH-5.4 | Done | see `git log` |
 | `routes/app.teams.tsx` | `src/routes/app.teams.tsx` | AH-3.3 | Done | see `git log` |
 | `routes/app.library.tsx` | `src/routes/app.library.tsx` | AH-4.2 | Done | see `git log` |
 | `routes/app.templates.tsx` | `src/routes/app.templates.tsx` | AH-5.5 | Backlog | |
