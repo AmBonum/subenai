@@ -62,6 +62,7 @@ import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
 import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
+import { Route as AdminTestsTestIdRouteImport } from './routes/admin/tests.$testId'
 import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
 import { Route as TestZostavaIdVysledkyRouteImport } from './routes/test.zostava.$id.vysledky'
 
@@ -330,6 +331,11 @@ const AppAccountProfileRoute = AppAccountProfileRouteImport.update({
   path: '/account/profile',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminTestsTestIdRoute = AdminTestsTestIdRouteImport.update({
+  id: '/$testId',
+  path: '/$testId',
+  getParentRoute: () => AdminTestsRoute,
+} as any)
 const AdminAnswerSetsSetIdRoute = AdminAnswerSetsSetIdRouteImport.update({
   id: '/$setId',
   path: '/$setId',
@@ -364,7 +370,7 @@ export interface FileRoutesByFullPath {
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
-  '/admin/tests': typeof AdminTestsRoute
+  '/admin/tests': typeof AdminTestsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/audiences': typeof AppAudiencesRoute
@@ -388,6 +394,7 @@ export interface FileRoutesByFullPath {
   '/test/': typeof TestIndexRoute
   '/testy/': typeof TestyIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
+  '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
@@ -418,7 +425,7 @@ export interface FileRoutesByTo {
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
-  '/admin/tests': typeof AdminTestsRoute
+  '/admin/tests': typeof AdminTestsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/audiences': typeof AppAudiencesRoute
@@ -442,6 +449,7 @@ export interface FileRoutesByTo {
   '/test': typeof TestIndexRoute
   '/testy': typeof TestyIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
+  '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
@@ -476,7 +484,7 @@ export interface FileRoutesById {
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
-  '/admin/tests': typeof AdminTestsRoute
+  '/admin/tests': typeof AdminTestsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/audiences': typeof AppAudiencesRoute
@@ -500,6 +508,7 @@ export interface FileRoutesById {
   '/test/': typeof TestIndexRoute
   '/testy/': typeof TestyIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
+  '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
@@ -559,6 +568,7 @@ export interface FileRouteTypes {
     | '/test/'
     | '/testy/'
     | '/admin/answer-sets/$setId'
+    | '/admin/tests/$testId'
     | '/app/account/profile'
     | '/app/account/security'
     | '/app/legal/dsr'
@@ -613,6 +623,7 @@ export interface FileRouteTypes {
     | '/test'
     | '/testy'
     | '/admin/answer-sets/$setId'
+    | '/admin/tests/$testId'
     | '/app/account/profile'
     | '/app/account/security'
     | '/app/legal/dsr'
@@ -670,6 +681,7 @@ export interface FileRouteTypes {
     | '/test/'
     | '/testy/'
     | '/admin/answer-sets/$setId'
+    | '/admin/tests/$testId'
     | '/app/account/profile'
     | '/app/account/security'
     | '/app/legal/dsr'
@@ -1080,6 +1092,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountProfileRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/tests/$testId': {
+      id: '/admin/tests/$testId'
+      path: '/$testId'
+      fullPath: '/admin/tests/$testId'
+      preLoaderRoute: typeof AdminTestsTestIdRouteImport
+      parentRoute: typeof AdminTestsRoute
+    }
     '/admin/answer-sets/$setId': {
       id: '/admin/answer-sets/$setId'
       path: '/$setId'
@@ -1109,6 +1128,18 @@ const AdminAnswerSetsRouteWithChildren = AdminAnswerSetsRoute._addFileChildren(
   AdminAnswerSetsRouteChildren,
 )
 
+interface AdminTestsRouteChildren {
+  AdminTestsTestIdRoute: typeof AdminTestsTestIdRoute
+}
+
+const AdminTestsRouteChildren: AdminTestsRouteChildren = {
+  AdminTestsTestIdRoute: AdminTestsTestIdRoute,
+}
+
+const AdminTestsRouteWithChildren = AdminTestsRoute._addFileChildren(
+  AdminTestsRouteChildren,
+)
+
 interface AdminRouteChildren {
   AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
   AdminAuditRoute: typeof AdminAuditRoute
@@ -1119,7 +1150,7 @@ interface AdminRouteChildren {
   AdminRespondentsRoute: typeof AdminRespondentsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSupportRoute: typeof AdminSupportRoute
-  AdminTestsRoute: typeof AdminTestsRoute
+  AdminTestsRoute: typeof AdminTestsRouteWithChildren
   AdminTrainingsRoute: typeof AdminTrainingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -1135,7 +1166,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminRespondentsRoute: AdminRespondentsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSupportRoute: AdminSupportRoute,
-  AdminTestsRoute: AdminTestsRoute,
+  AdminTestsRoute: AdminTestsRouteWithChildren,
   AdminTrainingsRoute: AdminTrainingsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,

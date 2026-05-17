@@ -40,7 +40,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/admin/answer-sets.tsx` | `src/routes/admin/answer-sets.tsx` | AH-4.4 | Done | see `git log` |
 | `routes/admin/answer-sets.$setId.tsx` | `src/routes/admin/answer-sets.$setId.tsx` | AH-4.5 | Done | see `git log` |
 | `routes/admin/tests.tsx` | `src/routes/admin/tests.tsx` | AH-5.7 | Done | see `git log` |
-| `routes/admin/tests.$testId.tsx` | `src/routes/admin/tests.$testId.tsx` | AH-5.8 | Backlog | |
+| `routes/admin/tests.$testId.tsx` | `src/routes/admin/tests.$testId.tsx` | AH-5.8 | Done | see `git log` |
 | `routes/admin/trainings.tsx` | `src/routes/admin/trainings.tsx` | AH-6.1 | Done | see `git log` |
 | `routes/admin/categories.tsx` | `src/routes/admin/categories.tsx` | AH-6.2 | Done | see `git log` |
 | `routes/admin/reports.tsx` | `src/routes/admin/reports.tsx` | AH-7.2 | Done | see `git log` |
@@ -81,7 +81,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `components/admin/QuestionEditor.tsx` | `src/components/admin/QuestionEditor.tsx` | AH-4.1 | Done | see `git log` |
 | `components/admin/StatCard.tsx` | `src/components/admin/StatCard.tsx` | AH-3.2 | Done | see `git log` |
 | `components/admin/StatusBadge.tsx` | `src/components/admin/StatusBadge.tsx` | AH-4.1 | Done | see `git log` |
-| `components/admin/TestEditor.tsx` | `src/components/admin/TestEditor.tsx` | AH-5.8 | Backlog | |
+| `components/admin/TestEditor.tsx` | `src/components/admin/TestEditor.tsx` | AH-5.8 | Done | see `git log` |
 | `components/admin/TrainingEditor.tsx` | `src/components/admin/TrainingEditor.tsx` | AH-6.1 | Done | see `git log` |
 | `components/app/page-header.tsx` | `src/components/app/page-header.tsx` | AH-3.1 | Done | see `git log` |
 | `components/auth/AuthShell.tsx` | NOT PORTED — replaced by `requireSupabaseAuth` middleware | — | N/A | |
