@@ -40,6 +40,7 @@ import { Route as AppLibraryRouteImport } from './routes/app.library'
 import { Route as AppHelpRouteImport } from './routes/app.help'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminSupportRouteImport } from './routes/admin/support'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
@@ -204,6 +205,11 @@ const AdminSupportRoute = AdminSupportRouteImport.update({
   path: '/support',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
   id: '/questions',
   path: '/questions',
@@ -261,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/zmeny': typeof ZmenyRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/help': typeof AppHelpRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/zmeny': typeof ZmenyRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/help': typeof AppHelpRoute
@@ -341,6 +349,7 @@ export interface FileRoutesById {
   '/zmeny': typeof ZmenyRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/help': typeof AppHelpRoute
@@ -384,6 +393,7 @@ export interface FileRouteTypes {
     | '/zmeny'
     | '/admin/answer-sets'
     | '/admin/questions'
+    | '/admin/settings'
     | '/admin/support'
     | '/admin/users'
     | '/app/help'
@@ -422,6 +432,7 @@ export interface FileRouteTypes {
     | '/zmeny'
     | '/admin/answer-sets'
     | '/admin/questions'
+    | '/admin/settings'
     | '/admin/support'
     | '/admin/users'
     | '/app/help'
@@ -463,6 +474,7 @@ export interface FileRouteTypes {
     | '/zmeny'
     | '/admin/answer-sets'
     | '/admin/questions'
+    | '/admin/settings'
     | '/admin/support'
     | '/admin/users'
     | '/app/help'
@@ -733,6 +745,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSupportRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/questions': {
       id: '/admin/questions'
       path: '/questions'
@@ -807,6 +826,7 @@ const AdminAnswerSetsRouteWithChildren = AdminAnswerSetsRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
   AdminQuestionsRoute: typeof AdminQuestionsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSupportRoute: typeof AdminSupportRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -815,6 +835,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAnswerSetsRoute: AdminAnswerSetsRouteWithChildren,
   AdminQuestionsRoute: AdminQuestionsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminSupportRoute: AdminSupportRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
