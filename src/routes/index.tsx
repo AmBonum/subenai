@@ -443,12 +443,14 @@ function Index() {
           </Link>
         </section>
 
-        {/* Brand slogan banner — light version for current dark site theme.
-            When/if a light mode is introduced, swap the src to the dark
-            variant `/su-be-na-i-slogan-dark.png` (already in public/). */}
+        {/* Brand slogan banner — light SVG variant for current dark site
+            theme. When/if a light mode is introduced, swap to the dark
+            variant `/su-be-na-i-slogan-dark.svg` (already in public/).
+            SVG instead of PNG: vector scales crisply at any size and
+            cuts the bytes shipped to the client. */}
         <section className="mt-20 flex justify-center" data-testid="home-slogan-section">
           <img
-            src="/su-be-na-i-slogan-light.png"
+            src="/su-be-na-i-slogan-light.svg"
             alt="su(rfuj) be(zpečne) na (i)nternete"
             data-testid="home-slogan-image"
             className="w-full max-w-2xl"
