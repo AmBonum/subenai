@@ -54,7 +54,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/admin/header.tsx` | `src/routes/admin/header.tsx` | AH-9.3 | Backlog | |
 | `routes/admin/footer.tsx` | `src/routes/admin/footer.tsx` | AH-9.3 | Backlog | |
 | `routes/admin/navigation.tsx` | `src/routes/admin/navigation.tsx` | AH-9.4 | Backlog | |
-| `routes/admin/support.tsx` | `src/routes/admin/support.tsx` | AH-10.4 | Backlog | |
+| `routes/admin/support.tsx` | `src/routes/admin/support.tsx` | AH-10.4 | Done | see `git log` |
 | `routes/admin/settings.tsx` | `src/routes/admin/settings.tsx` | AH-10.5 | Backlog | |
 | `routes/t.$shareId.tsx` | `src/routes/t.$shareId.tsx` | AH-8.1 | Backlog | |
 | `routes/s.$slug.tsx` | `src/routes/s.$slug.tsx` | AH-9.7 | Backlog | |
@@ -97,7 +97,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `lib/admin/cms-hooks.ts` | `src/lib/admin/cms-hooks.ts` (wired in AH-11) | AH-9.1 | Backlog | |
 | `lib/admin/export.ts` | `src/lib/admin/export.ts` (deferred — not wired) | AH-11 | Backlog | |
 | `lib/platform/exports.ts` | `src/lib/platform/exports.ts` (deferred — not wired) | AH-11 | Backlog | |
-| `lib/admin/support-config.ts` | `src/lib/admin/support-config.ts` | AH-10.4 | Backlog | |
+| `lib/admin/support-config.ts` | `src/lib/admin/support-config.ts` | AH-10.4 | Done | see `git log` |
 | `lib/ai-generate.functions.ts` | `src/lib/admin/ai-generate.functions.ts` (feature-flagged off) | AH-4.1 | Done | see `git log` |
 | `lib/utils.ts` | identical to existing `src/lib/utils.ts` (no merge needed) | AH-2.1 | Done | see `git log` |
 
