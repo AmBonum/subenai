@@ -30,7 +30,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 | `routes/app.history.tsx` | `src/routes/app.history.tsx` | AH-5.6 | Backlog | |
 | `routes/app.notifications.tsx` | `src/routes/app.notifications.tsx` | AH-3.4 | Done | see `git log` |
 | `routes/app.help.tsx` | `src/routes/app.help.tsx` | AH-3.5 | Done | see `git log` |
-| `routes/app.account.profile.tsx` | `src/routes/app.account.profile.tsx` | AH-3.6 | Backlog | |
+| `routes/app.account.profile.tsx` | `src/routes/app.account.profile.tsx` | AH-3.6 | Done | see `git log` |
 | `routes/app.account.security.tsx` | `src/routes/app.account.security.tsx` | AH-3.7 | Backlog | |
 | `routes/app.legal.dsr.tsx` | `src/routes/app.legal.dsr.tsx` | AH-7.1 | Backlog | |
 | `routes/admin.tsx` | `src/routes/admin.tsx` | AH-10.1 | Backlog | |
