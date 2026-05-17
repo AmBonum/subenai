@@ -30,7 +30,7 @@ function PrivacyPage() {
             Zásady ochrany súkromia
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Posledná aktualizácia: 1. mája 2026 (verzia 1.3.0)
+            Posledná aktualizácia: 18. mája 2026 (verzia 1.4.0)
           </p>
         </header>
 

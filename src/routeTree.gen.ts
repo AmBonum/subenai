@@ -47,6 +47,7 @@ import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
 import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
+import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
 import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
@@ -242,6 +243,11 @@ const AppSetsSetIdRoute = AppSetsSetIdRouteImport.update({
   path: '/sets/$setId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLegalDsrRoute = AppLegalDsrRouteImport.update({
+  id: '/legal/dsr',
+  path: '/legal/dsr',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
   id: '/account/security',
   path: '/account/security',
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
@@ -344,6 +351,7 @@ export interface FileRoutesByTo {
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
@@ -389,6 +397,7 @@ export interface FileRoutesById {
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
@@ -435,6 +444,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets/$setId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/test/zostava/$id'
     | '/test/zostava/$id/vysledky'
@@ -476,6 +486,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets/$setId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/test/zostava/$id'
     | '/test/zostava/$id/vysledky'
@@ -520,6 +531,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets/$setId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/test/zostava/$id'
     | '/test/zostava/$id/vysledky'
@@ -818,6 +830,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSetsSetIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/legal/dsr': {
+      id: '/app/legal/dsr'
+      path: '/legal/dsr'
+      fullPath: '/app/legal/dsr'
+      preLoaderRoute: typeof AppLegalDsrRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/account/security': {
       id: '/app/account/security'
       path: '/account/security'
@@ -893,6 +912,7 @@ interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppAccountProfileRoute: typeof AppAccountProfileRoute
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
+  AppLegalDsrRoute: typeof AppLegalDsrRoute
   AppSetsSetIdRoute: typeof AppSetsSetIdRoute
 }
 
@@ -904,6 +924,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppAccountProfileRoute: AppAccountProfileRoute,
   AppAccountSecurityRoute: AppAccountSecurityRoute,
+  AppLegalDsrRoute: AppLegalDsrRoute,
   AppSetsSetIdRoute: AppSetsSetIdRoute,
 }
 

@@ -205,10 +205,18 @@ export interface AuditLogEntry {
   at: string;
 }
 
+export type DSRType =
+  | "access"
+  | "rectification"
+  | "erase"
+  | "restriction"
+  | "portability"
+  | "objection";
+
 export interface DSRRequest {
   id: string;
   requester_email: string;
-  type: "access" | "erase" | "portability";
+  type: DSRType;
   status: "open" | "in_progress" | "completed" | "rejected";
   note: string;
   created_at: string;

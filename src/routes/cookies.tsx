@@ -33,7 +33,7 @@ function CookiesPage() {
             Zásady používania cookies
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Verzia {CONSENT_VERSION} · Posledná aktualizácia: 25. apríla 2026
+            Verzia {CONSENT_VERSION} · Posledná aktualizácia: 18. mája 2026
           </p>
         </header>
 
