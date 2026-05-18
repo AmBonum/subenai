@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ClipboardList, Users, Activity, CheckCircle2 } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatCard } from "@/components/admin/StatCard";
+import { ProfileCompletionBanner } from "@/components/auth/ProfileCompletionBanner";
 import { useTests, useUserRespondents, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/app-shell";
 
@@ -29,6 +30,7 @@ function AppDashboardPage() {
 
   return (
     <div className="space-y-6" data-testid="app-dashboard-root">
+      <ProfileCompletionBanner />
       <PageHeader
         eyebrow={t("page_header_eyebrow")}
         title={t("page_header_title")}
