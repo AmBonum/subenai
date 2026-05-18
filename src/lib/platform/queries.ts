@@ -13,6 +13,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
+import { getCurrentLocale } from "@/i18n/locale-context";
 
 import type { Option, Visual } from "@/lib/quiz/bank/questions";
 
@@ -1151,11 +1152,15 @@ export interface QuickTestQuestionRow {
 }
 
 export function useQuickTestQuestions(limit = 10) {
+  // AH-15.7: locale is part of the cache key so switching language
+  // re-fetches a localized payload instead of stale sk rows.
+  const locale = getCurrentLocale();
   return useQuery<QuickTestQuestionRow[]>({
-    queryKey: ["public", "quick-test-questions", limit],
+    queryKey: ["public", "quick-test-questions", limit, locale],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_quick_test_questions", {
         p_limit: limit,
+        p_locale: locale,
       });
       if (error) throw error;
       return (data ?? []) as unknown as QuickTestQuestionRow[];

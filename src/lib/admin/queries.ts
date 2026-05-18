@@ -46,6 +46,25 @@ type QuestionsRow = {
   status: string;
   answer_set_id: string | null;
   created_at: string;
+  prompt_en?: string | null;
+  prompt_cs?: string | null;
+  options_en?: unknown;
+  options_cs?: unknown;
+  visual_en?: unknown;
+  visual_cs?: unknown;
+};
+
+// AH-15.7: jsonb columns are arbitrary scam-scenario payloads. The
+// editor surfaces them as JSON text so admins can paste translated
+// options/visual structures without us inventing a schema-specific
+// form. `undefined` -> column unchanged on save; "" -> NULL.
+const jsonbToString = (value: unknown): string | undefined => {
+  if (value === null || value === undefined) return undefined;
+  try {
+    return JSON.stringify(value, null, 2);
+  } catch {
+    return undefined;
+  }
 };
 
 const mapQuestion = (row: QuestionsRow): AdminQuestion => {
@@ -69,7 +88,23 @@ const mapQuestion = (row: QuestionsRow): AdminQuestion => {
     answer_set_id: row.answer_set_id ?? undefined,
     correct_answer_ids: [],
     incorrect_answer_ids: [],
+    body_en: row.prompt_en ?? undefined,
+    body_cs: row.prompt_cs ?? undefined,
+    options_en: jsonbToString(row.options_en),
+    options_cs: jsonbToString(row.options_cs),
+    visual_en: jsonbToString(row.visual_en),
+    visual_cs: jsonbToString(row.visual_cs),
   };
+};
+
+// Parses an editor-supplied JSON string for a jsonb column.
+// "" -> null (clear column), undefined -> undefined (don't touch),
+// invalid JSON throws so the mutation surfaces the error.
+const parseJsonbForUpdate = (value: string | undefined): unknown => {
+  if (value === undefined) return undefined;
+  const trimmed = value.trim();
+  if (trimmed === "") return null;
+  return JSON.parse(trimmed);
 };
 
 type AnswerSetsRow = {
@@ -274,7 +309,9 @@ export function useAdminQuestions() {
     queryFn: async (): Promise<AdminQuestion[]> => {
       const { data, error } = await supabase
         .from("questions")
-        .select("id, prompt, branch_slug, author_id, status, answer_set_id, created_at")
+        .select(
+          "id, prompt, branch_slug, author_id, status, answer_set_id, created_at, prompt_en, prompt_cs, options_en, options_cs, visual_en, visual_cs",
+        )
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []).map((r) => mapQuestion(r as QuestionsRow));
@@ -290,7 +327,9 @@ export function useAdminQuestion(id: string | undefined) {
       if (!id) return null;
       const { data, error } = await supabase
         .from("questions")
-        .select("id, prompt, branch_slug, author_id, status, answer_set_id, created_at")
+        .select(
+          "id, prompt, branch_slug, author_id, status, answer_set_id, created_at, prompt_en, prompt_cs, options_en, options_cs, visual_en, visual_cs",
+        )
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
@@ -332,6 +371,14 @@ export function useUpdateQuestion() {
       if (patch.categories) update.branch_slug = patch.categories[0] ?? null;
       if (patch.status) update.status = patch.status;
       if (patch.answer_set_id !== undefined) update.answer_set_id = patch.answer_set_id;
+      // AH-15.7: per-locale columns. "" -> null (clear translation),
+      // undefined -> leave column alone.
+      if (patch.body_en !== undefined) update.prompt_en = patch.body_en.trim() || null;
+      if (patch.body_cs !== undefined) update.prompt_cs = patch.body_cs.trim() || null;
+      if (patch.options_en !== undefined) update.options_en = parseJsonbForUpdate(patch.options_en);
+      if (patch.options_cs !== undefined) update.options_cs = parseJsonbForUpdate(patch.options_cs);
+      if (patch.visual_en !== undefined) update.visual_en = parseJsonbForUpdate(patch.visual_en);
+      if (patch.visual_cs !== undefined) update.visual_cs = parseJsonbForUpdate(patch.visual_cs);
       const { error } = await supabase.from("questions").update(update).eq("id", id);
       if (error) throw error;
     },

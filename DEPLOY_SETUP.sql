@@ -1988,12 +1988,27 @@ CREATE POLICY quick_test_questions_admin_write
   USING (public.has_role(auth.uid(), 'admin'))
   WITH CHECK (public.has_role(auth.uid(), 'admin'));
 
--- ---- (3) get_quick_test_questions RPC ----
--- Anonymous-safe read. Returns N randomly-ordered published questions plus
--- the joined `visual` payload. status='published' filter keeps drafts
--- hidden. ORDER BY random() happens server-side so the client cannot
--- enumerate the bank via repeated calls. LIMIT is clamped to [1, 100].
-CREATE OR REPLACE FUNCTION public.get_quick_test_questions(p_limit int DEFAULT 10)
+-- ---- (3) get_quick_test_questions RPC (AH-15.7 trilingual) ----
+-- Anonymous-safe read. Returns N randomly-ordered published questions
+-- with prompt/options/visual projected for the requested locale.
+-- COALESCE(<col>_<locale>, <col>) means partial localization is safe:
+-- rows without an en/cs translation fall back to the sk source-of-truth.
+-- status='published' keeps drafts hidden; ORDER BY random() is
+-- server-side so clients cannot enumerate the bank via repeat calls.
+ALTER TABLE public.questions
+  ADD COLUMN IF NOT EXISTS prompt_en  text,
+  ADD COLUMN IF NOT EXISTS prompt_cs  text,
+  ADD COLUMN IF NOT EXISTS options_en jsonb,
+  ADD COLUMN IF NOT EXISTS options_cs jsonb,
+  ADD COLUMN IF NOT EXISTS visual_en  jsonb,
+  ADD COLUMN IF NOT EXISTS visual_cs  jsonb;
+
+DROP FUNCTION IF EXISTS public.get_quick_test_questions(int);
+
+CREATE OR REPLACE FUNCTION public.get_quick_test_questions(
+  p_limit  int  DEFAULT 10,
+  p_locale text DEFAULT 'sk'
+)
 RETURNS TABLE (
   id uuid,
   type public.question_type,
@@ -2010,8 +2025,28 @@ STABLE
 SECURITY DEFINER
 SET search_path = public, pg_temp
 AS $$
-  SELECT q.id, q.type, q.prompt, q.options, q.correct, q.branch_slug,
-         q.difficulty, q.visual, qtq.order_index
+  SELECT
+    q.id,
+    q.type,
+    CASE
+      WHEN p_locale = 'en' THEN COALESCE(q.prompt_en, q.prompt)
+      WHEN p_locale = 'cs' THEN COALESCE(q.prompt_cs, q.prompt)
+      ELSE q.prompt
+    END AS prompt,
+    CASE
+      WHEN p_locale = 'en' THEN COALESCE(q.options_en, q.options)
+      WHEN p_locale = 'cs' THEN COALESCE(q.options_cs, q.options)
+      ELSE q.options
+    END AS options,
+    q.correct,
+    q.branch_slug,
+    q.difficulty,
+    CASE
+      WHEN p_locale = 'en' THEN COALESCE(q.visual_en, q.visual)
+      WHEN p_locale = 'cs' THEN COALESCE(q.visual_cs, q.visual)
+      ELSE q.visual
+    END AS visual,
+    qtq.order_index
   FROM public.quick_test_questions qtq
   JOIN public.questions q ON q.id = qtq.question_id
   WHERE qtq.quick_test_config_id = 1
@@ -2020,8 +2055,8 @@ AS $$
   LIMIT GREATEST(1, LEAST(p_limit, 100));
 $$;
 
-REVOKE ALL ON FUNCTION public.get_quick_test_questions(int) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION public.get_quick_test_questions(int)
+REVOKE ALL ON FUNCTION public.get_quick_test_questions(int, text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_quick_test_questions(int, text)
   TO anon, authenticated;
 
 -- ---- (4) Seed scam scenarios ----

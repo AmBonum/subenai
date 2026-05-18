@@ -9,6 +9,7 @@ vi.mock("@/integrations/supabase/client", () => ({
 }));
 
 import { useQuickTestQuestions } from "@/lib/platform/queries";
+import { __resetLocaleForTests } from "@/i18n/locale-context";
 
 function wrapper({ children }: { children: React.ReactNode }) {
   const client = new QueryClient({
@@ -20,13 +21,17 @@ function wrapper({ children }: { children: React.ReactNode }) {
 describe("useQuickTestQuestions", () => {
   beforeEach(() => {
     rpcMock.mockReset();
+    __resetLocaleForTests("sk");
   });
 
-  it("calls get_quick_test_questions with the requested limit", async () => {
+  it("calls get_quick_test_questions with the requested limit and current locale", async () => {
     rpcMock.mockResolvedValueOnce({ data: [], error: null });
     const { result } = renderHook(() => useQuickTestQuestions(10), { wrapper });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(rpcMock).toHaveBeenCalledWith("get_quick_test_questions", { p_limit: 10 });
+    expect(rpcMock).toHaveBeenCalledWith("get_quick_test_questions", {
+      p_limit: 10,
+      p_locale: "sk",
+    });
   });
 
   it("returns rows from the RPC payload", async () => {
@@ -60,5 +65,27 @@ describe("useQuickTestQuestions", () => {
     const { result } = renderHook(() => useQuickTestQuestions(10), { wrapper });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual([]);
+  });
+
+  it("forwards the active locale to the RPC (en)", async () => {
+    __resetLocaleForTests("en");
+    rpcMock.mockResolvedValueOnce({ data: [], error: null });
+    const { result } = renderHook(() => useQuickTestQuestions(5), { wrapper });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(rpcMock).toHaveBeenCalledWith("get_quick_test_questions", {
+      p_limit: 5,
+      p_locale: "en",
+    });
+  });
+
+  it("forwards the active locale to the RPC (cs)", async () => {
+    __resetLocaleForTests("cs");
+    rpcMock.mockResolvedValueOnce({ data: [], error: null });
+    const { result } = renderHook(() => useQuickTestQuestions(7), { wrapper });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(rpcMock).toHaveBeenCalledWith("get_quick_test_questions", {
+      p_limit: 7,
+      p_locale: "cs",
+    });
   });
 });

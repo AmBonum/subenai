@@ -90,7 +90,20 @@
     "error_correct_required": "Select at least one correct answer",
     "error_incorrect_required": "Select at least 2 incorrect answers for a good random choice",
     "toast_saved": "Question saved",
-    "toast_created": "Question created"
+    "toast_created": "Question created",
+    "tab_sk": "Slovak",
+    "tab_en": "English",
+    "tab_cs": "Czech",
+    "tab_status_translated": "Translated",
+    "tab_status_partial": "Partial",
+    "tab_status_empty": "Not translated",
+    "locale_body_label": "Question body ({locale})",
+    "locale_options_label": "Options (JSON, {locale})",
+    "locale_visual_label": "Visual (JSON, {locale})",
+    "locale_body_placeholder_en": "English translation of the prompt...",
+    "locale_body_placeholder_cs": "Czech translation of the prompt...",
+    "locale_json_placeholder": "Optional. Paste JSON or leave empty to fall back to SK.",
+    "locale_json_invalid": "Invalid JSON in {field}"
   },
   "ai_generator": {
     "title": "AI question generator",

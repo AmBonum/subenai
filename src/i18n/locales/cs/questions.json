@@ -90,7 +90,20 @@
     "error_correct_required": "Vyberte alespoň jednu správnou odpověď",
     "error_incorrect_required": "Vyberte alespoň 2 nesprávné odpovědi pro dobrou náhodnou volbu",
     "toast_saved": "Otázka uložena",
-    "toast_created": "Otázka vytvořena"
+    "toast_created": "Otázka vytvořena",
+    "tab_sk": "Slovenština",
+    "tab_en": "Angličtina",
+    "tab_cs": "Čeština",
+    "tab_status_translated": "Přeloženo",
+    "tab_status_partial": "Částečně",
+    "tab_status_empty": "Nepřeloženo",
+    "locale_body_label": "Tělo otázky ({locale})",
+    "locale_options_label": "Možnosti (JSON, {locale})",
+    "locale_visual_label": "Vizuál (JSON, {locale})",
+    "locale_body_placeholder_en": "Anglický překlad otázky...",
+    "locale_body_placeholder_cs": "Český překlad otázky...",
+    "locale_json_placeholder": "Volitelné. Vložte JSON nebo nechte prázdné pro fallback na SK.",
+    "locale_json_invalid": "Neplatný JSON v poli {field}"
   },
   "ai_generator": {
     "title": "AI generátor otázky",

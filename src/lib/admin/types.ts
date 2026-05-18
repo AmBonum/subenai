@@ -35,6 +35,16 @@ export interface AdminQuestion {
   answer_set_id?: string;
   correct_answer_ids: string[];
   incorrect_answer_ids: string[];
+  // AH-15.7 trilingual scam-scenario fields. `body` is the sk
+  // source-of-truth (maps to questions.prompt); _en/_cs map to
+  // questions.prompt_en/_cs. Options/visual mirror the same pattern but
+  // are jsonb-as-string in the editor — admins paste/copy raw JSON.
+  body_en?: string;
+  body_cs?: string;
+  options_en?: string;
+  options_cs?: string;
+  visual_en?: string;
+  visual_cs?: string;
 }
 
 export interface AdminAnswer {

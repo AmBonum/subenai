@@ -586,6 +586,12 @@ export type Database = {
           answer_set_id: string | null;
           visual: Json | null;
           created_at: string;
+          prompt_en: string | null;
+          prompt_cs: string | null;
+          options_en: Json | null;
+          options_cs: Json | null;
+          visual_en: Json | null;
+          visual_cs: Json | null;
         };
         Insert: {
           id?: string;
@@ -603,6 +609,12 @@ export type Database = {
           answer_set_id?: string | null;
           visual?: Json | null;
           created_at?: string;
+          prompt_en?: string | null;
+          prompt_cs?: string | null;
+          options_en?: Json | null;
+          options_cs?: Json | null;
+          visual_en?: Json | null;
+          visual_cs?: Json | null;
         };
         Update: {
           id?: string;
@@ -620,6 +632,12 @@ export type Database = {
           answer_set_id?: string | null;
           visual?: Json | null;
           created_at?: string;
+          prompt_en?: string | null;
+          prompt_cs?: string | null;
+          options_en?: Json | null;
+          options_cs?: Json | null;
+          visual_en?: Json | null;
+          visual_cs?: Json | null;
         };
         Relationships: [];
       };
@@ -1224,7 +1242,7 @@ export type Database = {
         Returns: void;
       };
       get_quick_test_questions: {
-        Args: { p_limit?: number };
+        Args: { p_limit?: number; p_locale?: string };
         Returns: {
           id: string;
           type: Database["public"]["Enums"]["question_type"];
