@@ -13,6 +13,39 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > celý balík funkcionality (sponsorship, zber custom-test odpovedí, atď.)
 > kompletne otestovaný v reálnej prevádzke.
 
+## AH-15 — Trilingválna podpora (slovenčina / angličtina / čeština)
+
+Celá stránka — texty, otázky aj scam scenáre — je dostupná v troch
+jazykoch. Predvolený je slovenský; jazyk si vyberieš v hlavičke stránky
+(ikona zemegule). Voľba sa pamätá a aplikuje sa okamžite — bez nutnosti
+obnoviť stránku.
+
+### Pridané
+- **Prepínač jazyka** — `🇸🇰 Slovenčina / 🇬🇧 English / 🇨🇿 Čeština`
+  v hlavičke aj v admin paneli. Pri prvej návšteve sa jazyk
+  predvolí podľa nastavenia prehliadača (`navigator.language`);
+  zmena sa uloží do lokálneho úložiska a okamžite sa prejaví
+  v celej aplikácii.
+- **Anglická a česká verzia všetkých stránok** — domov, sada testov,
+  školenia, sponzori, kontakt, súkromie, cookies, podpora,
+  poďakovania, /app a /admin. Britská angličtina (`organisation`,
+  `behaviour`), formálne „vykání" v češtine.
+- **Kultúrne lokalizované scam scenáre** — všetkých 238 otázok má
+  verziu vhodnú pre lokálne publikum. Pre angličtinu (UK) bola
+  *Slovenská pošta* nahradená Royal Mail, *Tatra banka* Barclays,
+  *Bazoš* Gumtree, eurá librami (£), čísla `+421` na `+44`, IBAN
+  prefix `SK` na `GB`, domény `.sk` na `.co.uk`. Pre češtinu
+  Česká pošta, Česká spořitelna, Bazos.cz, koruny (Kč), `+420`,
+  IBAN `CZ`, `.cz`.
+- **Trilingválne otázky v databáze** — administrátorský editor
+  otázok získal záložky `sk | en | cs`. Pri každej otázke vidíš,
+  ktoré jazyky sú už preložené (zelená/oranžová/sivá značka).
+
+### Bezpečnosť
+- Žiadne. Lokalizácia je čisto prezentačná vrstva; obsah otázok
+  je v databáze, RLS policies nemení — len pridáva preložené
+  stĺpce (`prompt_en/cs`, `options_en/cs`, `visual_en/cs`).
+
 ## AH-13 — Registrácia, Google prihlásenie a obnova hesla
 
 Rozšírili sme prihlasovaciu plochu o samoobslužnú registráciu a obnovu
