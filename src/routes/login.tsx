@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { getAALStatus, listFactors } from "@/lib/auth/mfa";
 import { tFor } from "@/i18n/app-shell";
+import { tFor as tAuth } from "@/i18n/auth";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -17,11 +18,31 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const t = tFor("login");
+  const tc = tAuth("common");
+  const tx = tAuth("login_extras");
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const onGoogle = async () => {
+    setError(null);
+    setGoogleLoading(true);
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo:
+            typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined,
+        },
+      });
+    } catch {
+      setError(tc("google_error"));
+      setGoogleLoading(false);
+    }
+  };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -89,6 +110,21 @@ function LoginPage() {
           <CardDescription>{t("subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            disabled={googleLoading || submitting}
+            onClick={onGoogle}
+            data-testid="login-google-button"
+          >
+            {googleLoading ? tc("google_loading") : tc("continue_with_google")}
+          </Button>
+          <div className="my-4 flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="h-px flex-1 bg-border" />
+            <span>{tc("or_separator")}</span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
           <form onSubmit={onSubmit} className="space-y-4" data-testid="login-form" noValidate>
             <div className="space-y-2">
               <Label htmlFor="login-email">{t("email_label")}</Label>
@@ -131,11 +167,24 @@ function LoginPage() {
             >
               {submitting ? t("submitting") : t("submit")}
             </Button>
-            <p className="text-center text-xs text-muted-foreground">
-              <Link to="/" data-testid="login-back-home">
-                ← subenai.sk
-              </Link>
-            </p>
+            <div className="flex flex-col gap-2 text-center text-xs text-muted-foreground">
+              <p>
+                <Link to="/forgot-password" data-testid="login-forgot-password">
+                  {tx("forgot_password")}
+                </Link>
+              </p>
+              <p>
+                {tx("no_account")}{" "}
+                <Link to="/signup" data-testid="login-to-signup">
+                  {tx("to_signup")}
+                </Link>
+              </p>
+              <p>
+                <Link to="/" data-testid="login-back-home">
+                  ← subenai.sk
+                </Link>
+              </p>
+            </div>
           </form>
         </CardContent>
       </Card>
