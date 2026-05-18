@@ -96,8 +96,11 @@ function QuestionsPage() {
     onConfirm: () => void;
   } | null>(null);
 
+  // Radix `<Select.Item />` forbids value=""; questions seeded from the
+  // bank have no author_name (NULL → mapped to ""), so filter empties
+  // before they reach the SelectItem map below.
   const authors = useMemo(
-    () => Array.from(new Set(questions.map((q) => q.author_name))).sort(),
+    () => Array.from(new Set(questions.map((q) => q.author_name).filter((n) => Boolean(n)))).sort(),
     [questions],
   );
 
