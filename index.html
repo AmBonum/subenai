@@ -21,7 +21,22 @@
       gtag("js", new Date());
       gtag("config", "G-95QZ12WGFD", { anonymize_ip: true });
     </script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-95QZ12WGFD"></script>
+    <script>
+      // Load Google Analytics on every page EXCEPT the admin console.
+      // /admin is internal-use (single operator), so tracking admin
+      // sessions pollutes the public-traffic reports and triggers a CSP
+      // block on the GA audiences pixel (img-src does not allow
+      // google.sk). /app and /login stay tracked — they are real
+      // user-facing surfaces and we want their onboarding signal.
+      (function () {
+        var path = window.location.pathname || "/";
+        if (/^\/admin(\/|$)/.test(path)) return;
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=G-95QZ12WGFD";
+        document.head.appendChild(s);
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

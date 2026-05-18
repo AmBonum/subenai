@@ -22,7 +22,6 @@ import {
   Navigation,
   PanelTop,
   PanelBottom,
-  BookOpen,
   ShieldCheck,
 } from "lucide-react";
 
@@ -139,8 +138,10 @@ const cmsItems: NavItem[] = [
   },
 ];
 
+// AH-12.9 — /docs route does not exist yet; the AH-10.1 sidebar pointed at
+// it as a placeholder. Removed until a docs route lands. Add back as:
+//   { key: "docs", url: "/docs", icon: BookOpen, testid: "admin-shell-sidebar-link-docs" }
 const systemItems: NavItem[] = [
-  { key: "docs", url: "/docs", icon: BookOpen, testid: "admin-shell-sidebar-link-docs" },
   {
     key: "settings",
     url: "/admin/settings",
