@@ -1,8 +1,9 @@
 import "@testing-library/jest-dom/vitest";
-import { afterEach, vi } from "vitest";
+import { afterEach, beforeEach, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 import React from "react";
 import { QueryClient, QueryClientProvider, notifyManager } from "@tanstack/react-query";
+import { __resetLocaleForTests } from "@/i18n/locale-context";
 
 // TanStack Query batches store notifications via `systemSetTimeoutZero` so
 // observers receive updates one macrotask after `setQueryData`. Inside
@@ -110,6 +111,18 @@ if (typeof window !== "undefined") {
     Element.prototype.setPointerCapture = () => {};
   }
 }
+
+// AH-15.2: jsdom's navigator.language defaults to en-US, which now resolves
+// the new English bundle. The existing test suite was written against Slovak
+// UI copy (the production default locale), so force `sk` before every test.
+beforeEach(() => {
+  __resetLocaleForTests("sk");
+  try {
+    window.localStorage.setItem("subenai.locale", "sk");
+  } catch {
+    // ignore
+  }
+});
 
 afterEach(() => {
   cleanup();
