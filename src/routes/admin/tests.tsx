@@ -147,9 +147,9 @@ function AdminTestsListPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t("status_all")}</SelectItem>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="published">Publikovaný</SelectItem>
-                <SelectItem value="archived">Archivovaný</SelectItem>
+                <SelectItem value="draft">{t("status_draft")}</SelectItem>
+                <SelectItem value="published">{t("status_published")}</SelectItem>
+                <SelectItem value="archived">{t("status_archived")}</SelectItem>
               </SelectContent>
             </Select>
             <Select value={difficulty} onValueChange={setDifficulty}>
