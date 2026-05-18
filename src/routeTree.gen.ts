@@ -36,6 +36,7 @@ import { Route as SkoleniaSlugRouteImport } from './routes/skolenia.$slug'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as PodakovanieSessionIdRouteImport } from './routes/podakovanie.$sessionId'
+import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
 import { Route as AppTemplatesRouteImport } from './routes/app.templates'
 import { Route as AppTeamsRouteImport } from './routes/app.teams'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
@@ -207,6 +208,11 @@ const RShareIdRoute = RShareIdRouteImport.update({
 const PodakovanieSessionIdRoute = PodakovanieSessionIdRouteImport.update({
   id: '/podakovanie/$sessionId',
   path: '/podakovanie/$sessionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginEnroll2faRoute = LoginEnroll2faRouteImport.update({
+  id: '/login_/enroll-2fa',
+  path: '/login/enroll-2fa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppTemplatesRoute = AppTemplatesRouteImport.update({
@@ -434,6 +440,7 @@ export interface FileRoutesByFullPath {
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
+  '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
@@ -497,6 +504,7 @@ export interface FileRoutesByTo {
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
+  '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
@@ -564,6 +572,7 @@ export interface FileRoutesById {
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
+  '/login_/enroll-2fa': typeof LoginEnroll2faRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
@@ -632,6 +641,7 @@ export interface FileRouteTypes {
     | '/app/notifications'
     | '/app/teams'
     | '/app/templates'
+    | '/login/enroll-2fa'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/s/$slug'
@@ -695,6 +705,7 @@ export interface FileRouteTypes {
     | '/app/notifications'
     | '/app/teams'
     | '/app/templates'
+    | '/login/enroll-2fa'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/s/$slug'
@@ -761,6 +772,7 @@ export interface FileRouteTypes {
     | '/app/notifications'
     | '/app/teams'
     | '/app/templates'
+    | '/login_/enroll-2fa'
     | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/s/$slug'
@@ -803,6 +815,7 @@ export interface RootRouteChildren {
   SponzoriRoute: typeof SponzoriRouteWithChildren
   SpravovatPodporuRoute: typeof SpravovatPodporuRoute
   ZmenyRoute: typeof ZmenyRoute
+  LoginEnroll2faRoute: typeof LoginEnroll2faRoute
   PodakovanieSessionIdRoute: typeof PodakovanieSessionIdRoute
   RShareIdRoute: typeof RShareIdRoute
   SSlugRoute: typeof SSlugRoute
@@ -1005,6 +1018,13 @@ declare module '@tanstack/react-router' {
       path: '/podakovanie/$sessionId'
       fullPath: '/podakovanie/$sessionId'
       preLoaderRoute: typeof PodakovanieSessionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login_/enroll-2fa': {
+      id: '/login_/enroll-2fa'
+      path: '/login/enroll-2fa'
+      fullPath: '/login/enroll-2fa'
+      preLoaderRoute: typeof LoginEnroll2faRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/templates': {
@@ -1429,6 +1449,7 @@ const rootRouteChildren: RootRouteChildren = {
   SponzoriRoute: SponzoriRouteWithChildren,
   SpravovatPodporuRoute: SpravovatPodporuRoute,
   ZmenyRoute: ZmenyRoute,
+  LoginEnroll2faRoute: LoginEnroll2faRoute,
   PodakovanieSessionIdRoute: PodakovanieSessionIdRoute,
   RShareIdRoute: RShareIdRoute,
   SSlugRoute: SSlugRoute,
