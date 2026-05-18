@@ -66,6 +66,11 @@ function PublicTakeTestPage() {
   }
 
   return (
-    <TakeTestFlow test={safe} questionIds={test.question_ids} onClose={() => nav({ to: "/" })} />
+    <TakeTestFlow
+      test={safe}
+      questionIds={test.question_ids}
+      shareId={shareId}
+      onClose={() => nav({ to: "/" })}
+    />
   );
 }

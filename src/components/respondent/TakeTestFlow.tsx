@@ -6,7 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { IntakeStep } from "@/components/respondent/IntakeStep";
 import { QuestionStep } from "@/components/respondent/QuestionStep";
-import { getQuestion, createSession, completeSession } from "@/lib/respondent/mock-store";
+import { getQuestion } from "@/lib/respondent/mock-store";
+import {
+  startRespondentSession,
+  submitRespondentAnswer,
+  finalizeRespondentSession,
+} from "@/lib/respondent/queries";
 import type { Question } from "@/lib/platform/types";
 import type { SafeTestProjection } from "@/lib/respondent/take-test.functions";
 import { tFor } from "@/i18n/respondent-flow";
@@ -19,34 +24,48 @@ interface TakeTestFlowProps {
   // the mock we pull them from the platform store. AH-11 returns them in
   // the safe projection alongside the test.
   questionIds: string[];
+  // The /t/$shareId route resolves the test via share id; we need it again
+  // here to start the Supabase session under the same anonymous identity.
+  shareId: string;
   onClose: () => void;
 }
 
-export function TakeTestFlow({ test, questionIds, onClose }: TakeTestFlowProps) {
+export function TakeTestFlow({ test, questionIds, shareId, onClose }: TakeTestFlowProps) {
   const tRoot = tFor("root");
   const tThanks = tFor("thank_you");
+  const tErr = tFor("errors");
   const [stage, setStage] = useState<Stage>("intake");
   const [intake, setIntake] = useState<Record<string, string>>({});
-  const [, setConsent] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [qIdx, setQIdx] = useState(0);
   const [answers, setAnswers] = useState<
     { question_id: string; value: string; is_correct: boolean | null; time_ms: number }[]
   >([]);
   const [questionStart, setQuestionStart] = useState<number>(0);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const questions = questionIds.map((qid) => getQuestion(qid)).filter(Boolean) as Question[];
 
-  const onIntakeSubmit = (vals: Record<string, string>, c: boolean) => {
-    setIntake(vals);
-    setConsent(c);
-    const s = createSession(test.id, vals, c);
-    setSessionId(s.id);
-    setQuestionStart(Date.now());
-    setStage("questions");
+  const onIntakeSubmit = async (vals: Record<string, string>, c: boolean) => {
+    if (submitting) return;
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      const id = await startRespondentSession({ shareId, intake: vals, consent: c });
+      setIntake(vals);
+      setSessionId(id);
+      setQuestionStart(Date.now());
+      setStage("questions");
+    } catch {
+      setSubmitError(tErr("submit_failed"));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const onAnswer = (value: string) => {
+  const onAnswer = async (value: string) => {
+    if (submitting || !sessionId) return;
     const q = questions[qIdx];
     const time_ms = Date.now() - questionStart;
     const expected = Array.isArray(q.correct)
@@ -56,13 +75,30 @@ export function TakeTestFlow({ test, questionIds, onClose }: TakeTestFlowProps) 
         : null;
     const isCorrect = expected ? value === expected : null;
     const next = [...answers, { question_id: q.id, value, is_correct: isCorrect, time_ms }];
-    setAnswers(next);
-    if (qIdx + 1 < questions.length) {
-      setQIdx(qIdx + 1);
-      setQuestionStart(Date.now());
-    } else if (sessionId) {
-      completeSession(sessionId, next);
-      setStage("done");
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      await submitRespondentAnswer({
+        sessionId,
+        questionId: q.id,
+        value,
+        isCorrect,
+        timeMs: time_ms,
+      });
+      setAnswers(next);
+      if (qIdx + 1 < questions.length) {
+        setQIdx(qIdx + 1);
+        setQuestionStart(Date.now());
+      } else {
+        const correct = next.filter((a) => a.is_correct).length;
+        const score = next.length ? Math.round((correct / next.length) * 100) : 0;
+        await finalizeRespondentSession({ sessionId, score });
+        setStage("done");
+      }
+    } catch {
+      setSubmitError(tErr("submit_failed"));
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -93,19 +129,39 @@ export function TakeTestFlow({ test, questionIds, onClose }: TakeTestFlowProps) 
               </CardContent>
             </Card>
             <IntakeStep intakeFields={test.intake_fields} onSubmit={onIntakeSubmit} />
+            {submitError && (
+              <p
+                className="text-sm text-destructive"
+                data-testid="respondent-flow-submit-error"
+                role="alert"
+              >
+                {submitError}
+              </p>
+            )}
           </div>
         )}
 
         {stage === "questions" && questions[qIdx] && (
-          <QuestionStep
-            index={qIdx}
-            total={questions.length}
-            question={questions[qIdx]}
-            initialValue={answers[qIdx]?.value ?? ""}
-            isLast={qIdx + 1 === questions.length}
-            onPrev={qIdx > 0 ? () => setQIdx(qIdx - 1) : undefined}
-            onAnswer={onAnswer}
-          />
+          <>
+            <QuestionStep
+              index={qIdx}
+              total={questions.length}
+              question={questions[qIdx]}
+              initialValue={answers[qIdx]?.value ?? ""}
+              isLast={qIdx + 1 === questions.length}
+              onPrev={qIdx > 0 ? () => setQIdx(qIdx - 1) : undefined}
+              onAnswer={onAnswer}
+            />
+            {submitError && (
+              <p
+                className="mt-4 text-sm text-destructive"
+                data-testid="respondent-flow-submit-error"
+                role="alert"
+              >
+                {submitError}
+              </p>
+            )}
+          </>
         )}
 
         {stage === "done" && (

@@ -1804,3 +1804,131 @@ $$;
 
 REVOKE ALL ON FUNCTION public.log_audit_event(text, text, text, boolean, jsonb) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.log_audit_event(text, text, text, boolean, jsonb) TO authenticated;
+
+-- ============================================================================
+-- AH-11.4 — Public respondent flow: SECURITY DEFINER RPCs
+-- ============================================================================
+-- Source migration: supabase/migrations/20260518300000_public_respondent_rpc.sql
+-- The /t/$shareId route runs anonymously. sessions / session_answers /
+-- respondents have no anon INSERT policies; these three RPCs are the only
+-- sanctioned anonymous write path. SECURITY DEFINER bypasses RLS; functions
+-- re-resolve the test from share_id and guard against tampering.
+
+CREATE OR REPLACE FUNCTION public.start_respondent_session(
+  p_share_id text,
+  p_intake jsonb DEFAULT '{}'::jsonb,
+  p_consent_given boolean DEFAULT false,
+  p_segment text DEFAULT NULL
+)
+RETURNS uuid
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_test_id uuid;
+  v_version int;
+  v_respondent_id uuid;
+  v_session_id uuid;
+  v_email text;
+  v_display_name text;
+BEGIN
+  SELECT id, version
+    INTO v_test_id, v_version
+    FROM public.tests
+    WHERE share_id = p_share_id AND status = 'published';
+  IF v_test_id IS NULL THEN
+    RAISE EXCEPTION 'test_not_found';
+  END IF;
+
+  v_email := NULLIF(p_intake ->> 'if_email', '');
+  v_display_name := NULLIF(p_intake ->> 'if_name', '');
+
+  IF v_email IS NOT NULL OR v_display_name IS NOT NULL THEN
+    INSERT INTO public.respondents (email, display_name)
+    VALUES (v_email, v_display_name)
+    RETURNING id INTO v_respondent_id;
+  END IF;
+
+  INSERT INTO public.sessions (
+    test_id, version, respondent_id, intake_data, consent_given,
+    segment, status, started_at
+  )
+  VALUES (
+    v_test_id, v_version, v_respondent_id, p_intake, p_consent_given,
+    p_segment, 'in_progress', now()
+  )
+  RETURNING id INTO v_session_id;
+
+  RETURN v_session_id;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.start_respondent_session(text, jsonb, boolean, text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.start_respondent_session(text, jsonb, boolean, text) TO anon, authenticated;
+
+CREATE OR REPLACE FUNCTION public.submit_respondent_answer(
+  p_session_id uuid,
+  p_question_id uuid,
+  p_value text,
+  p_is_correct boolean DEFAULT NULL,
+  p_time_ms int DEFAULT NULL
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_status public.session_status;
+BEGIN
+  SELECT status INTO v_status FROM public.sessions WHERE id = p_session_id;
+  IF v_status IS NULL THEN
+    RAISE EXCEPTION 'session_not_found';
+  END IF;
+  IF v_status <> 'in_progress' THEN
+    RAISE EXCEPTION 'session_closed';
+  END IF;
+
+  INSERT INTO public.session_answers (session_id, question_id, value, is_correct, time_ms)
+  VALUES (p_session_id, p_question_id, p_value, p_is_correct, p_time_ms)
+  ON CONFLICT (session_id, question_id) DO UPDATE
+    SET value = EXCLUDED.value,
+        is_correct = EXCLUDED.is_correct,
+        time_ms = EXCLUDED.time_ms;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.submit_respondent_answer(uuid, uuid, text, boolean, int) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.submit_respondent_answer(uuid, uuid, text, boolean, int) TO anon, authenticated;
+
+CREATE OR REPLACE FUNCTION public.finalize_respondent_session(
+  p_session_id uuid,
+  p_score numeric DEFAULT NULL
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_status public.session_status;
+BEGIN
+  SELECT status INTO v_status FROM public.sessions WHERE id = p_session_id;
+  IF v_status IS NULL THEN
+    RAISE EXCEPTION 'session_not_found';
+  END IF;
+  IF v_status <> 'in_progress' THEN
+    RAISE EXCEPTION 'session_closed';
+  END IF;
+
+  UPDATE public.sessions
+    SET status = 'completed',
+        finished_at = now(),
+        score = p_score
+    WHERE id = p_session_id;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.finalize_respondent_session(uuid, numeric) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.finalize_respondent_session(uuid, numeric) TO anon, authenticated;

@@ -1179,6 +1179,29 @@ export type Database = {
         };
         Returns: string;
       };
+      start_respondent_session: {
+        Args: {
+          p_share_id: string;
+          p_intake?: Json;
+          p_consent_given?: boolean;
+          p_segment?: string | null;
+        };
+        Returns: string;
+      };
+      submit_respondent_answer: {
+        Args: {
+          p_session_id: string;
+          p_question_id: string;
+          p_value: string;
+          p_is_correct?: boolean | null;
+          p_time_ms?: number | null;
+        };
+        Returns: void;
+      };
+      finalize_respondent_session: {
+        Args: { p_session_id: string; p_score?: number | null };
+        Returns: void;
+      };
     };
     Enums: {
       app_role: "admin" | "moderator" | "user";
