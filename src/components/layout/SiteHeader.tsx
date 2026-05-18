@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from "@/components/ui/sheet";
+import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
 import { ROUTES } from "@/config/routes";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -79,6 +80,7 @@ export function SiteHeader() {
               Moje testy
             </Link>
           )}
+          <LocaleSwitcher />
           <CtaPill />
         </div>
 
@@ -144,7 +146,10 @@ export function SiteHeader() {
               )}
             </ul>
 
-            <div className="border-t border-border/40 px-5 py-5">
+            <div className="flex flex-col gap-3 border-t border-border/40 px-5 py-5">
+              <div className="flex justify-center" data-testid="header-mobile-locale">
+                <LocaleSwitcher variant="outline" />
+              </div>
               <Link
                 to={CTA_ITEM.to}
                 data-testid="header-mobile-cta"

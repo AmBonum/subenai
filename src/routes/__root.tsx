@@ -5,6 +5,7 @@ import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ConsentPreferencesDialog } from "@/components/consent/ConsentPreferencesDialog";
 import { GoogleAnalyticsManager } from "@/components/analytics/GoogleAnalyticsManager";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { LocaleProvider } from "@/i18n/locale-context";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,11 +41,13 @@ function NotFoundComponent() {
 function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
-      <GoogleAnalyticsManager />
-      <SiteHeader />
-      <Outlet />
-      <ConsentBanner />
-      <ConsentPreferencesDialog />
+      <LocaleProvider>
+        <GoogleAnalyticsManager />
+        <SiteHeader />
+        <Outlet />
+        <ConsentBanner />
+        <ConsentPreferencesDialog />
+      </LocaleProvider>
     </QueryClientProvider>
   );
 }

@@ -22,6 +22,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useCurrentProfile, useNotifications } from "@/lib/platform/queries";
 import { useAuth } from "@/hooks/useAuth";
+import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
 import { tFor } from "@/i18n/app-shell";
 
 type NavKey =
@@ -166,6 +167,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             {t("brand")}
           </Link>
           <div className="flex items-center gap-3 text-sm">
+            <LocaleSwitcher />
             <div
               className="flex items-center gap-2 rounded-full border border-border/60 bg-card py-1 pl-1 pr-3"
               data-testid="app-shell-header-user"

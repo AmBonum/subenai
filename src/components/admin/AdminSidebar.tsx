@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
 import { tFor } from "@/i18n/admin";
 
 type NavItem = {
@@ -246,6 +247,12 @@ export function AdminSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border">
+        <div
+          className="flex justify-center px-2 py-2 group-data-[collapsible=icon]:hidden"
+          data-testid="admin-shell-sidebar-locale"
+        >
+          <LocaleSwitcher variant="outline" />
+        </div>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
