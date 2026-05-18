@@ -1,5 +1,4 @@
 import type { Question } from "@/lib/quiz/bank/questions";
-import { tFor } from "@/i18n/quiz";
 
 export type AnswerFeedbackState = "correct" | "wrong" | "timeout";
 export type AnswerFeedbackMode = "live" | "review";
@@ -10,6 +9,12 @@ export function deriveState(question: Question, selectedId: string | null): Answ
   return picked?.correct ? "correct" : "wrong";
 }
 
-export function getHeadline(mode: AnswerFeedbackMode, state: AnswerFeedbackState): string {
-  return tFor("feedback")(`${mode}_${state}`);
+// `t` is a tFor("feedback") instance owned by the calling component — this
+// keeps locale-subscription in the React render (helper has no hook ties).
+export function getHeadline(
+  t: (key: string) => string,
+  mode: AnswerFeedbackMode,
+  state: AnswerFeedbackState,
+): string {
+  return t(`${mode}_${state}`);
 }

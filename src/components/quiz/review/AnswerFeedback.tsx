@@ -4,6 +4,7 @@ import {
   getHeadline,
   type AnswerFeedbackMode,
 } from "@/components/quiz/review/AnswerFeedback.helpers";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   question: Question;
@@ -21,6 +22,7 @@ interface Props {
  * (mode="live") aj v post-test review (`mode="review"`).
  */
 export function AnswerFeedback({ question, selectedId, mode }: Props) {
+  const t = tFor("feedback");
   const state = deriveState(question, selectedId);
 
   const headlineClass =
@@ -32,7 +34,7 @@ export function AnswerFeedback({ question, selectedId, mode }: Props) {
 
   return (
     <div className="mt-5 animate-fade-in-up rounded-xl border border-border/60 bg-card/60 p-4">
-      <div className={`mb-1 text-sm font-bold ${headlineClass}`}>{getHeadline(mode, state)}</div>
+      <div className={`mb-1 text-sm font-bold ${headlineClass}`}>{getHeadline(t, mode, state)}</div>
       <div className="text-sm text-muted-foreground">{question.explanation}</div>
     </div>
   );

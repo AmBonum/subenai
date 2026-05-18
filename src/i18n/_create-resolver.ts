@@ -6,6 +6,12 @@
 // consumers keep using `tFor("section")("key.path", vars)`.
 //
 // Lookup order: current locale → sk fallback → return the raw key.
+//
+// Perf note: this resolver is intentionally hook-free so it works in both
+// component render AND module top-level / `head()` lifecycle calls (which
+// AH-15.6 introduced). Instant re-render on locale switch is handled by
+// remounting the tree under LocaleProvider via `key={locale}` — see
+// `locale-context.tsx`.
 import { getCurrentLocale, type Locale } from "./locale-context";
 
 type Json = string | { [k: string]: Json };

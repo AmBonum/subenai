@@ -9,7 +9,15 @@
 // Co-located component + hook + constants in one file is intentional —
 // splitting just to please Fast Refresh would obscure the unit of meaning.
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 export type Locale = "sk" | "en" | "cs";
 
@@ -67,7 +75,16 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  return <LocaleContext.Provider value={{ locale, setLocale }}>{children}</LocaleContext.Provider>;
+  // Force-remount the tree under the provider on locale change. The resolver
+  // is hook-free for module-level / `head()` compatibility, so component
+  // re-renders aren't auto-triggered by context. Remounting via `key={locale}`
+  // makes the switch instant; the trade-off (form-local state resets) is
+  // acceptable for a deliberate user action.
+  return (
+    <LocaleContext.Provider value={{ locale, setLocale }}>
+      <Fragment key={locale}>{children}</Fragment>
+    </LocaleContext.Provider>
+  );
 }
 
 export function useLocale(): LocaleContextValue {
