@@ -1,5 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { ReactNode } from "react";
+import { signOutAndRedirect } from "@/lib/auth/signout";
 import {
   LayoutDashboard,
   FilePlus2,
@@ -172,14 +173,17 @@ export function AppShell({ children }: { children: ReactNode }) {
                 {me.display_name}
               </span>
             </div>
-            <Link
-              to="/login"
+            <button
+              type="button"
+              onClick={() => {
+                void signOutAndRedirect("/");
+              }}
               className="text-muted-foreground hover:text-foreground"
               aria-label={t("logout_aria")}
               data-testid="app-shell-header-logout"
             >
               <LogOut className="h-4 w-4" />
-            </Link>
+            </button>
           </div>
         </div>
       </header>

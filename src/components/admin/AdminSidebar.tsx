@@ -1,5 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import type { LucideIcon } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { signOutAndRedirect } from "@/lib/auth/signout";
 import {
   LayoutDashboard,
   MessageSquareText,
@@ -149,6 +152,28 @@ export function AdminSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const t = tFor("shell");
 
+  // Dynamic admin info: read the current Supabase user. AH-12 enforces AAL2
+  // for /admin so this hook only renders inside an authenticated admin
+  // session. Falls back to a neutral label if the session has not yet
+  // resolved (first render before useEffect fires).
+  const [adminEmail, setAdminEmail] = useState<string | null>(null);
+  const [adminName, setAdminName] = useState<string | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    supabase.auth.getUser().then(({ data }) => {
+      if (cancelled) return;
+      const user = data.user;
+      if (!user) return;
+      setAdminEmail(user.email ?? null);
+      const meta = (user.user_metadata ?? {}) as { display_name?: string };
+      setAdminName(meta.display_name ?? user.email?.split("@")[0] ?? null);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const initials = (adminName ?? adminEmail ?? "AD").slice(0, 2).toUpperCase();
+
   const isActive = (url: string, exact?: boolean) =>
     exact ? pathname === url : pathname === url || pathname.startsWith(url + "/");
 
@@ -215,15 +240,33 @@ export function AdminSidebar() {
       <SidebarFooter className="border-t border-sidebar-border">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" tooltip={t("account_label")}>
+            <SidebarMenuButton
+              size="lg"
+              tooltip={t("logout_label")}
+              onClick={() => {
+                void signOutAndRedirect("/");
+              }}
+              data-testid="admin-shell-sidebar-logout"
+              aria-label={t("logout_label")}
+            >
               <Avatar className="h-8 w-8">
                 <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-xs">
-                  JH
+                  {initials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-1 flex-col text-left text-xs group-data-[collapsible=icon]:hidden">
-                <span className="font-medium text-sidebar-foreground">Jana Horváthová</span>
-                <span className="text-sidebar-foreground/60">admin@subenai.sk</span>
+                <span
+                  className="font-medium text-sidebar-foreground"
+                  data-testid="admin-shell-sidebar-account-name"
+                >
+                  {adminName ?? t("account_label")}
+                </span>
+                <span
+                  className="text-sidebar-foreground/60"
+                  data-testid="admin-shell-sidebar-account-email"
+                >
+                  {adminEmail ?? ""}
+                </span>
               </div>
               <LogOut className="h-4 w-4 text-sidebar-foreground/60 group-data-[collapsible=icon]:hidden" />
             </SidebarMenuButton>

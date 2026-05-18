@@ -27,6 +27,7 @@
       "settings": "Nastavenia"
     },
     "account_label": "Účet",
+    "logout_label": "Odhlásiť sa",
     "collapse_toggle_aria": "Prepnúť bočný panel"
   },
   "dashboard": {
