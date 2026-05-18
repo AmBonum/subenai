@@ -13,6 +13,7 @@ import { Route as ZmenyRouteImport } from './routes/zmeny'
 import { Route as SpravovatPodporuRouteImport } from './routes/spravovat-podporu'
 import { Route as SponzoriRouteImport } from './routes/sponzori'
 import { Route as SkolyRouteImport } from './routes/skoly'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PodporaRouteImport } from './routes/podpora'
 import { Route as OProjekteRouteImport } from './routes/o-projekte'
@@ -95,6 +96,11 @@ const SponzoriRoute = SponzoriRouteImport.update({
 const SkolyRoute = SkolyRouteImport.update({
   id: '/skoly',
   path: '/skoly',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -423,6 +429,7 @@ export interface FileRoutesByFullPath {
   '/o-projekte': typeof OProjekteRoute
   '/podpora': typeof PodporaRoute
   '/privacy': typeof PrivacyRoute
+  '/signup': typeof SignupRoute
   '/skoly': typeof SkolyRoute
   '/sponzori': typeof SponzoriRouteWithChildren
   '/spravovat-podporu': typeof SpravovatPodporuRoute
@@ -490,6 +497,7 @@ export interface FileRoutesByTo {
   '/o-projekte': typeof OProjekteRoute
   '/podpora': typeof PodporaRoute
   '/privacy': typeof PrivacyRoute
+  '/signup': typeof SignupRoute
   '/skoly': typeof SkolyRoute
   '/spravovat-podporu': typeof SpravovatPodporuRoute
   '/zmeny': typeof ZmenyRoute
@@ -559,6 +567,7 @@ export interface FileRoutesById {
   '/o-projekte': typeof OProjekteRoute
   '/podpora': typeof PodporaRoute
   '/privacy': typeof PrivacyRoute
+  '/signup': typeof SignupRoute
   '/skoly': typeof SkolyRoute
   '/sponzori': typeof SponzoriRouteWithChildren
   '/spravovat-podporu': typeof SpravovatPodporuRoute
@@ -630,6 +639,7 @@ export interface FileRouteTypes {
     | '/o-projekte'
     | '/podpora'
     | '/privacy'
+    | '/signup'
     | '/skoly'
     | '/sponzori'
     | '/spravovat-podporu'
@@ -697,6 +707,7 @@ export interface FileRouteTypes {
     | '/o-projekte'
     | '/podpora'
     | '/privacy'
+    | '/signup'
     | '/skoly'
     | '/spravovat-podporu'
     | '/zmeny'
@@ -765,6 +776,7 @@ export interface FileRouteTypes {
     | '/o-projekte'
     | '/podpora'
     | '/privacy'
+    | '/signup'
     | '/skoly'
     | '/sponzori'
     | '/spravovat-podporu'
@@ -835,6 +847,7 @@ export interface RootRouteChildren {
   OProjekteRoute: typeof OProjekteRoute
   PodporaRoute: typeof PodporaRoute
   PrivacyRoute: typeof PrivacyRoute
+  SignupRoute: typeof SignupRoute
   SkolyRoute: typeof SkolyRoute
   SponzoriRoute: typeof SponzoriRouteWithChildren
   SpravovatPodporuRoute: typeof SpravovatPodporuRoute
@@ -882,6 +895,13 @@ declare module '@tanstack/react-router' {
       path: '/skoly'
       fullPath: '/skoly'
       preLoaderRoute: typeof SkolyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -1486,6 +1506,7 @@ const rootRouteChildren: RootRouteChildren = {
   OProjekteRoute: OProjekteRoute,
   PodporaRoute: PodporaRoute,
   PrivacyRoute: PrivacyRoute,
+  SignupRoute: SignupRoute,
   SkolyRoute: SkolyRoute,
   SponzoriRoute: SponzoriRouteWithChildren,
   SpravovatPodporuRoute: SpravovatPodporuRoute,
