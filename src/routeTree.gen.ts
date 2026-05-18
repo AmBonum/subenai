@@ -19,6 +19,7 @@ import { Route as PodporaRouteImport } from './routes/podpora'
 import { Route as OProjekteRouteImport } from './routes/o-projekte'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as KontaktRouteImport } from './routes/kontakt'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -39,6 +40,7 @@ import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as PodakovanieSessionIdRouteImport } from './routes/podakovanie.$sessionId'
 import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
 import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AppTemplatesRouteImport } from './routes/app.templates'
 import { Route as AppTeamsRouteImport } from './routes/app.teams'
@@ -127,6 +129,11 @@ const LoginRoute = LoginRouteImport.update({
 const KontaktRoute = KontaktRouteImport.update({
   id: '/kontakt',
   path: '/kontakt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CookiesRoute = CookiesRouteImport.update({
@@ -227,6 +234,11 @@ const LoginVerify2faRoute = LoginVerify2faRouteImport.update({
 const LoginEnroll2faRoute = LoginEnroll2faRouteImport.update({
   id: '/login_/enroll-2fa',
   path: '/login/enroll-2fa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/auth/reset-password',
+  path: '/auth/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
@@ -430,6 +442,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/cookies': typeof CookiesRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
   '/o-projekte': typeof OProjekteRoute
@@ -467,6 +480,7 @@ export interface FileRoutesByFullPath {
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
@@ -499,6 +513,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cookies': typeof CookiesRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
   '/o-projekte': typeof OProjekteRoute
@@ -535,6 +550,7 @@ export interface FileRoutesByTo {
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
@@ -570,6 +586,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/cookies': typeof CookiesRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
   '/o-projekte': typeof OProjekteRoute
@@ -607,6 +624,7 @@ export interface FileRoutesById {
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/login_/enroll-2fa': typeof LoginEnroll2faRoute
   '/login_/verify-2fa': typeof LoginVerify2faRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
@@ -643,6 +661,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/app'
     | '/cookies'
+    | '/forgot-password'
     | '/kontakt'
     | '/login'
     | '/o-projekte'
@@ -680,6 +699,7 @@ export interface FileRouteTypes {
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
+    | '/auth/reset-password'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
     | '/podakovanie/$sessionId'
@@ -712,6 +732,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cookies'
+    | '/forgot-password'
     | '/kontakt'
     | '/login'
     | '/o-projekte'
@@ -748,6 +769,7 @@ export interface FileRouteTypes {
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
+    | '/auth/reset-password'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
     | '/podakovanie/$sessionId'
@@ -782,6 +804,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/app'
     | '/cookies'
+    | '/forgot-password'
     | '/kontakt'
     | '/login'
     | '/o-projekte'
@@ -819,6 +842,7 @@ export interface FileRouteTypes {
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
+    | '/auth/reset-password'
     | '/login_/enroll-2fa'
     | '/login_/verify-2fa'
     | '/podakovanie/$sessionId'
@@ -854,6 +878,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
   CookiesRoute: typeof CookiesRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   KontaktRoute: typeof KontaktRoute
   LoginRoute: typeof LoginRoute
   OProjekteRoute: typeof OProjekteRoute
@@ -865,6 +890,7 @@ export interface RootRouteChildren {
   SpravovatPodporuRoute: typeof SpravovatPodporuRoute
   ZmenyRoute: typeof ZmenyRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   LoginEnroll2faRoute: typeof LoginEnroll2faRoute
   LoginVerify2faRoute: typeof LoginVerify2faRoute
   PodakovanieSessionIdRoute: typeof PodakovanieSessionIdRoute
@@ -950,6 +976,13 @@ declare module '@tanstack/react-router' {
       path: '/kontakt'
       fullPath: '/kontakt'
       preLoaderRoute: typeof KontaktRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cookies': {
@@ -1090,6 +1123,13 @@ declare module '@tanstack/react-router' {
       path: '/login/enroll-2fa'
       fullPath: '/login/enroll-2fa'
       preLoaderRoute: typeof LoginEnroll2faRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/auth/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/callback': {
@@ -1521,6 +1561,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
   CookiesRoute: CookiesRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   KontaktRoute: KontaktRoute,
   LoginRoute: LoginRoute,
   OProjekteRoute: OProjekteRoute,
@@ -1532,6 +1573,7 @@ const rootRouteChildren: RootRouteChildren = {
   SpravovatPodporuRoute: SpravovatPodporuRoute,
   ZmenyRoute: ZmenyRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
   LoginEnroll2faRoute: LoginEnroll2faRoute,
   LoginVerify2faRoute: LoginVerify2faRoute,
   PodakovanieSessionIdRoute: PodakovanieSessionIdRoute,

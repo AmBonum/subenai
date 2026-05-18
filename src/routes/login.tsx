@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,13 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [resetBanner, setResetBanner] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("reset") === "1") setResetBanner(true);
+  }, []);
 
   const onGoogle = async () => {
     setError(null);
@@ -110,6 +117,15 @@ function LoginPage() {
           <CardDescription>{t("subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
+          {resetBanner && (
+            <p
+              className="mb-4 rounded-md border border-primary/30 bg-primary/5 p-2 text-xs text-primary"
+              role="status"
+              data-testid="login-reset-success-banner"
+            >
+              {tx("login_success_after_reset")}
+            </p>
+          )}
           <Button
             type="button"
             variant="outline"
