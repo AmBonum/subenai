@@ -13,6 +13,30 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > celý balík funkcionality (sponsorship, zber custom-test odpovedí, atď.)
 > kompletne otestovaný v reálnej prevádzke.
 
+## AH-11 epic — migrácia mockov na reálnu Supabase (dokončené)
+
+V epicu AH-11 (15+ sub-commitov) sa celý admin-hub UI presunul z
+in-memory mock-store na produkčnú Supabase:
+- Admin core (questions, tests, answer-sets, categories, trainings,
+  respondents, audit, DSR, reports, users) — AH-11.1
+- Používateľské /app/* (tests, audiences, templates, notifications,
+  history, profile, teams, DSR submit) — AH-11.2
+- Privilegované operácie cez Cloudflare Pages function (user role
+  zmeny, ban toggle) so service-role kľúčom — AH-11.3
+- Anonymný respondent flow /t/$shareId so SECURITY DEFINER RPC — AH-11.4
+- CMS admin + verejné /s/$slug — AH-11.5a
+- /test (verejný kvíz) číta 238 scam scenárov z DB cez RPC — AH-11.5b
+- Mock cleanup + bundle alarm guard — AH-11.6
+
+Otvorené pre AH-14 follow-up: respondent reads RPC, answer-sets viewer
+hooky, questions.type/category schema enrichment, delete zostávajúcich
+mockov.
+
+Bundle guard `npm run check:bundle-no-mocks` v alarm-only móde —
+v produkcii žiadny mock string nie je v JS bundli.
+
+PRE-DEPLOY checklist: tasks/AH-11-production-runbook.md
+
 ### Zmenené
 - **Upratovanie mock dát + strážca produkčného balíčka (AH-11.6)** — interné typy pre CMS (stránky, hlavičku, pätu, navigáciu, share-card, rýchly test) sme presunuli do samostatného modulu `cms-types`, aby produkčné cesty nesiahali do mock súborov. Mock súbor s neaktívnymi používateľskými dátami (`mock-user-data`) sme odstránili, lebo už nikde nebol používaný. Pridali sme strážcu (`npm run check:bundle-no-mocks`), ktorý prehľadá zostavený balíček na zakázané mock identifikátory a v aktuálnom režime upozornenia ich len reportuje — kým prebieha presun zostávajúcich mock-ov (respondentské čítanie z `/t/<id>`, prehliadač odpovedí v `/app/sets/<id>`, knižnica otázok pre wizard a `/app/library`) na Supabase. ESLint pravidlá tieto výnimky pomenúvajú a smerujú na nasledujúci epic AH-14, ktorý ich uzavrie. Žiadna zmena správania pre používateľov.
 
