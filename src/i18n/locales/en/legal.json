@@ -1,0 +1,382 @@
+{
+  "privacy": {
+    "meta_title": "Privacy policy — subenai",
+    "meta_description": "What data we process, on what legal basis, how long we retain it and what rights you have under GDPR and the Slovak Personal Data Protection Act.",
+    "back_home": "← Back to home",
+    "title": "Privacy policy",
+    "last_updated": "Last updated: 18 May 2026 (version 1.4.0)",
+    "s1": {
+      "heading": "1. Controller",
+      "intro": "The controller within the meaning of Art. 4(7) GDPR and § 5 písm. o) zákona č. 18/2018 Z. z. is:",
+      "company": "am.bonum s. r. o.",
+      "address": "Registered office: Škultétyho 1560/3, 052 01 Spišská Nová Ves, Slovakia",
+      "ids": "IČO: 55 055 290 · DIČ: 2121850005 · VAT ID: not a VAT payer",
+      "registry": "Registration: Košice Municipal Court, Sro section, file no. 55453/V (registered 23. 11. 2022)",
+      "executive": "Statutory representative: Ľubomír Volčko, managing director acting independently",
+      "contact_label": "Contact for personal data protection matters: ",
+      "dpo": "The controller has not appointed a Data Protection Officer (DPO) — no such obligation arises under Art. 37(1) GDPR or § 44 zákona č. 18/2018 Z. z. (we are not a public authority, our core activities do not involve large-scale systematic monitoring of data subjects, nor large-scale processing of special categories of data under Art. 9 GDPR)."
+    },
+    "s2": {
+      "heading": "2. What data we process",
+      "answers_label": "Your test answers and score",
+      "answers_text": " — answers to 15 questions, response time, final score and personality archetype. Without these the test cannot be evaluated or stored.",
+      "details_label": "Your individual answers",
+      "details_text": " — for each question the question ID, selected option (a, b, c, d), whether it was correct, reaction time, category and difficulty. Without these we cannot display a detailed answer review after the test completes.",
+      "session_label": "Anonymous session identifier",
+      "session_text": " — generated automatically by Supabase. It does not contain your name, email or IP address. It is used to link your answers to your result.",
+      "consent_label": "Cookie consent record",
+      "consent_text": " — the version of the policy you approved, a timestamp and the categories you selected. Stored locally in your browser.",
+      "trap_label": "Educational \"TrapDialog\" after the test",
+      "trap_prefix": " — a popup that prompts you to enter sensitive data (national ID number, card number, CVV, IBAN, password, OTP). This is purely an educational moment. ",
+      "trap_emph": "The values you enter NEVER leave your browser",
+      "trap_middle": " — they are not sent to the server, not stored in the database, not written to ",
+      "trap_code": "localStorage",
+      "trap_suffix": ". They disappear from memory once the dialog is closed. We only store a single helper flag (`iiq_trap_seen`) so we don't show the popup again on your next visit — never any of your values.",
+      "survey_label": "Optional survey responses",
+      "survey_prefix": " — if you fill in the post-test survey: age group, gender, city, country, self-assessed caution (1–5), biggest online concern, whether you've ever fallen for a scam, where you heard about the test, whether you're interested in courses and which topics. ",
+      "survey_emph": "No field is mandatory",
+      "survey_suffix": " — you can submit an empty form too.",
+      "anticheat_label": "Technical anti-cheat data",
+      "anticheat_text": " — question display time, redirects, attempt count. Processed solely to prevent abuse of the test.",
+      "logs_label": "Hosting server logs",
+      "logs_text": " — Cloudflare and Supabase retain IP addresses and request headers for a limited time (typically 7–30 days) for security and attack prevention. The controller does not access these logs during normal operation.",
+      "exclusions_label": "We do not request or process:",
+      "exclusions_text": " email, name, phone number, address, precise geolocation, payment card data, or any special categories of data under Art. 9 GDPR (health, faith, political opinions, etc.)."
+    },
+    "s3": {
+      "heading": "3. Purpose and legal basis of processing",
+      "col_purpose": "Purpose",
+      "col_basis": "Legal basis",
+      "col_retention": "Retention period",
+      "rows": {
+        "completion": {
+          "purpose": "Test completion and score storage",
+          "basis": "Performance of a contract / Art. 6(1)(b) GDPR",
+          "retention": "36 months"
+        },
+        "review": {
+          "purpose": "Answer review after test completion",
+          "basis": "Performance of a contract / Art. 6(1)(b) GDPR",
+          "retention": "36 months"
+        },
+        "survey": {
+          "purpose": "Optional survey responses (post-test survey)",
+          "basis": "Consent / Art. 6(1)(a) GDPR",
+          "retention": "36 months / consent withdrawal"
+        },
+        "anticheat": {
+          "purpose": "Anti-cheat and security",
+          "basis": "Legitimate interest / Art. 6(1)(f) GDPR",
+          "retention": "12 months"
+        },
+        "composer": {
+          "purpose": "Custom test packs (Composer) — only question IDs, pass threshold, optional pack name",
+          "basis": "Performance of a contract / Art. 6(1)(b) GDPR",
+          "retention": "12 months from creation"
+        },
+        "edu": {
+          "purpose": "Edu responses (respondent name + email in opt-in \"Education mode\")",
+          "basis": "Consent / Art. 6(1)(a) GDPR",
+          "retention": "12 months, then auto-anonymisation"
+        },
+        "analytics": {
+          "purpose": "Analytics and product improvement",
+          "basis": "Consent / Art. 6(1)(a) GDPR",
+          "retention": "up to 13 months / consent withdrawal"
+        },
+        "consent_record": {
+          "purpose": "Record of consent itself",
+          "basis": "Legal obligation / Art. 6(1)(c) GDPR",
+          "retention": "For the duration of consent + 12 months"
+        },
+        "sponsorship": {
+          "purpose": "Sponsorship payments (invoice, AML, accounting)",
+          "basis": "Performance of a contract + zákon č. 431/2002 Z. z. / Art. 6(1)(b) and (c) GDPR",
+          "retention": "10 years"
+        }
+      }
+    },
+    "s4": {
+      "heading": "4. Recipients and processors",
+      "supabase_label": "Supabase Inc.",
+      "supabase_text": " (USA, data stored in the EU Frankfurt region) — processor under Art. 28 GDPR; third-country transfer secured by Standard Contractual Clauses (SCC).",
+      "cloudflare_label": "Cloudflare, Inc.",
+      "cloudflare_text": " (USA, EU PoP) — processor for hosting and CDN, GDPR Data Processing Addendum + SCC.",
+      "stripe_label": "Stripe Payments Europe, Ltd.",
+      "stripe_prefix": " (Ireland) with sub-processor ",
+      "stripe_emph": "Stripe, Inc.",
+      "stripe_middle": " (USA) — payment processor for voluntary support payments (card data collection, invoice issuance, recurring subscriptions). SCC transfer under Art. 46 GDPR. Activates only if you open the page ",
+      "stripe_link": "/podpora",
+      "stripe_suffix": ".",
+      "resend_label": "Resend, Inc.",
+      "resend_text": " (USA) — processor for transactional emails (support confirmation, magic link for subscription management, refund warning). SCC transfer. No marketing emails.",
+      "no_sell": "We do not share data with advertising networks, data brokers or social networks. We do not sell data.",
+      "share_label": "Sharing on social networks:",
+      "share_text": " if you click a \"Share on Facebook / Messenger / WhatsApp / X / LinkedIn / Telegram\" button, we open the official page of that platform directly with prefilled text and a link to the result. No code from those platforms (FB Pixel, X widget and the like) is loaded into our site — the share buttons are plain links. After the click you leave for that platform's server, at which point its own terms and privacy policy apply to you.",
+      "utm_label": "UTM parameters in share links",
+      "utm_prefix": " (e.g. ",
+      "utm_code": "?utm_source=facebook",
+      "utm_middle": "): when someone clicks a share link we generated, the URL contains information about which platform the visit came from. We ",
+      "utm_emph": "only read these parameters if you have analytics consent enabled in the consent dialog",
+      "utm_suffix": "; without consent the parameters are ignored and never sent anywhere. They serve solely for an aggregated \"where do visitors come from\" overview, not for profiling a specific person."
+    },
+    "s5": {
+      "heading": "5. Your rights",
+      "intro": "Under Art. 15–22 GDPR and § 21–28 zákona č. 18/2018 Z.z. you have the following rights vis-à-vis the controller:",
+      "right_access_prefix": "the right of ",
+      "right_access_emph": "access",
+      "right_access_suffix": " to personal data (Art. 15)",
+      "right_rect_prefix": "the right to ",
+      "right_rect_emph": "rectification",
+      "right_rect_suffix": " of inaccurate data (Art. 16)",
+      "right_erase_prefix": "the right to ",
+      "right_erase_emph": "erasure",
+      "right_erase_suffix": " (\"right to be forgotten\", Art. 17)",
+      "right_restrict_prefix": "the right to ",
+      "right_restrict_emph": "restriction of processing",
+      "right_restrict_suffix": " (Art. 18)",
+      "right_port_prefix": "the right to ",
+      "right_port_emph": "data portability",
+      "right_port_suffix": " (Art. 20)",
+      "right_object_prefix": "the right to ",
+      "right_object_emph": "object",
+      "right_object_suffix": " to processing based on legitimate interest (Art. 21)",
+      "right_withdraw_prefix": "the right to ",
+      "right_withdraw_emph": "withdraw consent at any time",
+      "right_withdraw_suffix": " without affecting the lawfulness of processing before withdrawal (Art. 7(3))",
+      "right_complaint_prefix": "the right to ",
+      "right_complaint_emph": "lodge a complaint",
+      "right_complaint_suffix": " with the Slovak Office for Personal Data Protection — Hraničná 12, 820 07 Bratislava, ",
+      "complaint_link": "dataprotection.gov.sk",
+      "deadline": "We respond to requests within 30 days of receipt (Art. 12(3) GDPR). Free of charge, unless the request is manifestly unfounded or excessive.",
+      "self_service_label": "Self-service erasure:",
+      "self_service_prefix": " Since a test attempt is entirely anonymous and not tied to an email, the fastest way to erase your own result is to ",
+      "self_service_emph": "open your share link",
+      "self_service_middle": " (e.g. ",
+      "self_service_code": "/r/abc123",
+      "self_service_suffix": ") and click the \"Delete this result\" button at the bottom of the page. The row is immediately and physically deleted from the database and the share link ceases to exist. No email correspondence, no waiting.",
+      "retention_label": "Automatic retention:",
+      "retention_prefix": " Our database has a scheduled daily job (Postgres pg_cron, runs 03:17 UTC) that physically deletes records older than 36 months. The duration does not reset on activity — it is counted from the original creation of the attempt. These rules are written directly into the migrations (",
+      "retention_code": "20260426110000_*",
+      "retention_suffix": ") and are not a recommendation."
+    },
+    "s6": {
+      "heading": "6. Automated decision-making and profiling",
+      "p1_prefix": "Test evaluation (score, percentile, archetype) is automated according to a fixed algorithm, but",
+      "p1_emph": " has no legal or similarly significant effect",
+      "p1_suffix": " on you within the meaning of Art. 22 GDPR. It serves solely for entertainment and education. We only carry out profiling for marketing purposes with explicit consent (the \"marketing\" category in the cookie banner); no marketing profiling currently takes place.",
+      "p2": "Answer review on a share link is a read-only display of your stored answers — no new automated decision is created by it, no further profile or score arises."
+    },
+    "s7": {
+      "heading": "7. Sponsoring the project",
+      "intro_prefix": "If you decide to support the project via the page ",
+      "intro_link": "/podpora",
+      "intro_suffix": " (one-off or monthly), we will process the following data solely for the purposes of invoice issuance, AML compliance and keeping accounting records:",
+      "email_label": "Email",
+      "email_text": " — for the invoice and future communications about the subscription (e.g. card change, subscription cancellation)",
+      "name_label": "Name or company name",
+      "name_text": " — mandatory invoice field per § 74 zákona č. 222/2004 Z. z.",
+      "vat_label": "VAT ID",
+      "vat_text": " — optional, for B2B invoices with input deduction",
+      "billing_label": "Billing address",
+      "billing_text": " — required by Stripe for amounts ≥ 35 €",
+      "payment_label": "Payment data (card data, IBAN)",
+      "payment_prefix": " — processed exclusively by",
+      "payment_emph": " Stripe Payments Europe, Ltd.",
+      "payment_suffix": " (Ireland) as our payment processor. We never see or store this data. Stripe is SCC-linked to Stripe Inc. (USA) under Art. 46 GDPR.",
+      "basis_label": "Legal basis:",
+      "basis_text": " Art. 6(1)(b) GDPR (contract for the provision of a digital service) in combination with (c) (legal obligation to keep accounting records per zákon č. 431/2002 Z. z.).",
+      "retention_label": "Retention period:",
+      "retention_emph": " 10 years",
+      "retention_suffix": " per § 35 zákona č. 431/2002 Z. z. on accounting. This retention takes precedence over GDPR Art. 17 (right to erasure) — on an erasure request we anonymise the displayed fields (`display_name`, `display_link`, `display_message`), but the accounting record of the transaction itself remains in the database for any tax audit.",
+      "refund_label": "Refund and subscription cancellation:",
+      "refund_prefix": " a voluntary contribution is ",
+      "refund_emph1": "non-refundable",
+      "refund_middle": " (digital service provided immediately, the right of withdrawal lapses under § 7 ods. 6 zákona č. 102/2014 Z. z. — you explicitly tick a consent before payment). You can ",
+      "refund_emph2": "cancel a monthly subscription at any time with a single click",
+      "refund_middle2": " via the Stripe Customer Portal, the link to which we will send you after you enter your email at ",
+      "refund_link": "/spravovat-podporu",
+      "refund_suffix": ". Cancellation applies to subsequent billing periods, not past ones.",
+      "public_label": "Optional data for public acknowledgement:",
+      "public_prefix": " at checkout you can choose whether we display you on the page ",
+      "public_link": "/sponzori",
+      "public_middle": " (default is off). Granular — name, optional link, optional message up to 80 characters. You can withdraw consent at any time by email at ",
+      "public_suffix": ".",
+      "limit_label": "Maximum one-off amount 500 €",
+      "limit_text": " — we keep the limit below the KYC threshold per § 10 zákona č. 297/2008 Z. z. on protection against legalisation of proceeds from criminal activity. Above this amount we only accept support via bank transfer outside Stripe."
+    },
+    "s8": {
+      "heading": "8. Education mode (collecting edu responses)",
+      "intro_prefix": "From May 2026, authors of educational tests (teachers, lecturers, HR) can, when creating their own pack in the Composer, enable the option to ",
+      "intro_emph": "collect responses together with the respondent's name and email",
+      "intro_middle": ". Goal: the teacher wants to see how a specific student is improving. This mode is ",
+      "intro_emph2": "opt-in",
+      "intro_middle2": " — it is off by default and does not affect standard anonymous tests at ",
+      "intro_code": "/test",
+      "intro_suffix": " nor company packs without this option.",
+      "data_label": "What data:",
+      "data_text": " respondent name, email, score, answer detail (the same columns as in an anonymous test).",
+      "access_label": "Who has access:",
+      "access_text": " the test author via a password-protected dashboard (password chosen by the author when creating the pack, hash stored via bcrypt). Our servers host the data; nobody accesses it outside the dashboard.",
+      "purpose_label": "Purpose:",
+      "purpose_text": " test evaluation by the author (teacher, HR).",
+      "role_label": "Legal role:",
+      "role_prefix": " in this scenario the ",
+      "role_emph1": "test author is the controller",
+      "role_middle": " (Art. 4(7) GDPR) — determines the purpose and means of processing the respondent's personal data. ",
+      "role_emph2": "am.bonum s. r. o. is the processor",
+      "role_middle2": " under Art. 28 GDPR — it hosts and processes the data exclusively on the author's instructions. A Data Processing Agreement (DPA) template will be provided on request by email at ",
+      "role_code": "subenai.podpora@gmail.com",
+      "role_suffix": ".",
+      "basis_label": "Legal basis:",
+      "basis_text": " respondent's consent under Art. 6(1)(a) GDPR. Consent is required explicitly on the intake form before the test begins; without it the test does not continue.",
+      "retention_label": "Retention period: 12 months",
+      "retention_text": " from record creation, after which name and email are automatically anonymised (score + answers remain for the author's statistics). The author can delete a specific respondent sooner via the dashboard.",
+      "callout_label": "If you are an edu-test respondent:",
+      "callout_prefix": " the primary contact for exercising your GDPR rights (Art. 15–22 — access, rectification, erasure, portability) is the ",
+      "callout_emph": "test author",
+      "callout_middle": ", not us. As the processor we merely host your data and, on the author's instructions, delete it. If you do not know who the author is, or they do not respond, contact us at ",
+      "callout_code": "subenai.podpora@gmail.com",
+      "callout_suffix": " — we will help identify the author and forward your request."
+    },
+    "s9": {
+      "heading": "9. Security",
+      "text": "Communication uses HTTPS (TLS 1.3); data in Supabase is encrypted at-rest and in-transit; access to the database is protected by Row Level Security policies. Stripe-hosted card forms are PCI DSS Level 1 certified — our servers never see any card data. Passwords of edu pack authors are stored exclusively as bcrypt hashes (pgcrypto, cost factor 10) — we never store the original password anywhere."
+    },
+    "s10": {
+      "heading": "10. Changes to this policy",
+      "text": "On a material change to this policy we will show you a new cookie banner with a request for fresh consent (by bumping the record version). Minor language updates are published without notice. The current version always has its date next to the document title."
+    },
+    "s11": {
+      "heading": "11. Related documents",
+      "prefix": "A detailed list of cookies and storage is in the ",
+      "link": "cookies policy",
+      "suffix": "."
+    }
+  },
+  "cookies": {
+    "meta_title": "Cookies policy — subenai",
+    "meta_description": "What storage and cookies subenai uses, what they are for, how long they remain and how you can manage them.",
+    "back_home": "← Back to home",
+    "title": "Cookies policy",
+    "version_line": "Version {version} · Last updated: 18 May 2026",
+    "s1": {
+      "heading": "1. What cookies and similar technologies are",
+      "prefix": "By \"cookies\" in this policy we mean any storing of information on your device or access to it — including HTTP cookies, ",
+      "code1": "localStorage",
+      "middle1": ", ",
+      "code2": "sessionStorage",
+      "middle2": " and IndexedDB. This scope is defined by the ePrivacy Directive 2002/58/EC (Art. 5(3)), and in Slovak law by § 109 zákona č. 452/2021 Z.z. on electronic communications."
+    },
+    "s2": {
+      "heading": "2. Categories and legal bases",
+      "intro": "We split storage into four categories. Only categories 2.2–2.4 require consent. Category 2.1 operates on the basis of legitimate interest (Art. 6(1)(f) GDPR) and your contractual requirement to take the test.",
+      "col_category": "Category",
+      "col_key": "Name / key",
+      "col_purpose": "Purpose",
+      "col_duration": "Duration",
+      "stripe_category_prefix": "Necessary for payment (only on ",
+      "stripe_category_code": "/podpora",
+      "stripe_category_suffix": ")",
+      "rows": {
+        "consent": {
+          "category": "Necessary",
+          "key": "iiq_consent",
+          "purpose": "Record of your consent (version + selected categories + timestamp)",
+          "duration": "12 months / until change"
+        },
+        "supabase": {
+          "category": "Necessary",
+          "key": "sb-*-auth-token",
+          "purpose": "Anonymous Supabase session — without it your test result cannot be saved via Row Level Security",
+          "duration": "~1 hour (auto-refresh)"
+        },
+        "prefs": {
+          "category": "Preferences",
+          "key": "future",
+          "purpose": "Remembering language / theme",
+          "duration": "12 months"
+        },
+        "analytics": {
+          "category": "Analytics",
+          "key": "future (PostHog)",
+          "purpose": "Anonymised completion-rate measurement, A/B tests",
+          "duration": "up to 13 months"
+        },
+        "marketing": {
+          "category": "Marketing",
+          "key": "none currently",
+          "purpose": "Personalised advertising, retargeting (not in use yet)",
+          "duration": "—"
+        },
+        "stripe_mid": {
+          "key": "__stripe_mid",
+          "purpose": "Stripe machine ID — fraud prevention, device identification",
+          "duration": "1 year"
+        },
+        "stripe_sid": {
+          "key": "__stripe_sid",
+          "purpose": "Stripe session ID — maintains the payment session",
+          "duration": "30 minutes"
+        },
+        "stripe_m": {
+          "key": "m",
+          "purpose": "Stripe Checkout — CSRF protection",
+          "duration": "session"
+        },
+        "stripe_test": {
+          "key": "cookie-test",
+          "purpose": "Stripe browser cookie support test (no personal data)",
+          "duration": "session"
+        }
+      }
+    },
+    "s3": {
+      "heading": "3. Third parties (processors)",
+      "supabase_label": "Supabase (Supabase Inc., USA — EU Frankfurt region):",
+      "supabase_text": " database hosting and anonymous authentication. Processed under SCC (Standard Contractual Clauses).",
+      "stripe_label": "Stripe (Stripe Payments Europe, Ltd., Ireland + Stripe, Inc., USA):",
+      "stripe_prefix": " payment processor. Cookies (",
+      "stripe_code1": "__stripe_mid",
+      "stripe_mid1": ", ",
+      "stripe_code2": "__stripe_sid",
+      "stripe_mid2": ", ",
+      "stripe_code3": "m",
+      "stripe_mid3": ", ",
+      "stripe_code4": "cookie-test",
+      "stripe_mid4": ") are set only when you visit ",
+      "stripe_code5": "/podpora",
+      "stripe_suffix": " or Stripe Checkout. They are necessary for payment to work and for fraud prevention. SCC transfer to the USA.",
+      "cloudflare_label": "Cloudflare (Cloudflare Inc., USA):",
+      "cloudflare_text": " hosting of the static part of the app and CDN. EU data centres, GDPR Data Processing Addendum.",
+      "future_emph": "We currently do not integrate any advertising networks, social plugins or external analytics (e.g. Google Analytics).",
+      "future_prefix": " If we ever add an analytics or marketing tool (e.g. for traffic measurement, A/B tests or advertising campaigns), it will activate ",
+      "future_emph2": "only",
+      "future_suffix": " with your opt-in consent in the \"analytics\" or \"marketing\" category. When we add a new processor we will bump the version of this policy — the banner will reappear and we will ask for fresh consent."
+    },
+    "s4": {
+      "heading": "4. How to manage consent",
+      "intro": "You can change your selection at any time by clicking the button below or the \"Cookie settings\" link in the page footer. Withdrawing consent does not affect the lawfulness of processing carried out before withdrawal.",
+      "button": "Open cookie settings",
+      "last_consent": "Your last consent: {timestamp} (version {version})"
+    },
+    "s5": {
+      "heading": "5. Disabling via the browser",
+      "prefix": "You can disable cookies and ",
+      "code": "localStorage",
+      "suffix": " directly in your browser settings. Without the necessary category, however, your test result will not be saved and the page will request consent again on every load."
+    },
+    "s6": {
+      "heading": "6. Changes to this policy",
+      "prefix": "On every material change we will bump ",
+      "code": "CONSENT_VERSION",
+      "suffix": " and the banner will reappear so you can confirm the current version. Minor stylistic fixes do not require fresh consent."
+    },
+    "s7": {
+      "heading": "7. Related documents",
+      "prefix": "The full scope of personal data processing, legal bases and your rights can be found in the ",
+      "link": "privacy policy",
+      "suffix": "."
+    }
+  }
+}

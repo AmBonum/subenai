@@ -1,0 +1,382 @@
+{
+  "privacy": {
+    "meta_title": "Zásady ochrany soukromí — subenai",
+    "meta_description": "Jaké údaje zpracováváme, na jakém právním základě, jak dlouho je uchováváme a jaká máte práva podle GDPR a slovenského zákona o ochraně osobních údajů.",
+    "back_home": "← Zpět na domovskou stránku",
+    "title": "Zásady ochrany soukromí",
+    "last_updated": "Poslední aktualizace: 18. května 2026 (verze 1.4.0)",
+    "s1": {
+      "heading": "1. Správce",
+      "intro": "Správcem ve smyslu čl. 4 odst. 7 GDPR a § 5 písm. o) zákona č. 18/2018 Z. z. je:",
+      "company": "am.bonum s. r. o.",
+      "address": "Sídlo: Škultétyho 1560/3, 052 01 Spišská Nová Ves, Slovensko",
+      "ids": "IČO: 55 055 290 · DIČ: 2121850005 · DIČ pro DPH: nejsme plátci DPH",
+      "registry": "Zápis: Městský soud Košice, oddíl Sro, vložka č. 55453/V (den zápisu 23. 11. 2022)",
+      "executive": "Statutární orgán: Ľubomír Volčko, jednatel jednající samostatně",
+      "contact_label": "Kontakt ve věcech ochrany osobních údajů: ",
+      "dpo": "Správce nemá jmenovaného pověřence pro ochranu osobních údajů (DPO) — povinnost mu nevyplývá z čl. 37 odst. 1 GDPR ani z § 44 zákona č. 18/2018 Z. z. (nejde o orgán veřejné moci, hlavní činnosti nezahrnují systematické monitorování subjektů údajů ve velkém rozsahu ani zpracování zvláštních kategorií údajů podle čl. 9 GDPR ve velkém rozsahu)."
+    },
+    "s2": {
+      "heading": "2. Jaké údaje zpracováváme",
+      "answers_label": "Vaše odpovědi a skóre v testu",
+      "answers_text": " — odpovědi na 15 otázek, čas odpovědi, výsledné skóre a archetyp osobnosti. Bez nich nelze test vyhodnotit ani uložit.",
+      "details_label": "Vaše konkrétní odpovědi",
+      "details_text": " — pro každou otázku ID otázky, vybraná možnost (a, b, c, d), zda byla správná, čas reakce, kategorie a obtížnost. Bez nich nelze po dokončení testu zobrazit detailní review odpovědí.",
+      "session_label": "Anonymní identifikátor relace",
+      "session_text": " — generovaný automaticky službou Supabase. Neobsahuje vaše jméno, e-mail ani IP adresu. Slouží k propojení odpovědí s výsledkem.",
+      "consent_label": "Záznam souhlasu s cookies",
+      "consent_text": " — verze zásad, které jste schválil/a, časové razítko a vybrané kategorie. Uloženo lokálně ve vašem prohlížeči.",
+      "trap_label": "Edukační „TrapDialog\" po testu",
+      "trap_prefix": " — popup, který vás vyzve vyplnit citlivé údaje (rodné číslo, číslo karty, CVV, IBAN, heslo, OTP). Jde o čistě vzdělávací moment. ",
+      "trap_emph": "Hodnoty, které do něj vyplníte, NIKDY neopustí váš prohlížeč",
+      "trap_middle": " — neodešlou se na server, neuloží se do databáze, nezapíšou se do ",
+      "trap_code": "localStorage",
+      "trap_suffix": ". Po zavření dialogu zaniknou v paměti. Ukládáme pouze jediný pomocný příznak (`iiq_trap_seen`), abychom vám popup znovu nezobrazili při další návštěvě — žádné vaše hodnoty.",
+      "survey_label": "Volitelné průzkumové odpovědi",
+      "survey_prefix": " — pokud vyplníte post-test survey: věková kategorie, pohlaví, město, země, sebehodnocení opatrnosti (1–5), největší obava na internetu, zda jste už někdy naletěl/a podvodu, odkud jste se dozvěděl/a o testu, zda máte zájem o kurzy a jaká témata. ",
+      "survey_emph": "Žádné pole není povinné",
+      "survey_suffix": ", můžete odeslat i prázdný formulář.",
+      "anticheat_label": "Technické údaje pro anti-cheat",
+      "anticheat_text": " — čas zobrazení otázky, přesměrování, počet pokusů. Zpracováváno výhradně k zabránění zneužití testu.",
+      "logs_label": "Serverové logy hostingu",
+      "logs_text": " — Cloudflare a Supabase uchovávají IP adresu a hlavičky požadavků po omezenou dobu (typicky 7–30 dnů) za účelem bezpečnosti a prevence útoků. K těmto logům správce při běžném provozu nepřistupuje.",
+      "exclusions_label": "Nepožadujeme a nezpracováváme:",
+      "exclusions_text": " e-mail, jméno, telefonní číslo, adresu, přesnou geolokaci, údaje o platební kartě ani žádné zvláštní kategorie údajů ve smyslu čl. 9 GDPR (zdraví, víra, politické názory atd.)."
+    },
+    "s3": {
+      "heading": "3. Účel a právní základ zpracování",
+      "col_purpose": "Účel",
+      "col_basis": "Právní základ",
+      "col_retention": "Doba uchovávání",
+      "rows": {
+        "completion": {
+          "purpose": "Provedení testu a uložení skóre",
+          "basis": "Plnění smlouvy / čl. 6 odst. 1 písm. b) GDPR",
+          "retention": "36 měsíců"
+        },
+        "review": {
+          "purpose": "Review odpovědí po dokončení testu",
+          "basis": "Plnění smlouvy / čl. 6 odst. 1 písm. b) GDPR",
+          "retention": "36 měsíců"
+        },
+        "survey": {
+          "purpose": "Volitelné průzkumové odpovědi (post-test survey)",
+          "basis": "Souhlas / čl. 6 odst. 1 písm. a) GDPR",
+          "retention": "36 měsíců / odvolání souhlasu"
+        },
+        "anticheat": {
+          "purpose": "Anti-cheat a bezpečnost",
+          "basis": "Oprávněný zájem / čl. 6 odst. 1 písm. f) GDPR",
+          "retention": "12 měsíců"
+        },
+        "composer": {
+          "purpose": "Vlastní sady testů (Composer) — pouze ID otázek, práh úspěšnosti, volitelný název sady",
+          "basis": "Plnění smlouvy / čl. 6 odst. 1 písm. b) GDPR",
+          "retention": "12 měsíců od vytvoření"
+        },
+        "edu": {
+          "purpose": "Edu odpovědi (jméno + e-mail respondenta v opt-in režimu „Education mode\")",
+          "basis": "Souhlas / čl. 6 odst. 1 písm. a) GDPR",
+          "retention": "12 měsíců, poté auto-anonymizace"
+        },
+        "analytics": {
+          "purpose": "Analytika a vylepšování produktu",
+          "basis": "Souhlas / čl. 6 odst. 1 písm. a) GDPR",
+          "retention": "do 13 měsíců / odvolání souhlasu"
+        },
+        "consent_record": {
+          "purpose": "Záznam souhlasu samotného",
+          "basis": "Plnění zákonné povinnosti / čl. 6 odst. 1 písm. c) GDPR",
+          "retention": "Po dobu platnosti souhlasu + 12 měsíců"
+        },
+        "sponsorship": {
+          "purpose": "Sponzorské platby (faktura, AML, účetnictví)",
+          "basis": "Plnění smlouvy + zákon č. 431/2002 Z. z. / čl. 6 odst. 1 písm. b) a c) GDPR",
+          "retention": "10 let"
+        }
+      }
+    },
+    "s4": {
+      "heading": "4. Příjemci a zpracovatelé",
+      "supabase_label": "Supabase Inc.",
+      "supabase_text": " (USA, data uložena v EU regionu Frankfurt) — zpracovatel podle čl. 28 GDPR, přenos do třetí země zajištěn Standardními smluvními doložkami (SCC).",
+      "cloudflare_label": "Cloudflare, Inc.",
+      "cloudflare_text": " (USA, EU PoP) — zpracovatel pro hosting a CDN, GDPR Data Processing Addendum + SCC.",
+      "stripe_label": "Stripe Payments Europe, Ltd.",
+      "stripe_prefix": " (Irsko) se subzpracovatelem ",
+      "stripe_emph": "Stripe, Inc.",
+      "stripe_middle": " (USA) — platební zpracovatel pro dobrovolné podpůrné platby (sběr karetních údajů, vystavení faktury, opakované odběry). SCC připojení podle čl. 46 GDPR. Aktivuje se pouze pokud otevřete stránku ",
+      "stripe_link": "/podpora",
+      "stripe_suffix": ".",
+      "resend_label": "Resend, Inc.",
+      "resend_text": " (USA) — zpracovatel pro transakční e-maily (potvrzení podpory, magic link na správu odběru, varování při refundaci). SCC připojení. Žádné marketingové e-maily.",
+      "no_sell": "Údaje neposkytujeme reklamním sítím, datovým brokerům ani sociálním sítím. Údaje neprodáváme.",
+      "share_label": "Sdílení na sociálních sítích:",
+      "share_text": " pokud kliknete na tlačítko „Sdílej na Facebook / Messenger / WhatsApp / X / LinkedIn / Telegram\", otevřeme přímo oficiální stránku dané platformy s předvyplněným textem a odkazem na výsledek. Žádný kód těchto platforem (FB Pixel, X widget apod.) se do naší stránky nenačítá — sdílecí tlačítka jsou obyčejné odkazy. Po kliknutí odcházíte na server dané platformy a od té chvíle se na vás vztahují její vlastní podmínky a privacy policy.",
+      "utm_label": "UTM parametry ve sdílecích odkazech",
+      "utm_prefix": " (např. ",
+      "utm_code": "?utm_source=facebook",
+      "utm_middle": "): když někdo klikne na námi vygenerovaný sdílecí odkaz, URL obsahuje informaci o tom, ze které platformy návštěva pochází. Tyto parametry ",
+      "utm_emph": "čteme pouze pokud máte v consent dialogu zapnutý souhlas s analytikou",
+      "utm_suffix": "; bez souhlasu se parametry ignorují a nikam se neodesílají. Slouží výhradně k agregovanému přehledu „odkud chodí návštěvníci\", nikoli k profilování konkrétní osoby."
+    },
+    "s5": {
+      "heading": "5. Vaše práva",
+      "intro": "Vůči správci máte podle čl. 15–22 GDPR a § 21–28 zákona č. 18/2018 Z.z. tato práva:",
+      "right_access_prefix": "právo na ",
+      "right_access_emph": "přístup",
+      "right_access_suffix": " k osobním údajům (čl. 15)",
+      "right_rect_prefix": "právo na ",
+      "right_rect_emph": "opravu",
+      "right_rect_suffix": " nepřesných údajů (čl. 16)",
+      "right_erase_prefix": "právo na ",
+      "right_erase_emph": "výmaz",
+      "right_erase_suffix": " („právo být zapomenut\", čl. 17)",
+      "right_restrict_prefix": "právo na ",
+      "right_restrict_emph": "omezení zpracování",
+      "right_restrict_suffix": " (čl. 18)",
+      "right_port_prefix": "právo na ",
+      "right_port_emph": "přenositelnost údajů",
+      "right_port_suffix": " (čl. 20)",
+      "right_object_prefix": "právo ",
+      "right_object_emph": "vznést námitku",
+      "right_object_suffix": " proti zpracování na základě oprávněného zájmu (čl. 21)",
+      "right_withdraw_prefix": "právo ",
+      "right_withdraw_emph": "kdykoli odvolat souhlas",
+      "right_withdraw_suffix": " bez vlivu na zákonnost zpracování před jeho odvoláním (čl. 7 odst. 3)",
+      "right_complaint_prefix": "právo ",
+      "right_complaint_emph": "podat stížnost",
+      "right_complaint_suffix": " Úřadu na ochranu osobních údajů SR — Hraničná 12, 820 07 Bratislava, ",
+      "complaint_link": "dataprotection.gov.sk",
+      "deadline": "Žádosti vyřizujeme do 30 dnů od doručení (čl. 12 odst. 3 GDPR). Bezplatně, pokud žádost není zjevně neopodstatněná nebo nepřiměřená.",
+      "self_service_label": "Self-service výmaz:",
+      "self_service_prefix": " Vzhledem k tomu, že pokus o test je čistě anonymní a nevázaný na e-mail, nejrychlejší cesta k výmazu vlastního výsledku je ",
+      "self_service_emph": "otevřít svůj sdílecí odkaz",
+      "self_service_middle": " (například ",
+      "self_service_code": "/r/abc123",
+      "self_service_suffix": ") a kliknout na tlačítko „Smazat tento výsledek\" ve spodní části stránky. Řádek je okamžitě fyzicky vymazán z databáze a sdílecí odkaz přestane existovat. Bez e-mailové komunikace, bez čekání.",
+      "retention_label": "Automatická retence:",
+      "retention_prefix": " Naše databáze má naplánovanou denní úlohu (Postgres pg_cron, běží 03:17 UTC), která fyzicky vymaže záznamy starší než 36 měsíců. Doba se neresetuje žádnou aktivitou — počítá se od původního vytvoření pokusu. Tato pravidla jsou zapsána přímo v migracích (",
+      "retention_code": "20260426110000_*",
+      "retention_suffix": ") a nejsou doporučením."
+    },
+    "s6": {
+      "heading": "6. Automatizované rozhodování a profilování",
+      "p1_prefix": "Vyhodnocení testu (skóre, percentil, archetyp) je automatizované podle pevně stanoveného algoritmu, ale",
+      "p1_emph": " nemá žádný právní ani podobně významný účinek",
+      "p1_suffix": " na vás ve smyslu čl. 22 GDPR. Slouží výhradně k zábavě a edukaci. Profilování pro marketingové účely provádíme pouze s výslovným souhlasem (kategorie „marketing\" v cookie banneru); v současnosti žádné marketingové profilování neprobíhá.",
+      "p2": "Review odpovědí na sdílecím odkazu je read-only zobrazení vašich uložených odpovědí — žádné nové automatizované rozhodnutí se jím nevytváří, nevzniká žádný další profil ani skóre."
+    },
+    "s7": {
+      "heading": "7. Sponzorování projektu",
+      "intro_prefix": "Pokud se rozhodnete podpořit projekt prostřednictvím stránky ",
+      "intro_link": "/podpora",
+      "intro_suffix": " (jednorázově nebo měsíčně), zpracujeme následující údaje výhradně pro účely vystavení faktury, AML compliance a vedení účetních záznamů:",
+      "email_label": "E-mail",
+      "email_text": " — pro fakturu a budoucí komunikaci k odběru (např. změna karty, zrušení odběru)",
+      "name_label": "Jméno nebo název firmy",
+      "name_text": " — povinný údaj na faktuře per § 74 zákona č. 222/2004 Z. z.",
+      "vat_label": "DIČ",
+      "vat_text": " — volitelně, pro B2B fakturu s nárokem na odpočet",
+      "billing_label": "Fakturační adresa",
+      "billing_text": " — vyžadována Stripe při částkách ≥ 35 €",
+      "payment_label": "Údaje o platbě (karetní údaje, IBAN)",
+      "payment_prefix": " — zpracovává výhradně",
+      "payment_emph": " Stripe Payments Europe, Ltd.",
+      "payment_suffix": " (Irsko) jako náš platební zpracovatel. My je nikdy nevidíme ani neukládáme. Stripe je SCC-připojený na Stripe Inc. (USA) per čl. 46 GDPR.",
+      "basis_label": "Právní základ:",
+      "basis_text": " čl. 6 odst. 1 písm. b) GDPR (smlouva o poskytování digitální služby) v kombinaci s písm. c) (právní povinnost vedení účetních záznamů per zákon č. 431/2002 Z. z.).",
+      "retention_label": "Doba uchovávání:",
+      "retention_emph": " 10 let",
+      "retention_suffix": " per § 35 zákona č. 431/2002 Z. z. o účetnictví. Tato retence má přednost před GDPR čl. 17 (právo na výmaz) — při žádosti o výmaz anonymizujeme zobrazovaná pole (`display_name`, `display_link`, `display_message`), ale samotný účetní záznam o transakci zůstává v databázi pro případný daňový audit.",
+      "refund_label": "Refundace a zrušení odběru:",
+      "refund_prefix": " dobrovolný příspěvek je ",
+      "refund_emph1": "nevratný",
+      "refund_middle": " (digitální služba poskytnutá okamžitě, právo na odstoupení zaniká podle § 7 ods. 6 zákona č. 102/2014 Z. z. — před platbou výslovně zaškrtnete souhlas). Měsíční odběr můžete ",
+      "refund_emph2": "kdykoli zrušit jediným kliknutím",
+      "refund_middle2": " přes Stripe Customer Portal, jehož odkaz vám pošleme po zadání e-mailu na adrese ",
+      "refund_link": "/spravovat-podporu",
+      "refund_suffix": ". Zrušení se vztahuje na následující fakturační období, nikoli minulá.",
+      "public_label": "Dobrovolné údaje pro veřejné poděkování:",
+      "public_prefix": " při checkoutu si můžete zvolit, zda vás zobrazíme na stránce ",
+      "public_link": "/sponzori",
+      "public_middle": " (výchozí je vypnuto). Granulárně — jméno, volitelný odkaz, volitelná zpráva do 80 znaků. Souhlas můžete kdykoli odvolat e-mailem na ",
+      "public_suffix": ".",
+      "limit_label": "Maximální jednorázová částka 500 €",
+      "limit_text": " — držíme limit pod hranicí KYC povinnosti per § 10 zákona č. 297/2008 Z. z. o ochraně před legalizací příjmů z trestné činnosti. Nad tuto částku přijímáme podporu pouze bankovním převodem mimo Stripe."
+    },
+    "s8": {
+      "heading": "8. Education mode (sběr edu odpovědí)",
+      "intro_prefix": "Od května 2026 si autoři vzdělávacích testů (učitelé, lektoři, HR) mohou při tvorbě vlastní sady v Composeru zapnout možnost ",
+      "intro_emph": "sbírat odpovědi se jménem a e-mailem respondenta",
+      "intro_middle": ". Cíl: učitel chce vidět, jak se konkrétní student zlepšuje. Tento režim je ",
+      "intro_emph2": "opt-in",
+      "intro_middle2": " — ve výchozím nastavení je vypnutý a nedotýká se standardních anonymních testů na ",
+      "intro_code": "/test",
+      "intro_suffix": " ani firemních sad bez této volby.",
+      "data_label": "Jaké údaje:",
+      "data_text": " jméno respondenta, e-mail, skóre, detail odpovědí (stejné sloupce jako u anonymního testu).",
+      "access_label": "Komu jsou přístupné:",
+      "access_text": " autorovi testu přes password-protected dashboard (heslo si autor zvolil při vytváření sady, hash uložen přes bcrypt). Naše servery data hostují; mimo dashboard k nim nikdo nepřistupuje.",
+      "purpose_label": "Účel:",
+      "purpose_text": " hodnocení testu autorem (učitelem, HR).",
+      "role_label": "Právní role:",
+      "role_prefix": " v tomto scénáři je ",
+      "role_emph1": "autor testu správcem",
+      "role_middle": " (čl. 4 odst. 7 GDPR) — určuje účel a prostředky zpracování osobních údajů respondenta. ",
+      "role_emph2": "am.bonum s. r. o. je zpracovatel",
+      "role_middle2": " podle čl. 28 GDPR — data hostuje a zpracovává výhradně na pokyn autora. Šablonu smlouvy o zpracování (DPA) poskytneme na vyžádání e-mailem na ",
+      "role_code": "subenai.podpora@gmail.com",
+      "role_suffix": ".",
+      "basis_label": "Právní základ:",
+      "basis_text": " souhlas respondenta podle čl. 6 odst. 1 písm. a) GDPR. Souhlas je vyžadován výslovně na intake formuláři před zahájením testu; bez něj test nepokračuje.",
+      "retention_label": "Doba uchovávání: 12 měsíců",
+      "retention_text": " od vytvoření záznamu, poté automaticky jméno a e-mail anonymizujeme (skóre + odpovědi zůstávají pro statistiku autora). Autor může konkrétního respondenta vymazat dříve přes dashboard.",
+      "callout_label": "Pokud jste respondent edu testu:",
+      "callout_prefix": " primární kontakt pro uplatnění vašich GDPR práv (čl. 15–22 — přístup, oprava, výmaz, přenos) je ",
+      "callout_emph": "autor testu",
+      "callout_middle": ", nikoli my. My jako zpracovatel vaše data pouze hostujeme a po pokynu autora je vymažeme. Pokud nevíte, kdo je autor, nebo nemá odpověď, kontaktujte nás na ",
+      "callout_code": "subenai.podpora@gmail.com",
+      "callout_suffix": " — pomůžeme vám autora identifikovat a postoupíme žádost."
+    },
+    "s9": {
+      "heading": "9. Bezpečnost",
+      "text": "Komunikace probíhá přes HTTPS (TLS 1.3), údaje v Supabase jsou šifrovány at-rest i in-transit, přístup k databázi je chráněn Row Level Security politikami. Stripe-hostované formuláře karetních údajů jsou PCI DSS Level 1 certifikované — naše servery žádné karetní údaje nikdy nevidí. Hesla autorů edu sad ukládáme výhradně jako bcrypt hashe (pgcrypto, cost factor 10) — původní heslo neukládáme nikde."
+    },
+    "s10": {
+      "heading": "10. Změny těchto zásad",
+      "text": "Při podstatné změně zásad vám zobrazíme nový cookie banner se žádostí o nový souhlas (zvýšením verze záznamu). Drobné jazykové úpravy zveřejňujeme bez upozornění. Aktuální verze má vždy uveden datum u názvu dokumentu."
+    },
+    "s11": {
+      "heading": "11. Související dokumenty",
+      "prefix": "Detailní seznam cookies a úložiště je v ",
+      "link": "zásadách používání cookies",
+      "suffix": "."
+    }
+  },
+  "cookies": {
+    "meta_title": "Zásady používání cookies — subenai",
+    "meta_description": "Jaké úložiště a cookies používá subenai, k čemu slouží, jak dlouho zůstávají a jak je můžete spravovat.",
+    "back_home": "← Zpět na domovskou stránku",
+    "title": "Zásady používání cookies",
+    "version_line": "Verze {version} · Poslední aktualizace: 18. května 2026",
+    "s1": {
+      "heading": "1. Co jsou cookies a podobné technologie",
+      "prefix": "Pod pojmem „cookies\" v těchto zásadách rozumíme jakékoli uložení informací na vašem zařízení nebo přístup k nim — včetně HTTP cookies, ",
+      "code1": "localStorage",
+      "middle1": ", ",
+      "code2": "sessionStorage",
+      "middle2": " a IndexedDB. Tento rozsah definuje směrnice o soukromí v elektronických komunikacích 2002/58/ES (čl. 5 odst. 3), ve slovenském právu § 109 zákona č. 452/2021 Z.z. o elektronických komunikacích."
+    },
+    "s2": {
+      "heading": "2. Kategorie a právní základy",
+      "intro": "Úložiště dělíme do čtyř kategorií. Souhlas si vyžadují pouze kategorie 2.2–2.4. Kategorie 2.1 funguje na základě oprávněného zájmu (čl. 6 odst. 1 písm. f) GDPR) a vaší smluvní požadavky test absolvovat.",
+      "col_category": "Kategorie",
+      "col_key": "Název / klíč",
+      "col_purpose": "Účel",
+      "col_duration": "Trvání",
+      "stripe_category_prefix": "Nezbytné pro platbu (pouze na ",
+      "stripe_category_code": "/podpora",
+      "stripe_category_suffix": ")",
+      "rows": {
+        "consent": {
+          "category": "Nezbytné",
+          "key": "iiq_consent",
+          "purpose": "Záznam vašeho souhlasu (verze + výběr kategorií + časové razítko)",
+          "duration": "12 měsíců / do změny"
+        },
+        "supabase": {
+          "category": "Nezbytné",
+          "key": "sb-*-auth-token",
+          "purpose": "Anonymní Supabase relace — bez ní nelze uložit váš výsledek testu přes Row Level Security",
+          "duration": "~1 hodina (auto-refresh)"
+        },
+        "prefs": {
+          "category": "Předvolby",
+          "key": "budoucí",
+          "purpose": "Zapamatování jazyka / motivu",
+          "duration": "12 měsíců"
+        },
+        "analytics": {
+          "category": "Analytika",
+          "key": "budoucí (PostHog)",
+          "purpose": "Anonymizované měření míry dokončení, A/B testy",
+          "duration": "do 13 měsíců"
+        },
+        "marketing": {
+          "category": "Marketing",
+          "key": "aktuálně žádné",
+          "purpose": "Personalizovaná reklama, retargeting (zatím nepoužíváme)",
+          "duration": "—"
+        },
+        "stripe_mid": {
+          "key": "__stripe_mid",
+          "purpose": "Stripe machine ID — fraud prevention, identifikace zařízení",
+          "duration": "1 rok"
+        },
+        "stripe_sid": {
+          "key": "__stripe_sid",
+          "purpose": "Stripe session ID — udržení platební relace",
+          "duration": "30 minut"
+        },
+        "stripe_m": {
+          "key": "m",
+          "purpose": "Stripe Checkout — ochrana proti CSRF",
+          "duration": "relace"
+        },
+        "stripe_test": {
+          "key": "cookie-test",
+          "purpose": "Stripe test podpory cookies v prohlížeči (žádné osobní údaje)",
+          "duration": "relace"
+        }
+      }
+    },
+    "s3": {
+      "heading": "3. Třetí strany (zpracovatelé)",
+      "supabase_label": "Supabase (Supabase Inc., USA — EU region Frankfurt):",
+      "supabase_text": " hosting databáze a anonymní autentizace. Zpracovává se podle SCC (standardních smluvních doložek).",
+      "stripe_label": "Stripe (Stripe Payments Europe, Ltd., Irsko + Stripe, Inc., USA):",
+      "stripe_prefix": " platební zpracovatel. Cookies (",
+      "stripe_code1": "__stripe_mid",
+      "stripe_mid1": ", ",
+      "stripe_code2": "__stripe_sid",
+      "stripe_mid2": ", ",
+      "stripe_code3": "m",
+      "stripe_mid3": ", ",
+      "stripe_code4": "cookie-test",
+      "stripe_mid4": ") se nastavují výhradně pokud navštívíte ",
+      "stripe_code5": "/podpora",
+      "stripe_suffix": " nebo Stripe Checkout. Jsou nutné pro fungování platby a fraud prevention. SCC připojení pro přenos do USA.",
+      "cloudflare_label": "Cloudflare (Cloudflare Inc., USA):",
+      "cloudflare_text": " hosting statické části aplikace a CDN. EU datová centra, GDPR Data Processing Addendum.",
+      "future_emph": "Aktuálně neintegrujeme žádné reklamní sítě, sociální pluginy ani externí analytiku (např. Google Analytics).",
+      "future_prefix": " Pokud bychom někdy přidali analytický nebo marketingový nástroj (např. pro měření návštěvnosti, A/B testy nebo reklamní kampaně), aktivuje se ",
+      "future_emph2": "pouze",
+      "future_suffix": " s vaším opt-in souhlasem v kategorii „analytika\" nebo „marketing\". Při přidání nového zpracovatele zvýšíme verzi těchto zásad — banner se znovu zobrazí a vyžádáme od vás nový souhlas."
+    },
+    "s4": {
+      "heading": "4. Jak spravovat souhlas",
+      "intro": "Svůj výběr můžete kdykoli změnit kliknutím na tlačítko níže nebo na odkaz „Nastavení cookies\" v patě stránky. Odvolání souhlasu nemá vliv na zákonnost zpracování provedeného před odvoláním.",
+      "button": "Otevřít nastavení cookies",
+      "last_consent": "Váš poslední souhlas: {timestamp} (verze {version})"
+    },
+    "s5": {
+      "heading": "5. Vypnutí přes prohlížeč",
+      "prefix": "Cookies i ",
+      "code": "localStorage",
+      "suffix": " můžete zakázat přímo v nastavení prohlížeče. Bez nezbytné kategorie se však váš výsledek testu neuloží a stránka bude při každém načtení žádat souhlas znovu."
+    },
+    "s6": {
+      "heading": "6. Změny těchto zásad",
+      "prefix": "Při každé podstatné změně zvýšíme ",
+      "code": "CONSENT_VERSION",
+      "suffix": " a banner se znovu zobrazí, abyste mohl/mohla potvrdit aktuální verzi. Drobné stylistické opravy nevyžadují nový souhlas."
+    },
+    "s7": {
+      "heading": "7. Související dokumenty",
+      "prefix": "Plný rozsah zpracování osobních údajů, právní základy a vaše práva najdete v ",
+      "link": "zásadách ochrany soukromí",
+      "suffix": "."
+    }
+  }
+}
