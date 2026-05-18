@@ -232,6 +232,40 @@ export interface Template {
   gdpr_purpose: GdprPurpose;
 }
 
+// ---------- AH-11.2a additions: user-side query shapes ----------
+// Profile = authenticated user's own row from `profiles` table.
+export interface Profile {
+  id: string;
+  email: string;
+  display_name: string;
+  avatar_initials: string;
+  created_at: string;
+}
+
+// HistoryItem = a finished session shown in the user's "history" view.
+export interface HistoryItem {
+  id: string;
+  test_id: string;
+  test_title: string;
+  score: number | null;
+  finished_at: string | null;
+  status: "in_progress" | "completed" | "abandoned";
+}
+
+// LibraryQuestion = read-only question scoped by team/visibility, as
+// surfaced in the user-side library picker.
+export interface LibraryQuestion {
+  id: string;
+  prompt: string;
+  branch_slug: string | null;
+  difficulty: string | null;
+  status: string;
+  created_at: string;
+}
+
+// Audience is the user-facing alias for RespondentGroup.
+export type Audience = RespondentGroup;
+
 // ---------- Respondent groups (audiences) ----------
 export interface RespondentGroup {
   id: string;
