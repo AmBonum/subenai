@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 beforeAll(() => {
   if (typeof window !== "undefined" && !window.matchMedia) {
@@ -31,6 +31,7 @@ vi.mock("@tanstack/react-router", async () => {
 
 import { Route } from "@/routes/admin/trainings";
 import { adminRepo } from "@/lib/admin/mock-store";
+import { adminMockRecorded, resetAdminMockRecorded } from "../../utils/admin-supabase-mock";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
@@ -57,13 +58,15 @@ describe("/admin/trainings", () => {
     expect(screen.getByTestId("admin-trainings-list-empty-state")).toBeInTheDocument();
   });
 
-  it("duplicate creates a new row with the (copy) suffix", () => {
+  it("duplicate inserts a trainings row via the mutation hook", async () => {
+    resetAdminMockRecorded();
     render(<Page />);
-    const before = adminRepo.trainings.list().length;
     const first = adminRepo.trainings.list()[0];
     fireEvent.click(screen.getByTestId(`admin-trainings-row-duplicate-${first.id}`));
-    const after = adminRepo.trainings.list();
-    expect(after.length).toBe(before + 1);
-    expect(after.some((t) => t.title.endsWith("(kópia)"))).toBe(true);
+    await waitFor(() => {
+      const inserts = adminMockRecorded.inserts.filter((i) => i.table === "trainings");
+      expect(inserts.length).toBe(1);
+      expect((inserts[0].values.title as string).endsWith("(kópia)")).toBe(true);
+    });
   });
 });

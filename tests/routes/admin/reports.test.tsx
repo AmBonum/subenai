@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 vi.mock("@tanstack/react-router", async () => {
   const actual =
@@ -15,6 +15,7 @@ vi.mock("@tanstack/react-router", async () => {
 
 import { Route } from "@/routes/admin/reports";
 import { adminRepo } from "@/lib/admin/mock-store";
+import { adminMockRecorded, resetAdminMockRecorded } from "../../utils/admin-supabase-mock";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
@@ -34,12 +35,18 @@ describe("/admin/reports", () => {
     expect(screen.getByTestId(`reports-queue-row-resolve-button-${first.id}`)).toBeInTheDocument();
   });
 
-  it("resolve action moves the row to resolved state in the store", () => {
+  it("resolve action issues an UPDATE on the reports row via the mutation hook", async () => {
+    resetAdminMockRecorded();
     render(<Page />);
     const seeded = adminRepo.reports.list();
     const target = seeded.find((r) => r.status === "open") ?? seeded[0];
     fireEvent.click(screen.getByTestId(`reports-queue-row-resolve-button-${target.id}`));
-    const after = adminRepo.reports.list().find((r) => r.id === target.id);
-    expect(after?.status).toBe("resolved");
+    await waitFor(() => {
+      const updates = adminMockRecorded.updates.filter(
+        (u) => u.table === "reports" && u.match.id === target.id,
+      );
+      expect(updates.length).toBe(1);
+      expect(updates[0].patch.status).toBe("resolved");
+    });
   });
 });

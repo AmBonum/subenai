@@ -17,8 +17,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { branchLabel, questionsUsingSet, type AdminAnswerSet } from "@/lib/admin/mock-data";
-import { deleteSet, duplicateSet } from "@/lib/admin/answer-sets-mock-store";
-import { useAdminAnswerSets, useAdminAnswers } from "@/lib/admin/queries";
+import {
+  useAdminAnswerSets,
+  useAdminAnswers,
+  useCreateAnswer,
+  useCreateAnswerSet,
+  useDeleteAnswerSet,
+} from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/questions";
 
@@ -30,10 +35,49 @@ function AnswerSetsPage() {
   const t = tFor("answer_sets_list");
   const setsQuery = useAdminAnswerSets();
   const answersQuery = useAdminAnswers();
+  const createSet = useCreateAnswerSet();
+  const createAnswer = useCreateAnswer();
+  const deleteSet = useDeleteAnswerSet();
   const allSets = useMemo(() => setsQuery.data ?? [], [setsQuery.data]);
   const allAnswers = useMemo(() => answersQuery.data ?? [], [answersQuery.data]);
   const [query, setQuery] = useState("");
   const [confirmDelete, setConfirmDelete] = useState<AdminAnswerSet | null>(null);
+
+  const onMutationError = (err: Error) => toast.error(err.message);
+
+  // Duplicate composes read-then-write via the existing hooks: re-fetch the
+  // source set's answers, create a new set, then copy each child answer. No
+  // dedicated useDuplicateAnswerSet hook in queries.ts; this client-side
+  // composition is intentional and avoids a server fn for AH-11.1c.
+  const duplicate = (src: AdminAnswerSet) => {
+    const copyName = `${src.name} (kópia)`;
+    createSet.mutate(
+      {
+        name: copyName,
+        description: src.description,
+        categories: [...src.categories],
+      },
+      {
+        onSuccess: (created) => {
+          const newId = (created as { id: string }).id;
+          const children = allAnswers.filter((a) => a.set_id === src.id);
+          for (const a of children) {
+            createAnswer.mutate(
+              {
+                set_id: newId,
+                text: a.text,
+                is_correct: a.is_correct,
+                explanation: a.explanation,
+              },
+              { onError: onMutationError },
+            );
+          }
+          toast.success(t("toast_duplicated", { name: copyName }));
+        },
+        onError: onMutationError,
+      },
+    );
+  };
 
   const sets = useMemo(
     () =>
@@ -123,10 +167,7 @@ function AnswerSetsPage() {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         data-testid={`answer-sets-row-duplicate-${s.id}`}
-                        onClick={() => {
-                          const c = duplicateSet(s.id);
-                          if (c) toast.success(t("toast_duplicated", { name: c.name }));
-                        }}
+                        onClick={() => duplicate(s)}
                       >
                         {t("duplicate")}
                       </DropdownMenuItem>
@@ -196,8 +237,10 @@ function AnswerSetsPage() {
         destructive
         onConfirm={() => {
           if (confirmDelete) {
-            deleteSet(confirmDelete.id);
-            toast.success(t("toast_deleted"));
+            deleteSet.mutate(confirmDelete.id, {
+              onSuccess: () => toast.success(t("toast_deleted")),
+              onError: onMutationError,
+            });
             setConfirmDelete(null);
           }
         }}

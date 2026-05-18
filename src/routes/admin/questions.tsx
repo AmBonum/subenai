@@ -48,8 +48,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BRANCHES, branchLabel, type AdminQuestion } from "@/lib/admin/mock-data";
-import { adminRepo } from "@/lib/admin/mock-store";
-import { useAdminQuestions } from "@/lib/admin/queries";
+import {
+  useAdminQuestions,
+  useCreateQuestion,
+  useUpdateQuestion,
+  useDeleteQuestion,
+} from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { exportToCSV } from "@/lib/admin/export";
 import { tFor } from "@/i18n/questions";
@@ -67,6 +71,9 @@ const AI_ENABLED = import.meta.env.VITE_AI_GENERATOR_ENABLED === "true";
 function QuestionsPage() {
   const t = tFor("admin_list");
   const questionsQuery = useAdminQuestions();
+  const createQuestion = useCreateQuestion();
+  const updateQuestion = useUpdateQuestion();
+  const deleteQuestion = useDeleteQuestion();
   const questions = useMemo(() => questionsQuery.data ?? [], [questionsQuery.data]);
 
   const [query, setQuery] = useState("");
@@ -125,12 +132,34 @@ function QuestionsPage() {
   const clearSelection = () => setSelected(new Set());
 
   const handleSave = (data: Partial<AdminQuestion>) => {
+    const onError = (err: Error) => toast.error(err.message);
     if (editing) {
-      adminRepo.questions.update(editing.id, data);
-      toast.success(t("toast_question_saved"));
+      updateQuestion.mutate(
+        { id: editing.id, patch: data },
+        { onSuccess: () => toast.success(t("toast_question_saved")), onError },
+      );
     } else {
-      adminRepo.questions.create(data);
-      toast.success(t("toast_question_created"));
+      createQuestion.mutate(data, {
+        onSuccess: () => toast.success(t("toast_question_created")),
+        onError,
+      });
+    }
+  };
+
+  const bulkUpdateStatus = (ids: string[], status: AdminQuestion["status"]) => {
+    for (const id of ids) {
+      updateQuestion.mutate(
+        { id, patch: { status } },
+        {
+          onError: (err: Error) => toast.error(err.message),
+        },
+      );
+    }
+  };
+
+  const bulkDelete = (ids: string[]) => {
+    for (const id of ids) {
+      deleteQuestion.mutate(id, { onError: (err: Error) => toast.error(err.message) });
     }
   };
 
@@ -328,9 +357,7 @@ function QuestionsPage() {
                   size="sm"
                   variant="ghost"
                   onClick={() =>
-                    askBulk(t("publish"), () =>
-                      adminRepo.questions.bulkUpdate([...selected], { status: "published" }),
-                    )
+                    askBulk(t("publish"), () => bulkUpdateStatus([...selected], "published"))
                   }
                 >
                   {t("publish")}
@@ -339,9 +366,7 @@ function QuestionsPage() {
                   size="sm"
                   variant="ghost"
                   onClick={() =>
-                    askBulk(t("archive"), () =>
-                      adminRepo.questions.bulkUpdate([...selected], { status: "archived" }),
-                    )
+                    askBulk(t("archive"), () => bulkUpdateStatus([...selected], "archived"))
                   }
                 >
                   {t("archive")}
@@ -350,9 +375,7 @@ function QuestionsPage() {
                   size="sm"
                   variant="ghost"
                   className="text-destructive"
-                  onClick={() =>
-                    askBulk(t("delete"), () => adminRepo.questions.bulkRemove([...selected]), true)
-                  }
+                  onClick={() => askBulk(t("delete"), () => bulkDelete([...selected]), true)}
                 >
                   {t("delete")}
                 </Button>
@@ -470,18 +493,28 @@ function QuestionsPage() {
                               {t("row_edit")}
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => {
-                                adminRepo.questions.update(q.id, { status: "published" });
-                                toast.success(t("toast_published"));
-                              }}
+                              onClick={() =>
+                                updateQuestion.mutate(
+                                  { id: q.id, patch: { status: "published" } },
+                                  {
+                                    onSuccess: () => toast.success(t("toast_published")),
+                                    onError: (err: Error) => toast.error(err.message),
+                                  },
+                                )
+                              }
                             >
                               {t("row_publish")}
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                              onClick={() => {
-                                adminRepo.questions.update(q.id, { status: "archived" });
-                                toast.success(t("toast_archived"));
-                              }}
+                              onClick={() =>
+                                updateQuestion.mutate(
+                                  { id: q.id, patch: { status: "archived" } },
+                                  {
+                                    onSuccess: () => toast.success(t("toast_archived")),
+                                    onError: (err: Error) => toast.error(err.message),
+                                  },
+                                )
+                              }
                             >
                               {t("row_archive")}
                             </DropdownMenuItem>
@@ -504,8 +537,10 @@ function QuestionsPage() {
                                   description: q.title,
                                   destructive: true,
                                   onConfirm: () => {
-                                    adminRepo.questions.remove(q.id);
-                                    toast.success(t("toast_question_deleted"));
+                                    deleteQuestion.mutate(q.id, {
+                                      onSuccess: () => toast.success(t("toast_question_deleted")),
+                                      onError: (err: Error) => toast.error(err.message),
+                                    });
                                   },
                                 })
                               }

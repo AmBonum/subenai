@@ -18,8 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { adminRepo } from "@/lib/admin/mock-store";
-import { useAdminTrainings } from "@/lib/admin/queries";
+import { useAdminTrainings, useCreateTraining, useDeleteTraining } from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import type { AdminTraining } from "@/lib/admin/mock-data";
 import { topicLabel } from "@/lib/admin/mock-data";
@@ -32,6 +31,8 @@ export const Route = createFileRoute("/admin/trainings")({
 function AdminTrainingsPage() {
   const t = tFor("trainings");
   const trainingsQuery = useAdminTrainings();
+  const createTraining = useCreateTraining();
+  const deleteTraining = useDeleteTraining();
   const trainings = useMemo(() => trainingsQuery.data ?? [], [trainingsQuery.data]);
   const [query, setQuery] = useState("");
   const [editorOpen, setEditorOpen] = useState(false);
@@ -57,14 +58,20 @@ function AdminTrainingsPage() {
   };
 
   const duplicate = (tr: AdminTraining) => {
-    const copy = adminRepo.trainings.create({
-      title: `${tr.title}${t("duplicate_suffix")}`,
-      topic: tr.topic,
-      description: tr.description,
-      duration_min: tr.duration_min,
-      status: "draft",
-    });
-    toast.success(copy.title);
+    const title = `${tr.title}${t("duplicate_suffix")}`;
+    createTraining.mutate(
+      {
+        title,
+        topic: tr.topic,
+        description: tr.description,
+        duration_min: tr.duration_min,
+        status: "draft",
+      },
+      {
+        onSuccess: () => toast.success(title),
+        onError: (err: Error) => toast.error(err.message),
+      },
+    );
   };
 
   return (
@@ -195,7 +202,9 @@ function AdminTrainingsPage() {
         destructive
         onConfirm={() => {
           if (confirmDelete) {
-            adminRepo.trainings.remove(confirmDelete.id);
+            deleteTraining.mutate(confirmDelete.id, {
+              onError: (err: Error) => toast.error(err.message),
+            });
             setConfirmDelete(null);
           }
         }}

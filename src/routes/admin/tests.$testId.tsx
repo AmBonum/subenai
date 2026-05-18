@@ -1,13 +1,13 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 import { ArrowLeft, Archive, Save, Send } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { TestEditor, type TestEditorState } from "@/components/admin/TestEditor";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
-import { adminRepo } from "@/lib/admin/mock-store";
-import { useAdminTest } from "@/lib/admin/queries";
+import { useAdminTest, useUpdateTest } from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/tests";
 
@@ -20,6 +20,7 @@ function AdminTestEditorPage() {
   const { testId } = useParams({ from: "/admin/tests/$testId" });
   const nav = useNavigate();
   const testQuery = useAdminTest(testId);
+  const updateTest = useUpdateTest();
   const test = testQuery.data ?? null;
 
   const [draft, setDraft] = useState<TestEditorState | null>(null);
@@ -59,21 +60,23 @@ function AdminTestEditorPage() {
     );
   }
 
+  const onError = (err: Error) => toast.error(err.message);
+
   const save = () => {
     if (draft) {
-      adminRepo.tests.update(test.id, draft);
+      updateTest.mutate({ id: test.id, patch: draft }, { onError });
       setDirty(false);
     }
   };
 
   const publish = () => {
     save();
-    adminRepo.tests.update(test.id, { status: "published" });
+    updateTest.mutate({ id: test.id, patch: { status: "published" } }, { onError });
   };
 
   const archive = () => {
     save();
-    adminRepo.tests.update(test.id, { status: "archived" });
+    updateTest.mutate({ id: test.id, patch: { status: "archived" } }, { onError });
   };
 
   const onBack = () => {

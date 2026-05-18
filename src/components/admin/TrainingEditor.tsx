@@ -28,7 +28,7 @@ import {
   type AdminTraining,
   type TrainingStatus,
 } from "@/lib/admin/mock-data";
-import { adminRepo } from "@/lib/admin/mock-store";
+import { useCreateTraining, useUpdateTraining } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/admin";
 
 export interface TrainingEditorProps {
@@ -51,6 +51,8 @@ const emptyForm = () => ({
 
 export function TrainingEditor({ open, onOpenChange, training, onSave }: TrainingEditorProps) {
   const t = tFor("trainings");
+  const createTraining = useCreateTraining();
+  const updateTraining = useUpdateTraining();
   const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
@@ -79,22 +81,18 @@ export function TrainingEditor({ open, onOpenChange, training, onSave }: Trainin
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSave) return;
+    const payload = {
+      title: form.title,
+      description: form.description,
+      topic: form.topic,
+      duration_min: form.duration_min,
+      status: form.status,
+    };
+    const onError = (err: Error) => toast.error(err.message);
     if (isEdit && training) {
-      adminRepo.trainings.update(training.id, {
-        title: form.title,
-        description: form.description,
-        topic: form.topic,
-        duration_min: form.duration_min,
-        status: form.status,
-      });
+      updateTraining.mutate({ id: training.id, patch: payload }, { onError });
     } else {
-      adminRepo.trainings.create({
-        title: form.title,
-        description: form.description,
-        topic: form.topic,
-        duration_min: form.duration_min,
-        status: form.status,
-      });
+      createTraining.mutate(payload, { onError });
     }
     onSave?.(form);
     toast.success(isEdit ? "OK" : "OK");

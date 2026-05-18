@@ -24,8 +24,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { adminRepo } from "@/lib/admin/mock-store";
-import { useAdminCategories, useAdminTopics } from "@/lib/admin/queries";
+import {
+  useAdminCategories,
+  useAdminTopics,
+  useCreateCategory,
+  useUpdateCategory,
+  useDeleteCategory,
+  useCreateTopic,
+  useUpdateTopic,
+  useDeleteTopic,
+} from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/admin";
 
@@ -47,6 +55,12 @@ function AdminCategoriesPage() {
   const t = tFor("categories");
   const branchesQuery = useAdminCategories();
   const topicsQuery = useAdminTopics();
+  const createCategory = useCreateCategory();
+  const updateCategory = useUpdateCategory();
+  const deleteCategory = useDeleteCategory();
+  const createTopic = useCreateTopic();
+  const updateTopic = useUpdateTopic();
+  const deleteTopic = useDeleteTopic();
   const branches = branchesQuery.data ?? [];
   const topics = topicsQuery.data ?? [];
   const [editor, setEditor] = useState<EditorState | null>(null);
@@ -88,11 +102,13 @@ function AdminCategoriesPage() {
       color: "#6366f1",
     };
     if (!editor.name.trim()) return;
-    const repo = editor.kind === "branch" ? adminRepo.categories : adminRepo.topics;
-    if (editor.id) {
-      repo.update(editor.id, payload);
+    const onError = (err: Error) => toast.error(err.message);
+    if (editor.kind === "branch") {
+      if (editor.id) updateCategory.mutate({ id: editor.id, patch: payload }, { onError });
+      else createCategory.mutate(payload, { onError });
     } else {
-      repo.create(payload);
+      if (editor.id) updateTopic.mutate({ id: editor.id, patch: payload }, { onError });
+      else createTopic.mutate(payload, { onError });
     }
     setEditor(null);
   };
@@ -107,9 +123,13 @@ function AdminCategoriesPage() {
         setConfirmDel(null);
         return;
       }
-      adminRepo.categories.remove(confirmDel.id);
+      deleteCategory.mutate(confirmDel.id, {
+        onError: (err: Error) => toast.error(err.message),
+      });
     } else {
-      adminRepo.topics.remove(confirmDel.id);
+      deleteTopic.mutate(confirmDel.id, {
+        onError: (err: Error) => toast.error(err.message),
+      });
     }
     setDeleteError(null);
     setConfirmDel(null);

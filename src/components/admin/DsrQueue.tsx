@@ -20,8 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { updateDSR } from "@/lib/platform/mock-store";
-import { useAdminDSRQueue } from "@/lib/admin/queries";
+import { useAdminDSRQueue, useUpdateDSRStatus } from "@/lib/admin/queries";
 import type { DSRRequest, DSRType } from "@/lib/platform/types";
 import { classifyDsrSla, daysRemaining, type DsrSlaVariant } from "@/lib/admin/dsr-sla";
 import { tFor } from "@/i18n/governance";
@@ -45,6 +44,7 @@ const SLA_CLASS: Record<DsrSlaVariant, string> = {
 export function DsrQueue() {
   const t = tFor("dsr_queue");
   const dsrQuery = useAdminDSRQueue();
+  const updateDsrStatus = useUpdateDSRStatus();
   const dsr = useMemo(() => dsrQuery.data ?? [], [dsrQuery.data]);
   const [status, setStatus] = useState<string>("all");
   const [type, setType] = useState<string>("all");
@@ -59,13 +59,18 @@ export function DsrQueue() {
 
   const now = new Date();
 
+  const onMutationError = (err: Error) => toast.error(err.message);
   const onResolve = (id: string) => {
-    updateDSR(id, "completed");
-    toast.success(t("toast_resolved"));
+    updateDsrStatus.mutate(
+      { id, status: "completed" },
+      { onSuccess: () => toast.success(t("toast_resolved")), onError: onMutationError },
+    );
   };
   const onReject = (id: string) => {
-    updateDSR(id, "rejected");
-    toast(t("toast_rejected"));
+    updateDsrStatus.mutate(
+      { id, status: "rejected" },
+      { onSuccess: () => toast(t("toast_rejected")), onError: onMutationError },
+    );
   };
 
   return (

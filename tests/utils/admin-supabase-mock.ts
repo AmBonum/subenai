@@ -290,6 +290,26 @@ function makeBuilder(state: QueryState): unknown {
   return builder;
 }
 
+// AH-11.1c: tests assert on these to verify the mutation reached Supabase
+// (instead of mock-store, which was the assertion surface in 11.1a/b).
+export interface AdminMockRecorded {
+  inserts: Array<{ table: string; values: Row }>;
+  updates: Array<{ table: string; patch: Row; match: Record<string, unknown> }>;
+  deletes: Array<{ table: string; match: Record<string, unknown> }>;
+}
+
+export const adminMockRecorded: AdminMockRecorded = {
+  inserts: [],
+  updates: [],
+  deletes: [],
+};
+
+export function resetAdminMockRecorded(): void {
+  adminMockRecorded.inserts = [];
+  adminMockRecorded.updates = [];
+  adminMockRecorded.deletes = [];
+}
+
 export function makeAdminSupabaseStub() {
   return {
     from(table: string) {
@@ -312,6 +332,7 @@ export function makeAdminSupabaseStub() {
             ...values,
           };
           if (tbl) tbl.rows = [row, ...tbl.rows];
+          adminMockRecorded.inserts.push({ table, values: row });
           return {
             select() {
               return {
@@ -320,14 +341,28 @@ export function makeAdminSupabaseStub() {
             },
           };
         },
-        update(_patch: Row) {
+        update(patch: Row) {
           return {
-            eq: async () => ({ data: null, error: null }),
+            eq: (col: string, val: unknown) => {
+              const tbl = adminMockTables[table as keyof AdminMockTables];
+              if (tbl) {
+                tbl.rows = tbl.rows.map((r) => (r[col] === val ? { ...r, ...patch } : r));
+              }
+              // Record synchronously so tests can assert without awaiting the
+              // mutation's microtask chain.
+              adminMockRecorded.updates.push({ table, patch, match: { [col]: val } });
+              return Promise.resolve({ data: null, error: null });
+            },
           };
         },
         delete() {
           return {
-            eq: async () => ({ data: null, error: null }),
+            eq: (col: string, val: unknown) => {
+              const tbl = adminMockTables[table as keyof AdminMockTables];
+              if (tbl) tbl.rows = tbl.rows.filter((r) => r[col] !== val);
+              adminMockRecorded.deletes.push({ table, match: { [col]: val } });
+              return Promise.resolve({ data: null, error: null });
+            },
           };
         },
       };

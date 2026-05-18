@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ExternalLink, Trash2, Search } from "lucide-react";
+import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatusBadge } from "@/components/admin/StatusBadge";
@@ -26,8 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { BRANCHES, branchLabel } from "@/lib/admin/mock-data";
-import { adminRepo } from "@/lib/admin/mock-store";
-import { useAdminTests } from "@/lib/admin/queries";
+import { useAdminTests, useDeleteTest } from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/tests";
 
@@ -38,6 +38,7 @@ export const Route = createFileRoute("/admin/tests")({
 function AdminTestsListPage() {
   const t = tFor("admin_list");
   const testsQuery = useAdminTests();
+  const deleteTest = useDeleteTest();
   const tests = useMemo(() => testsQuery.data ?? [], [testsQuery.data]);
 
   const [search, setSearch] = useState("");
@@ -83,13 +84,15 @@ function AdminTestsListPage() {
   };
 
   const onBulkDelete = () => {
-    adminRepo.tests.bulkRemove(Array.from(selected));
+    for (const id of selected) {
+      deleteTest.mutate(id, { onError: (err: Error) => toast.error(err.message) });
+    }
     setSelected(new Set());
   };
 
   const onRowDelete = () => {
     if (rowConfirm) {
-      adminRepo.tests.remove(rowConfirm);
+      deleteTest.mutate(rowConfirm, { onError: (err: Error) => toast.error(err.message) });
       const next = new Set(selected);
       next.delete(rowConfirm);
       setSelected(next);

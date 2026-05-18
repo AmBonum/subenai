@@ -161,6 +161,7 @@ export function RespondentsList() {
                           aria-label={t("action_view")}
                           data-testid={`respondents-list-row-view-button-${r.id}`}
                           onClick={() => {
+                            // AH-11.3: error-toast acceptable until server fn wired
                             logPiiAccess(r.id, "Admin otvoril detail respondenta");
                             toast.success(t("toast_pii_access"));
                           }}

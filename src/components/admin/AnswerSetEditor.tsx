@@ -22,11 +22,11 @@ import {
 import { BRANCHES, type AdminAnswerSet, type AdminAnswer } from "@/lib/admin/mock-data";
 import { CategoryMultiSelect } from "@/components/admin/CategoryMultiSelect";
 import {
-  createAnswer,
-  createSet,
-  updateAnswer,
-  updateSet,
-} from "@/lib/admin/answer-sets-mock-store";
+  useCreateAnswer,
+  useCreateAnswerSet,
+  useUpdateAnswer,
+  useUpdateAnswerSet,
+} from "@/lib/admin/queries";
 import { tFor } from "@/i18n/questions";
 
 export interface AnswerSetEditorProps {
@@ -44,6 +44,8 @@ const empty: { name: string; description: string; categories: string[] } = {
 
 export function AnswerSetEditor({ open, onOpenChange, set, onSaved }: AnswerSetEditorProps) {
   const t = tFor("answer_set_editor");
+  const createSet = useCreateAnswerSet();
+  const updateSet = useUpdateAnswerSet();
   const [form, setForm] = useState(empty);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,22 +75,36 @@ export function AnswerSetEditor({ open, onOpenChange, set, onSaved }: AnswerSetE
       return;
     }
     setError(null);
+    const payload = {
+      name: form.name.trim(),
+      description: form.description.trim(),
+      categories: form.categories,
+    };
+    const onError = (err: Error) => toast.error(err.message);
     if (isEdit && set) {
-      updateSet(set.id, {
-        name: form.name.trim(),
-        description: form.description.trim(),
-        categories: form.categories,
-      });
-      toast.success(t("toast_saved"));
+      updateSet.mutate(
+        { id: set.id, patch: payload },
+        {
+          onSuccess: () => toast.success(t("toast_saved")),
+          onError,
+        },
+      );
       onSaved?.({ ...set, ...form });
     } else {
-      const created = createSet({
-        name: form.name.trim(),
-        description: form.description.trim(),
-        categories: form.categories,
+      createSet.mutate(payload, {
+        onSuccess: (created) => {
+          toast.success(t("toast_created"));
+          onSaved?.({
+            id: (created as { id: string }).id,
+            name: payload.name,
+            description: payload.description,
+            categories: payload.categories,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+        },
+        onError,
       });
-      toast.success(t("toast_created"));
-      onSaved?.(created);
     }
     onOpenChange(false);
   };
@@ -163,6 +179,8 @@ export interface AnswerEditorProps {
 
 export function AnswerEditor({ open, onOpenChange, setId, initial }: AnswerEditorProps) {
   const t = tFor("answer_editor");
+  const createAnswer = useCreateAnswer();
+  const updateAnswer = useUpdateAnswer();
   const [text, setText] = useState("");
   const [explanation, setExplanation] = useState("");
   const [isCorrect, setIsCorrect] = useState(true);
@@ -181,21 +199,29 @@ export function AnswerEditor({ open, onOpenChange, setId, initial }: AnswerEdito
       toast.error(t("error_text_required"));
       return;
     }
+    const onError = (err: Error) => toast.error(err.message);
     if (initial) {
-      updateAnswer(initial.id, {
-        text: text.trim(),
-        is_correct: isCorrect,
-        explanation: explanation.trim() || undefined,
-      });
-      toast.success(t("toast_saved"));
+      updateAnswer.mutate(
+        {
+          id: initial.id,
+          patch: {
+            text: text.trim(),
+            is_correct: isCorrect,
+            explanation: explanation.trim() || undefined,
+          },
+        },
+        { onSuccess: () => toast.success(t("toast_saved")), onError },
+      );
     } else {
-      createAnswer({
-        set_id: setId,
-        text: text.trim(),
-        is_correct: isCorrect,
-        explanation: explanation.trim() || undefined,
-      });
-      toast.success(t("toast_created"));
+      createAnswer.mutate(
+        {
+          set_id: setId,
+          text: text.trim(),
+          is_correct: isCorrect,
+          explanation: explanation.trim() || undefined,
+        },
+        { onSuccess: () => toast.success(t("toast_created")), onError },
+      );
     }
     onOpenChange(false);
   };

@@ -25,8 +25,12 @@ import {
   questionsUsingSet,
   type AdminAnswer,
 } from "@/lib/admin/mock-data";
-import { deleteAnswer, deleteSet } from "@/lib/admin/answer-sets-mock-store";
-import { useAdminAnswerSets, useAdminAnswers } from "@/lib/admin/queries";
+import {
+  useAdminAnswerSets,
+  useAdminAnswers,
+  useDeleteAnswer,
+  useDeleteAnswerSet,
+} from "@/lib/admin/queries";
 import { tFor } from "@/i18n/questions";
 
 export const Route = createFileRoute("/admin/answer-sets/$setId")({
@@ -65,7 +69,10 @@ function AnswerSetDetailPage() {
   const router = useRouter();
   const setsQuery = useAdminAnswerSets();
   const answersQuery = useAdminAnswers();
+  const deleteAnswer = useDeleteAnswer();
+  const deleteSet = useDeleteAnswerSet();
   const sets = useMemo(() => setsQuery.data ?? [], [setsQuery.data]);
+  const onMutationError = (err: Error) => toast.error(err.message);
   const allAnswers = useMemo(() => answersQuery.data ?? [], [answersQuery.data]);
 
   const set = useMemo(() => sets.find((s) => s.id === setId), [sets, setId]);
@@ -247,8 +254,10 @@ function AnswerSetDetailPage() {
         destructive
         onConfirm={() => {
           if (confirmDeleteAnswer) {
-            deleteAnswer(confirmDeleteAnswer.id);
-            toast.success(t("toast_answer_deleted"));
+            deleteAnswer.mutate(confirmDeleteAnswer.id, {
+              onSuccess: () => toast.success(t("toast_answer_deleted")),
+              onError: onMutationError,
+            });
             setConfirmDeleteAnswer(null);
           }
         }}
@@ -262,9 +271,13 @@ function AnswerSetDetailPage() {
         confirmLabel={t("confirm_delete_set_button")}
         destructive
         onConfirm={() => {
-          deleteSet(set.id);
-          toast.success(t("toast_set_deleted"));
-          router.navigate({ to: "/admin/answer-sets" });
+          deleteSet.mutate(set.id, {
+            onSuccess: () => {
+              toast.success(t("toast_set_deleted"));
+              router.navigate({ to: "/admin/answer-sets" });
+            },
+            onError: onMutationError,
+          });
         }}
       />
     </div>

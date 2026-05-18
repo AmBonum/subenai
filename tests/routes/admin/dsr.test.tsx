@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 vi.mock("@tanstack/react-router", async () => {
   const actual =
@@ -14,7 +14,7 @@ vi.mock("@tanstack/react-router", async () => {
 });
 
 import { Route } from "@/routes/admin/dsr";
-import * as platformStore from "@/lib/platform/mock-store";
+import { adminMockRecorded, resetAdminMockRecorded } from "../../utils/admin-supabase-mock";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
@@ -32,21 +32,16 @@ describe("/admin/dsr", () => {
     expect(screen.getByTestId("dsr-queue-row-sla-badge-dsr_001")).toBeInTheDocument();
   });
 
-  it("resolve button moves the row to completed via the store", () => {
+  it("resolve button issues an UPDATE on the dsr_requests row via the mutation hook", async () => {
+    resetAdminMockRecorded();
     render(<Page />);
-    const btn = screen.getByTestId("dsr-queue-row-resolve-button-dsr_001");
-    fireEvent.click(btn);
-    // AH-11.1b: reads come from TanStack Query / Supabase; the mutation still
-    // writes to the platform mock-store and AH-11.1c wires it through the
-    // matching mutation hook. Probe the platform store to confirm the click
-    // reached it.
-    let dsr: { id: string; status: string }[] = [];
-    function Probe() {
-      dsr = platformStore.useDSR();
-      return null;
-    }
-    const probe = render(<Probe />);
-    probe.unmount();
-    expect(dsr.find((d) => d.id === "dsr_001")?.status).toBe("completed");
+    fireEvent.click(screen.getByTestId("dsr-queue-row-resolve-button-dsr_001"));
+    await waitFor(() => {
+      const updates = adminMockRecorded.updates.filter(
+        (u) => u.table === "dsr_requests" && u.match.id === "dsr_001",
+      );
+      expect(updates.length).toBe(1);
+      expect(updates[0].patch.status).toBe("completed");
+    });
   });
 });

@@ -20,8 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { StatusBadge } from "@/components/admin/StatusBadge";
-import { adminRepo } from "@/lib/admin/mock-store";
-import { useAdminReports } from "@/lib/admin/queries";
+import { useAdminReports, useResolveReport } from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/governance";
 
@@ -31,7 +30,9 @@ const REASONS = ["spam", "inappropriate", "harassment", "misinformation", "other
 export function ReportsQueue() {
   const t = tFor("reports_queue");
   const reportsQuery = useAdminReports();
+  const resolveReport = useResolveReport();
   const reports = useMemo(() => reportsQuery.data ?? [], [reportsQuery.data]);
+  const onMutationError = (err: Error) => toast.error(err.message);
   const [status, setStatus] = useState<string>("all");
   const [reason, setReason] = useState<string>("all");
 
@@ -140,10 +141,15 @@ export function ReportsQueue() {
                           className="h-8 w-8"
                           aria-label={t("action_review")}
                           data-testid={`reports-queue-row-review-button-${r.id}`}
-                          onClick={() => {
-                            adminRepo.reports.update(r.id, { status: "reviewing" });
-                            toast.info(t("toast_review"));
-                          }}
+                          onClick={() =>
+                            resolveReport.mutate(
+                              { id: r.id, status: "reviewing" },
+                              {
+                                onSuccess: () => toast.info(t("toast_review")),
+                                onError: onMutationError,
+                              },
+                            )
+                          }
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -154,10 +160,15 @@ export function ReportsQueue() {
                           className="h-8 w-8 text-emerald-600"
                           aria-label={t("action_resolve")}
                           data-testid={`reports-queue-row-resolve-button-${r.id}`}
-                          onClick={() => {
-                            adminRepo.reports.update(r.id, { status: "resolved" });
-                            toast.success(t("toast_resolved"));
-                          }}
+                          onClick={() =>
+                            resolveReport.mutate(
+                              { id: r.id, status: "resolved" },
+                              {
+                                onSuccess: () => toast.success(t("toast_resolved")),
+                                onError: onMutationError,
+                              },
+                            )
+                          }
                         >
                           <Check className="h-4 w-4" />
                         </Button>
@@ -168,10 +179,15 @@ export function ReportsQueue() {
                           className="h-8 w-8 text-muted-foreground"
                           aria-label={t("action_dismiss")}
                           data-testid={`reports-queue-row-dismiss-button-${r.id}`}
-                          onClick={() => {
-                            adminRepo.reports.update(r.id, { status: "dismissed" });
-                            toast(t("toast_dismissed"));
-                          }}
+                          onClick={() =>
+                            resolveReport.mutate(
+                              { id: r.id, status: "dismissed" },
+                              {
+                                onSuccess: () => toast(t("toast_dismissed")),
+                                onError: onMutationError,
+                              },
+                            )
+                          }
                         >
                           <X className="h-4 w-4" />
                         </Button>
