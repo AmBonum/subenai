@@ -1,35 +1,35 @@
 {
   "root": {
     "brand": "SubenAI",
-    "page_title": "SubenAI — vypĺňanie testu"
+    "page_title": "SubenAI — vyplňování testu"
   },
   "intake": {
-    "title": "Pred začiatkom",
-    "consent_label": "Súhlasím so spracovaním údajov pre uvedený účel (verzia 1.4.0).",
-    "consent_required": "Pre pokračovanie udeľ súhlas s GDPR.",
-    "name_label": "Meno",
+    "title": "Než začnete",
+    "consent_label": "Souhlasím se zpracováním údajů pro uvedený účel (verze 1.4.0).",
+    "consent_required": "Pro pokračování udělte souhlas s GDPR.",
+    "name_label": "Jméno",
     "email_label": "E-mail",
-    "submit_button": "Pokračovať na otázky",
-    "missing_required": "Vyplň povinné polia: {fields}"
+    "submit_button": "Pokračovat na otázky",
+    "missing_required": "Vyplňte povinná pole: {fields}"
   },
   "questions": {
     "progress": "Otázka {n} z {total}",
-    "free_answer_placeholder": "Tvoja odpoveď...",
-    "free_answer_hint": "Stlač Enter pre odoslanie",
-    "next_button": "Ďalej",
-    "prev_button": "Späť",
-    "submit_button": "Odoslať"
+    "free_answer_placeholder": "Vaše odpověď...",
+    "free_answer_hint": "Stiskněte Enter pro odeslání",
+    "next_button": "Další",
+    "prev_button": "Zpět",
+    "submit_button": "Odeslat"
   },
   "thank_you": {
     "title": "Hotovo!",
-    "subtitle": "Tvoje odpovede boli odoslané. Ďakujeme za účasť.",
-    "close_button": "Zatvoriť"
+    "subtitle": "Vaše odpovědi byly odeslány. Děkujeme za účast.",
+    "close_button": "Zavřít"
   },
   "errors": {
-    "not_found": "Test nebol nájdený alebo už nie je dostupný.",
-    "not_published": "Tento test ešte nie je publikovaný.",
-    "rate_limited": "Príliš veľa pokusov z tejto IP. Skús to neskôr.",
-    "back_home": "Späť na úvod",
-    "submit_failed": "Nepodarilo sa odoslať odpoveď. Skús to znova."
+    "not_found": "Test nebyl nalezen nebo již není dostupný.",
+    "not_published": "Tento test ještě není publikován.",
+    "rate_limited": "Příliš mnoho pokusů z této IP. Zkuste to později.",
+    "back_home": "Zpět na úvod",
+    "submit_failed": "Nepodařilo se odeslat odpověď. Zkuste to znovu."
   }
 }

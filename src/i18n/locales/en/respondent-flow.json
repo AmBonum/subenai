@@ -1,35 +1,35 @@
 {
   "root": {
     "brand": "SubenAI",
-    "page_title": "SubenAI — vypĺňanie testu"
+    "page_title": "SubenAI — taking the test"
   },
   "intake": {
-    "title": "Pred začiatkom",
-    "consent_label": "Súhlasím so spracovaním údajov pre uvedený účel (verzia 1.4.0).",
-    "consent_required": "Pre pokračovanie udeľ súhlas s GDPR.",
-    "name_label": "Meno",
-    "email_label": "E-mail",
-    "submit_button": "Pokračovať na otázky",
-    "missing_required": "Vyplň povinné polia: {fields}"
+    "title": "Before you begin",
+    "consent_label": "I agree to the processing of my data for the stated purpose (version 1.4.0).",
+    "consent_required": "Please grant GDPR consent to continue.",
+    "name_label": "Name",
+    "email_label": "Email",
+    "submit_button": "Continue to questions",
+    "missing_required": "Please fill in the required fields: {fields}"
   },
   "questions": {
-    "progress": "Otázka {n} z {total}",
-    "free_answer_placeholder": "Tvoja odpoveď...",
-    "free_answer_hint": "Stlač Enter pre odoslanie",
-    "next_button": "Ďalej",
-    "prev_button": "Späť",
-    "submit_button": "Odoslať"
+    "progress": "Question {n} of {total}",
+    "free_answer_placeholder": "Your answer...",
+    "free_answer_hint": "Press Enter to submit",
+    "next_button": "Next",
+    "prev_button": "Back",
+    "submit_button": "Submit"
   },
   "thank_you": {
-    "title": "Hotovo!",
-    "subtitle": "Tvoje odpovede boli odoslané. Ďakujeme za účasť.",
-    "close_button": "Zatvoriť"
+    "title": "Done!",
+    "subtitle": "Your answers have been submitted. Thank you for taking part.",
+    "close_button": "Close"
   },
   "errors": {
-    "not_found": "Test nebol nájdený alebo už nie je dostupný.",
-    "not_published": "Tento test ešte nie je publikovaný.",
-    "rate_limited": "Príliš veľa pokusov z tejto IP. Skús to neskôr.",
-    "back_home": "Späť na úvod",
-    "submit_failed": "Nepodarilo sa odoslať odpoveď. Skús to znova."
+    "not_found": "The test could not be found or is no longer available.",
+    "not_published": "This test is not yet published.",
+    "rate_limited": "Too many attempts from this IP. Please try again later.",
+    "back_home": "Back to home",
+    "submit_failed": "Could not submit the answer. Please try again."
   }
 }
