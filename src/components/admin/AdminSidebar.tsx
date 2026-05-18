@@ -23,6 +23,7 @@ import {
   PanelTop,
   PanelBottom,
   BookOpen,
+  ShieldCheck,
 } from "lucide-react";
 
 import {
@@ -145,6 +146,12 @@ const systemItems: NavItem[] = [
     url: "/admin/settings",
     icon: Settings,
     testid: "admin-shell-sidebar-link-settings",
+  },
+  {
+    key: "security",
+    url: "/admin/security",
+    icon: ShieldCheck,
+    testid: "admin-shell-sidebar-link-security",
   },
 ];
 

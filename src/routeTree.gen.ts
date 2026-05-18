@@ -51,6 +51,7 @@ import { Route as AdminTestsRouteImport } from './routes/admin/tests'
 import { Route as AdminSupportRouteImport } from './routes/admin/support'
 import { Route as AdminShareCardRouteImport } from './routes/admin/share-card'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminSecurityRouteImport } from './routes/admin/security'
 import { Route as AdminRespondentsRouteImport } from './routes/admin/respondents'
 import { Route as AdminReportsRouteImport } from './routes/admin/reports'
 import { Route as AdminQuickTestRouteImport } from './routes/admin/quick-test'
@@ -286,6 +287,11 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminSecurityRoute = AdminSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminRespondentsRoute = AdminRespondentsRouteImport.update({
   id: '/respondents',
   path: '/respondents',
@@ -433,6 +439,7 @@ export interface FileRoutesByFullPath {
   '/admin/quick-test': typeof AdminQuickTestRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
+  '/admin/security': typeof AdminSecurityRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
@@ -498,6 +505,7 @@ export interface FileRoutesByTo {
   '/admin/quick-test': typeof AdminQuickTestRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
+  '/admin/security': typeof AdminSecurityRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
@@ -567,6 +575,7 @@ export interface FileRoutesById {
   '/admin/quick-test': typeof AdminQuickTestRoute
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
+  '/admin/security': typeof AdminSecurityRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
@@ -637,6 +646,7 @@ export interface FileRouteTypes {
     | '/admin/quick-test'
     | '/admin/reports'
     | '/admin/respondents'
+    | '/admin/security'
     | '/admin/settings'
     | '/admin/share-card'
     | '/admin/support'
@@ -702,6 +712,7 @@ export interface FileRouteTypes {
     | '/admin/quick-test'
     | '/admin/reports'
     | '/admin/respondents'
+    | '/admin/security'
     | '/admin/settings'
     | '/admin/share-card'
     | '/admin/support'
@@ -770,6 +781,7 @@ export interface FileRouteTypes {
     | '/admin/quick-test'
     | '/admin/reports'
     | '/admin/respondents'
+    | '/admin/security'
     | '/admin/settings'
     | '/admin/share-card'
     | '/admin/support'
@@ -1138,6 +1150,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/security': {
+      id: '/admin/security'
+      path: '/security'
+      fullPath: '/admin/security'
+      preLoaderRoute: typeof AdminSecurityRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/respondents': {
       id: '/admin/respondents'
       path: '/respondents'
@@ -1358,6 +1377,7 @@ interface AdminRouteChildren {
   AdminQuickTestRoute: typeof AdminQuickTestRoute
   AdminReportsRoute: typeof AdminReportsRoute
   AdminRespondentsRoute: typeof AdminRespondentsRoute
+  AdminSecurityRoute: typeof AdminSecurityRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminShareCardRoute: typeof AdminShareCardRoute
   AdminSupportRoute: typeof AdminSupportRoute
@@ -1380,6 +1400,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminQuickTestRoute: AdminQuickTestRoute,
   AdminReportsRoute: AdminReportsRoute,
   AdminRespondentsRoute: AdminRespondentsRoute,
+  AdminSecurityRoute: AdminSecurityRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminShareCardRoute: AdminShareCardRoute,
   AdminSupportRoute: AdminSupportRoute,
