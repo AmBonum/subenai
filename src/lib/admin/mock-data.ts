@@ -5,216 +5,52 @@
 // Mock data for SubenAI admin. Replace with Supabase queries when wiring up.
 // Schema mirrors expected production tables: users, questions, categories,
 // reports, trainings, training_topics.
+//
+// Types live in ./types.ts and static reference data lives in ./branches.ts —
+// re-exported here so existing consumers keep working until AH-11.1b swaps them
+// over.
 
-export type UserRole = "admin" | "moderator" | "user";
-export type UserStatus = "active" | "suspended" | "pending";
+import { BRANCHES, TRAINING_TOPICS } from "./branches";
+import type {
+  AdminUser,
+  AdminQuestion,
+  AdminAnswer,
+  AdminAnswerSet,
+  AdminCategory,
+  AdminTraining,
+  AdminTopic,
+  AdminReport,
+  AdminTest,
+  AdminActivityEvent,
+  ShareCardConfig,
+  TestDifficulty,
+} from "./types";
 
-export interface AdminUser {
-  id: string;
-  email: string;
-  display_name: string;
-  avatar_url?: string;
-  role: UserRole;
-  status: UserStatus;
-  questions_count: number;
-  created_at: string;
-  last_active_at: string;
-}
+export type {
+  UserRole,
+  UserStatus,
+  AdminUser,
+  QuestionStatus,
+  AdminQuestion,
+  AdminAnswer,
+  AdminAnswerSet,
+  AdminCategory,
+  TrainingStatus,
+  AdminTraining,
+  AdminTopic,
+  ReportReason,
+  ReportStatus,
+  AdminReport,
+  TestStatus,
+  TestDifficulty,
+  AdminTest,
+  AdminActivityEvent,
+  AdminDashboardStats,
+  ShareRatingTier,
+  ShareCardConfig,
+} from "./types";
 
-export type QuestionStatus = "published" | "pending" | "flagged" | "archived";
-
-export interface AdminQuestion {
-  id: string;
-  title: string;
-  excerpt: string;
-  body?: string;
-  author_id: string;
-  author_name: string;
-  categories: string[]; // branch slugs (multi)
-  status: QuestionStatus;
-  answers_count: number;
-  votes: number;
-  reports_count: number;
-  created_at: string;
-  // Linking to answer set + selected answers from that set
-  answer_set_id?: string;
-  correct_answer_ids: string[];
-  incorrect_answer_ids: string[];
-}
-
-export interface AdminAnswer {
-  id: string;
-  set_id: string;
-  text: string;
-  is_correct: boolean;
-  explanation?: string;
-  created_at: string;
-}
-
-export interface AdminAnswerSet {
-  id: string;
-  name: string;
-  description: string;
-  categories: string[]; // branch slugs (multi)
-  created_at: string;
-  updated_at: string;
-}
-
-export interface AdminCategory {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  color: string;
-  questions_count: number;
-}
-
-export type TrainingStatus = "published" | "draft" | "archived";
-
-export interface AdminTraining {
-  id: string;
-  title: string;
-  topic: string; // topic slug
-  description: string;
-  duration_min: number;
-  status: TrainingStatus;
-  views: number;
-  updated_at: string;
-}
-
-export interface AdminTopic {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  color: string;
-  trainings_count: number;
-}
-
-export type ReportReason = "spam" | "inappropriate" | "harassment" | "misinformation" | "other";
-export type ReportStatus = "open" | "reviewing" | "resolved" | "dismissed";
-
-export interface AdminReport {
-  id: string;
-  target_type: "question" | "user" | "answer" | "training";
-  target_id: string;
-  target_label: string;
-  reason: ReportReason;
-  status: ReportStatus;
-  reporter_name: string;
-  created_at: string;
-}
-
-// Real branches used on www.subenai.sk
-export const BRANCHES: { name: string; slug: string; color: string; description: string }[] = [
-  {
-    name: "E-shop",
-    slug: "eshop",
-    color: "#8b5cf6",
-    description: "Otázky pre majiteľov a zamestnancov e-shopov.",
-  },
-  {
-    name: "Gastro",
-    slug: "gastro",
-    color: "#f97316",
-    description: "Otázky pre prevádzky reštaurácií, kaviarní a hotelov.",
-  },
-  {
-    name: "Autoservis",
-    slug: "autoservis",
-    color: "#0ea5e9",
-    description: "Otázky pre mechanikov a majiteľov autoservisov.",
-  },
-  {
-    name: "IT / Softvérový vývoj",
-    slug: "it-software",
-    color: "#06b6d4",
-    description: "Otázky pre vývojárov a IT špecialistov.",
-  },
-  {
-    name: "Verejné služby",
-    slug: "verejne-sluzby",
-    color: "#10b981",
-    description: "Otázky pre úrady a zamestnancov verejnej správy.",
-  },
-  {
-    name: "Žiaci (do 16 rokov)",
-    slug: "ziaci",
-    color: "#ec4899",
-    description: "Otázky prispôsobené žiakom základných škôl.",
-  },
-  {
-    name: "Študenti (16+)",
-    slug: "studenti",
-    color: "#a855f7",
-    description: "Otázky pre stredoškolákov a vysokoškolákov.",
-  },
-  {
-    name: "Seniori (55+)",
-    slug: "seniori",
-    color: "#eab308",
-    description: "Otázky pre starších používateľov internetu.",
-  },
-  {
-    name: "Všeobecný test",
-    slug: "vseobecny",
-    color: "#64748b",
-    description: "Univerzálny test pre širokú verejnosť.",
-  },
-];
-
-// Real training topics used on www.subenai.sk
-export const TRAINING_TOPICS: { name: string; slug: string; color: string; description: string }[] =
-  [
-    {
-      name: "SMS",
-      slug: "sms",
-      color: "#f59e0b",
-      description: "Podvodné SMS správy, smishing, falošné doručovacie linky.",
-    },
-    {
-      name: "Email",
-      slug: "email",
-      color: "#3b82f6",
-      description: "Phishingové emaily, falošné faktúry, prílohy s malvérom.",
-    },
-    {
-      name: "Telefón",
-      slug: "telefon",
-      color: "#22c55e",
-      description: "Vishing, falošní bankári a technická podpora.",
-    },
-    {
-      name: "Marketplace",
-      slug: "marketplace",
-      color: "#a855f7",
-      description: "Podvody na Bazoši, Vinted a Facebook Marketplace.",
-    },
-    {
-      name: "Data hygiene",
-      slug: "data-hygiene",
-      color: "#06b6d4",
-      description: "Silné heslá, 2FA, manažment osobných údajov.",
-    },
-    {
-      name: "Investície",
-      slug: "investicie",
-      color: "#ef4444",
-      description: "Falošné investičné platformy a kryptopodvody.",
-    },
-    {
-      name: "Vzťahy",
-      slug: "vztahy",
-      color: "#ec4899",
-      description: "Romance scams, sextortion, manipulácia cez sociálne siete.",
-    },
-    {
-      name: "Všeobecné",
-      slug: "vseobecne",
-      color: "#64748b",
-      description: "Základné princípy bezpečnosti na internete.",
-    },
-  ];
+export { BRANCHES, TRAINING_TOPICS, branchLabel, topicLabel } from "./branches";
 
 const NAMES = [
   "Jana Horváthová",
@@ -533,14 +369,6 @@ export const dashboardStats = {
   pending_dsr: 3,
 };
 
-export interface AdminActivityEvent {
-  id: string;
-  type: "question_created" | "test_published" | "report_filed" | "user_signup";
-  actor: string;
-  summary: string;
-  created_at: string;
-}
-
 export const mockAdminActivity: AdminActivityEvent[] = [
   {
     id: "act-1",
@@ -588,30 +416,7 @@ export const categoryDistribution = mockCategories.map((c) => ({
   color: c.color,
 }));
 
-// Helpers to resolve display label from slug
-export const branchLabel = (slug: string) => BRANCHES.find((b) => b.slug === slug)?.name ?? slug;
-export const topicLabel = (slug: string) =>
-  TRAINING_TOPICS.find((t) => t.slug === slug)?.name ?? slug;
-
 // ---- Tests (https://subenai.sk/testy) -----------------------------------
-export type TestStatus = "published" | "draft" | "archived";
-export type TestDifficulty = "easy" | "medium" | "hard";
-
-export interface AdminTest {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  categories: string[]; // branch slugs (multi)
-  difficulty: TestDifficulty;
-  status: TestStatus;
-  time_limit_min: number;
-  pass_score: number; // percentage
-  is_quick: boolean; // quick test flag
-  question_ids: string[];
-  attempts: number;
-  updated_at: string;
-}
 
 const TEST_SEEDS: {
   title: string;
@@ -724,30 +529,6 @@ export const mockQuickTest: AdminTest = {
 };
 
 // ---- Share Card config (OG image after finishing a test) ----------------
-export interface ShareRatingTier {
-  id: string;
-  min_score: number; // inclusive lower bound (0-100)
-  label: string; // vtipné hodnotenie
-  emoji: string;
-  color: string; // accent color (hex)
-}
-
-export interface ShareCardConfig {
-  enabled: boolean;
-  title_template: string; // e.g. "Som {label}!"
-  subtitle_template: string; // e.g. "Skóre: {score}/{total} ({percent}%)"
-  footer_text: string; // e.g. "subenai.sk/testy"
-  background_from: string; // hex
-  background_to: string; // hex
-  text_color: string;
-  accent_color: string;
-  show_logo: boolean;
-  show_score_ring: boolean;
-  share_text: string; // text pre social share
-  hashtags: string;
-  tiers: ShareRatingTier[];
-}
-
 export const defaultShareCard: ShareCardConfig = {
   enabled: true,
   title_template: "Som {label} {emoji}",

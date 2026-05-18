@@ -1,9 +1,19 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet, Link, createRootRoute } from "@tanstack/react-router";
 
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ConsentPreferencesDialog } from "@/components/consent/ConsentPreferencesDialog";
 import { GoogleAnalyticsManager } from "@/components/analytics/GoogleAnalyticsManager";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function NotFoundComponent() {
   return (
@@ -29,13 +39,13 @@ function NotFoundComponent() {
 
 function RootComponent() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <GoogleAnalyticsManager />
       <SiteHeader />
       <Outlet />
       <ConsentBanner />
       <ConsentPreferencesDialog />
-    </>
+    </QueryClientProvider>
   );
 }
 
