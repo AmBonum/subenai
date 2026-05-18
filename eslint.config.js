@@ -138,6 +138,48 @@ export default tseslint.config(
     },
   },
   {
+    // AH-11.2d — user-scope Supabase cutover guard.
+    // User scope (`src/routes/app*/**`, `src/components/user/**`,
+    // `src/components/app/**`) is wired to real Supabase via
+    // `@/lib/platform/queries.ts` (AH-11.2a/b/c). This rule prevents
+    // future PRs from regressing to the platform mock stores. The two
+    // files exempted below still import `useQuestions` from
+    // `@/lib/platform/mock-store` because the production `questions`
+    // table is missing the `type` and `category` columns the wizard /
+    // library UI rely on; AH-12 schema enrichment closes that gap and
+    // both files swap to `useLibraryQuestions` at that point.
+    files: [
+      "src/routes/app*/**/*.{ts,tsx}",
+      "src/routes/app.*.{ts,tsx}",
+      "src/components/user/**/*.{ts,tsx}",
+      "src/components/app/**/*.{ts,tsx}",
+    ],
+    ignores: [
+      // AH-12 schema-gap — questions table lacks type/category.
+      "src/routes/app.tests.new.tsx",
+      "src/routes/app.library.tsx",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/lib/platform/mock-store",
+              message:
+                "User scope is wired to Supabase via @/lib/platform/queries.ts. mock-store imports are AH-12 (schema-gap) carve-outs only.",
+            },
+            {
+              name: "@/lib/platform/mock-user-data",
+              message:
+                "User scope is wired to Supabase via @/lib/platform/queries.ts. mock-store imports are AH-12 (schema-gap) carve-outs only.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     // shadcn UI primitives, the consent provider/hook pair, and the router
     // entry point intentionally co-locate non-component exports (variants,
     // hooks, factories) with components. Fast-refresh granularity is not a
