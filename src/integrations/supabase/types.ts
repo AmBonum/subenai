@@ -584,6 +584,7 @@ export type Database = {
           author_id: string | null;
           status: Database["public"]["Enums"]["question_status"];
           answer_set_id: string | null;
+          visual: Json | null;
           created_at: string;
         };
         Insert: {
@@ -600,6 +601,7 @@ export type Database = {
           author_id?: string | null;
           status?: Database["public"]["Enums"]["question_status"];
           answer_set_id?: string | null;
+          visual?: Json | null;
           created_at?: string;
         };
         Update: {
@@ -616,6 +618,7 @@ export type Database = {
           author_id?: string | null;
           status?: Database["public"]["Enums"]["question_status"];
           answer_set_id?: string | null;
+          visual?: Json | null;
           created_at?: string;
         };
         Relationships: [];
@@ -624,6 +627,24 @@ export type Database = {
         Row: { id: number; config: Json; updated_at: string };
         Insert: { id?: number; config?: Json; updated_at?: string };
         Update: { id?: number; config?: Json; updated_at?: string };
+        Relationships: [];
+      };
+      quick_test_questions: {
+        Row: {
+          quick_test_config_id: number;
+          question_id: string;
+          order_index: number;
+        };
+        Insert: {
+          quick_test_config_id?: number;
+          question_id: string;
+          order_index?: number;
+        };
+        Update: {
+          quick_test_config_id?: number;
+          question_id?: string;
+          order_index?: number;
+        };
         Relationships: [];
       };
       reports: {
@@ -1201,6 +1222,20 @@ export type Database = {
       finalize_respondent_session: {
         Args: { p_session_id: string; p_score?: number | null };
         Returns: void;
+      };
+      get_quick_test_questions: {
+        Args: { p_limit?: number };
+        Returns: {
+          id: string;
+          type: Database["public"]["Enums"]["question_type"];
+          prompt: string;
+          options: Json;
+          correct: Json;
+          branch_slug: string | null;
+          difficulty: string | null;
+          visual: Json | null;
+          order_index: number;
+        }[];
       };
     };
     Enums: {
