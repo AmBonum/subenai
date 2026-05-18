@@ -1076,6 +1076,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      mfa_backup_codes: {
+        Row: {
+          id: string;
+          user_id: string;
+          code_hash: string;
+          used_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          code_hash: string;
+          used_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          code_hash?: string;
+          used_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       public_sponsors: {
@@ -1135,6 +1159,14 @@ export type Database = {
       };
       has_role: {
         Args: { _user_id: string; _role: Database["public"]["Enums"]["app_role"] };
+        Returns: boolean;
+      };
+      generate_mfa_backup_codes: {
+        Args: Record<string, never>;
+        Returns: string[];
+      };
+      consume_mfa_backup_code: {
+        Args: { p_code: string };
         Returns: boolean;
       };
     };
