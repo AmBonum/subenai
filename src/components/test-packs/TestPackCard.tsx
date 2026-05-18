@@ -2,8 +2,10 @@ import { Link } from "@tanstack/react-router";
 import type { TestPack } from "@/content/test-packs";
 import { INDUSTRY_LABEL } from "@/lib/seo/quiz-jsonld";
 import { ROUTES } from "@/config/routes";
+import { tFor } from "@/i18n/quiz";
 
 export function TestPackCard({ pack }: { pack: TestPack }) {
+  const t = tFor("testy");
   return (
     <Link
       to={ROUTES.testySlug}
@@ -21,7 +23,7 @@ export function TestPackCard({ pack }: { pack: TestPack }) {
       <h3 className="text-lg font-bold text-foreground group-hover:text-primary">{pack.title}</h3>
       <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{pack.tagline}</p>
       <p className="mt-3 text-xs text-muted-foreground">
-        📋 {pack.questionIds.length} otázok · ≥ {pack.passingThreshold} %
+        {t("pack_card_meta", { n: pack.questionIds.length, threshold: pack.passingThreshold })}
       </p>
     </Link>
   );

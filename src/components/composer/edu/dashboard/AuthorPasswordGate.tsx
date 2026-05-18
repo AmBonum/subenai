@@ -1,4 +1,5 @@
 import { useId, useState, type FormEvent } from "react";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   setId: string;
@@ -8,6 +9,8 @@ interface Props {
 type SubmitState = "idle" | "submitting" | "error";
 
 export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
+  const t = tFor("author_gate");
+  const tCommon = tFor("common");
   const formId = useId();
   const passwordId = useId();
   const errorId = useId();
@@ -45,13 +48,11 @@ export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
   const errorMessage = (() => {
     switch (errorCode) {
       case "rate_limited":
-        return "Príliš veľa pokusov. Skús to znova o 15 minút.";
       case "unauthorized":
-        return "Nesprávne heslo, alebo sa zostava nenašla.";
       case "network_error":
-        return "Pripojenie sa nepodarilo. Skontroluj sieť.";
+        return t(`errors.${errorCode}`);
       default:
-        return "Chyba pri overovaní hesla. Skús to prosím znova.";
+        return t("errors.generic");
     }
   })();
 
@@ -63,15 +64,12 @@ export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
       aria-labelledby={`${formId}-h`}
     >
       <h2 id={`${formId}-h`} className="text-xl font-semibold text-foreground">
-        Heslo na pozeranie výsledkov
+        {t("heading")}
       </h2>
-      <p className="text-sm text-muted-foreground">
-        Zadaj heslo, ktoré si si zvolil/a pri vytváraní tohto edu testu. Heslo nikam neukladáme — ak
-        ho zabudneš, výsledky späť nezískaš.
-      </p>
+      <p className="text-sm text-muted-foreground">{t("body")}</p>
       <div>
         <label htmlFor={passwordId} className="sr-only">
-          Heslo
+          {t("password_label")}
         </label>
         <div className="relative">
           <input
@@ -93,7 +91,7 @@ export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
             aria-pressed={revealed}
             className="absolute inset-y-0 right-0 flex items-center px-3 text-xs font-semibold text-muted-foreground hover:text-foreground"
           >
-            {revealed ? "Skryť" : "Zobraziť"}
+            {revealed ? t("hide") : t("reveal")}
           </button>
         </div>
       </div>
@@ -112,7 +110,7 @@ export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
         disabled={state === "submitting" || password.length === 0}
         className="w-full rounded-xl bg-accent-gradient px-4 py-2 text-sm font-bold text-primary-foreground shadow-glow disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {state === "submitting" ? "Overujem…" : "Otvoriť výsledky →"}
+        {state === "submitting" ? tCommon("verifying") : t("submit")}
       </button>
     </form>
   );

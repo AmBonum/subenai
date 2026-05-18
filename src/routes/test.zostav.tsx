@@ -20,6 +20,7 @@ import {
 } from "@/lib/quiz/composer";
 import { ROUTES } from "@/config/routes";
 import { copyToClipboard } from "@/lib/browser/clipboard";
+import { tFor } from "@/i18n/quiz";
 
 /**
  * Decode an incoming `?config=` URL into a usable composer config,
@@ -62,21 +63,21 @@ export const Route = createFileRoute("/test/zostav")({
   validateSearch: (search: Record<string, unknown>): ZostavSearch => ({
     config: typeof search.config === "string" ? search.config : undefined,
   }),
-  head: () => ({
-    meta: [
-      { title: "Zostav vlastný test pre tím — subenai" },
-      {
-        name: "description",
-        content:
-          "Vyber otázky podľa kategórie a obtiažnosti, nastav prah úspešnosti, zdieľaj test s tímom. Žiadna registrácia, anonymné výsledky.",
-      },
-      { name: "robots", content: "index, follow" },
-    ],
-  }),
+  head: () => {
+    const t = tFor("composer");
+    return {
+      meta: [
+        { title: t("meta_title") },
+        { name: "description", content: t("meta_description") },
+        { name: "robots", content: "index, follow" },
+      ],
+    };
+  },
   component: ComposerPage,
 });
 
 export function ComposerPage() {
+  const t = useMemo(() => tFor("composer"), []);
   const search = useSearch({ from: "/test/zostav" });
   const navigate = useNavigate();
 
@@ -124,77 +125,83 @@ export function ComposerPage() {
   useEffect(() => {
     if (!initial || initial.drift <= 0) return;
     const n = initial.drift;
-    setStaleNotice(
-      `Z odkazu sa nepodarilo načítať ${n} ${n === 1 ? "otázku" : "otázok"} — pravdepodobne ich autor banky premenoval. Pokračuj s tým, čo zostalo, alebo doplň ďalšie.`,
-    );
-  }, [initial]);
+    setStaleNotice(t(n === 1 ? "stale_drift_singular" : "stale_drift_plural", { n }));
+  }, [initial, t]);
 
-  const togglePack = useCallback((slug: string) => {
-    const pack = getPackBySlug(slug);
-    if (!pack) return;
-    setStaleNotice(null);
-    setSelectedPackSlugs((prev) => {
-      const next = new Set(prev);
-      if (next.has(slug)) {
-        next.delete(slug);
-        // Removing pack: drop its IDs but keep IDs still referenced by
-        // another active pack OR added manually (manual = present in
-        // prevIds but never in any pack's questionIds list).
-        setSelectedIds((prevIds) => {
-          const stillReferenced = new Set<string>();
-          for (const otherSlug of next) {
-            const other = getPackBySlug(otherSlug);
-            other?.questionIds.forEach((id) => stillReferenced.add(id));
-          }
-          const removed = new Set(pack.questionIds);
-          const result = new Set<string>();
-          for (const id of prevIds) {
-            if (!removed.has(id) || stillReferenced.has(id)) result.add(id);
-          }
-          return result;
-        });
-      } else {
-        next.add(slug);
-        // Adding pack: count drift (IDs from manifest no longer in bank)
-        // and enforce the 50-cap. Anything we couldn't fit due to cap
-        // is surfaced separately so the user understands why.
-        let drifted = 0;
-        let capped = 0;
-        setSelectedIds((prevIds) => {
-          const result = new Set(prevIds);
-          for (const id of pack.questionIds) {
-            if (!getQuestionById(id)) {
-              drifted += 1;
-              continue;
+  const togglePack = useCallback(
+    (slug: string) => {
+      const pack = getPackBySlug(slug);
+      if (!pack) return;
+      setStaleNotice(null);
+      setSelectedPackSlugs((prev) => {
+        const next = new Set(prev);
+        if (next.has(slug)) {
+          next.delete(slug);
+          // Removing pack: drop its IDs but keep IDs still referenced by
+          // another active pack OR added manually (manual = present in
+          // prevIds but never in any pack's questionIds list).
+          setSelectedIds((prevIds) => {
+            const stillReferenced = new Set<string>();
+            for (const otherSlug of next) {
+              const other = getPackBySlug(otherSlug);
+              other?.questionIds.forEach((id) => stillReferenced.add(id));
             }
-            if (result.size >= COMPOSER_LIMITS.maxQuestions) {
-              capped += 1;
-              continue;
+            const removed = new Set(pack.questionIds);
+            const result = new Set<string>();
+            for (const id of prevIds) {
+              if (!removed.has(id) || stillReferenced.has(id)) result.add(id);
             }
-            result.add(id);
-          }
-          return result;
-        });
-        // useState batches; we set the notice unconditionally and read
-        // the captured drift/capped after the setState callback returns.
-        if (drifted > 0 || capped > 0) {
-          const parts: string[] = [];
-          if (drifted > 0) {
-            parts.push(
-              `${drifted} ${drifted === 1 ? "otázka bola premenovaná" : "otázok bolo premenovaných"} v banke a nedá sa načítať`,
+            return result;
+          });
+        } else {
+          next.add(slug);
+          // Adding pack: count drift (IDs from manifest no longer in bank)
+          // and enforce the 50-cap. Anything we couldn't fit due to cap
+          // is surfaced separately so the user understands why.
+          let drifted = 0;
+          let capped = 0;
+          setSelectedIds((prevIds) => {
+            const result = new Set(prevIds);
+            for (const id of pack.questionIds) {
+              if (!getQuestionById(id)) {
+                drifted += 1;
+                continue;
+              }
+              if (result.size >= COMPOSER_LIMITS.maxQuestions) {
+                capped += 1;
+                continue;
+              }
+              result.add(id);
+            }
+            return result;
+          });
+          // useState batches; we set the notice unconditionally and read
+          // the captured drift/capped after the setState callback returns.
+          if (drifted > 0 || capped > 0) {
+            const parts: string[] = [];
+            if (drifted > 0) {
+              parts.push(
+                t(drifted === 1 ? "pack_drift_singular" : "pack_drift_plural", { n: drifted }),
+              );
+            }
+            if (capped > 0) {
+              parts.push(
+                t(capped === 1 ? "pack_cap_singular" : "pack_cap_plural", {
+                  n: capped,
+                  max: COMPOSER_LIMITS.maxQuestions,
+                }),
+              );
+            }
+            setStaleNotice(
+              t("stale_pack_prefix", { title: pack.title, details: parts.join("; ") }),
             );
           }
-          if (capped > 0) {
-            parts.push(
-              `${capped} ${capped === 1 ? "otázka prekročila limit" : "otázok prekročilo limit"} 50 a nepridali sa`,
-            );
-          }
-          setStaleNotice(`Pri pridaní packu ${pack.title}: ${parts.join("; ")}.`);
         }
-      }
-      return next;
-    });
-  }, []);
+        return next;
+      });
+    },
+    [t],
+  );
 
   const toggleQuestion = useCallback((id: string) => {
     setSelectedIds((prev) => {
@@ -207,16 +214,14 @@ export function ComposerPage() {
 
   const clearAll = useCallback(() => {
     if (selectedIds.size >= 10) {
-      const ok = window.confirm(
-        `Zrušiť výber? Stratíš ${selectedIds.size} vybraných otázok. Akciu nedá vrátiť späť.`,
-      );
+      const ok = window.confirm(t("clear_confirm", { n: selectedIds.size }));
       if (!ok) return;
     }
     setSelectedIds(new Set());
     setSelectedPackSlugs(new Set());
     setError(null);
     setStaleNotice(null);
-  }, [selectedIds.size]);
+  }, [selectedIds.size, t]);
 
   const selectedCount = selectedIds.size;
   const meetsMin = selectedCount >= COMPOSER_LIMITS.minQuestions;
@@ -250,11 +255,11 @@ export function ComposerPage() {
     const url = `${window.location.origin}${ROUTES.zostav}?config=${encoded}`;
     const ok = await copyToClipboard(url);
     if (ok) {
-      setShareToast("Odkaz s draftom skopírovaný — pošli ho tímu na úpravu.");
+      setShareToast(t("share_toast"));
     } else {
       setError("clipboard_failed");
     }
-  }, [canShareUrl, selectedIds, passingThreshold, creatorLabel, selectedPackSlugs]);
+  }, [canShareUrl, selectedIds, passingThreshold, creatorLabel, selectedPackSlugs, t]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -320,7 +325,7 @@ export function ComposerPage() {
             kind: "composer",
             questions,
             passingThreshold,
-            label: "tento test",
+            label: t("self_run_label"),
             testSetId: "self-run",
           }}
         />
@@ -333,15 +338,15 @@ export function ComposerPage() {
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-10 text-center md:text-left">
           <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
-            ← Späť na domov
+            ← {tFor("common")("back_home")}
           </Link>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Zostav vlastný test pre tím
+            {t("page_heading")}
           </h1>
-          <p className="mt-3 text-base text-muted-foreground sm:text-lg">
-            Vyber otázky podľa <strong className="text-foreground">tvojej</strong> branže a hrozieb,
-            nastav prah úspešnosti, zdieľaj jediným linkom. Žiadna registrácia, anonymné výsledky.
-          </p>
+          <p
+            className="mt-3 text-base text-muted-foreground sm:text-lg"
+            dangerouslySetInnerHTML={{ __html: t("page_intro_html") }}
+          />
         </header>
 
         {staleNotice ? (
@@ -353,7 +358,7 @@ export function ComposerPage() {
             <button
               type="button"
               onClick={() => setStaleNotice(null)}
-              aria-label="Zatvoriť upozornenie"
+              aria-label={t("dismiss_notice_aria")}
               className="shrink-0 rounded p-1 text-muted-foreground hover:text-foreground"
             >
               ✕
@@ -363,18 +368,17 @@ export function ComposerPage() {
 
         <form onSubmit={handleSubmit} className="space-y-12" aria-labelledby="composer-h">
           <h2 id="composer-h" className="sr-only">
-            Composer testu
+            {t("form_aria_heading")}
           </h2>
 
           <section aria-labelledby="step-1-h" className="space-y-3">
             <h3 id="step-1-h" className="text-lg font-semibold text-foreground">
-              <span className="text-primary">1.</span> Predefinované sady{" "}
-              <span className="text-sm font-normal text-muted-foreground">(voliteľné)</span>
+              <span className="text-primary">1.</span> {t("step_1_heading")}{" "}
+              <span className="text-sm font-normal text-muted-foreground">
+                {t("step_1_optional")}
+              </span>
             </h3>
-            <p className="text-sm text-muted-foreground">
-              Klikni na sady ktoré najlepšie pasujú tvojej firme. Otázky sa pridajú automaticky;
-              môžeš ich neskôr odobrať alebo doplniť ručne.
-            </p>
+            <p className="text-sm text-muted-foreground">{t("step_1_body")}</p>
             <PackPreloadChips
               packs={packs}
               selectedSlugs={selectedPackSlugs}
@@ -387,7 +391,7 @@ export function ComposerPage() {
             className="space-y-3 rounded-2xl border border-border/60 bg-card/40 p-5 sm:p-6"
           >
             <h3 id="step-2-h" className="text-lg font-semibold text-foreground">
-              <span className="text-primary">2.</span> Otázky
+              <span className="text-primary">2.</span> {t("step_2_heading")}
             </h3>
             <QuestionPicker
               questions={QUESTIONS}
@@ -401,7 +405,7 @@ export function ComposerPage() {
             className="space-y-4 rounded-2xl border border-border/60 bg-card/40 p-5 sm:p-6"
           >
             <h3 id="step-3-h" className="text-lg font-semibold text-foreground">
-              <span className="text-primary">3.</span> Nastavenia
+              <span className="text-primary">3.</span> {t("step_3_heading")}
             </h3>
             <ComposerSettings
               passingThreshold={passingThreshold}
@@ -426,7 +430,8 @@ export function ComposerPage() {
               role="alert"
               className="rounded-xl border border-destructive/60 bg-destructive/10 p-3 text-sm text-foreground"
             >
-              Niečo sa pokazilo: <code>{error}</code>. Skús to prosím znova.
+              {t("error_block_prefix")} <code>{error}</code>
+              {t("error_block_suffix")}
             </div>
           ) : null}
         </form>
@@ -446,7 +451,7 @@ export function ComposerPage() {
 
       <div
         role="region"
-        aria-label="Akcie composeru"
+        aria-label={t("actions_region_aria")}
         className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-background/95 px-4 py-3 backdrop-blur sm:px-6"
       >
         <div className="mx-auto flex max-w-3xl flex-col gap-2">
@@ -456,10 +461,16 @@ export function ComposerPage() {
               className={`text-sm font-semibold ${canRun ? "text-foreground" : "text-muted-foreground"}`}
             >
               {!meetsMin
-                ? `Vyber aspoň ${COMPOSER_LIMITS.minQuestions} otázok (zostáva ${COMPOSER_LIMITS.minQuestions - selectedCount})`
+                ? t("min_remaining", {
+                    min: COMPOSER_LIMITS.minQuestions,
+                    remaining: COMPOSER_LIMITS.minQuestions - selectedCount,
+                  })
                 : !eduPasswordOk
-                  ? `Heslo musí mať aspoň ${EDU_PASSWORD_MIN_LEN} znakov`
-                  : `Vybraných: ${selectedCount} · prah ${passingThreshold} %${collectsResponses ? " · edu mód" : ""}`}
+                  ? t("password_min_len", { min: EDU_PASSWORD_MIN_LEN })
+                  : t(collectsResponses ? "selected_summary_edu" : "selected_summary", {
+                      count: selectedCount,
+                      threshold: passingThreshold,
+                    })}
             </p>
             <div className="flex flex-wrap items-center gap-2">
               <button
@@ -468,20 +479,16 @@ export function ComposerPage() {
                 disabled={selectedCount === 0 || submitting}
                 className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Vyčistiť
+                {t("clear")}
               </button>
               <button
                 type="button"
                 onClick={runForSelf}
                 disabled={!canSelfRun}
-                title={
-                  collectsResponses
-                    ? "Edu mód s heslom: zostavu treba zdieľať tímu cez link, nie spustiť tu (preskočil by sa intake formulár)."
-                    : undefined
-                }
+                title={collectsResponses ? t("run_self_disabled_title") : undefined}
                 className="rounded-xl border border-primary/40 bg-card px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Spustiť pre seba
+                {t("run_self")}
               </button>
               <button
                 type="button"
@@ -493,10 +500,10 @@ export function ComposerPage() {
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-gradient px-4 py-2 text-sm font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
               >
                 {submitting
-                  ? "Ukladám…"
+                  ? tFor("common")("saving")
                   : collectsResponses
-                    ? "Vytvoriť edu test"
-                    : "Zdieľať s tímom"}
+                    ? t("submit_creating_edu")
+                    : t("submit_share")}
                 <span aria-hidden="true">→</span>
               </button>
             </div>
@@ -508,9 +515,9 @@ export function ComposerPage() {
                 onClick={copyShareUrl}
                 className="underline underline-offset-2 hover:text-foreground"
               >
-                Skopírovať draft cez URL (bez DB)
+                {t("url_share_button")}
               </button>{" "}
-              — vhodné pre malé zostavy do {COMPOSER_LIMITS.urlShareMaxQuestions} otázok.
+              {t("url_share_hint", { max: COMPOSER_LIMITS.urlShareMaxQuestions })}
             </p>
           ) : null}
         </div>

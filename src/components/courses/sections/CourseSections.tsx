@@ -1,6 +1,7 @@
 import type { CourseSection } from "@/content/courses";
 import { VisualBlock } from "@/components/quiz/flow/VisualBlock";
 import { Check, X, AlertTriangle } from "lucide-react";
+import { tFor } from "@/i18n/quiz";
 
 function SectionFrame({
   id,
@@ -32,6 +33,7 @@ function slugify(text: string, idx: number): string {
 }
 
 export function CourseSectionView({ section, idx }: { section: CourseSection; idx: number }) {
+  const t = tFor("courses_misc");
   const id = slugify(section.heading, idx);
   switch (section.kind) {
     case "intro":
@@ -61,9 +63,15 @@ export function CourseSectionView({ section, idx }: { section: CourseSection; id
                 className="flex items-start gap-3 rounded-lg border border-border/60 bg-card/50 p-3"
               >
                 {item.good ? (
-                  <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-success" aria-label="OK" />
+                  <Check
+                    className="mt-0.5 h-5 w-5 flex-shrink-0 text-success"
+                    aria-label={t("checklist_ok_aria")}
+                  />
                 ) : (
-                  <X className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" aria-label="Pozor" />
+                  <X
+                    className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive"
+                    aria-label={t("checklist_bad_aria")}
+                  />
                 )}
                 <span className="text-sm text-foreground/90 sm:text-base">{item.text}</span>
               </li>
@@ -95,7 +103,7 @@ export function CourseSectionView({ section, idx }: { section: CourseSection; id
         <SectionFrame id={id} heading={section.heading}>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-lg border border-success/40 bg-success/10 p-4">
-              <p className="mb-2 text-sm font-semibold text-success">Áno</p>
+              <p className="mb-2 text-sm font-semibold text-success">{t("do_dont_yes")}</p>
               <ul className="space-y-1.5 text-sm text-foreground/90 sm:text-base" role="list">
                 {section.do.map((item, i) => (
                   <li key={i} className="flex gap-2">
@@ -109,7 +117,7 @@ export function CourseSectionView({ section, idx }: { section: CourseSection; id
               </ul>
             </div>
             <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-4">
-              <p className="mb-2 text-sm font-semibold text-destructive">Nie</p>
+              <p className="mb-2 text-sm font-semibold text-destructive">{t("do_dont_no")}</p>
               <ul className="space-y-1.5 text-sm text-foreground/90 sm:text-base" role="list">
                 {section.dont.map((item, i) => (
                   <li key={i} className="flex gap-2">
@@ -134,7 +142,7 @@ export function CourseSectionView({ section, idx }: { section: CourseSection; id
             </p>
             <div className="rounded-lg border border-success/40 bg-success/10 p-4">
               <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-success">
-                Správna reakcia
+                {t("section_correct_reaction")}
               </p>
               <p className="text-sm text-foreground/90 sm:text-base">{section.right_action}</p>
             </div>

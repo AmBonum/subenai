@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { copyToClipboard } from "@/lib/browser/clipboard";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   publicUrl: string;
@@ -21,6 +22,7 @@ interface Props {
 type CopyKey = "public" | "results" | "password" | null;
 
 export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: Props) {
+  const t = tFor("edu_success");
   const [acknowledged, setAcknowledged] = useState(false);
   const [copied, setCopied] = useState<CopyKey>(null);
 
@@ -51,32 +53,29 @@ export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: P
         }}
       >
         <DialogHeader>
-          <DialogTitle>Edu test vytvorený</DialogTitle>
-          <DialogDescription>
-            Skopíruj si <strong className="text-foreground">obidva linky aj heslo PRED</strong> tým,
-            ako zatvoríš toto okno. Heslo nikam neukladáme — ak ho stratíš, výsledky späť nezískaš.
-          </DialogDescription>
+          <DialogTitle>{t("title")}</DialogTitle>
+          <DialogDescription dangerouslySetInnerHTML={{ __html: t("description_html") }} />
         </DialogHeader>
 
         <div className="space-y-3">
           <Field
-            label="Link pre respondentov"
+            label={t("public_label")}
             value={publicUrl}
-            hint="Pošli tento link študentom / kolegom."
+            hint={t("public_hint")}
             copied={copied === "public"}
             onCopy={() => copy(publicUrl, "public")}
           />
           <Field
-            label="Link na výsledky (pre teba)"
+            label={t("results_label")}
             value={resultsUrl}
-            hint="Po zadaní hesla uvidíš všetky odpovede."
+            hint={t("results_hint")}
             copied={copied === "results"}
             onCopy={() => copy(resultsUrl, "results")}
           />
           <Field
-            label="Heslo"
+            label={t("password_label")}
             value={password}
-            hint="Bez hesla sa k výsledkom nedostaneš. Reset cez e-mail neexistuje."
+            hint={t("password_hint")}
             mono
             copied={copied === "password"}
             onCopy={() => copy(password, "password")}
@@ -92,17 +91,13 @@ export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: P
               onChange={(e) => setAcknowledged(e.target.checked)}
               className="mt-0.5 size-4 cursor-pointer accent-primary"
             />
-            <span className="leading-relaxed">
-              Linky aj heslo som si <strong>zaznamenal/a</strong> (password manager, poznámka).
-              Beriem na vedomie, že po zatvorení tohto okna ich už nikde nezobrazíme a heslo sa nedá
-              obnoviť.
-            </span>
+            <span className="leading-relaxed" dangerouslySetInnerHTML={{ __html: t("ack_html") }} />
           </label>
         </div>
 
         <DialogFooter>
           <Button onClick={onClose} disabled={!acknowledged}>
-            Hotovo, zatvoriť
+            {t("close")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -120,6 +115,8 @@ interface FieldProps {
 }
 
 function Field({ label, value, hint, mono, copied, onCopy }: FieldProps) {
+  const t = tFor("edu_success");
+  const tCommon = tFor("common");
   return (
     <div className="rounded-lg border border-border/60 bg-card/40 p-3">
       <div className="flex items-center justify-between gap-3">
@@ -128,15 +125,15 @@ function Field({ label, value, hint, mono, copied, onCopy }: FieldProps) {
           type="button"
           onClick={onCopy}
           className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 text-xs font-semibold text-foreground hover:border-primary"
-          aria-label={`Skopírovať ${label}`}
+          aria-label={t("copy_aria", { label })}
         >
           {copied ? (
             <>
-              <Check className="size-3" aria-hidden /> Skopírované
+              <Check className="size-3" aria-hidden /> {tCommon("copied")}
             </>
           ) : (
             <>
-              <Copy className="size-3" aria-hidden /> Kopírovať
+              <Copy className="size-3" aria-hidden /> {tCommon("copy")}
             </>
           )}
         </button>

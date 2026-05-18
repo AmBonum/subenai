@@ -18,6 +18,17 @@ const OutputSchema = z.object({
 export type GeneratedQuestion = z.infer<typeof OutputSchema>;
 export type GenerateInput = z.infer<typeof InputSchema>;
 
+export type AIGenerateErrorCode = "ai_disabled" | "rate_limit" | "no_credits";
+
+export class AIGenerateError extends Error {
+  readonly code: AIGenerateErrorCode;
+  constructor(code: AIGenerateErrorCode, message?: string) {
+    super(message ?? code);
+    this.code = code;
+    this.name = "AIGenerateError";
+  }
+}
+
 // AH-4.1: feature-flagged off by default. Until VITE_AI_GENERATOR_ENABLED is
 // flipped to "true" (a dedicated AI epic post-AH-4), this function short-
 // circuits before reaching any remote service so the production bundle ships
@@ -27,7 +38,7 @@ export async function generateQuestionWithAnswers(
   input: GenerateInput,
 ): Promise<GeneratedQuestion> {
   if (import.meta.env.VITE_AI_GENERATOR_ENABLED !== "true") {
-    throw new Error("AI generátor je momentálne vypnutý.");
+    throw new AIGenerateError("ai_disabled");
   }
 
   const data = InputSchema.parse(input);
@@ -38,9 +49,8 @@ export async function generateQuestionWithAnswers(
     body: JSON.stringify(data),
   });
 
-  if (res.status === 429)
-    throw new Error("AI Gateway: prekročený limit požiadaviek. Skúste o chvíľu.");
-  if (res.status === 402) throw new Error("AI Gateway: vyčerpané kredity workspace.");
+  if (res.status === 429) throw new AIGenerateError("rate_limit");
+  if (res.status === 402) throw new AIGenerateError("no_credits");
   if (!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`AI Gateway zlyhala (${res.status}): ${text.slice(0, 200)}`);

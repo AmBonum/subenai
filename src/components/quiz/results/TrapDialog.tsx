@@ -24,6 +24,7 @@ import {
 import { matchers, type TrapFieldId } from "@/lib/data-trap/matchers";
 import { useConsent } from "@/hooks/useConsent";
 import { track } from "@/lib/browser/tracking";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   open: boolean;
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export function TrapDialog({ open, onOpenChange, onAcknowledged }: Props) {
+  const t = tFor("trap");
   const { record } = useConsent();
   const [values, setValues] = useState<Record<TrapFieldId, string>>(() => emptyValues());
   // Once a field has matched, we keep the warning visible even if the user
@@ -77,16 +79,11 @@ export function TrapDialog({ open, onOpenChange, onAcknowledged }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">
-            ✋ Skús nás oklamať — vyplň citlivé údaje
-          </DialogTitle>
-          <DialogDescription className="text-sm leading-relaxed text-muted-foreground">
-            Toto je vzdelávací popup.{" "}
-            <strong className="text-foreground">
-              Nič z toho čo sem napíšeš sa nikam neukladá ani neposiela
-            </strong>{" "}
-            — len ti pri zadaní citlivého údaja ukážeme, čo sa môže stať v reálnom svete.
-          </DialogDescription>
+          <DialogTitle className="text-xl font-bold">{t("title")}</DialogTitle>
+          <DialogDescription
+            className="text-sm leading-relaxed text-muted-foreground"
+            dangerouslySetInnerHTML={{ __html: t("description_html") }}
+          />
         </DialogHeader>
 
         <div className="mt-2 space-y-5">
@@ -102,9 +99,7 @@ export function TrapDialog({ open, onOpenChange, onAcknowledged }: Props) {
         </div>
 
         <DialogFooter className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-end">
-          <p className="flex-1 text-xs text-muted-foreground">
-            Hodnoty zaniknú so zatvorením dialógu — žiadny zápis na server.
-          </p>
+          <p className="flex-1 text-xs text-muted-foreground">{t("footer_note")}</p>
           <button
             type="button"
             onClick={() => {
@@ -113,7 +108,7 @@ export function TrapDialog({ open, onOpenChange, onAcknowledged }: Props) {
             }}
             className="rounded-xl bg-accent-gradient px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02]"
           >
-            Rozumiem — viac to nezadám
+            {t("acknowledge")}
           </button>
         </DialogFooter>
       </DialogContent>

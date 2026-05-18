@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/layout/Footer";
 import { buildPackQuizJsonLd, INDUSTRY_LABEL } from "@/lib/seo/quiz-jsonld";
 import { SITE_ORIGIN } from "@/config/site";
+import { tFor } from "@/i18n/quiz";
 const COPYRIGHT_HOLDER = "am.bonum s. r. o.";
 
 export const Route = createFileRoute("/testy/$slug")({
@@ -17,10 +18,16 @@ export const Route = createFileRoute("/testy/$slug")({
   },
   head: ({ loaderData: pack }) => {
     if (!pack) return { meta: [] };
+    const t = tFor("testy");
     const url = `${SITE_ORIGIN}/testy/${pack.slug}`;
     return {
       meta: [
-        { title: `${pack.title} — subenai pre ${INDUSTRY_LABEL[pack.industry]}` },
+        {
+          title: t("pack_meta_title", {
+            title: pack.title,
+            industry: INDUSTRY_LABEL[pack.industry],
+          }),
+        },
         { name: "description", content: pack.tagline },
         { name: "author", content: COPYRIGHT_HOLDER },
         { name: "robots", content: "index, follow, max-image-preview:large" },
@@ -48,6 +55,8 @@ export const Route = createFileRoute("/testy/$slug")({
 });
 
 function PackPage() {
+  const t = tFor("testy");
+  const tCommon = tFor("common");
   const pack = Route.useLoaderData() as TestPack;
   const [started, setStarted] = useState(false);
 
@@ -85,9 +94,11 @@ function PackPage() {
           </p>
           <p className="mt-4 text-sm text-muted-foreground">{pack.targetPersona}</p>
           <p className="mt-4 text-sm text-muted-foreground">
-            <span aria-label="Počet otázok">📋 {questions.length} otázok</span>
+            <span aria-label={t("pack_questions_aria")}>
+              {t("pack_questions_inline", { n: questions.length })}
+            </span>
             {" · "}
-            <span>Vyhovenie pri ≥ {pack.passingThreshold} %</span>
+            <span>{t("pack_threshold", { threshold: pack.passingThreshold })}</span>
             {" · "}
             <span>{INDUSTRY_LABEL[pack.industry]}</span>
           </p>
@@ -95,17 +106,15 @@ function PackPage() {
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Button size="lg" onClick={() => setStarted(true)} disabled={questions.length === 0}>
-            Spustiť pack →
+            {t("pack_start")}
           </Button>
           <Button asChild variant="outline">
-            <Link to="/test">Štandardný test</Link>
+            <Link to="/test">{t("pack_standard_cta")}</Link>
           </Button>
         </div>
 
         {questions.length === 0 && (
-          <p className="mt-6 text-center text-sm text-warning">
-            Pack momentálne neobsahuje žiadnu otázku. Kontaktuj autora.
-          </p>
+          <p className="mt-6 text-center text-sm text-warning">{t("pack_empty")}</p>
         )}
 
         {pack.sources && pack.sources.length > 0 && (
@@ -117,7 +126,7 @@ function PackPage() {
               id="pack-sources-h"
               className="text-sm font-semibold uppercase tracking-wider text-muted-foreground"
             >
-              Zdroje
+              {tCommon("sources")}
             </h2>
             <ul className="mt-3 space-y-1 text-sm" role="list">
               {pack.sources.map((s, i) => (
@@ -137,8 +146,10 @@ function PackPage() {
         )}
 
         <p className="mt-10 border-t border-border/60 pt-4 text-center text-xs text-muted-foreground">
-          © {new Date(pack.publishedAt).getFullYear()} {COPYRIGHT_HOLDER}. Obsah packu je chránený
-          autorským zákonom č. 185/2015 Z. z.
+          {t("pack_copyright", {
+            year: new Date(pack.publishedAt).getFullYear(),
+            holder: COPYRIGHT_HOLDER,
+          })}
         </p>
       </main>
       <Footer />

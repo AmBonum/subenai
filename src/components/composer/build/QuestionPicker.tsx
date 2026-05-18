@@ -1,20 +1,7 @@
 import { useMemo, useState, type ChangeEvent } from "react";
 import type { Category, Difficulty, Question } from "@/lib/quiz/bank/questions";
 import { COMPOSER_LIMITS } from "@/lib/quiz/composer";
-
-const CATEGORY_LABELS: Record<Category, string> = {
-  phishing: "Phishing",
-  url: "URL",
-  fake_vs_real: "Fake vs. real",
-  scenario: "Scenár",
-  honeypot: "Vyzerá podozrivo, ale OK",
-};
-
-const DIFFICULTY_LABELS: Record<Difficulty, string> = {
-  easy: "Ľahké",
-  medium: "Stredné",
-  hard: "Ťažké",
-};
+import { tFor } from "@/i18n/quiz";
 
 const ALL_CATEGORIES: Category[] = ["phishing", "url", "fake_vs_real", "scenario", "honeypot"];
 const ALL_DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
@@ -26,9 +13,13 @@ interface Props {
 }
 
 export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
+  const t = tFor("question_picker");
   const [activeCategories, setActiveCategories] = useState<Set<Category>>(new Set());
   const [activeDifficulties, setActiveDifficulties] = useState<Set<Difficulty>>(new Set());
   const [search, setSearch] = useState("");
+
+  const categoryLabel = (c: Category) => t(`categories.${c}`);
+  const difficultyLabel = (d: Difficulty) => t(`difficulties.${d}`);
 
   const filtered = useMemo(() => {
     const trimmed = search.trim().toLowerCase();
@@ -63,29 +54,29 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
     <div className="space-y-4">
       <div className="space-y-3">
         <FilterRow
-          label="Kategória"
+          label={t("category_label")}
           options={ALL_CATEGORIES}
           activeSet={activeCategories}
           onToggle={(c) => toggleCategory(c as Category)}
-          labels={CATEGORY_LABELS}
+          getLabel={(c) => categoryLabel(c as Category)}
         />
         <FilterRow
-          label="Obtiažnosť"
+          label={t("difficulty_label")}
           options={ALL_DIFFICULTIES}
           activeSet={activeDifficulties}
           onToggle={(d) => toggleDifficulty(d as Difficulty)}
-          labels={DIFFICULTY_LABELS}
+          getLabel={(d) => difficultyLabel(d as Difficulty)}
         />
         <div>
           <label htmlFor="picker-search" className="sr-only">
-            Hľadaj v texte otázky
+            {t("search_aria")}
           </label>
           <input
             id="picker-search"
             type="search"
             value={search}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-            placeholder="Hľadaj v texte otázky…"
+            placeholder={t("search_placeholder")}
             className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
           />
         </div>
@@ -96,16 +87,16 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
           aria-live="polite"
           className={`font-semibold ${atMax ? "text-amber-500" : "text-foreground"}`}
         >
-          Vybraných: {selectedIds.size} / {COMPOSER_LIMITS.maxQuestions}
+          {t("selected_count", { count: selectedIds.size, max: COMPOSER_LIMITS.maxQuestions })}
         </p>
         <p className="text-xs text-muted-foreground">
-          {filtered.length} z {questions.length} otázok zodpovedá filtru
+          {t("filter_count", { shown: filtered.length, total: questions.length })}
         </p>
       </div>
 
       {filtered.length === 0 ? (
         <p className="rounded-xl border border-dashed border-border/60 bg-card/50 p-4 text-center text-sm text-muted-foreground">
-          Filtru nezodpovedá žiadna otázka. Skús uvolniť kategóriu alebo zmazať vyhľadávanie.
+          {t("empty")}
         </p>
       ) : (
         <ul className="space-y-2" role="list">
@@ -141,10 +132,10 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
                     <p className="font-medium text-foreground">{q.prompt}</p>
                     <p className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                       <span className="rounded bg-muted px-1.5 py-0.5">
-                        {CATEGORY_LABELS[q.category]}
+                        {categoryLabel(q.category)}
                       </span>
                       <span className="rounded bg-muted px-1.5 py-0.5">
-                        {DIFFICULTY_LABELS[q.difficulty]}
+                        {difficultyLabel(q.difficulty)}
                       </span>
                     </p>
                   </div>
@@ -163,7 +154,7 @@ interface FilterRowProps<T extends string> {
   options: readonly T[];
   activeSet: ReadonlySet<T>;
   onToggle: (option: T) => void;
-  labels: Record<T, string>;
+  getLabel: (option: T) => string;
 }
 
 function FilterRow<T extends string>({
@@ -171,7 +162,7 @@ function FilterRow<T extends string>({
   options,
   activeSet,
   onToggle,
-  labels,
+  getLabel,
 }: FilterRowProps<T>) {
   return (
     <div>
@@ -193,7 +184,7 @@ function FilterRow<T extends string>({
                   : "border-border bg-card text-muted-foreground hover:border-primary/40"
               }`}
             >
-              {labels[opt]}
+              {getLabel(opt)}
             </button>
           );
         })}

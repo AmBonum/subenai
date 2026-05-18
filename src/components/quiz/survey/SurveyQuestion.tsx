@@ -1,4 +1,5 @@
 import type { SurveyOption } from "@/lib/quiz/survey/index";
+import { tFor } from "@/i18n/quiz";
 
 /**
  * Declarative survey question — covers the four shapes our growth survey
@@ -197,6 +198,7 @@ function YesNo({
   required,
   errorId,
 }: Extract<SurveyQuestionProps, { type: "yesno" }> & { errorId?: string }) {
+  const tCommon = tFor("common");
   return (
     <div
       role="radiogroup"
@@ -215,7 +217,7 @@ function YesNo({
             : "border-border text-foreground/70 hover:border-primary/50"
         }`}
       >
-        Áno
+        {tCommon("yes_capital")}
       </button>
       <button
         type="button"
@@ -228,7 +230,7 @@ function YesNo({
             : "border-border text-foreground/70 hover:border-primary/50"
         }`}
       >
-        Nie
+        {tCommon("no_capital")}
       </button>
     </div>
   );

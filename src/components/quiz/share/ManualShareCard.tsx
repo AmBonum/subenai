@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   /** Bare share URL without UTM — IG/TikTok captions aren't clickable, so
@@ -21,6 +22,8 @@ interface Props {
  * explicit two-step flow.
  */
 export function ManualShareCard({ url, text, onDownloadStory, downloading }: Props) {
+  const t = tFor("manual_share");
+  const tCommon = tFor("common");
   const [copied, setCopied] = useState(false);
   const caption = `${text} ${url}`;
 
@@ -37,36 +40,34 @@ export function ManualShareCard({ url, text, onDownloadStory, downloading }: Pro
 
   return (
     <div className="mt-6 animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-card">
-      <h3 className="text-base font-bold">📲 Instagram & TikTok</h3>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Tieto siete nemajú web share — stiahni obrázok a vlož caption manuálne.
-      </p>
+      <h3 className="text-base font-bold">{t("title")}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{t("body")}</p>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <button
           type="button"
           onClick={onDownloadStory}
           disabled={downloading}
-          aria-label="Stiahnuť IG Story obrázok"
+          aria-label={t("download_aria")}
           className="rounded-xl bg-accent-gradient px-5 py-3 text-base font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02] disabled:opacity-60"
         >
-          {downloading ? "Generujem…" : "📥 Stiahni IG Story PNG"}
+          {downloading ? t("generating") : t("download_button")}
         </button>
         <button
           type="button"
           onClick={handleCopyCaption}
-          aria-label="Skopírovať caption do schránky"
+          aria-label={t("copy_caption_aria")}
           className="rounded-xl border-2 border-border bg-card px-5 py-3 text-base font-semibold transition-colors hover:border-primary/60"
         >
-          {copied ? "✅ Skopírované" : "📋 Skopíruj caption"}
+          {copied ? `✅ ${tCommon("copied")}` : t("copy_caption")}
         </button>
       </div>
 
       <ol className="mt-5 list-decimal space-y-1.5 pl-5 text-sm text-foreground/80">
-        <li>Stiahni obrázok kliknutím vyššie.</li>
-        <li>Skopíruj caption text.</li>
-        <li>Otvor Instagram Story alebo TikTok appku.</li>
-        <li>Vyber stiahnutý obrázok zo Photos a vlož caption.</li>
+        <li>{t("step_1")}</li>
+        <li>{t("step_2")}</li>
+        <li>{t("step_3")}</li>
+        <li>{t("step_4")}</li>
       </ol>
     </div>
   );

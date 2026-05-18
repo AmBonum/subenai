@@ -11,6 +11,7 @@ import {
 } from "@/lib/quiz/score/scoring";
 import { QuestionCard } from "@/components/quiz/flow/QuestionCard";
 import { ResultsView } from "@/components/quiz/results/ResultsView";
+import { tFor } from "@/i18n/quiz";
 
 const QUICK_TEST_SIZE = 10;
 
@@ -108,6 +109,8 @@ function clearPersistedResult(key: string) {
 }
 
 export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowConfig } = {}) {
+  const t = tFor("take");
+  const tCommon = tFor("common");
   const storageKey = storageKeyFor(config);
   // Restore prior completed test ONLY when the user used the browser's
   // back/forward button — fresh navigation (link click, address bar) must
@@ -213,8 +216,8 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
         data-testid="test-error"
         className="flex min-h-[60vh] flex-col items-center justify-center text-center"
       >
-        <div className="text-3xl font-bold">Test sa nepodarilo načítať</div>
-        <div className="mt-2 text-muted-foreground">Skús stránku obnoviť o chvíľu.</div>
+        <div className="text-3xl font-bold">{t("load_error_title")}</div>
+        <div className="mt-2 text-muted-foreground">{t("load_error_body")}</div>
       </div>
     );
   }
@@ -225,10 +228,8 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
         data-testid="test-loading"
         className="flex min-h-[60vh] flex-col items-center justify-center text-center"
       >
-        <div className="text-3xl font-bold animate-fade-in-up">Pripravený?</div>
-        <div className="mt-2 text-muted-foreground animate-fade-in-up">
-          Odpovedaj rýchlo. Čas beží.
-        </div>
+        <div className="text-3xl font-bold animate-fade-in-up">{t("ready_title")}</div>
+        <div className="mt-2 text-muted-foreground animate-fade-in-up">{t("ready_body")}</div>
       </div>
     );
   }
@@ -240,7 +241,7 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
           to="/"
           className="text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
-          ← Späť
+          ← {tCommon("back")}
         </Link>
       </div>
       <QuestionCard

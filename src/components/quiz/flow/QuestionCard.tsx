@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { getQuestionTimeLimit, type Question } from "@/lib/quiz/bank/questions";
 import { VisualBlock } from "@/components/quiz/flow/VisualBlock";
 import { AnswerFeedback } from "@/components/quiz/review/AnswerFeedback";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   question: Question;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export function QuestionCard({ question, index, total, onAnswer }: Props) {
+  const t = tFor("take");
   const timeLimit = useMemo(() => getQuestionTimeLimit(question), [question]);
   const [secondsLeft, setSecondsLeft] = useState(timeLimit);
   const [selected, setSelected] = useState<string | null>(null);
@@ -69,9 +71,7 @@ export function QuestionCard({ question, index, total, onAnswer }: Props) {
       <div className="mb-6 flex items-center justify-between gap-4">
         <div className="flex-1">
           <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            <span>
-              Otázka {index + 1} / {total}
-            </span>
+            <span>{t("question_progress", { n: index + 1, total })}</span>
             <span className="text-primary">{question.category}</span>
           </div>
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -87,7 +87,7 @@ export function QuestionCard({ question, index, total, onAnswer }: Props) {
               ? "border-destructive text-destructive animate-pulse-ring"
               : "border-border text-foreground"
           }`}
-          aria-label={`${secondsLeft} sekúnd zostáva`}
+          aria-label={t("timer_aria", { seconds: secondsLeft })}
         >
           {secondsLeft}
         </div>

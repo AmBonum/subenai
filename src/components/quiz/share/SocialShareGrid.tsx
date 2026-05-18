@@ -6,6 +6,7 @@ import {
   withUtm,
   type SharePlatform,
 } from "@/lib/share/intents";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   url: string;
@@ -24,6 +25,7 @@ interface Props {
  * a toast — honest UX over a misleading FB redirect.
  */
 export function SocialShareGrid({ url, text }: Props) {
+  const t = tFor("social");
   const [messengerCopied, setMessengerCopied] = useState(false);
 
   async function handleClick(platform: SharePlatform) {
@@ -47,16 +49,14 @@ export function SocialShareGrid({ url, text }: Props) {
 
   return (
     <div className="mt-4">
-      <div className="text-xs uppercase tracking-wider text-muted-foreground">
-        Alebo zdieľaj priamo
-      </div>
+      <div className="text-xs uppercase tracking-wider text-muted-foreground">{t("or_share")}</div>
       <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-6">
         {SHARE_PLATFORMS.map((p) => (
           <button
             key={p.id}
             type="button"
             onClick={() => handleClick(p.id)}
-            aria-label={`Zdieľaj na ${p.label}`}
+            aria-label={t("share_aria", { platform: p.label })}
             className="group flex flex-col items-center gap-1.5 rounded-xl border border-border bg-card px-2 py-3 text-xs font-medium text-foreground/80 transition-colors hover:border-primary/60 hover:text-foreground"
           >
             <span aria-hidden className={`text-foreground/70 ${p.brandHover}`}>
@@ -72,7 +72,7 @@ export function SocialShareGrid({ url, text }: Props) {
           aria-live="polite"
           className="mt-3 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2 text-xs text-foreground"
         >
-          ✅ Skopírované do schránky — otvor Messenger a vlož správu.
+          {t("messenger_copied")}
         </div>
       )}
     </div>

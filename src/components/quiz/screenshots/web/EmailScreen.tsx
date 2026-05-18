@@ -1,3 +1,5 @@
+import { tFor } from "@/i18n/quiz";
+
 interface Props {
   from: string;
   fromEmail: string;
@@ -8,12 +10,13 @@ interface Props {
 
 /** Gmail-style email screenshot */
 export function EmailScreen({ from, fromEmail, subject, body, cta }: Props) {
+  const t = tFor("screenshots");
   return (
     <div className="mx-auto w-full max-w-md overflow-hidden rounded-xl border border-border/60 bg-white text-zinc-900 shadow-card">
       {/* toolbar */}
       <div className="flex items-center gap-2 border-b border-zinc-200 bg-zinc-50 px-3 py-2 text-[11px] text-zinc-500">
         <span className="font-semibold text-red-500">M</span>
-        <span>Doručené</span>
+        <span>{t("email_inbox")}</span>
       </div>
       <div className="px-4 py-4">
         <div className="text-[15px] font-semibold leading-tight">{subject}</div>
@@ -26,7 +29,7 @@ export function EmailScreen({ from, fromEmail, subject, body, cta }: Props) {
               <span className="font-semibold text-zinc-900">{from}</span>
               <span className="truncate text-zinc-500">&lt;{fromEmail}&gt;</span>
             </div>
-            <div className="text-[11px] text-zinc-500">komu: ja</div>
+            <div className="text-[11px] text-zinc-500">{t("email_to_me")}</div>
           </div>
         </div>
         <div className="mt-4 whitespace-pre-line text-[13px] leading-relaxed text-zinc-800">

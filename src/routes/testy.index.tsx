@@ -6,30 +6,21 @@ import { TestPackCard } from "@/components/test-packs/TestPackCard";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { SITE_ORIGIN } from "@/config/site";
+import { tFor } from "@/i18n/quiz";
 
 export const Route = createFileRoute("/testy/")({
   head: () => {
+    const t = tFor("testy");
     const url = `${SITE_ORIGIN}/testy`;
     const packs = listPublishedPacks();
     return {
       meta: [
-        { title: "Kyberbezpečnostné testy pre firmy podľa odvetvia — subenai" },
-        {
-          name: "description",
-          content:
-            "Phishing, podvodné SMS a online scamy — testy kybernetickej bezpečnosti pre e-shop, gastro, IT, autoservis a ďalšie odvetvia. Otestuj celý tím.",
-        },
+        { title: t("meta_title") },
+        { name: "description", content: t("meta_description") },
         { name: "robots", content: "index, follow, max-image-preview:large" },
         { name: "language", content: "sk-SK" },
-        {
-          property: "og:title",
-          content: "Kyberbezpečnostné testy pre firmy podľa odvetvia — subenai",
-        },
-        {
-          property: "og:description",
-          content:
-            "Phishing, podvodné SMS a online scamy — testy kybernetickej bezpečnosti pre e-shop, gastro, IT, autoservis a ďalšie odvetvia.",
-        },
+        { property: "og:title", content: t("meta_title") },
+        { property: "og:description", content: t("og_description") },
         { property: "og:type", content: "website" },
         { property: "og:url", content: url },
         { property: "og:locale", content: "sk_SK" },
@@ -42,7 +33,7 @@ export const Route = createFileRoute("/testy/")({
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ItemList",
-            name: "Industry test packy",
+            name: t("list_name"),
             itemListElement: packs.map((p, i) => ({
               "@type": "ListItem",
               position: i + 1,
@@ -58,6 +49,7 @@ export const Route = createFileRoute("/testy/")({
 });
 
 function FirmaIndexPage() {
+  const t = tFor("testy");
   const allPacks = listPublishedPacks();
   const [activeIndustries, setActiveIndustries] = useState<Set<Industry>>(new Set());
 
@@ -85,10 +77,9 @@ function FirmaIndexPage() {
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-5xl px-4 pb-12 pt-12 sm:pt-16">
         <header className="mb-8 text-center">
-          <h1 className="text-4xl font-black sm:text-5xl">Otestuj svoju branžu</h1>
+          <h1 className="text-4xl font-black sm:text-5xl">{t("page_heading")}</h1>
           <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg">
-            Predefinované testy digitálnej obozretnosti — pošli ich tímu a uvidíš, kde má slabiny.
-            Žiadna registrácia, výsledok za 5–10 minút.
+            {t("page_intro")}
           </p>
         </header>
 
@@ -101,7 +92,7 @@ function FirmaIndexPage() {
               id="filters-h"
               className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground"
             >
-              Filter podľa branže
+              {t("filter_industry")}
             </h2>
             <div className="flex flex-wrap gap-2">
               {availableIndustries.map((i) => {
@@ -128,7 +119,7 @@ function FirmaIndexPage() {
                   onClick={() => setActiveIndustries(new Set())}
                   className="ml-auto text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
                 >
-                  Vyčistiť ({activeIndustries.size})
+                  {t("clear_filter", { n: activeIndustries.size })}
                 </button>
               )}
             </div>
@@ -140,7 +131,7 @@ function FirmaIndexPage() {
             role="status"
             className="rounded-2xl border border-border/60 bg-card/30 p-8 text-center text-muted-foreground"
           >
-            Pre vybrané branže zatiaľ nemáme pack. Skús iný filter alebo si zostav vlastný test.
+            {t("empty")}
           </p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -152,10 +143,10 @@ function FirmaIndexPage() {
 
         <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
           <Button asChild>
-            <Link to="/test">Štandardný test (15 otázok)</Link>
+            <Link to="/test">{t("cta_standard")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/skolenia">Pozri bezplatné školenia</Link>
+            <Link to="/skolenia">{t("cta_courses")}</Link>
           </Button>
         </div>
       </main>

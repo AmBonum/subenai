@@ -1,18 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import type { Course } from "@/content/courses";
-
-const CATEGORY_LABEL: Record<Course["category"], string> = {
-  sms: "SMS",
-  email: "Email",
-  voice: "Telefón",
-  marketplace: "Marketplace",
-  investicie: "Investície",
-  vztahy: "Vzťahy",
-  data: "Data hygiene",
-  obecne: "Všeobecné",
-};
+import { tFor } from "@/i18n/quiz";
 
 export function CourseCard({ course }: { course: Course }) {
+  const t = tFor("courses_misc");
   return (
     <Link
       to="/skolenia/$slug"
@@ -24,7 +15,7 @@ export function CourseCard({ course }: { course: Course }) {
           {course.heroEmoji}
         </span>
         <span className="rounded-full border border-border/60 bg-background/40 px-2 py-0.5 text-xs text-muted-foreground">
-          {CATEGORY_LABEL[course.category]}
+          {t(`category_label.${course.category}`)}
         </span>
       </div>
       <h3 className="text-lg font-bold text-foreground group-hover:text-primary">{course.title}</h3>

@@ -154,5 +154,10 @@
     "multiselect_search": "Search branch...",
     "multiselect_empty": "Nothing found.",
     "multiselect_clear": "Clear selection"
+  },
+  "ai_errors": {
+    "disabled": "AI generator is currently disabled.",
+    "rate_limit": "AI Gateway: request rate limit exceeded. Try again in a moment.",
+    "no_credits": "AI Gateway: workspace credits exhausted."
   }
 }

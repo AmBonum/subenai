@@ -23,9 +23,11 @@ import {
 import { BRANCHES } from "@/lib/admin/branches";
 import {
   generateQuestionWithAnswers,
+  AIGenerateError,
   type GeneratedQuestion,
 } from "@/lib/admin/ai-generate.functions";
 import { tFor } from "@/i18n/questions";
+import { tFor as tForAdmin } from "@/i18n/admin";
 
 export interface AiQuestionGeneratorProps {
   open: boolean;
@@ -65,7 +67,11 @@ export function AiQuestionGenerator({
       setResult(out);
       toast.success(t("toast_generated"));
     } catch (e) {
-      toast.error((e as Error).message || t("error_generic"));
+      if (e instanceof AIGenerateError) {
+        toast.error(tForAdmin("ai_errors")(e.code === "ai_disabled" ? "disabled" : e.code));
+      } else {
+        toast.error((e as Error).message || t("error_generic"));
+      }
     } finally {
       setLoading(false);
     }

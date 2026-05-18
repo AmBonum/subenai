@@ -1,6 +1,7 @@
 import { getQuestionById } from "@/lib/quiz/bank/questions";
 import type { AnswerRecordPersisted } from "@/lib/quiz/bank/schema";
 import { AnswerReviewCard } from "@/components/quiz/review/AnswerReviewCard";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   answers: AnswerRecordPersisted[];
@@ -13,13 +14,11 @@ interface Props {
  * actually expands the review section.
  */
 export function AnswerReviewSection({ answers }: Props) {
+  const t = tFor("review");
   if (answers.length === 0) {
     return (
       <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
-        <p className="text-sm text-muted-foreground">
-          Detail odpovedí nie je dostupný pre staré výsledky. Tento záznam vznikol skôr, ako sme
-          začali ukladať odpovede pre review.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("empty")}</p>
       </div>
     );
   }

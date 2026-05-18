@@ -1,5 +1,6 @@
 import type { ChangeEvent } from "react";
 import { COMPOSER_LIMITS } from "@/lib/quiz/composer";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   passingThreshold: number;
@@ -22,6 +23,7 @@ export function ComposerSettings({
   creatorLabel,
   onCreatorLabelChange,
 }: Props) {
+  const t = tFor("composer_settings");
   const thresholdTone =
     passingThreshold < 60
       ? "text-red-500"
@@ -34,7 +36,7 @@ export function ComposerSettings({
       <div>
         <div className="flex items-baseline justify-between">
           <label htmlFor="threshold-slider" className="text-sm font-semibold text-foreground">
-            Prah úspešnosti
+            {t("threshold_label")}
           </label>
           <span className={`text-2xl font-black ${thresholdTone}`}>{passingThreshold}%</span>
         </div>
@@ -51,16 +53,18 @@ export function ComposerSettings({
           aria-valuenow={passingThreshold}
           className="mt-2 w-full accent-primary"
         />
-        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-          Pri skóre <strong className="text-foreground">{passingThreshold}/100</strong> a vyššom
-          dostane člen tímu badge „Vyhovuje" pri výsledku.
-        </p>
+        <p
+          className="mt-2 text-xs leading-relaxed text-muted-foreground"
+          dangerouslySetInnerHTML={{
+            __html: t("threshold_hint_html", { value: passingThreshold }),
+          }}
+        />
       </div>
 
       <div>
         <div className="flex items-baseline justify-between">
           <label htmlFor="max-slider" className="text-sm font-semibold text-foreground">
-            Maximálne otázok
+            {t("max_label")}
           </label>
           <span className="text-2xl font-black text-foreground">{maxQuestions}</span>
         </div>
@@ -79,16 +83,16 @@ export function ComposerSettings({
           aria-valuenow={maxQuestions}
           className="mt-2 w-full accent-primary"
         />
-        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-          Aktuálne vybraných: <strong className="text-foreground">{selectedCount}</strong>. Ak
-          posunieš pod tento počet, otázky vyžiadajú odobrať.
-        </p>
+        <p
+          className="mt-2 text-xs leading-relaxed text-muted-foreground"
+          dangerouslySetInnerHTML={{ __html: t("max_hint_html", { count: selectedCount }) }}
+        />
       </div>
 
       <div>
         <label htmlFor="creator-label" className="text-sm font-semibold text-foreground">
-          Pomenovanie zostavy{" "}
-          <span className="text-xs font-normal text-muted-foreground">(voliteľné)</span>
+          {t("creator_label")}{" "}
+          <span className="text-xs font-normal text-muted-foreground">{t("creator_optional")}</span>
         </label>
         <input
           id="creator-label"
@@ -98,22 +102,24 @@ export function ComposerSettings({
             onCreatorLabelChange(e.target.value.slice(0, COMPOSER_LIMITS.labelMaxLen))
           }
           maxLength={COMPOSER_LIMITS.labelMaxLen}
-          placeholder="napr. E-shop Q1 2026 onboarding"
+          placeholder={t("creator_placeholder")}
           className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
         />
         <p className="mt-1 text-xs text-muted-foreground">
-          {COMPOSER_LIMITS.labelMaxLen - creatorLabel.length} znakov zostáva
+          {t("creator_remaining", { n: COMPOSER_LIMITS.labelMaxLen - creatorLabel.length })}
         </p>
       </div>
 
       <div className="rounded-xl border border-border/60 bg-card/40 p-4">
         <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-          Pomer „vyzerá podozrivo, ale OK" otázok
+          {t("honeypot_title")}
         </p>
-        <p className="mt-1 text-sm leading-relaxed text-foreground">
-          <strong className="text-foreground">{Math.round(honeypotRatio * 100)} %</strong> z výberu
-          sú legit prípady. Vyšší pomer učí dôveru, nižší ostražitosť.
-        </p>
+        <p
+          className="mt-1 text-sm leading-relaxed text-foreground"
+          dangerouslySetInnerHTML={{
+            __html: t("honeypot_body_html", { pct: Math.round(honeypotRatio * 100) }),
+          }}
+        />
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ import {
   type TopFear,
 } from "@/lib/quiz/survey/index";
 import { ROUTES } from "@/config/routes";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   shareId: string;
@@ -27,10 +28,17 @@ const AGE_OPTIONS: SurveyOption[] = (
   ["<18", "18–24", "25–34", "35–44", "45–54", "55–64", "65+"] as const
 ).map((v) => ({ id: v, label: v }));
 
-const GENDER_OPTIONS: SurveyOption[] = (["Muž", "Žena", "Iné", "Neuvádzam"] as const).map((v) => ({
-  id: v,
-  label: v,
-}));
+function makeGenderOptions(t: ReturnType<typeof tFor>): SurveyOption[] {
+  // Gender option ids are stored as the Slovak words to preserve DB
+  // back-compat (attempts.gender CHECK constraint pins to these strings);
+  // only the visible label is locale-aware.
+  return [
+    { id: "Muž", label: t("gender.male") },
+    { id: "Žena", label: t("gender.female") },
+    { id: "Iné", label: t("gender.other") },
+    { id: "Neuvádzam", label: t("gender.prefer_not") },
+  ];
+}
 
 // E2.3 — growth survey enums hydrated to SurveyOption[] from the single
 // source of truth in survey-options.ts (DB CHECK constrainty mirror tieto
@@ -56,6 +64,8 @@ const INTEREST_OPTIONS: SurveyOption[] = INTEREST_VALUES.map((id) => ({
 }));
 
 export function SurveyCard({ shareId, onDone }: Props) {
+  const t = tFor("survey");
+  const GENDER_OPTIONS = makeGenderOptions(t);
   const [submitted, setSubmitted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +75,7 @@ export function SurveyCard({ shareId, onDone }: Props) {
   const [ageRange, setAgeRange] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [city, setCity] = useState("");
-  const [country, setCountry] = useState("Slovensko");
+  const [country, setCountry] = useState(t("country_default"));
   const [caution, setCaution] = useState<number>(3);
   // E2.3 — growth survey state
   const [topFear, setTopFear] = useState<string>("");
@@ -112,7 +122,7 @@ export function SurveyCard({ shareId, onDone }: Props) {
 
       const { error: e } = await supabase.from("attempts").update(payload).eq("share_id", shareId);
       if (e) {
-        setError("Nepodarilo sa uložiť. Skús ešte raz.");
+        setError(t("save_failed"));
         return;
       }
       setSubmitted(true);
@@ -126,16 +136,14 @@ export function SurveyCard({ shareId, onDone }: Props) {
     return (
       <div className="mt-6 animate-fade-in-up rounded-2xl border border-success/40 bg-card p-6 shadow-card">
         <div className="text-2xl">🙏</div>
-        <h3 className="mt-2 text-base font-bold">Vďaka!</h3>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Pomáhaš nám robiť test presnejším pre Slovákov.
-        </p>
+        <h3 className="mt-2 text-base font-bold">{t("thanks_title")}</h3>
+        <p className="mt-1 text-sm text-muted-foreground">{t("thanks_body")}</p>
         {wantsCourses === true && (
           <a
             href={ROUTES.skolenia}
             className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
           >
-            Pozri si naše bezplatné školenia →
+            {t("thanks_courses_cta")}
           </a>
         )}
       </div>
@@ -154,10 +162,8 @@ export function SurveyCard({ shareId, onDone }: Props) {
         className="-m-2 flex w-[calc(100%+1rem)] items-start gap-3 rounded-xl p-2 text-left transition-colors hover:bg-foreground/5"
       >
         <div className="flex-1">
-          <h3 className="text-base font-bold">Pomôž nám zlepšiť test 🙏</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Anonymné, dobrovoľné. 30 sekúnd. Žiadne polia nie sú povinné.
-          </p>
+          <h3 className="text-base font-bold">{t("title")}</h3>
+          <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
         <span aria-hidden className="mt-1 text-xl text-muted-foreground">
           {open ? "▴" : "▾"}
@@ -169,14 +175,14 @@ export function SurveyCard({ shareId, onDone }: Props) {
           {/* Nickname */}
           <div>
             <label className="mb-1 block text-xs font-medium text-foreground/70">
-              Prezývka (voliteľné)
+              {t("nickname_label")}
             </label>
             <input
               type="text"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               maxLength={40}
-              placeholder="napr. Janko"
+              placeholder={t("nickname_placeholder")}
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
             />
           </div>
@@ -184,7 +190,7 @@ export function SurveyCard({ shareId, onDone }: Props) {
           {/* Age */}
           <SurveyQuestion
             type="single"
-            label="Vek"
+            label={t("age_label")}
             options={AGE_OPTIONS}
             value={ageRange}
             onChange={setAgeRange}
@@ -193,7 +199,7 @@ export function SurveyCard({ shareId, onDone }: Props) {
           {/* Gender */}
           <SurveyQuestion
             type="single"
-            label="Pohlavie"
+            label={t("gender_label")}
             options={GENDER_OPTIONS}
             value={gender}
             onChange={setGender}
@@ -202,18 +208,22 @@ export function SurveyCard({ shareId, onDone }: Props) {
           {/* Location */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-xs font-medium text-foreground/70">Mesto</label>
+              <label className="mb-1 block text-xs font-medium text-foreground/70">
+                {t("city_label")}
+              </label>
               <input
                 type="text"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 maxLength={80}
-                placeholder="napr. Košice"
+                placeholder={t("city_placeholder")}
                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium text-foreground/70">Krajina</label>
+              <label className="mb-1 block text-xs font-medium text-foreground/70">
+                {t("country_label")}
+              </label>
               <input
                 type="text"
                 value={country}
@@ -227,8 +237,7 @@ export function SurveyCard({ shareId, onDone }: Props) {
           {/* Self-rated caution */}
           <div>
             <label className="mb-1 block text-xs font-medium text-foreground/70">
-              Ako opatrný si na internete?{" "}
-              <span className="text-foreground/50">(1 = vôbec, 5 = paranoidne)</span>
+              {t("caution_label")} <span className="text-foreground/50">{t("caution_hint")}</span>
             </label>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((n) => (
@@ -255,7 +264,7 @@ export function SurveyCard({ shareId, onDone }: Props) {
           */}
           <SurveyQuestion
             type="single"
-            label="Čoho sa najviac obávaš na internete?"
+            label={t("top_fear_label")}
             options={TOP_FEAR_OPTIONS}
             value={topFear}
             onChange={setTopFear}
@@ -263,7 +272,7 @@ export function SurveyCard({ shareId, onDone }: Props) {
 
           <SurveyQuestion
             type="single"
-            label="Už ťa niekto raz oklamal?"
+            label={t("scammed_label")}
             options={HAS_BEEN_SCAMMED_OPTIONS}
             value={scammed}
             onChange={setScammed}
@@ -271,7 +280,7 @@ export function SurveyCard({ shareId, onDone }: Props) {
 
           <SurveyQuestion
             type="single"
-            label="Odkiaľ vieš o tomto teste?"
+            label={t("referral_label")}
             options={REFERRAL_SOURCE_OPTIONS}
             value={referral}
             onChange={setReferral}
@@ -279,7 +288,7 @@ export function SurveyCard({ shareId, onDone }: Props) {
 
           <SurveyQuestion
             type="yesno"
-            label="Mali by sme robiť školenia zadarmo?"
+            label={t("wants_courses_label")}
             value={wantsCourses}
             onChange={setWantsCourses}
           />
@@ -287,8 +296,8 @@ export function SurveyCard({ shareId, onDone }: Props) {
           {wantsCourses === true && (
             <SurveyQuestion
               type="multi"
-              label="Aké témy by ťa najviac zaujali?"
-              hint="Vyber všetky ktoré ti dávajú zmysel."
+              label={t("interests_label")}
+              hint={t("interests_hint")}
               options={INTEREST_OPTIONS}
               value={interests}
               onChange={setInterests}
@@ -303,7 +312,7 @@ export function SurveyCard({ shareId, onDone }: Props) {
           disabled={saving}
           className="mt-5 w-full rounded-xl bg-accent-gradient px-5 py-3 text-sm font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.01] disabled:opacity-60"
         >
-          {saving ? "Ukladám…" : "Odoslať odpoveď"}
+          {saving ? t("submit_saving") : t("submit")}
         </button>
       </div>
     </div>

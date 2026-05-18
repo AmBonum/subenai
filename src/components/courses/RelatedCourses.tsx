@@ -1,5 +1,6 @@
 import { COURSES, type Course } from "@/content/courses";
 import { CourseCard } from "./CourseCard";
+import { tFor } from "@/i18n/quiz";
 
 /**
  * Show up to 3 other published courses (excluding self). Prefer courses
@@ -7,6 +8,7 @@ import { CourseCard } from "./CourseCard";
  * has fewer than 3 siblings.
  */
 export function RelatedCourses({ current }: { current: Course }) {
+  const t = tFor("courses_misc");
   const others = COURSES.filter((c) => c.slug !== current.slug);
   const sameCategory = others.filter((c) => c.category === current.category);
   const fillers = others.filter((c) => c.category !== current.category);
@@ -20,7 +22,7 @@ export function RelatedCourses({ current }: { current: Course }) {
       className="mt-12 border-t border-border/60 pt-8 print:hidden"
     >
       <h2 id="related-h" className="text-lg font-bold text-foreground">
-        Pokračuj ďalším kurzom
+        {t("related_title")}
       </h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {picks.map((c) => (

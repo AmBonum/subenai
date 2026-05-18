@@ -1,4 +1,5 @@
 import type { Question } from "@/lib/quiz/bank/questions";
+import { tFor } from "@/i18n/quiz";
 
 export type AnswerFeedbackState = "correct" | "wrong" | "timeout";
 export type AnswerFeedbackMode = "live" | "review";
@@ -9,15 +10,6 @@ export function deriveState(question: Question, selectedId: string | null): Answ
   return picked?.correct ? "correct" : "wrong";
 }
 
-export const HEADLINES: Record<AnswerFeedbackMode, Record<AnswerFeedbackState, string>> = {
-  live: {
-    timeout: "⏱️ Príliš pomaly. Scammer by ťa už dostal.",
-    correct: "✅ Správne. Scammer si hľadá ďalšieho.",
-    wrong: "❌ Ups. Nalietol si.",
-  },
-  review: {
-    timeout: "⏱️ Nezodpovedané — vypršal čas.",
-    correct: "✅ Správna odpoveď.",
-    wrong: "❌ Nesprávna odpoveď.",
-  },
-};
+export function getHeadline(mode: AnswerFeedbackMode, state: AnswerFeedbackState): string {
+  return tFor("feedback")(`${mode}_${state}`);
+}

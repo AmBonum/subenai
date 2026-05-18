@@ -1,34 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  CATEGORY_LABELS,
-  PERSONALITIES,
-  pickPersonalityVariant,
-  type ScoreResult,
-} from "@/lib/quiz/score/scoring";
+import { PERSONALITIES, pickPersonalityVariant, type ScoreResult } from "@/lib/quiz/score/scoring";
 import { parseAnswers, type AnswerRecordPersisted } from "@/lib/quiz/bank/schema";
 import { buildShareCaption } from "@/lib/share/intents";
 import { SocialShareGrid } from "@/components/quiz/share/SocialShareGrid";
 import { ManualShareCard } from "@/components/quiz/share/ManualShareCard";
+import { tFor } from "@/i18n/quiz";
 
 const AnswerReviewSection = lazy(() => import("@/components/quiz/review/AnswerReviewSection"));
 
 export const Route = createFileRoute("/r/$shareId")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `Výsledok ${params.shareId} · subenai` },
-      {
-        name: "description",
-        content: "Pozri sa, ako dopadol — a otestuj sa aj ty.",
-      },
-      { property: "og:title", content: "subenai — výsledok" },
-      {
-        property: "og:description",
-        content: "Pozri si výsledok a otestuj sa aj ty. 15 otázok, čas beží.",
-      },
-    ],
-  }),
+  head: ({ params }) => {
+    const t = tFor("share");
+    return {
+      meta: [
+        { title: t("meta_title", { shareId: params.shareId }) },
+        { name: "description", content: t("meta_description") },
+        { property: "og:title", content: t("og_title") },
+        { property: "og:description", content: t("og_description") },
+      ],
+    };
+  },
   component: SharePageRoute,
 });
 
@@ -50,6 +43,9 @@ interface AttemptRow {
 }
 
 export function SharePage({ shareId }: { shareId: string }) {
+  const t = tFor("share");
+  const tCommon = tFor("common");
+  const tResults = tFor("results");
   const [attempt, setAttempt] = useState<AttemptRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -92,7 +88,7 @@ export function SharePage({ shareId }: { shareId: string }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-hero flex items-center justify-center text-muted-foreground">
-        Načítavam výsledok…
+        {t("loading")}
       </div>
     );
   }
@@ -101,13 +97,13 @@ export function SharePage({ shareId }: { shareId: string }) {
     return (
       <div className="min-h-screen bg-hero flex flex-col items-center justify-center px-4 text-center">
         <div className="text-6xl">🕵️</div>
-        <h1 className="mt-4 text-2xl font-bold">Výsledok neexistuje</h1>
-        <p className="mt-2 text-muted-foreground">Link je neplatný alebo bol zmazaný.</p>
+        <h1 className="mt-4 text-2xl font-bold">{t("not_found_title")}</h1>
+        <p className="mt-2 text-muted-foreground">{t("not_found_body")}</p>
         <Link
           to="/"
           className="mt-6 rounded-xl bg-accent-gradient px-6 py-3 font-bold text-primary-foreground shadow-glow"
         >
-          Otestuj sa
+          {t("go_test")}
         </Link>
       </div>
     );
@@ -186,7 +182,7 @@ export function SharePage({ shareId }: { shareId: string }) {
       <div className="mx-auto max-w-2xl px-4 py-10">
         <div className="text-center">
           <div className="text-xs uppercase tracking-wider text-muted-foreground">
-            Cudzí výsledok
+            {t("header_label")}
           </div>
           <div className="mt-2 inline-flex items-baseline gap-2 font-display">
             <span className="text-7xl font-black sm:text-8xl tabular-nums">
@@ -194,9 +190,12 @@ export function SharePage({ shareId }: { shareId: string }) {
             </span>
             <span className="text-2xl text-muted-foreground">/ 100</span>
           </div>
-          <div className="mt-2 text-base text-muted-foreground">
-            Lepší než <span className="font-bold text-primary">{attempt.percentile} %</span> ľudí.
-          </div>
+          <div
+            className="mt-2 text-base text-muted-foreground"
+            dangerouslySetInnerHTML={{
+              __html: t("percentile_html", { pct: attempt.percentile }),
+            }}
+          />
         </div>
 
         <div className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-card">
@@ -207,12 +206,12 @@ export function SharePage({ shareId }: { shareId: string }) {
         </div>
 
         <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-card">
-          <h3 className="text-base font-bold">Rozloženie</h3>
+          <h3 className="text-base font-bold">{t("breakdown_title")}</h3>
           <div className="mt-4 space-y-3">
             {(Object.keys(attempt.breakdown) as Array<keyof typeof attempt.breakdown>).map((k) => (
               <div key={k}>
                 <div className="mb-1 flex items-center justify-between text-sm">
-                  <span className="text-foreground/85">{CATEGORY_LABELS[k]}</span>
+                  <span className="text-foreground/85">{tResults(`categories.${k}`)}</span>
                   <span className="font-mono font-semibold tabular-nums">
                     {attempt.breakdown[k]} %
                   </span>
@@ -244,8 +243,8 @@ export function SharePage({ shareId }: { shareId: string }) {
           >
             <span>
               {reviewCount > 0
-                ? `Pozri si moje odpovede (${reviewCount})`
-                : "Pozri si moje odpovede"}
+                ? t("see_my_answers_count", { n: reviewCount })
+                : t("see_my_answers")}
             </span>
             <span aria-hidden className="ml-3 text-xl">
               {reviewOpen ? "▴" : "▾"}
@@ -256,7 +255,7 @@ export function SharePage({ shareId }: { shareId: string }) {
             id={reviewSectionId}
             ref={reviewRef}
             role="region"
-            aria-label={`Detail odpovedí — ${reviewCount} odpovedí dostupných`}
+            aria-label={t("answers_region_aria", { n: reviewCount })}
             hidden={!reviewOpen}
             className={reviewOpen ? "mt-4" : undefined}
           >
@@ -264,7 +263,7 @@ export function SharePage({ shareId }: { shareId: string }) {
               <Suspense
                 fallback={
                   <div className="rounded-2xl border border-border bg-card p-6 text-sm text-muted-foreground shadow-card">
-                    Načítavam odpovede…
+                    {t("answers_loading")}
                   </div>
                 }
               >
@@ -275,10 +274,8 @@ export function SharePage({ shareId }: { shareId: string }) {
         </div>
 
         <div className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-card">
-          <h3 className="text-base font-bold">Zdieľaj ďalej</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Pošli to kamošovi, nech vie kde stojí.
-          </p>
+          <h3 className="text-base font-bold">{t("share_more_title")}</h3>
+          <p className="mt-1 text-sm text-muted-foreground">{t("share_more_body")}</p>
           <SocialShareGrid url={shareUrl} text={shareCaption} />
         </div>
 
@@ -294,24 +291,18 @@ export function SharePage({ shareId }: { shareId: string }) {
             to="/test"
             className="rounded-xl bg-accent-gradient px-6 py-4 text-center text-lg font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02]"
           >
-            Otestuj sa aj ty
+            {t("cta_test")}
           </Link>
           <Link to="/" className="text-center text-sm text-muted-foreground hover:text-foreground">
-            Späť na úvod
+            {tCommon("back_to_start")}
           </Link>
         </div>
 
         <div className="mt-10 rounded-2xl border border-border/60 bg-card/50 p-5">
-          <h3 className="text-sm font-semibold text-foreground">Tvoje právo na vymazanie</h3>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Tento výsledok je anonymný — patrí komukoľvek, kto má jeho link. Ak chceš, môžeš ho
-            kedykoľvek bez emailu vymazať. Po vymazaní sa stratí navždy a tento link prestane
-            fungovať.
-          </p>
+          <h3 className="text-sm font-semibold text-foreground">{t("delete_title")}</h3>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{t("delete_body")}</p>
           {deleteState === "deleted" ? (
-            <p className="mt-3 text-sm font-semibold text-success">
-              Výsledok bol vymazaný. Refresh stránky potvrdí, že už neexistuje.
-            </p>
+            <p className="mt-3 text-sm font-semibold text-success">{t("delete_done")}</p>
           ) : deleteState === "confirming" || deleteState === "deleting" ? (
             <div className="mt-3 flex flex-wrap gap-2">
               <button
@@ -320,7 +311,7 @@ export function SharePage({ shareId }: { shareId: string }) {
                 disabled={deleteState === "deleting"}
                 className="rounded-lg border border-destructive bg-destructive/15 px-4 py-2 text-sm font-semibold text-destructive hover:bg-destructive/25 disabled:opacity-50"
               >
-                {deleteState === "deleting" ? "Mažem…" : "Áno, definitívne vymazať"}
+                {deleteState === "deleting" ? t("deleting") : t("delete_confirm")}
               </button>
               <button
                 type="button"
@@ -328,7 +319,7 @@ export function SharePage({ shareId }: { shareId: string }) {
                 disabled={deleteState === "deleting"}
                 className="rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground hover:text-foreground disabled:opacity-50"
               >
-                Zrušiť
+                {tCommon("cancel")}
               </button>
             </div>
           ) : (
@@ -337,7 +328,7 @@ export function SharePage({ shareId }: { shareId: string }) {
               onClick={() => setDeleteState("confirming")}
               className="mt-3 rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground hover:border-destructive/60 hover:text-destructive"
             >
-              Vymazať tento výsledok
+              {t("delete_button")}
             </button>
           )}
         </div>

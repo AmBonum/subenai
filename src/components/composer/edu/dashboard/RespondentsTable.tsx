@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Trash2 } from "lucide-react";
 import type { RespondentRow } from "@/lib/edu/types";
+import { tFor } from "@/i18n/quiz";
 
 type SortKey = "name" | "score" | "created_at";
 type SortDir = "asc" | "desc";
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
+  const t = tFor("respondents");
+  const tCommon = tFor("common");
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("created_at");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
@@ -60,7 +63,7 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
   async function handleDelete(row: RespondentRow) {
     if (
       !window.confirm(
-        `Naozaj zmazať respondenta ${row.respondent_name} (${row.respondent_email})? Akciu nedá vrátiť.`,
+        t("delete_confirm", { name: row.respondent_name, email: row.respondent_email }),
       )
     ) {
       return;
@@ -73,60 +76,62 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
     }
   }
 
+  const captionKey =
+    sortKey === "name"
+      ? "caption_by_name"
+      : sortKey === "score"
+        ? "caption_by_score"
+        : "caption_by_date";
+
   return (
     <section aria-labelledby="resp-h" className="space-y-3">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 id="resp-h" className="text-lg font-semibold text-foreground">
-            Respondenti ({filtered.length})
+            {t("title", { count: filtered.length })}
           </h2>
-          <p className="text-sm text-muted-foreground">Klik na hlavičku stĺpca = zoradenie.</p>
+          <p className="text-sm text-muted-foreground">{t("hint")}</p>
         </div>
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Hľadať podľa mena alebo e-mailu…"
-          aria-label="Filtrovať respondentov"
+          placeholder={t("search_placeholder")}
+          aria-label={t("search_aria")}
           className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm sm:max-w-xs"
         />
       </div>
 
       {sorted.length === 0 ? (
         <p className="rounded-xl border border-border/60 bg-card/40 p-6 text-center text-sm text-muted-foreground">
-          {rows.length === 0
-            ? "Zatiaľ žiadne odpovede. Pošli respondentom verejný link."
-            : "Filter nenašiel žiadny záznam."}
+          {rows.length === 0 ? t("empty_no_rows") : t("empty_filter")}
         </p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-border/60">
           <table className="w-full text-sm">
-            <caption className="sr-only">
-              Respondenti edu testu zoradení podľa{" "}
-              {sortKey === "name" ? "mena" : sortKey === "score" ? "skóre" : "dátumu"}
-            </caption>
+            <caption className="sr-only">{t(captionKey)}</caption>
             <thead className="bg-muted/30 text-left">
               <tr>
                 <SortableTh ariaSort={ariaSort("name")} onClick={() => toggleSort("name")}>
-                  Meno
+                  {t("th_name")}
                 </SortableTh>
                 <th scope="col" className="px-3 py-2 font-semibold">
-                  Email
+                  {t("th_email")}
                 </th>
                 <SortableTh ariaSort={ariaSort("score")} onClick={() => toggleSort("score")}>
-                  Skóre
+                  {t("th_score")}
                 </SortableTh>
                 <th scope="col" className="px-3 py-2 font-semibold">
-                  Vyhovel?
+                  {t("th_passed")}
                 </th>
                 <SortableTh
                   ariaSort={ariaSort("created_at")}
                   onClick={() => toggleSort("created_at")}
                 >
-                  Dátum
+                  {t("th_date")}
                 </SortableTh>
                 <th scope="col" className="px-3 py-2 font-semibold">
-                  <span className="sr-only">Akcie</span>
+                  <span className="sr-only">{t("th_actions")}</span>
                 </th>
               </tr>
             </thead>
@@ -148,7 +153,7 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
                             : "rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-semibold text-amber-500"
                         }
                       >
-                        {passed ? "áno" : "nie"}
+                        {passed ? tCommon("yes") : tCommon("no")}
                       </span>
                     </td>
                     <td className="px-3 py-2 text-muted-foreground">
@@ -159,7 +164,7 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
                         type="button"
                         onClick={() => handleDelete(r)}
                         disabled={pendingDelete === r.id}
-                        aria-label={`Zmazať respondenta ${r.respondent_name}`}
+                        aria-label={t("delete_aria", { name: r.respondent_name })}
                         className="inline-flex items-center justify-center rounded-md border border-border bg-background p-1.5 text-muted-foreground hover:border-destructive hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         <Trash2 className="size-4" aria-hidden />

@@ -1,10 +1,12 @@
 import type { AggregateStats as Stats } from "@/lib/edu/types";
+import { tFor } from "@/i18n/quiz";
 
 interface Props {
   stats: Stats;
 }
 
 export function AggregateStats({ stats }: Props) {
+  const t = tFor("aggregate");
   if (stats.count === 0) {
     return null;
   }
@@ -22,22 +24,22 @@ export function AggregateStats({ stats }: Props) {
       className="grid gap-4 rounded-2xl border border-border/60 bg-card/40 p-5 sm:p-6 md:grid-cols-2"
     >
       <h2 id="agg-h" className="sr-only">
-        Súhrnné štatistiky
+        {t("section_aria")}
       </h2>
       <dl className="grid grid-cols-2 gap-3 text-sm">
-        <Cell label="Respondentov" value={String(stats.count)} />
-        <Cell label="Priemer" value={`${stats.avg_score.toFixed(1)} %`} />
-        <Cell label="Medián" value={`${stats.median_score.toFixed(1)} %`} />
-        <Cell label="Min / Max" value={`${stats.min_score} / ${stats.max_score} %`} />
+        <Cell label={t("respondents")} value={String(stats.count)} />
+        <Cell label={t("average")} value={`${stats.avg_score.toFixed(1)} %`} />
+        <Cell label={t("median")} value={`${stats.median_score.toFixed(1)} %`} />
+        <Cell label={t("min_max")} value={`${stats.min_score} / ${stats.max_score} %`} />
         <Cell
-          label={`Vyhovelo (≥ ${stats.passing_threshold} %)`}
-          value={`${stats.pass_count} (${stats.pass_rate.toFixed(1)} %)`}
+          label={t("passed_label", { threshold: stats.passing_threshold })}
+          value={t("passed_value", { count: stats.pass_count, rate: stats.pass_rate.toFixed(1) })}
           span={2}
         />
       </dl>
       <div>
         <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-          Distribúcia skóre
+          {t("distribution")}
         </p>
         <ul className="mt-2 space-y-2">
           {bands.map((b) => (

@@ -154,5 +154,10 @@
     "multiselect_search": "Hľadať branžu...",
     "multiselect_empty": "Nič nenájdené.",
     "multiselect_clear": "Vymazať výber"
+  },
+  "ai_errors": {
+    "disabled": "AI generátor je momentálne vypnutý.",
+    "rate_limit": "AI Gateway: prekročený limit požiadaviek. Skúste o chvíľu.",
+    "no_credits": "AI Gateway: vyčerpané kredity workspace."
   }
 }

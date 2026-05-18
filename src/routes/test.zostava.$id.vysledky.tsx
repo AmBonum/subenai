@@ -7,16 +7,17 @@ import { AggregateStats } from "@/components/composer/edu/dashboard/AggregateSta
 import { RespondentsTable } from "@/components/composer/edu/dashboard/RespondentsTable";
 import { rowsToCsv, type ResultsDataPayload } from "@/lib/edu/types";
 import { ROUTES } from "@/config/routes";
+import { tFor } from "@/i18n/quiz";
 
 type Phase = "loading" | "needs_auth" | "ready" | "error" | "not_found";
 
 export const Route = createFileRoute("/test/zostava/$id/vysledky")({
-  head: () => ({
-    meta: [
-      { title: "Výsledky edu testu — subenai" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
-  }),
+  head: () => {
+    const t = tFor("results_page");
+    return {
+      meta: [{ title: t("meta_title") }, { name: "robots", content: "noindex, nofollow" }],
+    };
+  },
   component: VysledkyPage,
 });
 
@@ -30,6 +31,8 @@ interface Props {
 }
 
 export function VysledkyView({ id }: Props) {
+  const t = tFor("results_page");
+  const tCommon = tFor("common");
   const [phase, setPhase] = useState<Phase>("loading");
   const [data, setData] = useState<ResultsDataPayload | null>(null);
 
@@ -109,23 +112,21 @@ export function VysledkyView({ id }: Props) {
   }
 
   if (phase === "loading") {
-    return <CenteredMessage>Overujem prístup…</CenteredMessage>;
+    return <CenteredMessage>{t("verifying")}</CenteredMessage>;
   }
   if (phase === "not_found") {
     return (
       <CenteredMessage tone="warn">
-        <h1 className="text-2xl font-bold text-foreground">Test nenájdený</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Tento odkaz neukazuje na žiadnu zostavu. Možno bol odstránený alebo URL je preklepnuté.
-        </p>
+        <h1 className="text-2xl font-bold text-foreground">{t("not_found_title")}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{t("not_found_body")}</p>
       </CenteredMessage>
     );
   }
   if (phase === "error") {
     return (
       <CenteredMessage tone="warn">
-        <h1 className="text-2xl font-bold text-foreground">Niečo sa pokazilo</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Skús obnoviť stránku.</p>
+        <h1 className="text-2xl font-bold text-foreground">{t("error_title")}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{t("error_body")}</p>
       </CenteredMessage>
     );
   }
@@ -135,10 +136,10 @@ export function VysledkyView({ id }: Props) {
         <main className="mx-auto max-w-md px-4 pb-12 pt-12 sm:pt-16">
           <header>
             <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
-              ← Späť na domov
+              ← {tCommon("back_home")}
             </Link>
             <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
-              Výsledky edu testu
+              {t("heading_gate")}
             </h1>
           </header>
           <div className="mt-8">
@@ -158,22 +159,25 @@ export function VysledkyView({ id }: Props) {
         <header className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
-              ← Späť na domov
+              ← {tCommon("back_home")}
             </Link>
             <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
-              {data.creator_label?.trim() || "Výsledky edu testu"}
+              {data.creator_label?.trim() || t("heading_default")}
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              {data.question_count} otázok · vyhovenie pri ≥ {data.passing_threshold} % ·
-              respondentov: {data.stats.count}
+              {t("meta_line", {
+                count: data.question_count,
+                threshold: data.passing_threshold,
+                respondents: data.stats.count,
+              })}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" onClick={downloadCsv} disabled={data.rows.length === 0}>
-              Stiahnuť CSV
+              {t("download_csv")}
             </Button>
             <Button variant="outline" onClick={handleLogout}>
-              Odhlásiť
+              {t("logout")}
             </Button>
           </div>
         </header>

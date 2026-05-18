@@ -4,8 +4,10 @@ import type { AnswerRecordPersisted } from "@/lib/quiz/bank/schema";
 import { getRelatedCourseForCategory } from "@/lib/quiz/score/category-course-map";
 import { AnswerFeedback } from "@/components/quiz/review/AnswerFeedback";
 import { VisualBlock } from "@/components/quiz/flow/VisualBlock";
+import { tFor } from "@/i18n/quiz";
 
 function RelatedCourseCta({ category }: { category: Category }) {
+  const t = tFor("review");
   const course = getRelatedCourseForCategory(category);
   if (!course) return null;
   return (
@@ -16,7 +18,7 @@ function RelatedCourseCta({ category }: { category: Category }) {
     >
       <span aria-hidden="true">📚</span>
       <span>
-        Nauč sa viac: <span className="text-primary">{course.title}</span>
+        {t("course_cta_prefix")} <span className="text-primary">{course.title}</span>
       </span>
     </Link>
   );
@@ -37,15 +39,14 @@ interface Props {
  * one card instead of crashing.
  */
 export function AnswerReviewCard({ answer, question, index, total }: Props) {
+  const t = tFor("review");
   if (!question) {
     return (
       <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
         <div className="text-xs uppercase tracking-wider text-muted-foreground">
-          Otázka {index} / {total}
+          {t("question_progress", { n: index, total })}
         </div>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Otázka už nie je dostupná — bola odstránená z banky po tom, čo si test dokončil/a.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{t("missing_question")}</p>
       </div>
     );
   }
@@ -57,9 +58,7 @@ export function AnswerReviewCard({ answer, question, index, total }: Props) {
   return (
     <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
       <div className="mb-3 flex items-center justify-between gap-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        <span>
-          Otázka {index} / {total}
-        </span>
+        <span>{t("question_progress", { n: index, total })}</span>
         <span className="text-primary">{question.category}</span>
       </div>
 
@@ -89,10 +88,10 @@ export function AnswerReviewCard({ answer, question, index, total }: Props) {
                 {opt.id}
               </span>
               <span className="flex-1">{opt.label}</span>
-              {isCorrect && <span aria-label="správna odpoveď">✅</span>}
-              {wasPicked && !isCorrect && <span aria-label="tvoja odpoveď">❌</span>}
+              {isCorrect && <span aria-label={t("correct_aria")}>✅</span>}
+              {wasPicked && !isCorrect && <span aria-label={t("your_answer_aria")}>❌</span>}
               {wasPicked && isCorrect && (
-                <span className="ml-1 text-xs text-success/80">tvoja odpoveď</span>
+                <span className="ml-1 text-xs text-success/80">{t("your_answer_tag")}</span>
               )}
             </li>
           );
@@ -104,7 +103,7 @@ export function AnswerReviewCard({ answer, question, index, total }: Props) {
       <RelatedCourseCta category={question.category} />
 
       <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/40 px-3 py-1 text-xs">
-        <span className="text-muted-foreground">Tvoj čas</span>
+        <span className="text-muted-foreground">{t("your_time")}</span>
         <span
           className={`font-mono font-semibold tabular-nums ${
             slow ? "text-warning" : "text-foreground"

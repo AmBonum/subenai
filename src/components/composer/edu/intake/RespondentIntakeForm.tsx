@@ -2,6 +2,7 @@ import { useId, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/config/routes";
+import { tFor } from "@/i18n/quiz";
 
 const NAME_MIN_LEN = 2;
 const NAME_MAX_LEN = 80;
@@ -23,6 +24,8 @@ interface Props {
 type SubmitState = "idle" | "submitting" | "error";
 
 export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
+  const t = tFor("intake");
+  const tCommon = tFor("common");
   const formId = useId();
   const nameId = useId();
   const emailId = useId();
@@ -85,20 +88,17 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
     >
       <div>
         <h2 id={`${formId}-h`} className="text-lg font-semibold text-foreground">
-          Pred testom: kto si?
+          {t("heading")}
         </h2>
         <div className="mt-2 space-y-1 text-sm leading-relaxed text-muted-foreground">
           <p>
-            Test pripravil:{" "}
-            <strong className="text-foreground">{authorLabel || "autor testu"}</strong>.
+            {t("author_prefix")}{" "}
+            <strong className="text-foreground">{authorLabel || t("author_fallback")}</strong>.
           </p>
           <p>
-            Tvoje meno, e-mail, skóre a odpovede uvidí{" "}
-            <strong className="text-foreground">tvoj autor</strong> cez heslom chránený dashboard.
-            Údaje uchovávame <strong className="text-foreground">12 mesiacov</strong>, potom ich
-            anonymizujeme. Detail v{" "}
+            <span dangerouslySetInnerHTML={{ __html: t("disclosure_html") }} />{" "}
             <Link to={ROUTES.privacy} className="underline underline-offset-2">
-              zásadách spracovania
+              {t("privacy_link")}
             </Link>
             .
           </p>
@@ -107,7 +107,7 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
 
       <div>
         <label htmlFor={nameId} className="block text-sm font-semibold text-foreground">
-          Meno a priezvisko
+          {t("name_label")}
         </label>
         <input
           id={nameId}
@@ -119,14 +119,14 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
           minLength={NAME_MIN_LEN}
           maxLength={NAME_MAX_LEN}
           required
-          placeholder="napr. Jana Nováková"
+          placeholder={t("name_placeholder")}
           className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
         />
       </div>
 
       <div>
         <label htmlFor={emailId} className="block text-sm font-semibold text-foreground">
-          E-mail
+          {t("email_label")}
         </label>
         <input
           id={emailId}
@@ -138,7 +138,7 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
           aria-required="true"
           maxLength={EMAIL_MAX_LEN}
           required
-          placeholder="napr. jana@skola.sk"
+          placeholder={t("email_placeholder")}
           className="mt-1 w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
         />
       </div>
@@ -152,16 +152,12 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
           aria-required="true"
           className="mt-0.5 size-4 shrink-0 cursor-pointer accent-primary"
         />
-        <span className="leading-relaxed text-foreground">
-          Súhlasím so spracovaním môjho mena a e-mailu autorom testu na účely vyhodnotenia. Beriem
-          na vedomie 12-mesačnú dobu uchovávania a možnosť kedykoľvek autora požiadať o vymazanie
-          mojich údajov (čl. 6 ods. 1 písm. a GDPR).
-        </span>
+        <span className="leading-relaxed text-foreground">{t("consent_html")}</span>
       </label>
 
       {/* Honeypot — visually hidden + aria-hidden so screen readers skip it. */}
       <div aria-hidden="true" style={{ position: "absolute", left: "-9999px" }}>
-        <label htmlFor={`${formId}-hp`}>Webová adresa</label>
+        <label htmlFor={`${formId}-hp`}>{t("honeypot_label")}</label>
         <input
           id={`${formId}-hp`}
           type="text"
@@ -180,7 +176,7 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
           aria-live="polite"
           className="rounded-md border border-destructive/60 bg-destructive/10 p-3 text-sm text-foreground"
         >
-          {errorMessage(errorCode)}
+          {errorMessageFor(errorCode, t)}
         </p>
       ) : null}
 
@@ -190,32 +186,27 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
         size="lg"
         aria-describedby={state === "error" ? errorId : undefined}
       >
-        {state === "submitting" ? "Overujem…" : "Pokračovať na test →"}
+        {state === "submitting" ? tCommon("verifying") : t("submit")}
       </Button>
     </form>
   );
 }
 
-function errorMessage(code: string): string {
+function errorMessageFor(code: string, t: ReturnType<typeof tFor>): string {
   switch (code) {
     case "rate_limited":
-      return "Príliš veľa pokusov v krátkom čase. Skús znova o pár minút.";
     case "already_attempted":
-      return "Tento test si už pod týmto e-mailom absolvoval/a. Pre opakovanie kontaktuj autora.";
     case "invalid_email":
-      return "E-mailová adresa nemá platný formát.";
     case "name_length":
-      return "Meno musí mať aspoň 2 a najviac 80 znakov.";
     case "set_not_found":
-      return "Tento test už neexistuje. Pýtaj sa autora na nový odkaz.";
     case "not_edu_set":
-      return "Tento test nezbiera odpovede s menom — preto sem prístup nepotrebuješ.";
+    case "submit_failed":
+    case "network_error":
+      return t(`errors.${code}`);
     case "spam_detected":
     case "invalid_shape":
-      return "Formulár sa nepodarilo odoslať. Skús prosím znova.";
-    case "network_error":
-      return "Pripojenie sa nepodarilo. Skontroluj sieť a skús znova.";
+      return t("errors.submit_failed");
     default:
-      return "Nastala chyba. Skús prosím znova alebo kontaktuj autora.";
+      return t("errors.generic");
   }
 }

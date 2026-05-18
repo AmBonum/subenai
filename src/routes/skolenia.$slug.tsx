@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/layout/Footer";
 import { buildCourseJsonLd } from "@/lib/seo/course-jsonld";
 import { SITE_ORIGIN } from "@/config/site";
+import { tFor } from "@/i18n/quiz";
 const COPYRIGHT_HOLDER = "subenai";
 
 export const Route = createFileRoute("/skolenia/$slug")({
@@ -18,10 +19,11 @@ export const Route = createFileRoute("/skolenia/$slug")({
   },
   head: ({ loaderData: course }) => {
     if (!course) return { meta: [] };
+    const t = tFor("skolenia");
     const url = `${SITE_ORIGIN}/skolenia/${course.slug}`;
     return {
       meta: [
-        { title: `${course.title} — Bezplatný kurz · subenai` },
+        { title: t("detail_meta_title", { title: course.title }) },
         { name: "description", content: course.tagline },
         { name: "author", content: COPYRIGHT_HOLDER },
         {
@@ -57,6 +59,8 @@ export const Route = createFileRoute("/skolenia/$slug")({
 });
 
 function CoursePage() {
+  const t = tFor("skolenia");
+  const tCommon = tFor("common");
   const course = Route.useLoaderData();
   const year = new Date(course.publishedAt).getFullYear();
   return (
@@ -74,7 +78,7 @@ function CoursePage() {
               id="sources-h"
               className="text-sm font-semibold uppercase tracking-wider text-muted-foreground"
             >
-              Zdroje
+              {tCommon("sources")}
             </h2>
             <ul className="mt-3 space-y-1 text-sm" role="list">
               {course.sources.map((s: { label: string; url: string }, i: number) => (
@@ -95,19 +99,17 @@ function CoursePage() {
 
         <div className="mt-12 flex flex-wrap gap-3 print:hidden">
           <Button asChild>
-            <Link to="/test">Otestuj sa</Link>
+            <Link to="/test">{t("detail_cta_test")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/skolenia">Späť na školenia</Link>
+            <Link to="/skolenia">{t("detail_cta_back")}</Link>
           </Button>
         </div>
 
         <RelatedCourses current={course} />
 
         <p className="mt-10 border-t border-border/60 pt-4 text-center text-xs text-muted-foreground">
-          © {year} {COPYRIGHT_HOLDER}. Obsah kurzu je chránený autorským zákonom č. 185/2015 Z. z.
-          Šírenie a kopírovanie celých sekcií bez uvedenia zdroja a aktívneho odkazu na pôvodnú
-          stránku je zakázané.
+          {t("detail_copyright", { year, holder: COPYRIGHT_HOLDER })}
         </p>
       </main>
       <Footer />

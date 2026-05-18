@@ -1,3 +1,5 @@
+import { tFor } from "@/i18n/quiz";
+
 interface Props {
   account: string;
   verified?: boolean;
@@ -8,14 +10,9 @@ interface Props {
 }
 
 /** Instagram sponsored post screenshot */
-export function InstagramAd({
-  account,
-  verified,
-  body,
-  cta = "Kúpiť teraz",
-  imageEmoji = "📦",
-  price,
-}: Props) {
+export function InstagramAd({ account, verified, body, cta, imageEmoji = "📦", price }: Props) {
+  const t = tFor("screenshots");
+  const resolvedCta = cta ?? t("ig_cta_default");
   return (
     <div className="mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-border/40 bg-black text-white shadow-card">
       {/* header */}
@@ -28,7 +25,7 @@ export function InstagramAd({
             {account}
             {verified && <span className="text-blue-400">✓</span>}
           </div>
-          <div className="text-[10px] text-white/60">Sponzorované</div>
+          <div className="text-[10px] text-white/60">{t("ig_sponsored")}</div>
         </div>
         <div className="ml-auto text-white/60">⋯</div>
       </div>
@@ -43,7 +40,7 @@ export function InstagramAd({
       </div>
       {/* CTA strip */}
       <div className="flex items-center justify-between border-y border-white/10 bg-zinc-900 px-3 py-2 text-[12px]">
-        <span className="font-semibold">{cta}</span>
+        <span className="font-semibold">{resolvedCta}</span>
         <span className="text-white/60">›</span>
       </div>
       {/* caption */}

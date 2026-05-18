@@ -8,36 +8,19 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { SITE_ORIGIN } from "@/config/site";
 import { searchCourses } from "@/lib/courses/search";
-
-const CATEGORY_LABEL: Record<CourseCategory, string> = {
-  sms: "SMS",
-  email: "Email",
-  voice: "Telefón",
-  marketplace: "Marketplace",
-  investicie: "Investície",
-  vztahy: "Vzťahy",
-  data: "Data hygiene",
-  obecne: "Všeobecné",
-};
+import { tFor } from "@/i18n/quiz";
 
 export const Route = createFileRoute("/skolenia/")({
   head: () => {
+    const t = tFor("skolenia");
     const url = `${SITE_ORIGIN}/skolenia`;
     return {
       meta: [
-        { title: "Školenia kybernetickej bezpečnosti zadarmo — subenai" },
-        {
-          name: "description",
-          content:
-            "Bezplatné kurzy kybernetickej bezpečnosti: phishing, vishing, smishing, online podvody, ochrana údajov. Reálne príklady zo slovenského prostredia.",
-        },
+        { title: t("meta_title") },
+        { name: "description", content: t("meta_description") },
         { name: "robots", content: "index, follow, max-image-preview:large" },
-        { property: "og:title", content: "Školenia kybernetickej bezpečnosti zadarmo — subenai" },
-        {
-          property: "og:description",
-          content:
-            "Bezplatné kurzy kybernetickej bezpečnosti: phishing, vishing, smishing, online podvody. Reálne príklady zo slovenského prostredia.",
-        },
+        { property: "og:title", content: t("meta_title") },
+        { property: "og:description", content: t("og_description") },
         { property: "og:type", content: "website" },
         { property: "og:url", content: url },
         { property: "og:locale", content: "sk_SK" },
@@ -50,7 +33,7 @@ export const Route = createFileRoute("/skolenia/")({
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "ItemList",
-            name: "Bezplatné kurzy o digitálnej obozretnosti",
+            name: t("list_name"),
             itemListElement: COURSES.map((c, i) => ({
               "@type": "ListItem",
               position: i + 1,
@@ -66,6 +49,8 @@ export const Route = createFileRoute("/skolenia/")({
 });
 
 function CoursesIndexPage() {
+  const t = tFor("skolenia");
+  const tCourses = tFor("courses_misc");
   const [activeCategories, setActiveCategories] = useState<Set<CourseCategory>>(new Set());
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -97,15 +82,29 @@ function CoursesIndexPage() {
   }
 
   const isFiltered = activeCategories.size > 0 || query.trim().length > 0;
+  const queryTrim = query.trim();
+
+  const resultLine = (() => {
+    if (!isFiltered || filtered.length === 0) return null;
+    const head =
+      filtered.length === 1
+        ? t("result_one")
+        : filtered.length < 5
+          ? t("result_few", { n: filtered.length })
+          : t("result_many", { n: filtered.length });
+    const tail = queryTrim ? t("result_for_query", { q: queryTrim }) : "";
+    return `${head}${tail}`;
+  })();
+
+  const emptyLine = queryTrim ? t("empty_for_query", { q: queryTrim }) : t("empty_for_filters");
 
   return (
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-5xl px-4 pb-12 pt-12 sm:pt-16">
         <header className="mb-10 text-center">
-          <h1 className="text-4xl font-black sm:text-5xl">Bezplatné školenia</h1>
+          <h1 className="text-4xl font-black sm:text-5xl">{t("page_heading")}</h1>
           <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg">
-            Krátke školenia o tom, ako rozoznať najčastejšie podvody na slovenskom internete. Žiadna
-            registrácia, žiadne reklamy. 5 – 20 minút na školenie.
+            {t("page_intro")}
           </p>
         </header>
 
@@ -117,14 +116,14 @@ function CoursesIndexPage() {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Hľadaj školenie… napr. seniori, krypto, AI, phishing"
-            aria-label="Hľadaj školenie"
+            placeholder={t("search_placeholder")}
+            aria-label={t("search_aria")}
             className="h-11 w-full rounded-xl border border-border/60 bg-card/30 pl-10 pr-10 text-sm outline-none transition placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-card/60 focus:ring-2 focus:ring-primary/20"
           />
           {query && (
             <button
               type="button"
-              aria-label="Vymazať vyhľadávanie"
+              aria-label={t("clear_search_aria")}
               onClick={() => {
                 setQuery("");
                 inputRef.current?.focus();
@@ -145,7 +144,7 @@ function CoursesIndexPage() {
               id="filters-h"
               className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground"
             >
-              Filter podľa témy
+              {t("filter_topic")}
             </h2>
             <div className="flex flex-wrap gap-2">
               {availableCategories.map((cat) => {
@@ -162,7 +161,7 @@ function CoursesIndexPage() {
                         : "border-border/60 bg-background/40 text-muted-foreground hover:border-primary/40 hover:text-foreground"
                     }`}
                   >
-                    {CATEGORY_LABEL[cat]}
+                    {tCourses(`category_label.${cat}`)}
                   </button>
                 );
               })}
@@ -172,7 +171,7 @@ function CoursesIndexPage() {
                   onClick={() => setActiveCategories(new Set())}
                   className="ml-auto text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
                 >
-                  Vyčistiť ({activeCategories.size})
+                  {t("clear_filter", { n: activeCategories.size })}
                 </button>
               )}
             </div>
@@ -180,26 +179,12 @@ function CoursesIndexPage() {
         )}
 
         {/* Result count */}
-        {isFiltered && filtered.length > 0 && (
-          <p className="mb-4 text-sm text-muted-foreground">
-            {filtered.length === 1
-              ? "1 školenie"
-              : filtered.length < 5
-                ? `${filtered.length} školenia`
-                : `${filtered.length} školení`}
-            {query.trim() ? ` pre „${query.trim()}"` : ""}
-          </p>
-        )}
+        {resultLine && <p className="mb-4 text-sm text-muted-foreground">{resultLine}</p>}
 
         {filtered.length === 0 ? (
           <div className="py-16 text-center">
-            <p className="text-muted-foreground">
-              Nenašlo sa žiadne školenie
-              {query.trim() ? ` pre „${query.trim()}"` : " pre vybraté filtre"}.
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground/70">
-              Skúste: seniori, krypto, AI, phishing, romance, práca, QR…
-            </p>
+            <p className="text-muted-foreground">{emptyLine}</p>
+            <p className="mt-2 text-sm text-muted-foreground/70">{t("empty_hint")}</p>
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -211,7 +196,7 @@ function CoursesIndexPage() {
 
         <div className="mt-12 flex justify-center">
           <Button asChild>
-            <Link to="/test">Otestuj sa (cca 90 sekúnd)</Link>
+            <Link to="/test">{t("cta_test")}</Link>
           </Button>
         </div>
       </main>
