@@ -1,17 +1,20 @@
 // Lightweight client-side auth context for header/footer gating.
 //
-// AH-9.8 — mock-only in this epic. Subscribes to the Supabase auth
-// session on the client and exposes `{ isAuthenticated, isAdmin }`.
-// SSR-safe: returns the unauthenticated shape on the server, then
-// rehydrates after mount so anonymous renders stay stable.
+// Subscribes to the Supabase auth session and verifies admin membership
+// via the `has_role(user_id, 'admin')` security-definer RPC (AH-1.1).
+// Reading `user_roles` directly is blocked by RLS — has_role is the only
+// safe path. SSR-safe: returns the unauthenticated shape on the server,
+// then rehydrates after mount so anonymous renders stay stable.
 //
-// TODO(AH-11): swap inner subscription to read the actual `app_roles`
-// table via has_role() RPC instead of the user metadata fallback used
-// here as a placeholder.
+// `isAdmin` starts `false` even for an authenticated user and only flips
+// `true` after the RPC resolves. This is intentional — UI gates default
+// to the more restrictive state during the resolve window so an admin
+// link can never render before its check completes.
 
 import { useEffect, useState } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
+import type { Session } from "@supabase/supabase-js";
 
 export interface AuthState {
   isAuthenticated: boolean;
@@ -26,20 +29,31 @@ export function useAuth(): AuthState {
   useEffect(() => {
     let cancelled = false;
 
-    const apply = (session: { user?: { app_metadata?: { role?: string } } } | null) => {
+    const apply = async (session: Session | null) => {
       if (cancelled) return;
       if (!session?.user) {
         setState(UNAUTH);
         return;
       }
-      const role = session.user.app_metadata?.role;
-      setState({ isAuthenticated: true, isAdmin: role === "admin" });
+      // Reveal authenticated first; admin probe runs in parallel.
+      setState({ isAuthenticated: true, isAdmin: false });
+      try {
+        const { data, error } = await supabase.rpc("has_role", {
+          _user_id: session.user.id,
+          _role: "admin",
+        });
+        if (cancelled) return;
+        setState({ isAuthenticated: true, isAdmin: !error && data === true });
+      } catch {
+        if (cancelled) return;
+        setState({ isAuthenticated: true, isAdmin: false });
+      }
     };
 
     // Defensive: in test mocks `supabase.auth` may be undefined.
     const auth = (supabase as { auth?: typeof supabase.auth }).auth;
     if (!auth?.getSession) {
-      apply(null);
+      void apply(null);
       return () => {
         cancelled = true;
       };
@@ -50,7 +64,9 @@ export function useAuth(): AuthState {
       .then(({ data }) => apply(data.session))
       .catch(() => apply(null));
 
-    const { data: sub } = auth.onAuthStateChange((_event, session) => apply(session));
+    const { data: sub } = auth.onAuthStateChange((_event, session) => {
+      void apply(session);
+    });
 
     return () => {
       cancelled = true;
