@@ -25,6 +25,22 @@
 -- first admin is in place. See tasks/PLAN-2026-05-17-admin-hub-integration.md
 -- decision #10 and the AH-11.8 story for the production-ready checklist.
 -- ============================================================================
+-- AH-11.3 Part 2 — CF Pages environment variable required for role/ban UI
+-- ============================================================================
+-- The /admin/users role-change and ban toggle controls hit the Cloudflare
+-- Pages function PATCH /api/admin/users/:id, which uses the Supabase
+-- service-role key to bypass RLS (user_roles writes + auth.admin ban).
+--
+--   1. Cloudflare dashboard -> Pages -> subenai -> Settings ->
+--      Environment Variables -> Production.
+--   2. Add `SUPABASE_SERVICE_ROLE_KEY` with the value from Supabase
+--      Dashboard -> Settings -> API -> `service_role` secret.
+--   3. Redeploy production. Without this env var every PATCH on
+--      /api/admin/users/:id returns 500 `supabase_not_configured`.
+--
+-- NEVER commit the service_role key to the repo. It is a master key
+-- that bypasses every RLS policy.
+-- ============================================================================
 
 -- 1) ATTEMPTS TABLE
 CREATE TABLE public.attempts (

@@ -978,6 +978,65 @@ export function useAdminUsers() {
   });
 }
 
+// AH-11.3 Part 2 — privileged mutations on users (role + ban) require the
+// service-role key, which only lives inside the Cloudflare Pages function
+// at PATCH /api/admin/users/:id. The function verifies the caller is an
+// admin and logs every action via the audit_log RPC. These hooks just
+// forward the caller's session JWT and surface the error string verbatim.
+
+async function patchAdminUser(
+  userId: string,
+  patch: { role?: string; banned?: boolean },
+): Promise<{ ok: true; user_id: string; role?: string | null; banned?: boolean }> {
+  const { data: sessionData } = await supabase.auth.getSession();
+  const token = sessionData.session?.access_token;
+  if (!token) throw new Error("not_authenticated");
+  const res = await fetch(`/api/admin/users/${userId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(patch),
+  });
+  if (!res.ok) {
+    let message = res.statusText || "user_patch_failed";
+    try {
+      const errBody = (await res.json()) as { error?: string };
+      if (errBody?.error) message = errBody.error;
+    } catch {
+      // body wasn't JSON — fall through with statusText
+    }
+    throw new Error(message);
+  }
+  return res.json() as Promise<{
+    ok: true;
+    user_id: string;
+    role?: string | null;
+    banned?: boolean;
+  }>;
+}
+
+export function useUpdateUserRole() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ userId, role }: { userId: string; role: AdminUser["role"] }) => {
+      return patchAdminUser(userId, { role });
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "users"] }),
+  });
+}
+
+export function useToggleUserBanned() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ userId, banned }: { userId: string; banned: boolean }) => {
+      return patchAdminUser(userId, { banned });
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "users"] }),
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Dashboard
 // ---------------------------------------------------------------------------
