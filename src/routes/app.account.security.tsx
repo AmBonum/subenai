@@ -1,16 +1,29 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Shield, Key, Lock, Monitor } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { PageHeader } from "@/components/app/page-header";
+import { BackupCodesManager } from "@/components/auth/BackupCodesManager";
+import { listFactors, unenrollFactor } from "@/lib/auth/mfa";
 import { tFor } from "@/i18n/app-shell";
+import { tFor as tSecurity } from "@/i18n/security";
 
 export const Route = createFileRoute("/app/account/security")({
   head: () => ({
@@ -58,8 +71,32 @@ const SESSIONS = [
 
 function SecurityPage() {
   const t = tFor("account.security");
+  const ts = tSecurity("security_card");
+  const navigate = useNavigate();
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
+  const [factorId, setFactorId] = useState<string | null>(null);
+  const [loadingFactor, setLoadingFactor] = useState(true);
+
+  useEffect(() => {
+    listFactors()
+      .then((f) => {
+        const verified = f.totp.find((x) => x.status === "verified");
+        setFactorId(verified?.id ?? null);
+      })
+      .finally(() => setLoadingFactor(false));
+  }, []);
+
+  const onDeactivate = async () => {
+    if (!factorId) return;
+    try {
+      await unenrollFactor(factorId);
+      setFactorId(null);
+      toast.success(ts("toast_deactivated"));
+    } catch {
+      toast.error("Error");
+    }
+  };
   const strength = score(pw);
   const strengthLabel =
     strength < 40
@@ -186,30 +223,67 @@ function SecurityPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Lock className="h-5 w-5" /> {t("card_2fa_title")}
+            <Lock className="h-5 w-5" /> {ts("title")}
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <p className="mb-3 text-sm text-muted-foreground">{t("card_2fa_desc")}</p>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span data-testid="app-account-security-2fa-tooltip-wrapper">
+        <CardContent className="space-y-4">
+          {loadingFactor ? (
+            <p
+              className="text-sm text-muted-foreground"
+              data-testid="app-account-security-2fa-loading"
+            >
+              ...
+            </p>
+          ) : factorId ? (
+            <>
+              <div className="flex items-center gap-2">
+                <Badge data-testid="app-account-security-2fa-active-badge">
+                  {ts("badge_active")}
+                </Badge>
+                <span className="text-sm text-muted-foreground">{ts("desc_active")}</span>
+              </div>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
                   <Button
                     variant="outline"
-                    disabled
-                    aria-disabled
-                    data-testid="app-account-security-2fa-toggle"
+                    size="sm"
+                    data-testid="app-account-security-2fa-deactivate-button"
                   >
-                    {t("btn_activate_2fa")}
+                    {ts("btn_deactivate")}
                   </Button>
-                </span>
-              </TooltipTrigger>
-              <TooltipContent data-testid="app-account-security-2fa-tooltip">
-                {t("tooltip_2fa_deferred")}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+                </AlertDialogTrigger>
+                <AlertDialogContent data-testid="app-account-security-2fa-deactivate-dialog">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{ts("btn_deactivate")}</AlertDialogTitle>
+                    <AlertDialogDescription>{ts("deactivate_confirm")}</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel data-testid="app-account-security-2fa-deactivate-cancel">
+                      {ts("deactivate_cancel")}
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={onDeactivate}
+                      data-testid="app-account-security-2fa-deactivate-confirm"
+                    >
+                      {ts("deactivate_yes")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <BackupCodesManager />
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground">{ts("desc_inactive")}</p>
+              <Button
+                variant="outline"
+                onClick={() => navigate({ to: "/login/enroll-2fa" })}
+                data-testid="app-account-security-2fa-activate-button"
+              >
+                {ts("btn_activate")}
+              </Button>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
