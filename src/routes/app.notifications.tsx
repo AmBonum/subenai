@@ -14,9 +14,11 @@ import {
 import { PageHeader } from "@/components/app/page-header";
 import { tFor } from "@/i18n/app-shell";
 
+const tRoutes = tFor("route_titles");
+
 export const Route = createFileRoute("/app/notifications")({
   head: () => ({
-    meta: [{ title: "Notifikácie · SubenAI" }, { name: "robots", content: "noindex,nofollow" }],
+    meta: [{ title: tRoutes("notifications") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: NotificationsPage,
 });

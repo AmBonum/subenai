@@ -100,7 +100,14 @@
     "questions_heading": "Questions",
     "save": "Save",
     "saved": "Configuration saved.",
-    "disabled_fallback": "This test is currently unavailable."
+    "disabled_fallback": "This test is currently unavailable.",
+    "branza_option_general": "General test",
+    "branza_option_senior": "Senior",
+    "branza_option_youth": "Youth",
+    "branza_option_firma": "Company",
+    "difficulty_option_easy": "Easy",
+    "difficulty_option_medium": "Medium",
+    "difficulty_option_hard": "Hard"
   },
   "shareCard": {
     "title": "Share card",

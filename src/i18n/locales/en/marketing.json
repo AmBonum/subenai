@@ -196,6 +196,8 @@
     "error_body": "Refresh the page in a moment — if the error keeps happening, let us know at "
   },
   "spravovat_podporu": {
+    "head_title": "Manage support — subenai",
+    "head_description": "We'll send you a Stripe Customer Portal link by e-mail — cancel the monthly subscription, change your card, download invoices.",
     "back_home": "← Back to home",
     "title": "Manage your support",
     "hero_prefix": "Enter the e-mail you used to ",
@@ -219,6 +221,10 @@
     "submitted_footer_prefix": "Didn't receive the e-mail? Check your spam folder. If it doesn't arrive within 5 minutes, let us know at "
   },
   "sponzori": {
+    "head_title": "Our sponsors — subenai",
+    "head_description_index": "Public list of people and companies who financially supported the subenai project and consented to having their name listed.",
+    "head_title_all": "All sponsors — subenai",
+    "head_description_all": "Filterable list of all public sponsors of the subenai project. Search by name or date.",
     "back_home": "← Back to home",
     "title": "Our sponsors",
     "hero_prefix": "subenai exists thanks to these people. Where the money goes is detailed in ",

@@ -159,5 +159,10 @@
     "disabled": "AI generátor je momentálne vypnutý.",
     "rate_limit": "AI Gateway: prekročený limit požiadaviek. Skúste o chvíľu.",
     "no_credits": "AI Gateway: vyčerpané kredity workspace."
+  },
+  "route_titles": {
+    "audit": "Audit log · Admin",
+    "respondents": "Respondenti · Admin",
+    "reports": "Reporty · Admin"
   }
 }

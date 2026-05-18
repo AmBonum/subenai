@@ -7,18 +7,15 @@ import { type PublicSponsor } from "./sponzori";
 import { SITE_ORIGIN, CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
+const tSponzori = tFor("sponzori");
 const PAGE_URL = `${SITE_ORIGIN}/sponzori/vsetci`;
 const FETCH_LIMIT = 500;
 
 export const Route = createFileRoute("/sponzori/vsetci")({
   head: () => ({
     meta: [
-      { title: "Všetci sponzori — subenai" },
-      {
-        name: "description",
-        content:
-          "Filtrovateľný zoznam všetkých verejných sponzorov projektu subenai. Hľadaj podľa mena alebo dátumu.",
-      },
+      { title: tSponzori("head_title_all") },
+      { name: "description", content: tSponzori("head_description_all") },
       { name: "robots", content: "index, follow" },
     ],
     links: [{ rel: "canonical", href: PAGE_URL }],

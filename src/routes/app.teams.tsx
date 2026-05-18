@@ -24,9 +24,11 @@ import type { Role } from "@/lib/platform/types";
 import { PageHeader } from "@/components/app/page-header";
 import { tFor } from "@/i18n/app-shell";
 
+const tRoutes = tFor("route_titles");
+
 export const Route = createFileRoute("/app/teams")({
   head: () => ({
-    meta: [{ title: "Tímy · SubenAI" }, { name: "robots", content: "noindex,nofollow" }],
+    meta: [{ title: tRoutes("teams") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: TeamsPage,
 });

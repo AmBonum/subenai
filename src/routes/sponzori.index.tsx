@@ -12,6 +12,7 @@ import { formatMonthYear } from "@/lib/sponsors";
 import { SITE_ORIGIN, CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
+const tSponzori = tFor("sponzori");
 const SPONZORI_URL = `${SITE_ORIGIN}/sponzori`;
 const HOMEPAGE_LIMIT = 5;
 
@@ -27,14 +28,10 @@ export interface PublicSponsor {
 export const Route = createFileRoute("/sponzori/")({
   head: () => ({
     meta: [
-      { title: "Naši sponzori — subenai" },
-      {
-        name: "description",
-        content:
-          "Verejný zoznam ľudí a firiem, ktorí finančne podporili projekt subenai a dali súhlas s uvedením mena.",
-      },
+      { title: tSponzori("head_title") },
+      { name: "description", content: tSponzori("head_description_index") },
       { name: "robots", content: "index, follow" },
-      { property: "og:title", content: "Naši sponzori — subenai" },
+      { property: "og:title", content: tSponzori("head_title") },
       { property: "og:url", content: SPONZORI_URL },
       { property: "og:type", content: "website" },
     ],

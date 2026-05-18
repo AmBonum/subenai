@@ -218,10 +218,10 @@ function AdminTestsListPage() {
                         aria-label={t("select_all")}
                       />
                     </TableHead>
-                    <TableHead>Test</TableHead>
-                    <TableHead>Branža</TableHead>
-                    <TableHead>Obtiažnosť</TableHead>
-                    <TableHead>Stav</TableHead>
+                    <TableHead>{t("column_test")}</TableHead>
+                    <TableHead>{t("column_branch")}</TableHead>
+                    <TableHead>{t("column_difficulty")}</TableHead>
+                    <TableHead>{t("column_status")}</TableHead>
                     <TableHead className="w-[160px]" />
                   </TableRow>
                 </TableHeader>

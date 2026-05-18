@@ -61,6 +61,9 @@
     "regenerate_yes": "Ano, vygenerovat",
     "regenerate_cancel": "Zrušit",
     "toast_deactivated": "2FA bylo deaktivováno",
-    "toast_regenerated": "Vygenerovány nové záložní kódy"
+    "toast_regenerated": "Vygenerovány nové záložní kódy",
+    "btn_copy": "Zkopírovat",
+    "btn_copied": "Zkopírováno",
+    "btn_download_txt": "Stáhnout jako .txt"
   }
 }

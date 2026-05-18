@@ -16,10 +16,13 @@ import {
 import { PageHeader } from "@/components/app/page-header";
 import { useTestVersions, useTests, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
+import { tFor as tAppShell } from "@/i18n/app-shell";
+
+const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/history")({
   head: () => ({
-    meta: [{ title: "Moja história · SubenAI" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("history") }, { name: "robots", content: "noindex" }],
   }),
   component: HistoryPage,
 });

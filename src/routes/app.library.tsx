@@ -21,10 +21,13 @@ import { PageHeader } from "@/components/app/page-header";
 import { useQuestions } from "@/lib/platform/mock-store";
 import type { QuestionType } from "@/lib/platform/types";
 import { tFor } from "@/i18n/questions";
+import { tFor as tAppShell } from "@/i18n/app-shell";
+
+const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/library")({
   head: () => ({
-    meta: [{ title: "Knižnica otázok · SubenAI" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("library") }, { name: "robots", content: "noindex" }],
   }),
   component: LibraryPage,
 });

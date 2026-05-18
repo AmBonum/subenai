@@ -514,5 +514,8 @@
     "admin": "Admin",
     "moderator": "Moderátor",
     "user": "Uživatel"
+  },
+  "route_titles": {
+    "take": "SubenAI — vyplnění testu"
   }
 }

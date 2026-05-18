@@ -131,7 +131,11 @@
     "row_delete": "Smazat",
     "empty_state": "Žádné testy v tomto filtru.",
     "select_all": "Vybrat vše",
-    "owner_label": "Vlastník"
+    "owner_label": "Vlastník",
+    "column_test": "Test",
+    "column_branch": "Odvětví",
+    "column_difficulty": "Obtížnost",
+    "column_status": "Stav"
   },
   "admin_editor": {
     "page_eyebrow": "Admin · Test",

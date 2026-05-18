@@ -196,6 +196,8 @@
     "error_body": "Stránku obnov za chvíľu — ak sa chyba opakuje, daj nám vedieť na "
   },
   "spravovat_podporu": {
+    "head_title": "Spravovať podporu — subenai",
+    "head_description": "Pošli si na e-mail odkaz na Stripe Customer Portal — zruš mesačný odber, zmeň kartu, stiahni faktúry.",
     "back_home": "← Späť na domov",
     "title": "Spravovať podporu",
     "hero_prefix": "Zadaj e-mail, ktorým si pri ",
@@ -219,6 +221,10 @@
     "submitted_footer_prefix": "Nedošiel ti e-mail? Skontroluj spam priečinok. Ak neprišiel ani po 5 minútach, daj nám vedieť na "
   },
   "sponzori": {
+    "head_title": "Naši sponzori — subenai",
+    "head_description_index": "Verejný zoznam ľudí a firiem, ktorí finančne podporili projekt subenai a dali súhlas s uvedením mena.",
+    "head_title_all": "Všetci sponzori — subenai",
+    "head_description_all": "Filtrovateľný zoznam všetkých verejných sponzorov projektu subenai. Hľadaj podľa mena alebo dátumu.",
     "back_home": "← Späť na domov",
     "title": "Naši sponzori",
     "hero_prefix": "Vďaka týmto ľuďom funguje subenai. Detail kam idú peniaze v ",

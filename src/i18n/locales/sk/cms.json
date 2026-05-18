@@ -100,7 +100,14 @@
     "questions_heading": "Otázky",
     "save": "Uložiť",
     "saved": "Konfigurácia uložená.",
-    "disabled_fallback": "Tento test je momentálne nedostupný."
+    "disabled_fallback": "Tento test je momentálne nedostupný.",
+    "branza_option_general": "Všeobecný test",
+    "branza_option_senior": "Senior",
+    "branza_option_youth": "Mládež",
+    "branza_option_firma": "Firma",
+    "difficulty_option_easy": "Ľahká",
+    "difficulty_option_medium": "Stredná",
+    "difficulty_option_hard": "Ťažká"
   },
   "shareCard": {
     "title": "Share karta",

@@ -16,10 +16,13 @@ import {
 import { PageHeader } from "@/components/app/page-header";
 import { useTemplates } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
+import { tFor as tAppShell } from "@/i18n/app-shell";
+
+const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/templates")({
   head: () => ({
-    meta: [{ title: "Šablóny · SubenAI" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("templates") }, { name: "robots", content: "noindex" }],
   }),
   component: TemplatesPage,
 });

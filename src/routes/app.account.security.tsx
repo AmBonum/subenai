@@ -25,9 +25,11 @@ import { listFactors, unenrollFactor } from "@/lib/auth/mfa";
 import { tFor } from "@/i18n/app-shell";
 import { tFor as tSecurity } from "@/i18n/security";
 
+const tRoutes = tFor("route_titles");
+
 export const Route = createFileRoute("/app/account/security")({
   head: () => ({
-    meta: [{ title: "Bezpečnosť · SubenAI" }, { name: "robots", content: "noindex,nofollow" }],
+    meta: [{ title: tRoutes("security") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: SecurityPage,
 });

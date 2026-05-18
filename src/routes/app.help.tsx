@@ -12,78 +12,41 @@ import {
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
 import { tFor } from "@/i18n/app-shell";
+import { getCurrentLocale } from "@/i18n/locale-context";
+import skBundle from "@/i18n/locales/sk/app-shell.json";
+import enBundle from "@/i18n/locales/en/app-shell.json";
+import csBundle from "@/i18n/locales/cs/app-shell.json";
+
+const tRoutes = tFor("route_titles");
 
 export const Route = createFileRoute("/app/help")({
   head: () => ({
-    meta: [{ title: "Help centrum · SubenAI" }, { name: "robots", content: "noindex,nofollow" }],
+    meta: [{ title: tRoutes("help") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: HelpPage,
 });
 
-const FAQ: ReadonlyArray<readonly [string, string]> = [
-  ["Ako vytvorím nový test?", "Klikni na 'Nový test' v ľavom menu a prejdi 3-krokovým wizardom."],
-  [
-    "Ako zdieľam test s respondentmi?",
-    "V editore testu otvor záložku 'Detaily' → tlačidlo Zdieľať vygeneruje link /t/{shareId}.",
-  ],
-  [
-    "Môžem si test chrániť heslom?",
-    "Áno, v 'Detaily' nastav heslo. Respondent ho zadá pred začiatkom.",
-  ],
-  [
-    "Aké typy otázok podporujete?",
-    "15 typov: jednovýber, viacvýber, NPS, škála, matrix, ranking, slider, text, dátum, čas, image, yes/no, file.",
-  ],
-  ["Aký je limit otázok v sade?", "Maximálne 50 otázok na jeden test."],
-  [
-    "Sú dáta respondentov anonymizované?",
-    "Ak zapneš 'Anonymizovať po 90 dňoch', PII sa automaticky odstránia.",
-  ],
-  ["Ako exportujem výsledky?", "V detaile testu → 'Exporty' → vyber CSV, JSON alebo PDF."],
-  [
-    "Čo robí podmienené vetvenie?",
-    "Umožňuje preskočiť otázky podľa predošlých odpovedí (v Pokročilých funkciách).",
-  ],
-  [
-    "Aké roly môžem priradiť v tíme?",
-    "Owner (plný prístup), Editor (úpravy obsahu), Viewer (iba čítanie).",
-  ],
-  [
-    "Ako verzionujem test?",
-    "Pri každom publishe sa vytvorí nová verzia — vidíš ich v záložke 'Verzie' editora.",
-  ],
-  [
-    "Čo je GDPR DSR?",
-    "Data Subject Request — formulár na prístup/výmaz/portabilitu osobných údajov, SLA 30 dní.",
-  ],
-  ["Ako funguje rate-limit pre heslá?", "Po 5 nesprávnych pokusoch je IP zablokovaná na 15 minút."],
-  ["Aký typ hashu používate?", "Argon2id pre heslá testov, bcrypt pre user heslá."],
-  [
-    "Mám viacero respondentov — môžem im poslať pozvánky?",
-    "Áno, v Share dialogu zadaj viacero emailov oddelených čiarkou.",
-  ],
-  ["Kde nájdem audit log?", "Per-test v editore záložka 'Audit'; globálny v Admin panele."],
-  ["Ako nastavím notifikácie?", "V editore testu záložka 'Notifikácie' — 5 typov udalostí."],
-  [
-    "Ako exportujem dáta jedného respondenta?",
-    "V detaile sedenia klikni 'Export JSON' (zapíše sa do audit logu).",
-  ],
-  ["Môžem vytvoriť test zo šablóny?", "Áno, vo wizarde vyber 'Šablóna' v kroku 1."],
-  [
-    "Aký je rozdiel medzi privátnym a verejným testom?",
-    "Privátny: iba ty. Unlisted: cez link. Verejné: index v zozname.",
-  ],
-  ["Akú podporu poskytujete?", "Email support@subenai.sk, odpovedáme do 24 h v pracovných dňoch."],
-] as const;
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+const FAQ_BY_LOCALE = {
+  sk: skBundle.help.faq.items as ReadonlyArray<FaqItem>,
+  en: enBundle.help.faq.items as ReadonlyArray<FaqItem>,
+  cs: csBundle.help.faq.items as ReadonlyArray<FaqItem>,
+} as const;
 
 function HelpPage() {
   const t = tFor("help");
+  const locale = getCurrentLocale();
+  const faq = FAQ_BY_LOCALE[locale] ?? FAQ_BY_LOCALE.sk;
   const [query, setQuery] = useState("");
-  const filtered = FAQ.filter(
-    ([k, v]) =>
+  const filtered = faq.filter(
+    ({ question, answer }) =>
       !query ||
-      k.toLowerCase().includes(query.toLowerCase()) ||
-      v.toLowerCase().includes(query.toLowerCase()),
+      question.toLowerCase().includes(query.toLowerCase()) ||
+      answer.toLowerCase().includes(query.toLowerCase()),
   );
 
   return (
@@ -113,10 +76,10 @@ function HelpPage() {
       </Card>
 
       <Accordion type="single" collapsible className="w-full" data-testid="app-help-faq-list">
-        {filtered.map(([k, v], i) => (
-          <AccordionItem key={k} value={`i${i}`} data-testid={`app-help-faq-item-${i}`}>
-            <AccordionTrigger>{k}</AccordionTrigger>
-            <AccordionContent>{v}</AccordionContent>
+        {filtered.map(({ question, answer }, i) => (
+          <AccordionItem key={question} value={`i${i}`} data-testid={`app-help-faq-item-${i}`}>
+            <AccordionTrigger>{question}</AccordionTrigger>
+            <AccordionContent>{answer}</AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>

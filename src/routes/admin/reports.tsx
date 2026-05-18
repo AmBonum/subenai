@@ -3,10 +3,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { ReportsQueue } from "@/components/admin/ReportsQueue";
 import { tFor } from "@/i18n/governance";
+import { tFor as tAdmin } from "@/i18n/admin";
+
+const tRoutes = tAdmin("route_titles");
 
 export const Route = createFileRoute("/admin/reports")({
   head: () => ({
-    meta: [{ title: "Reporty · Admin" }, { name: "robots", content: "noindex,nofollow" }],
+    meta: [{ title: tRoutes("reports") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: AdminReportsPage,
 });

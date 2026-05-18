@@ -131,7 +131,11 @@
     "row_delete": "Delete",
     "empty_state": "No tests match this filter.",
     "select_all": "Select all",
-    "owner_label": "Owner"
+    "owner_label": "Owner",
+    "column_test": "Test",
+    "column_branch": "Branch",
+    "column_difficulty": "Difficulty",
+    "column_status": "Status"
   },
   "admin_editor": {
     "page_eyebrow": "Admin · Test",

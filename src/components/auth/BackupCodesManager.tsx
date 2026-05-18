@@ -106,7 +106,7 @@ export function BackupCodesManager() {
               onClick={copy}
               data-testid="backup-codes-fresh-copy"
             >
-              {copied ? "Skopírované" : "Skopírovať"}
+              {copied ? t("btn_copied") : t("btn_copy")}
             </Button>
             <Button
               variant="outline"
@@ -114,7 +114,7 @@ export function BackupCodesManager() {
               onClick={download}
               data-testid="backup-codes-fresh-download"
             >
-              Stiahnuť ako .txt
+              {t("btn_download_txt")}
             </Button>
           </div>
         </div>

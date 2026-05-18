@@ -5,10 +5,13 @@ import { TakeTestFlow } from "@/components/respondent/TakeTestFlow";
 import { takeTestFn } from "@/lib/respondent/take-test.functions";
 import { getTestByShareId } from "@/lib/respondent/mock-store";
 import { tFor } from "@/i18n/respondent-flow";
+import { tFor as tQuiz } from "@/i18n/quiz";
+
+const tRoutes = tQuiz("route_titles");
 
 export const Route = createFileRoute("/t/$shareId")({
   head: () => ({
-    meta: [{ title: "SubenAI — vypĺňanie testu" }, { name: "robots", content: "noindex,nofollow" }],
+    meta: [{ title: tRoutes("take") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: PublicTakeTestPage,
 });

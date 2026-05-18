@@ -6,10 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { DsrSubmitForm } from "@/components/user/DsrSubmitForm";
 import { useUserDSRList } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/governance";
+import { tFor as tAppShell } from "@/i18n/app-shell";
+
+const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/legal/dsr")({
   head: () => ({
-    meta: [{ title: "GDPR žiadosť · SubenAI" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("dsr") }, { name: "robots", content: "noindex" }],
   }),
   component: DsrPage,
 });

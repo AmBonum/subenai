@@ -159,5 +159,10 @@
     "disabled": "AI generator is currently disabled.",
     "rate_limit": "AI Gateway: request rate limit exceeded. Try again in a moment.",
     "no_credits": "AI Gateway: workspace credits exhausted."
+  },
+  "route_titles": {
+    "audit": "Audit log · Admin",
+    "respondents": "Respondents · Admin",
+    "reports": "Reports · Admin"
   }
 }

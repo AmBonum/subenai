@@ -6,9 +6,11 @@ import { ProfileCompletionBanner } from "@/components/auth/ProfileCompletionBann
 import { useTests, useUserRespondents, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/app-shell";
 
+const tRoutes = tFor("route_titles");
+
 export const Route = createFileRoute("/app/")({
   head: () => ({
-    meta: [{ title: "Môj prehľad · SubenAI" }, { name: "robots", content: "noindex,nofollow" }],
+    meta: [{ title: tRoutes("dashboard") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: AppDashboardPage,
 });

@@ -94,10 +94,10 @@ function AdminQuickTestPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Všeobecný test">Všeobecný test</SelectItem>
-                  <SelectItem value="Senior">Senior</SelectItem>
-                  <SelectItem value="Mládež">Mládež</SelectItem>
-                  <SelectItem value="Firma">Firma</SelectItem>
+                  <SelectItem value="Všeobecný test">{t("branza_option_general")}</SelectItem>
+                  <SelectItem value="Senior">{t("branza_option_senior")}</SelectItem>
+                  <SelectItem value="Mládež">{t("branza_option_youth")}</SelectItem>
+                  <SelectItem value="Firma">{t("branza_option_firma")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -137,9 +137,9 @@ function AdminQuickTestPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Ľahká">Ľahká</SelectItem>
-                    <SelectItem value="Stredná">Stredná</SelectItem>
-                    <SelectItem value="Ťažká">Ťažká</SelectItem>
+                    <SelectItem value="Ľahká">{t("difficulty_option_easy")}</SelectItem>
+                    <SelectItem value="Stredná">{t("difficulty_option_medium")}</SelectItem>
+                    <SelectItem value="Ťažká">{t("difficulty_option_hard")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

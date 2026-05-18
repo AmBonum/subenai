@@ -61,6 +61,9 @@
     "regenerate_yes": "Yes, generate",
     "regenerate_cancel": "Cancel",
     "toast_deactivated": "2FA has been deactivated",
-    "toast_regenerated": "New backup codes generated"
+    "toast_regenerated": "New backup codes generated",
+    "btn_copy": "Copy",
+    "btn_copied": "Copied",
+    "btn_download_txt": "Download as .txt"
   }
 }

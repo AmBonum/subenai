@@ -4,10 +4,13 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { RespondentsList } from "@/components/admin/RespondentsList";
 import { useAdminRespondents } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/governance";
+import { tFor as tAdmin } from "@/i18n/admin";
+
+const tRoutes = tAdmin("route_titles");
 
 export const Route = createFileRoute("/admin/respondents")({
   head: () => ({
-    meta: [{ title: "Respondenti · Admin" }, { name: "robots", content: "noindex,nofollow" }],
+    meta: [{ title: tRoutes("respondents") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: AdminRespondentsPage,
 });

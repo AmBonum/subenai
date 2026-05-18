@@ -30,6 +30,9 @@ import {
   useTemplates,
 } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
+import { tFor as tAppShell } from "@/i18n/app-shell";
+
+const tRoutes = tAppShell("route_titles");
 
 const stepSchema = z.object({
   step: z.coerce.number().int().min(1).max(4).catch(1),
@@ -39,7 +42,7 @@ const stepSchema = z.object({
 export const Route = createFileRoute("/app/tests/new")({
   validateSearch: stepSchema,
   head: () => ({
-    meta: [{ title: "Nový test · SubenAI" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("tests_new") }, { name: "robots", content: "noindex" }],
   }),
   component: WizardPage,
 });

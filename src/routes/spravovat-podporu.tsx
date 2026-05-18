@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { SITE_ORIGIN, CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
+const tManage = tFor("spravovat_podporu");
 const PAGE_URL = `${SITE_ORIGIN}/spravovat-podporu`;
 const TURNSTILE_SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
@@ -33,12 +34,8 @@ declare global {
 export const Route = createFileRoute("/spravovat-podporu")({
   head: () => ({
     meta: [
-      { title: "Spravovať podporu — subenai" },
-      {
-        name: "description",
-        content:
-          "Pošli si na e-mail odkaz na Stripe Customer Portal — zruš mesačný odber, zmeň kartu, stiahni faktúry.",
-      },
+      { title: tManage("head_title") },
+      { name: "description", content: tManage("head_description") },
       { name: "robots", content: "index, follow" },
     ],
     links: [{ rel: "canonical", href: PAGE_URL }],

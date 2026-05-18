@@ -514,5 +514,8 @@
     "admin": "Admin",
     "moderator": "Moderator",
     "user": "User"
+  },
+  "route_titles": {
+    "take": "SubenAI — taking test"
   }
 }

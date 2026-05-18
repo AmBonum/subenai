@@ -13,9 +13,11 @@ import { useCurrentProfile, useUpdateProfile } from "@/lib/platform/queries";
 import { PageHeader } from "@/components/app/page-header";
 import { tFor } from "@/i18n/app-shell";
 
+const tRoutes = tFor("route_titles");
+
 export const Route = createFileRoute("/app/account/profile")({
   head: () => ({
-    meta: [{ title: "Môj profil · SubenAI" }, { name: "robots", content: "noindex,nofollow" }],
+    meta: [{ title: tRoutes("profile") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: ProfilePage,
 });
