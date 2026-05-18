@@ -20,8 +20,8 @@ type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
 
 describe("/admin/respondents", () => {
-  it("renders header, filters, search, and seeded table; logs an audit access on mount", () => {
-    const spy = vi.spyOn(fns, "logRespondentsAccess");
+  it("renders header, filters, search, and seeded table; builds an audit payload on mount", () => {
+    const spy = vi.spyOn(fns, "buildRespondentsAccessAudit");
     render(<Page />);
     expect(screen.getByTestId("admin-respondents-root")).toBeInTheDocument();
     expect(screen.getByTestId("admin-respondents-page-header-root")).toBeInTheDocument();

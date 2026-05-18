@@ -1,8 +1,9 @@
-// Server-fn skeleton for /admin/respondents list access. AH-7.3 mock-only
-// stub: appends a `pii_access: true` audit_log row each time the admin opens
-// or filters the respondents list. AH-11 swaps the body to
-// `supabaseAdmin.from("audit_log").insert(...)` (kept signature stable).
-import { logPiiAccess } from "@/lib/platform/mock-store";
+// AH-11.3 — input builder for the respondents-list PII-access audit event.
+// AH-7.3 stored the row through a mock-store helper; the real INSERT now
+// goes through the `log_audit_event` RPC (SECURITY DEFINER, admin-gated)
+// exposed by `useLogAuditEvent`. This module stays a pure input builder so
+// it can be unit-tested without React and reused by the hook caller.
+import type { LogAuditEventInput } from "@/lib/admin/queries";
 
 export interface LogRespondentsAccessInput {
   filterTestId?: string;
@@ -10,8 +11,10 @@ export interface LogRespondentsAccessInput {
   query?: string;
 }
 
-export function logRespondentsAccess(input: LogRespondentsAccessInput = {}): void {
-  const details = [
+export function buildRespondentsAccessAudit(
+  input: LogRespondentsAccessInput = {},
+): LogAuditEventInput {
+  const note = [
     "Admin otvoril zoznam respondentov",
     input.filterTestId ? `test=${input.filterTestId}` : null,
     input.filterStatus ? `status=${input.filterStatus}` : null,
@@ -19,6 +22,11 @@ export function logRespondentsAccess(input: LogRespondentsAccessInput = {}): voi
   ]
     .filter(Boolean)
     .join(" · ");
-  // pii_access: true is set inside logPiiAccess via the audit log helper.
-  logPiiAccess("__list__", details);
+  return {
+    action: "respondent.pii_access",
+    target_type: "respondent",
+    target_id: "__list__",
+    pii_access: true,
+    details: { note, ...input },
+  };
 }

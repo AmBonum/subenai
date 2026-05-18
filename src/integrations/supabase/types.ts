@@ -1169,6 +1169,16 @@ export type Database = {
         Args: { p_code: string };
         Returns: boolean;
       };
+      log_audit_event: {
+        Args: {
+          p_action: string;
+          p_target_type: string;
+          p_target_id: string;
+          p_pii_access?: boolean;
+          p_details?: Json;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       app_role: "admin" | "moderator" | "user";

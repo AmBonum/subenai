@@ -1,29 +1,29 @@
 import { describe, it, expect } from "vitest";
 
-import { logRespondentsAccess } from "@/lib/admin/respondents.functions";
-import { useAudit } from "@/lib/platform/mock-store";
-import { renderHook } from "@testing-library/react";
+import { buildRespondentsAccessAudit } from "@/lib/admin/respondents.functions";
 
-describe("logRespondentsAccess (AH-7.3)", () => {
-  it("appends one audit_log entry with pii_access: true and a respondents details string", () => {
-    const before = renderHook(() => useAudit()).result.current.length;
-    logRespondentsAccess({ filterTestId: "tst_test_1", query: "anna" });
-    const after = renderHook(() => useAudit()).result.current;
-    expect(after.length).toBe(before + 1);
-    const head = after[0];
-    expect(head.pii_access).toBe(true);
-    expect(head.action).toBe("respondent.pii_access");
-    expect(head.details).toContain("zoznam respondentov");
-    expect(head.details).toContain("test=tst_test_1");
-    expect(head.details).toContain("query=anna");
+describe("buildRespondentsAccessAudit (AH-11.3)", () => {
+  it("encodes filter context as a pii_access=true audit input", () => {
+    const input = buildRespondentsAccessAudit({
+      filterTestId: "tst_test_1",
+      query: "anna",
+    });
+    expect(input.action).toBe("respondent.pii_access");
+    expect(input.target_type).toBe("respondent");
+    expect(input.target_id).toBe("__list__");
+    expect(input.pii_access).toBe(true);
+    const details = input.details as Record<string, unknown>;
+    expect(String(details.note)).toContain("zoznam respondentov");
+    expect(String(details.note)).toContain("test=tst_test_1");
+    expect(String(details.note)).toContain("query=anna");
+    expect(details.filterTestId).toBe("tst_test_1");
+    expect(details.query).toBe("anna");
   });
 
-  it("propagates the current user as the actor", () => {
-    const before = renderHook(() => useAudit()).result.current[0];
-    logRespondentsAccess();
-    const after = renderHook(() => useAudit()).result.current[0];
-    expect(after.actor_id).toBeTruthy();
-    expect(after.actor_name).toBeTruthy();
-    expect(after.id).not.toBe(before?.id);
+  it("emits a minimal payload with no filters", () => {
+    const input = buildRespondentsAccessAudit();
+    expect(input.action).toBe("respondent.pii_access");
+    const details = input.details as Record<string, unknown>;
+    expect(String(details.note)).toBe("Admin otvoril zoznam respondentov");
   });
 });

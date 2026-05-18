@@ -788,8 +788,31 @@ export function useDeleteTraining() {
 }
 
 // ---------------------------------------------------------------------------
-// Respondents
+// Respondents + sessions
 // ---------------------------------------------------------------------------
+
+type AdminSessionRow = {
+  id: string;
+  test_id: string;
+  respondent_id: string | null;
+  status: string;
+  started_at: string;
+  finished_at: string | null;
+};
+
+export function useAdminSessions() {
+  return useQuery({
+    queryKey: ["admin", "sessions"],
+    queryFn: async (): Promise<AdminSessionRow[]> => {
+      const { data, error } = await supabase
+        .from("sessions")
+        .select("id, test_id, respondent_id, status, started_at, finished_at")
+        .order("started_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as AdminSessionRow[];
+    },
+  });
+}
 
 export function useAdminRespondents() {
   return useQuery({
@@ -808,6 +831,37 @@ export function useAdminRespondents() {
 // ---------------------------------------------------------------------------
 // Audit log
 // ---------------------------------------------------------------------------
+
+export interface LogAuditEventInput {
+  action: string;
+  target_type: string;
+  target_id: string;
+  pii_access?: boolean;
+  details?: Record<string, unknown> | string;
+}
+
+// AH-11.3 — audit_log is INSERT-locked by RLS + immutability trigger; the
+// only sanctioned write path is the SECURITY DEFINER `log_audit_event` RPC
+// which verifies the caller is an admin server-side.
+export function useLogAuditEvent() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: LogAuditEventInput) => {
+      const details =
+        typeof input.details === "string" ? { note: input.details } : (input.details ?? {});
+      const { data, error } = await supabase.rpc("log_audit_event", {
+        p_action: input.action,
+        p_target_type: input.target_type,
+        p_target_id: input.target_id,
+        p_pii_access: input.pii_access ?? true,
+        p_details: details,
+      });
+      if (error) throw error;
+      return data as string;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "audit_log"] }),
+  });
+}
 
 export function useAdminAuditLog(limit = 100) {
   return useQuery({

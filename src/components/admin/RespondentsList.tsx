@@ -21,28 +21,40 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useSessions, useTests, logPiiAccess } from "@/lib/platform/mock-store";
-import { useAdminRespondents } from "@/lib/admin/queries";
-import { logRespondentsAccess } from "@/lib/admin/respondents.functions";
+import {
+  useAdminRespondents,
+  useAdminSessions,
+  useAdminTests,
+  useLogAuditEvent,
+} from "@/lib/admin/queries";
+import { buildRespondentsAccessAudit } from "@/lib/admin/respondents.functions";
 import { tFor } from "@/i18n/governance";
 
 export function RespondentsList() {
   const t = tFor("respondents_list");
   const respondentsQuery = useAdminRespondents();
   const respondents = useMemo(() => respondentsQuery.data ?? [], [respondentsQuery.data]);
-  const sessions = useSessions();
-  const tests = useTests();
+  const sessionsQuery = useAdminSessions();
+  const sessions = useMemo(() => sessionsQuery.data ?? [], [sessionsQuery.data]);
+  const testsQuery = useAdminTests();
+  const tests = useMemo(() => testsQuery.data ?? [], [testsQuery.data]);
+  const logAudit = useLogAuditEvent();
   const [query, setQuery] = useState("");
   const [filterTest, setFilterTest] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
   // Audit every "load" — initial mount + any filter change that re-queries.
   useEffect(() => {
-    logRespondentsAccess({
-      filterTestId: filterTest === "all" ? undefined : filterTest,
-      filterStatus: filterStatus === "all" ? undefined : filterStatus,
-      query: query || undefined,
-    });
+    logAudit.mutate(
+      buildRespondentsAccessAudit({
+        filterTestId: filterTest === "all" ? undefined : filterTest,
+        filterStatus: filterStatus === "all" ? undefined : filterStatus,
+        query: query || undefined,
+      }),
+    );
+    // logAudit.mutate identity is stable across renders via TanStack Query
+    // — including it in deps would invalidate the dep array every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterTest, filterStatus, query]);
 
   const filtered = useMemo(() => {
@@ -161,8 +173,13 @@ export function RespondentsList() {
                           aria-label={t("action_view")}
                           data-testid={`respondents-list-row-view-button-${r.id}`}
                           onClick={() => {
-                            // AH-11.3: error-toast acceptable until server fn wired
-                            logPiiAccess(r.id, "Admin otvoril detail respondenta");
+                            logAudit.mutate({
+                              action: "respondent.pii_access",
+                              target_type: "respondent",
+                              target_id: r.id,
+                              pii_access: true,
+                              details: { note: "Admin otvoril detail respondenta" },
+                            });
                             toast.success(t("toast_pii_access"));
                           }}
                         >

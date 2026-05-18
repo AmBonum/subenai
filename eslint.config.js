@@ -85,10 +85,6 @@ export default tseslint.config(
       "src/routes/admin/navigation.tsx",
       "src/routes/admin/share-card.tsx",
       "src/routes/admin/quick-test.tsx",
-      // AH-11.3 scope — RespondentsList consumes `useSessions`, `useTests`,
-      // and `logPiiAccess` from `@/lib/platform/mock-store` pending the
-      // privileged server function migration. Stays exempt until AH-11.3.
-      "src/components/admin/RespondentsList.tsx",
     ],
     rules: {
       "no-restricted-imports": [
