@@ -14,6 +14,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
 
+import type { Option, Visual } from "@/lib/quiz/bank/questions";
+
 import type {
   Audience,
   DSRRequest,
@@ -1125,5 +1127,40 @@ export function useUpdateTeamMemberRole() {
       qc.invalidateQueries({ queryKey: ["user", "teams"] });
       qc.invalidateQueries({ queryKey: ["user", "team_members"] });
     },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Quick test questions (public /test — anonymous reads via SECURITY DEFINER
+// RPC). Anonymous SELECT on `questions` is blocked by RLS; the
+// `get_quick_test_questions` RPC is the only safe path. Returns DB-shape
+// rows; the caller maps to the `Question` shape that QuestionCard renders
+// via `src/lib/quiz/from-db.ts`.
+// ---------------------------------------------------------------------------
+
+export interface QuickTestQuestionRow {
+  id: string;
+  type: string;
+  prompt: string;
+  options: Option[];
+  correct: number[];
+  branch_slug: string;
+  difficulty: string;
+  visual: Visual | null;
+  order_index: number;
+}
+
+export function useQuickTestQuestions(limit = 10) {
+  return useQuery<QuickTestQuestionRow[]>({
+    queryKey: ["public", "quick-test-questions", limit],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_quick_test_questions", {
+        p_limit: limit,
+      });
+      if (error) throw error;
+      return (data ?? []) as unknown as QuickTestQuestionRow[];
+    },
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   });
 }

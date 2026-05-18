@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { getTestQuestions, type Question } from "@/lib/quiz/bank/questions";
+import { type Question } from "@/lib/quiz/bank/questions";
+import { mapDbRowsToQuestions } from "@/lib/quiz/from-db";
+import { useQuickTestQuestions } from "@/lib/platform/queries";
 import {
   buildAnswerRecord,
   computeScore,
@@ -9,6 +11,8 @@ import {
 } from "@/lib/quiz/score/scoring";
 import { QuestionCard } from "@/components/quiz/flow/QuestionCard";
 import { ResultsView } from "@/components/quiz/results/ResultsView";
+
+const QUICK_TEST_SIZE = 10;
 
 type Phase = "intro" | "playing" | "done";
 
@@ -123,18 +127,30 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
   const [answers, setAnswers] = useState<AnswerRecord[]>(restored?.answers ?? []);
   const [result, setResult] = useState<ScoreResult | null>(restored?.result ?? null);
 
-  // Pick questions on mount — only when starting fresh.
+  // Default kind fetches the quick-test bank from Supabase via the
+  // anon-safe `get_quick_test_questions` RPC. Pack / composer flows
+  // pass pre-built question lists and never hit the network here.
+  const quickTestQuery = useQuickTestQuestions(QUICK_TEST_SIZE);
+  const dbQuestions = useMemo(
+    () => mapDbRowsToQuestions(quickTestQuery.data ?? []),
+    [quickTestQuery.data],
+  );
+
+  // Pick questions on mount — only when starting fresh. For pack /
+  // composer flows we have the list synchronously; for default we wait
+  // for the RPC response, then promote to `playing`.
   useEffect(() => {
     if (restored) return;
     if (config.kind === "default") {
-      setQuestions(getTestQuestions());
+      if (dbQuestions.length === 0) return;
+      setQuestions(dbQuestions);
     } else {
       setQuestions(config.questions);
     }
     const t = setTimeout(() => setPhase("playing"), 900);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [config.kind === "default" ? dbQuestions : null]);
 
   function handleAnswer(optionId: string | null, responseMs: number) {
     const q = questions[index];
@@ -154,7 +170,14 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
 
   function restart() {
     clearPersistedResult(storageKey);
-    setQuestions(config.kind === "default" ? getTestQuestions() : config.questions);
+    if (config.kind === "default") {
+      // Refetch a fresh random batch from the DB. The query effect
+      // above promotes the new questions and flips to "playing".
+      setQuestions([]);
+      void quickTestQuery.refetch();
+    } else {
+      setQuestions(config.questions);
+    }
     setIndex(0);
     setAnswers([]);
     setResult(null);
@@ -181,9 +204,27 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
     );
   }
 
+  // Default kind only: surface RPC failure so the user is not stuck on
+  // the intro card forever. Pack / composer flows have synchronous
+  // question lists and never hit this branch.
+  if (config.kind === "default" && !restored && quickTestQuery.isError && questions.length === 0) {
+    return (
+      <div
+        data-testid="test-error"
+        className="flex min-h-[60vh] flex-col items-center justify-center text-center"
+      >
+        <div className="text-3xl font-bold">Test sa nepodarilo načítať</div>
+        <div className="mt-2 text-muted-foreground">Skús stránku obnoviť o chvíľu.</div>
+      </div>
+    );
+  }
+
   if (phase === "intro" || questions.length === 0) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
+      <div
+        data-testid="test-loading"
+        className="flex min-h-[60vh] flex-col items-center justify-center text-center"
+      >
         <div className="text-3xl font-bold animate-fade-in-up">Pripravený?</div>
         <div className="mt-2 text-muted-foreground animate-fade-in-up">
           Odpovedaj rýchlo. Čas beží.
