@@ -68,24 +68,12 @@ export default tseslint.config(
   {
     // AH-11.1d — admin Supabase cutover guard.
     // Admin scope (`src/routes/admin/**`, `src/components/admin/**`) is wired
-    // to real Supabase via `@/lib/admin/queries.ts` (AH-11.1a/b/c). This rule
-    // prevents future PRs from regressing to the mock stores. CMS admin
-    // routes are exempted — those run on `@/lib/admin/cms-*` until AH-11.5
-    // wires them to Supabase. A handful of admin files are also exempted
-    // below because their mock-store consumers were not fully swapped in
-    // AH-11.1b/c (tracked as AH-11.1e / AH-11.6 follow-up); the guard still
-    // protects every other admin file from re-introducing mock imports.
+    // to real Supabase via `@/lib/admin/queries.ts` (AH-11.1a/b/c, AH-11.5a
+    // for CMS). This rule prevents future PRs from regressing to the mock
+    // stores. AH-11.6 will delete the mock-* modules entirely; until then
+    // the only remaining carve-outs are AH-12 schema-gap exemptions in the
+    // user-scope block below.
     files: ["src/routes/admin/**/*.{ts,tsx}", "src/components/admin/**/*.{ts,tsx}"],
-    ignores: [
-      // CMS admin — AH-11.5 scope, keeps cms-mock-store imports for now.
-      "src/routes/admin/pages.tsx",
-      "src/routes/admin/pages.$pageId.tsx",
-      "src/routes/admin/header.tsx",
-      "src/routes/admin/footer.tsx",
-      "src/routes/admin/navigation.tsx",
-      "src/routes/admin/share-card.tsx",
-      "src/routes/admin/quick-test.tsx",
-    ],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -115,6 +103,12 @@ export default tseslint.config(
               name: "@/lib/admin/answer-sets-mock-store",
               message:
                 "Admin scope is wired to Supabase via @/lib/admin/queries.ts. mock-store imports are AH-11.5 (CMS) scope only.",
+            },
+            {
+              name: "@/lib/admin/cms-mock-store",
+              message:
+                "CMS admin is wired to Supabase via @/lib/admin/queries.ts (AH-11.5a). cms-mock-store is type-only until AH-11.6 deletes it.",
+              allowTypeImports: true,
             },
             {
               name: "@/lib/platform/mock-store",

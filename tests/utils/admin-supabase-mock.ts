@@ -25,6 +25,14 @@ import {
 } from "@/lib/admin/mock-data";
 import { SEED_DSR, SEED_RESPONDENTS } from "@/lib/platform/seed";
 import { readState } from "@/lib/admin/mock-store";
+import {
+  seedPages as cmsSeedPages,
+  seedHeader as cmsSeedHeader,
+  seedFooter as cmsSeedFooter,
+  seedNavigation as cmsSeedNavigation,
+  seedShareCard as cmsSeedShareCard,
+  seedQuickTestConfig as cmsSeedQuickTest,
+} from "@/lib/admin/cms-mock-store";
 
 type Row = Record<string, unknown>;
 
@@ -166,6 +174,55 @@ const respondentRows = (): Row[] =>
     created_at: r.created_at,
   }));
 
+// AH-11.5a — CMS tables. Routes read these through `useCmsX()` hooks in
+// queries.ts; tests assert mutation calls through `adminMockRecorded`.
+const cmsPageRows = (): Row[] =>
+  cmsSeedPages.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    seo_description: p.seo_description,
+    blocks: p.content_blocks.map((b) => ({ ...b })),
+    status: p.status,
+    published_at: p.published_at,
+    updated_at: p.updated_at,
+  }));
+
+const cmsHeaderRow = (): Row => ({
+  id: 1,
+  logo: cmsSeedHeader.logo_url,
+  nav: {
+    cta_label: cmsSeedHeader.cta_label,
+    cta_url: cmsSeedHeader.cta_url,
+    mobile_trigger_label: cmsSeedHeader.mobile_trigger_label,
+  },
+});
+
+const cmsFooterRow = (): Row => ({
+  id: 1,
+  columns: cmsSeedFooter.columns.map((c) => ({ ...c, links: c.links.map((l) => ({ ...l })) })),
+  socials: cmsSeedFooter.socials.map((s) => ({ ...s })),
+});
+
+const cmsNavigationRow = (): Row => ({
+  id: 1,
+  items: cmsSeedNavigation.map((n) => ({ ...n })),
+});
+
+const shareCardRow = (): Row => ({
+  id: 1,
+  branding: {
+    og_template_url: cmsSeedShareCard.og_template_url,
+    title_fallback: cmsSeedShareCard.title_fallback,
+    description_fallback: cmsSeedShareCard.description_fallback,
+  },
+});
+
+const quickTestRow = (): Row => ({
+  id: 1,
+  config: { ...cmsSeedQuickTest, question_ids: [...cmsSeedQuickTest.question_ids] },
+});
+
 export interface AdminMockTables {
   questions: TableState;
   answer_sets: TableState;
@@ -182,6 +239,12 @@ export interface AdminMockTables {
   dsr_requests: TableState;
   respondents: TableState;
   sessions: TableState;
+  cms_pages: TableState;
+  cms_header: TableState;
+  cms_footer: TableState;
+  cms_navigation: TableState;
+  share_card_config: TableState;
+  quick_test_config: TableState;
 }
 
 export const adminMockTables: AdminMockTables = {
@@ -200,6 +263,12 @@ export const adminMockTables: AdminMockTables = {
   dsr_requests: makeTable(dsrRows()),
   respondents: makeTable(respondentRows()),
   sessions: makeTable([]),
+  cms_pages: makeTable(cmsPageRows()),
+  cms_header: makeTable([cmsHeaderRow()]),
+  cms_footer: makeTable([cmsFooterRow()]),
+  cms_navigation: makeTable([cmsNavigationRow()]),
+  share_card_config: makeTable([shareCardRow()]),
+  quick_test_config: makeTable([quickTestRow()]),
 };
 
 export function resetAdminMockTables() {
@@ -218,6 +287,12 @@ export function resetAdminMockTables() {
   adminMockTables.dsr_requests.rows = dsrRows();
   adminMockTables.respondents.rows = respondentRows();
   adminMockTables.sessions.rows = [];
+  adminMockTables.cms_pages.rows = cmsPageRows();
+  adminMockTables.cms_header.rows = [cmsHeaderRow()];
+  adminMockTables.cms_footer.rows = [cmsFooterRow()];
+  adminMockTables.cms_navigation.rows = [cmsNavigationRow()];
+  adminMockTables.share_card_config.rows = [shareCardRow()];
+  adminMockTables.quick_test_config.rows = [quickTestRow()];
 }
 
 // ---- chainable PostgREST-shaped query builder stub ----
@@ -266,6 +341,14 @@ function makeBuilder(state: QueryState): unknown {
     },
     in(col: string, vals: unknown[]) {
       state.filters.push((r) => vals.includes(r[col]));
+      return builder;
+    },
+    not(col: string, op: string, val: unknown) {
+      // Only `is null` negation is used by queries.ts today; keep the
+      // implementation tight rather than building a full PostgREST shim.
+      if (op === "is" && val === null) {
+        state.filters.push((r) => r[col] !== null && r[col] !== undefined);
+      }
       return builder;
     },
     order() {
@@ -652,6 +735,47 @@ export function seedAdminQueryClient(qc: QueryClient): void {
   // Respondents / DSR queue: empty until tests seed.
   qc.setQueryData(["admin", "respondents"], adminMockTables.respondents.rows);
   qc.setQueryData(["admin", "dsr_requests"], adminMockTables.dsr_requests.rows);
+
+  // CMS — pages list + per-singleton config. Reads through ["admin","cms",X].
+  qc.setQueryData(
+    ["admin", "cms", "pages"],
+    adminMockTables.cms_pages.rows.map((r) => ({
+      id: r.id as string,
+      slug: r.slug as string,
+      title: r.title as string,
+      seo_description: (r.seo_description as string) ?? "",
+      content_blocks: Array.isArray(r.blocks) ? (r.blocks as Row[]) : [],
+      status: (r.status as string) ?? "draft",
+      published_at: (r.published_at as string | null) ?? null,
+      updated_at: r.updated_at as string,
+    })),
+  );
+  const headerRow = adminMockTables.cms_header.rows[0] ?? {};
+  const headerNav = (headerRow.nav as Row | null) ?? {};
+  qc.setQueryData(["admin", "cms", "header"], {
+    logo_url: (headerRow.logo as string) ?? "",
+    cta_label: (headerNav.cta_label as string) ?? "",
+    cta_url: (headerNav.cta_url as string) ?? "",
+    mobile_trigger_label: (headerNav.mobile_trigger_label as string) ?? "",
+  });
+  const footerRow = adminMockTables.cms_footer.rows[0] ?? {};
+  qc.setQueryData(["admin", "cms", "footer"], {
+    columns: Array.isArray(footerRow.columns) ? footerRow.columns : [],
+    socials: Array.isArray(footerRow.socials) ? footerRow.socials : [],
+  });
+  const navRow = adminMockTables.cms_navigation.rows[0] ?? {};
+  qc.setQueryData(["admin", "cms", "navigation"], Array.isArray(navRow.items) ? navRow.items : []);
+  const scRow = adminMockTables.share_card_config.rows[0] ?? {};
+  const scBranding = (scRow.branding as Row | null) ?? {};
+  qc.setQueryData(["admin", "cms", "share_card"], {
+    og_template_url: (scBranding.og_template_url as string) ?? "",
+    title_fallback: (scBranding.title_fallback as string) ?? "",
+    description_fallback: (scBranding.description_fallback as string) ?? "",
+  });
+  const qtRow = adminMockTables.quick_test_config.rows[0] ?? {};
+  qc.setQueryData(["admin", "cms", "quick_test"], {
+    ...((qtRow.config as Row) ?? {}),
+  });
 
   // Dashboard stats
   qc.setQueryData(["admin", "dashboard_stats"], {

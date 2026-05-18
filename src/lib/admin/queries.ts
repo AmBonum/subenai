@@ -1082,6 +1082,461 @@ export function useAdminDashboardStats() {
   });
 }
 
+// ---------------------------------------------------------------------------
+// CMS — pages, header, footer, navigation, share-card, quick-test config.
+// ---------------------------------------------------------------------------
+// AH-11.5a swaps the admin CMS routes and the public /s/$slug loader from
+// `cms-mock-store` onto these hooks. The UI types (CmsPage, CmsHeader, …)
+// live in `cms-mock-store` and stay there until AH-11.6 deletes the mock —
+// the mappers below adapt the DB rows (jsonb columns, snake_case) into those
+// shapes so the route components render unchanged. Mutations write through
+// optimistic cache updates so the UI reacts SYNC and tests can assert the
+// effect right after `fireEvent.click`. RLS allows anon SELECT on the public
+// rows (cms_pages where status='published', all singletons).
+
+import type {
+  CmsBlock,
+  CmsFooter,
+  CmsHeader,
+  CmsNavItem,
+  CmsPage,
+  CmsShareCard,
+  PageStatus,
+  QuickTestConfig,
+} from "./cms-mock-store";
+
+interface CmsPagesRow {
+  id: string;
+  slug: string;
+  title: string;
+  seo_description: string | null;
+  blocks: CmsBlock[] | null;
+  status: string;
+  published_at: string | null;
+  updated_at: string;
+}
+
+const mapCmsPage = (row: CmsPagesRow): CmsPage => ({
+  id: row.id,
+  slug: row.slug,
+  title: row.title,
+  seo_description: row.seo_description ?? "",
+  content_blocks: Array.isArray(row.blocks) ? row.blocks : [],
+  status: (row.status as PageStatus) ?? "draft",
+  published_at: row.published_at,
+  updated_at: row.updated_at,
+});
+
+const cmsPagePatchToRow = (patch: Partial<CmsPage>): Record<string, unknown> => {
+  const row: Record<string, unknown> = {};
+  if (patch.slug !== undefined) row.slug = patch.slug;
+  if (patch.title !== undefined) row.title = patch.title;
+  if (patch.seo_description !== undefined) row.seo_description = patch.seo_description;
+  if (patch.content_blocks !== undefined) row.blocks = patch.content_blocks;
+  if (patch.status !== undefined) row.status = patch.status;
+  if (patch.published_at !== undefined) row.published_at = patch.published_at;
+  return row;
+};
+
+export function useCmsPages() {
+  return useQuery({
+    queryKey: ["admin", "cms", "pages"],
+    queryFn: async (): Promise<CmsPage[]> => {
+      const { data, error } = await supabase
+        .from("cms_pages")
+        .select("id, slug, title, seo_description, blocks, status, published_at, updated_at")
+        .order("updated_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map((r) => mapCmsPage(r as CmsPagesRow));
+    },
+  });
+}
+
+// Public read for /s/$slug. Anon SELECT is allowed by RLS when
+// status = 'published' AND published_at IS NOT NULL.
+export function usePublishedCmsPage(slug: string | undefined) {
+  return useQuery({
+    queryKey: ["cms", "pages", "published", slug],
+    enabled: !!slug,
+    queryFn: async (): Promise<CmsPage | null> => {
+      if (!slug) return null;
+      const { data, error } = await supabase
+        .from("cms_pages")
+        .select("id, slug, title, seo_description, blocks, status, published_at, updated_at")
+        .eq("slug", slug)
+        .eq("status", "published")
+        .not("published_at", "is", null)
+        .maybeSingle();
+      if (error) throw error;
+      return data ? mapCmsPage(data as CmsPagesRow) : null;
+    },
+  });
+}
+
+export function useCreateCmsPage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input?: Partial<CmsPage>): Promise<CmsPage> => {
+      const draft = {
+        slug: input?.slug ?? `nova-stranka-${Date.now().toString(36).slice(-4)}`,
+        title: input?.title ?? "Nová stránka",
+        seo_description: input?.seo_description ?? "",
+        blocks: input?.content_blocks ?? [],
+        status: "draft",
+      };
+      const { data, error } = await supabase.from("cms_pages").insert(draft).select().single();
+      if (error) throw error;
+      return mapCmsPage(data as CmsPagesRow);
+    },
+    onSuccess: (page) => {
+      qc.setQueryData<CmsPage[]>(["admin", "cms", "pages"], (prev) => [page, ...(prev ?? [])]);
+      qc.invalidateQueries({ queryKey: ["admin", "cms", "pages"] });
+    },
+  });
+}
+
+export function useUpdateCmsPage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, patch }: { id: string; patch: Partial<CmsPage> }) => {
+      const row = cmsPagePatchToRow(patch);
+      const { error } = await supabase.from("cms_pages").update(row).eq("id", id);
+      if (error) throw error;
+    },
+    onMutate: ({ id, patch }) => {
+      qc.setQueryData<CmsPage[]>(["admin", "cms", "pages"], (prev) =>
+        (prev ?? []).map((p) =>
+          p.id === id ? { ...p, ...patch, updated_at: new Date().toISOString() } : p,
+        ),
+      );
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["admin", "cms", "pages"] }),
+  });
+}
+
+export function useDeleteCmsPage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("cms_pages").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onMutate: (id) => {
+      qc.setQueryData<CmsPage[]>(["admin", "cms", "pages"], (prev) =>
+        (prev ?? []).filter((p) => p.id !== id),
+      );
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["admin", "cms", "pages"] }),
+  });
+}
+
+// Combined publish/unpublish — `publish: true` sets status+published_at,
+// `false` clears both. Matches the AH-9 mock helpers.
+export function usePublishCmsPage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, publish }: { id: string; publish: boolean }) => {
+      const patch = publish
+        ? { status: "published", published_at: new Date().toISOString() }
+        : { status: "draft", published_at: null };
+      const { error } = await supabase.from("cms_pages").update(patch).eq("id", id);
+      if (error) throw error;
+    },
+    onMutate: ({ id, publish }) => {
+      const patch: Partial<CmsPage> = publish
+        ? { status: "published", published_at: new Date().toISOString() }
+        : { status: "draft", published_at: null };
+      qc.setQueryData<CmsPage[]>(["admin", "cms", "pages"], (prev) =>
+        (prev ?? []).map((p) => (p.id === id ? { ...p, ...patch } : p)),
+      );
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["admin", "cms", "pages"] }),
+  });
+}
+
+// ---- Singleton configs (header / footer / navigation / share-card / quick-test)
+// All five singletons sit on PK id=1; the seed row is created by the
+// migration. Each hook returns a sensible default while loading so the
+// route UIs (which read fields directly) never see `undefined`.
+
+interface CmsHeaderRow {
+  logo: string | null;
+  nav: { cta_label?: string; cta_url?: string; mobile_trigger_label?: string } | null;
+}
+
+const DEFAULT_HEADER: CmsHeader = {
+  logo_url: "",
+  cta_label: "",
+  cta_url: "",
+  mobile_trigger_label: "",
+};
+
+const mapCmsHeader = (row: CmsHeaderRow | null): CmsHeader => {
+  if (!row) return DEFAULT_HEADER;
+  const nav = row.nav ?? {};
+  return {
+    logo_url: row.logo ?? "",
+    cta_label: nav.cta_label ?? "",
+    cta_url: nav.cta_url ?? "",
+    mobile_trigger_label: nav.mobile_trigger_label ?? "",
+  };
+};
+
+export function useCmsHeader() {
+  return useQuery({
+    queryKey: ["admin", "cms", "header"],
+    queryFn: async (): Promise<CmsHeader> => {
+      const { data, error } = await supabase
+        .from("cms_header")
+        .select("logo, nav")
+        .eq("id", 1)
+        .maybeSingle();
+      if (error) throw error;
+      return mapCmsHeader(data as CmsHeaderRow | null);
+    },
+    initialData: DEFAULT_HEADER,
+  });
+}
+
+export function useUpdateCmsHeader() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (patch: Partial<CmsHeader>) => {
+      const current = qc.getQueryData<CmsHeader>(["admin", "cms", "header"]) ?? DEFAULT_HEADER;
+      const next = { ...current, ...patch };
+      const { error } = await supabase
+        .from("cms_header")
+        .update({
+          logo: next.logo_url,
+          nav: {
+            cta_label: next.cta_label,
+            cta_url: next.cta_url,
+            mobile_trigger_label: next.mobile_trigger_label,
+          },
+        })
+        .eq("id", 1);
+      if (error) throw error;
+    },
+    onMutate: (patch) => {
+      qc.setQueryData<CmsHeader>(
+        ["admin", "cms", "header"],
+        (prev) => ({ ...(prev ?? DEFAULT_HEADER), ...patch }) as CmsHeader,
+      );
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["admin", "cms", "header"] }),
+  });
+}
+
+interface CmsFooterRow {
+  columns: CmsFooter["columns"] | null;
+  socials: CmsFooter["socials"] | null;
+}
+
+const DEFAULT_FOOTER: CmsFooter = { columns: [], socials: [] };
+
+const mapCmsFooter = (row: CmsFooterRow | null): CmsFooter => ({
+  columns: Array.isArray(row?.columns) ? row!.columns : [],
+  socials: Array.isArray(row?.socials) ? row!.socials : [],
+});
+
+export function useCmsFooter() {
+  return useQuery({
+    queryKey: ["admin", "cms", "footer"],
+    queryFn: async (): Promise<CmsFooter> => {
+      const { data, error } = await supabase
+        .from("cms_footer")
+        .select("columns, socials")
+        .eq("id", 1)
+        .maybeSingle();
+      if (error) throw error;
+      return mapCmsFooter(data as CmsFooterRow | null);
+    },
+    initialData: DEFAULT_FOOTER,
+  });
+}
+
+export function useUpdateCmsFooter() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (next: CmsFooter) => {
+      const { error } = await supabase
+        .from("cms_footer")
+        .update({ columns: next.columns, socials: next.socials })
+        .eq("id", 1);
+      if (error) throw error;
+    },
+    onMutate: (next) => {
+      qc.setQueryData<CmsFooter>(["admin", "cms", "footer"], next);
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["admin", "cms", "footer"] }),
+  });
+}
+
+interface CmsNavigationRow {
+  items: CmsNavItem[] | null;
+}
+
+const mapCmsNavigation = (row: CmsNavigationRow | null): CmsNavItem[] =>
+  Array.isArray(row?.items) ? row!.items : [];
+
+export function useCmsNavigation() {
+  return useQuery({
+    queryKey: ["admin", "cms", "navigation"],
+    queryFn: async (): Promise<CmsNavItem[]> => {
+      const { data, error } = await supabase
+        .from("cms_navigation")
+        .select("items")
+        .eq("id", 1)
+        .maybeSingle();
+      if (error) throw error;
+      return mapCmsNavigation(data as CmsNavigationRow | null);
+    },
+    initialData: [] as CmsNavItem[],
+  });
+}
+
+export function useUpdateCmsNavigation() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (items: CmsNavItem[]) => {
+      const { error } = await supabase.from("cms_navigation").update({ items }).eq("id", 1);
+      if (error) throw error;
+    },
+    onMutate: (items) => {
+      qc.setQueryData<CmsNavItem[]>(["admin", "cms", "navigation"], items);
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["admin", "cms", "navigation"] }),
+  });
+}
+
+interface ShareCardRow {
+  branding: {
+    og_template_url?: string;
+    title_fallback?: string;
+    description_fallback?: string;
+  } | null;
+}
+
+const DEFAULT_SHARE_CARD: CmsShareCard = {
+  og_template_url: "",
+  title_fallback: "",
+  description_fallback: "",
+};
+
+const mapShareCard = (row: ShareCardRow | null): CmsShareCard => {
+  const b = row?.branding ?? {};
+  return {
+    og_template_url: b.og_template_url ?? "",
+    title_fallback: b.title_fallback ?? "",
+    description_fallback: b.description_fallback ?? "",
+  };
+};
+
+export function useCmsShareCard() {
+  return useQuery({
+    queryKey: ["admin", "cms", "share_card"],
+    queryFn: async (): Promise<CmsShareCard> => {
+      const { data, error } = await supabase
+        .from("share_card_config")
+        .select("branding")
+        .eq("id", 1)
+        .maybeSingle();
+      if (error) throw error;
+      return mapShareCard(data as ShareCardRow | null);
+    },
+    initialData: DEFAULT_SHARE_CARD,
+  });
+}
+
+export function useUpdateCmsShareCard() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (patch: Partial<CmsShareCard>) => {
+      const current =
+        qc.getQueryData<CmsShareCard>(["admin", "cms", "share_card"]) ?? DEFAULT_SHARE_CARD;
+      const next = { ...current, ...patch };
+      const { error } = await supabase
+        .from("share_card_config")
+        .update({
+          branding: {
+            og_template_url: next.og_template_url,
+            title_fallback: next.title_fallback,
+            description_fallback: next.description_fallback,
+          },
+        })
+        .eq("id", 1);
+      if (error) throw error;
+    },
+    onMutate: (patch) => {
+      qc.setQueryData<CmsShareCard>(
+        ["admin", "cms", "share_card"],
+        (prev) => ({ ...(prev ?? DEFAULT_SHARE_CARD), ...patch }) as CmsShareCard,
+      );
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["admin", "cms", "share_card"] }),
+  });
+}
+
+interface QuickTestRow {
+  config: Partial<QuickTestConfig> | null;
+}
+
+const DEFAULT_QUICK_TEST: QuickTestConfig = {
+  id: "qt_default",
+  visible: true,
+  title: "",
+  description: "",
+  branza: "Všeobecný test",
+  time_seconds: 120,
+  pass_percentage: 60,
+  difficulty: "Ľahká",
+  question_ids: [],
+};
+
+const mapQuickTest = (row: QuickTestRow | null): QuickTestConfig => ({
+  ...DEFAULT_QUICK_TEST,
+  ...(row?.config ?? {}),
+});
+
+export function useCmsQuickTestConfig() {
+  return useQuery({
+    queryKey: ["admin", "cms", "quick_test"],
+    queryFn: async (): Promise<QuickTestConfig> => {
+      const { data, error } = await supabase
+        .from("quick_test_config")
+        .select("config")
+        .eq("id", 1)
+        .maybeSingle();
+      if (error) throw error;
+      return mapQuickTest(data as QuickTestRow | null);
+    },
+    initialData: DEFAULT_QUICK_TEST,
+  });
+}
+
+export function useUpdateCmsQuickTestConfig() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (patch: Partial<QuickTestConfig>) => {
+      const current =
+        qc.getQueryData<QuickTestConfig>(["admin", "cms", "quick_test"]) ?? DEFAULT_QUICK_TEST;
+      const next = { ...current, ...patch };
+      const { error } = await supabase
+        .from("quick_test_config")
+        .update({ config: next })
+        .eq("id", 1);
+      if (error) throw error;
+    },
+    onMutate: (patch) => {
+      qc.setQueryData<QuickTestConfig>(
+        ["admin", "cms", "quick_test"],
+        (prev) => ({ ...(prev ?? DEFAULT_QUICK_TEST), ...patch }) as QuickTestConfig,
+      );
+    },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["admin", "cms", "quick_test"] }),
+  });
+}
+
 export function useAdminActivity(limit = 20) {
   return useQuery({
     queryKey: ["admin", "activity", limit],

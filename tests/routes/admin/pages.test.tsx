@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 beforeAll(() => {
   if (typeof window !== "undefined" && !window.matchMedia) {
@@ -33,14 +33,19 @@ vi.mock("@tanstack/react-router", async () => {
 });
 
 import { Route } from "@/routes/admin/pages";
-import { resetCmsStoresForTests } from "@/lib/admin/cms-mock-store";
+import {
+  adminMockRecorded,
+  resetAdminMockRecorded,
+  resetAdminMockTables,
+} from "../../utils/admin-supabase-mock";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
 
 describe("/admin/pages", () => {
   beforeEach(() => {
-    resetCmsStoresForTests();
+    resetAdminMockTables();
+    resetAdminMockRecorded();
     navigateSpy.mockReset();
   });
 
@@ -76,12 +81,17 @@ describe("/admin/pages", () => {
     expect(screen.queryByTestId("cms-pages-list-row-pg_draft_skoly")).not.toBeInTheDocument();
   });
 
-  it("new-page button creates a draft and navigates", () => {
+  it("new-page button creates a draft and navigates", async () => {
     render(<Page />);
     fireEvent.click(screen.getByTestId("cms-pages-list-new-button"));
-    expect(navigateSpy).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      const inserts = adminMockRecorded.inserts.filter((i) => i.table === "cms_pages");
+      expect(inserts.length).toBe(1);
+      expect(inserts[0].values.status).toBe("draft");
+      expect(navigateSpy).toHaveBeenCalledTimes(1);
+    });
     const arg = navigateSpy.mock.calls[0][0] as { to: string; params: { pageId: string } };
     expect(arg.to).toBe("/admin/pages/$pageId");
-    expect(arg.params.pageId).toMatch(/^pg_/);
+    expect(typeof arg.params.pageId).toBe("string");
   });
 });

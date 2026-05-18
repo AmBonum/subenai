@@ -1,19 +1,42 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 
-import { getPublicCmsPage, type PublicCmsPage } from "@/lib/cms/get-page.functions";
-import type { CmsBlock } from "@/lib/admin/cms-mock-store";
+import { usePublishedCmsPage } from "@/lib/admin/queries";
+import type { CmsBlock, CmsPage } from "@/lib/admin/cms-mock-store";
 
 export const Route = createFileRoute("/s/$slug")({
-  loader: ({ params }) => {
-    const page = getPublicCmsPage(params.slug);
-    if (!page) throw notFound();
-    return { page };
-  },
   component: PublicCmsPageRoute,
 });
 
+interface PublicCmsPage {
+  id: string;
+  slug: string;
+  title: string;
+  seo_description: string;
+  content_blocks: CmsBlock[];
+  published_at: string;
+}
+
+// AH-11.5a — safe-column projection. Drops owner_id / updated_at / status so
+// nothing leaks beyond what was rendered by the AH-9 loader.
+function project(page: CmsPage): PublicCmsPage {
+  return {
+    id: page.id,
+    slug: page.slug,
+    title: page.title,
+    seo_description: page.seo_description,
+    content_blocks: page.content_blocks.map((b) => ({ ...b })),
+    published_at: page.published_at ?? "",
+  };
+}
+
 function PublicCmsPageRoute() {
-  const { page } = Route.useLoaderData() as { page: PublicCmsPage };
+  const { slug } = Route.useParams();
+  const query = usePublishedCmsPage(slug);
+
+  if (query.isLoading) return null;
+  if (!query.data) throw notFound();
+
+  const page = project(query.data);
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10" data-testid="public-cms-page-content">

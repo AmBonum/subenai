@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -7,26 +8,30 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  cmsFooterStore,
-  newId,
-  type CmsFooter,
-  type CmsFooterColumn,
-} from "@/lib/admin/cms-mock-store";
-import { useCmsFooter } from "@/lib/admin/cms-hooks";
+import type { CmsFooter, CmsFooterColumn } from "@/lib/admin/cms-mock-store";
+import { useCmsFooter, useUpdateCmsFooter } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
+
+const newId = (p = "id") => `${p}_${Math.random().toString(36).slice(2, 8)}`;
 
 export const Route = createFileRoute("/admin/footer")({
   component: AdminFooterPage,
 });
 
-function setFooter(updater: (prev: CmsFooter) => CmsFooter) {
-  cmsFooterStore.set(updater);
-}
-
 function AdminFooterPage() {
   const t = tFor("footerAdmin");
-  const footer = useCmsFooter();
+  const qc = useQueryClient();
+  const footerQuery = useCmsFooter();
+  const updateFooter = useUpdateCmsFooter();
+  const footer = footerQuery.data;
+
+  const setFooter = (updater: (prev: CmsFooter) => CmsFooter) => {
+    const next = updater(footer);
+    qc.setQueryData<CmsFooter>(["admin", "cms", "footer"], next);
+    updateFooter.mutate(next, {
+      onError: (e) => toast.error((e as Error).message),
+    });
+  };
 
   const addColumn = () =>
     setFooter((prev) => ({

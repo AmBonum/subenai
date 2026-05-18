@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 beforeAll(() => {
   if (typeof window !== "undefined" && !window.matchMedia) {
@@ -27,14 +27,19 @@ vi.mock("@tanstack/react-router", async () => {
 });
 
 import { Route } from "@/routes/admin/quick-test";
-import { cmsQuickTestConfigStore, resetCmsStoresForTests } from "@/lib/admin/cms-mock-store";
+import {
+  adminMockRecorded,
+  resetAdminMockRecorded,
+  resetAdminMockTables,
+} from "../../utils/admin-supabase-mock";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
 
 describe("/admin/quick-test", () => {
   beforeEach(() => {
-    resetCmsStoresForTests();
+    resetAdminMockTables();
+    resetAdminMockRecorded();
   });
 
   it("renders all fields with seed values", () => {
@@ -47,18 +52,28 @@ describe("/admin/quick-test", () => {
     expect(passInput.value).toBe("60");
   });
 
-  it("editing title persists to mock store", () => {
+  it("editing title calls the update mutation", async () => {
     render(<Page />);
     const titleInput = screen.getByTestId("quick-test-title-input") as HTMLInputElement;
     fireEvent.change(titleInput, { target: { value: "Iný názov" } });
-    expect(cmsQuickTestConfigStore.get().title).toBe("Iný názov");
+    await waitFor(() => {
+      const updates = adminMockRecorded.updates.filter((u) => u.table === "quick_test_config");
+      expect(updates.length).toBeGreaterThan(0);
+      const last = updates[updates.length - 1];
+      expect((last.patch.config as Record<string, unknown>).title).toBe("Iný názov");
+    });
   });
 
-  it("editing pass percentage persists as number", () => {
+  it("editing pass percentage persists as number", async () => {
     render(<Page />);
     const passInput = screen.getByTestId("quick-test-pass-input") as HTMLInputElement;
     fireEvent.change(passInput, { target: { value: "75" } });
-    expect(cmsQuickTestConfigStore.get().pass_percentage).toBe(75);
+    await waitFor(() => {
+      const updates = adminMockRecorded.updates.filter((u) => u.table === "quick_test_config");
+      expect(updates.length).toBeGreaterThan(0);
+      const last = updates[updates.length - 1];
+      expect((last.patch.config as Record<string, unknown>).pass_percentage).toBe(75);
+    });
   });
 
   it("visibility toggle is interactive", () => {

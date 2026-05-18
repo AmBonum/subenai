@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 beforeAll(() => {
   if (typeof window !== "undefined" && !window.matchMedia) {
@@ -27,14 +27,25 @@ vi.mock("@tanstack/react-router", async () => {
 });
 
 import { Route } from "@/routes/admin/footer";
-import { cmsFooterStore, resetCmsStoresForTests, seedFooter } from "@/lib/admin/cms-mock-store";
+import { seedFooter } from "@/lib/admin/cms-mock-store";
+import {
+  adminMockRecorded,
+  adminMockTables,
+  resetAdminMockRecorded,
+  resetAdminMockTables,
+} from "../../utils/admin-supabase-mock";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
 
+function footerCols(): Array<{ links: unknown[] }> {
+  return (adminMockTables.cms_footer.rows[0].columns as Array<{ links: unknown[] }>) ?? [];
+}
+
 describe("/admin/footer", () => {
   beforeEach(() => {
-    resetCmsStoresForTests();
+    resetAdminMockTables();
+    resetAdminMockRecorded();
   });
 
   it("renders seeded columns", () => {
@@ -49,43 +60,47 @@ describe("/admin/footer", () => {
     expect(screen.getByTestId("cms-footer-column-link-0-1")).toBeInTheDocument();
   });
 
-  it("add column appends a new column", () => {
+  it("add column appends a new column", async () => {
     render(<Page />);
-    const before = cmsFooterStore.get().columns.length;
+    const before = footerCols().length;
     fireEvent.click(screen.getByTestId("cms-footer-form-add-column"));
-    expect(cmsFooterStore.get().columns.length).toBe(before + 1);
+    await waitFor(() => expect(footerCols().length).toBe(before + 1));
   });
 
-  it("add link appends inside the column", () => {
+  it("add link appends inside the column", async () => {
     render(<Page />);
-    const before = cmsFooterStore.get().columns[0].links.length;
+    const before = footerCols()[0].links.length;
     fireEvent.click(screen.getByTestId("cms-footer-column-0-add-link"));
-    expect(cmsFooterStore.get().columns[0].links.length).toBe(before + 1);
+    await waitFor(() => expect(footerCols()[0].links.length).toBe(before + 1));
   });
 
-  it("edit link label updates store", () => {
+  it("edit link label updates table", async () => {
     render(<Page />);
     const input = screen.getByTestId("cms-footer-column-link-0-0-label") as HTMLInputElement;
     fireEvent.change(input, { target: { value: "Nový štítok" } });
-    expect(cmsFooterStore.get().columns[0].links[0].label).toBe("Nový štítok");
+    await waitFor(() => {
+      const links = footerCols()[0].links as Array<{ label: string }>;
+      expect(links[0].label).toBe("Nový štítok");
+    });
   });
 
-  it("remove link drops it", () => {
+  it("remove link drops it", async () => {
     render(<Page />);
-    const before = cmsFooterStore.get().columns[0].links.length;
+    const before = footerCols()[0].links.length;
     fireEvent.click(screen.getByTestId("cms-footer-column-link-0-0-remove"));
-    expect(cmsFooterStore.get().columns[0].links.length).toBe(before - 1);
+    await waitFor(() => expect(footerCols()[0].links.length).toBe(before - 1));
   });
 
-  it("remove column drops it", () => {
+  it("remove column drops it", async () => {
     render(<Page />);
-    const before = cmsFooterStore.get().columns.length;
+    const before = footerCols().length;
     fireEvent.click(screen.getByTestId("cms-footer-column-0-remove"));
-    expect(cmsFooterStore.get().columns.length).toBe(before - 1);
+    await waitFor(() => expect(footerCols().length).toBe(before - 1));
   });
 
   it("empty footer state renders when all columns removed", () => {
-    cmsFooterStore.set({ columns: [], socials: [] });
+    adminMockTables.cms_footer.rows[0].columns = [];
+    adminMockTables.cms_footer.rows[0].socials = [];
     render(<Page />);
     expect(screen.getByTestId("cms-footer-form-empty")).toBeInTheDocument();
   });
@@ -98,5 +113,14 @@ describe("/admin/footer", () => {
 
   it("seed shape sanity", () => {
     expect(seedFooter.columns.length).toBe(2);
+  });
+
+  it("recorded mutations target cms_footer", async () => {
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("cms-footer-form-add-column"));
+    await waitFor(() => {
+      const updates = adminMockRecorded.updates.filter((u) => u.table === "cms_footer");
+      expect(updates.length).toBeGreaterThan(0);
+    });
   });
 });

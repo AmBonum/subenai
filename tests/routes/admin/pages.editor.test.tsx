@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 beforeAll(() => {
   if (typeof window !== "undefined" && !window.matchMedia) {
@@ -39,7 +39,13 @@ vi.mock("@tanstack/react-router", async () => {
 });
 
 import { Route } from "@/routes/admin/pages.$pageId";
-import { cmsPagesStore, resetCmsStoresForTests, seedPages } from "@/lib/admin/cms-mock-store";
+import { seedPages } from "@/lib/admin/cms-mock-store";
+import {
+  adminMockRecorded,
+  adminMockTables,
+  resetAdminMockRecorded,
+  resetAdminMockTables,
+} from "../../utils/admin-supabase-mock";
 
 type RouteConfig = { component: () => JSX.Element };
 const Editor = (Route as unknown as RouteConfig).component;
@@ -48,9 +54,14 @@ function setPageId(id: string) {
   paramsRef.current = { pageId: id };
 }
 
+function pageRow(id: string) {
+  return adminMockTables.cms_pages.rows.find((r) => r.id === id);
+}
+
 describe("/admin/pages/$pageId", () => {
   beforeEach(() => {
-    resetCmsStoresForTests();
+    resetAdminMockTables();
+    resetAdminMockRecorded();
     setPageId("pg_o_projekte");
   });
 
@@ -71,44 +82,52 @@ describe("/admin/pages/$pageId", () => {
     expect(screen.getByTestId("cms-page-editor-block-2")).toBeInTheDocument();
   });
 
-  it("add-block appends a new block at the end", () => {
+  it("add-block appends a new block at the end", async () => {
     render(<Editor />);
-    const before = cmsPagesStore.get().find((p) => p.id === "pg_o_projekte")!.content_blocks.length;
+    const before = (pageRow("pg_o_projekte")!.blocks as unknown[]).length;
     fireEvent.click(screen.getByTestId("cms-page-editor-add-block"));
-    const after = cmsPagesStore.get().find((p) => p.id === "pg_o_projekte")!.content_blocks.length;
-    expect(after).toBe(before + 1);
+    await waitFor(() =>
+      expect((pageRow("pg_o_projekte")!.blocks as unknown[]).length).toBe(before + 1),
+    );
   });
 
-  it("reorder moves a block up", () => {
+  it("reorder moves a block up", async () => {
     render(<Editor />);
-    const page = cmsPagesStore.get().find((p) => p.id === "pg_o_projekte")!;
-    const first = page.content_blocks[0].id;
-    const second = page.content_blocks[1].id;
+    const before = pageRow("pg_o_projekte")!.blocks as Array<{ id: string }>;
+    const first = before[0].id;
+    const second = before[1].id;
     fireEvent.click(screen.getByTestId("cms-page-editor-block-1-move-up"));
-    const reordered = cmsPagesStore.get().find((p) => p.id === "pg_o_projekte")!.content_blocks;
-    expect(reordered[0].id).toBe(second);
-    expect(reordered[1].id).toBe(first);
+    await waitFor(() => {
+      const reordered = pageRow("pg_o_projekte")!.blocks as Array<{ id: string }>;
+      expect(reordered[0].id).toBe(second);
+      expect(reordered[1].id).toBe(first);
+    });
   });
 
-  it("delete removes a block", () => {
+  it("delete removes a block", async () => {
     render(<Editor />);
-    const before = cmsPagesStore.get().find((p) => p.id === "pg_o_projekte")!.content_blocks.length;
+    const before = (pageRow("pg_o_projekte")!.blocks as unknown[]).length;
     fireEvent.click(screen.getByTestId("cms-page-editor-block-0-remove"));
-    const after = cmsPagesStore.get().find((p) => p.id === "pg_o_projekte")!.content_blocks.length;
-    expect(after).toBe(before - 1);
+    await waitFor(() =>
+      expect((pageRow("pg_o_projekte")!.blocks as unknown[]).length).toBe(before - 1),
+    );
   });
 
-  it("publish sets published_at; unpublish clears it", () => {
+  it("publish sets published_at; unpublish clears it", async () => {
     setPageId("pg_draft_skoly");
     render(<Editor />);
     fireEvent.click(screen.getByTestId("cms-page-editor-publish"));
-    const after = cmsPagesStore.get().find((p) => p.id === "pg_draft_skoly")!;
-    expect(after.status).toBe("published");
-    expect(after.published_at).not.toBeNull();
+    await waitFor(() => {
+      const afterRow = pageRow("pg_draft_skoly")!;
+      expect(afterRow.status).toBe("published");
+      expect(afterRow.published_at).not.toBeNull();
+    });
     fireEvent.click(screen.getByTestId("cms-page-editor-unpublish"));
-    const reverted = cmsPagesStore.get().find((p) => p.id === "pg_draft_skoly")!;
-    expect(reverted.status).toBe("draft");
-    expect(reverted.published_at).toBeNull();
+    await waitFor(() => {
+      const revertedRow = pageRow("pg_draft_skoly")!;
+      expect(revertedRow.status).toBe("draft");
+      expect(revertedRow.published_at).toBeNull();
+    });
   });
 
   it("slug validation rejects invalid characters and disables save", () => {
@@ -129,5 +148,14 @@ describe("/admin/pages/$pageId", () => {
 
   it("seed shape sanity: pg_o_projekte exists", () => {
     expect(seedPages.find((p) => p.id === "pg_o_projekte")).toBeDefined();
+  });
+
+  it("editor mutations are recorded against cms_pages", async () => {
+    render(<Editor />);
+    fireEvent.click(screen.getByTestId("cms-page-editor-add-block"));
+    await waitFor(() => {
+      const updates = adminMockRecorded.updates.filter((u) => u.table === "cms_pages");
+      expect(updates.length).toBeGreaterThan(0);
+    });
   });
 });

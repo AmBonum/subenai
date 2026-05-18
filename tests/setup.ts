@@ -2,7 +2,14 @@ import "@testing-library/jest-dom/vitest";
 import { afterEach, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, notifyManager } from "@tanstack/react-query";
+
+// TanStack Query batches store notifications via `systemSetTimeoutZero` so
+// observers receive updates one macrotask after `setQueryData`. Inside
+// fireEvent-style sync tests that breaks: the controlled input still renders
+// the pre-mutation value when the assertion fires. Force the notify scheduler
+// to invoke callbacks synchronously so `setQueryData` propagates immediately.
+notifyManager.setScheduler((cb: () => void) => cb());
 
 // AH-11.1b swaps admin reads onto Supabase-backed TanStack Query hooks. Provide
 // a default stub so admin tests that don't ship their own Supabase mock still

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 beforeAll(() => {
   if (typeof window !== "undefined" && !window.matchMedia) {
@@ -27,14 +27,19 @@ vi.mock("@tanstack/react-router", async () => {
 });
 
 import { Route } from "@/routes/admin/share-card";
-import { cmsShareCardStore, resetCmsStoresForTests } from "@/lib/admin/cms-mock-store";
+import {
+  adminMockRecorded,
+  resetAdminMockRecorded,
+  resetAdminMockTables,
+} from "../../utils/admin-supabase-mock";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
 
 describe("/admin/share-card", () => {
   beforeEach(() => {
-    resetCmsStoresForTests();
+    resetAdminMockTables();
+    resetAdminMockRecorded();
   });
 
   it("renders all fields with seeded values", () => {
@@ -49,11 +54,17 @@ describe("/admin/share-card", () => {
     expect(desc.value.length).toBeGreaterThan(0);
   });
 
-  it("editing title persists to mock store", () => {
+  it("editing title calls the update mutation", async () => {
     render(<Page />);
     const title = screen.getByTestId("share-card-config-title-fallback") as HTMLInputElement;
     fireEvent.change(title, { target: { value: "Iný názov" } });
-    expect(cmsShareCardStore.get().title_fallback).toBe("Iný názov");
+    await waitFor(() => {
+      const updates = adminMockRecorded.updates.filter((u) => u.table === "share_card_config");
+      expect(updates.length).toBeGreaterThan(0);
+      const last = updates[updates.length - 1];
+      const branding = last.patch.branding as Record<string, unknown>;
+      expect(branding.title_fallback).toBe("Iný názov");
+    });
   });
 
   it("preview renders bound to current form state", () => {

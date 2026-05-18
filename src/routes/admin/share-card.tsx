@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
@@ -7,8 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { cmsShareCardStore, type CmsShareCard } from "@/lib/admin/cms-mock-store";
-import { useCmsShareCard } from "@/lib/admin/cms-hooks";
+import type { CmsShareCard } from "@/lib/admin/cms-mock-store";
+import { useCmsShareCard, useUpdateCmsShareCard } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 
 export const Route = createFileRoute("/admin/share-card")({
@@ -17,9 +18,18 @@ export const Route = createFileRoute("/admin/share-card")({
 
 function AdminShareCardPage() {
   const t = tFor("shareCard");
-  const card = useCmsShareCard();
+  const qc = useQueryClient();
+  const cardQuery = useCmsShareCard();
+  const updateCard = useUpdateCmsShareCard();
+  const card = cardQuery.data;
 
-  const patch = (p: Partial<CmsShareCard>) => cmsShareCardStore.set((prev) => ({ ...prev, ...p }));
+  const patch = (p: Partial<CmsShareCard>) => {
+    qc.setQueryData<CmsShareCard>(
+      ["admin", "cms", "share_card"],
+      (prev) => ({ ...(prev ?? card), ...p }) as CmsShareCard,
+    );
+    updateCard.mutate(p, { onError: (e) => toast.error((e as Error).message) });
+  };
 
   const titleInvalid = card.title_fallback.trim().length === 0;
 

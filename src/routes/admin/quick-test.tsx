@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
@@ -15,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cmsQuickTestConfigStore, type QuickTestConfig } from "@/lib/admin/cms-mock-store";
-import { useQuickTestConfig } from "@/lib/admin/cms-hooks";
+import type { QuickTestConfig } from "@/lib/admin/cms-mock-store";
+import { useCmsQuickTestConfig, useUpdateCmsQuickTestConfig } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 
 export const Route = createFileRoute("/admin/quick-test")({
@@ -25,10 +26,18 @@ export const Route = createFileRoute("/admin/quick-test")({
 
 function AdminQuickTestPage() {
   const t = tFor("quickTest");
-  const cfg = useQuickTestConfig();
+  const qc = useQueryClient();
+  const cfgQuery = useCmsQuickTestConfig();
+  const updateCfg = useUpdateCmsQuickTestConfig();
+  const cfg = cfgQuery.data;
 
-  const patch = (p: Partial<QuickTestConfig>) =>
-    cmsQuickTestConfigStore.set((prev) => ({ ...prev, ...p }));
+  const patch = (p: Partial<QuickTestConfig>) => {
+    qc.setQueryData<QuickTestConfig>(
+      ["admin", "cms", "quick_test"],
+      (prev) => ({ ...(prev ?? cfg), ...p }) as QuickTestConfig,
+    );
+    updateCfg.mutate(p, { onError: (e) => toast.error((e as Error).message) });
+  };
 
   const onSave = () => {
     toast.success(t("saved"));

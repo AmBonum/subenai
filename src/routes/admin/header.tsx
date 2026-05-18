@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
@@ -6,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cmsHeaderStore, type CmsHeader } from "@/lib/admin/cms-mock-store";
-import { useCmsHeader } from "@/lib/admin/cms-hooks";
+import type { CmsHeader } from "@/lib/admin/cms-mock-store";
+import { useCmsHeader, useUpdateCmsHeader } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 
 export const Route = createFileRoute("/admin/header")({
@@ -16,9 +17,20 @@ export const Route = createFileRoute("/admin/header")({
 
 function AdminHeaderPage() {
   const t = tFor("headerAdmin");
-  const header = useCmsHeader();
+  const qc = useQueryClient();
+  const headerQuery = useCmsHeader();
+  const updateHeader = useUpdateCmsHeader();
+  const header = headerQuery.data;
 
-  const patch = (p: Partial<CmsHeader>) => cmsHeaderStore.set((prev) => ({ ...prev, ...p }));
+  const patch = (p: Partial<CmsHeader>) => {
+    // Optimistic cache update is synchronous so the controlled input reflects
+    // the new value before the mutation's `onMutate` microtask fires.
+    qc.setQueryData<CmsHeader>(
+      ["admin", "cms", "header"],
+      (prev) => ({ ...(prev ?? header), ...p }) as CmsHeader,
+    );
+    updateHeader.mutate(p, { onError: (e) => toast.error((e as Error).message) });
+  };
 
   const onSave = () => {
     toast.success(t("saved"));

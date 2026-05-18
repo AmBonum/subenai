@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { ArrowLeft, ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -16,16 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  type BlockKind,
-  type CmsBlock,
-  newId,
-  publishPage,
-  unpublishPage,
-  updatePage,
-} from "@/lib/admin/cms-mock-store";
-import { usePages } from "@/lib/admin/cms-hooks";
+import type { BlockKind, CmsBlock, CmsPage } from "@/lib/admin/cms-mock-store";
+import { useCmsPages, usePublishCmsPage, useUpdateCmsPage } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
+
+const newId = (p = "id") => `${p}_${Math.random().toString(36).slice(2, 8)}`;
 
 export const Route = createFileRoute("/admin/pages/$pageId")({
   component: PageEditor,
@@ -37,8 +33,14 @@ function PageEditor() {
   const t = tFor("pageEditor");
   const tList = tFor("pagesList");
   const { pageId } = Route.useParams();
-  const pages = usePages();
-  const page = useMemo(() => pages.find((p) => p.id === pageId), [pages, pageId]);
+  const qc = useQueryClient();
+  const pagesQuery = useCmsPages();
+  const updateCmsPage = useUpdateCmsPage();
+  const publishCmsPage = usePublishCmsPage();
+  const page = useMemo(
+    () => (pagesQuery.data ?? []).find((p) => p.id === pageId),
+    [pagesQuery.data, pageId],
+  );
   const navigate = useNavigate();
 
   const [addKind, setAddKind] = useState<BlockKind>("heading");
@@ -61,29 +63,37 @@ function PageEditor() {
   const titleInvalid = page.title.trim().length === 0;
   const disabled = slugInvalid || titleInvalid;
 
-  const patch = (p: Partial<typeof page>) => updatePage(page.id, p);
+  const mutateError = (e: unknown) => toast.error((e as Error).message);
+
+  const patch = (p: Partial<CmsPage>) => {
+    const id = page.id;
+    qc.setQueryData<CmsPage[]>(["admin", "cms", "pages"], (prev) =>
+      (prev ?? []).map((row) =>
+        row.id === id ? { ...row, ...p, updated_at: new Date().toISOString() } : row,
+      ),
+    );
+    updateCmsPage.mutate({ id, patch: p }, { onError: mutateError });
+  };
 
   const patchBlock = (id: string, p: Partial<CmsBlock>) =>
-    updatePage(page.id, {
+    patch({
       content_blocks: page.content_blocks.map((b) => (b.id === id ? { ...b, ...p } : b)),
     });
 
   const removeBlock = (id: string) =>
-    updatePage(page.id, {
-      content_blocks: page.content_blocks.filter((b) => b.id !== id),
-    });
+    patch({ content_blocks: page.content_blocks.filter((b) => b.id !== id) });
 
   const moveBlock = (idx: number, dir: -1 | 1) => {
     const target = idx + dir;
     if (target < 0 || target >= page.content_blocks.length) return;
     const arr = [...page.content_blocks];
     [arr[idx], arr[target]] = [arr[target], arr[idx]];
-    updatePage(page.id, { content_blocks: arr });
+    patch({ content_blocks: arr });
   };
 
   const addBlock = () => {
     const b: CmsBlock = { id: newId("blk"), kind: addKind };
-    updatePage(page.id, { content_blocks: [...page.content_blocks, b] });
+    patch({ content_blocks: [...page.content_blocks, b] });
   };
 
   const onSave = () => {
@@ -91,14 +101,29 @@ function PageEditor() {
     toast.success(t("save"));
   };
 
+  const applyPublishSync = (id: string, publish: boolean) => {
+    const patchValues: Partial<CmsPage> = publish
+      ? { status: "published", published_at: new Date().toISOString() }
+      : { status: "draft", published_at: null };
+    qc.setQueryData<CmsPage[]>(["admin", "cms", "pages"], (prev) =>
+      (prev ?? []).map((row) => (row.id === id ? { ...row, ...patchValues } : row)),
+    );
+  };
+
   const onPublish = () => {
-    publishPage(page.id);
-    toast.success(t("publish"));
+    applyPublishSync(page.id, true);
+    publishCmsPage.mutate(
+      { id: page.id, publish: true },
+      { onSuccess: () => toast.success(t("publish")), onError: mutateError },
+    );
   };
 
   const onUnpublish = () => {
-    unpublishPage(page.id);
-    toast.success(t("unpublish"));
+    applyPublishSync(page.id, false);
+    publishCmsPage.mutate(
+      { id: page.id, publish: false },
+      { onSuccess: () => toast.success(t("unpublish")), onError: mutateError },
+    );
   };
 
   return (

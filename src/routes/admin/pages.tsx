@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -23,8 +24,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { createDraftPage, deletePage, type PageStatus } from "@/lib/admin/cms-mock-store";
-import { usePages } from "@/lib/admin/cms-hooks";
+import type { CmsPage, PageStatus } from "@/lib/admin/cms-mock-store";
+import { useCmsPages, useCreateCmsPage, useDeleteCmsPage } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 
 export const Route = createFileRoute("/admin/pages")({
@@ -33,8 +34,13 @@ export const Route = createFileRoute("/admin/pages")({
 
 function AdminCmsPagesPage() {
   const t = tFor("pagesList");
-  const pages = usePages();
+  const qc = useQueryClient();
+  const pagesQuery = useCmsPages();
+  const createPage = useCreateCmsPage();
+  const deletePage = useDeleteCmsPage();
   const navigate = useNavigate();
+
+  const pages = useMemo(() => pagesQuery.data ?? [], [pagesQuery.data]);
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<PageStatus | "all">("all");
@@ -49,14 +55,23 @@ function AdminCmsPagesPage() {
   }, [pages, search, status]);
 
   const onNew = () => {
-    const page = createDraftPage();
-    toast.success(t("new_button"));
-    navigate({ to: "/admin/pages/$pageId", params: { pageId: page.id } });
+    createPage.mutate(undefined, {
+      onSuccess: (page) => {
+        toast.success(t("new_button"));
+        navigate({ to: "/admin/pages/$pageId", params: { pageId: page.id } });
+      },
+      onError: (e) => toast.error((e as Error).message),
+    });
   };
 
   const onDelete = (id: string) => {
-    deletePage(id);
-    toast.success(t("delete"));
+    qc.setQueryData<CmsPage[]>(["admin", "cms", "pages"], (prev) =>
+      (prev ?? []).filter((p) => p.id !== id),
+    );
+    deletePage.mutate(id, {
+      onSuccess: () => toast.success(t("delete")),
+      onError: (e) => toast.error((e as Error).message),
+    });
   };
 
   return (

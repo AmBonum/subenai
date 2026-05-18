@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -24,9 +25,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cmsNavigationStore, newId, type CmsNavItem } from "@/lib/admin/cms-mock-store";
-import { useCmsNavigation } from "@/lib/admin/cms-hooks";
+import type { CmsNavItem } from "@/lib/admin/cms-mock-store";
+import { useCmsNavigation, useUpdateCmsNavigation } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
+
+const newId = (p = "id") => `${p}_${Math.random().toString(36).slice(2, 8)}`;
 
 export const Route = createFileRoute("/admin/navigation")({
   component: AdminNavigationPage,
@@ -38,14 +41,20 @@ function ordered(items: CmsNavItem[]): CmsNavItem[] {
   return [...items].sort((a, b) => a.position - b.position);
 }
 
-function setNav(updater: (prev: CmsNavItem[]) => CmsNavItem[]) {
-  cmsNavigationStore.set(updater);
-}
-
 function AdminNavigationPage() {
   const t = tFor("navAdmin");
-  const items = useCmsNavigation();
+  const qc = useQueryClient();
+  const navQuery = useCmsNavigation();
+  const updateNav = useUpdateCmsNavigation();
+  const items = navQuery.data ?? [];
   const list = ordered(items);
+
+  const mutateError = (e: unknown) => toast.error((e as Error).message);
+  const setNav = (updater: (prev: CmsNavItem[]) => CmsNavItem[]) => {
+    const next = updater(items);
+    qc.setQueryData<CmsNavItem[]>(["admin", "cms", "navigation"], next);
+    updateNav.mutate(next, { onError: mutateError });
+  };
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const editing = list.find((i) => i.id === editingId) ?? null;
