@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { getAALStatus, listFactors } from "@/lib/auth/mfa";
 import { tFor } from "@/i18n/app-shell";
 
 export const Route = createFileRoute("/login")({
@@ -27,7 +28,7 @@ function LoginPage() {
     setError(null);
     setSubmitting(true);
     try {
-      const { error: authError } = await supabase.auth.signInWithPassword({
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
       });
@@ -37,6 +38,41 @@ function LoginPage() {
         setError(isInvalid ? t("error_invalid") : t("error_generic"));
         return;
       }
+
+      // AH-12.5: route by 2FA state. Admin must hold a verified TOTP
+      // factor AND have AAL2 before reaching /admin. The AAL2 gate in
+      // role-middleware (commit AH-12.7) enforces this on every admin
+      // page load; here we just deliver the user to the right next step
+      // so they don't bounce through a redirect chain.
+      const uid = data.session?.user.id;
+      let isAdmin = false;
+      if (uid) {
+        const { data: roleOk } = await supabase.rpc("has_role", {
+          _user_id: uid,
+          _role: "admin",
+        });
+        isAdmin = roleOk === true;
+      }
+
+      if (isAdmin) {
+        const factors = await listFactors();
+        const hasFactor = factors.totp.some((f) => f.status === "verified");
+        if (!hasFactor) {
+          navigate({ to: "/login/enroll-2fa" });
+          return;
+        }
+        const aal = await getAALStatus();
+        if (aal.currentLevel !== "aal2") {
+          navigate({
+            to: "/login/verify-2fa",
+            search: { redirect: "/admin" },
+          });
+          return;
+        }
+        navigate({ to: "/admin" });
+        return;
+      }
+
       navigate({ to: "/app" });
     } catch {
       setError(t("error_generic"));
