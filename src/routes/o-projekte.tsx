@@ -2,16 +2,18 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Footer } from "@/components/layout/Footer";
 import { SITE_ORIGIN } from "@/config/site";
 import { ROUTES } from "@/config/routes";
+import { tFor } from "@/i18n/marketing";
+
 const ABOUT_URL = `${SITE_ORIGIN}/o-projekte`;
+const tAbout = tFor("marketing");
 
 const aboutJsonLd = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
   url: ABOUT_URL,
-  name: "O projekte — subenai",
+  name: tAbout("about.jsonld_name"),
   inLanguage: "sk-SK",
-  description:
-    "Čo je projekt subenai, prečo je bezplatný, prečo sponsorship namiesto členstva a kam idú podporné príspevky.",
+  description: tAbout("about.jsonld_description"),
   isPartOf: {
     "@type": "WebSite",
     name: "subenai",
@@ -27,19 +29,11 @@ const aboutJsonLd = {
 export const Route = createFileRoute("/o-projekte")({
   head: () => ({
     meta: [
-      { title: "O projekte — subenai" },
-      {
-        name: "description",
-        content:
-          "Bezplatný edukačný projekt o kybernetickej bezpečnosti pre slovenských používateľov a firmy. Bez reklám, bez paywallu — transparentne.",
-      },
+      { title: tAbout("about.meta_title") },
+      { name: "description", content: tAbout("about.meta_description") },
       { name: "robots", content: "index, follow" },
-      { property: "og:title", content: "O projekte — subenai" },
-      {
-        property: "og:description",
-        content:
-          "Bezplatný edukatívny nástroj pre slovenský digitálny svet. Prečo je projekt zadarmo a kam idú podporné príspevky.",
-      },
+      { property: "og:title", content: tAbout("about.meta_title") },
+      { property: "og:description", content: tAbout("about.meta_og_description") },
       { property: "og:type", content: "website" },
       { property: "og:url", content: ABOUT_URL },
       { name: "twitter:card", content: "summary_large_image" },
@@ -56,18 +50,19 @@ export const Route = createFileRoute("/o-projekte")({
 });
 
 export function AboutPage() {
+  const t = tFor("marketing");
   return (
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-10">
           <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
-            ← Späť na domov
+            {t("about.back_home")}
           </Link>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Čo je subenai
+            {t("about.title")}
           </h1>
           <p className="mt-4 text-lg font-semibold text-foreground sm:text-xl">
-            Bezplatný edukatívny nástroj pre slovenský digitálny svet.
+            {t("about.tagline")}
           </p>
         </header>
 
@@ -77,17 +72,10 @@ export function AboutPage() {
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
           >
             <h2 id="ciel" className="text-xl font-semibold">
-              1. Cieľ projektu
+              {t("about.ciel_heading")}
             </h2>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Vzdelávať verejnosť o digitálnych podvodoch — phishing, smishing, vishing, BEC,
-              investičné scamy, romance scams, marketplace fraud. Každý slovenský občan by mal
-              vedieť rozpoznať bežné scam pattern bez toho, aby pre to musel mať IT vzdelanie.
-            </p>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Merateľný impact: počet absolventov testu, kategórie objavených slabín na úrovni
-              populácie, aktualizácie obsahu podľa toho, čo ľudia v testoch reálne nezvládajú.
-            </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">{t("about.ciel_p1")}</p>
+            <p className="text-sm leading-relaxed text-muted-foreground">{t("about.ciel_p2")}</p>
           </section>
 
           <section
@@ -95,17 +83,15 @@ export function AboutPage() {
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
           >
             <h2 id="bezplatne" className="text-xl font-semibold">
-              2. Prečo bezplatné
+              {t("about.bezplatne_heading")}
             </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Paywall by zúžil cieľovú skupinu presne na tých, ktorí pomoc nepotrebujú.
-              Najzraniteľnejšia demografia — seniori, dôchodcovia, ne-technickí používatelia — by sa
-              k obsahu vôbec nedostala. Misia projektu je <strong>inklúzia</strong>, nie premium
-              produkt.
+              {t("about.bezplatne_p1_prefix")}
+              <strong>{t("about.bezplatne_p1_emph")}</strong>
+              {t("about.bezplatne_p1_suffix")}
             </p>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Žiadny free tier vs. premium tier. Každá otázka, každý kurz, každý výsledok je
-              prístupný komukoľvek bez registrácie.
+              {t("about.bezplatne_p2")}
             </p>
           </section>
 
@@ -114,17 +100,15 @@ export function AboutPage() {
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
           >
             <h2 id="preco-sponsorship" className="text-xl font-semibold">
-              3. Prečo sponsorship a nie členstvo
+              {t("about.sponsorship_heading")}
             </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Donation-povaha zachováva právnu čistotu — žiadny paid service, jednoduchšie
-              účtovníctvo, žiadne sporné spotrebiteľské reklamácie pri „nedostatočnej kvalite
-              produktu". Sponzori dostávajú <strong>uznanie</strong>, nie privilegia.
+              {t("about.sponsorship_p1_prefix")}
+              <strong>{t("about.sponsorship_p1_emph")}</strong>
+              {t("about.sponsorship_p1_suffix")}
             </p>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Nechceme rozdeliť používateľov na dve triedy. Sponzor a anonymný návštevník dostávajú
-              presne ten istý obsah. To je vedome vybraný kompromis: vďaka tomu projekt vie ostať
-              bezplatný pre všetkých.
+              {t("about.sponsorship_p2")}
             </p>
           </section>
 
@@ -133,36 +117,39 @@ export function AboutPage() {
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
           >
             <h2 id="kam-id-peniaze" className="text-xl font-semibold">
-              4. Kam idú peniaze
+              {t("about.money_heading")}
             </h2>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Transparentný breakdown bežných nákladov (orientačné čísla, aktualizujeme raz ročne):
-            </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">{t("about.money_p1")}</p>
             <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
               <li>
-                <strong>Cloudflare hosting</strong> — ~5 €/mes (Pages + Workers)
+                <strong>{t("about.money_li1_emph")}</strong>
+                {t("about.money_li1_suffix")}
               </li>
               <li>
-                <strong>Supabase databáza</strong> — ~25 €/mes (Pro plán, EU región)
+                <strong>{t("about.money_li2_emph")}</strong>
+                {t("about.money_li2_suffix")}
               </li>
               <li>
-                <strong>Stripe poplatky</strong> — ~3 % z prijatých príspevkov (kartové +
-                fakturačné)
+                <strong>{t("about.money_li3_emph")}</strong>
+                {t("about.money_li3_suffix")}
               </li>
               <li>
-                <strong>Tvorba nového obsahu</strong> — kurzy, otázky, scenáre, validácia
-                respondentmi
+                <strong>{t("about.money_li4_emph")}</strong>
+                {t("about.money_li4_suffix")}
               </li>
               <li>
-                <strong>Audit a údržba</strong> — security review, dependency updates, bug fixy
+                <strong>{t("about.money_li5_emph")}</strong>
+                {t("about.money_li5_suffix")}
               </li>
               <li>
-                <strong>Občasné expert konzultácie</strong> — právnik, účtovník, GDPR konzultant
+                <strong>{t("about.money_li6_emph")}</strong>
+                {t("about.money_li6_suffix")}
               </li>
             </ul>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Konkrétny zoznam zmien a deploy histórie pripravujeme na samostatnej stránke{" "}
-              <code className="rounded bg-muted px-1 py-0.5 text-xs">/zmeny</code>.
+              {t("about.money_zmeny_prefix")}
+              <code className="rounded bg-muted px-1 py-0.5 text-xs">/zmeny</code>
+              {t("about.money_zmeny_suffix")}
             </p>
           </section>
 
@@ -171,26 +158,23 @@ export function AboutPage() {
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
           >
             <h2 id="co-sponzori" className="text-xl font-semibold">
-              5. Čo sponzori dostanú
+              {t("about.sponsors_heading")}
             </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Žiadne platené výhody ani prémiové funkcie. Sponzorstvo je dobrovoľný príspevok, nie
-              nákup balíčka. Voliteľne:
+              {t("about.sponsors_p1")}
             </p>
             <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
               <li>
-                Mention na stránke{" "}
-                <code className="rounded bg-muted px-1 py-0.5 text-xs">/sponzori</code> — granularne
-                (meno, voliteľný odkaz, krátka správa do 80 znakov), default je vypnuté
+                {t("about.sponsors_li1_prefix")}
+                <code className="rounded bg-muted px-1 py-0.5 text-xs">/sponzori</code>
+                {t("about.sponsors_li1_suffix")}
               </li>
+              <li>{t("about.sponsors_li2")}</li>
+              <li>{t("about.sponsors_li3")}</li>
               <li>
-                Mention v päte stránky pri vyššom tier-i (jednorazovo ≥ 50 € alebo mesačný odber ≥
-                25 €/mes), opt-in
-              </li>
-              <li>Faktúra pre účtovníctvo (Stripe Invoicing, EU-compliant, PDF na stiahnutie)</li>
-              <li>
-                Možnosť kedykoľvek <strong>zrušiť mesačný odber jediným klikom</strong> cez Stripe
-                Customer Portal
+                {t("about.sponsors_li4_prefix")}
+                <strong>{t("about.sponsors_li4_emph")}</strong>
+                {t("about.sponsors_li4_suffix")}
               </li>
             </ul>
           </section>
@@ -200,38 +184,35 @@ export function AboutPage() {
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
           >
             <h2 id="co-nerobime" className="text-xl font-semibold">
-              6. Čo nerobíme (a kde je hranica)
+              {t("about.limits_heading")}
             </h2>
             <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
               <li>
-                <strong>Žiadne reklamy v obsahu</strong> — ani vlastné, ani affiliate, ani natívne
+                <strong>{t("about.limits_li1_emph")}</strong>
+                {t("about.limits_li1_suffix")}
               </li>
               <li>
-                <strong>Sponzori nemôžu ovplyvňovať obsah</strong> — žiadne prefavoring scam
-                patternov, žiadne menené klasifikácie, žiadne sponsored kurzy
+                <strong>{t("about.limits_li2_emph")}</strong>
+                {t("about.limits_li2_suffix")}
               </li>
               <li>
-                <strong>Žiadny paywall na bežné použitie</strong> — test, kurzy a výsledok sú
-                zadarmo pre každého. Pri rastúcej prevádzke môžeme zaviesť mäkké limity na nadmerné
-                používanie (napr. veľa testov denne z jednej IP) aby sme udržali náklady na hosting
-                a databázu udržateľné. Bežný návštevník to nikdy nepocíti.
+                <strong>{t("about.limits_li3_emph")}</strong>
+                {t("about.limits_li3_suffix")}
               </li>
               <li>
-                <strong>Žiadne dark patterns</strong> — cancel mesačného odberu je jeden klik,
-                žiadny „are you sure" loop, žiadne pause-tactics
+                <strong>{t("about.limits_li4_emph")}</strong>
+                {t("about.limits_li4_suffix")}
               </li>
               <li>
-                <strong>Žiadne tracking bez explicitného súhlasu</strong> — analytika ani
-                marketingové nástroje sa nezapnú, kým ich nepovolíš v cookie banneri (kategórie
-                „analytika" / „marketing"). Bez súhlasu žiadne pixely, žiadne externé skripty,
-                žiadny remarketing. Súhlas môžeš kedykoľvek odvolať cez{" "}
+                <strong>{t("about.limits_li5_emph")}</strong>
+                {t("about.limits_li5_suffix_prefix")}
                 <Link
                   to={ROUTES.cookies}
                   className="underline underline-offset-2 hover:text-foreground"
                 >
-                  Nastavenia cookies
+                  {t("about.limits_li5_link")}
                 </Link>
-                .
+                {t("about.limits_li5_suffix_end")}
               </li>
             </ul>
           </section>
@@ -241,25 +222,24 @@ export function AboutPage() {
             className="space-y-4 rounded-2xl border border-primary/40 bg-card p-6 text-center sm:p-8"
           >
             <h2 id="podporit" className="text-xl font-semibold">
-              Chceš projekt podporiť?
+              {t("about.support_heading")}
             </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Akákoľvek čiastka pomáha pokryť hosting, tvorbu nového obsahu a údržbu. Mesačná
-              podpora od 5 € alebo jednorazovo. Faktúru dostaneš e-mailom.
+              {t("about.support_body")}
             </p>
             <div className="flex flex-col items-center gap-3 pt-2 sm:flex-row sm:justify-center">
               <Link
                 to={ROUTES.podpora}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-6 py-3 text-base font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.99]"
               >
-                Podporiť projekt
+                {t("about.support_cta_primary")}
                 <span aria-hidden="true">→</span>
               </Link>
               <Link
                 to={ROUTES.sponzori}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border/60 bg-background/60 px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-background"
               >
-                Pozri sponzorov
+                {t("about.support_cta_secondary")}
               </Link>
             </div>
           </section>

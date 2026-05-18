@@ -10,246 +10,217 @@ import { Footer } from "@/components/layout/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { ROUTES } from "@/config/routes";
 import { SITE_ORIGIN } from "@/config/site";
+import { tFor } from "@/i18n/marketing";
+
+const tHome = tFor("marketing");
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "subenai — Bezplatný phishing test a kurzy digitálnej bezpečnosti" },
-      {
-        name: "description",
-        content:
-          "Phishing, podvodné SMS, falošné e-shopy — 10 otázok, 90 sekúnd. Bezplatný test digitálnej bezpečnosti bez registrácie.",
-      },
+      { title: tHome("home.meta_title") },
+      { name: "description", content: tHome("home.meta_description") },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "language", content: "sk-SK" },
-      {
-        property: "og:title",
-        content: "subenai — Bezplatný phishing test a kurzy digitálnej bezpečnosti",
-      },
-      {
-        property: "og:description",
-        content:
-          "Phishing, podvodné SMS, falošné e-shopy — 10 otázok, 90 sekúnd. Bezplatný test digitálnej bezpečnosti bez registrácie.",
-      },
+      { property: "og:title", content: tHome("home.meta_title") },
+      { property: "og:description", content: tHome("home.meta_description") },
       { property: "og:type", content: "website" },
       { property: "og:url", content: SITE_ORIGIN },
       { property: "og:locale", content: "sk_SK" },
       { name: "twitter:card", content: "summary" },
-      {
-        name: "twitter:title",
-        content: "subenai — Bezplatný phishing test a kurzy digitálnej bezpečnosti",
-      },
-      {
-        name: "twitter:description",
-        content:
-          "Phishing, podvodné SMS, falošné e-shopy — 10 otázok, 90 sekúnd. Bezplatný test digitálnej bezpečnosti bez registrácie.",
-      },
+      { name: "twitter:title", content: tHome("home.meta_title") },
+      { name: "twitter:description", content: tHome("home.meta_description") },
     ],
     links: [{ rel: "canonical", href: SITE_ORIGIN }],
   }),
   component: Index,
 });
 
-const FAQ_SECTIONS: {
+function buildFaqSections(t: ReturnType<typeof tFor>): {
   title: string;
   items: { id: string; question: string; answer: ReactNode }[];
-}[] = [
-  {
-    title: "Rýchly test",
-    items: [
-      {
-        id: "vazne",
-        question: "Je to seriózne použiteľné?",
-        answer:
-          "Otázky sú stavané podľa reálnych scam vzorcov, ktoré sa na Slovensku objavili v posledných mesiacoch. Nie je to bezpečnostný audit, ale pošli to rodičom alebo kolegom — uvidíš, kde majú slabinu.",
-      },
-      {
-        id: "podvadzanie",
-        question: "Dá sa to podvádzať?",
-        answer:
-          "Skús. Časový limit beží, otázky sa miešajú, googliť asi nestihneš. Uvidíme, kto z nás je chytrejší.",
-      },
-      {
-        id: "vysledok",
-        question: "Čo dostanem po skončení testu?",
-        answer:
-          "Skóre, kategóriu (Skúsený / Pozorný / Zraniteľný / Ľahká korisť) a prehľad každej otázky s vysvetlením. Výsledok si môžeš uložiť ako obrázok alebo zdieľať — nikomu neukáže tvoje konkrétne odpovede.",
-      },
-    ],
-  },
-  {
-    title: "Testy",
-    items: [
-      {
-        id: "testy",
-        question: "Čo sú testy pre firmy?",
-        answer: (
-          <>
-            Predpripravené sady otázok prispôsobené konkrétnej branži. E-shop dostane otázky o
-            falošných objednávkach, gastro o fake kontrolách, IT o BEC podvodoch. Stačí zdieľať link
-            s tímom — výsledok dostane každý sám pre seba.{" "}
-            <Link
-              to={ROUTES.testy}
-              className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
-            >
-              Pozrieť testy
-            </Link>
-            .
-          </>
-        ),
-      },
-      {
-        id: "demograficke",
-        question: "Existujú testy pre bežných ľudí, nie len firmy?",
-        answer: (
-          <>
-            Áno — máme sady pre žiakov do 16 rokov (herné a školské scam-y), študentov (fake
-            prenájmy, falošné štipendiá), seniorov (AI klonovanie hlasu, dverové podvody) a
-            všeobecný test pre každého. Nájdeš ich vsekcii{" "}
-            <Link
-              to={ROUTES.testy}
-              className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
-            >
-              Testy
-            </Link>
-            .
-          </>
-        ),
-      },
-    ],
-  },
-  {
-    title: "Školenia",
-    items: [
-      {
-        id: "skolenia-co",
-        question: "Čo sú bezplatné školenia?",
-        answer: (
-          <>
-            Krátke texty so slovenskými scenármi pre každý typ podvodu — phishing, smishing,
-            vishing, BEC, marketplace, investičné a romance scam-y, hygiena hesiel. Môžeš ich čítať
-            v ľubovoľnom poradí v{" "}
-            <Link
-              to={ROUTES.skolenia}
-              className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
-            >
-              bezplatných školeniach
-            </Link>
-            , nie sú za paywall.
-          </>
-        ),
-      },
-      {
-        id: "skolenia-odbornik",
-        question: "Musím byť IT odborník?",
-        answer:
-          "Nie. Školenia sú písané pre administrátorku, recepčnú, dôchodcu aj gymnazistu rovnako. Žiadny žargón bez výkladu.",
-      },
-    ],
-  },
-  {
-    title: "Podpora projektu",
-    items: [
-      {
-        id: "zadarmo",
-        question: "Je to zadarmo?",
-        answer: (
-          <>
-            Áno.{" "}
-            <Link
-              to={ROUTES.test}
-              className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
-            >
-              Test
-            </Link>
-            ,{" "}
-            <Link
-              to={ROUTES.testy}
-              className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
-            >
-              testy
-            </Link>
-            ,{" "}
-            <Link
-              to={ROUTES.skolenia}
-              className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
-            >
-              školenia
-            </Link>
-            , výsledok aj zdieľanie sú bezplatné. Žiadne reklamy, žiadna registrácia, žiadne
-            paywally. Projekt funguje z dobrovoľných príspevkov.
-          </>
-        ),
-      },
-      {
-        id: "podpora-preco",
-        question: "Prečo je to zadarmo a ako to udržiavate?",
-        answer: (
-          <>
-            Projekt vznikol z presvedčenia, že digitálna bezpečnosť nesmie byť len pre tých, čo si
-            môžu dovoliť školenia za stovky eur. Chod pokrývajú dobrovoľné príspevky od sponzorov.
-            Ak chceš pomôcť, prejdi na stránku{" "}
-            <Link
-              to={ROUTES.podpora}
-              className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
-            >
-              Podpora projektu
-            </Link>
-            .
-          </>
-        ),
-      },
-    ],
-  },
-  {
-    title: "Bezpečnosť a súkromie",
-    items: [
-      {
-        id: "data",
-        question: "Aké údaje o mne ukladáte?",
-        answer: (
-          <>
-            Iba tvoje odpovede a skóre — anonymne, bez mena, bez e-mailu, bez IP adresy. Detaily
-            nájdeš v{" "}
-            <Link
-              to={ROUTES.privacy}
-              className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
-            >
-              Zásadách ochrany súkromia
-            </Link>
-            .
-          </>
-        ),
-      },
-      {
-        id: "cookies",
-        question: "Používate cookies?",
-        answer: (
-          <>
-            Používame len technicky nevyhnutné cookies (relácia, súhlas). Analytické alebo reklamné
-            cookies nespúšťame bez tvojho výslovného súhlasu. Nastavenia kedykoľvek zmeníš alebo
-            odvoláš cez banner „Spravovať cookies" v päte stránky alebo v{" "}
-            <Link
-              to={ROUTES.cookies}
-              className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
-            >
-              Zásadách cookies
-            </Link>
-            .
-          </>
-        ),
-      },
-      {
-        id: "zmazanie",
-        question: "Môžem si zmazať svoje dáta?",
-        answer:
-          "Áno. Anonymný výsledok je zviazaný len s ID relácii v tvojom prehliadači — nie s tvojou identitou. Stačí vymazať cookies a lokálne úložisko prehliadača (Nastavenia → Súkromie → Vymazať dáta prehliadania). Ak si použil zdieľateľný link, napíš nám cez stránku Kontakt v päte a konkrétny záznam odstránime.",
-      },
-    ],
-  },
-];
+}[] {
+  return [
+    {
+      title: t("home.faq.rychly_test.title"),
+      items: [
+        {
+          id: "vazne",
+          question: t("home.faq.rychly_test.vazne_q"),
+          answer: t("home.faq.rychly_test.vazne_a"),
+        },
+        {
+          id: "podvadzanie",
+          question: t("home.faq.rychly_test.podvadzanie_q"),
+          answer: t("home.faq.rychly_test.podvadzanie_a"),
+        },
+        {
+          id: "vysledok",
+          question: t("home.faq.rychly_test.vysledok_q"),
+          answer: t("home.faq.rychly_test.vysledok_a"),
+        },
+      ],
+    },
+    {
+      title: t("home.faq.testy.title"),
+      items: [
+        {
+          id: "testy",
+          question: t("home.faq.testy.testy_q"),
+          answer: (
+            <>
+              {t("home.faq.testy.testy_a_prefix")}
+              <Link
+                to={ROUTES.testy}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.testy.testy_a_link")}
+              </Link>
+              {t("home.faq.testy.testy_a_suffix")}
+            </>
+          ),
+        },
+        {
+          id: "demograficke",
+          question: t("home.faq.testy.demograficke_q"),
+          answer: (
+            <>
+              {t("home.faq.testy.demograficke_a_prefix")}
+              <Link
+                to={ROUTES.testy}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.testy.demograficke_a_link")}
+              </Link>
+              {t("home.faq.testy.demograficke_a_suffix")}
+            </>
+          ),
+        },
+      ],
+    },
+    {
+      title: t("home.faq.skolenia.title"),
+      items: [
+        {
+          id: "skolenia-co",
+          question: t("home.faq.skolenia.co_q"),
+          answer: (
+            <>
+              {t("home.faq.skolenia.co_a_prefix")}
+              <Link
+                to={ROUTES.skolenia}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.skolenia.co_a_link")}
+              </Link>
+              {t("home.faq.skolenia.co_a_suffix")}
+            </>
+          ),
+        },
+        {
+          id: "skolenia-odbornik",
+          question: t("home.faq.skolenia.odbornik_q"),
+          answer: t("home.faq.skolenia.odbornik_a"),
+        },
+      ],
+    },
+    {
+      title: t("home.faq.podpora.title"),
+      items: [
+        {
+          id: "zadarmo",
+          question: t("home.faq.podpora.zadarmo_q"),
+          answer: (
+            <>
+              {t("home.faq.podpora.zadarmo_a_prefix")}
+              <Link
+                to={ROUTES.test}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.podpora.zadarmo_a_link_test")}
+              </Link>
+              {t("home.faq.podpora.zadarmo_a_comma1")}
+              <Link
+                to={ROUTES.testy}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.podpora.zadarmo_a_link_testy")}
+              </Link>
+              {t("home.faq.podpora.zadarmo_a_comma2")}
+              <Link
+                to={ROUTES.skolenia}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.podpora.zadarmo_a_link_skolenia")}
+              </Link>
+              {t("home.faq.podpora.zadarmo_a_suffix")}
+            </>
+          ),
+        },
+        {
+          id: "podpora-preco",
+          question: t("home.faq.podpora.preco_q"),
+          answer: (
+            <>
+              {t("home.faq.podpora.preco_a_prefix")}
+              <Link
+                to={ROUTES.podpora}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.podpora.preco_a_link")}
+              </Link>
+              {t("home.faq.podpora.preco_a_suffix")}
+            </>
+          ),
+        },
+      ],
+    },
+    {
+      title: t("home.faq.bezpecnost.title"),
+      items: [
+        {
+          id: "data",
+          question: t("home.faq.bezpecnost.data_q"),
+          answer: (
+            <>
+              {t("home.faq.bezpecnost.data_a_prefix")}
+              <Link
+                to={ROUTES.privacy}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.bezpecnost.data_a_link")}
+              </Link>
+              {t("home.faq.bezpecnost.data_a_suffix")}
+            </>
+          ),
+        },
+        {
+          id: "cookies",
+          question: t("home.faq.bezpecnost.cookies_q"),
+          answer: (
+            <>
+              {t("home.faq.bezpecnost.cookies_a_prefix")}
+              <Link
+                to={ROUTES.cookies}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.bezpecnost.cookies_a_link")}
+              </Link>
+              {t("home.faq.bezpecnost.cookies_a_suffix")}
+            </>
+          ),
+        },
+        {
+          id: "zmazanie",
+          question: t("home.faq.bezpecnost.zmazanie_q"),
+          answer: t("home.faq.bezpecnost.zmazanie_a"),
+        },
+      ],
+    },
+  ];
+}
 
 function Index() {
+  const t = tFor("marketing");
   const [count, setCount] = useState<number | null>(null);
 
   useEffect(() => {
@@ -267,6 +238,7 @@ function Index() {
 
   // Display: real count + a small offset so first visitors don't see "0 ľudí"
   const displayCount = count === null ? null : count + 127;
+  const faqSections = buildFaqSections(t);
 
   return (
     <div className="min-h-screen bg-hero">
@@ -276,17 +248,17 @@ function Index() {
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
             <span className="h-2 w-2 animate-pulse rounded-full bg-primary" />
             {displayCount === null
-              ? "Načítavam štatistiky…"
-              : `Už otestovaných ${displayCount.toLocaleString("sk-SK")} ľudí`}
+              ? t("home.stats_loading")
+              : t("home.stats_count", { count: displayCount.toLocaleString("sk-SK") })}
           </div>
 
           <h1 className="text-balance text-4xl font-black leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
-            Otestuj sa skôr, <span className="text-primary">než ťa otestuje podvodník.</span>
+            {t("home.hero_title_prefix")}
+            <span className="text-primary">{t("home.hero_title_suffix")}</span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-xl text-balance text-base text-muted-foreground sm:text-lg">
-            10 otázok. 90 sekúnd. Reálne scam SMS-ky, emaily a stránky zo slovenského prostredia.
-            Uvidíš, kde máš slabinu — bez toho, aby ťa to stálo peniaze.
+            {t("home.hero_lead")}
           </p>
 
           <div className="mt-10 flex flex-col items-center gap-3">
@@ -294,19 +266,19 @@ function Index() {
               to={ROUTES.test}
               className="group inline-flex items-center gap-2 rounded-2xl bg-accent-gradient px-8 py-5 text-lg font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.99]"
             >
-              Spustiť test
+              {t("home.hero_cta")}
               <span className="transition-transform group-hover:translate-x-1">→</span>
             </Link>
             <p className="text-sm font-semibold text-foreground sm:text-base">
-              <span className="text-muted-foreground font-normal">Bez registrácie</span>{" "}
+              <span className="text-muted-foreground font-normal">{t("home.hero_no_reg")}</span>{" "}
               <span className="text-muted-foreground" aria-hidden="true">
                 ·
               </span>{" "}
-              <span className="text-muted-foreground font-normal">90 sekúnd</span>{" "}
+              <span className="text-muted-foreground font-normal">{t("home.hero_seconds")}</span>{" "}
               <span className="text-muted-foreground" aria-hidden="true">
                 ·
               </span>{" "}
-              <span className="text-primary">Zadarmo</span>
+              <span className="text-primary">{t("home.hero_free")}</span>
             </p>
           </div>
         </div>
@@ -314,24 +286,24 @@ function Index() {
         {/* How it works */}
         <section className="mt-24">
           <h2 className="text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            Žiadna registrácia. Žiadne bullshit.
+            {t("home.how_heading")}
           </h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             {[
               {
-                n: "15",
-                title: "otázok",
-                sub: "phishing, scam, fake stránky",
+                n: t("home.how_cards.questions_n"),
+                title: t("home.how_cards.questions_title"),
+                sub: t("home.how_cards.questions_sub"),
               },
               {
-                n: "90s",
-                title: "limit",
-                sub: "čas beží, žiadne googlenie",
+                n: t("home.how_cards.time_n"),
+                title: t("home.how_cards.time_title"),
+                sub: t("home.how_cards.time_sub"),
               },
               {
-                n: "1",
-                title: "test",
-                sub: "zistíš, aký používateľ si",
+                n: t("home.how_cards.result_n"),
+                title: t("home.how_cards.result_title"),
+                sub: t("home.how_cards.result_sub"),
               },
             ].map((c) => (
               <div
@@ -349,28 +321,28 @@ function Index() {
         {/* Feature cards: Testy / Školenia / O projekte */}
         <section className="mt-20 grid gap-4 md:grid-cols-3" aria-labelledby="features-h">
           <h2 id="features-h" className="sr-only">
-            Čo všetko tu nájdeš
+            {t("home.features_aria")}
           </h2>
           <FeatureCard
             to={ROUTES.testy}
             emoji="🏢"
-            title="Sada testov"
-            description="Predefinované sady podľa branže — e-shop, gastro, IT, autoservis, verejné služby. Otestuj celý tím naraz, každý dostane vlastný výsledok."
-            cta="Pozrieť sady testov"
+            title={t("home.feature_testy_title")}
+            description={t("home.feature_testy_desc")}
+            cta={t("home.feature_testy_cta")}
           />
           <FeatureCard
             to={ROUTES.skolenia}
             emoji="📚"
-            title="Bezplatné školenia"
-            description="8 kurzov: phishing, smishing, vishing, BEC, marketplace, investičné a romance scams, hygiena údajov. Krátke, so slovenskými scenármi."
-            cta="Prejsť do školení"
+            title={t("home.feature_skolenia_title")}
+            description={t("home.feature_skolenia_desc")}
+            cta={t("home.feature_skolenia_cta")}
           />
           <FeatureCard
             to={ROUTES.oProjecte}
             emoji="🛡️"
-            title="O projekte"
-            description="Prečo je to zadarmo, prečo bez reklám, kam idú peniaze. Transparentne — žiadny paywall, žiadne dark patterns, žiadne tracking bez súhlasu."
-            cta="Spoznaj projekt"
+            title={t("home.feature_about_title")}
+            description={t("home.feature_about_desc")}
+            cta={t("home.feature_about_cta")}
           />
         </section>
 
@@ -386,17 +358,15 @@ function Index() {
           <div className="relative flex flex-col items-center gap-6 text-center md:flex-row md:items-center md:justify-between md:text-left">
             <div className="max-w-xl space-y-3">
               <p className="text-xs font-bold uppercase tracking-wider text-primary">
-                Misia projektu
+                {t("home.mission_kicker")}
               </p>
               <h2 id="support-h" className="text-2xl font-black tracking-tight sm:text-3xl">
-                Pomôž udržať to bezplatné pre všetkých.
+                {t("home.mission_heading")}
               </h2>
               <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-                Robíme to preto, aby aj seniori, dôchodcovia a ne-technickí používatelia vedeli
-                rozpoznať podvod skôr, než ich pripraví o peniaze. Bez reklám. Bez paywallu.
-                Príspevok od{" "}
-                <strong className="text-foreground">5 € mesačne alebo jednorazovo</strong> pomáha
-                pokryť hosting, novú tvorbu obsahu a údržbu.
+                {t("home.mission_body_prefix")}
+                <strong className="text-foreground">{t("home.mission_body_amount")}</strong>
+                {t("home.mission_body_suffix")}
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
@@ -404,14 +374,14 @@ function Index() {
                 to={ROUTES.podpora}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-6 py-3 text-base font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.99]"
               >
-                Podporiť projekt
+                {t("home.mission_cta_support")}
                 <span aria-hidden="true">→</span>
               </Link>
               <Link
                 to={ROUTES.oProjecte}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border/60 bg-background/60 px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-background"
               >
-                Dozvedieť sa viac
+                {t("home.mission_cta_more")}
               </Link>
             </div>
           </div>
@@ -427,18 +397,15 @@ function Index() {
               🙏
             </p>
             <h2 id="sponsors-h" className="text-base font-bold">
-              Vďaka týmto ľuďom funguje subenai
+              {t("home.sponsors_heading")}
             </h2>
-            <p className="text-sm text-muted-foreground">
-              Verejné poďakovanie sponzorom, ktorí súhlasili so zverejnením mena. Anonymita je
-              default — väčšina podporovateľov tu nie je vidieť.
-            </p>
+            <p className="text-sm text-muted-foreground">{t("home.sponsors_body")}</p>
           </div>
           <Link
             to={ROUTES.sponzori}
             className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-primary/40"
           >
-            Pozrieť zoznam
+            {t("home.sponsors_cta")}
             <span aria-hidden="true">→</span>
           </Link>
         </section>
@@ -451,7 +418,7 @@ function Index() {
         <section className="mt-20 flex justify-center" data-testid="home-slogan-section">
           <img
             src="/su-be-na-i-slogan-light.svg"
-            alt="su(rfuj) be(zpečne) na (i)nternete"
+            alt={t("home.slogan_alt")}
             data-testid="home-slogan-image"
             className="w-full max-w-2xl"
             loading="lazy"
@@ -461,9 +428,9 @@ function Index() {
 
         {/* FAQ */}
         <section className="mt-20">
-          <h2 className="text-2xl font-bold">Časté otázky</h2>
+          <h2 className="text-2xl font-bold">{t("home.faq_heading")}</h2>
           <div className="mt-6 flex flex-col gap-6">
-            {FAQ_SECTIONS.map((section) => (
+            {faqSections.map((section) => (
               <div key={section.title}>
                 <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   {section.title}

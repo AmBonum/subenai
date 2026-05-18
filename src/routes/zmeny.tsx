@@ -2,7 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Footer } from "@/components/layout/Footer";
 import changelog from "@/content/changelog.generated.json";
 import { SITE_ORIGIN } from "@/config/site";
+import { tFor } from "@/i18n/marketing";
+
 const PAGE_URL = `${SITE_ORIGIN}/zmeny`;
+const tZmeny = tFor("marketing");
 
 interface ChangelogEntry {
   version: string;
@@ -17,16 +20,35 @@ interface ChangelogEntry {
 
 const entries = changelog as ChangelogEntry[];
 
-const SECTION_LABELS: Record<keyof Omit<ChangelogEntry, "version" | "date">, string> = {
-  added: "Pridané",
-  changed: "Zmenené",
-  fixed: "Opravené",
-  removed: "Odstránené",
-  deprecated: "Zastarané",
-  security: "Bezpečnosť",
-};
+type SectionKey = keyof Omit<ChangelogEntry, "version" | "date">;
 
-const SECTION_TONE: Record<keyof typeof SECTION_LABELS, string> = {
+function sectionLabel(t: ReturnType<typeof tFor>, key: SectionKey): string {
+  switch (key) {
+    case "added":
+      return t("zmeny.kind_added");
+    case "changed":
+      return t("zmeny.kind_changed");
+    case "fixed":
+      return t("zmeny.kind_fixed");
+    case "removed":
+      return t("zmeny.kind_removed");
+    case "deprecated":
+      return t("zmeny.kind_deprecated");
+    case "security":
+      return t("zmeny.kind_security");
+  }
+}
+
+const SECTION_KEYS: SectionKey[] = [
+  "added",
+  "changed",
+  "fixed",
+  "removed",
+  "deprecated",
+  "security",
+];
+
+const SECTION_TONE: Record<SectionKey, string> = {
   added: "border-success/40 bg-success/10 text-success-foreground",
   changed: "border-primary/40 bg-primary/10 text-foreground",
   fixed: "border-warning/40 bg-warning/10 text-warning-foreground",
@@ -39,7 +61,7 @@ const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "ItemList",
   url: PAGE_URL,
-  name: "Zmeny a verzie — subenai",
+  name: tZmeny("zmeny.jsonld_name"),
   itemListOrder: "https://schema.org/ItemListOrderDescending",
   itemListElement: entries.slice(0, 10).map((e, i) => ({
     "@type": "ListItem",
@@ -56,14 +78,10 @@ const articleJsonLd = {
 export const Route = createFileRoute("/zmeny")({
   head: () => ({
     meta: [
-      { title: "Zmeny a verzie — subenai" },
-      {
-        name: "description",
-        content:
-          "Verejný changelog projektu subenai — čo sa pridalo, zmenilo a opravilo v každej verzii. Aktualizovaný pri každom deploy.",
-      },
+      { title: tZmeny("zmeny.meta_title") },
+      { name: "description", content: tZmeny("zmeny.meta_description") },
       { name: "robots", content: "index, follow" },
-      { property: "og:title", content: "Zmeny a verzie — subenai" },
+      { property: "og:title", content: tZmeny("zmeny.meta_title") },
       { property: "og:url", content: PAGE_URL },
       { property: "og:type", content: "website" },
     ],
@@ -79,24 +97,24 @@ export const Route = createFileRoute("/zmeny")({
 });
 
 function ZmenyPage() {
+  const t = tFor("marketing");
   return (
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-10">
           <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
-            ← Späť na domov
+            {t("zmeny.back_home")}
           </Link>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Zmeny a verzie
+            {t("zmeny.title")}
           </h1>
           <p className="mt-3 text-base text-muted-foreground sm:text-lg">
-            Verejný zoznam toho, čo sa v projekte za posledné obdobie zmenilo.
+            {t("zmeny.lead")}
             {entries[0] ? (
               <>
-                {" "}
-                Posledný deploy:{" "}
-                <time dateTime={entries[0].date}>{formatDate(entries[0].date)}</time> (verzia{" "}
-                {entries[0].version}).
+                {t("zmeny.last_deploy_prefix")}
+                <time dateTime={entries[0].date}>{formatDate(entries[0].date)}</time>
+                {t("zmeny.last_deploy_version", { version: entries[0].version })}
               </>
             ) : null}
           </p>
@@ -104,10 +122,10 @@ function ZmenyPage() {
 
         {entries.length === 0 ? (
           <p className="rounded-2xl border border-border/60 bg-card p-6 text-sm text-muted-foreground">
-            Zatiaľ žiadne verzie.
+            {t("zmeny.empty")}
           </p>
         ) : (
-          <ol className="space-y-8" aria-label="Zoznam verzií">
+          <ol className="space-y-8" aria-label={t("zmeny.list_aria")}>
             {entries.map((entry) => (
               <VersionBlock key={entry.version} entry={entry} />
             ))}
@@ -121,9 +139,8 @@ function ZmenyPage() {
 }
 
 function VersionBlock({ entry }: { entry: ChangelogEntry }) {
-  const sections = (Object.keys(SECTION_LABELS) as Array<keyof typeof SECTION_LABELS>).filter(
-    (key) => entry[key].length > 0,
-  );
+  const t = tFor("marketing");
+  const sections = SECTION_KEYS.filter((key) => entry[key].length > 0);
   const anchor = `v${entry.version}`;
 
   return (
@@ -143,7 +160,7 @@ function VersionBlock({ entry }: { entry: ChangelogEntry }) {
       </div>
 
       {sections.length === 0 ? (
-        <p className="text-sm text-muted-foreground">(prázdna verzia — len interné zmeny)</p>
+        <p className="text-sm text-muted-foreground">{t("zmeny.empty_version")}</p>
       ) : (
         sections.map((key) => (
           <section key={key} className="space-y-2">
@@ -151,7 +168,7 @@ function VersionBlock({ entry }: { entry: ChangelogEntry }) {
               <span
                 className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-bold uppercase tracking-wide ${SECTION_TONE[key]}`}
               >
-                {SECTION_LABELS[key]}
+                {sectionLabel(t, key)}
               </span>
             </h3>
             <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
