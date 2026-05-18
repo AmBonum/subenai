@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useConsent } from "@/hooks/useConsent";
+import { tFor } from "@/i18n/marketing";
 
 /**
  * First-visit consent banner.
@@ -16,6 +17,7 @@ import { useConsent } from "@/hooks/useConsent";
  */
 export function ConsentBanner() {
   const { needsDecision, acceptAll, rejectAll, openPreferences } = useConsent();
+  const t = tFor("consent");
 
   if (!needsDecision) return null;
 
@@ -30,33 +32,31 @@ export function ConsentBanner() {
       <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-4 sm:px-6 md:flex-row md:items-center md:gap-6 md:py-5">
         <div className="flex-1 text-sm leading-relaxed">
           <p id="consent-banner-title" className="font-semibold text-foreground">
-            🍪 Cookies a súkromie
+            {t("banner.title")}
             <span className="ml-2 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-normal text-primary">
-              aktualizované
+              {t("banner.badge_updated")}
             </span>
           </p>
           <p id="consent-banner-description" className="mt-1 text-muted-foreground">
-            Pridali sme možnosť autorom zbierať odpovede pre edukačné účely (opt-in, s heslom
-            autora). Privacy sme aktualizovali. Používame nevyhnutné úložisko pre fungovanie testu;
-            voliteľné kategórie (analytika, marketing) zapneme len s tvojím súhlasom.{" "}
+            {t("banner.description")}{" "}
             <Link to="/cookies" className="underline underline-offset-2 hover:text-foreground">
-              Cookies
+              {t("banner.link_cookies")}
             </Link>
             {" · "}
             <Link to="/privacy" className="underline underline-offset-2 hover:text-foreground">
-              Súkromie
+              {t("banner.link_privacy")}
             </Link>
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap md:flex-nowrap">
           <Button variant="outline" size="sm" onClick={openPreferences} className="md:order-1">
-            Nastavenia
+            {t("banner.settings")}
           </Button>
           <Button variant="outline" size="sm" onClick={rejectAll} className="md:order-2">
-            Odmietnuť všetko
+            {t("banner.reject_all")}
           </Button>
           <Button size="sm" onClick={acceptAll} className="md:order-3">
-            Prijať všetko
+            {t("banner.accept_all")}
           </Button>
         </div>
       </div>

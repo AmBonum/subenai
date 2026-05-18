@@ -5,44 +5,55 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import changelog from "@/content/changelog.generated.json";
 import { ROUTES } from "@/config/routes";
+import { tFor } from "@/i18n/marketing";
 
 const CURRENT_VERSION = (changelog as { version: string }[])[0]?.version ?? "—";
 
-interface FooterLink {
+interface FooterLinkDef {
   to: string;
-  label: string;
+  labelKey: string;
   slug: string;
 }
 
-const COLUMNS: { title: string; testid: string; links: FooterLink[] }[] = [
+interface FooterColumnDef {
+  titleKey: string;
+  testid: string;
+  links: FooterLinkDef[];
+}
+
+const COLUMN_DEFS: FooterColumnDef[] = [
   {
-    title: "Obsah",
+    titleKey: "columns.obsah.title",
     testid: "footer-column-obsah",
     links: [
-      { to: ROUTES.test, label: "Spustiť test", slug: "test" },
-      { to: ROUTES.testy, label: "Sada testov", slug: "testy" },
-      { to: ROUTES.skolenia, label: "Školenia", slug: "skolenia" },
-      { to: ROUTES.skoly, label: "Pre školy", slug: "skoly" },
+      { to: ROUTES.test, labelKey: "columns.obsah.links.test", slug: "test" },
+      { to: ROUTES.testy, labelKey: "columns.obsah.links.testy", slug: "testy" },
+      { to: ROUTES.skolenia, labelKey: "columns.obsah.links.skolenia", slug: "skolenia" },
+      { to: ROUTES.skoly, labelKey: "columns.obsah.links.skoly", slug: "skoly" },
     ],
   },
   {
-    title: "Projekt",
+    titleKey: "columns.projekt.title",
     testid: "footer-column-projekt",
     links: [
-      { to: ROUTES.oProjecte, label: "O projekte", slug: "o-projekte" },
-      { to: ROUTES.kontakt, label: "Kontakt", slug: "kontakt" },
-      { to: ROUTES.podpora, label: "Podporiť projekt", slug: "podpora" },
-      { to: ROUTES.sponzori, label: "Sponzori", slug: "sponzori" },
-      { to: ROUTES.zmeny, label: "Zmeny a verzie", slug: "zmeny" },
+      { to: ROUTES.oProjecte, labelKey: "columns.projekt.links.o_projekte", slug: "o-projekte" },
+      { to: ROUTES.kontakt, labelKey: "columns.projekt.links.kontakt", slug: "kontakt" },
+      { to: ROUTES.podpora, labelKey: "columns.projekt.links.podpora", slug: "podpora" },
+      { to: ROUTES.sponzori, labelKey: "columns.projekt.links.sponzori", slug: "sponzori" },
+      { to: ROUTES.zmeny, labelKey: "columns.projekt.links.zmeny", slug: "zmeny" },
     ],
   },
   {
-    title: "Právne",
+    titleKey: "columns.pravne.title",
     testid: "footer-column-pravne",
     links: [
-      { to: ROUTES.privacy, label: "Súkromie", slug: "privacy" },
-      { to: ROUTES.cookies, label: "Cookies", slug: "cookies" },
-      { to: ROUTES.spravovat, label: "Spravovať podporu (sponzori)", slug: "spravovat-podporu" },
+      { to: ROUTES.privacy, labelKey: "columns.pravne.links.privacy", slug: "privacy" },
+      { to: ROUTES.cookies, labelKey: "columns.pravne.links.cookies", slug: "cookies" },
+      {
+        to: ROUTES.spravovat,
+        labelKey: "columns.pravne.links.spravovat_podporu",
+        slug: "spravovat-podporu",
+      },
     ],
   },
 ];
@@ -90,6 +101,7 @@ export function Footer() {
   const { openPreferences } = useConsent();
   const { isAuthenticated, isAdmin } = useAuth();
   const [sponsors, setSponsors] = useState<FooterSponsor[]>([]);
+  const t = tFor("footer");
 
   useEffect(() => {
     let cancelled = false;
@@ -112,15 +124,15 @@ export function Footer() {
             to={ROUTES.home}
             data-testid="footer-logo-link"
             className="inline-flex items-center"
-            aria-label="subenai — domov"
+            aria-label={t("logo_aria")}
           >
             <img src="/logo.svg" alt="subenai" className="h-8 w-auto" />
           </Link>
           <p data-testid="footer-tagline" className="text-xs leading-relaxed text-muted-foreground">
-            Bezplatný edukatívny nástroj pre slovenský digitálny svet.
+            {t("tagline")}
           </p>
           <p className="text-xs text-muted-foreground">
-            spravené s 🍺 v{" "}
+            {t("made_with")}{" "}
             <a
               data-testid="footer-novejsi-link"
               href="https://www.youtube.com/watch?v=dbuCSt_k5c8"
@@ -135,21 +147,26 @@ export function Footer() {
               data-testid="footer-version-link"
               to={ROUTES.zmeny}
               className="font-mono hover:text-foreground transition-colors"
-              aria-label={`Aktuálna verzia v${CURRENT_VERSION} — zoznam zmien`}
+              aria-label={t("version_aria", { version: CURRENT_VERSION })}
             >
               v{CURRENT_VERSION}
             </Link>
           </p>
         </div>
 
-        {COLUMNS.map((col) => (
-          <FooterColumn key={col.title} title={col.title} testid={col.testid} links={col.links} />
+        {COLUMN_DEFS.map((col) => (
+          <FooterColumn
+            key={col.testid}
+            title={t(col.titleKey)}
+            testid={col.testid}
+            links={col.links.map((l) => ({ to: l.to, label: t(l.labelKey), slug: l.slug }))}
+          />
         ))}
 
         {isAuthenticated && (
           <div data-testid="footer-platform-column" className="space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-              Platforma
+              {t("columns.platforma.title")}
             </h3>
             <ul className="space-y-2">
               <li>
@@ -158,7 +175,7 @@ export function Footer() {
                   to="/app"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  Tvorba testov
+                  {t("columns.platforma.links.app")}
                 </Link>
               </li>
               {isAdmin && (
@@ -168,7 +185,7 @@ export function Footer() {
                     to="/admin"
                     className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    Administrácia
+                    {t("columns.platforma.links.admin")}
                   </Link>
                 </li>
               )}
@@ -183,7 +200,7 @@ export function Footer() {
           className="mt-10 border-t border-border/40 pt-6 text-center sm:text-left"
         >
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Vďaka top sponzorom
+            {t("sponsors.heading")}
           </h3>
           <ul className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm sm:justify-start">
             {sponsors.map((s) => (
@@ -214,7 +231,7 @@ export function Footer() {
                 to={ROUTES.sponzori}
                 className="text-xs text-muted-foreground transition-colors hover:text-foreground"
               >
-                všetci sponzori →
+                {t("sponsors.all_link")}
               </Link>
             </li>
           </ul>
@@ -223,7 +240,7 @@ export function Footer() {
 
       <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border/40 pt-6 sm:flex-row sm:items-center">
         <p data-testid="footer-copyright" className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} subenai · Všetky práva vyhradené.
+          {t("copyright", { year: new Date().getFullYear() })}
         </p>
         <button
           data-testid="footer-cookies-button"
@@ -231,7 +248,7 @@ export function Footer() {
           onClick={openPreferences}
           className="text-xs text-muted-foreground underline-offset-2 transition-colors hover:text-foreground hover:underline"
         >
-          Nastavenia cookies
+          {t("cookies_button")}
         </button>
       </div>
 
@@ -258,7 +275,7 @@ function FooterColumn({
 }: {
   title: string;
   testid: string;
-  links: FooterLink[];
+  links: { to: string; label: string; slug: string }[];
 }) {
   return (
     <div data-testid={testid} className="space-y-3">

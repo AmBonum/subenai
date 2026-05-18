@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LOCALES, useLocale, type Locale } from "@/i18n/locale-context";
+import { tFor } from "@/i18n/marketing";
 
 const LABELS: Record<Locale, { name: string; flag: string }> = {
   sk: { name: "Slovenčina", flag: "🇸🇰" },
@@ -31,6 +32,7 @@ export function LocaleSwitcher({
 }) {
   const { locale, setLocale } = useLocale();
   const current = LABELS[locale];
+  const t = tFor("locale_switcher");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -39,7 +41,7 @@ export function LocaleSwitcher({
           size="sm"
           className={className}
           data-testid="locale-switcher-trigger"
-          aria-label="Jazyk / Language"
+          aria-label={t("aria_label")}
         >
           <Globe className="h-4 w-4" aria-hidden="true" />
           <span className="ml-1 hidden sm:inline" data-testid="locale-switcher-current">

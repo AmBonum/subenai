@@ -1,0 +1,115 @@
+{
+  "header": {
+    "logo_aria": "subenai — domov",
+    "main_nav_aria": "Hlavná navigácia",
+    "mobile_nav_title": "Hlavná navigácia",
+    "open_menu_aria": "Otvoriť menu",
+    "close_menu_aria": "Zavrieť menu",
+    "nav": {
+      "testy": "Testy",
+      "skolenia": "Školenia",
+      "podpora": "Podporiť projekt",
+      "kontakt": "Kontakt",
+      "app": "Moje testy"
+    },
+    "cta": {
+      "short": "Spustiť test",
+      "long": "Spustiť rýchly test",
+      "split_prefix": "Spustiť ",
+      "split_middle": "rýchly ",
+      "split_suffix": "test"
+    }
+  },
+  "footer": {
+    "logo_aria": "subenai — domov",
+    "tagline": "Bezplatný edukatívny nástroj pre slovenský digitálny svet.",
+    "made_with": "spravené s 🍺 v",
+    "version_aria": "Aktuálna verzia v{version} — zoznam zmien",
+    "columns": {
+      "obsah": {
+        "title": "Obsah",
+        "links": {
+          "test": "Spustiť test",
+          "testy": "Sada testov",
+          "skolenia": "Školenia",
+          "skoly": "Pre školy"
+        }
+      },
+      "projekt": {
+        "title": "Projekt",
+        "links": {
+          "o_projekte": "O projekte",
+          "kontakt": "Kontakt",
+          "podpora": "Podporiť projekt",
+          "sponzori": "Sponzori",
+          "zmeny": "Zmeny a verzie"
+        }
+      },
+      "pravne": {
+        "title": "Právne",
+        "links": {
+          "privacy": "Súkromie",
+          "cookies": "Cookies",
+          "spravovat_podporu": "Spravovať podporu (sponzori)"
+        }
+      },
+      "platforma": {
+        "title": "Platforma",
+        "links": {
+          "app": "Tvorba testov",
+          "admin": "Administrácia"
+        }
+      }
+    },
+    "sponsors": {
+      "heading": "Vďaka top sponzorom",
+      "all_link": "všetci sponzori →"
+    },
+    "copyright": "© {year} subenai · Všetky práva vyhradené.",
+    "cookies_button": "Nastavenia cookies"
+  },
+  "consent": {
+    "banner": {
+      "title": "🍪 Cookies a súkromie",
+      "badge_updated": "aktualizované",
+      "description": "Pridali sme možnosť autorom zbierať odpovede pre edukačné účely (opt-in, s heslom autora). Privacy sme aktualizovali. Používame nevyhnutné úložisko pre fungovanie testu; voliteľné kategórie (analytika, marketing) zapneme len s tvojím súhlasom.",
+      "link_cookies": "Cookies",
+      "link_privacy": "Súkromie",
+      "settings": "Nastavenia",
+      "reject_all": "Odmietnuť všetko",
+      "accept_all": "Prijať všetko"
+    },
+    "dialog": {
+      "title": "Nastavenia cookies",
+      "description_prefix": "Vyber, ktoré kategórie úložiska a spracúvania povoľuješ. Tvoj výber môžeš kedykoľvek zmeniť cez odkaz „Nastavenia cookies\" v päte stránky. Detaily sú v ",
+      "description_link_cookies": "zásadách cookies",
+      "description_and": " a ",
+      "description_link_privacy": "zásadách ochrany súkromia",
+      "always_active": "(vždy aktívne)",
+      "reject_all": "Odmietnuť všetko",
+      "accept_all": "Prijať všetko",
+      "save": "Uložiť výber",
+      "categories": {
+        "necessary": {
+          "title": "Nevyhnutné",
+          "description": "Bez týchto sa test nedá ukončiť ani uložiť výsledok. Patria sem anonymná relácia, anti-cheat ochrana a uloženie tvojho súhlasu. Právny základ: oprávnený záujem (čl. 6 ods. 1 písm. f GDPR)."
+        },
+        "preferences": {
+          "title": "Predvoľby",
+          "description": "Zapamätanie nastavenia jazyka, témy alebo obľúbených odpovedí pre lepší zážitok pri ďalšej návšteve."
+        },
+        "analytics": {
+          "title": "Analytika",
+          "description": "Anonymizovaná analytika (návštevnosť, miery dokončenia, A/B testy) — pomáha nám test vylepšovať. Nezdieľame nič identifikujúce."
+        },
+        "marketing": {
+          "title": "Marketing",
+          "description": "Personalizované odporúčania, retargeting v reklamných sieťach a meranie efektivity kampaní. Aktuálne nepoužívame, ponecháme tu pre prípad budúceho rozšírenia."
+        }
+      }
+    }
+  },
+  "locale_switcher": {
+    "aria_label": "Jazyk / Language"
+  }
+}

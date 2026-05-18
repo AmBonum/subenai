@@ -20,41 +20,19 @@ import {
   DEFAULT_CATEGORIES,
 } from "@/lib/consent";
 import { useConsent } from "@/hooks/useConsent";
+import { tFor } from "@/i18n/marketing";
 
 interface CategoryDescriptor {
   id: ConsentCategory;
-  title: string;
-  description: string;
   /** locked = always on, cannot be turned off (necessary). */
   locked?: boolean;
 }
 
 const CATEGORIES: CategoryDescriptor[] = [
-  {
-    id: "necessary",
-    title: "Nevyhnutné",
-    description:
-      "Bez týchto sa test nedá ukončiť ani uložiť výsledok. Patria sem anonymná relácia, anti-cheat ochrana a uloženie tvojho súhlasu. Právny základ: oprávnený záujem (čl. 6 ods. 1 písm. f GDPR).",
-    locked: true,
-  },
-  {
-    id: "preferences",
-    title: "Predvoľby",
-    description:
-      "Zapamätanie nastavenia jazyka, témy alebo obľúbených odpovedí pre lepší zážitok pri ďalšej návšteve.",
-  },
-  {
-    id: "analytics",
-    title: "Analytika",
-    description:
-      "Anonymizovaná analytika (návštevnosť, miery dokončenia, A/B testy) — pomáha nám test vylepšovať. Nezdieľame nič identifikujúce.",
-  },
-  {
-    id: "marketing",
-    title: "Marketing",
-    description:
-      "Personalizované odporúčania, retargeting v reklamných sieťach a meranie efektivity kampaní. Aktuálne nepoužívame, ponecháme tu pre prípad budúceho rozšírenia.",
-  },
+  { id: "necessary", locked: true },
+  { id: "preferences" },
+  { id: "analytics" },
+  { id: "marketing" },
 ];
 
 /**
@@ -67,6 +45,7 @@ const CATEGORIES: CategoryDescriptor[] = [
  */
 export function ConsentPreferencesDialog() {
   const { record, preferencesOpen, closePreferences, saveCategories } = useConsent();
+  const t = tFor("consent");
 
   const [draft, setDraft] = useState<ConsentCategories>(record?.categories ?? DEFAULT_CATEGORIES);
 
@@ -91,19 +70,18 @@ export function ConsentPreferencesDialog() {
     >
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Nastavenia cookies</DialogTitle>
+          <DialogTitle>{t("dialog.title")}</DialogTitle>
           <DialogDescription>
-            Vyber, ktoré kategórie úložiska a spracúvania povoľuješ. Tvoj výber môžeš kedykoľvek
-            zmeniť cez odkaz „Nastavenia cookies" v päte stránky. Detaily sú v{" "}
+            {t("dialog.description_prefix")}
             <DialogClose asChild>
               <Link to="/cookies" className="underline underline-offset-2 hover:text-foreground">
-                zásadách cookies
+                {t("dialog.description_link_cookies")}
               </Link>
             </DialogClose>
-            {" a "}
+            {t("dialog.description_and")}
             <DialogClose asChild>
               <Link to="/privacy" className="underline underline-offset-2 hover:text-foreground">
-                zásadách ochrany súkromia
+                {t("dialog.description_link_privacy")}
               </Link>
             </DialogClose>
             .
@@ -111,46 +89,50 @@ export function ConsentPreferencesDialog() {
         </DialogHeader>
 
         <div className="my-2 space-y-4">
-          {CATEGORIES.map((cat, idx) => (
-            <div key={cat.id}>
-              {idx > 0 ? <Separator className="mb-4" /> : null}
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <label
-                    htmlFor={`consent-${cat.id}`}
-                    className="text-sm font-semibold text-foreground"
-                  >
-                    {cat.title}
-                    {cat.locked ? (
-                      <span className="ml-2 text-xs font-normal text-muted-foreground">
-                        (vždy aktívne)
-                      </span>
-                    ) : null}
-                  </label>
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                    {cat.description}
-                  </p>
+          {CATEGORIES.map((cat, idx) => {
+            const title = t(`dialog.categories.${cat.id}.title`);
+            const description = t(`dialog.categories.${cat.id}.description`);
+            return (
+              <div key={cat.id}>
+                {idx > 0 ? <Separator className="mb-4" /> : null}
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <label
+                      htmlFor={`consent-${cat.id}`}
+                      className="text-sm font-semibold text-foreground"
+                    >
+                      {title}
+                      {cat.locked ? (
+                        <span className="ml-2 text-xs font-normal text-muted-foreground">
+                          {t("dialog.always_active")}
+                        </span>
+                      ) : null}
+                    </label>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      {description}
+                    </p>
+                  </div>
+                  <Switch
+                    id={`consent-${cat.id}`}
+                    checked={draft[cat.id]}
+                    disabled={cat.locked}
+                    onCheckedChange={(checked) => toggle(cat.id, checked)}
+                    aria-label={title}
+                  />
                 </div>
-                <Switch
-                  id={`consent-${cat.id}`}
-                  checked={draft[cat.id]}
-                  disabled={cat.locked}
-                  onCheckedChange={(checked) => toggle(cat.id, checked)}
-                  aria-label={cat.title}
-                />
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <DialogFooter className="gap-2 sm:gap-2">
           <Button variant="outline" onClick={() => saveCategories(ALL_REJECTED)}>
-            Odmietnuť všetko
+            {t("dialog.reject_all")}
           </Button>
           <Button variant="outline" onClick={() => saveCategories(ALL_ACCEPTED)}>
-            Prijať všetko
+            {t("dialog.accept_all")}
           </Button>
-          <Button onClick={() => saveCategories(draft)}>Uložiť výber</Button>
+          <Button onClick={() => saveCategories(draft)}>{t("dialog.save")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
