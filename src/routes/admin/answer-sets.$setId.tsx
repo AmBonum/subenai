@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   ArrowLeft,
@@ -18,16 +18,12 @@ import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  branchLabel,
-  mockAnswerSets,
-  questionsUsingAnswer,
-  questionsUsingSet,
-  type AdminAnswer,
-} from "@/lib/admin/mock-data";
+import { branchLabel } from "@/lib/admin/branches";
+import type { AdminAnswer, AdminQuestion } from "@/lib/admin/types";
 import {
   useAdminAnswerSets,
   useAdminAnswers,
+  useAdminQuestions,
   useDeleteAnswer,
   useDeleteAnswerSet,
 } from "@/lib/admin/queries";
@@ -36,12 +32,7 @@ import { tFor } from "@/i18n/questions";
 export const Route = createFileRoute("/admin/answer-sets/$setId")({
   component: AnswerSetDetailPage,
   notFoundComponent: () => <NotFoundFallback />,
-  loader: ({ params }) => {
-    const exists =
-      mockAnswerSets.some((s) => s.id === params.setId) || params.setId.startsWith("as_");
-    if (!exists) throw notFound();
-    return { setId: params.setId };
-  },
+  loader: ({ params }) => ({ setId: params.setId }),
 });
 
 function NotFoundFallback() {
@@ -69,14 +60,20 @@ function AnswerSetDetailPage() {
   const router = useRouter();
   const setsQuery = useAdminAnswerSets();
   const answersQuery = useAdminAnswers();
+  const questionsQuery = useAdminQuestions();
   const deleteAnswer = useDeleteAnswer();
   const deleteSet = useDeleteAnswerSet();
   const sets = useMemo(() => setsQuery.data ?? [], [setsQuery.data]);
   const onMutationError = (err: Error) => toast.error(err.message);
   const allAnswers = useMemo(() => answersQuery.data ?? [], [answersQuery.data]);
+  const allQuestions = useMemo(() => questionsQuery.data ?? [], [questionsQuery.data]);
 
   const set = useMemo(() => sets.find((s) => s.id === setId), [sets, setId]);
   const answers = useMemo(() => allAnswers.filter((a) => a.set_id === setId), [allAnswers, setId]);
+  const linkedQuestions = useMemo(
+    () => allQuestions.filter((q) => q.answer_set_id === setId),
+    [allQuestions, setId],
+  );
 
   const [answerEditorOpen, setAnswerEditorOpen] = useState(false);
   const [editingAnswer, setEditingAnswer] = useState<AdminAnswer | null>(null);
@@ -100,7 +97,6 @@ function AnswerSetDetailPage() {
 
   const correct = answers.filter((a) => a.is_correct);
   const incorrect = answers.filter((a) => !a.is_correct);
-  const linkedQuestions = questionsUsingSet(set.id);
 
   const openCreate = () => {
     setEditingAnswer(null);
@@ -176,6 +172,7 @@ function AnswerSetDetailPage() {
           tone="correct"
           title={t("correct_column_title")}
           answers={correct}
+          allQuestions={allQuestions}
           onEdit={openEdit}
           onDelete={setConfirmDeleteAnswer}
         />
@@ -183,6 +180,7 @@ function AnswerSetDetailPage() {
           tone="incorrect"
           title={t("incorrect_column_title")}
           answers={incorrect}
+          allQuestions={allQuestions}
           onEdit={openEdit}
           onDelete={setConfirmDeleteAnswer}
         />
@@ -288,12 +286,14 @@ function AnswerColumn({
   tone,
   title,
   answers,
+  allQuestions,
   onEdit,
   onDelete,
 }: {
   tone: "correct" | "incorrect";
   title: string;
   answers: AdminAnswer[];
+  allQuestions: AdminQuestion[];
   onEdit: (a: AdminAnswer) => void;
   onDelete: (a: AdminAnswer) => void;
 }) {
@@ -336,7 +336,12 @@ function AnswerColumn({
           <p className="text-sm text-muted-foreground">{t("empty_column")}</p>
         )}
         {answers.map((a, idx) => {
-          const usage = questionsUsingAnswer(a.id);
+          // TODO: AH-11.6 schema-side back-reference — until the schema models
+          // per-answer question links, `correct_answer_ids`/`incorrect_answer_ids`
+          // are always empty (see mapQuestion in queries.ts) and usage is 0.
+          const usage = allQuestions.filter(
+            (q) => q.correct_answer_ids.includes(a.id) || q.incorrect_answer_ids.includes(a.id),
+          );
           const rowTestId =
             tone === "correct"
               ? `answer-set-editor-correct-row-${idx}`

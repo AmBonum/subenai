@@ -16,10 +16,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { branchLabel, questionsUsingSet, type AdminAnswerSet } from "@/lib/admin/mock-data";
+import { branchLabel } from "@/lib/admin/branches";
+import type { AdminAnswerSet } from "@/lib/admin/types";
 import {
   useAdminAnswerSets,
   useAdminAnswers,
+  useAdminQuestions,
   useCreateAnswer,
   useCreateAnswerSet,
   useDeleteAnswerSet,
@@ -35,11 +37,13 @@ function AnswerSetsPage() {
   const t = tFor("answer_sets_list");
   const setsQuery = useAdminAnswerSets();
   const answersQuery = useAdminAnswers();
+  const questionsQuery = useAdminQuestions();
   const createSet = useCreateAnswerSet();
   const createAnswer = useCreateAnswer();
   const deleteSet = useDeleteAnswerSet();
   const allSets = useMemo(() => setsQuery.data ?? [], [setsQuery.data]);
   const allAnswers = useMemo(() => answersQuery.data ?? [], [answersQuery.data]);
+  const allQuestions = useMemo(() => questionsQuery.data ?? [], [questionsQuery.data]);
   const [query, setQuery] = useState("");
   const [confirmDelete, setConfirmDelete] = useState<AdminAnswerSet | null>(null);
 
@@ -132,7 +136,7 @@ function AnswerSetsPage() {
           const answers = allAnswers.filter((a) => a.set_id === s.id);
           const correct = answers.filter((a) => a.is_correct).length;
           const incorrect = answers.length - correct;
-          const usage = questionsUsingSet(s.id).length;
+          const usage = allQuestions.filter((q) => q.answer_set_id === s.id).length;
           return (
             <Card
               key={s.id}

@@ -85,11 +85,6 @@ export default tseslint.config(
       "src/routes/admin/navigation.tsx",
       "src/routes/admin/share-card.tsx",
       "src/routes/admin/quick-test.tsx",
-      // Carryover from AH-11.1b/c — runtime mock-data accessors not yet
-      // swapped (loader-time existence checks, in-component cross-set
-      // lookups). Tracked for AH-11.1e final purge.
-      "src/routes/admin/answer-sets.$setId.tsx",
-      "src/routes/admin/answer-sets.tsx",
       // AH-11.3 scope — RespondentsList consumes `useSessions`, `useTests`,
       // and `logPiiAccess` from `@/lib/platform/mock-store` pending the
       // privileged server function migration. Stays exempt until AH-11.3.
