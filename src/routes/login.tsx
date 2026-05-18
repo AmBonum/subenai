@@ -129,11 +129,29 @@ function LoginPage() {
           <Button
             type="button"
             variant="outline"
-            className="w-full"
+            className="flex w-full items-center justify-center gap-2"
             disabled={googleLoading || submitting}
             onClick={onGoogle}
             data-testid="login-google-button"
           >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+              <path
+                fill="#EA4335"
+                d="M12 5c1.6 0 3 .55 4.13 1.62l3.07-3.07A12 12 0 0 0 0 12c0 1.93.46 3.75 1.28 5.37l3.6-2.79A7.2 7.2 0 0 1 4.8 12 7.2 7.2 0 0 1 12 4.8z"
+              />
+              <path
+                fill="#34A853"
+                d="M23.5 12.27c0-.87-.07-1.7-.2-2.5H12v4.74h6.5a5.56 5.56 0 0 1-2.4 3.66l3.7 2.87c2.16-2 3.7-4.93 3.7-8.77z"
+              />
+              <path
+                fill="#4A90E2"
+                d="M5.27 14.27 1.67 17.05A12 12 0 0 0 12 24c3.24 0 5.95-1.07 7.94-2.9l-3.7-2.87a7.2 7.2 0 0 1-10.97-3.96z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M4.88 14.58a7.2 7.2 0 0 1 0-5.16L1.28 6.63a12 12 0 0 0 0 10.74l3.6-2.79z"
+              />
+            </svg>
             {googleLoading ? tc("google_loading") : tc("continue_with_google")}
           </Button>
           <div className="my-4 flex items-center gap-2 text-xs text-muted-foreground">
@@ -183,7 +201,7 @@ function LoginPage() {
             >
               {submitting ? t("submitting") : t("submit")}
             </Button>
-            <div className="flex flex-col gap-2 text-center text-xs text-muted-foreground">
+            <div className="flex flex-col gap-2 text-center text-base text-muted-foreground">
               <p>
                 <Link to="/forgot-password" data-testid="login-forgot-password">
                   {tx("forgot_password")}
@@ -191,11 +209,15 @@ function LoginPage() {
               </p>
               <p>
                 {tx("no_account")}{" "}
-                <Link to="/signup" data-testid="login-to-signup">
+                <Link
+                  to="/signup"
+                  className="text-lg font-semibold text-primary hover:underline"
+                  data-testid="login-to-signup"
+                >
                   {tx("to_signup")}
                 </Link>
               </p>
-              <p>
+              <p className="text-sm">
                 <Link to="/" data-testid="login-back-home">
                   ← subenai.sk
                 </Link>

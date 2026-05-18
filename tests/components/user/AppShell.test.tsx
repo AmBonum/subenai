@@ -2,6 +2,12 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { AppShell } from "@/components/user/AppShell";
 
+const authStateRef = { current: { isAuthenticated: true, isAdmin: true } };
+
+vi.mock("@/hooks/useAuth", () => ({
+  useAuth: () => authStateRef.current,
+}));
+
 vi.mock("@tanstack/react-router", async () => {
   const actual =
     await vi.importActual<typeof import("@tanstack/react-router")>("@tanstack/react-router");
@@ -72,5 +78,19 @@ describe("AppShell", () => {
     );
     expect(screen.getByTestId("app-shell-sidebar-link-tests").textContent).toContain("Moje testy");
     expect(screen.getByTestId("app-shell-sidebar-link-teams").textContent).toContain("Tímy");
+  });
+
+  it("hides admin sidebar link for non-admin users", () => {
+    authStateRef.current = { isAuthenticated: true, isAdmin: false };
+    try {
+      render(
+        <AppShell>
+          <div />
+        </AppShell>,
+      );
+      expect(screen.queryByTestId("app-shell-sidebar-link-admin")).not.toBeInTheDocument();
+    } finally {
+      authStateRef.current = { isAuthenticated: true, isAdmin: true };
+    }
   });
 });

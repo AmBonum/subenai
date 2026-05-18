@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useCurrentProfile, useNotifications } from "@/lib/platform/queries";
+import { useAuth } from "@/hooks/useAuth";
 import { tFor } from "@/i18n/app-shell";
 
 type NavKey =
@@ -141,6 +142,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const loc = useLocation();
   const profileQ = useCurrentProfile();
   const notifsQ = useNotifications();
+  const { isAdmin } = useAuth();
   const me = profileQ.data;
   const notifs = notifsQ.data ?? [];
   const unread = notifs.filter((n) => !n.read_at).length;
@@ -221,15 +223,17 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </Link>
               );
             })}
-            <div className="pt-4 text-xs text-muted-foreground">
-              <Link
-                to="/admin"
-                className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted"
-                data-testid="app-shell-sidebar-link-admin"
-              >
-                <ListChecks className="h-4 w-4" /> {t("admin")}
-              </Link>
-            </div>
+            {isAdmin && (
+              <div className="pt-4 text-xs text-muted-foreground">
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-muted"
+                  data-testid="app-shell-sidebar-link-admin"
+                >
+                  <ListChecks className="h-4 w-4" /> {t("admin")}
+                </Link>
+              </div>
+            )}
           </nav>
         </aside>
         <main className="min-w-0 flex-1" data-testid="app-shell-main">
