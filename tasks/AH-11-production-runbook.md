@@ -129,6 +129,46 @@ testovacieho používateľa bez admin role.
 18. Logout z `/app` → land na `/` s plne vyčistenou session (full
     reload, žiadny `sb-` cookie nezostáva).
 
+### C.4 Samoobslužná registrácia + obnova hesla (AH-13)
+
+Predpoklady (Supabase Dashboard):
+- Auth → Providers → **Email** je `Enabled`.
+- Auth → Providers → **Google** je `Enabled` (Client ID + Secret z
+  Google Cloud Console nastavené).
+- Auth → URL Configuration → **Site URL** = `https://subenai.sk`.
+- Auth → URL Configuration → **Redirect URLs** obsahuje
+  `https://subenai.sk/auth/callback` aj
+  `https://subenai.sk/auth/reset-password`.
+
+19. **`/signup`** — formulár s e-mailom, heslom a potvrdením hesla
+    renderuje, „Pokračovať cez Google" tlačidlo je viditeľné. Pri
+    rozdielnych heslách sa zobrazí „Heslá sa nezhodujú."
+20. **`/signup` happy path** — zaregistruj nový e-mail. Formulár ukáže
+    „Skontroluj si e-mail". Doručený e-mail obsahuje overovací odkaz.
+    Klik na odkaz → land na `/auth/callback` → presmerovanie na `/app`.
+    V Supabase Dashboard → Authentication → Users je nový riadok;
+    `profiles` má auto-vytvorený riadok (trigger `handle_new_user` z
+    AH-1.9); `user_roles` má rolu `user`.
+21. **`/login` → „Pokračovať cez Google"** → Google consent screen →
+    redirect späť na `/auth/callback` → land na `/app`. Prvý login
+    vytvorí profil + rolu `user` automaticky.
+22. **Doplnenie profilu** — ak Google vrátil len e-mail (bez plného
+    mena) alebo display_name zhoduje sa s lokálnou časťou e-mailu, na
+    `/app` sa zobrazí banner „Doplň si profil" s odkazom na
+    `/app/account/profile`. Po dismiss-e sa už nevracia (uložené v
+    localStorage).
+23. **`/forgot-password`** — zadaj e-mail existujúceho účtu →
+    „Skontroluj si e-mail" hláška. Doručený e-mail má odkaz na
+    `/auth/reset-password`.
+24. **`/auth/reset-password`** — klik na odkaz z e-mailu → formulár
+    s novým heslom + potvrdením. Po submit-e land na `/login?reset=1`
+    s banner-om „Heslo zmenené — môžeš sa prihlásiť." Nové heslo
+    úspešne funguje.
+25. **Negatívne — neplatný/expirovaný recovery odkaz** — otvor
+    `/auth/reset-password` priamo (bez recovery session) → zobrazí
+    „Odkaz na obnovu vypršal. Vyžiadaj si nový." s linkou späť na
+    `/forgot-password`.
+
 ---
 
 ## D. Bundle health verification
@@ -137,7 +177,7 @@ V repo root:
 
 ```bash
 npm run lint                       # → 0 errors / 0 warnings
-npm test                           # → 749 passing
+npm test                           # → 768 passing
 npm run build                      # → ✓ built in N s
 npm run check:bundle-no-mocks      # → PASS (zero mock strings in dist/)
 ```

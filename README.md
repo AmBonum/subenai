@@ -138,6 +138,17 @@ Current test count: **749** (must not regress).
   `SUPABASE_SERVICE_ROLE_KEY` in CF Pages env, promote first admin).
 - **2FA is enforced for the `admin` role** (see AH-12). Bootstrap admin
   must enroll TOTP on first login before write actions unlock.
+- **Self-serve signup + Google OAuth + password recovery** (AH-13). Before
+  going live, configure the Supabase project's auth surface:
+  - Supabase Dashboard → **Authentication → Providers** → enable
+    **Email** and **Google** (Google needs OAuth Client ID + Secret from
+    Google Cloud Console).
+  - **Authentication → URL Configuration** → set **Site URL** to
+    `https://subenai.sk` and add
+    `https://subenai.sk/auth/callback` plus
+    `https://subenai.sk/auth/reset-password` to **Redirect URLs**.
+  - Email templates (verification, password reset) — review the Slovak
+    copy under Authentication → Email Templates.
 - End-to-end production checks live in
   [`tasks/AH-11-production-runbook.md`](./tasks/AH-11-production-runbook.md).
 

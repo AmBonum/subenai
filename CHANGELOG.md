@@ -13,6 +13,48 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > celý balík funkcionality (sponsorship, zber custom-test odpovedí, atď.)
 > kompletne otestovaný v reálnej prevádzke.
 
+## AH-13 — Registrácia, Google prihlásenie a obnova hesla
+
+Rozšírili sme prihlasovaciu plochu o samoobslužnú registráciu a obnovu
+hesla. Doteraz museli účty zakladať administrátori; po AH-13 si nový
+používateľ vie vytvoriť účet sám — e-mailom alebo cez Google.
+
+### Pridané
+- **/signup** — verejná stránka registrácie e-mailom a heslom.
+  Po odoslaní pošleme overovací e-mail s odkazom; po kliknutí na odkaz
+  je účet aktivovaný a používateľ je presmerovaný na `/app`.
+- **Prihlásenie cez Google** — tlačidlo „Pokračovať cez Google"
+  na `/login` aj `/signup`. Pri prvom prihlásení sa automaticky vytvorí
+  profil so štandardnou rolou používateľa.
+- **/forgot-password** — formulár pre vyžiadanie obnovy hesla.
+  Po odoslaní e-mailu zobrazí potvrdenie bez ohľadu na to, či účet
+  s daným e-mailom existuje (ochrana proti enumerácii).
+- **/auth/reset-password** — stránka pre nastavenie nového hesla
+  po kliknutí na obnovovací odkaz z e-mailu.
+- **Doplnenie profilu** — nový používateľ, ktorému Google nedal plné
+  meno, vidí na `/app` jednorazové upozornenie s odkazom na úpravu
+  profilu. Upozornenie sa po zatvorení už neopakuje.
+
+### Bezpečnosť
+- Registrácia + obnova hesla bežia výhradne cez Supabase Auth
+  (`signUp`, `resetPasswordForEmail`, `updateUser`). Žiadne heslá
+  neopúšťajú prehliadač v plain texte.
+- Nové účty dostávajú výhradne rolu `user`. Administrátorské oprávnenia
+  pridáva ručne existujúci admin v `/admin/users`.
+- E-mailové odkazy (overovací aj obnovovací) sú jednorazové a expirujú
+  podľa nastavenia Supabase projektu.
+
+### Pre operátora — pred nasadením
+V Supabase Dashboard pre `subenai.sk` projekt skontroluj:
+- **Auth → Providers → Email** je `Enabled` (typicky predvolené).
+- **Auth → Providers → Google** je `Enabled` s OAuth Client ID a
+  Secret z Google Cloud Console.
+- **Auth → URL Configuration → Site URL** = `https://subenai.sk`.
+- **Auth → URL Configuration → Redirect URLs** obsahuje
+  `https://subenai.sk/auth/callback` a `https://subenai.sk/auth/reset-password`.
+
+Detaily v `tasks/AH-11-production-runbook.md` (smoke test sekcia).
+
 ## AH-11.8 — Deploy bootstrap finalizácia
 
 DEPLOY_SETUP.sql, README.md, .env.example doladené tak, aby nový
