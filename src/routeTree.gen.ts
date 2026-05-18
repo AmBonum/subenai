@@ -39,6 +39,7 @@ import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as PodakovanieSessionIdRouteImport } from './routes/podakovanie.$sessionId'
 import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
 import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AppTemplatesRouteImport } from './routes/app.templates'
 import { Route as AppTeamsRouteImport } from './routes/app.teams'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
@@ -226,6 +227,11 @@ const LoginVerify2faRoute = LoginVerify2faRouteImport.update({
 const LoginEnroll2faRoute = LoginEnroll2faRouteImport.update({
   id: '/login_/enroll-2fa',
   path: '/login/enroll-2fa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppTemplatesRoute = AppTemplatesRouteImport.update({
@@ -460,6 +466,7 @@ export interface FileRoutesByFullPath {
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
@@ -527,6 +534,7 @@ export interface FileRoutesByTo {
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
@@ -598,6 +606,7 @@ export interface FileRoutesById {
   '/app/notifications': typeof AppNotificationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/login_/enroll-2fa': typeof LoginEnroll2faRoute
   '/login_/verify-2fa': typeof LoginVerify2faRoute
   '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
@@ -670,6 +679,7 @@ export interface FileRouteTypes {
     | '/app/notifications'
     | '/app/teams'
     | '/app/templates'
+    | '/auth/callback'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
     | '/podakovanie/$sessionId'
@@ -737,6 +747,7 @@ export interface FileRouteTypes {
     | '/app/notifications'
     | '/app/teams'
     | '/app/templates'
+    | '/auth/callback'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
     | '/podakovanie/$sessionId'
@@ -807,6 +818,7 @@ export interface FileRouteTypes {
     | '/app/notifications'
     | '/app/teams'
     | '/app/templates'
+    | '/auth/callback'
     | '/login_/enroll-2fa'
     | '/login_/verify-2fa'
     | '/podakovanie/$sessionId'
@@ -852,6 +864,7 @@ export interface RootRouteChildren {
   SponzoriRoute: typeof SponzoriRouteWithChildren
   SpravovatPodporuRoute: typeof SpravovatPodporuRoute
   ZmenyRoute: typeof ZmenyRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   LoginEnroll2faRoute: typeof LoginEnroll2faRoute
   LoginVerify2faRoute: typeof LoginVerify2faRoute
   PodakovanieSessionIdRoute: typeof PodakovanieSessionIdRoute
@@ -1077,6 +1090,13 @@ declare module '@tanstack/react-router' {
       path: '/login/enroll-2fa'
       fullPath: '/login/enroll-2fa'
       preLoaderRoute: typeof LoginEnroll2faRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/templates': {
@@ -1511,6 +1531,7 @@ const rootRouteChildren: RootRouteChildren = {
   SponzoriRoute: SponzoriRouteWithChildren,
   SpravovatPodporuRoute: SpravovatPodporuRoute,
   ZmenyRoute: ZmenyRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   LoginEnroll2faRoute: LoginEnroll2faRoute,
   LoginVerify2faRoute: LoginVerify2faRoute,
   PodakovanieSessionIdRoute: PodakovanieSessionIdRoute,
