@@ -82,13 +82,13 @@ WHERE id = '7d98e002-a223-5fac-af69-88e89f037718';
 -- ============================================================================
 UPDATE public.questions SET
   prompt_en = 'Email arrives: "Someone requested a password reset on your Google account. If it wasn''t you, ignore this." You weren''t the one. Action?',
-  options_en = '[{"id":"a","label":"Click the „it wasn''t me" link","correct":false,"severity":"medium"},{"id":"b","label":"Ignore — a real Google warning works even when ignored","correct":true,"severity":null},{"id":"c","label":"Reset the password to be safe via the link in the email","correct":false,"severity":"critical"}]'::jsonb,
+  options_en = '[{"id":"a","label":"Click the \"it wasn''t me\" link","correct":false,"severity":"medium"},{"id":"b","label":"Ignore — a real Google warning works even when ignored","correct":true,"severity":null},{"id":"c","label":"Reset the password to be safe via the link in the email","correct":false,"severity":"critical"}]'::jsonb,
   visual_en = NULL
 WHERE id = 'e3b9c8e4-061b-58dc-828f-77722f6743b4';
 
 UPDATE public.questions SET
   prompt_cs = 'Přijde email: „Někdo zažádal o reset hesla na vašem Google. Pokud jste to nebyli vy, ignorujte." Vy jste to nebyli. Akce?',
-  options_cs = '[{"id":"a","label":"Kliknu na „to jsem nebyl já" link","correct":false,"severity":"medium"},{"id":"b","label":"Ignoruji — varování od pravého Google funguje i když ignoruji","correct":true,"severity":null},{"id":"c","label":"Resetuji heslo pro jistotu přes link v emailu","correct":false,"severity":"critical"}]'::jsonb,
+  options_cs = '[{"id":"a","label":"Kliknu na \"to jsem nebyl já\" link","correct":false,"severity":"medium"},{"id":"b","label":"Ignoruji — varování od pravého Google funguje i když ignoruji","correct":true,"severity":null},{"id":"c","label":"Resetuji heslo pro jistotu přes link v emailu","correct":false,"severity":"critical"}]'::jsonb,
   visual_cs = NULL
 WHERE id = 'e3b9c8e4-061b-58dc-828f-77722f6743b4';
 
