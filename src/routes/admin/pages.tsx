@@ -24,7 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { CmsPage, PageStatus } from "@/lib/admin/cms-mock-store";
+import type { CmsPage, PageStatus } from "@/lib/admin/cms-types";
 import { useCmsPages, useCreateCmsPage, useDeleteCmsPage } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 

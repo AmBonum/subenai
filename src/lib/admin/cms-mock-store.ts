@@ -1,90 +1,34 @@
-// Mock CMS store for AH-9. Swapped to Supabase in AH-11.
+// AH-11.6 carve-out — CMS mock seed store, retained for Vitest fixtures.
 //
-// Schema mirrors planned DB tables: cms_pages, cms_header, cms_footer,
-// cms_navigation, cms_share_card_config, quick_test_config.
+// Type definitions live in `@/lib/admin/cms-types`. Production CMS reads
+// flow through `@/lib/admin/queries.ts` + Supabase (AH-11.5a). This file
+// stays only for the seed arrays consumed by `tests/utils/admin-supabase-mock`
+// and a handful of admin-route specs. Tree-shaken from the production
+// bundle because no runtime code path imports it.
 
-export type PageStatus = "draft" | "published";
+export type {
+  PageStatus,
+  BlockKind,
+  CmsBlock,
+  CmsPage,
+  CmsHeader,
+  CmsFooterLink,
+  CmsFooterColumn,
+  CmsSocialLink,
+  CmsFooter,
+  CmsNavItem,
+  CmsShareCard,
+  QuickTestConfig,
+} from "@/lib/admin/cms-types";
 
-export type BlockKind = "heading" | "paragraph" | "image" | "cta";
-
-export interface CmsBlock {
-  id: string;
-  kind: BlockKind;
-  text?: string;
-  url?: string;
-  alt?: string;
-  label?: string;
-}
-
-export interface CmsPage {
-  id: string;
-  slug: string;
-  title: string;
-  seo_description: string;
-  content_blocks: CmsBlock[];
-  status: PageStatus;
-  published_at: string | null;
-  updated_at: string;
-  owner_id?: string;
-}
-
-export interface CmsHeader {
-  logo_url: string;
-  cta_label: string;
-  cta_url: string;
-  mobile_trigger_label: string;
-}
-
-export interface CmsFooterLink {
-  id: string;
-  label: string;
-  url: string;
-}
-
-export interface CmsFooterColumn {
-  id: string;
-  title: string;
-  links: CmsFooterLink[];
-}
-
-export interface CmsSocialLink {
-  id: string;
-  platform: string;
-  url: string;
-}
-
-export interface CmsFooter {
-  columns: CmsFooterColumn[];
-  socials: CmsSocialLink[];
-}
-
-export interface CmsNavItem {
-  id: string;
-  label: string;
-  url: string;
-  position: number;
-  visible: boolean;
-  open_in_new_tab: boolean;
-  auth_only: boolean;
-}
-
-export interface CmsShareCard {
-  og_template_url: string;
-  title_fallback: string;
-  description_fallback: string;
-}
-
-export interface QuickTestConfig {
-  id: string;
-  visible: boolean;
-  title: string;
-  description: string;
-  branza: string;
-  time_seconds: number;
-  pass_percentage: number;
-  difficulty: "Ľahká" | "Stredná" | "Ťažká";
-  question_ids: string[];
-}
+import type {
+  CmsPage,
+  CmsHeader,
+  CmsFooter,
+  CmsNavItem,
+  CmsShareCard,
+  QuickTestConfig,
+} from "@/lib/admin/cms-types";
 
 const uid = (p: string) => `${p}_${Math.random().toString(36).slice(2, 8)}`;
 export const newId = (p = "id") => uid(p);

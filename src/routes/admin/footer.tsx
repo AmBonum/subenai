@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { CmsFooter, CmsFooterColumn } from "@/lib/admin/cms-mock-store";
+import type { CmsFooter, CmsFooterColumn } from "@/lib/admin/cms-types";
 import { useCmsFooter, useUpdateCmsFooter } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 

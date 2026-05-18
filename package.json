@@ -25,6 +25,7 @@
     "e2e:report": "playwright show-report",
     "e2e:stripe": "STRIPE_E2E_BASE_URL=http://localhost:8788 playwright test e2e/integration/webhooks e2e/specs/sponsorship",
     "audit:bundle": "scripts/check-bundle-no-trackers.sh dist",
+    "check:bundle-no-mocks": "node scripts/check-bundle-no-mocks.mjs",
     "db:verify:staging": "ENV_FILE=.env.staging bash scripts/verify-supabase-migration.sh",
     "db:verify:prod": "ENV_FILE=.env.prod bash scripts/verify-supabase-migration.sh"
   },

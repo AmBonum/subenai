@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { BlockKind, CmsBlock, CmsPage } from "@/lib/admin/cms-mock-store";
+import type { BlockKind, CmsBlock, CmsPage } from "@/lib/admin/cms-types";
 import { useCmsPages, usePublishCmsPage, useUpdateCmsPage } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 

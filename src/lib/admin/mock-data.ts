@@ -1,6 +1,8 @@
-// AH-11 deletes this file. Production reads via React Query + Supabase queries
-// (`src/lib/admin/queries.ts`, `src/lib/platform/queries.ts`). Mock data only —
-// never seeded into production.
+// AH-11.6 carve-out — admin seed/type re-export module, retained for
+// `mock-store` and Vitest fixtures. Canonical types live in `./types.ts`
+// and reference constants in `./branches.ts`. Production reads go through
+// `@/lib/admin/queries.ts` + Supabase. AH-14 deletes this together with
+// `mock-store` once the answer-sets viewer migrates off the repo.
 //
 // Mock data for SubenAI admin. Replace with Supabase queries when wiring up.
 // Schema mirrors expected production tables: users, questions, categories,

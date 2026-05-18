@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { QuickTestConfig } from "@/lib/admin/cms-mock-store";
+import type { QuickTestConfig } from "@/lib/admin/cms-types";
 import { useCmsQuickTestConfig, useUpdateCmsQuickTestConfig } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 

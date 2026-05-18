@@ -1,6 +1,11 @@
-// AH-11 deletes this file. Production reads via React Query + Supabase queries
-// (`src/lib/admin/queries.ts`, `src/lib/platform/queries.ts`). Mock data only —
-// never seeded into production.
+// AH-11.6 carve-out — platform mock store, retained for
+// /app/tests/new + /app/library (questions library), the respondent flow
+// (`@/lib/respondent/mock-store`), and the composer/test-packs/seed paths.
+// The /app/* questions usage is an AH-12 schema-gap exemption: the
+// production `questions` table lacks `type` and `category` columns.
+// AH-14 finishes the schema enrichment and these consumers swap to
+// `useLibraryQuestions`; the respondent reads migrate via the
+// `get_test_by_share_id` RPC. After both, this file is deletable.
 import { useSyncExternalStore } from "react";
 import {
   CURRENT_USER_ID,

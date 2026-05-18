@@ -25,7 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { CmsNavItem } from "@/lib/admin/cms-mock-store";
+import type { CmsNavItem } from "@/lib/admin/cms-types";
 import { useCmsNavigation, useUpdateCmsNavigation } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 

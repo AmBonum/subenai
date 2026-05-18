@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { CmsHeader } from "@/lib/admin/cms-mock-store";
+import type { CmsHeader } from "@/lib/admin/cms-types";
 import { useCmsHeader, useUpdateCmsHeader } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 

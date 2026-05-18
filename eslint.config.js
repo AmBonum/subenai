@@ -70,9 +70,12 @@ export default tseslint.config(
     // Admin scope (`src/routes/admin/**`, `src/components/admin/**`) is wired
     // to real Supabase via `@/lib/admin/queries.ts` (AH-11.1a/b/c, AH-11.5a
     // for CMS). This rule prevents future PRs from regressing to the mock
-    // stores. AH-11.6 will delete the mock-* modules entirely; until then
-    // the only remaining carve-outs are AH-12 schema-gap exemptions in the
-    // user-scope block below.
+    // stores. AH-11.6 relocated CMS types to `@/lib/admin/cms-types` and
+    // deleted `@/lib/platform/mock-user-data`. The remaining mock modules
+    // (`mock-store`, `mock-data`, `answer-sets-mock-store`,
+    // `cms-mock-store`, platform `mock-store`) are AH-14 carve-outs: the
+    // answer-sets viewer, respondent reads, and /app/{tests/new,library}
+    // questions still need Supabase wiring before they can be removed.
     files: ["src/routes/admin/**/*.{ts,tsx}", "src/components/admin/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": [
@@ -107,8 +110,7 @@ export default tseslint.config(
             {
               name: "@/lib/admin/cms-mock-store",
               message:
-                "CMS admin is wired to Supabase via @/lib/admin/queries.ts (AH-11.5a). cms-mock-store is type-only until AH-11.6 deletes it.",
-              allowTypeImports: true,
+                "CMS admin is wired to Supabase via @/lib/admin/queries.ts (AH-11.5a). Import CMS types from @/lib/admin/cms-types — the mock module exists only as a Vitest seed source.",
             },
             {
               name: "@/lib/platform/mock-store",
@@ -132,12 +134,14 @@ export default tseslint.config(
     // User scope (`src/routes/app*/**`, `src/components/user/**`,
     // `src/components/app/**`) is wired to real Supabase via
     // `@/lib/platform/queries.ts` (AH-11.2a/b/c). This rule prevents
-    // future PRs from regressing to the platform mock stores. The two
+    // future PRs from regressing to the platform mock store. The two
     // files exempted below still import `useQuestions` from
     // `@/lib/platform/mock-store` because the production `questions`
     // table is missing the `type` and `category` columns the wizard /
-    // library UI rely on; AH-12 schema enrichment closes that gap and
-    // both files swap to `useLibraryQuestions` at that point.
+    // library UI rely on; AH-14 schema enrichment closes that gap and
+    // both files swap to `useLibraryQuestions` at that point. The
+    // `mock-user-data` rule is retained as a tripwire even though
+    // AH-11.6 deleted the file — re-introducing it should fail lint.
     files: [
       "src/routes/app*/**/*.{ts,tsx}",
       "src/routes/app.*.{ts,tsx}",
@@ -145,7 +149,7 @@ export default tseslint.config(
       "src/components/app/**/*.{ts,tsx}",
     ],
     ignores: [
-      // AH-12 schema-gap — questions table lacks type/category.
+      // AH-14 schema-gap — questions table lacks type/category.
       "src/routes/app.tests.new.tsx",
       "src/routes/app.library.tsx",
     ],
@@ -157,12 +161,12 @@ export default tseslint.config(
             {
               name: "@/lib/platform/mock-store",
               message:
-                "User scope is wired to Supabase via @/lib/platform/queries.ts. mock-store imports are AH-12 (schema-gap) carve-outs only.",
+                "User scope is wired to Supabase via @/lib/platform/queries.ts. mock-store imports are AH-14 (schema-gap) carve-outs only.",
             },
             {
               name: "@/lib/platform/mock-user-data",
               message:
-                "User scope is wired to Supabase via @/lib/platform/queries.ts. mock-store imports are AH-12 (schema-gap) carve-outs only.",
+                "@/lib/platform/mock-user-data was deleted in AH-11.6. Use @/lib/platform/seed + queries.ts.",
             },
           ],
         },

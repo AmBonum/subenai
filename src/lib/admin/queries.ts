@@ -1086,13 +1086,14 @@ export function useAdminDashboardStats() {
 // CMS — pages, header, footer, navigation, share-card, quick-test config.
 // ---------------------------------------------------------------------------
 // AH-11.5a swaps the admin CMS routes and the public /s/$slug loader from
-// `cms-mock-store` onto these hooks. The UI types (CmsPage, CmsHeader, …)
-// live in `cms-mock-store` and stay there until AH-11.6 deletes the mock —
-// the mappers below adapt the DB rows (jsonb columns, snake_case) into those
-// shapes so the route components render unchanged. Mutations write through
-// optimistic cache updates so the UI reacts SYNC and tests can assert the
-// effect right after `fireEvent.click`. RLS allows anon SELECT on the public
-// rows (cms_pages where status='published', all singletons).
+// `cms-mock-store` onto these hooks. The UI types live in `cms-types`
+// (AH-11.6 relocation) so production code never reaches into the mock
+// module. The mappers below adapt the DB rows (jsonb columns, snake_case)
+// into those shapes so the route components render unchanged. Mutations
+// write through optimistic cache updates so the UI reacts SYNC and tests
+// can assert the effect right after `fireEvent.click`. RLS allows anon
+// SELECT on the public rows (cms_pages where status='published', all
+// singletons).
 
 import type {
   CmsBlock,
@@ -1103,7 +1104,7 @@ import type {
   CmsShareCard,
   PageStatus,
   QuickTestConfig,
-} from "./cms-mock-store";
+} from "./cms-types";
 
 interface CmsPagesRow {
   id: string;

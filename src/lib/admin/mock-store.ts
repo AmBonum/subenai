@@ -1,6 +1,9 @@
-// AH-11 deletes this file. Production reads via React Query + Supabase queries
-// (`src/lib/admin/queries.ts`, `src/lib/platform/queries.ts`). Mock data only —
-// never seeded into production.
+// AH-11.6 carve-out — admin in-memory repo, retained for tests and the
+// `answer-sets-mock-store` user-side viewer at /app/sets/$setId.
+// Production admin reads go through `@/lib/admin/queries.ts` + Supabase.
+// AH-14 migrates the answer-sets viewer onto `useAnswerSets` /
+// `useAnswers` query hooks; at that point this file plus
+// `answer-sets-mock-store` and `mock-data` can be deleted together.
 //
 // Reactive in-memory store + repo abstraction for the SubenAI admin.
 //

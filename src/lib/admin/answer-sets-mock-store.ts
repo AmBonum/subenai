@@ -1,7 +1,10 @@
-// AH-11 deletes this file. Production reads via React Query + Supabase queries.
-// Mock-only thin wrapper around `adminRepo` so the answer-set pages share state
-// with the rest of admin. The `mock-` prefix in the filename is the contract
-// AH-11's grep guard relies on to catch leakage into the production bundle.
+// AH-11.6 carve-out — wraps `adminRepo` so the /app/sets/$setId user-side
+// viewer can read the same answer-set state mutated by admin. AH-14 lifts
+// the viewer onto Supabase-backed `useAnswerSets` / `useAnswers` hooks in
+// `@/lib/admin/queries.ts`; at that point this whole file (and the parent
+// `mock-store` + `mock-data`) is deletable. The `mock-` prefix in the
+// filename is the contract `scripts/check-bundle-no-mocks.mjs` relies on
+// to catch accidental leakage of these symbols into the production bundle.
 import { adminRepo, useAdminState } from "@/lib/admin/mock-store";
 import type { AdminAnswer, AdminAnswerSet } from "@/lib/admin/mock-data";
 

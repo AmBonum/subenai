@@ -27,7 +27,7 @@ vi.mock("@tanstack/react-router", async () => {
 });
 
 import { Route } from "@/routes/admin/navigation";
-import type { CmsNavItem } from "@/lib/admin/cms-mock-store";
+import type { CmsNavItem } from "@/lib/admin/cms-types";
 import {
   adminMockTables,
   resetAdminMockRecorded,

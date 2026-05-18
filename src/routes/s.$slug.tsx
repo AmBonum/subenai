@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 
 import { usePublishedCmsPage } from "@/lib/admin/queries";
-import type { CmsBlock, CmsPage } from "@/lib/admin/cms-mock-store";
+import type { CmsBlock, CmsPage } from "@/lib/admin/cms-types";
 
 export const Route = createFileRoute("/s/$slug")({
   component: PublicCmsPageRoute,

@@ -1,8 +1,8 @@
 // Pre-seed every user (`["user", ...]`) TanStack Query key with the same UI
-// shape `mock-user-data` (SEED_*) provides. AH-11.2b swaps every /app/* read
-// onto `useX()` hooks from `src/lib/platform/queries.ts`; tests assert on
-// rendered rows immediately after `render(<Page />)`, so the cache must be
-// populated before the first paint.
+// shape `@/lib/platform/seed` (SEED_*) provides. AH-11.2b swaps every /app/*
+// read onto `useX()` hooks from `src/lib/platform/queries.ts`; tests assert
+// on rendered rows immediately after `render(<Page />)`, so the cache must
+// be populated before the first paint.
 
 import type { QueryClient } from "@tanstack/react-query";
 import {
