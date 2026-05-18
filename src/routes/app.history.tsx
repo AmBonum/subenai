@@ -14,7 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/app/page-header";
-import { currentUserId, useSessions, useTests, useTestVersions } from "@/lib/platform/mock-store";
+// useTestVersions has no equivalent in queries.ts (no `test_versions` table in
+// the AH-1 schema); keep it on mock-store until AH-12 enrichment lands.
+import { useTestVersions } from "@/lib/platform/mock-store";
+import { useTests, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
 
 export const Route = createFileRoute("/app/history")({
@@ -38,14 +41,15 @@ interface TimelineRow {
 
 function HistoryPage() {
   const t = tFor("history");
-  const tests = useTests();
-  const sessions = useSessions();
+  const testsQ = useTests();
+  const sessionsQ = useUserSessions();
   const versions = useTestVersions();
+  const tests = useMemo(() => testsQ.data ?? [], [testsQ.data]);
+  const sessions = useMemo(() => sessionsQ.data ?? [], [sessionsQ.data]);
 
-  const ownedIds = useMemo(
-    () => new Set(tests.filter((x) => x.owner_id === currentUserId()).map((x) => x.id)),
-    [tests],
-  );
+  // RLS already scopes `tests` to those owned by or shared with the current
+  // user; `ownedIds` reduces to "tests visible to me".
+  const ownedIds = useMemo(() => new Set(tests.map((x) => x.id)), [tests]);
 
   const rows: TimelineRow[] = useMemo(() => {
     const map = new Map(tests.map((x) => [x.id, x] as const));

@@ -12,14 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ShareDialog } from "@/components/user/ShareDialog";
-import {
-  archiveTest,
-  getTest,
-  publishTest,
-  updateTest,
-  useSessions,
-  useTests,
-} from "@/lib/platform/mock-store";
+import { archiveTest, publishTest, updateTest } from "@/lib/platform/mock-store";
+import { useTest, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
 
 const editorSearch = z.object({
@@ -40,9 +34,10 @@ function TestEditorPage() {
   const { testId } = useParams({ from: "/app/tests/$testId" });
   const search = useSearch({ from: "/app/tests/$testId" });
   const nav = useNavigate({ from: "/app/tests/$testId" });
-  useTests();
-  const test = getTest(testId);
-  const sessions = useSessions().filter((s) => s.test_id === testId);
+  const testQ = useTest(testId);
+  const sessionsQ = useUserSessions();
+  const test = testQ.data ?? null;
+  const sessions = (sessionsQ.data ?? []).filter((s) => s.test_id === testId);
 
   const [title, setTitle] = useState(test?.title ?? "");
   const [description, setDescription] = useState(test?.description ?? "");

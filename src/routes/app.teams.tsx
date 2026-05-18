@@ -13,13 +13,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+// `useTeamMembers` is a flat list across all teams; queries.ts only exposes a
+// scoped `useTeam(id)` join. Keep the flat read on mock-store until the
+// schema gets a list-membership hook.
 import {
-  useTeams,
   useTeamMembers,
   addTeamMember,
   removeTeamMember,
   updateTeamMemberRole,
 } from "@/lib/platform/mock-store";
+import { useTeams } from "@/lib/platform/queries";
 import type { Role } from "@/lib/platform/types";
 import { PageHeader } from "@/components/app/page-header";
 import { tFor } from "@/i18n/app-shell";
@@ -35,7 +38,8 @@ const ROLE_ICON = { owner: Crown, editor: Pencil, viewer: Eye } as const;
 
 function TeamsPage() {
   const t = tFor("teams");
-  const teams = useTeams();
+  const teamsQ = useTeams();
+  const teams = teamsQ.data ?? [];
   const members = useTeamMembers();
   const [activeTeam, setActiveTeam] = useState(teams[0]?.id ?? "");
   const [email, setEmail] = useState("");

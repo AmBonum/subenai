@@ -24,6 +24,8 @@ vi.mock("@testing-library/react", async () => {
   const actual =
     await vi.importActual<typeof import("@testing-library/react")>("@testing-library/react");
   const { seedAdminQueryClient } = await import("./utils/admin-supabase-mock");
+  const { seedUserQueryClient: seedUserQueryClientSync } =
+    await import("./utils/user-supabase-mock");
   return new Proxy(actual, {
     get(target, prop, receiver) {
       if (prop === "render") {
@@ -42,6 +44,10 @@ vi.mock("@testing-library/react", async () => {
           // first render and tests that assert on the table/list-state right
           // after `render(<Page />)` continue to find rows.
           seedAdminQueryClient(client);
+          // AH-11.2b: extend the same pre-seed to user (`["user", ...]`) query
+          // keys so /app/* component tests stay synchronous after swapping
+          // mock-store reads onto `useX()` hooks from `queries.ts`.
+          seedUserQueryClientSync(client);
           const InnerWrapper = options?.wrapper;
           const FullWrapper = ({ children }: { children: React.ReactNode }) =>
             React.createElement(

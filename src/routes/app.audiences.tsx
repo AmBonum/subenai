@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Plus, Mail, Pencil, Trash2, X, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -10,13 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { PageHeader } from "@/components/app/page-header";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
-import {
-  createGroup,
-  currentUserId,
-  deleteGroup,
-  updateGroup,
-  useGroups,
-} from "@/lib/platform/mock-store";
+import { createGroup, deleteGroup, updateGroup } from "@/lib/platform/mock-store";
+import { useAudiences } from "@/lib/platform/queries";
 import type { RespondentGroup } from "@/lib/platform/types";
 import { tFor } from "@/i18n/tests";
 
@@ -29,8 +24,8 @@ export const Route = createFileRoute("/app/audiences")({
 
 function AudiencesPage() {
   const t = tFor("audiences");
-  const groups = useGroups();
-  const myGroups = useMemo(() => groups.filter((g) => g.owner_id === currentUserId()), [groups]);
+  const groupsQ = useAudiences();
+  const myGroups = groupsQ.data ?? [];
 
   const [editing, setEditing] = useState<RespondentGroup | null>(null);
   const [isNew, setIsNew] = useState(false);

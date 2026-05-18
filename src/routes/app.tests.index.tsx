@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusBadge } from "@/components/admin/StatusBadge";
-import { useTests, currentUserId } from "@/lib/platform/mock-store";
+import { useTests } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
 
 export const Route = createFileRoute("/app/tests/")({
@@ -30,8 +30,9 @@ type StatusFilter = "all" | "published" | "draft" | "archived";
 
 function TestsList() {
   const t = tFor("list");
-  const all = useTests();
-  const owned = useMemo(() => all.filter((x) => x.owner_id === currentUserId()), [all]);
+  const testsQ = useTests();
+  // RLS filters tests to those owned by or shared with the current user.
+  const owned = useMemo(() => testsQ.data ?? [], [testsQ.data]);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [branch, setBranch] = useState<string>("all");

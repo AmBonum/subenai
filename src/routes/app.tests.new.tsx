@@ -17,7 +17,13 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/app/page-header";
-import { createTest, useGroups, useQuestions, useTemplates } from "@/lib/platform/mock-store";
+// `useQuestions` reads from mock-store: the wizard surfaces a question's
+// `type` + `category`, but the production `questions` table only ships
+// `branch_slug` + `difficulty` (see queries.ts `useLibraryQuestions`).
+// AH-11.2c keeps the mutation here; the read swap waits for AH-12 schema
+// enrichment.
+import { createTest, useQuestions } from "@/lib/platform/mock-store";
+import { useAudiences, useTemplates } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
 
 const stepSchema = z.object({
@@ -38,8 +44,10 @@ function WizardPage() {
   const nav = useNavigate({ from: "/app/tests/new" });
   const search = useSearch({ from: "/app/tests/new" });
   const step = search.step ?? 1;
-  const templates = useTemplates();
-  const groups = useGroups();
+  const templatesQ = useTemplates();
+  const groupsQ = useAudiences();
+  const templates = useMemo(() => templatesQ.data ?? [], [templatesQ.data]);
+  const groups = groupsQ.data ?? [];
   const questions = useQuestions();
 
   const initialFromTemplate = useMemo(() => {

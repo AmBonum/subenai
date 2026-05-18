@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/app/page-header";
-import { useTemplates } from "@/lib/platform/mock-store";
+import { useTemplates } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
 
 export const Route = createFileRoute("/app/templates")({
@@ -26,7 +26,8 @@ export const Route = createFileRoute("/app/templates")({
 
 function TemplatesPage() {
   const t = tFor("templates");
-  const templates = useTemplates();
+  const templatesQ = useTemplates();
+  const templates = useMemo(() => templatesQ.data ?? [], [templatesQ.data]);
   const nav = useNavigate();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>("all");

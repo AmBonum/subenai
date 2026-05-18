@@ -4,11 +4,8 @@ import { Bell, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  useNotifications,
-  markNotificationRead,
-  markAllNotificationsRead,
-} from "@/lib/platform/mock-store";
+import { markNotificationRead, markAllNotificationsRead } from "@/lib/platform/mock-store";
+import { useNotifications } from "@/lib/platform/queries";
 import { PageHeader } from "@/components/app/page-header";
 import { tFor } from "@/i18n/app-shell";
 
@@ -29,7 +26,8 @@ const TYPE_TONE = {
 
 function NotificationsPage() {
   const t = tFor("notifications");
-  const notifs = useNotifications();
+  const notifsQ = useNotifications();
+  const notifs = notifsQ.data ?? [];
   const [onlyUnread, setOnlyUnread] = useState(false);
   const visible = onlyUnread ? notifs.filter((n) => !n.read_at) : notifs;
   const unread = notifs.filter((n) => !n.read_at).length;

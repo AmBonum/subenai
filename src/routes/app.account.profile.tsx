@@ -9,7 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { useCurrentUser, updateCurrentUser } from "@/lib/platform/mock-store";
+import { updateCurrentUser } from "@/lib/platform/mock-store";
+import { useCurrentProfile } from "@/lib/platform/queries";
 import { PageHeader } from "@/components/app/page-header";
 import { tFor } from "@/i18n/app-shell";
 
@@ -35,7 +36,13 @@ function buildSchema(t: ReturnType<typeof tFor>) {
 
 function ProfilePage() {
   const t = tFor("account.profile");
-  const me = useCurrentUser();
+  const profileQ = useCurrentProfile();
+  const me = profileQ.data ?? {
+    id: "",
+    email: "",
+    display_name: "",
+    avatar_initials: "",
+  };
   const [displayName, setDisplayName] = useState(me.display_name);
   const [email, setEmail] = useState(me.email);
   const [initials, setInitials] = useState(me.avatar_initials);

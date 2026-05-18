@@ -13,6 +13,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/app/page-header";
+// `useQuestions` reads `Question` (with `type` + `category`). Production
+// `questions` table only has `branch_slug` + `difficulty` (see
+// `useLibraryQuestions` in queries.ts). Keep on mock-store until AH-12 schema
+// enrichment adds the missing columns; otherwise the type badge + category
+// chip would render blank.
 import { useQuestions } from "@/lib/platform/mock-store";
 import type { QuestionType } from "@/lib/platform/types";
 import { tFor } from "@/i18n/questions";

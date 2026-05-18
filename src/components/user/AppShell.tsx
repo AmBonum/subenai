@@ -20,7 +20,7 @@ import {
   UserCog,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useCurrentUser, useNotifications } from "@/lib/platform/mock-store";
+import { useCurrentProfile, useNotifications } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/app-shell";
 
 type NavKey =
@@ -139,8 +139,10 @@ const NAV: NavItem[] = [
 
 export function AppShell({ children }: { children: ReactNode }) {
   const loc = useLocation();
-  const me = useCurrentUser();
-  const notifs = useNotifications();
+  const profileQ = useCurrentProfile();
+  const notifsQ = useNotifications();
+  const me = profileQ.data;
+  const notifs = notifsQ.data ?? [];
   const unread = notifs.filter((n) => !n.read_at).length;
   const t = tFor("sidebar");
 
@@ -167,10 +169,10 @@ export function AppShell({ children }: { children: ReactNode }) {
               data-testid="app-shell-header-user"
             >
               <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
-                {me.avatar_initials}
+                {me?.avatar_initials ?? ""}
               </span>
               <span className="hidden sm:inline" data-testid="app-shell-header-user-name">
-                {me.display_name}
+                {me?.display_name ?? ""}
               </span>
             </div>
             <button
