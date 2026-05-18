@@ -12,8 +12,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ShareDialog } from "@/components/user/ShareDialog";
-import { archiveTest, publishTest, updateTest } from "@/lib/platform/mock-store";
-import { useTest, useUserSessions } from "@/lib/platform/queries";
+import { toast } from "sonner";
+import {
+  useArchiveTest,
+  usePublishTest,
+  useTest,
+  useUpdateTest,
+  useUserSessions,
+} from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
 
 const editorSearch = z.object({
@@ -36,6 +42,9 @@ function TestEditorPage() {
   const nav = useNavigate({ from: "/app/tests/$testId" });
   const testQ = useTest(testId);
   const sessionsQ = useUserSessions();
+  const updateMut = useUpdateTest();
+  const publishMut = usePublishTest();
+  const archiveMut = useArchiveTest();
   const test = testQ.data ?? null;
   const sessions = (sessionsQ.data ?? []).filter((s) => s.test_id === testId);
 
@@ -69,15 +78,18 @@ function TestEditorPage() {
   }
 
   const onSave = () => {
-    updateTest(test.id, { title: title.trim(), description: description.trim() });
+    updateMut.mutate(
+      { id: test.id, patch: { title: title.trim(), description: description.trim() } },
+      { onError: (err) => toast.error(err.message) },
+    );
   };
 
   const onArchive = () => {
-    archiveTest(test.id);
+    archiveMut.mutate(test.id, { onError: (err) => toast.error(err.message) });
   };
 
   const onPublish = () => {
-    publishTest(test.id);
+    publishMut.mutate(test.id, { onError: (err) => toast.error(err.message) });
   };
 
   const setTab = (tab: "results" | "analytics" | "settings") => {
@@ -112,13 +124,19 @@ function TestEditorPage() {
                 size="sm"
                 variant="outline"
                 onClick={onArchive}
+                disabled={archiveMut.isPending}
                 data-testid="test-editor-archive-button"
               >
                 <Archive className="mr-2 h-3 w-3" />
                 {t("archive_button")}
               </Button>
             )}
-            <Button size="sm" onClick={onPublish} data-testid="test-editor-publish-button">
+            <Button
+              size="sm"
+              onClick={onPublish}
+              disabled={publishMut.isPending}
+              data-testid="test-editor-publish-button"
+            >
               <Send className="mr-2 h-3 w-3" />
               {t("publish_button")}
             </Button>
@@ -192,7 +210,11 @@ function TestEditorPage() {
                 />
               </div>
               <div className="flex justify-end">
-                <Button onClick={onSave} data-testid="test-editor-save-button">
+                <Button
+                  onClick={onSave}
+                  disabled={updateMut.isPending}
+                  data-testid="test-editor-save-button"
+                >
                   <Save className="mr-2 h-3 w-3" />
                   {t("save_button")}
                 </Button>

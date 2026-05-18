@@ -20,10 +20,15 @@ import { PageHeader } from "@/components/app/page-header";
 // `useQuestions` reads from mock-store: the wizard surfaces a question's
 // `type` + `category`, but the production `questions` table only ships
 // `branch_slug` + `difficulty` (see queries.ts `useLibraryQuestions`).
-// AH-11.2c keeps the mutation here; the read swap waits for AH-12 schema
-// enrichment.
-import { createTest, useQuestions } from "@/lib/platform/mock-store";
-import { useAudiences, useTemplates } from "@/lib/platform/queries";
+// AH-11.2c keeps the read here; the swap waits for AH-12 schema enrichment.
+import { useQuestions } from "@/lib/platform/mock-store";
+import { toast } from "sonner";
+import {
+  useAudiences,
+  useCreateTest,
+  useCurrentProfile,
+  useTemplates,
+} from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
 
 const stepSchema = z.object({
@@ -46,6 +51,8 @@ function WizardPage() {
   const step = search.step ?? 1;
   const templatesQ = useTemplates();
   const groupsQ = useAudiences();
+  const profileQ = useCurrentProfile();
+  const createMut = useCreateTest();
   const templates = useMemo(() => templatesQ.data ?? [], [templatesQ.data]);
   const groups = groupsQ.data ?? [];
   const questions = useQuestions();
@@ -71,15 +78,25 @@ function WizardPage() {
   const step3Valid = questionIds.length > 0;
 
   const onPublish = () => {
-    const created = createTest({
-      title: title.trim(),
-      description: description.trim(),
-      question_ids: questionIds,
-      segmentation: groupId === "none" ? [] : [groupId],
-    });
-    setCreatedTestId(created.id);
-    setCreatedShareId(created.share_id);
-    goStep(4);
+    const ownerId = profileQ.data?.id ?? "";
+    createMut.mutate(
+      {
+        owner_id: ownerId,
+        title: title.trim(),
+        description: description.trim(),
+        segmentation: groupId === "none" ? [] : [groupId],
+      },
+      {
+        onSuccess: (created) => {
+          const row = created as { id: string; share_id: string } | null;
+          if (!row) return;
+          setCreatedTestId(row.id);
+          setCreatedShareId(row.share_id);
+          goStep(4);
+        },
+        onError: (err) => toast.error(err.message),
+      },
+    );
   };
 
   const shareUrl =
@@ -279,7 +296,7 @@ function WizardPage() {
               </Button>
               <Button
                 onClick={onPublish}
-                disabled={!step3Valid}
+                disabled={!step3Valid || createMut.isPending}
                 data-testid="new-test-wizard-step-3-next"
               >
                 {t("publish_button")}

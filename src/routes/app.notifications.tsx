@@ -1,11 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Bell, CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { markNotificationRead, markAllNotificationsRead } from "@/lib/platform/mock-store";
-import { useNotifications } from "@/lib/platform/queries";
+import {
+  useCurrentProfile,
+  useMarkAllRead,
+  useMarkNotificationRead,
+  useNotifications,
+} from "@/lib/platform/queries";
 import { PageHeader } from "@/components/app/page-header";
 import { tFor } from "@/i18n/app-shell";
 
@@ -27,10 +32,29 @@ const TYPE_TONE = {
 function NotificationsPage() {
   const t = tFor("notifications");
   const notifsQ = useNotifications();
+  const profileQ = useCurrentProfile();
+  const markOne = useMarkNotificationRead();
+  const markAll = useMarkAllRead();
   const notifs = notifsQ.data ?? [];
   const [onlyUnread, setOnlyUnread] = useState(false);
   const visible = onlyUnread ? notifs.filter((n) => !n.read_at) : notifs;
   const unread = notifs.filter((n) => !n.read_at).length;
+
+  const onMarkOne = (id: string) =>
+    markOne.mutate(id, {
+      onError: (err) => toast.error(err.message),
+    });
+
+  const onMarkAll = () => {
+    const uid = profileQ.data?.id;
+    if (!uid) {
+      toast.error(t("mark_all"));
+      return;
+    }
+    markAll.mutate(uid, {
+      onError: (err) => toast.error(err.message),
+    });
+  };
 
   return (
     <div className="space-y-6" data-testid="app-notifications-root">
@@ -56,7 +80,8 @@ function NotificationsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={markAllNotificationsRead}
+                onClick={onMarkAll}
+                disabled={markAll.isPending}
                 data-testid="app-notifications-mark-all"
               >
                 <CheckCheck className="mr-2 h-4 w-4" /> {t("mark_all")}
@@ -89,7 +114,8 @@ function NotificationsPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => markNotificationRead(n.id)}
+                  onClick={() => onMarkOne(n.id)}
+                  disabled={markOne.isPending}
                   data-testid={`app-notifications-mark-read-${n.id}`}
                 >
                   {t("mark_one")}

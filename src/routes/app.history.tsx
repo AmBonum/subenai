@@ -14,10 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/app/page-header";
-// useTestVersions has no equivalent in queries.ts (no `test_versions` table in
-// the AH-1 schema); keep it on mock-store until AH-12 enrichment lands.
-import { useTestVersions } from "@/lib/platform/mock-store";
-import { useTests, useUserSessions } from "@/lib/platform/queries";
+import { useTestVersions, useTests, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
 
 export const Route = createFileRoute("/app/history")({
@@ -43,7 +40,8 @@ function HistoryPage() {
   const t = tFor("history");
   const testsQ = useTests();
   const sessionsQ = useUserSessions();
-  const versions = useTestVersions();
+  const versionsQ = useTestVersions();
+  const versions = useMemo(() => versionsQ.data ?? [], [versionsQ.data]);
   const tests = useMemo(() => testsQ.data ?? [], [testsQ.data]);
   const sessions = useMemo(() => sessionsQ.data ?? [], [sessionsQ.data]);
 

@@ -9,8 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { updateCurrentUser } from "@/lib/platform/mock-store";
-import { useCurrentProfile } from "@/lib/platform/queries";
+import { useCurrentProfile, useUpdateProfile } from "@/lib/platform/queries";
 import { PageHeader } from "@/components/app/page-header";
 import { tFor } from "@/i18n/app-shell";
 
@@ -37,6 +36,7 @@ function buildSchema(t: ReturnType<typeof tFor>) {
 function ProfilePage() {
   const t = tFor("account.profile");
   const profileQ = useCurrentProfile();
+  const updateMut = useUpdateProfile();
   const me = profileQ.data ?? {
     id: "",
     email: "",
@@ -75,9 +75,13 @@ function ProfilePage() {
       return;
     }
     setErrors({});
-    updateCurrentUser(parsed.data);
-    setShowSavedToast(true);
-    toast.success(t("toast_saved"));
+    updateMut.mutate(parsed.data, {
+      onSuccess: () => {
+        setShowSavedToast(true);
+        toast.success(t("toast_saved"));
+      },
+      onError: (err) => toast.error(err.message),
+    });
   };
 
   const handleReset = () => {
@@ -252,7 +256,11 @@ function ProfilePage() {
                 >
                   <RotateCcw className="mr-2 h-4 w-4" /> {t("btn_reset")}
                 </Button>
-                <Button type="submit" disabled={!dirty} data-testid="app-account-profile-submit">
+                <Button
+                  type="submit"
+                  disabled={!dirty || updateMut.isPending}
+                  data-testid="app-account-profile-submit"
+                >
                   <Save className="mr-2 h-4 w-4" /> {t("btn_save")}
                 </Button>
               </div>

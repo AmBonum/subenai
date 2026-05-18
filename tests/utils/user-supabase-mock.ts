@@ -9,10 +9,12 @@ import {
   SEED_DSR,
   SEED_GROUPS,
   SEED_NOTIFICATIONS,
+  SEED_RESPONDENTS,
   SEED_SESSIONS,
   SEED_TEAMS,
   SEED_TEAM_MEMBERS,
   SEED_TEMPLATES,
+  SEED_TEST_VERSIONS,
   SEED_TESTS,
   SEED_USERS,
   CURRENT_USER_ID,
@@ -22,10 +24,13 @@ import type {
   HistoryItem,
   Notification,
   Profile,
+  Respondent,
   Session,
   Team,
+  TeamMember,
   Template,
   Test,
+  TestVersion,
 } from "@/lib/platform/types";
 
 export function seedUserQueryClient(qc: QueryClient): void {
@@ -83,8 +88,25 @@ export function seedUserQueryClient(qc: QueryClient): void {
   }));
   qc.setQueryData(["user", "history", 50], history);
 
-  // DSR list — queries.ts ships only `useSubmitDSR` mutation; the read stays on
-  // mock-store. We pre-seed the key anyway so a future `useUserDSR()` lands
-  // without changing the seed shape.
+  // DSR list (AH-11.2c) — `useUserDSRList()` now reads dsr_requests through
+  // RLS-filtered Supabase; pre-seeding keeps the first render synchronous.
   qc.setQueryData(["user", "dsr"], SEED_DSR);
+
+  // Respondents (AH-11.2c) — backs the /app dashboard count card.
+  const respondents: Respondent[] = SEED_RESPONDENTS;
+  qc.setQueryData(["user", "respondents"], respondents);
+
+  // Test versions (AH-11.2c) — backs /app/history version events.
+  const versions: TestVersion[] = SEED_TEST_VERSIONS;
+  qc.setQueryData(["user", "test_versions", "all"], versions);
+  for (const t of tests) {
+    qc.setQueryData(
+      ["user", "test_versions", t.id],
+      versions.filter((v) => v.test_id === t.id),
+    );
+  }
+
+  // Team members (AH-11.2c) — flat list /app/teams iterates.
+  const teamMembers: TeamMember[] = SEED_TEAM_MEMBERS;
+  qc.setQueryData(["user", "team_members"], teamMembers);
 }

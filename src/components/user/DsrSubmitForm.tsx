@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createDSR } from "@/lib/platform/mock-store";
+import { useSubmitDSR } from "@/lib/platform/queries";
 import type { DSRType } from "@/lib/platform/types";
 import { tFor } from "@/i18n/governance";
 
@@ -28,6 +28,7 @@ const TYPES: DSRType[] = [
 
 export function DsrSubmitForm() {
   const t = tFor("dsr_form");
+  const submitMut = useSubmitDSR();
   const [email, setEmail] = useState("");
   const [type, setType] = useState<DSRType>("access");
   const [note, setNote] = useState("");
@@ -41,14 +42,17 @@ export function DsrSubmitForm() {
       setError(t("error_invalid_email"));
       return;
     }
-    try {
-      createDSR({ requester_email: email, type, note });
-      setSuccess(true);
-      setEmail("");
-      setNote("");
-    } catch {
-      setError(t("error_generic"));
-    }
+    submitMut.mutate(
+      { requester_email: email, type, note },
+      {
+        onSuccess: () => {
+          setSuccess(true);
+          setEmail("");
+          setNote("");
+        },
+        onError: () => setError(t("error_generic")),
+      },
+    );
   };
 
   return (
@@ -114,7 +118,11 @@ export function DsrSubmitForm() {
             data-testid="dsr-form-details-textarea"
           />
         </div>
-        <Button onClick={submit} data-testid="dsr-form-submit-button">
+        <Button
+          onClick={submit}
+          disabled={submitMut.isPending}
+          data-testid="dsr-form-submit-button"
+        >
           <ShieldCheck className="mr-2 h-4 w-4" />
           {t("submit_button")}
         </Button>

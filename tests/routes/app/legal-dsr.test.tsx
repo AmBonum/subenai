@@ -36,14 +36,14 @@ describe("/app/legal/dsr", () => {
     expect(screen.queryByTestId("dsr-form-success-banner")).toBeNull();
   });
 
-  it("submitting with a valid e-mail shows success banner and appends to history", () => {
+  it("submitting with a valid e-mail shows success banner and appends to history", async () => {
     render(<Page />);
     const email = screen.getByTestId("dsr-form-subject-input") as HTMLInputElement;
     fireEvent.change(email, { target: { value: "test-user-7-1@example.sk" } });
     fireEvent.click(screen.getByTestId("dsr-form-submit-button"));
-    const banner = screen.getByTestId("dsr-form-success-banner");
+    const banner = await screen.findByTestId("dsr-form-success-banner");
     expect(banner).toBeInTheDocument();
     const history = screen.getByTestId("app-legal-dsr-history-card");
-    expect(within(history).getByText(/test-user-7-1@example.sk/)).toBeInTheDocument();
+    expect(await within(history).findByText(/test-user-7-1@example.sk/)).toBeInTheDocument();
   });
 });

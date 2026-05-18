@@ -2,10 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ClipboardList, Users, Activity, CheckCircle2 } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatCard } from "@/components/admin/StatCard";
-// queries.ts has no `useRespondents` for the user dashboard count — the
-// admin domain owns the respondents table. Keep on mock-store.
-import { useRespondents } from "@/lib/platform/mock-store";
-import { useTests, useUserSessions } from "@/lib/platform/queries";
+import { useTests, useUserRespondents, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/app-shell";
 
 export const Route = createFileRoute("/app/")({
@@ -19,9 +16,10 @@ function AppDashboardPage() {
   const t = tFor("dashboard");
   const testsQ = useTests();
   const sessionsQ = useUserSessions();
-  const respondents = useRespondents();
+  const respondentsQ = useUserRespondents();
   const tests = testsQ.data ?? [];
   const sessions = sessionsQ.data ?? [];
+  const respondents = respondentsQ.data ?? [];
 
   const activeTests = tests.filter((x) => x.status === "published").length;
   const recentSessions = sessions.length;

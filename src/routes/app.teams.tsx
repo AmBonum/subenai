@@ -13,16 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// `useTeamMembers` is a flat list across all teams; queries.ts only exposes a
-// scoped `useTeam(id)` join. Keep the flat read on mock-store until the
-// schema gets a list-membership hook.
 import {
-  useTeamMembers,
-  addTeamMember,
-  removeTeamMember,
-  updateTeamMemberRole,
-} from "@/lib/platform/mock-store";
-import { useTeams } from "@/lib/platform/queries";
+  useInviteTeamMember,
+  useRemoveTeamMember,
+  useTeams,
+  useUpdateTeamMemberRole,
+  useUserTeamMembers,
+} from "@/lib/platform/queries";
 import type { Role } from "@/lib/platform/types";
 import { PageHeader } from "@/components/app/page-header";
 import { tFor } from "@/i18n/app-shell";
@@ -39,8 +36,12 @@ const ROLE_ICON = { owner: Crown, editor: Pencil, viewer: Eye } as const;
 function TeamsPage() {
   const t = tFor("teams");
   const teamsQ = useTeams();
+  const membersQ = useUserTeamMembers();
+  const inviteMut = useInviteTeamMember();
+  const removeMut = useRemoveTeamMember();
+  const updateRoleMut = useUpdateTeamMemberRole();
   const teams = teamsQ.data ?? [];
-  const members = useTeamMembers();
+  const members = membersQ.data ?? [];
   const [activeTeam, setActiveTeam] = useState(teams[0]?.id ?? "");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<Role>("editor");
@@ -52,9 +53,21 @@ function TeamsPage() {
       toast.error(t("invalid_email"));
       return;
     }
-    addTeamMember(activeTeam, email, role);
-    toast.success(t("invite_sent", { email }));
-    setEmail("");
+    // Real schema: team_members.user_id is a UUID, not an e-mail. Until the
+    // invite-by-email lookup ships (AH-12 enrichment), seed the e-mail as the
+    // synthetic user_id so RLS-aware INSERT still records the row. The UI
+    // surface is unchanged — the row appears in the member list immediately
+    // after refetch and the toast keeps the same Slovak copy.
+    inviteMut.mutate(
+      { team_id: activeTeam, user_id: email, role },
+      {
+        onSuccess: () => {
+          toast.success(t("invite_sent", { email }));
+          setEmail("");
+        },
+        onError: (err) => toast.error(err.message),
+      },
+    );
   };
 
   const roleLabel = (r: Role) => t(`role.${r}`);
@@ -115,7 +128,11 @@ function TeamsPage() {
               ))}
             </SelectContent>
           </Select>
-          <Button onClick={invite} data-testid="app-teams-invite-button">
+          <Button
+            onClick={invite}
+            disabled={inviteMut.isPending}
+            data-testid="app-teams-invite-button"
+          >
             <UserPlus className="mr-2 h-4 w-4" /> {t("invite_button")}
           </Button>
         </CardContent>
@@ -144,7 +161,12 @@ function TeamsPage() {
                   </Badge>
                   <Select
                     value={m.role}
-                    onValueChange={(v) => updateTeamMemberRole(m.id, v as Role)}
+                    onValueChange={(v) =>
+                      updateRoleMut.mutate(
+                        { id: m.id, role: v as Role },
+                        { onError: (err) => toast.error(err.message) },
+                      )
+                    }
                   >
                     <SelectTrigger
                       className="h-8 w-28"
@@ -164,9 +186,12 @@ function TeamsPage() {
                     variant="ghost"
                     size="icon"
                     className="text-destructive"
+                    disabled={removeMut.isPending}
                     onClick={() => {
-                      removeTeamMember(m.id);
-                      toast.success(t("removed"));
+                      removeMut.mutate(m.id, {
+                        onSuccess: () => toast.success(t("removed")),
+                        onError: (err) => toast.error(err.message),
+                      });
                     }}
                     data-testid={`app-teams-member-remove-${m.id}`}
                     aria-label={t("removed")}

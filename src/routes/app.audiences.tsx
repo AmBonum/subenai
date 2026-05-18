@@ -10,8 +10,14 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { PageHeader } from "@/components/app/page-header";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
-import { createGroup, deleteGroup, updateGroup } from "@/lib/platform/mock-store";
-import { useAudiences } from "@/lib/platform/queries";
+import { toast } from "sonner";
+import {
+  useAudiences,
+  useCreateAudience,
+  useCurrentProfile,
+  useDeleteAudience,
+  useUpdateAudience,
+} from "@/lib/platform/queries";
 import type { RespondentGroup } from "@/lib/platform/types";
 import { tFor } from "@/i18n/tests";
 
@@ -25,6 +31,10 @@ export const Route = createFileRoute("/app/audiences")({
 function AudiencesPage() {
   const t = tFor("audiences");
   const groupsQ = useAudiences();
+  const profileQ = useCurrentProfile();
+  const createMut = useCreateAudience();
+  const updateMut = useUpdateAudience();
+  const deleteMut = useDeleteAudience();
   const myGroups = groupsQ.data ?? [];
 
   const [editing, setEditing] = useState<RespondentGroup | null>(null);
@@ -66,16 +76,31 @@ function AudiencesPage() {
   const onSave = () => {
     if (!name.trim()) return;
     if (editing) {
-      updateGroup(editing.id, { name: name.trim(), tags });
+      updateMut.mutate(
+        { id: editing.id, patch: { name: name.trim(), tags } },
+        {
+          onSuccess: () => closeEditor(),
+          onError: (err) => toast.error(err.message),
+        },
+      );
     } else {
-      createGroup({ name: name.trim(), tags });
+      const ownerId = profileQ.data?.id ?? "";
+      createMut.mutate(
+        { name: name.trim(), tags, owner_id: ownerId },
+        {
+          onSuccess: () => closeEditor(),
+          onError: (err) => toast.error(err.message),
+        },
+      );
     }
-    closeEditor();
   };
 
   const onConfirmDelete = () => {
     if (pendingDelete) {
-      deleteGroup(pendingDelete.id);
+      const id = pendingDelete.id;
+      deleteMut.mutate(id, {
+        onError: (err) => toast.error(err.message),
+      });
       setPendingDelete(null);
     }
   };

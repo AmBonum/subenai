@@ -4,10 +4,7 @@ import { FileText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DsrSubmitForm } from "@/components/user/DsrSubmitForm";
-// queries.ts ships `useSubmitDSR` (mutation) but no list hook for the user's
-// own DSR history. Keep on mock-store; AH-11.2c is the right place to add a
-// `useUserDSR()` read.
-import { useDSR } from "@/lib/platform/mock-store";
+import { useUserDSRList } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/governance";
 
 export const Route = createFileRoute("/app/legal/dsr")({
@@ -19,7 +16,8 @@ export const Route = createFileRoute("/app/legal/dsr")({
 
 function DsrPage() {
   const t = tFor("dsr_form");
-  const dsr = useDSR();
+  const dsrQ = useUserDSRList();
+  const dsr = dsrQ.data ?? [];
   const recent = dsr.slice(0, 5);
 
   return (

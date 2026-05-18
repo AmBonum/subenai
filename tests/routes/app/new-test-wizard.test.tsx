@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 const navigateMock = vi.fn();
 
@@ -69,7 +69,7 @@ describe("/app/tests/new (AH-5.2 wizard)", () => {
     expect(screen.getByTestId("new-test-wizard-step-3-root")).toBeInTheDocument();
   });
 
-  it("publish on step 3 creates a test and routes to step 4 with a share link", () => {
+  it("publish on step 3 creates a test and routes to step 4 with a share link", async () => {
     searchState.step = 3;
     const { rerender } = render(<Page />);
     // Title is empty on a fresh render but we set it earlier; populate step 1
@@ -87,6 +87,9 @@ describe("/app/tests/new (AH-5.2 wizard)", () => {
     rerender(<Page />);
     fireEvent.click(screen.getByTestId("new-test-wizard-question-add-button"));
     fireEvent.click(screen.getByTestId("new-test-wizard-step-3-next"));
+    // useCreateTest is now async (Supabase INSERT); wait for the onSuccess
+    // callback to flip the wizard to step 4 before asserting the share link.
+    await waitFor(() => expect(searchState.step).toBe(4));
     rerender(<Page />);
     expect(screen.getByTestId("new-test-wizard-step-4-root")).toBeInTheDocument();
     const shareInput = screen.getByTestId("new-test-wizard-share-link-input") as HTMLInputElement;

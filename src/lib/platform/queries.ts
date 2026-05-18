@@ -22,6 +22,7 @@ import type {
   LibraryQuestion,
   Notification,
   Profile,
+  Respondent,
   RespondentGroup,
   Session,
   Team,
@@ -29,6 +30,7 @@ import type {
   Template,
   Test,
   TestStatus,
+  TestVersion,
 } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -813,7 +815,10 @@ export function useInviteTeamMember() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "teams"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "teams"] });
+      qc.invalidateQueries({ queryKey: ["user", "team_members"] });
+    },
   });
 }
 
@@ -824,7 +829,10 @@ export function useRemoveTeamMember() {
       const { error } = await supabase.from("team_members").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "teams"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "teams"] });
+      qc.invalidateQueries({ queryKey: ["user", "team_members"] });
+    },
   });
 }
 
@@ -891,7 +899,14 @@ export function useSubmitDSR() {
       if (error) throw error;
       return data ? mapDSR(data as DsrRequestsRow) : null;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "dsr"] }),
+    onSuccess: (created) => {
+      if (created) {
+        qc.setQueryData<DSRRequest[]>(["user", "dsr"], (prev) =>
+          prev ? [created, ...prev] : [created],
+        );
+      }
+      qc.invalidateQueries({ queryKey: ["user", "dsr"] });
+    },
   });
 }
 
@@ -912,6 +927,203 @@ export function useLibraryQuestions(branchSlug?: string) {
       const { data, error } = await q;
       if (error) throw error;
       return (data ?? []).map((r) => mapLibraryQuestion(r as QuestionsRow));
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Respondents (RLS scopes to owners of the parent test / team)
+// ---------------------------------------------------------------------------
+
+type RespondentsRow = {
+  id: string;
+  email: string | null;
+  display_name: string | null;
+  anonymized_at: string | null;
+  created_at: string;
+};
+
+const mapRespondent = (row: RespondentsRow): Respondent => ({
+  id: row.id,
+  email: row.email,
+  display_name: row.display_name,
+  anonymized_at: row.anonymized_at,
+  created_at: row.created_at,
+});
+
+export function useUserRespondents() {
+  return useQuery({
+    queryKey: ["user", "respondents"],
+    queryFn: async (): Promise<Respondent[]> => {
+      const { data, error } = await supabase
+        .from("respondents")
+        .select("id, email, display_name, anonymized_at, created_at")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map((r) => mapRespondent(r as RespondentsRow));
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Test versions (snapshot history; RLS via parent test)
+// ---------------------------------------------------------------------------
+
+type TestVersionsRow = {
+  id: string;
+  test_id: string;
+  version: number;
+  snapshot: unknown;
+  published_at: string;
+  published_by: string | null;
+  changelog: string | null;
+};
+
+const mapTestVersion = (row: TestVersionsRow): TestVersion => {
+  const snap = (row.snapshot ?? {}) as { title?: string; question_count?: number };
+  return {
+    id: row.id,
+    test_id: row.test_id,
+    version: row.version,
+    snapshot_title: snap.title ?? "",
+    snapshot_questions: snap.question_count ?? 0,
+    published_at: row.published_at,
+    published_by: row.published_by ?? "",
+    changelog: row.changelog ?? "",
+  };
+};
+
+export function useTestVersions(testId?: string) {
+  return useQuery({
+    queryKey: ["user", "test_versions", testId ?? "all"],
+    queryFn: async (): Promise<TestVersion[]> => {
+      let q = supabase
+        .from("test_versions")
+        .select("id, test_id, version, snapshot, published_at, published_by, changelog")
+        .order("published_at", { ascending: false });
+      if (testId) q = q.eq("test_id", testId);
+      const { data, error } = await q;
+      if (error) throw error;
+      return (data ?? []).map((r) => mapTestVersion(r as TestVersionsRow));
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// DSR list — the user's own submitted requests (RLS by requester_email match
+// on the auth user's email).
+// ---------------------------------------------------------------------------
+
+export function useUserDSRList() {
+  return useQuery({
+    queryKey: ["user", "dsr"],
+    queryFn: async (): Promise<DSRRequest[]> => {
+      const { data, error } = await supabase
+        .from("dsr_requests")
+        .select("id, requester_email, type, status, note, created_at, sla_due_at, resolved_at")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map((r) => mapDSR(r as DsrRequestsRow));
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Team members — flat list across the user's teams (joined with profiles for
+// display name + email). RLS on team_members filters by is_team_member().
+// ---------------------------------------------------------------------------
+
+export function useUserTeamMembers() {
+  return useQuery({
+    queryKey: ["user", "team_members"],
+    queryFn: async (): Promise<TeamMember[]> => {
+      const { data: members, error } = await supabase
+        .from("team_members")
+        .select("id, team_id, user_id, role, joined_at");
+      if (error) throw error;
+      const rows = (members ?? []) as TeamMembersRow[];
+      const profileIds = Array.from(new Set(rows.map((m) => m.user_id)));
+      let profileMap = new Map<string, ProfilesRow>();
+      if (profileIds.length) {
+        const { data: profiles, error: e2 } = await supabase
+          .from("profiles")
+          .select("id, email, display_name, avatar_initials, created_at")
+          .in("id", profileIds);
+        if (e2) throw e2;
+        profileMap = new Map(((profiles ?? []) as ProfilesRow[]).map((p) => [p.id, p]));
+      }
+      return rows.map((m) => mapTeamMember(m, profileMap.get(m.user_id)));
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Test lifecycle helpers (publish + archive). Mirror mock-store semantics.
+// ---------------------------------------------------------------------------
+
+export function usePublishTest() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data: src, error: e1 } = await supabase
+        .from("tests")
+        .select("id, version, status, title")
+        .eq("id", id)
+        .maybeSingle();
+      if (e1) throw e1;
+      if (!src) throw new Error("Test not found");
+      const row = src as { id: string; version: number; status: string; title: string };
+      const newVersion = row.version + (row.status === "published" ? 1 : 0);
+      const nowIso = new Date().toISOString();
+      const { error } = await supabase
+        .from("tests")
+        .update({
+          status: "published" as never,
+          version: newVersion,
+          published_at: nowIso,
+          updated_at: nowIso,
+        })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "tests"] });
+      qc.invalidateQueries({ queryKey: ["user", "test_versions"] });
+    },
+  });
+}
+
+export function useArchiveTest() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("tests")
+        .update({ status: "archived" as never, updated_at: new Date().toISOString() })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests"] }),
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Team member role update.
+// ---------------------------------------------------------------------------
+
+export function useUpdateTeamMemberRole() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, role }: { id: string; role: TeamMember["role"] }) => {
+      const { error } = await supabase
+        .from("team_members")
+        .update({ role: role as never })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "teams"] });
+      qc.invalidateQueries({ queryKey: ["user", "team_members"] });
     },
   });
 }
