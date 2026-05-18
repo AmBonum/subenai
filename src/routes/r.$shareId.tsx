@@ -190,12 +190,14 @@ export function SharePage({ shareId }: { shareId: string }) {
             </span>
             <span className="text-2xl text-muted-foreground">/ 100</span>
           </div>
-          <div
-            className="mt-2 text-base text-muted-foreground"
-            dangerouslySetInnerHTML={{
-              __html: t("percentile_html", { pct: attempt.percentile }),
-            }}
-          />
+          <div className="mt-2 text-base text-muted-foreground">
+            {t("percentile.prefix")}
+            <span className="font-bold text-primary">
+              {attempt.percentile}
+              {t("percentile.value_suffix")}
+            </span>
+            {t("percentile.suffix")}
+          </div>
         </div>
 
         <div className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-card">

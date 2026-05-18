@@ -54,7 +54,11 @@ export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: P
       >
         <DialogHeader>
           <DialogTitle>{t("title")}</DialogTitle>
-          <DialogDescription dangerouslySetInnerHTML={{ __html: t("description_html") }} />
+          <DialogDescription>
+            {t("description.prefix")}
+            <strong>{t("description.strong")}</strong>
+            {t("description.suffix")}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-3">
@@ -91,7 +95,11 @@ export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: P
               onChange={(e) => setAcknowledged(e.target.checked)}
               className="mt-0.5 size-4 cursor-pointer accent-primary"
             />
-            <span className="leading-relaxed" dangerouslySetInnerHTML={{ __html: t("ack_html") }} />
+            <span className="leading-relaxed">
+              {t("ack.prefix")}
+              <strong>{t("ack.strong")}</strong>
+              {t("ack.suffix")}
+            </span>
           </label>
         </div>
 

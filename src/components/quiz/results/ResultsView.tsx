@@ -305,10 +305,14 @@ export function ResultsView({
           <span className="text-2xl text-muted-foreground">/ 100</span>
         </div>
         {showRest && (
-          <div
-            className="mt-2 animate-fade-in-up text-base text-muted-foreground"
-            dangerouslySetInnerHTML={{ __html: t("percentile_html", { pct: result.percentile }) }}
-          />
+          <div className="mt-2 animate-fade-in-up text-base text-muted-foreground">
+            {t("percentile.prefix")}
+            <span className="font-bold text-primary">
+              {result.percentile}
+              {t("percentile.value_suffix")}
+            </span>
+            {t("percentile.suffix")}
+          </div>
         )}
         {showRest && passes && (
           <div

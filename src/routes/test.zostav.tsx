@@ -343,10 +343,11 @@ export function ComposerPage() {
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             {t("page_heading")}
           </h1>
-          <p
-            className="mt-3 text-base text-muted-foreground sm:text-lg"
-            dangerouslySetInnerHTML={{ __html: t("page_intro_html") }}
-          />
+          <p className="mt-3 text-base text-muted-foreground sm:text-lg">
+            {t("page_intro.prefix")}
+            <strong className="text-foreground">{t("page_intro.strong")}</strong>
+            {t("page_intro.suffix")}
+          </p>
         </header>
 
         {staleNotice ? (

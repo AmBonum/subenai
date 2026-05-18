@@ -96,7 +96,13 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
             <strong className="text-foreground">{authorLabel || t("author_fallback")}</strong>.
           </p>
           <p>
-            <span dangerouslySetInnerHTML={{ __html: t("disclosure_html") }} />{" "}
+            <span>
+              {t("disclosure.prefix")}
+              <strong className="text-foreground">{t("disclosure.author")}</strong>
+              {t("disclosure.middle")}
+              <strong className="text-foreground">{t("disclosure.retention")}</strong>
+              {t("disclosure.suffix")}
+            </span>{" "}
             <Link to={ROUTES.privacy} className="underline underline-offset-2">
               {t("privacy_link")}
             </Link>

@@ -88,11 +88,13 @@ export function EduSettings({
               {revealed ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
           </div>
-          <p
-            id={helperId}
-            className="text-xs leading-relaxed text-muted-foreground"
-            dangerouslySetInnerHTML={{ __html: t("password_hint_html") }}
-          />
+          <p id={helperId} className="text-xs leading-relaxed text-muted-foreground">
+            {t("password_hint.prefix")}
+            <strong>{t("password_hint.strong")}</strong>
+            {t("password_hint.middle")}
+            <em>{t("password_hint.em")}</em>
+            {t("password_hint.suffix")}
+          </p>
         </div>
       ) : null}
     </div>

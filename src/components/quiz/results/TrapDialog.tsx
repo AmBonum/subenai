@@ -80,10 +80,11 @@ export function TrapDialog({ open, onOpenChange, onAcknowledged }: Props) {
       <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">{t("title")}</DialogTitle>
-          <DialogDescription
-            className="text-sm leading-relaxed text-muted-foreground"
-            dangerouslySetInnerHTML={{ __html: t("description_html") }}
-          />
+          <DialogDescription className="text-sm leading-relaxed text-muted-foreground">
+            {t("description.prefix")}
+            <strong>{t("description.strong")}</strong>
+            {t("description.suffix")}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-2 space-y-5">

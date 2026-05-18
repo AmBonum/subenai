@@ -27,8 +27,11 @@
     "meta_title": "Zostav vlastný test pre tím — subenai",
     "meta_description": "Vyber otázky podľa kategórie a obtiažnosti, nastav prah úspešnosti, zdieľaj test s tímom. Žiadna registrácia, anonymné výsledky.",
     "page_heading": "Zostav vlastný test pre tím",
-    "page_intro_html": "Vyber otázky podľa <strong class=\"text-foreground\">tvojej</strong> branže a hrozieb, nastav prah úspešnosti, zdieľaj jediným linkom. Žiadna registrácia, anonymné výsledky.",
-    "page_intro_strong": "tvojej",
+    "page_intro": {
+      "prefix": "Vyber otázky podľa ",
+      "strong": "tvojej",
+      "suffix": " branže a hrozieb, nastav prah úspešnosti, zdieľaj jediným linkom. Žiadna registrácia, anonymné výsledky."
+    },
     "stale_drift_singular": "Z odkazu sa nepodarilo načítať {n} otázku — pravdepodobne ich autor banky premenoval. Pokračuj s tým, čo zostalo, alebo doplň ďalšie.",
     "stale_drift_plural": "Z odkazu sa nepodarilo načítať {n} otázok — pravdepodobne ich autor banky premenoval. Pokračuj s tým, čo zostalo, alebo doplň ďalšie.",
     "stale_pack_prefix": "Pri pridaní packu {title}: {details}.",
@@ -66,15 +69,25 @@
   },
   "composer_settings": {
     "threshold_label": "Prah úspešnosti",
-    "threshold_hint_html": "Pri skóre <strong>{value}/100</strong> a vyššom dostane člen tímu badge „Vyhovuje\" pri výsledku.",
+    "threshold_hint": {
+      "prefix": "Pri skóre ",
+      "value_suffix": "/100",
+      "suffix": " a vyššom dostane člen tímu badge „Vyhovuje\" pri výsledku."
+    },
     "max_label": "Maximálne otázok",
-    "max_hint_html": "Aktuálne vybraných: <strong>{count}</strong>. Ak posunieš pod tento počet, otázky vyžiadajú odobrať.",
+    "max_hint": {
+      "prefix": "Aktuálne vybraných: ",
+      "suffix": ". Ak posunieš pod tento počet, otázky vyžiadajú odobrať."
+    },
     "creator_label": "Pomenovanie zostavy",
     "creator_optional": "(voliteľné)",
     "creator_placeholder": "napr. E-shop Q1 2026 onboarding",
     "creator_remaining": "{n} znakov zostáva",
     "honeypot_title": "Pomer „vyzerá podozrivo, ale OK\" otázok",
-    "honeypot_body_html": "<strong>{pct} %</strong> z výberu sú legit prípady. Vyšší pomer učí dôveru, nižší ostražitosť."
+    "honeypot_body": {
+      "value_suffix": " %",
+      "suffix": " z výberu sú legit prípady. Vyšší pomer učí dôveru, nižší ostražitosť."
+    }
   },
   "question_picker": {
     "category_label": "Kategória",
@@ -109,18 +122,32 @@
     "password_placeholder": "Minimum {min} znakov",
     "reveal_password": "Zobraziť heslo",
     "hide_password": "Skryť heslo",
-    "password_hint_html": "Toto heslo budeš potrebovať na otvorenie výsledkov. Ak ho stratíš, výsledky nezískaš späť — <strong>žiadny reset cez e-mail.</strong> Ulož si ho do password managera <em>predtým</em>, ako klikneš „Zdieľať s tímom\"."
+    "password_hint": {
+      "prefix": "Toto heslo budeš potrebovať na otvorenie výsledkov. Ak ho stratíš, výsledky nezískaš späť — ",
+      "strong": "žiadny reset cez e-mail.",
+      "middle": " Ulož si ho do password managera ",
+      "em": "predtým",
+      "suffix": ", ako klikneš „Zdieľať s tímom\"."
+    }
   },
   "edu_success": {
     "title": "Edu test vytvorený",
-    "description_html": "Skopíruj si <strong>obidva linky aj heslo PRED</strong> tým, ako zatvoríš toto okno. Heslo nikam neukladáme — ak ho stratíš, výsledky späť nezískaš.",
+    "description": {
+      "prefix": "Skopíruj si ",
+      "strong": "obidva linky aj heslo PRED",
+      "suffix": " tým, ako zatvoríš toto okno. Heslo nikam neukladáme — ak ho stratíš, výsledky späť nezískaš."
+    },
     "public_label": "Link pre respondentov",
     "public_hint": "Pošli tento link študentom / kolegom.",
     "results_label": "Link na výsledky (pre teba)",
     "results_hint": "Po zadaní hesla uvidíš všetky odpovede.",
     "password_label": "Heslo",
     "password_hint": "Bez hesla sa k výsledkom nedostaneš. Reset cez e-mail neexistuje.",
-    "ack_html": "Linky aj heslo som si <strong>zaznamenal/a</strong> (password manager, poznámka). Beriem na vedomie, že po zatvorení tohto okna ich už nikde nezobrazíme a heslo sa nedá obnoviť.",
+    "ack": {
+      "prefix": "Linky aj heslo som si ",
+      "strong": "zaznamenal/a",
+      "suffix": " (password manager, poznámka). Beriem na vedomie, že po zatvorení tohto okna ich už nikde nezobrazíme a heslo sa nedá obnoviť."
+    },
     "close": "Hotovo, zatvoriť",
     "copy_aria": "Skopírovať {label}"
   },
@@ -128,7 +155,13 @@
     "heading": "Pred testom: kto si?",
     "author_prefix": "Test pripravil:",
     "author_fallback": "autor testu",
-    "disclosure_html": "Tvoje meno, e-mail, skóre a odpovede uvidí <strong class=\"text-foreground\">tvoj autor</strong> cez heslom chránený dashboard. Údaje uchovávame <strong class=\"text-foreground\">12 mesiacov</strong>, potom ich anonymizujeme. Detail v",
+    "disclosure": {
+      "prefix": "Tvoje meno, e-mail, skóre a odpovede uvidí ",
+      "author": "tvoj autor",
+      "middle": " cez heslom chránený dashboard. Údaje uchovávame ",
+      "retention": "12 mesiacov",
+      "suffix": ", potom ich anonymizujeme. Detail v"
+    },
     "privacy_link": "zásadách spracovania",
     "name_label": "Meno a priezvisko",
     "name_placeholder": "napr. Jana Nováková",
@@ -238,7 +271,11 @@
     "not_found_body": "Link je neplatný alebo bol zmazaný.",
     "go_test": "Otestuj sa",
     "header_label": "Cudzí výsledok",
-    "percentile_html": "Lepší než <span class=\"font-bold text-primary\">{pct} %</span> ľudí.",
+    "percentile": {
+      "prefix": "Lepší než ",
+      "value_suffix": " %",
+      "suffix": " ľudí."
+    },
     "breakdown_title": "Rozloženie",
     "see_my_answers_count": "Pozri si moje odpovede ({n})",
     "see_my_answers": "Pozri si moje odpovede",
@@ -285,7 +322,11 @@
   },
   "results": {
     "score_label": "Tvoje skóre",
-    "percentile_html": "Si lepší než <span class=\"font-bold text-primary\">{pct} %</span> ľudí.",
+    "percentile": {
+      "prefix": "Si lepší než ",
+      "value_suffix": " %",
+      "suffix": " ľudí."
+    },
     "pass_badge": "Vyhovuje pre {label}",
     "fail_badge": "Nedosiahnutý prah {threshold} % pre {label} — pozri školenia nižšie a skús znova.",
     "recommended_courses": "Odporúčané školenia",
@@ -336,7 +377,11 @@
   },
   "trap": {
     "title": "✋ Skús nás oklamať — vyplň citlivé údaje",
-    "description_html": "Toto je vzdelávací popup. <strong>Nič z toho čo sem napíšeš sa nikam neukladá ani neposiela</strong> — len ti pri zadaní citlivého údaja ukážeme, čo sa môže stať v reálnom svete.",
+    "description": {
+      "prefix": "Toto je vzdelávací popup. ",
+      "strong": "Nič z toho čo sem napíšeš sa nikam neukladá ani neposiela",
+      "suffix": " — len ti pri zadaní citlivého údaja ukážeme, čo sa môže stať v reálnom svete."
+    },
     "footer_note": "Hodnoty zaniknú so zatvorením dialógu — žiadny zápis na server.",
     "acknowledge": "Rozumiem — viac to nezadám"
   },

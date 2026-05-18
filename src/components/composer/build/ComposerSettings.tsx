@@ -53,12 +53,14 @@ export function ComposerSettings({
           aria-valuenow={passingThreshold}
           className="mt-2 w-full accent-primary"
         />
-        <p
-          className="mt-2 text-xs leading-relaxed text-muted-foreground"
-          dangerouslySetInnerHTML={{
-            __html: t("threshold_hint_html", { value: passingThreshold }),
-          }}
-        />
+        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          {t("threshold_hint.prefix")}
+          <strong>
+            {passingThreshold}
+            {t("threshold_hint.value_suffix")}
+          </strong>
+          {t("threshold_hint.suffix")}
+        </p>
       </div>
 
       <div>
@@ -83,10 +85,11 @@ export function ComposerSettings({
           aria-valuenow={maxQuestions}
           className="mt-2 w-full accent-primary"
         />
-        <p
-          className="mt-2 text-xs leading-relaxed text-muted-foreground"
-          dangerouslySetInnerHTML={{ __html: t("max_hint_html", { count: selectedCount }) }}
-        />
+        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          {t("max_hint.prefix")}
+          <strong>{selectedCount}</strong>
+          {t("max_hint.suffix")}
+        </p>
       </div>
 
       <div>
@@ -114,12 +117,13 @@ export function ComposerSettings({
         <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
           {t("honeypot_title")}
         </p>
-        <p
-          className="mt-1 text-sm leading-relaxed text-foreground"
-          dangerouslySetInnerHTML={{
-            __html: t("honeypot_body_html", { pct: Math.round(honeypotRatio * 100) }),
-          }}
-        />
+        <p className="mt-1 text-sm leading-relaxed text-foreground">
+          <strong>
+            {Math.round(honeypotRatio * 100)}
+            {t("honeypot_body.value_suffix")}
+          </strong>
+          {t("honeypot_body.suffix")}
+        </p>
       </div>
     </div>
   );

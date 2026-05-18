@@ -27,8 +27,11 @@
     "meta_title": "Build a custom test for your team — subenai",
     "meta_description": "Pick questions by category and difficulty, set the passing threshold, share with your team. No signup, anonymous results.",
     "page_heading": "Build a custom test for your team",
-    "page_intro_html": "Pick questions for <strong class=\"text-foreground\">your</strong> industry and threats, set the passing threshold, share via a single link. No signup, anonymous results.",
-    "page_intro_strong": "your",
+    "page_intro": {
+      "prefix": "Pick questions for ",
+      "strong": "your",
+      "suffix": " industry and threats, set the passing threshold, share via a single link. No signup, anonymous results."
+    },
     "stale_drift_singular": "Couldn't load {n} question from the link — the bank author probably renamed it. Continue with what's left, or add more.",
     "stale_drift_plural": "Couldn't load {n} questions from the link — the bank author probably renamed them. Continue with what's left, or add more.",
     "stale_pack_prefix": "When adding pack {title}: {details}.",
@@ -66,15 +69,25 @@
   },
   "composer_settings": {
     "threshold_label": "Passing threshold",
-    "threshold_hint_html": "At a score of <strong>{value}/100</strong> or higher, team members get the \"Pass\" badge on their result.",
+    "threshold_hint": {
+      "prefix": "At a score of ",
+      "value_suffix": "/100",
+      "suffix": " or higher, team members get the \"Pass\" badge on their result."
+    },
     "max_label": "Max questions",
-    "max_hint_html": "Currently selected: <strong>{count}</strong>. If you drop below this number, questions will need to be removed.",
+    "max_hint": {
+      "prefix": "Currently selected: ",
+      "suffix": ". If you drop below this number, questions will need to be removed."
+    },
     "creator_label": "Set name",
     "creator_optional": "(optional)",
     "creator_placeholder": "e.g. E-shop Q1 2026 onboarding",
     "creator_remaining": "{n} characters remaining",
     "honeypot_title": "Ratio of \"looks suspicious but is OK\" questions",
-    "honeypot_body_html": "<strong>{pct}%</strong> of your picks are legit cases. Higher ratio teaches trust, lower teaches vigilance."
+    "honeypot_body": {
+      "value_suffix": "%",
+      "suffix": " of your picks are legit cases. Higher ratio teaches trust, lower teaches vigilance."
+    }
   },
   "question_picker": {
     "category_label": "Category",
@@ -109,18 +122,32 @@
     "password_placeholder": "Minimum {min} characters",
     "reveal_password": "Show password",
     "hide_password": "Hide password",
-    "password_hint_html": "You'll need this password to open the results. If you lose it, you won't get the results back — <strong>no email reset.</strong> Save it in a password manager <em>before</em> you click \"Share with team\"."
+    "password_hint": {
+      "prefix": "You'll need this password to open the results. If you lose it, you won't get the results back — ",
+      "strong": "no email reset.",
+      "middle": " Save it in a password manager ",
+      "em": "before",
+      "suffix": " you click \"Share with team\"."
+    }
   },
   "edu_success": {
     "title": "Edu test created",
-    "description_html": "Copy <strong>both links and the password BEFORE</strong> closing this window. We don't store the password anywhere — if you lose it, you can't get the results back.",
+    "description": {
+      "prefix": "Copy ",
+      "strong": "both links and the password BEFORE",
+      "suffix": " closing this window. We don't store the password anywhere — if you lose it, you can't get the results back."
+    },
     "public_label": "Link for respondents",
     "public_hint": "Send this link to your students / colleagues.",
     "results_label": "Link to results (for you)",
     "results_hint": "After entering the password you'll see all responses.",
     "password_label": "Password",
     "password_hint": "Without the password you can't access the results. There's no email reset.",
-    "ack_html": "I have <strong>saved</strong> the links and password (password manager, note). I understand that after closing this window we won't show them again and the password cannot be recovered.",
+    "ack": {
+      "prefix": "I have ",
+      "strong": "saved",
+      "suffix": " the links and password (password manager, note). I understand that after closing this window we won't show them again and the password cannot be recovered."
+    },
     "close": "Done, close",
     "copy_aria": "Copy {label}"
   },
@@ -128,7 +155,13 @@
     "heading": "Before the test: who are you?",
     "author_prefix": "Test prepared by:",
     "author_fallback": "test author",
-    "disclosure_html": "Your name, email, score and answers will be visible to <strong class=\"text-foreground\">your author</strong> via a password-protected dashboard. We keep the data for <strong class=\"text-foreground\">12 months</strong>, then anonymize it. Details in",
+    "disclosure": {
+      "prefix": "Your name, email, score and answers will be visible to ",
+      "author": "your author",
+      "middle": " via a password-protected dashboard. We keep the data for ",
+      "retention": "12 months",
+      "suffix": ", then anonymize it. Details in"
+    },
     "privacy_link": "the privacy policy",
     "name_label": "Full name",
     "name_placeholder": "e.g. Jane Doe",
@@ -238,7 +271,11 @@
     "not_found_body": "The link is invalid or has been deleted.",
     "go_test": "Test yourself",
     "header_label": "Someone else's result",
-    "percentile_html": "Better than <span class=\"font-bold text-primary\">{pct}%</span> of people.",
+    "percentile": {
+      "prefix": "Better than ",
+      "value_suffix": "%",
+      "suffix": " of people."
+    },
     "breakdown_title": "Breakdown",
     "see_my_answers_count": "See my answers ({n})",
     "see_my_answers": "See my answers",
@@ -285,7 +322,11 @@
   },
   "results": {
     "score_label": "Your score",
-    "percentile_html": "You're better than <span class=\"font-bold text-primary\">{pct}%</span> of people.",
+    "percentile": {
+      "prefix": "You're better than ",
+      "value_suffix": "%",
+      "suffix": " of people."
+    },
     "pass_badge": "Passes for {label}",
     "fail_badge": "Below {threshold}% threshold for {label} — see the courses below and try again.",
     "recommended_courses": "Recommended courses",
@@ -336,7 +377,11 @@
   },
   "trap": {
     "title": "✋ Try to fool us — fill in sensitive data",
-    "description_html": "This is an educational popup. <strong>Nothing you type here is saved or sent anywhere</strong> — we just show you what could happen in the real world when you enter a sensitive value.",
+    "description": {
+      "prefix": "This is an educational popup. ",
+      "strong": "Nothing you type here is saved or sent anywhere",
+      "suffix": " — we just show you what could happen in the real world when you enter a sensitive value."
+    },
     "footer_note": "Values disappear when you close the dialog — no server write.",
     "acknowledge": "Got it — won't enter it again"
   },
