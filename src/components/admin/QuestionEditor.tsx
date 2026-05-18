@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { type AdminQuestion, type QuestionStatus } from "@/lib/admin/mock-data";
+import type { AdminQuestion, QuestionStatus } from "@/lib/admin/types";
 import { useAdminAnswerSets, useAdminAnswers } from "@/lib/admin/queries";
 import { AiQuestionGenerator } from "@/components/admin/AiQuestionGenerator";
 import { CategoryMultiSelect } from "@/components/admin/CategoryMultiSelect";

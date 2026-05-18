@@ -11,7 +11,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { BRANCHES, branchLabel } from "@/lib/admin/mock-data";
+import { BRANCHES, branchLabel } from "@/lib/admin/branches";
 import { cn } from "@/lib/utils";
 import { tFor as tForQuestions } from "@/i18n/questions";
 import { tFor as tForAdmin } from "@/i18n/admin";

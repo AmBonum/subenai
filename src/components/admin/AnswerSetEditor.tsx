@@ -19,7 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BRANCHES, type AdminAnswerSet, type AdminAnswer } from "@/lib/admin/mock-data";
+import { BRANCHES } from "@/lib/admin/branches";
+import type { AdminAnswerSet, AdminAnswer } from "@/lib/admin/types";
 import { CategoryMultiSelect } from "@/components/admin/CategoryMultiSelect";
 import {
   useCreateAnswer,

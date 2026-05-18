@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BRANCHES } from "@/lib/admin/mock-data";
+import { BRANCHES } from "@/lib/admin/branches";
 import {
   generateQuestionWithAnswers,
   type GeneratedQuestion,

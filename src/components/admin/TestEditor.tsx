@@ -14,12 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CategoryMultiSelect } from "@/components/admin/CategoryMultiSelect";
-import {
-  BRANCHES,
-  type AdminTest,
-  type TestDifficulty,
-  type TestStatus,
-} from "@/lib/admin/mock-data";
+import { BRANCHES } from "@/lib/admin/branches";
+import type { AdminTest, TestDifficulty, TestStatus } from "@/lib/admin/types";
 import { useAdminQuestions } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/tests";
 

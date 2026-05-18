@@ -90,12 +90,6 @@ export default tseslint.config(
       // lookups). Tracked for AH-11.1e final purge.
       "src/routes/admin/answer-sets.$setId.tsx",
       "src/routes/admin/answer-sets.tsx",
-      "src/components/admin/AnswerSetEditor.tsx",
-      "src/components/admin/AiQuestionGenerator.tsx",
-      "src/components/admin/CategoryMultiSelect.tsx",
-      "src/components/admin/QuestionEditor.tsx",
-      "src/components/admin/TestEditor.tsx",
-      "src/components/admin/TrainingEditor.tsx",
       // AH-11.3 scope — RespondentsList consumes `useSessions`, `useTests`,
       // and `logPiiAccess` from `@/lib/platform/mock-store` pending the
       // privileged server function migration. Stays exempt until AH-11.3.

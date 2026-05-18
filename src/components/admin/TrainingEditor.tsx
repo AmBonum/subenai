@@ -22,12 +22,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CategoryMultiSelect } from "@/components/admin/CategoryMultiSelect";
-import {
-  TRAINING_TOPICS,
-  BRANCHES,
-  type AdminTraining,
-  type TrainingStatus,
-} from "@/lib/admin/mock-data";
+import { TRAINING_TOPICS, BRANCHES } from "@/lib/admin/branches";
+import type { AdminTraining, TrainingStatus } from "@/lib/admin/types";
 import { useCreateTraining, useUpdateTraining } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/admin";
 
