@@ -1,7 +1,24 @@
 -- ============================================================================
--- INTERNET IQ TEST — Complete database schema
+-- subenai.sk — Supabase bootstrap (standalone)
 -- ============================================================================
--- Usage:
+--
+-- This file is the canonical bootstrap for a fresh Supabase project. It
+-- replays every migration in supabase/migrations/ in chronological order.
+-- Apply once via Supabase Dashboard -> SQL Editor -> New query -> paste ->
+-- Run. Re-runnable: every CREATE/INSERT uses IF NOT EXISTS / ON CONFLICT.
+--
+-- After applying:
+--   1. Project Settings -> Authentication -> Multi-Factor -> Enable TOTP
+--   2. Project Settings -> API -> copy `service_role secret` -> set as
+--      SUPABASE_SERVICE_ROLE_KEY in Cloudflare Pages env vars
+--   3. Bootstrap your admin: INSERT into public.user_roles per AH-1
+--      runbook (tasks/AH-1-staging-runbook.md).
+--
+-- See tasks/AH-11-production-runbook.md for the full deployment runbook
+-- including end-to-end smoke tests.
+-- ============================================================================
+-- Legacy usage notes
+-- ============================================================================
 -- 1. Create a new project on supabase.com (free tier).
 -- 2. In the Supabase dashboard open: SQL Editor -> New query.
 -- 3. Copy the full contents of this file and click RUN.
@@ -2497,3 +2514,21 @@ VALUES
   (1, '7da091ed-695a-5d84-ad77-5ddb44f05535', 236),
   (1, '0e86480f-8b07-5c20-a890-4450af7f99df', 237)
 ON CONFLICT (quick_test_config_id, question_id) DO NOTHING;
+
+-- ============================================================================
+-- Verification — run after the script completes
+-- ============================================================================
+SELECT
+  (SELECT count(*) FROM pg_tables WHERE schemaname = 'public') as public_tables,
+  (SELECT count(*) FROM pg_proc WHERE pronamespace = 'public'::regnamespace) as public_functions,
+  (SELECT count(*) FROM pg_policy) as policies,
+  (SELECT count(*) FROM public.questions) as seeded_questions;
+-- Expected (approximate):
+--   public_tables ≈ 50+
+--   public_functions ≈ 15+ (has_role, is_team_member, is_team_owner,
+--     log_audit_event, start_respondent_session, submit_respondent_answer,
+--     finalize_respondent_session, get_quick_test_questions,
+--     generate_mfa_backup_codes, consume_mfa_backup_code, handle_new_user, ...)
+--   policies ≈ 70+
+--   seeded_questions = 238
+

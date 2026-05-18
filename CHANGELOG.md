@@ -13,6 +13,12 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > celý balík funkcionality (sponsorship, zber custom-test odpovedí, atď.)
 > kompletne otestovaný v reálnej prevádzke.
 
+## AH-11.8 — Deploy bootstrap finalizácia
+
+DEPLOY_SETUP.sql, README.md, .env.example doladené tak, aby nový
+operátor mohol zo svežého clone-u nasadiť subenai.sk podľa
+tasks/AH-11-production-runbook.md bez ďalšieho dohľadu.
+
 ## AH-11 epic — migrácia mockov na reálnu Supabase (dokončené)
 
 V epicu AH-11 (15+ sub-commitov) sa celý admin-hub UI presunul z

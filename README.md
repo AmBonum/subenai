@@ -107,6 +107,40 @@ Then open **http://localhost:8080**.
 
 If you only need the UI (no edu / Stripe / portal flows), `npm run dev` alone works fine — `/api/*` calls will return 504 from the proxy.
 
+**Quick start (UI-only):**
+
+```bash
+npm install
+cp .env.example .env  # fill in SUPABASE_URL + anon key
+npm run dev
+```
+
+## ✅ Verification
+
+Every change must keep these green before it ships:
+
+```bash
+npm run lint               # 0 errors / 0 warnings
+npm test                   # Vitest + RTL — full suite
+npm run build              # Cloudflare Pages SSR bundle
+npm run check:bundle-no-mocks  # asserts no admin-hub mock-store leaked into prod bundle
+```
+
+Current test count: **749** (must not regress).
+
+## 🚢 Production deployment
+
+- Hosted on **Cloudflare Pages**, auto-deployed on every push to `main`
+  (production domain: `subenai.sk`). Feature branches get preview deploys.
+- Supabase backend (free tier). Bootstrap a fresh project with
+  [`DEPLOY_SETUP.sql`](./DEPLOY_SETUP.sql) — see the file header for
+  step-by-step instructions and post-apply tasks (enable TOTP, wire
+  `SUPABASE_SERVICE_ROLE_KEY` in CF Pages env, promote first admin).
+- **2FA is enforced for the `admin` role** (see AH-12). Bootstrap admin
+  must enroll TOTP on first login before write actions unlock.
+- End-to-end production checks live in
+  [`tasks/AH-11-production-runbook.md`](./tasks/AH-11-production-runbook.md).
+
 ## 🛠️ Project status
 
 🚧 Early-stage project — actively being developed
