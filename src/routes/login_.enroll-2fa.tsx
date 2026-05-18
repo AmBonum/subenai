@@ -166,12 +166,24 @@ function EnrollTwoFactorPage() {
                 {t("step2_body")}
               </p>
               {qrCode ? (
-                <img
-                  src={qrCode}
-                  alt="QR"
-                  className="mx-auto h-48 w-48"
-                  data-testid="enroll-2fa-qr-image"
-                />
+                // Bigger render (288px desktop, full-width on phones) + a
+                // white frame + a quiet zone of pure white background.
+                // TOTP QR encodes a long otpauth:// URI with high entropy
+                // → many small modules. Phone cameras need both contrast
+                // (white background, not theme-dark) and pixel area to
+                // resolve each module. 192px wasn't enough on a Pixel.
+                <div
+                  className="mx-auto w-full max-w-xs rounded-lg bg-white p-4"
+                  data-testid="enroll-2fa-qr-frame"
+                >
+                  <img
+                    src={qrCode}
+                    alt="QR"
+                    className="block h-auto w-full"
+                    style={{ imageRendering: "pixelated" }}
+                    data-testid="enroll-2fa-qr-image"
+                  />
+                </div>
               ) : (
                 <p
                   className="text-center text-sm text-muted-foreground"
