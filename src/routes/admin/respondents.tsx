@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { PageHeader } from "@/components/admin/PageHeader";
 import { RespondentsList } from "@/components/admin/RespondentsList";
-import { useRespondents } from "@/lib/platform/mock-store";
+import { useAdminRespondents } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/governance";
 
 export const Route = createFileRoute("/admin/respondents")({
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/admin/respondents")({
 
 function AdminRespondentsPage() {
   const t = tFor("respondents_list");
-  const respondents = useRespondents();
+  const respondents = useAdminRespondents().data ?? [];
   return (
     <div className="space-y-6" data-testid="admin-respondents-root">
       <PageHeader

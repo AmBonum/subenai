@@ -17,12 +17,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { branchLabel, questionsUsingSet, type AdminAnswerSet } from "@/lib/admin/mock-data";
-import {
-  deleteSet,
-  duplicateSet,
-  useAnswers,
-  useAnswerSets,
-} from "@/lib/admin/answer-sets-mock-store";
+import { deleteSet, duplicateSet } from "@/lib/admin/answer-sets-mock-store";
+import { useAdminAnswerSets, useAdminAnswers } from "@/lib/admin/queries";
+import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/questions";
 
 export const Route = createFileRoute("/admin/answer-sets")({
@@ -31,8 +28,10 @@ export const Route = createFileRoute("/admin/answer-sets")({
 
 function AnswerSetsPage() {
   const t = tFor("answer_sets_list");
-  const allSets = useAnswerSets();
-  const allAnswers = useAnswers();
+  const setsQuery = useAdminAnswerSets();
+  const answersQuery = useAdminAnswers();
+  const allSets = useMemo(() => setsQuery.data ?? [], [setsQuery.data]);
+  const allAnswers = useMemo(() => answersQuery.data ?? [], [answersQuery.data]);
   const [query, setQuery] = useState("");
   const [confirmDelete, setConfirmDelete] = useState<AdminAnswerSet | null>(null);
 
@@ -71,8 +70,13 @@ function AnswerSetsPage() {
         </CardContent>
       </Card>
 
+      {setsQuery.isLoading && <AdminListLoading testId="answer-sets-list-loading" />}
+      {setsQuery.error && (
+        <AdminListError error={setsQuery.error as Error} testId="answer-sets-list-error" />
+      )}
+
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {sets.length === 0 && (
+        {!setsQuery.isLoading && sets.length === 0 && (
           <p
             data-testid="answer-sets-list-empty-state"
             className="col-span-full py-12 text-center text-sm text-muted-foreground"

@@ -14,6 +14,7 @@ vi.mock("@tanstack/react-router", async () => {
 });
 
 import { Route } from "@/routes/admin/dsr";
+import * as platformStore from "@/lib/platform/mock-store";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
@@ -35,8 +36,17 @@ describe("/admin/dsr", () => {
     render(<Page />);
     const btn = screen.getByTestId("dsr-queue-row-resolve-button-dsr_001");
     fireEvent.click(btn);
-    // After resolve, row exists but the resolve/reject buttons disappear.
-    expect(screen.queryByTestId("dsr-queue-row-resolve-button-dsr_001")).toBeNull();
-    expect(screen.queryByTestId("dsr-queue-row-reject-button-dsr_001")).toBeNull();
+    // AH-11.1b: reads come from TanStack Query / Supabase; the mutation still
+    // writes to the platform mock-store and AH-11.1c wires it through the
+    // matching mutation hook. Probe the platform store to confirm the click
+    // reached it.
+    let dsr: { id: string; status: string }[] = [];
+    function Probe() {
+      dsr = platformStore.useDSR();
+      return null;
+    }
+    const probe = render(<Probe />);
+    probe.unmount();
+    expect(dsr.find((d) => d.id === "dsr_001")?.status).toBe("completed");
   });
 });

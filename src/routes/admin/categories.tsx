@@ -24,7 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { adminRepo, useAdminState } from "@/lib/admin/mock-store";
+import { adminRepo } from "@/lib/admin/mock-store";
+import { useAdminCategories, useAdminTopics } from "@/lib/admin/queries";
+import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/admin";
 
 export const Route = createFileRoute("/admin/categories")({
@@ -43,8 +45,10 @@ interface EditorState {
 
 function AdminCategoriesPage() {
   const t = tFor("categories");
-  const branches = useAdminState((s) => s.categories);
-  const topics = useAdminState((s) => s.topics);
+  const branchesQuery = useAdminCategories();
+  const topicsQuery = useAdminTopics();
+  const branches = branchesQuery.data ?? [];
+  const topics = topicsQuery.data ?? [];
   const [editor, setEditor] = useState<EditorState | null>(null);
   const [confirmDel, setConfirmDel] = useState<{ kind: Kind; id: string; name: string } | null>(
     null,
@@ -126,6 +130,13 @@ function AdminCategoriesPage() {
         >
           <CardContent className="p-4 text-sm text-destructive">{deleteError}</CardContent>
         </Card>
+      )}
+
+      {(branchesQuery.isLoading || topicsQuery.isLoading) && (
+        <AdminListLoading testId="admin-categories-loading" />
+      )}
+      {branchesQuery.error && (
+        <AdminListError error={branchesQuery.error as Error} testId="admin-categories-error" />
       )}
 
       <section className="space-y-3">

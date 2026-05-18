@@ -20,18 +20,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAudit } from "@/lib/platform/mock-store";
+import { useAdminAuditLog } from "@/lib/admin/queries";
+import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/governance";
 
 const PAGE_SIZE = 25;
 
 export function AuditLogViewer() {
   const t = tFor("audit_log");
-  const audit = useAudit();
+  const auditQuery = useAdminAuditLog();
+  const audit = useMemo(() => auditQuery.data ?? [], [auditQuery.data]);
 
   const actions = useMemo(() => {
     const set = new Set<string>();
-    audit.forEach((a) => set.add(a.action));
+    audit.forEach((a) => {
+      if (a.action) set.add(a.action);
+    });
     return Array.from(set).sort();
   }, [audit]);
 
@@ -47,7 +51,7 @@ export function AuditLogViewer() {
     // Inclusive end of day: snap dateTo to 23:59:59.999 local.
     const toTs = dateTo ? new Date(dateTo).getTime() + 86_399_999 : null;
     return audit.filter((a) => {
-      if (actor && !a.actor_name.toLowerCase().includes(actor.toLowerCase())) return false;
+      if (actor && !(a.actor_name ?? "").toLowerCase().includes(actor.toLowerCase())) return false;
       if (action !== "all" && a.action !== action) return false;
       if (pii === "only" && !a.pii_access) return false;
       const ts = new Date(a.at).getTime();
@@ -142,7 +146,11 @@ export function AuditLogViewer() {
         </CardContent>
       </Card>
 
-      {filtered.length === 0 ? (
+      {auditQuery.isLoading ? (
+        <AdminListLoading testId="audit-log-loading" />
+      ) : auditQuery.error ? (
+        <AdminListError error={auditQuery.error as Error} testId="audit-log-error" />
+      ) : filtered.length === 0 ? (
         <Card className="border-border/60" data-testid="audit-log-empty-state">
           <CardContent className="p-6 text-center text-sm text-muted-foreground">
             {t("empty_state")}
@@ -189,7 +197,7 @@ export function AuditLogViewer() {
                           <span className="text-xs text-muted-foreground">{t("pii_flag_no")}</span>
                         )}
                       </TableCell>
-                      <TableCell className="text-xs">{a.details}</TableCell>
+                      <TableCell className="text-xs">{a.details ?? ""}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

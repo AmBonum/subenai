@@ -21,13 +21,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useRespondents, useSessions, useTests, logPiiAccess } from "@/lib/platform/mock-store";
+import { useSessions, useTests, logPiiAccess } from "@/lib/platform/mock-store";
+import { useAdminRespondents } from "@/lib/admin/queries";
 import { logRespondentsAccess } from "@/lib/admin/respondents.functions";
 import { tFor } from "@/i18n/governance";
 
 export function RespondentsList() {
   const t = tFor("respondents_list");
-  const respondents = useRespondents();
+  const respondentsQuery = useAdminRespondents();
+  const respondents = useMemo(() => respondentsQuery.data ?? [], [respondentsQuery.data]);
   const sessions = useSessions();
   const tests = useTests();
   const [query, setQuery] = useState("");

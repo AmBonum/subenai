@@ -24,7 +24,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAdminState } from "@/lib/admin/mock-store";
+import { useAdminUsers } from "@/lib/admin/queries";
+import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/admin";
 
 export const Route = createFileRoute("/admin/users")({
@@ -41,7 +42,8 @@ const initials = (n: string) =>
 
 function AdminUsersPage() {
   const t = tFor("users");
-  const users = useAdminState((s) => s.users);
+  const usersQuery = useAdminUsers();
+  const users = useMemo(() => usersQuery.data ?? [], [usersQuery.data]);
   const [query, setQuery] = useState("");
   const [role, setRole] = useState<string>("all");
 
@@ -95,7 +97,11 @@ function AdminUsersPage() {
         </CardContent>
       </Card>
 
-      {filtered.length === 0 ? (
+      {usersQuery.isLoading ? (
+        <AdminListLoading testId="admin-users-loading" />
+      ) : usersQuery.error ? (
+        <AdminListError error={usersQuery.error as Error} testId="admin-users-error" />
+      ) : filtered.length === 0 ? (
         <Card className="border-border/60" data-testid="admin-users-empty-state">
           <CardContent className="space-y-1 p-6 text-center">
             <p className="text-sm font-medium text-foreground">{t("empty_state_title")}</p>

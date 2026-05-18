@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { TestEditor, type TestEditorState } from "@/components/admin/TestEditor";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
-import { adminRepo, useAdminState } from "@/lib/admin/mock-store";
+import { adminRepo } from "@/lib/admin/mock-store";
+import { useAdminTest } from "@/lib/admin/queries";
+import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/tests";
 
 export const Route = createFileRoute("/admin/tests/$testId")({
@@ -17,8 +19,8 @@ function AdminTestEditorPage() {
   const t = tFor("admin_editor");
   const { testId } = useParams({ from: "/admin/tests/$testId" });
   const nav = useNavigate();
-  const tests = useAdminState((s) => s.tests);
-  const test = tests.find((x) => x.id === testId);
+  const testQuery = useAdminTest(testId);
+  const test = testQuery.data ?? null;
 
   const [draft, setDraft] = useState<TestEditorState | null>(null);
   const [dirty, setDirty] = useState(false);
@@ -28,6 +30,14 @@ function AdminTestEditorPage() {
     setDraft(next);
     setDirty(true);
   }, []);
+
+  if (testQuery.isLoading) {
+    return <AdminListLoading testId="admin-test-editor-loading" />;
+  }
+
+  if (testQuery.error) {
+    return <AdminListError error={testQuery.error as Error} testId="admin-test-editor-error" />;
+  }
 
   if (!test) {
     return (

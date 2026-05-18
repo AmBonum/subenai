@@ -228,6 +228,7 @@ type AuditLogRow = {
   target_type: string | null;
   target_id: string | null;
   pii_access: boolean;
+  details: string | null;
   at: string;
 };
 
@@ -363,6 +364,19 @@ export function useAdminAnswerSets() {
         .order("updated_at", { ascending: false });
       if (error) throw error;
       return (data ?? []).map((r) => mapAnswerSet(r as AnswerSetsRow));
+    },
+  });
+}
+
+export function useAdminAnswers() {
+  return useQuery({
+    queryKey: ["admin", "answers"],
+    queryFn: async (): Promise<AdminAnswer[]> => {
+      const { data, error } = await supabase
+        .from("answers")
+        .select("id, set_id, text, is_correct, explanation");
+      if (error) throw error;
+      return (data ?? []).map((r) => mapAnswer(r as AnswersRow));
     },
   });
 }
@@ -801,7 +815,7 @@ export function useAdminAuditLog(limit = 100) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("audit_log")
-        .select("id, actor_id, actor_name, action, target_type, target_id, pii_access, at")
+        .select("id, actor_id, actor_name, action, target_type, target_id, pii_access, details, at")
         .order("at", { ascending: false })
         .limit(limit);
       if (error) throw error;

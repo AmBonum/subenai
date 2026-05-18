@@ -18,7 +18,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { adminRepo, useAdminState } from "@/lib/admin/mock-store";
+import { adminRepo } from "@/lib/admin/mock-store";
+import { useAdminTrainings } from "@/lib/admin/queries";
+import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import type { AdminTraining } from "@/lib/admin/mock-data";
 import { topicLabel } from "@/lib/admin/mock-data";
 import { tFor } from "@/i18n/admin";
@@ -29,7 +31,8 @@ export const Route = createFileRoute("/admin/trainings")({
 
 function AdminTrainingsPage() {
   const t = tFor("trainings");
-  const trainings = useAdminState((s) => s.trainings);
+  const trainingsQuery = useAdminTrainings();
+  const trainings = useMemo(() => trainingsQuery.data ?? [], [trainingsQuery.data]);
   const [query, setQuery] = useState("");
   const [editorOpen, setEditorOpen] = useState(false);
   const [editing, setEditing] = useState<AdminTraining | null>(null);
@@ -88,7 +91,14 @@ function AdminTrainingsPage() {
             data-testid="admin-trainings-list-search"
           />
 
-          {filtered.length === 0 ? (
+          {trainingsQuery.isLoading ? (
+            <AdminListLoading testId="admin-trainings-list-loading" />
+          ) : trainingsQuery.error ? (
+            <AdminListError
+              error={trainingsQuery.error as Error}
+              testId="admin-trainings-list-error"
+            />
+          ) : filtered.length === 0 ? (
             <div
               className="py-10 text-center text-sm text-muted-foreground"
               data-testid="admin-trainings-list-empty-state"

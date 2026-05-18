@@ -20,7 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useDSR, updateDSR } from "@/lib/platform/mock-store";
+import { updateDSR } from "@/lib/platform/mock-store";
+import { useAdminDSRQueue } from "@/lib/admin/queries";
 import type { DSRRequest, DSRType } from "@/lib/platform/types";
 import { classifyDsrSla, daysRemaining, type DsrSlaVariant } from "@/lib/admin/dsr-sla";
 import { tFor } from "@/i18n/governance";
@@ -43,7 +44,8 @@ const SLA_CLASS: Record<DsrSlaVariant, string> = {
 
 export function DsrQueue() {
   const t = tFor("dsr_queue");
-  const dsr = useDSR();
+  const dsrQuery = useAdminDSRQueue();
+  const dsr = useMemo(() => dsrQuery.data ?? [], [dsrQuery.data]);
   const [status, setStatus] = useState<string>("all");
   const [type, setType] = useState<string>("all");
 

@@ -20,7 +20,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { StatusBadge } from "@/components/admin/StatusBadge";
-import { adminRepo, useAdminState } from "@/lib/admin/mock-store";
+import { adminRepo } from "@/lib/admin/mock-store";
+import { useAdminReports } from "@/lib/admin/queries";
+import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/governance";
 
 const STATUSES = ["open", "reviewing", "resolved", "dismissed"] as const;
@@ -28,7 +30,8 @@ const REASONS = ["spam", "inappropriate", "harassment", "misinformation", "other
 
 export function ReportsQueue() {
   const t = tFor("reports_queue");
-  const reports = useAdminState((s) => s.reports);
+  const reportsQuery = useAdminReports();
+  const reports = useMemo(() => reportsQuery.data ?? [], [reportsQuery.data]);
   const [status, setStatus] = useState<string>("all");
   const [reason, setReason] = useState<string>("all");
 
@@ -81,7 +84,11 @@ export function ReportsQueue() {
         </CardContent>
       </Card>
 
-      {filtered.length === 0 ? (
+      {reportsQuery.isLoading ? (
+        <AdminListLoading testId="reports-queue-loading" />
+      ) : reportsQuery.error ? (
+        <AdminListError error={reportsQuery.error as Error} testId="reports-queue-error" />
+      ) : filtered.length === 0 ? (
         <Card className="border-border/60" data-testid="reports-queue-empty-state">
           <CardContent className="p-6 text-center text-sm text-muted-foreground">
             {t("empty_state")}

@@ -3,8 +3,9 @@ import { Users, ClipboardList, Activity, ShieldAlert } from "lucide-react";
 
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatCard } from "@/components/admin/StatCard";
+import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { dashboardStats, mockAdminActivity } from "@/lib/admin/mock-data";
+import { useAdminDashboardStats, useAdminActivity } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/admin";
 
 export const Route = createFileRoute("/admin/")({
@@ -13,7 +14,14 @@ export const Route = createFileRoute("/admin/")({
 
 function AdminDashboardPage() {
   const t = tFor("dashboard");
-  const activity = mockAdminActivity;
+  const stats = useAdminDashboardStats();
+  const activityQuery = useAdminActivity();
+
+  if (stats.error)
+    return <AdminListError error={stats.error as Error} testId="admin-dashboard-error" />;
+
+  const s = stats.data;
+  const activity = activityQuery.data ?? [];
 
   return (
     <div className="space-y-6" data-testid="admin-dashboard-root">
@@ -26,7 +34,7 @@ function AdminDashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label={t("stat_users")}
-          value={dashboardStats.total_users}
+          value={s?.total_users ?? 0}
           delta={12}
           icon={Users}
           tone="primary"
@@ -34,7 +42,7 @@ function AdminDashboardPage() {
         />
         <StatCard
           label={t("stat_tests")}
-          value={dashboardStats.total_tests}
+          value={s?.total_tests ?? 0}
           delta={6}
           icon={ClipboardList}
           tone="success"
@@ -42,7 +50,7 @@ function AdminDashboardPage() {
         />
         <StatCard
           label={t("stat_sessions")}
-          value={dashboardStats.total_sessions}
+          value={s?.total_sessions ?? 0}
           delta={18}
           icon={Activity}
           tone="primary"
@@ -50,7 +58,7 @@ function AdminDashboardPage() {
         />
         <StatCard
           label={t("stat_dsr_pending")}
-          value={dashboardStats.pending_dsr}
+          value={s?.pending_dsr ?? 0}
           delta={-25}
           icon={ShieldAlert}
           tone="warning"
@@ -67,7 +75,9 @@ function AdminDashboardPage() {
           <CardDescription>{t("recent_activity_description")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          {activity.length === 0 ? (
+          {activityQuery.isLoading ? (
+            <AdminListLoading testId="admin-dashboard-recent-activity-loading" />
+          ) : activity.length === 0 ? (
             <p
               className="text-sm text-muted-foreground"
               data-testid="admin-dashboard-recent-activity-empty"

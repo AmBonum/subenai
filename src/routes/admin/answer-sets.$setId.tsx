@@ -25,12 +25,8 @@ import {
   questionsUsingSet,
   type AdminAnswer,
 } from "@/lib/admin/mock-data";
-import {
-  deleteAnswer,
-  deleteSet,
-  useAnswers,
-  useAnswerSets,
-} from "@/lib/admin/answer-sets-mock-store";
+import { deleteAnswer, deleteSet } from "@/lib/admin/answer-sets-mock-store";
+import { useAdminAnswerSets, useAdminAnswers } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/questions";
 
 export const Route = createFileRoute("/admin/answer-sets/$setId")({
@@ -67,8 +63,10 @@ function AnswerSetDetailPage() {
   const t = tFor("answer_set_editor");
   const { setId } = Route.useLoaderData();
   const router = useRouter();
-  const sets = useAnswerSets();
-  const allAnswers = useAnswers();
+  const setsQuery = useAdminAnswerSets();
+  const answersQuery = useAdminAnswers();
+  const sets = useMemo(() => setsQuery.data ?? [], [setsQuery.data]);
+  const allAnswers = useMemo(() => answersQuery.data ?? [], [answersQuery.data]);
 
   const set = useMemo(() => sets.find((s) => s.id === setId), [sets, setId]);
   const answers = useMemo(() => allAnswers.filter((a) => a.set_id === setId), [allAnswers, setId]);

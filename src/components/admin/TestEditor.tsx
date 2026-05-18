@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, Plus, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import {
   type TestDifficulty,
   type TestStatus,
 } from "@/lib/admin/mock-data";
-import { useAdminState } from "@/lib/admin/mock-store";
+import { useAdminQuestions } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/tests";
 
 export interface TestEditorState {
@@ -39,7 +39,8 @@ interface TestEditorProps {
 
 export function TestEditor({ test, onChange }: TestEditorProps) {
   const t = tFor("admin_editor");
-  const allQuestions = useAdminState((s) => s.questions);
+  const questionsQuery = useAdminQuestions();
+  const allQuestions = useMemo(() => questionsQuery.data ?? [], [questionsQuery.data]);
   const [state, setState] = useState<TestEditorState>({
     title: test.title,
     description: test.description,

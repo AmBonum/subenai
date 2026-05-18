@@ -48,7 +48,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BRANCHES, branchLabel, type AdminQuestion } from "@/lib/admin/mock-data";
-import { adminRepo, useAdminState } from "@/lib/admin/mock-store";
+import { adminRepo } from "@/lib/admin/mock-store";
+import { useAdminQuestions } from "@/lib/admin/queries";
+import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { exportToCSV } from "@/lib/admin/export";
 import { tFor } from "@/i18n/questions";
 
@@ -64,7 +66,8 @@ const AI_ENABLED = import.meta.env.VITE_AI_GENERATOR_ENABLED === "true";
 
 function QuestionsPage() {
   const t = tFor("admin_list");
-  const questions = useAdminState((s) => s.questions);
+  const questionsQuery = useAdminQuestions();
+  const questions = useMemo(() => questionsQuery.data ?? [], [questionsQuery.data]);
 
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<string>("all");
@@ -358,6 +361,11 @@ function QuestionsPage() {
                 </Button>
               </div>
             </div>
+          )}
+
+          {questionsQuery.isLoading && <AdminListLoading testId="admin-questions-loading" />}
+          {questionsQuery.error && (
+            <AdminListError error={questionsQuery.error as Error} testId="admin-questions-error" />
           )}
 
           <div className="overflow-hidden rounded-lg border border-border/60">

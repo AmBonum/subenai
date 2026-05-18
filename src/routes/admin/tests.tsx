@@ -26,7 +26,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { BRANCHES, branchLabel } from "@/lib/admin/mock-data";
-import { adminRepo, useAdminState } from "@/lib/admin/mock-store";
+import { adminRepo } from "@/lib/admin/mock-store";
+import { useAdminTests } from "@/lib/admin/queries";
+import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/tests";
 
 export const Route = createFileRoute("/admin/tests")({
@@ -35,7 +37,8 @@ export const Route = createFileRoute("/admin/tests")({
 
 function AdminTestsListPage() {
   const t = tFor("admin_list");
-  const tests = useAdminState((s) => s.tests);
+  const testsQuery = useAdminTests();
+  const tests = useMemo(() => testsQuery.data ?? [], [testsQuery.data]);
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>("all");
@@ -188,7 +191,11 @@ function AdminTestsListPage() {
             </Button>
           </div>
 
-          {filtered.length === 0 ? (
+          {testsQuery.isLoading ? (
+            <AdminListLoading testId="admin-tests-list-loading" />
+          ) : testsQuery.error ? (
+            <AdminListError error={testsQuery.error as Error} testId="admin-tests-list-error" />
+          ) : filtered.length === 0 ? (
             <div
               className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground"
               data-testid="admin-tests-list-empty-state"

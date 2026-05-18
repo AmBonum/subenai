@@ -23,12 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  mockAnswerSets,
-  answersForSet,
-  type AdminQuestion,
-  type QuestionStatus,
-} from "@/lib/admin/mock-data";
+import { type AdminQuestion, type QuestionStatus } from "@/lib/admin/mock-data";
+import { useAdminAnswerSets, useAdminAnswers } from "@/lib/admin/queries";
 import { AiQuestionGenerator } from "@/components/admin/AiQuestionGenerator";
 import { CategoryMultiSelect } from "@/components/admin/CategoryMultiSelect";
 import { tFor } from "@/i18n/questions";
@@ -47,7 +43,7 @@ const empty = {
   body: "",
   categories: [] as string[],
   status: "pending" as QuestionStatus,
-  answer_set_id: mockAnswerSets[0]?.id ?? "",
+  answer_set_id: "",
   correct_answer_ids: [] as string[],
   incorrect_answer_ids: [] as string[],
 };
@@ -60,6 +56,10 @@ export function QuestionEditor({
   aiEnabled = false,
 }: QuestionEditorProps) {
   const t = tFor("question_editor");
+  const answerSetsQuery = useAdminAnswerSets();
+  const answersQuery = useAdminAnswers();
+  const answerSets = useMemo(() => answerSetsQuery.data ?? [], [answerSetsQuery.data]);
+  const allAnswers = useMemo(() => answersQuery.data ?? [], [answersQuery.data]);
   const [form, setForm] = useState(empty);
   const [aiOpen, setAiOpen] = useState(false);
 
@@ -73,20 +73,20 @@ export function QuestionEditor({
               body: question.body ?? "",
               categories: [...question.categories],
               status: question.status,
-              answer_set_id: question.answer_set_id ?? mockAnswerSets[0]?.id ?? "",
+              answer_set_id: question.answer_set_id ?? answerSets[0]?.id ?? "",
               correct_answer_ids: [...question.correct_answer_ids],
               incorrect_answer_ids: [...question.incorrect_answer_ids],
             }
-          : empty,
+          : { ...empty, answer_set_id: answerSets[0]?.id ?? "" },
       );
     }
-  }, [open, question]);
+  }, [open, question, answerSets]);
 
   const isEdit = Boolean(question);
 
   const setAnswers = useMemo(
-    () => (form.answer_set_id ? answersForSet(form.answer_set_id) : []),
-    [form.answer_set_id],
+    () => (form.answer_set_id ? allAnswers.filter((a) => a.set_id === form.answer_set_id) : []),
+    [form.answer_set_id, allAnswers],
   );
   const correctPool = setAnswers.filter((a) => a.is_correct);
   const incorrectPool = setAnswers.filter((a) => !a.is_correct);
@@ -227,7 +227,7 @@ export function QuestionEditor({
                   <SelectValue placeholder={t("answers_set_placeholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {mockAnswerSets.map((s) => (
+                  {answerSets.map((s) => (
                     <SelectItem key={s.id} value={s.id}>
                       {s.name}
                     </SelectItem>

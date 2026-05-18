@@ -30,10 +30,10 @@ describe("/admin/tests/$testId (AH-5.8)", () => {
     params.testId = "test_unknown";
   });
 
-  it("renders the not-found state for an unknown id", () => {
+  it("renders the not-found state for an unknown id", async () => {
     params.testId = "test_does_not_exist";
     render(<Page />);
-    expect(screen.getByTestId("admin-test-editor-not-found")).toBeInTheDocument();
+    expect(await screen.findByTestId("admin-test-editor-not-found")).toBeInTheDocument();
   });
 
   it("renders the editor for a seeded test with full form + buttons", () => {
