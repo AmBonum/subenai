@@ -75,6 +75,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - **Stránka „Pre školy a vzdelávacie inštitúcie"** ([/skoly](skoly)) — návod ako pripraviť edu test, zdieľať link a pozrieť výsledky. Vysvetľuje GDPR rolu autora (kontrolór) a am.bonum (sprostredkovateľ podľa čl. 28 GDPR), retention politiku, a obsahuje vzor e-mailu pre respondentov + FAQ. Link v päte stránky.
 
 ### Zmenené
+- **Admin sekcia napojená na živú databázu** — stránky `/admin/questions`, `/admin/tests`, `/admin/answer-sets`, `/admin/categories`, `/admin/trainings`, `/admin/respondents`, `/admin/audit`, `/admin/dsr`, `/admin/reports`, `/admin/users` a úvodný panel `/admin` teraz čítajú a zapisujú do reálneho Supabase projektu cez TanStack Query (predtým mock dáta). Mock vrstva ostáva len pre používateľské cesty `/app/*` a CMS admin stránky — tie napojíme v ďalšej iterácii.
 - **Identifikácia prevádzkovateľa** v zásadách ochrany súkromia — projekt teraz transparentne vystupuje ako am.bonum s. r. o. (predtým fyzická osoba). Cookie banner sa znova zobrazil, aby si mohol/a aktualizovať svoj súhlas pod správnu entitu.
 - **Súkromie** — pridaná samostatná sekcia *„Education mode"* (zber edu odpovedí, role kontrolór/sprostredkovateľ, doba uchovávania 12 mesiacov). Cookie banner sa znova zobrazí, aby si súhlas potvrdil/a pod novú verziu zásad (1.3.0).
 - Texty na stránkach **O projekte**, **Cookies** a **Súkromie** o trackingu: sformulované tak, aby boli zrozumiteľné a konzistentné s tým, čo cookie banner naozaj robí — analytika a marketing sa zapnú **iba so súhlasom**.

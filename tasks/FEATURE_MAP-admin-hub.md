@@ -74,7 +74,7 @@ in `tasks/PLAN-2026-05-17-admin-hub-integration.md`. Status values:
 |---|---|---|---|---|
 | `components/admin/AdminSidebar.tsx` | `src/components/admin/AdminSidebar.tsx` | AH-10.1 | Done | see `git log` |
 | `components/admin/AiQuestionGenerator.tsx` | `src/components/admin/AiQuestionGenerator.tsx` (feature-flagged off) | AH-4.1 | Done | see `git log` |
-| `components/admin/AnswerSetEditor.tsx` | `src/components/admin/AnswerSetEditor.tsx` | AH-4.5 | Backlog | |
+| `components/admin/AnswerSetEditor.tsx` | `src/components/admin/AnswerSetEditor.tsx` | AH-4.5 | Done | see `git log` |
 | `components/admin/CategoryMultiSelect.tsx` | `src/components/admin/CategoryMultiSelect.tsx` | AH-6.2 | Done | see `git log` |
 | `components/admin/ConfirmDialog.tsx` | `src/components/admin/ConfirmDialog.tsx` | AH-3.1 | Done | see `git log` |
 | `components/admin/PageHeader.tsx` | `src/components/admin/PageHeader.tsx` | AH-10.2 | Done | see `git log` |

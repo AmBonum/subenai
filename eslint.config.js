@@ -66,6 +66,89 @@ export default tseslint.config(
     },
   },
   {
+    // AH-11.1d — admin Supabase cutover guard.
+    // Admin scope (`src/routes/admin/**`, `src/components/admin/**`) is wired
+    // to real Supabase via `@/lib/admin/queries.ts` (AH-11.1a/b/c). This rule
+    // prevents future PRs from regressing to the mock stores. CMS admin
+    // routes are exempted — those run on `@/lib/admin/cms-*` until AH-11.5
+    // wires them to Supabase. A handful of admin files are also exempted
+    // below because their mock-store consumers were not fully swapped in
+    // AH-11.1b/c (tracked as AH-11.1e / AH-11.6 follow-up); the guard still
+    // protects every other admin file from re-introducing mock imports.
+    files: ["src/routes/admin/**/*.{ts,tsx}", "src/components/admin/**/*.{ts,tsx}"],
+    ignores: [
+      // CMS admin — AH-11.5 scope, keeps cms-mock-store imports for now.
+      "src/routes/admin/pages.tsx",
+      "src/routes/admin/pages.$pageId.tsx",
+      "src/routes/admin/header.tsx",
+      "src/routes/admin/footer.tsx",
+      "src/routes/admin/navigation.tsx",
+      "src/routes/admin/share-card.tsx",
+      "src/routes/admin/quick-test.tsx",
+      // Carryover from AH-11.1b/c — runtime mock-data accessors not yet
+      // swapped (loader-time existence checks, in-component cross-set
+      // lookups). Tracked for AH-11.1e / AH-11.6 final purge.
+      "src/routes/admin/answer-sets.$setId.tsx",
+      "src/routes/admin/answer-sets.tsx",
+      "src/routes/admin/questions.tsx",
+      "src/routes/admin/tests.tsx",
+      "src/routes/admin/trainings.tsx",
+      "src/components/admin/AnswerSetEditor.tsx",
+      "src/components/admin/AiQuestionGenerator.tsx",
+      "src/components/admin/CategoryMultiSelect.tsx",
+      "src/components/admin/QuestionEditor.tsx",
+      "src/components/admin/TestEditor.tsx",
+      "src/components/admin/TrainingEditor.tsx",
+      "src/components/admin/RespondentsList.tsx",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/integrations/supabase/admin",
+              message:
+                "supabaseAdmin must only be imported from *.server.ts, *.functions.ts, or functions/** — never from client code (AH-1.7).",
+            },
+            {
+              name: "@/integrations/supabase/client.server",
+              message:
+                "client.server must only be imported from *.server.ts, *.functions.ts, or functions/** — never from client code (AH-1.7).",
+            },
+            {
+              name: "@/lib/admin/mock-store",
+              message:
+                "Admin scope is wired to Supabase via @/lib/admin/queries.ts. mock-store imports are AH-11.5 (CMS) scope only.",
+            },
+            {
+              name: "@/lib/admin/mock-data",
+              message:
+                "Admin scope is wired to Supabase via @/lib/admin/queries.ts. mock-store imports are AH-11.5 (CMS) scope only.",
+            },
+            {
+              name: "@/lib/admin/answer-sets-mock-store",
+              message:
+                "Admin scope is wired to Supabase via @/lib/admin/queries.ts. mock-store imports are AH-11.5 (CMS) scope only.",
+            },
+            {
+              name: "@/lib/platform/mock-store",
+              message:
+                "Admin scope is wired to Supabase via @/lib/admin/queries.ts. mock-store imports are AH-11.5 (CMS) scope only.",
+            },
+          ],
+          patterns: [
+            {
+              group: ["**/integrations/supabase/admin", "**/integrations/supabase/client.server"],
+              message:
+                "Service-role Supabase client is server-only. See AH-1.7 in /tasks/PLAN-2026-05-17-admin-hub-integration.md.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     // shadcn UI primitives, the consent provider/hook pair, and the router
     // entry point intentionally co-locate non-component exports (variants,
     // hooks, factories) with components. Fast-refresh granularity is not a
