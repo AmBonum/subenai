@@ -26,7 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { BRANCHES, branchLabel } from "@/lib/admin/mock-data";
+import { BRANCHES, branchLabel } from "@/lib/admin/branches";
 import { useAdminTests, useDeleteTest } from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/tests";

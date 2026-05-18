@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/table";
 import { useAdminTrainings, useCreateTraining, useDeleteTraining } from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
-import type { AdminTraining } from "@/lib/admin/mock-data";
-import { topicLabel } from "@/lib/admin/mock-data";
+import type { AdminTraining } from "@/lib/admin/types";
+import { topicLabel } from "@/lib/admin/branches";
 import { tFor } from "@/i18n/admin";
 
 export const Route = createFileRoute("/admin/trainings")({

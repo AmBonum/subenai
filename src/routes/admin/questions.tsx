@@ -47,7 +47,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BRANCHES, branchLabel, type AdminQuestion } from "@/lib/admin/mock-data";
+import { BRANCHES, branchLabel } from "@/lib/admin/branches";
+import type { AdminQuestion } from "@/lib/admin/types";
 import {
   useAdminQuestions,
   useCreateQuestion,
