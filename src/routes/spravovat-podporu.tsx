@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Footer } from "@/components/layout/Footer";
 import { SITE_ORIGIN, CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
+import { tFor } from "@/i18n/marketing";
 const PAGE_URL = `${SITE_ORIGIN}/spravovat-podporu`;
 const TURNSTILE_SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
@@ -50,6 +51,7 @@ function SpravovatPodporuPage() {
 }
 
 export function ManageSupportForm() {
+  const t = tFor("spravovat_podporu");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -156,22 +158,22 @@ export function ManageSupportForm() {
       <main className="mx-auto max-w-xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-8">
           <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
-            ← Späť na domov
+            {t("back_home")}
           </Link>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Spravovať podporu
+            {t("title")}
           </h1>
           <p className="mt-3 text-base text-muted-foreground sm:text-lg">
-            Zadaj e-mail, ktorým si pri{" "}
+            {t("hero_prefix")}
             <Link
               to={ROUTES.podpora}
               className="underline underline-offset-2 hover:text-foreground"
             >
-              podpore
-            </Link>{" "}
-            prispel/a. Pošleme ti naň odkaz na Stripe Customer Portal — môžeš tam{" "}
-            <strong>zrušiť mesačný odber jediným klikom</strong>, zmeniť kartu alebo stiahnuť
-            faktúry.
+              {t("hero_link")}
+            </Link>
+            {t("hero_middle")}
+            <strong>{t("hero_cancel")}</strong>
+            {t("hero_suffix")}
           </p>
         </header>
 
@@ -184,11 +186,11 @@ export function ManageSupportForm() {
             aria-labelledby="manage-h1"
           >
             <h2 id="manage-h1" className="sr-only">
-              Formulár na zaslanie odkazu
+              {t("form_aria")}
             </h2>
             <div>
               <label htmlFor="email" className="text-sm font-medium text-foreground">
-                E-mail
+                {t("field_email")}
               </label>
               <input
                 id="email"
@@ -199,20 +201,23 @@ export function ManageSupportForm() {
                 required
                 className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
               />
-              <p className="mt-1 text-xs text-muted-foreground">
-                Bezpečnostná poznámka: bez ohľadu na to, či pre tento e-mail nájdeme platbu,
-                dostaneš rovnakú odpoveď. Tým sa nedá zistiť kto je sponzorom (anti-enumeration).
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground">{t("email_hint")}</p>
             </div>
 
-            <div ref={turnstileContainerRef} aria-label="Bot challenge" className="min-h-[65px]" />
+            <div
+              ref={turnstileContainerRef}
+              aria-label={t("turnstile_aria")}
+              className="min-h-[65px]"
+            />
 
             {error ? (
               <div
                 role="alert"
                 className="rounded-xl border border-destructive/60 bg-destructive/10 p-3 text-sm text-foreground"
               >
-                Niečo sa pokazilo: <code>{error}</code>. Skús to prosím znova alebo nám napíš na{" "}
+                {t("error_prefix")}
+                <code>{error}</code>
+                {t("error_suffix")}
                 <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
                   {CONTACT_EMAIL}
                 </a>
@@ -227,7 +232,7 @@ export function ManageSupportForm() {
               }
               className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-6 py-3 text-base font-bold text-primary-foreground shadow-glow disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {submitting ? "Posielam…" : "Poslať odkaz na e-mail"}
+              {submitting ? t("submit_sending") : t("submit")}
               <span aria-hidden="true">→</span>
             </button>
           </form>
@@ -240,20 +245,21 @@ export function ManageSupportForm() {
 }
 
 function SubmittedState({ email }: { email: string }) {
+  const t = tFor("spravovat_podporu");
   return (
     <section
       role="status"
       aria-live="polite"
       className="space-y-4 rounded-2xl border border-primary/40 bg-card p-8 text-center"
     >
-      <h2 className="text-2xl font-bold tracking-tight text-foreground">Skontroluj e-mail</h2>
+      <h2 className="text-2xl font-bold tracking-tight text-foreground">{t("submitted_title")}</h2>
       <p className="text-sm leading-relaxed text-muted-foreground">
-        Ak na <strong>{email}</strong> evidujeme podporu, do pár minút ti príde e-mail s odkazom na
-        Stripe Customer Portal. Odkaz platí <strong>1 hodinu</strong>.
+        {t("submitted_body_prefix")} <strong>{email}</strong> {t("submitted_body_suffix")}{" "}
+        <strong>{t("submitted_body_hours")}</strong>
+        {t("submitted_body_end")}
       </p>
       <p className="text-xs leading-relaxed text-muted-foreground">
-        Nedošiel ti e-mail? Skontroluj spam priečinok. Ak neprišiel ani po 5 minútach, daj nám
-        vedieť na{" "}
+        {t("submitted_footer_prefix")}
         <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
           {CONTACT_EMAIL}
         </a>

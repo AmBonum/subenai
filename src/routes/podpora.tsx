@@ -3,6 +3,7 @@ import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { Footer } from "@/components/layout/Footer";
 import { CONTACT_EMAIL, SITE_ORIGIN } from "@/config/site";
 import { ROUTES } from "@/config/routes";
+import { tFor } from "@/i18n/marketing";
 
 const ONEOFF_AMOUNTS = [5, 10, 25, 50, 100] as const;
 const MONTHLY_TIERS = [5, 10, 25] as const;
@@ -58,6 +59,7 @@ interface DonateFormProps {
 }
 
 export function DonateForm({ cancelled = false }: DonateFormProps) {
+  const t = tFor("podpora");
   const [mode, setMode] = useState<Mode>("oneoff");
   const [presetAmount, setPresetAmount] = useState<number | null>(null);
   const [customState, setCustomState] = useState<CustomState>("preset");
@@ -173,19 +175,18 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
       <main className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-8">
           <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
-            ← Späť na domov
+            {t("back_home")}
           </Link>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Podpora projektu
+            {t("title")}
           </h1>
           <p className="mt-3 text-base text-muted-foreground sm:text-lg">
-            Akúkoľvek čiastku použijeme na hosting, tvorbu obsahu a údržbu. Žiadne reklamy, žiadne
-            platené výhody. Detail v{" "}
+            {t("hero")}{" "}
             <Link
               to={ROUTES.oProjecte}
               className="text-primary underline underline-offset-2 hover:opacity-80"
             >
-              O projekte
+              {t("hero_link_about")}
             </Link>
             .
           </p>
@@ -197,8 +198,7 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
             data-testid="podpora-cancelled-banner"
             className="mb-6 rounded-2xl border border-border/60 bg-card p-4 text-sm text-muted-foreground"
           >
-            Platbu si zrušil. Žiadne údaje neboli uložené. Ak si to len rozmyslel, môžeš formulár
-            vyplniť znova.
+            {t("cancelled_banner")}
           </div>
         ) : null}
 
@@ -209,12 +209,18 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
           aria-labelledby="podpora-h1"
         >
           <h2 id="podpora-h1" className="sr-only">
-            Formulár podpory
+            {t("form_aria")}
           </h2>
 
           <fieldset className="space-y-3">
-            <legend className="text-sm font-semibold text-foreground">Frekvencia</legend>
-            <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Frekvencia">
+            <legend className="text-sm font-semibold text-foreground">
+              {t("section_frequency")}
+            </legend>
+            <div
+              className="grid grid-cols-2 gap-2"
+              role="radiogroup"
+              aria-label={t("section_frequency")}
+            >
               {(["oneoff", "monthly"] as const).map((m) => (
                 <button
                   key={m}
@@ -229,7 +235,7 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
                       : "border-border bg-background text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {m === "oneoff" ? "Jednorazovo" : "Mesačne"}
+                  {m === "oneoff" ? t("mode_oneoff") : t("mode_monthly")}
                 </button>
               ))}
             </div>
@@ -237,9 +243,13 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
 
           <fieldset className="space-y-3">
             <legend className="text-sm font-semibold text-foreground">
-              Suma {mode === "monthly" ? "(€/mesiac)" : "(€)"}
+              {mode === "monthly" ? t("section_amount_monthly") : t("section_amount_oneoff")}
             </legend>
-            <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Suma">
+            <div
+              className="flex flex-wrap gap-2"
+              role="radiogroup"
+              aria-label={t("section_amount_aria")}
+            >
               {(mode === "oneoff" ? ONEOFF_AMOUNTS : MONTHLY_TIERS).map((value) => (
                 <button
                   key={value}
@@ -270,14 +280,14 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
                       : "border-border bg-background text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  Iná suma
+                  {t("custom_amount")}
                 </button>
               ) : null}
             </div>
             {mode === "oneoff" && customState === "custom" ? (
               <div className="pt-2">
                 <label htmlFor="custom-amount" className="text-xs text-muted-foreground">
-                  Vlastná suma (5–500 €)
+                  {t("custom_amount_label")}
                 </label>
                 <input
                   id="custom-amount"
@@ -289,7 +299,7 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
                   step="0.01"
                   value={customAmountText}
                   onChange={(e) => setCustomAmountText(e.target.value)}
-                  placeholder="napr. 35"
+                  placeholder={t("custom_amount_placeholder")}
                   className="mt-1 w-32 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
                   aria-invalid={!amountValid && customAmountText.length > 0}
                 />
@@ -298,69 +308,71 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
           </fieldset>
 
           <fieldset className="space-y-3">
-            <legend className="text-sm font-semibold text-foreground">Údaje pre faktúru</legend>
+            <legend className="text-sm font-semibold text-foreground">
+              {t("section_invoice")}
+            </legend>
             <div className="space-y-3">
               <Field
                 id="email"
-                label="E-mail"
+                label={t("field_email")}
                 value={email}
                 onChange={setEmail}
                 type="email"
                 autoComplete="email"
                 required
-                hint="Pošleme sem faktúru a potvrdenie."
+                hint={t("field_email_hint")}
               />
               <Field
                 id="name"
-                label="Meno alebo firma"
+                label={t("field_name")}
                 value={name}
                 onChange={setName}
                 autoComplete="name"
                 required
-                hint="Povinné pre faktúru per § 74 zákona č. 222/2004 Z. z."
+                hint={t("field_name_hint")}
               />
               <Field
                 id="tax-id"
-                label="DIČ (voliteľné)"
+                label={t("field_tax_id")}
                 value={taxId}
                 onChange={setTaxId}
-                hint="Vyplň iba ak si platca DPH a chceš odpočet."
+                hint={t("field_tax_id_hint")}
               />
             </div>
           </fieldset>
 
           <fieldset className="space-y-3">
-            <legend className="text-sm font-semibold text-foreground">Verejné poďakovanie</legend>
+            <legend className="text-sm font-semibold text-foreground">{t("section_public")}</legend>
             <CheckboxRow
               id="show-in-list"
               checked={showInList}
               onChange={setShowInList}
-              label="Chcem byť na zozname sponzorov (/sponzori)"
+              label={t("show_in_list")}
             />
             {showInList ? (
               <div className="space-y-3 rounded-xl border border-border/60 bg-background/40 p-4">
                 <Field
                   id="display-name"
-                  label="Zobrazované meno"
+                  label={t("display_name")}
                   value={displayName}
                   onChange={setDisplayName}
                   required
                 />
                 <Field
                   id="display-link"
-                  label="Odkaz (https://, voliteľné)"
+                  label={t("display_link")}
                   value={displayLink}
                   onChange={setDisplayLink}
                   type="url"
                   hint={
                     !linkValid && displayLink.trim().length > 0
-                      ? "Odkaz musí začínať https://"
+                      ? t("display_link_hint_invalid")
                       : undefined
                   }
                 />
                 <div>
                   <label htmlFor="display-message" className="text-sm font-medium text-foreground">
-                    Krátka správa (voliteľné)
+                    {t("display_message")}
                   </label>
                   <textarea
                     id="display-message"
@@ -374,7 +386,9 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
                     className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
                   />
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {DISPLAY_MESSAGE_MAX - displayMessage.length} znakov zostáva
+                    {t("display_message_counter", {
+                      remaining: DISPLAY_MESSAGE_MAX - displayMessage.length,
+                    })}
                   </p>
                 </div>
                 <CheckboxRow
@@ -384,8 +398,11 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
                   disabled={!qualifiesForFooter}
                   label={
                     qualifiesForFooter
-                      ? "Zobraziť ma aj v päte stránky"
-                      : `Zobraziť ma v päte (potrebné: jednorazovo ≥ ${FOOTER_THRESHOLD_ONEOFF} € alebo mesačne ≥ ${FOOTER_THRESHOLD_MONTHLY} €)`
+                      ? t("show_in_footer")
+                      : t("show_in_footer_disabled", {
+                          oneoff: FOOTER_THRESHOLD_ONEOFF,
+                          monthly: FOOTER_THRESHOLD_MONTHLY,
+                        })
                   }
                 />
               </div>
@@ -393,18 +410,15 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
           </fieldset>
 
           <fieldset className="space-y-3">
-            <legend className="text-sm font-semibold text-foreground">Súhlasy</legend>
+            <legend className="text-sm font-semibold text-foreground">
+              {t("section_consents")}
+            </legend>
             <CheckboxRow
               id="consent-immediate"
               checked={consentImmediate}
               onChange={setConsentImmediate}
               required
-              label={
-                <span>
-                  Súhlasím so začatím poskytovania okamžite a beriem na vedomie stratu práva na
-                  odstúpenie (§ 7 ods. 6 zákona č. 102/2014 Z. z.).
-                </span>
-              }
+              label={<span>{t("consent_immediate")}</span>}
             />
             <CheckboxRow
               id="consent-data"
@@ -413,9 +427,9 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
               required
               label={
                 <span>
-                  Beriem na vedomie spracovanie mojich osobných údajov per{" "}
+                  {t("consent_data_prefix")}
                   <Link to={ROUTES.privacy} className="underline underline-offset-2">
-                    Zásady ochrany súkromia
+                    {t("consent_data_link")}
                   </Link>
                   .
                 </span>
@@ -429,7 +443,9 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
               data-testid="podpora-error-banner"
               className="rounded-xl border border-destructive/60 bg-destructive/10 p-3 text-sm text-foreground"
             >
-              Niečo sa pokazilo: <code>{error}</code>. Skús to prosím znova alebo nás kontaktuj na{" "}
+              {t("error_prefix")}
+              <code>{error}</code>
+              {t("error_suffix")}
               <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
                 {CONTACT_EMAIL}
               </a>
@@ -445,16 +461,18 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
               className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-6 py-4 text-base font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
             >
               {submitting
-                ? "Presmerúvam na Stripe…"
+                ? t("submit_redirecting")
                 : amountEur != null
-                  ? `Pokračovať na platbu — ${amountEur} €${mode === "monthly" ? "/mes" : ""}`
-                  : "Pokračovať na platbu"}
+                  ? mode === "monthly"
+                    ? t("submit_with_amount_monthly", { amount: amountEur })
+                    : t("submit_with_amount_oneoff", { amount: amountEur })
+                  : t("submit_default")}
               <span aria-hidden="true">→</span>
             </button>
             <p className="text-xs text-muted-foreground">
-              Platbu spracúva <strong>Stripe Payments Europe, Ltd.</strong> (Írsko). Kartové údaje
-              nikdy neukladáme. Faktúru ti pošleme e-mailom (PDF). Mesačný odber môžeš{" "}
-              <strong>kedykoľvek zrušiť jediným klikom</strong> cez Stripe Customer Portal.
+              {t("footer_legal")} <strong>{t("footer_legal_entity")}</strong>{" "}
+              {t("footer_legal_country")} <strong>{t("footer_legal_cancel")}</strong>{" "}
+              {t("footer_legal_end")}
             </p>
           </div>
         </form>

@@ -3,6 +3,7 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { Footer } from "@/components/layout/Footer";
 import { CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
+import { tFor } from "@/i18n/marketing";
 
 const POLL_INTERVAL_MS = 3000;
 const POLL_MAX_MS = 30000;
@@ -45,6 +46,7 @@ interface ThankYouViewProps {
 }
 
 export function ThankYouView({ sessionId }: ThankYouViewProps) {
+  const t = tFor("podakovanie");
   const [status, setStatus] = useState<Status>("loading");
   const [data, setData] = useState<DonationStatusResponse | null>(null);
   const [portalSubmitting, setPortalSubmitting] = useState(false);
@@ -136,7 +138,7 @@ export function ThankYouView({ sessionId }: ThankYouViewProps) {
       <main className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-8">
           <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
-            ← Späť na domov
+            {t("back_home")}
           </Link>
         </header>
 
@@ -168,16 +170,15 @@ export function ThankYouView({ sessionId }: ThankYouViewProps) {
 }
 
 function PendingState() {
+  const t = tFor("podakovanie");
   return (
     <section
       role="status"
       aria-live="polite"
       className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center"
     >
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">Hľadáme tvoju platbu…</h1>
-      <p className="text-sm leading-relaxed text-muted-foreground">
-        Stripe webhook môže trvať pár sekúnd. Stránka sa sama obnoví, nemusíš nič robiť.
-      </p>
+      <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("pending_title")}</h1>
+      <p className="text-sm leading-relaxed text-muted-foreground">{t("pending_body")}</p>
       <div className="mx-auto h-2 w-32 overflow-hidden rounded-full bg-muted" aria-hidden="true">
         <div className="h-full w-1/3 animate-pulse bg-primary" />
       </div>
@@ -202,13 +203,16 @@ function ReadyState({
   portalError,
   onOpenPortal,
 }: ReadyStateProps) {
-  const greeting = sponsorDisplayName ? `Ďakujeme, ${sponsorDisplayName}!` : "Ďakujeme za podporu!";
+  const t = tFor("podakovanie");
+  const greeting = sponsorDisplayName
+    ? t("ready_greeting_named", { name: sponsorDisplayName })
+    : t("ready_greeting_default");
   const dateLabel = new Date(donation.created_at).toLocaleDateString("sk-SK", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
-  const kindLabel = isSubscription ? "Mesačný odber" : "Jednorazová podpora";
+  const kindLabel = isSubscription ? t("kind_subscription") : t("kind_oneoff");
   const amountLabel = `${donation.amount_eur.toFixed(2)} ${donation.currency.toUpperCase()}${
     isSubscription ? "/mes" : ""
   }`;
@@ -226,7 +230,7 @@ function ReadyState({
       </div>
 
       <div className="space-y-3 rounded-2xl border border-border/60 bg-card p-6">
-        <h2 className="text-lg font-semibold text-foreground">Faktúra a doklady</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t("invoice_heading")}</h2>
         {donation.invoice_pdf_url ? (
           <a
             href={donation.invoice_pdf_url}
@@ -234,27 +238,25 @@ function ReadyState({
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground hover:border-primary/40"
           >
-            Stiahnuť faktúru (PDF)
+            {t("invoice_download")}
             <span aria-hidden="true">↗</span>
           </a>
         ) : (
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            Faktúru ti Stripe pošle e-mailom v priebehu pár minút. PDF link sa objaví aj tu po
-            obnovení stránky.
-          </p>
+          <p className="text-sm leading-relaxed text-muted-foreground">{t("invoice_pending")}</p>
         )}
         <p className="text-xs leading-relaxed text-muted-foreground">
-          Faktúru vystavila <strong>am.bonum s. r. o.</strong>, IČO 55 055 290, sídlo Škultétyho
-          1560/3, 052 01 Spišská Nová Ves. Nie sme platcami DPH (§ 4 zákona č. 222/2004 Z. z.).
+          {t("invoice_issuer_prefix")} <strong>{t("invoice_issuer_entity")}</strong>
+          {t("invoice_issuer_suffix")}
         </p>
       </div>
 
       {isSubscription ? (
         <div className="space-y-3 rounded-2xl border border-border/60 bg-card p-6">
-          <h2 className="text-lg font-semibold text-foreground">Spravovať mesačný odber</h2>
+          <h2 className="text-lg font-semibold text-foreground">{t("subscription_heading")}</h2>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Odber môžeš <strong>kedykoľvek zrušiť jediným klikom</strong> alebo zmeniť kartu cez
-            Stripe Customer Portal. Žiadny „are you sure" loop, žiadne pause-tactics.
+            {t("subscription_body_prefix")}
+            <strong>{t("subscription_body_cancel")}</strong>
+            {t("subscription_body_suffix")}
           </p>
           <button
             type="button"
@@ -262,12 +264,14 @@ function ReadyState({
             disabled={portalSubmitting}
             className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground hover:border-primary/40 disabled:opacity-50"
           >
-            {portalSubmitting ? "Otváram portál…" : "Spravovať odber"}
+            {portalSubmitting ? t("subscription_opening") : t("subscription_manage")}
             <span aria-hidden="true">→</span>
           </button>
           {portalError ? (
             <p role="alert" className="text-sm text-foreground">
-              Portál sa nepodarilo otvoriť: <code>{portalError}</code>. Napíš nám na{" "}
+              {t("subscription_error_prefix")}
+              <code>{portalError}</code>
+              {t("subscription_error_suffix")}
               <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
                 {CONTACT_EMAIL}
               </a>
@@ -279,13 +283,12 @@ function ReadyState({
 
       <div className="space-y-2 rounded-2xl border border-border/60 bg-card p-6 text-sm leading-relaxed text-muted-foreground">
         <p>
-          Tvoje peniaze idú na hosting (Cloudflare ~5 €/mes), Supabase databázu (~25 €/mes), Stripe
-          poplatky (~3 %) a tvorbu nového obsahu. Detailný breakdown v{" "}
+          {t("breakdown_prefix")}
           <Link
             to={ROUTES.oProjecte}
             className="underline underline-offset-2 hover:text-foreground"
           >
-            O projekte
+            {t("breakdown_link_about")}
           </Link>
           .
         </p>
@@ -295,11 +298,12 @@ function ReadyState({
 }
 
 function UnpaidState() {
+  const t = tFor("podakovanie");
   return (
     <section className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">Platba ešte neprešla</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("unpaid_title")}</h1>
       <p className="text-sm leading-relaxed text-muted-foreground">
-        Vyzerá to, že platba nebola dokončená. Skús to prosím znova alebo nás kontaktuj na{" "}
+        {t("unpaid_body")}
         <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
           {CONTACT_EMAIL}
         </a>
@@ -309,36 +313,35 @@ function UnpaidState() {
         to={ROUTES.podpora}
         className="inline-flex items-center gap-2 rounded-2xl bg-accent-gradient px-6 py-3 text-sm font-bold text-primary-foreground"
       >
-        Späť na /podpora
+        {t("unpaid_cta")}
       </Link>
     </section>
   );
 }
 
 function TimeoutState() {
+  const t = tFor("podakovanie");
   return (
     <section className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">Stále spracúvame…</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("timeout_title")}</h1>
       <p className="text-sm leading-relaxed text-muted-foreground">
-        Stripe nám ešte neposlal potvrdenie. Tvoja platba je pravdepodobne v poriadku — Stripe ti
-        pošle faktúru e-mailom hneď ako ju spracuje. Ak to bude trvať dlhšie ako 10 minút, napíš nám
-        na{" "}
+        {t("timeout_body_prefix")}
         <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
           {CONTACT_EMAIL}
-        </a>{" "}
-        s ID platby z e-mailu od Stripe.
+        </a>
+        {t("timeout_body_suffix")}
       </p>
     </section>
   );
 }
 
 function NotFoundState() {
+  const t = tFor("podakovanie");
   return (
     <section className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">Neznáma platba</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("not_found_title")}</h1>
       <p className="text-sm leading-relaxed text-muted-foreground">
-        Tento odkaz nezodpovedá žiadnej platbe v našom systéme. Skontroluj URL alebo nás kontaktuj
-        na{" "}
+        {t("not_found_body")}
         <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
           {CONTACT_EMAIL}
         </a>
@@ -349,11 +352,12 @@ function NotFoundState() {
 }
 
 function ErrorState() {
+  const t = tFor("podakovanie");
   return (
     <section className="space-y-4 rounded-2xl border border-destructive/60 bg-card p-8 text-center">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">Niečo sa pokazilo</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("error_title")}</h1>
       <p className="text-sm leading-relaxed text-muted-foreground">
-        Stránku obnov za chvíľu — ak sa chyba opakuje, daj nám vedieť na{" "}
+        {t("error_body")}
         <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
           {CONTACT_EMAIL}
         </a>
