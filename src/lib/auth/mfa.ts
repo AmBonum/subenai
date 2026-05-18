@@ -42,11 +42,33 @@ export interface FactorList {
  * display to the user. The factor stays in `unverified` state until the
  * caller invokes `challengeAndVerify` with a code from the user's
  * authenticator app.
+ *
+ * `issuer` is encoded into the otpauth:// URI inside the QR. Authenticator
+ * apps render it as the entry's account label (e.g. "subenai.sk admin:
+ * user@example.com"). Without explicit issuer, Supabase falls back to the
+ * project's Site URL — which often defaults to `http://localhost:3000` in
+ * dev and leaks into production QRs. Passing an explicit issuer makes the
+ * label stable regardless of dashboard config.
+ *
+ * Callers pass different issuers for different audiences so the user can
+ * tell admin and user enrolments apart in their authenticator:
+ *   - admin enrolment    → ISSUER_ADMIN (`subenai.sk admin`)
+ *   - user-opt-in        → ISSUER_USER  (`subenai.sk`)
  */
-export async function enrollTotp(friendlyName = "SubenAI admin"): Promise<EnrollResult> {
+export const ISSUER_ADMIN = "subenai.sk admin";
+export const ISSUER_USER = "subenai.sk";
+
+export interface EnrollTotpOptions {
+  friendlyName?: string;
+  issuer?: string;
+}
+
+export async function enrollTotp(opts: EnrollTotpOptions = {}): Promise<EnrollResult> {
+  const { friendlyName = "SubenAI", issuer = ISSUER_USER } = opts;
   const { data, error } = await supabase.auth.mfa.enroll({
     factorType: "totp",
     friendlyName,
+    issuer,
   });
   if (error || !data) {
     throw new Error(error?.message ?? "mfa_enroll_failed");

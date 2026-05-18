@@ -22,11 +22,14 @@ vi.mock("@/lib/auth/mfa", () => ({
   generateBackupCodes: () => generateBackupCodes(),
   listFactors: vi.fn().mockResolvedValue({ totp: [] }),
   getAALStatus: vi.fn().mockResolvedValue({ currentLevel: "aal1", nextLevel: "aal2" }),
+  ISSUER_ADMIN: "subenai.sk admin",
+  ISSUER_USER: "subenai.sk",
 }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     auth: { getSession: vi.fn().mockResolvedValue({ data: { session: { user: { id: "u" } } } }) },
+    rpc: vi.fn().mockResolvedValue({ data: false, error: null }),
   },
 }));
 

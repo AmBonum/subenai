@@ -20,6 +20,8 @@ import {
   generateBackupCodes,
   listFactors,
   getAALStatus,
+  ISSUER_ADMIN,
+  ISSUER_USER,
 } from "@/lib/auth/mfa";
 import { tFor } from "@/i18n/security";
 
@@ -65,16 +67,33 @@ function EnrollTwoFactorPage() {
   const [copied, setCopied] = useState(false);
 
   // Kick off enrollment as soon as the user advances to step 2 so the QR
-  // is ready by the time the step renders.
+  // is ready by the time the step renders. Issuer is decided by the
+  // current user's admin role so the authenticator app shows
+  // "subenai.sk admin" for admins vs plain "subenai.sk" for users —
+  // helps when one person has both kinds of accounts.
   useEffect(() => {
     if (step === 2 && !qrCode) {
-      enrollTotp()
-        .then((res) => {
+      (async () => {
+        try {
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
+          let issuer = ISSUER_USER;
+          if (session?.user) {
+            const { data: isAdmin } = await supabase.rpc("has_role", {
+              _user_id: session.user.id,
+              _role: "admin",
+            });
+            if (isAdmin === true) issuer = ISSUER_ADMIN;
+          }
+          const res = await enrollTotp({ issuer });
           setFactorId(res.factorId);
           setQrCode(res.qrCode);
           setSecret(res.secret);
-        })
-        .catch(() => setError(t("step3_error_generic")));
+        } catch {
+          setError(t("step3_error_generic"));
+        }
+      })();
     }
   }, [step, qrCode, t]);
 

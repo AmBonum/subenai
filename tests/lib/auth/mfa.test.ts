@@ -54,9 +54,13 @@ describe("mfa helpers", () => {
       data: { id: "f1", type: "totp", totp: { qr_code: "QR", secret: "S", uri: "U" } },
       error: null,
     });
-    const res = await enrollTotp("My device");
+    const res = await enrollTotp({ friendlyName: "My device", issuer: "test-issuer" });
     expect(res).toEqual({ factorId: "f1", qrCode: "QR", secret: "S", uri: "U" });
-    expect(enroll).toHaveBeenCalledWith({ factorType: "totp", friendlyName: "My device" });
+    expect(enroll).toHaveBeenCalledWith({
+      factorType: "totp",
+      friendlyName: "My device",
+      issuer: "test-issuer",
+    });
   });
 
   it("enrollTotp throws on supabase error", async () => {
