@@ -53,4 +53,28 @@ describe("NotFoundPage (E22)", () => {
     expect(svg).not.toBeNull();
     expect(svg?.getAttribute("aria-hidden")).toBe("true");
   });
+
+  // Regression sentinel: 2026-05-19 — production was rendering raw
+  // i18n keys (`back_to_start`, `errors.not_found_suggestions.*`) on
+  // the 404 page because the component passed already-prefixed paths
+  // to a resolver scoped to that prefix, and used the wrong section
+  // for the home-CTA label. These checks pin down actual Slovak
+  // strings so a copy/paste of the same mistake fails CI.
+  it("renders Slovak strings for home CTA and suggestion cards (regression)", () => {
+    render(<NotFoundPage />);
+    expect(screen.getByTestId("not-found-home-cta")).toHaveTextContent("Späť na úvod");
+    expect(screen.getByTestId("not-found-suggestion-test")).toHaveTextContent("Spusti rýchly test");
+    expect(screen.getByTestId("not-found-suggestion-academy")).toHaveTextContent("Otvor akadémiu");
+    expect(screen.getByTestId("not-found-suggestion-courses")).toHaveTextContent("Pozri školenia");
+    expect(screen.getByTestId("not-found-suggestion-schools")).toHaveTextContent(
+      "Pre školy a učiteľov",
+    );
+  });
+
+  it("does NOT leak raw i18n keys (regression)", () => {
+    render(<NotFoundPage />);
+    const text = screen.getByTestId("not-found-root").textContent ?? "";
+    expect(text).not.toMatch(/errors\.not_found_suggestions/);
+    expect(text).not.toMatch(/\bback_to_start\b/);
+  });
 });

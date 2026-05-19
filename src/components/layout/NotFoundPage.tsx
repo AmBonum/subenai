@@ -32,32 +32,32 @@ const SUGGESTIONS: Suggestion[] = [
     testId: "test",
     to: "test",
     icon: Compass,
-    titleKey: "errors.not_found_suggestions.test_title",
-    descKey: "errors.not_found_suggestions.test_desc",
+    titleKey: "not_found_suggestions.test_title",
+    descKey: "not_found_suggestions.test_desc",
     accent: "primary",
   },
   {
     testId: "academy",
     to: "blog",
     icon: BookOpen,
-    titleKey: "errors.not_found_suggestions.academy_title",
-    descKey: "errors.not_found_suggestions.academy_desc",
+    titleKey: "not_found_suggestions.academy_title",
+    descKey: "not_found_suggestions.academy_desc",
     accent: "default",
   },
   {
     testId: "courses",
     to: "skolenia",
     icon: GraduationCap,
-    titleKey: "errors.not_found_suggestions.courses_title",
-    descKey: "errors.not_found_suggestions.courses_desc",
+    titleKey: "not_found_suggestions.courses_title",
+    descKey: "not_found_suggestions.courses_desc",
     accent: "default",
   },
   {
     testId: "schools",
     to: "skoly",
     icon: Map,
-    titleKey: "errors.not_found_suggestions.schools_title",
-    descKey: "errors.not_found_suggestions.schools_desc",
+    titleKey: "not_found_suggestions.schools_title",
+    descKey: "not_found_suggestions.schools_desc",
     accent: "success",
   },
 ];
@@ -143,7 +143,11 @@ function LostIllustration() {
 
 export function NotFoundPage() {
   const tErr = tFor("errors");
-  const t = tFor("results");
+  // `back_to_start` lives in the `common` namespace, not `results` —
+  // a prior author named the local `t` without realizing the section
+  // shifted (2026-05-19 finding from Phase 8 e2e snapshot showed raw
+  // key `back_to_start` rendering on 404 in prod).
+  const tCommon = tFor("common");
 
   return (
     <div className="min-h-screen bg-background">
@@ -181,7 +185,7 @@ export function NotFoundPage() {
             data-testid="not-found-home-cta"
           >
             <Home className="size-4" aria-hidden="true" />
-            {t("back_to_start") || "Späť na domov"}
+            {tCommon("back_to_start")}
           </Link>
         </div>
 
