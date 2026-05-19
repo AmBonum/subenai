@@ -1,0 +1,159 @@
+---
+slug: verejna-wifi-rizika-a-obrana
+title: "verejná wifi — riziká, mýty a reálna obrana v 2026"
+subtitle: "panika z roku 2010 vs. realita 2026 — čo ti naozaj hrozí v kaviarni, na letisku a v hoteli"
+excerpt: "verejná wifi nie je tá hrozba, ktorou bola pred 15 rokmi. https pokrýva 95 % webu, prevádzka je šifrovaná end-to-end. ale stále existujú reálne útoky, ktoré ti môžu ublížiť. tu je triezvy rozbor, čomu sa vyhýbať a čomu sa neoplatí venovať pozornosť."
+category_slug: digitalna-bezpecnost
+author_slug: subenai-editorial
+primary_keyword: verejna wifi
+search_intent: informational
+reading_minutes: 9
+hero_image_url: null
+og_image_url: null
+seo_title: "verejná wifi — riziká a obrana 2026 (bez paniky) | subenai"
+seo_description: "myty o verejnej wifi z roku 2010 vs. realita 2026. čo ti naozaj hrozí v kaviarni, hoteli a na letisku — a čo je marketingový bullshit od vpn predajcov."
+canonical_url: null
+pillar: false
+sources:
+  - label: "sk-cert: varovanie pred zvýšeným rizikom kybernetických bezpečnostných útokov"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "google transparency report: https encryption on the web"
+    url: "https://transparencyreport.google.com/https/overview"
+    publisher: "Google"
+    accessed_at: "2026-05-19"
+  - label: "eset bezpečne na nete: verejná wi-fi a jej riziká"
+    url: "https://bezpecnenanete.eset.com/sk/cybernews/"
+    publisher: "ESET"
+    accessed_at: "2026-05-19"
+  - label: "mozilla: what a vpn does and doesn't do"
+    url: "https://www.mozilla.org/en-US/products/vpn/resource-center/what-does-a-vpn-do/"
+    publisher: "Mozilla"
+    accessed_at: "2026-05-19"
+  - label: "fbi public service announcement: avoiding public usb charging stations and unsecured wi-fi"
+    url: "https://www.ic3.gov/Media/Y2023/PSA230406"
+    publisher: "FBI IC3"
+    accessed_at: "2026-05-19"
+---
+
+otvoríš si notebook v kaviarni, pripojíš sa na *Coffee_Free_WiFi* a v hlave ti zaznie ten dobre známy hlas: *„pozor, hekuri sledujú každý tvoj klik, kúp si vpn za 3 € mesačne a chráň svoju identitu."* tento hlas má 15 rokov a vychádza z reality, ktorá už neplatí. v 2026 verejná wifi nie je tá horiaca skládka osobných údajov, ktorou bola v roku 2010 — ale nie je ani úplne neškodná. tento článok ti za 9 minút povie, kde je mýtus, kde je reálna hrozba a čo s tým robiť bez paniky.
+
+## mýtus z roku 2010 — „hacker vidí všetko, čo robíš"
+
+starý obraz funguje takto: sadneš si do starbucks, otvoríš gmail, prihlásiš sa, a chlapík v rohu s notebookom a nálepkou *„hack the planet"* odpočúva tvoju komunikáciu cez wireshark. vidí tvoje heslo. vidí, čo si píšeš s priateľkou. vidí čísla kariet, ktoré zadávaš pri nákupe.
+
+v roku 2010 to bola **pravda** — drvivá väčšina webu fungovala cez nezašifrované http a man-in-the-middle útok na otvorenej wifi bol triviálny. v 2026 to **pravda nie je**, a dôvod je jediný: **https vyhralo**.
+
+[google v transparency reporte uvádza, že podiel https na zariadeniach v chromese sa pohybuje okolo 95–98 %](https://transparencyreport.google.com/https/overview) [2] v závislosti od krajiny a platformy. firefox a safari hlásia podobné čísla. moderné prehliadače dnes [zobrazujú agresívne varovania pre každú stránku, ktorá ide cez čistý http](https://www.mozilla.org/en-US/products/vpn/resource-center/what-does-a-vpn-do/) [4], a väčšina používateľov sa cez to varovanie neprehrýzne.
+
+čo to znamená v praxi pre teba v kaviarni:
+
+- otvoríš si **gmail** → prevádzka medzi tebou a google serverom je šifrovaná. operátor wifi vidí len, že komunikuješ s `mail.google.com`, ale **obsah** (e-maily, heslá, kontakty) je v zašifrovanom tuneli, ktorý si operátor neotvorí.
+- prihlásiš sa do **slsp internet bankingu** → to isté. tls vrstva medzi tvojím prehliadačom a `slsp.sk` zašifruje **všetko** — vrátane prihlasovacieho hesla a sms autorizácie.
+- nakúpiš na **alze** → číslo karty cestuje cez šifrovaný kanál priamo k platobnej bráne. wifi operátor vidí, že si bol na alza.sk. nevidí, čo si kúpil ani akou kartou si platil.
+
+**hacker s wiresharkom v rohu kaviarne v 2026 sa pozerá na šum.** to je realita, ktorú ti marketing vpn predajcov nepovie.
+
+## čo wifi operátor **stále** vidí
+
+teraz tá nepríjemnejšia časť — https chráni *obsah*, ale **nie metadáta**. operátor wifi (kaviareň, hotel, letisko, ten istý chlapík s laptopom v rohu, ak by mal ovládnutý ten access point) **vidí**:
+
+- **dns dotazy** — teda mená domén, na ktoré sa pripájaš. vidí, že si bol na `slsp.sk`, na `nbusr.sk`, na `pornhub.com`, na `chemtrails-pravda.sk`. nevie čo si tam robil. ale vie kam si chodil.
+- **ip adresy a sni hlavičky** — aj keď je dns šifrované cez doh (čo moderné prehliadače dnes [robia automaticky](https://www.mozilla.org/en-US/products/vpn/resource-center/what-does-a-vpn-do/) [4]), tls handshake stále posiela názov domény v sni v plaintexte. encrypted client hello (ech) to rieši, ale rollout je zatiaľ čiastočný.
+- **objem a načasovanie** — vidí, že si o 14:32 stiahol 800 mb dát zo serveru v amsterdame. nemusí vedieť, čo to bolo, ale dokáže si urobiť odhad (videostream, torrent, cloud backup).
+
+pre **bežného slováka v kaviarni** je toto neutrálna informácia. **pre cestujúceho v krajine s aktívnym monitoringom** (čína, irán, rusko, biela rus, turecko počas politických kríz) to už neutrálne nie je — a tu má vpn legitímny use case. detail v [vpn — naozaj ju potrebuješ](/blog/vpn-ci-naozaj-potrebujem).
+
+## čo je **stále** reálne nebezpečné v 2026
+
+odpočúvanie zomrelo. ale tri konkrétne útoky cez verejnú wifi sú stále živé:
+
+### 1. evil twin access point
+
+útočník postaví vlastný wifi prístupový bod s rovnakým názvom siete (ssid) ako legitímna sieť kaviarne — *„Coffee_Free_WiFi"*. tvoje zariadenie sa pripojí, lebo si to ssid videlo už predtým a má ho v zozname *„auto-connect"*. od tej chvíle všetka tvoja prevádzka prechádza cez **jeho** access point, ktorý ti môže ukázať falošný captive portál, falošné stránky alebo ťa zasypať varovaniami typu *„aktualizujte si certifikát"*.
+
+obrana:
+
+- **vypni auto-connect na otvorené wifi siete.** v ios: nastavenia → wifi → ask to join networks → ask. v androide: nastavenia → wifi → preferencie → auto-connect off.
+- **pri prvom pripojení v novej kaviarni si opýtaj presný názov siete na pulte.** ak vidíš dva access pointy s rovnakým menom, jeden z nich je takmer isto evil twin.
+- **kontroluj „secure" znak** — legitímne kaviarňové wifi v 2026 už zvyčajne má heslo (wpa2/wpa3). úplne otvorená wifi bez hesla je v 2026 zriedkavá v slušnom podniku.
+
+### 2. malicious captive portal
+
+pripojíš sa na hotelovú wifi, otvorí sa ti stránka s logom hotela: *„pre prístup na internet sa prihláste menom a priezviskom a číslom izby"* alebo, horšia verzia: *„prosím nainštalujte si bezpečnostný certifikát hotela kliknutím na tlačidlo nižšie"*.
+
+prvá verzia ti zbiera osobné údaje (predaj na čierny trh, social engineering pre cielený phishing). druhá verzia je oveľa horšia — **stiahne ti trojan**, ktorý sa vydáva za root certifikát, a od tej chvíle môže dešifrovať tvoj https traffic priamo na tvojom zariadení. [fbi v public service announcement z roku 2023 explicitne varovala pred takýmto typom útokov v hoteloch a verejných priestoroch](https://www.ic3.gov/Media/Y2023/PSA230406) [5] — najmä na medzinárodných cestách.
+
+obrana:
+
+- **nikdy nesťahuj „bezpečnostný certifikát" ani „aktualizáciu" cez captive portál.** žiadny legitímny hotel toto od teba nikdy nepýta.
+- **pri prihlasovaní do captive portálu nezadávaj viac údajov, než je nevyhnutné.** krstné meno a priezvisko — ok. číslo pasu a kreditka — nikdy.
+- **ak ti captive portál ukáže ssl varovanie** (žltý alebo červený zámok, *„this connection is not private"*), zatvor prehliadač. nepripájaj sa.
+
+### 3. dns únik a tracking
+
+aj keď ide všetko cez https, **dns dotazy** (ktoré sa pýtajú „kde je slsp.sk"?) môžu ísť na dns server operátora wifi. ten si vie zaznamenať každú jednu doménu, na ktorú sa kdo z hostí pripájal — a predať tento profil reklamným brokerom alebo si ho proste nechať na vyšetrenie, ak ho niekto požiada.
+
+moderné prehliadače (chrome, firefox, safari, edge) tomu čelia cez **dns-over-https (doh)** — dns dotazy idú zašifrované priamo do cloudflare alebo google dns servera, mimo dosahu operátora wifi. v chrome je doh zapnuté defaultom od verzie 83. ale **nie všetky aplikácie** používajú prehliadačový dns — natívne aplikácie (facebook app, instagram app, slovenské banky) môžu byť stále vystavené.
+
+obrana:
+
+- **zapni systémové doh / dot v ios 14+ a android 9+.** v ios: nastavenia → wifi → tvoja sieť → konfigurovať dns → manuálne → cloudflare 1.1.1.1 alebo quad9 9.9.9.9. v androide: nastavenia → sieť → privátne dns → `one.one.one.one`.
+- **ak si paranoidný a často cestuješ**, vpn ti dns problém vyrieši ako vedľajší efekt — všetky dns dotazy idú cez vpn tunel.
+
+## scenáre podľa rizika — kaviareň, hotel, letisko
+
+reálne riziko závisí od kontextu. tu je krátky prehľad, koľko paniky si zaslúži ktorá situácia:
+
+| scenár | reálne riziko | čo robiť |
+|---|---|---|
+| kaviareň v bratislave / košiciach na hodinu | **nízke** | https ťa pokryje. vyhni sa „free wifi" bez hesla. |
+| coworking, fixná adresa s wpa2 heslom | **veľmi nízke** | rovnaké ako domáca wifi. |
+| hotel v eu | **stredné** | pozor na captive portál. nikdy „certifikáty" odtiaľ neinštaluj. |
+| hotel mimo eu (najmä ázia, blízky východ) | **vyššie** | vpn legitímna. fbi to explicitne odporúča. [5] |
+| letisko (tranzitná zóna) | **stredné** | krátky pobyt, vysoká frekvencia evil twin pokusov. |
+| autobus / vlak (regiojet, leo express wifi) | **nízke** | https + krátky čas pripojenia = malé riziko. |
+| festival, výstava, konferencia | **vyššie** | dav, anonymita útočníka, ssid spoofing. |
+
+## ako sa **reálne** brániť — checklist na 5 minút
+
+ak chceš v 2026 chodiť po verejných wifi s pokojnou hlavou, toto je úplný checklist:
+
+1. **používaj password manager.** nielen pre pohodlie — ak ti niekto podstrčí falošnú prihlasovaciu stránku slsp cez evil twin a captive portál, password manager ju **nevyplní**, lebo doména nesedí. najsilnejší anti-phishing signál existuje. detail v [silné heslo 2026 vs. passkey](/blog/silne-heslo-2026-vs-passkey).
+2. **zapni 2fa všade, kde sa dá.** najmä e-mail, banky, sociálne siete. aj keď ti niekto ukradne heslo cez captive portál phishing, bez druhého faktora sa do účtu nedostane. detail v [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca).
+3. **vypni auto-connect na otvorené siete** v nastaveniach telefónu a notebooku.
+4. **zapni dns-over-https** v systéme (`one.one.one.one` alebo `9.9.9.9`).
+5. **kontroluj url v adresnom riadku pred zadaním hesla** — najmä znak zámku a presné znenie domény (`slsp.sk` vs. `s1sp.sk` s číslicou 1).
+6. **vpn ako voliteľná vrstva** — len ak cestuješ do citlivej krajiny, používaš firemnú vpn, alebo chceš obejsť geo-blokovanie. **nie ako anti-scam riešenie.** triezvy rozbor v [vpn — naozaj ju potrebuješ](/blog/vpn-ci-naozaj-potrebujem).
+
+## čo robiť, ak si sa pripojil na podozrivú sieť
+
+ak máš pocit, že si sa nedávno pripojil na evil twin alebo si klikol na podozrivý captive portál:
+
+1. **odpoj sa okamžite** a *„zabudnúť sieť"* v nastaveniach wifi (aby sa zariadenie automaticky nepripájalo znovu).
+2. **skontroluj nainštalované root certifikáty** — v ios: nastavenia → všeobecné → vpn a správa zariadenia → profil. v androide: nastavenia → bezpečnosť → šifrovanie a poverenia → dôveryhodné poverenia → používateľ. ak vidíš čokoľvek, čo si neinštaloval ty alebo tvoj zamestnávateľ, **vymaž to**.
+3. **zmeň heslá ku všetkým službám**, do ktorých si sa cez podozrivú sieť prihlásil — najmä e-mail a banka. urob to z dôveryhodnej siete (mobilné dáta, domáca wifi).
+4. **skontroluj e-mail na neznáme prihlásenia** — gmail a outlook posielajú varovanie pri prihlásení z novej krajiny / nového zariadenia.
+5. **ak ide o pracovný notebook, nahlás IT.** majú nástroje na forenznú kontrolu, ktoré ty nemáš.
+
+[sk-cert v aktuálnych varovaniach pravidelne pripomína, že prevencia cez vrstvenú obranu (password manager + 2fa + aktualizácie) chráni pred drvivou väčšinou útokov](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [1], nielen pred wifi-špecifickými. [eset slovensko v sérii materiálov o verejnej wifi rovnako píše, že primárnym vektorom dnes nie je odpočúvanie, ale sociálne inžinierstvo](https://bezpecnenanete.eset.com/sk/cybernews/) [3].
+
+## širší kontext digitálnej bezpečnosti
+
+verejná wifi je len jedna kapitola v 10-bodovej obrane. ak ťa zaujíma celý obraz — heslá, 2fa, password manager, aktualizácie, zálohovanie, kontrola únikov a psychológia útoku — pozri [digitálna bezpečnosť — kompletný návod pre bežných ľudí](/blog/digitalna-bezpecnost-kompletny-navod). je to pillar, pod ktorý tento článok patrí.
+
+## zhrnutie
+
+- **panika z roku 2010** o tom, že hacker v kaviarni vidí všetky tvoje heslá, **už neplatí**. https pokrýva 95+ % webu, obsah prevádzky je šifrovaný end-to-end.
+- **wifi operátor stále vidí metadáta** — dns dotazy, domény, objem prevádzky. obsah nie.
+- **reálne hrozby v 2026**: evil twin access point, malicious captive portal s falošnými „certifikátmi", dns únik k operátorovi.
+- **kaviareň v bratislave**: nízke riziko. **hotel v ázii**: vyššie, vpn legitímna.
+- **najsilnejšia obrana je password manager + 2fa**, nie vpn. vpn rieši sieťové súkromie, nie phishing.
+- **nikdy neinštaluj „certifikáty"** ponúkané cez captive portál. nikdy.
+- **zapni dns-over-https v systéme** a vypni auto-connect na otvorené siete.
+- **vpn na verejnú wifi** je voliteľná vrstva, nie nutnosť — pre väčšinu slovákov v eu nepridáva merateľnú hodnotu.
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
