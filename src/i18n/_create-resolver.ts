@@ -78,8 +78,26 @@ export function createResolver(opts: { sk: Json; loaders: LazyLoaders }) {
 
   registry.add(preload);
 
+  // Stable per-section closure cache. The closure reads getCurrentLocale()
+  // at lookup time so it stays correct across locale switches; caching only
+  // memoizes the FUNCTION REFERENCE. Without this cache, every `tFor(s)`
+  // call returned a new arrow function, so callers that put `t` in
+  // useEffect deps (idiomatic per react-hooks/exhaustive-deps) would fire
+  // their effect on every render. That caused a production infinite-loop
+  // bug in /auth/callback after Google OAuth (2026-05-19): the effect kept
+  // re-issuing navigate(), which kept TanStack's route transition pending,
+  // which kept re-rendering the component, which kept producing a fresh
+  // `t`, which kept the effect deps unstable — 352+ profile_preferences
+  // queries per stuck tab.
+  const sectionCache = new Map<
+    string,
+    (key: string, vars?: Record<string, string | number>) => string
+  >();
+
   function tFor(section: string) {
-    return (key: string, vars?: Record<string, string | number>) => {
+    const cached = sectionCache.get(section);
+    if (cached) return cached;
+    const fn = (key: string, vars?: Record<string, string | number>) => {
       const locale = getCurrentLocale();
       const skSection = pickSection(sk, section);
       if (locale !== "sk") {
@@ -96,6 +114,8 @@ export function createResolver(opts: { sk: Json; loaders: LazyLoaders }) {
       const value = resolve(skSection, key) ?? key;
       return interpolate(value, vars);
     };
+    sectionCache.set(section, fn);
+    return fn;
   }
 
   return tFor;

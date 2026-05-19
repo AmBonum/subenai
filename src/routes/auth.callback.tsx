@@ -10,7 +10,7 @@
 // with a friendly toast.
 
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { decidePostLoginTarget } from "@/lib/auth/post-login-redirect";
 import { tFor } from "@/i18n/auth";
@@ -41,8 +41,18 @@ function AuthCallbackPage() {
   const navigate = useNavigate();
   const search = useSearch({ from: "/auth/callback" }) as CallbackSearch;
   const [error, setError] = useState<string | null>(null);
+  // Defense-in-depth against re-entry. The effect resolves exactly one
+  // navigate() per page load. If TanStack re-renders this component during
+  // a pending route transition (which DID happen in production on
+  // 2026-05-19: the prior `t` instability re-fired the effect, navigate
+  // re-issued, transition restarted, ad infinitum — 352+ profile_preferences
+  // queries before the user closed the tab), this ref guarantees the redirect
+  // logic only runs once regardless of how many times the effect fires.
+  const startedRef = useRef(false);
 
   useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
     let cancelled = false;
     const run = async () => {
       if (search.error) {
