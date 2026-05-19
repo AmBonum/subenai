@@ -168,6 +168,27 @@
     "dismiss_cta": "Dismiss",
     "view_all_cta": "View all"
   },
+  "retest": {
+    "page_title": "Retest reminders · SubenAI",
+    "page_header_eyebrow": "Retests",
+    "heading": "Retest reminders",
+    "subheading": "After 90 days it's time to measure what your class knows now — and show where you added value.",
+    "empty_title": "No reminders yet",
+    "empty_body": "Once a group completes your test, we'll remind you in 90 days to retest and compare results.",
+    "section_due": "Due now",
+    "section_upcoming": "Upcoming",
+    "card_title": "Time for a retest",
+    "card_item_headline": "Your class took '{title}' {days} days ago. Send it again?",
+    "last_session_label": "Last session {days}d ago",
+    "sessions_count_label": "{count} sessions",
+    "avg_score_label": "Average {score}%",
+    "due_in_label": "Due in {days}d ({date})",
+    "run_retest_cta": "Run retest",
+    "snooze_cta": "Snooze 30 days",
+    "dismiss_cta": "Hide",
+    "retested_label": "Retest started",
+    "view_all_cta": "View all"
+  },
   "help": {
     "page_header_eyebrow": "Help centre",
     "page_header_title": "Frequently asked questions",
@@ -212,7 +233,8 @@
     "notifications": "Notifications · SubenAI",
     "tests_new": "New test · SubenAI",
     "dsr": "GDPR request · SubenAI",
-    "help": "Help centre · SubenAI"
+    "help": "Help centre · SubenAI",
+    "retest": "Retest reminders · SubenAI"
   },
   "account": {
     "tabs": {

@@ -164,3 +164,107 @@ export function useClickRecommendation() {
 export function useMarkRecommendationSent() {
   return useRecommendationTimestampMutation("sent_at");
 }
+
+// ---------------------------------------------------------------------------
+// Phase 6 — retest reminders (90 days after a class completed a test).
+// ---------------------------------------------------------------------------
+export interface RetestReminder {
+  id: string;
+  test_id: string;
+  last_score: number | null;
+  sessions_count: number;
+  last_session_at: string;
+  remind_after: string;
+  dismissed_at: string | null;
+  snoozed_until: string | null;
+  retested_at: string | null;
+  test?: { id: string; title: string; status: string } | null;
+}
+
+const RETEST_KEY = ["user", "retest_reminders"] as const;
+
+const RETEST_COLS =
+  "id, test_id, last_score, sessions_count, last_session_at, remind_after, dismissed_at, snoozed_until, retested_at, test:tests(id, title, status)";
+
+function todayISO(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export function useDueRetestReminders() {
+  return useQuery({
+    queryKey: [...RETEST_KEY, "due"],
+    queryFn: async (): Promise<RetestReminder[]> => {
+      const today = todayISO();
+      const { data, error } = await supabase
+        .from("retest_reminders")
+        .select(RETEST_COLS)
+        .lte("remind_after", today)
+        .is("dismissed_at", null)
+        .is("retested_at", null)
+        .or(`snoozed_until.is.null,snoozed_until.lte.${today}`)
+        .order("remind_after", { ascending: true })
+        .limit(30);
+      if (error) throw error;
+      return (data ?? []) as unknown as RetestReminder[];
+    },
+  });
+}
+
+export function useAllRetestReminders() {
+  return useQuery({
+    queryKey: [...RETEST_KEY, "all"],
+    queryFn: async (): Promise<RetestReminder[]> => {
+      const { data, error } = await supabase
+        .from("retest_reminders")
+        .select(RETEST_COLS)
+        .is("dismissed_at", null)
+        .is("retested_at", null)
+        .order("remind_after", { ascending: true })
+        .limit(30);
+      if (error) throw error;
+      return (data ?? []) as unknown as RetestReminder[];
+    },
+  });
+}
+
+function useRetestTimestampMutation(column: "dismissed_at" | "retested_at") {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (reminderId: string) => {
+      const { error } = await supabase
+        .from("retest_reminders")
+        .update({ [column]: new Date().toISOString() })
+        .eq("id", reminderId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: RETEST_KEY });
+    },
+  });
+}
+
+export function useDismissRetest() {
+  return useRetestTimestampMutation("dismissed_at");
+}
+
+export function useMarkRetested() {
+  return useRetestTimestampMutation("retested_at");
+}
+
+export function useSnoozeRetest() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (reminderId: string) => {
+      const snoozedUntil = new Date();
+      snoozedUntil.setDate(snoozedUntil.getDate() + 30);
+      const { error } = await supabase
+        .from("retest_reminders")
+        .update({ snoozed_until: snoozedUntil.toISOString().slice(0, 10) })
+        .eq("id", reminderId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: RETEST_KEY });
+    },
+  });
+}

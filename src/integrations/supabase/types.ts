@@ -1202,6 +1202,51 @@ export type Database = {
         };
         Relationships: [];
       };
+      retest_reminders: {
+        Row: {
+          id: string;
+          user_id: string;
+          test_id: string;
+          last_score: number | null;
+          sessions_count: number;
+          last_session_at: string;
+          remind_after: string;
+          dismissed_at: string | null;
+          snoozed_until: string | null;
+          retested_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          test_id: string;
+          last_score?: number | null;
+          sessions_count?: number;
+          last_session_at: string;
+          remind_after: string;
+          dismissed_at?: string | null;
+          snoozed_until?: string | null;
+          retested_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          test_id?: string;
+          last_score?: number | null;
+          sessions_count?: number;
+          last_session_at?: string;
+          remind_after?: string;
+          dismissed_at?: string | null;
+          snoozed_until?: string | null;
+          retested_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       user_roles: {
         Row: {
           id: string;

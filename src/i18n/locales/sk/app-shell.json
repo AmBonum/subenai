@@ -168,6 +168,27 @@
     "dismiss_cta": "Zatvoriť",
     "view_all_cta": "Pozri všetky"
   },
+  "retest": {
+    "page_title": "Pripomienky retestov · SubenAI",
+    "page_header_eyebrow": "Retesty",
+    "heading": "Pripomienky retestov",
+    "subheading": "Po 90 dňoch je čas zmerať, čo trieda ovláda dnes — a ukázať, kde si pridal hodnotu.",
+    "empty_title": "Zatiaľ žiadne pripomienky",
+    "empty_body": "Keď tvoj test dokončí prvá skupina, o 90 dní ti pripomenieme retest a porovnáme výsledky.",
+    "section_due": "Splatné teraz",
+    "section_upcoming": "Pripravované",
+    "card_title": "Čas na retest",
+    "card_item_headline": "Trieda robila '{title}' pred {days} dňami. Pošli znova?",
+    "last_session_label": "Posledný retest pred {days} d",
+    "sessions_count_label": "{count} sedení",
+    "avg_score_label": "Priemer {score}%",
+    "due_in_label": "Splatné o {days} d ({date})",
+    "run_retest_cta": "Spustiť retest",
+    "snooze_cta": "Odložiť o 30 dní",
+    "dismiss_cta": "Skryť",
+    "retested_label": "Retest spustený",
+    "view_all_cta": "Pozri všetky"
+  },
   "help": {
     "page_header_eyebrow": "Help centrum",
     "page_header_title": "Najčastejšie otázky",
@@ -212,7 +233,8 @@
     "notifications": "Notifikácie · SubenAI",
     "tests_new": "Nový test · SubenAI",
     "dsr": "GDPR žiadosť · SubenAI",
-    "help": "Help centrum · SubenAI"
+    "help": "Help centrum · SubenAI",
+    "retest": "Pripomienky retestov · SubenAI"
   },
   "account": {
     "tabs": {

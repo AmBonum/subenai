@@ -17,6 +17,7 @@ import { StatCard } from "@/components/admin/StatCard";
 import { ProfileCompletionBanner } from "@/components/auth/ProfileCompletionBanner";
 import { DigestDashboardCard } from "@/components/user/DigestDashboardCard";
 import { RecommendationsDashboardCard } from "@/components/user/RecommendationsDashboardCard";
+import { RetestDashboardCard } from "@/components/user/RetestDashboardCard";
 import { useTests, useUserRespondents, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/app-shell";
 
@@ -290,7 +291,10 @@ function AppDashboardPage() {
           {/* Phase 5: course recommendations */}
           <RecommendationsDashboardCard />
 
-          {/* Phase 6-7: retest, peer cards land here */}
+          {/* Phase 6: retest reminders */}
+          <RetestDashboardCard />
+
+          {/* Phase 7: peer card lands here */}
 
           <div className="space-y-3 pt-2" data-testid="app-dashboard-stats-section">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">

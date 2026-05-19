@@ -2809,6 +2809,105 @@ GRANT EXECUTE ON FUNCTION public.generate_course_recommendations() TO service_ro
 -- );
 
 -- ============================================================================
+-- Phase 6 — retest_reminders (90-day retest cycle for completed tests)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS public.retest_reminders (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id         uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  test_id         uuid NOT NULL REFERENCES public.tests(id) ON DELETE CASCADE,
+  last_score      numeric(5,2),
+  sessions_count  integer NOT NULL DEFAULT 0,
+  last_session_at timestamptz NOT NULL,
+  remind_after    date NOT NULL,
+  dismissed_at    timestamptz,
+  snoozed_until   date,
+  retested_at     timestamptz,
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  updated_at      timestamptz NOT NULL DEFAULT now(),
+  UNIQUE(user_id, test_id)
+);
+
+CREATE INDEX IF NOT EXISTS retest_user_active_idx
+  ON public.retest_reminders (user_id, remind_after)
+  WHERE dismissed_at IS NULL AND retested_at IS NULL;
+
+ALTER TABLE public.retest_reminders ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY retest_owner_select ON public.retest_reminders
+  FOR SELECT TO authenticated
+  USING (user_id = auth.uid());
+
+CREATE POLICY retest_owner_update ON public.retest_reminders
+  FOR UPDATE TO authenticated
+  USING (user_id = auth.uid())
+  WITH CHECK (user_id = auth.uid());
+
+GRANT SELECT, UPDATE ON public.retest_reminders TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.touch_retest_reminders()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END $$;
+
+DROP TRIGGER IF EXISTS retest_reminders_touch ON public.retest_reminders;
+CREATE TRIGGER retest_reminders_touch
+  BEFORE UPDATE ON public.retest_reminders
+  FOR EACH ROW EXECUTE FUNCTION public.touch_retest_reminders();
+
+CREATE OR REPLACE FUNCTION public.refresh_retest_reminders()
+RETURNS integer
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_count integer := 0;
+BEGIN
+  WITH last_sessions AS (
+    SELECT
+      t.owner_id                                  AS user_id,
+      t.id                                        AS test_id,
+      MAX(s.finished_at)                          AS last_session_at,
+      COUNT(s.id)                                 AS sessions_count,
+      ROUND(AVG(COALESCE(s.score, 0))::numeric, 2) AS last_score
+    FROM public.tests t
+    JOIN public.sessions s ON s.test_id = t.id
+    WHERE s.status = 'completed'
+      AND s.finished_at IS NOT NULL
+      AND s.finished_at >= now() - interval '365 days'
+    GROUP BY t.owner_id, t.id
+  )
+  INSERT INTO public.retest_reminders
+    (user_id, test_id, last_score, sessions_count, last_session_at, remind_after)
+  SELECT
+    user_id, test_id, last_score, sessions_count, last_session_at,
+    (last_session_at + interval '90 days')::date
+  FROM last_sessions
+  ON CONFLICT (user_id, test_id) DO UPDATE
+  SET
+    last_score      = EXCLUDED.last_score,
+    sessions_count  = EXCLUDED.sessions_count,
+    last_session_at = EXCLUDED.last_session_at,
+    remind_after    = EXCLUDED.remind_after,
+    updated_at      = now();
+
+  GET DIAGNOSTICS v_count = ROW_COUNT;
+  RETURN v_count;
+END $$;
+
+GRANT EXECUTE ON FUNCTION public.refresh_retest_reminders() TO service_role;
+
+-- pg_cron (activate manually in prod):
+-- SELECT cron.schedule(
+--   'refresh-retest-reminders',
+--   '0 4 * * *',
+--   $$ SELECT public.refresh_retest_reminders(); $$
+-- );
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT

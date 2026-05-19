@@ -44,6 +44,7 @@ import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-passw
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AppTemplatesRouteImport } from './routes/app.templates'
 import { Route as AppTeamsRouteImport } from './routes/app.teams'
+import { Route as AppRetestRouteImport } from './routes/app.retest'
 import { Route as AppRecommendationsRouteImport } from './routes/app.recommendations'
 import { Route as AppOnboardingRouteImport } from './routes/app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
@@ -259,6 +260,11 @@ const AppTeamsRoute = AppTeamsRouteImport.update({
   path: '/teams',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRetestRoute = AppRetestRouteImport.update({
+  id: '/retest',
+  path: '/retest',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() => import('./routes/app.retest.lazy').then((d) => d.Route))
 const AppRecommendationsRoute = AppRecommendationsRouteImport.update({
   id: '/recommendations',
   path: '/recommendations',
@@ -532,6 +538,7 @@ export interface FileRoutesByFullPath {
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
   '/app/recommendations': typeof AppRecommendationsRoute
+  '/app/retest': typeof AppRetestRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -605,6 +612,7 @@ export interface FileRoutesByTo {
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
   '/app/recommendations': typeof AppRecommendationsRoute
+  '/app/retest': typeof AppRetestRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -682,6 +690,7 @@ export interface FileRoutesById {
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
   '/app/recommendations': typeof AppRecommendationsRoute
+  '/app/retest': typeof AppRetestRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -760,6 +769,7 @@ export interface FileRouteTypes {
     | '/app/notifications'
     | '/app/onboarding'
     | '/app/recommendations'
+    | '/app/retest'
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
@@ -833,6 +843,7 @@ export interface FileRouteTypes {
     | '/app/notifications'
     | '/app/onboarding'
     | '/app/recommendations'
+    | '/app/retest'
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
@@ -909,6 +920,7 @@ export interface FileRouteTypes {
     | '/app/notifications'
     | '/app/onboarding'
     | '/app/recommendations'
+    | '/app/retest'
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
@@ -1221,6 +1233,13 @@ declare module '@tanstack/react-router' {
       path: '/teams'
       fullPath: '/app/teams'
       preLoaderRoute: typeof AppTeamsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/retest': {
+      id: '/app/retest'
+      path: '/retest'
+      fullPath: '/app/retest'
+      preLoaderRoute: typeof AppRetestRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/recommendations': {
@@ -1592,6 +1611,7 @@ interface AppRouteChildren {
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
   AppRecommendationsRoute: typeof AppRecommendationsRoute
+  AppRetestRoute: typeof AppRetestRoute
   AppTeamsRoute: typeof AppTeamsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -1613,6 +1633,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
   AppRecommendationsRoute: AppRecommendationsRoute,
+  AppRetestRoute: AppRetestRoute,
   AppTeamsRoute: AppTeamsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
   AppIndexRoute: AppIndexRoute,
