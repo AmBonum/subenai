@@ -3,6 +3,7 @@ import { getCourseBySlug } from "@/content/courses";
 import type { CourseSection } from "@/content/courses/_schema";
 import { CourseHero } from "@/components/courses/CourseHero";
 import { CourseSectionView } from "@/components/courses/sections/CourseSections";
+import { RelatedAcademyArticleCard } from "@/components/courses/RelatedAcademyArticleCard";
 import { RelatedCourses } from "@/components/courses/RelatedCourses";
 import { Button } from "@/components/ui/button";
 import { buildCourseJsonLd } from "@/lib/seo/course-jsonld";
@@ -104,6 +105,11 @@ function CoursePage() {
             <Link to="/courses">{t("detail_cta_back")}</Link>
           </Button>
         </div>
+
+        {/* E17.3 — reverse cross-link from active training back into
+            the editorial long-form. Renders ONLY when a blog post has
+            related_course_slug pointing at this course's slug. */}
+        <RelatedAcademyArticleCard courseSlug={course.slug} />
 
         <RelatedCourses current={course} />
 

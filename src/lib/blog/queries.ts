@@ -184,6 +184,36 @@ export function useBlogPostsByCategoryId(categoryId: string | undefined) {
   });
 }
 
+// E17.3 — reverse lookup: which blog post links TO this course?
+// Used on /courses/<slug> to render a "chceš tomu rozumieť do hĺbky"
+// card pointing back at the related article. Returns at most one post
+// (slug is logically unique per course in our editorial model — multiple
+// articles linking to the same course is allowed in schema but the UI
+// shows only the first match by published_at desc).
+export function useBlogPostByRelatedCourse(courseSlug: string | undefined) {
+  return useQuery({
+    queryKey: ["blog", "post", "by-course", courseSlug ?? ""],
+    enabled: typeof courseSlug === "string" && courseSlug.length > 0,
+    queryFn: async (): Promise<BlogPostListItem | null> => {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select(
+          `id, slug, title, excerpt, hero_image_url, reading_minutes, published_at,
+           category:blog_categories!inner(slug, name),
+           author:blog_authors!inner(slug, display_name)`,
+        )
+        .eq("related_course_slug", courseSlug as string)
+        .eq("status", "published")
+        .lte("published_at", new Date().toISOString())
+        .order("published_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return (data as unknown as BlogPostListItem | null) ?? null;
+    },
+  });
+}
+
 export function useBlogPostsByAuthorId(authorId: string | undefined) {
   return useQuery({
     queryKey: ["blog", "posts", "by-author", authorId ?? ""],
