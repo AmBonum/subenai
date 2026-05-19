@@ -122,12 +122,16 @@ describe("/admin/security", () => {
   it("shows low-backup warning when fewer than 3 codes remain", async () => {
     remainingBackupCodesMock.mockResolvedValue(1);
     render(<Page />);
+    // Race fix: warning shows when remaining < 3, which is also true for
+    // the initial pre-fetch state (count=0). Waiting on `warning` alone
+    // can pass before the async fetch resolves the count to 1. Pin the
+    // wait to the final count text instead.
     await waitFor(() => {
-      expect(screen.getByTestId("admin-security-backup-warning")).toBeInTheDocument();
+      expect(screen.getByTestId("admin-security-backup-count")).toHaveTextContent(
+        "Zostáva 1 záložných kódov",
+      );
     });
-    expect(screen.getByTestId("admin-security-backup-count")).toHaveTextContent(
-      "Zostáva 1 záložných kódov",
-    );
+    expect(screen.getByTestId("admin-security-backup-warning")).toBeInTheDocument();
   });
 
   it("shows empty-state CTA when no factor is registered", async () => {
