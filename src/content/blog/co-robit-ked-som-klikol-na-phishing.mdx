@@ -1,0 +1,152 @@
+---
+slug: co-robit-ked-som-klikol-na-phishing
+title: "čo robiť, keď som klikol na phishingový odkaz — prvá pomoc krok za krokom"
+subtitle: "sedem krokov, ktoré ti zachránia účet, peniaze aj nervy, ak si zachytíš útok do prvej hodiny"
+excerpt: "klikol si na phishing a teraz panikáriš. nie si idiot, naletel by každý unavený človek. tu je sedem krokov v poradí, ktoré ti vrátia kontrolu nad zariadením a účtami — od odpojenia siete cez zmenu hesiel až po monitoring výpisov."
+category_slug: phishing-a-emaily
+author_slug: subenai-editorial
+primary_keyword: klikol som na phishing
+search_intent: informational
+reading_minutes: 9
+hero_image_url: null
+og_image_url: null
+seo_title: "klikol som na phishing — čo robiť krok za krokom | subenai"
+seo_description: "klikol si na podvodný odkaz? tu je 7-krokový krízový protokol: odpoj sieť, zmeň heslá z čistého zariadenia, zavolaj banke z čísla na karte, nahlás incident."
+canonical_url: null
+pillar: false
+sources:
+  - label: "sk-cert: ako nahlásiť kybernetický incident"
+    url: "https://www.sk-cert.sk/sk/nahlasenie-incidentu/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "národná banka slovenska: internetové podvody a postup po zneužití platobných údajov"
+    url: "https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/"
+    publisher: "NBS"
+    accessed_at: "2026-05-19"
+  - label: "polícia sr: podvodné e-maily a podanie trestného oznámenia"
+    url: "https://www.minv.sk/?podvodne_emaily="
+    publisher: "Polícia SR"
+    accessed_at: "2026-05-19"
+  - label: "malwarebytes: what to do if you click on a phishing link"
+    url: "https://www.malwarebytes.com/cybersecurity/basics/what-to-do-if-you-click-on-a-phishing-link"
+    publisher: "Malwarebytes"
+    accessed_at: "2026-05-19"
+  - label: "eset: ako postupovať po phishingovom útoku"
+    url: "https://www.eset.com/sk/blog/temata/digitalna-bezpecnost/co-robit-po-phishingu/"
+    publisher: "ESET"
+    accessed_at: "2026-05-19"
+---
+
+klikol si. možno si zadal heslo, možno si len otvoril stránku, možno si stiahol prílohu, ktorá sa tvárila ako faktúra. teraz ti tlčie srdce a v hlave máš jednu vetu: *„som idiot."* nie si. naletel by každý unavený človek, ktorý práve odpovedá na päťdesiaty e-mail v rade a v autobuse mu vedľa kričí dieťa. presne na tieto momenty phisheri čakajú.
+
+dobrá správa: ak zareaguješ do prvej hodiny, drvivú väčšinu škody vieš zastaviť. tu je sedem krokov v presnom poradí. nepreskakuj, nečítaj diagonálne. trvá to dvadsať minút a stojí to nulu.
+
+## krok 1 — odpoj zariadenie od internetu, ak si stiahol prílohu alebo ti naskočil OS update prompt
+
+ak si len klikol na odkaz a otvorila sa ti podozrivá stránka, tento krok preskoč a choď rovno na krok 2. ak si však stiahol prílohu (`.exe`, `.docx`, `.zip`, `.pdf` s makrom), naskočil ti prompt typu *„váš systém je zastaraný, kliknite pre okamžitú aktualizáciu"* alebo si zadal admin heslo do náhodného dialógu, **okamžite vypni wifi aj mobilné dáta**.
+
+prečo: malvér, ktorý sa práve nainštaloval, sa snaží spojiť s útočníkovým serverom (tzv. *command-and-control*), stiahnuť ďalšie nástroje a začať škodiť. ak mu zatrhneš sieť, ostane spať. na windowse: pravým na ikonu siete → *„zakázať"*. na mac: vypni wifi z lišty. na androide/ios: režim *„v lietadle"*.
+
+nereštartuj zariadenie a nemaž súbory — antivírus a forenzné nástroje potrebujú stopu, aby vedeli, čo presne sa stalo.
+
+## krok 2 — zmeň heslo k službe, ktorú útok napodobnil — z iného, čistého zariadenia
+
+toto je najdôležitejší krok a väčšina ľudí ho urobí nesprávne. nemeň heslo z toho istého zariadenia, na ktorom si práve klikol. ak je infikované, útočník vidí, čo píšeš, vrátane nového hesla. použi **iné fyzické zariadenie** — manželkin mobil, pracovný notebook, tablet rodiča.
+
+priorita zmien:
+- **e-mail ako prvý.** z e-mailu sa dá reštartovať heslo všade inde. ak útočník drží tvoj e-mail, drží všetko.
+- potom služba, ktorú útok napodobnil (banka, slovenská pošta, daňový portál).
+- potom všetky ostatné účty, kde si používal **rovnaké heslo** alebo jeho variantu.
+
+nové heslo má mať aspoň 16 znakov a má byť unikátne. ak nemáš správcu hesiel, je to dnes ten správny deň. [malwarebytes vo svojom oficiálnom návode po phishingovom kliku](https://www.malwarebytes.com/cybersecurity/basics/what-to-do-if-you-click-on-a-phishing-link) odporúča presne tento postup — *zmeniť z neinfikovaného zariadenia* — ako prvú technickú akciu.
+
+## krok 3 — over účty cez oficiálnu aplikáciu alebo z bookmarku, nie cez odkaz v e-maile
+
+prihláste sa do internet bankingu, gmailu, slovenskej pošty alebo akejkoľvek napodobenej služby **z aplikácie alebo z bookmarku v prehliadači**, nikdy nie cez odkaz z podozrivej správy. raz si na falošnej stránke skončil, druhýkrát už nie.
+
+skontroluj:
+- posledné prihlásenia (e-mail / banking majú túto sekciu v nastaveniach bezpečnosti)
+- aktívne relácie (sessions) — odhlás všetky okrem aktuálnej
+- e-mailové preposielanie (forwarding rules) — útočníci si často nastavia automatické preposielanie kópií všetkých tvojich e-mailov na vlastnú adresu, aby vedeli o reset linkoch skôr než ty
+- prepojené aplikácie a OAuth povolenia — odpoj všetko, čo nepoznáš
+
+zapni dvojfaktorové overenie cez authenticator app (nie cez SMS — SIM swap je reálne riziko). detailný návod nájdeš v [nastav si 2fa a passkey](/blog/ochrana-pred-phishingom-2fa-passkey).
+
+## krok 4 — zavolaj banke z čísla na zadnej strane karty
+
+ak útok bol „banka", „doplatok za balík", „daňový preplatok" alebo si zadal niekde číslo karty, **zavolaj banke z čísla, ktoré máš vyrazené na karte alebo na ich oficiálnej stránke** — nikdy nie z čísla v SMS-ke, e-maile či na falošnej stránke. povedz im, čo sa stalo, a požiadaj o:
+- okamžité **zablokovanie karty** (trvá 30 sekúnd)
+- prehľad transakcií za posledných 24 hodín
+- vystavenie novej karty s novým číslom
+
+ak útočník stihol kartu nahodiť do apple pay alebo google pay, banka ti vie tieto digitálne kópie zrušiť. [národná banka slovenska v príručke o internetových podvodoch](https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/) potvrdzuje, že čím skôr nahlásiš zneužitie, tým väčšia šanca, že banka transakciu zachytí pred zúčtovaním a peniaze ti vráti.
+
+ak ti útočník vybral peniaze a banka odmieta refundáciu, máš právo požiadať o písomné stanovisko a postúpiť spor na **finančného arbitra** alebo na NBS. to už si však kapitola pre krok 6.
+
+## krok 5 — spusti dôkladný antivírusový sken
+
+teraz, keď si presunul najdôležitejšie veci (heslá, banka, e-mail) do bezpečia, vráť sa k zariadeniu, ktoré bolo offline od kroku 1. zapni wifi naspäť **iba na čas skenu**.
+
+odporúčané kombinácie:
+- **windows**: vstavaný microsoft defender + jednorazový sken **malwarebytes free** (špecializuje sa na adware, trojany a malvér, ktorý defender občas prehliadne)
+- **mac**: malwarebytes free for mac alebo **eset cyber security**
+- **android**: eset mobile security, malwarebytes mobile alebo bitdefender (slovenský eset je rozumná stávka, lebo má lokálne pravidlá)
+- **iphone**: ios má pieskoviská, ktoré klasický „antivírus" neumožňujú; ak máš pochybnosti, urob **factory reset** a obnov zo zálohy spred incidentu
+
+spusti **plný sken**, nie rýchly. trvá hodinu, oplatí sa. ak nájde čokoľvek — odstráň, reštartuj, sken zopakuj. ak to opakovane nachádza to isté, alebo ti zariadenie spomaľuje, kontaktuj autorizovaný servis alebo to nechaj preinštalovať. tridsať eur za reinštaláciu je menej než týždeň podozrievania.
+
+## krok 6 — zapíš incident a nahlás ho — pre poistku, políciu aj sk-cert
+
+teraz, keď je akútna fáza za tebou, sadni si a **napíš si chronológiu**:
+- presný čas, keď ti správa prišla
+- presný čas kliku
+- screenshot e-mailu alebo SMS (vrátane celej hlavičky, ak vieš)
+- URL falošnej stránky
+- číslo účtu, na ktoré išli prípadné peniaze
+- sumy a typy transakcií
+
+prečo: tieto údaje budeš potrebovať pre tri rôzne nahlásenia.
+
+**sk-cert** prijíma hlásenia incidentov cez formulár alebo e-mail `incident@nbu.gov.sk`. [oficiálna stránka pre nahlásenie incidentu](https://www.sk-cert.sk/sk/nahlasenie-incidentu/index.html) vysvetľuje, ktoré údaje sú nutné a ktoré sú voliteľné. tvoje hlásenie pomôže rozšíriť varovanie pre ostatných.
+
+**polícia sr** je nutná, ak ti útočník skutočne vybral peniaze alebo zneužil identitu. [polícia má vyhradenú stránku pre podvodné e-maily a postup pri podaní trestného oznámenia](https://www.minv.sk/?podvodne_emaily=). môžeš ho podať elektronicky cez `slovensko.sk` alebo osobne na ktoromkoľvek okresnom riaditeľstve. policajt sa ťa bude pýtať práve na tú chronológiu, ktorú si si pripravil.
+
+**poisťovňa**, ak máš zjednané kybernetické poistenie alebo poistenie zneužitia karty. lehoty na oznámenie sú často 48 – 72 hodín, takže s tým neotáľaj.
+
+**zamestnávateľ**, ak si klikol z pracovného zariadenia alebo z firemného účtu. nepríjemný telefonát, ale o sto stupňov menej nepríjemný než ten, ktorý zavoláš o tri dni neskôr, keď útočník prejde cez tvoj prístup do firemných systémov. firmy majú internú procedúru pre incidenty a oceňujú, keď zamestnanec príde sám.
+
+## krok 7 — sleduj výpisy a varovania najmenej 30 dní
+
+phishing nie je jednorazová udalosť. ukradnuté heslá a údaje sa **predávajú v balíkoch na fórach a v telegram kanáloch** a kupec ich môže použiť o týždeň, mesiac alebo pol roka. preto:
+
+- **denne kontroluj výpis** z bankového účtu prvý mesiac. nastav si push notifikácie na každú platbu (banking apps to majú).
+- **over heslá na haveibeenpwned**, či sa neobjavili v leakoch — postup máš v [over si únik hesla](/blog/uniknute-heslo-overit-haveibeenpwned).
+- **sleduj e-maily o resete hesla**, ktoré si si neobjednal. každý taký e-mail je signál, že niekto skúša prelomiť ďalší tvoj účet.
+- **upozorni rodinu a blízkych kolegov.** útočník má teraz tvoj kontaktný zoznam (ak išlo o e-mailový útok) a môže im posielať správy v tvojom mene. krátka SMS s textom *„ak ti príde odo mňa čokoľvek nezvyčajné, najprv mi zavolaj"* zabráni druhej vlne.
+
+ak si v incidente prišiel o významnú sumu alebo o prístup k pracovným systémom, zváž **30-dňovú emocionálnu rekonvalescenciu**. ľudia po phishingovom útoku popisujú stratu dôvery v technológie, hanbu, paranoju. je to normálna reakcia a prejde. nehanbi sa o tom hovoriť — [polícia aj nbs](https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/) opakovane uvádzajú, že obeťami sú prevažne **vzdelaní ľudia s vyšším príjmom**, nie naivné babičky z televíznych spotov.
+
+## čo nerobiť
+
+stručný negatívny zoznam, lebo zlé inštinkty robia škodu rýchlejšie než dobré:
+
+- **nikdy neklikni na druhý odkaz „pre overenie"** v tej istej správe alebo v následnej SMS. útočník presne čaká, že začneš panikáriť a klikneš na všetko, čo sľubuje pomoc.
+- **nevolaj na číslo z podozrivej správy.** ak tam píše *„v prípade problému kontaktujte 0900..."*, to číslo patrí útočníkovi.
+- **nezaplať „pokutu", „daň", „spracovateľský poplatok"**, ktorý ti útočník vystaví ako podmienku vrátenia peňazí. druhá vlna phishingových útokov na tú istú obeť (tzv. *recovery scam*) je bežná — útočníci si vedia, že obeť je teraz emocionálne zraniteľná a zaplatí čokoľvek za nádej.
+- **nemaž e-mail ani SMS.** je to dôkaz. presuň ich do osobitnej zložky *„incident_{dátum}"* a nechaj ležať.
+
+## zhrnutie — 7-krokový krízový protokol
+
+1. **odpoj sieť**, ak si stiahol prílohu alebo zadal admin heslo do náhodného promptu.
+2. **zmeň heslá z iného zariadenia** — e-mail ako prvý, potom napodobená služba, potom všetky účty so zhodným heslom.
+3. **over účty cez oficiálnu aplikáciu** — posledné prihlásenia, forwarding rules, prepojené aplikácie.
+4. **zavolaj banke z čísla na karte** — blokácia karty, prehľad transakcií, nová karta.
+5. **spusti plný antivírusový sken** — malwarebytes / eset / defender. ak nejde to vyčistiť, preinštaluj systém.
+6. **nahlás incident** sk-certu, polícii (ak si stratil peniaze), poisťovni, zamestnávateľovi.
+7. **sleduj výpisy 30 dní**, over heslá v haveibeenpwned, upozorni okolie.
+
+ak chceš vrátiť kontext a pochopiť, **prečo to vôbec funguje a ako budúcim útokom predísť**, [prečítaj si pillar o phishingu](/blog/phishing-kompletny-sprievodca). a keď akútna fáza prejde, [nastav si 2fa a passkey](/blog/ochrana-pred-phishingom-2fa-passkey), aby ďalší klik nebol tak drahý — passkey útočník totiž jednoducho nevie z teba vytiahnuť.
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
