@@ -214,6 +214,63 @@ export function useBlogPostByRelatedCourse(courseSlug: string | undefined) {
   });
 }
 
+// E25 Phase 2 — batched variant of useBlogPostByRelatedCourse for
+// catalog pages (/courses index). Issues ONE Supabase query with
+// `.in("related_course_slug", slugs)` instead of N parallel per-card
+// queries, then groups results client-side by related_course_slug.
+//
+// Returns a map keyed by courseSlug — undefined when the query is
+// in-flight, then {slug: post | null} after settle. Each CourseCard
+// reads its slug from the map and renders the related-article slot
+// only when a post exists.
+//
+// `__related_course_slug` is selected explicitly so we can group
+// the rows back to their source course; the column is on blog_posts
+// but is omitted from BlogPostListItem (consumers shouldn't depend
+// on it). Cast through unknown to express that this query alone
+// returns the extra field.
+export function useBlogPostsByRelatedCourses(courseSlugs: string[]) {
+  // Stable key derived from sorted slugs so re-orderings on the page
+  // don't bust the cache.
+  const cacheKey = [...courseSlugs].sort().join(",");
+  return useQuery({
+    queryKey: ["blog", "posts", "by-courses-batch", cacheKey],
+    enabled: courseSlugs.length > 0,
+    queryFn: async (): Promise<Record<string, BlogPostListItem | null>> => {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select(
+          `id, slug, title, excerpt, hero_image_url, reading_minutes, published_at,
+           related_course_slug,
+           category:blog_categories!inner(slug, name),
+           author:blog_authors!inner(slug, display_name)`,
+        )
+        .in("related_course_slug", courseSlugs)
+        .eq("status", "published")
+        .lte("published_at", new Date().toISOString())
+        .order("published_at", { ascending: false });
+      if (error) throw error;
+      const rows = (data ?? []) as unknown as Array<
+        BlogPostListItem & { related_course_slug: string | null }
+      >;
+      const out: Record<string, BlogPostListItem | null> = {};
+      for (const slug of courseSlugs) out[slug] = null;
+      // First-seen wins per related_course_slug (rows are ordered
+      // published_at desc, so the most recent article anchors each
+      // course — matching the single-slug query's behavior).
+      for (const row of rows) {
+        const k = row.related_course_slug;
+        if (k && out[k] === null) {
+          const { related_course_slug: _drop, ...rest } = row;
+          void _drop;
+          out[k] = rest as BlogPostListItem;
+        }
+      }
+      return out;
+    },
+  });
+}
+
 export function useBlogPostsByAuthorId(authorId: string | undefined) {
   return useQuery({
     queryKey: ["blog", "posts", "by-author", authorId ?? ""],

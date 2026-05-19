@@ -4,10 +4,30 @@ import { Search, X } from "lucide-react";
 import { COURSES } from "@/content/courses";
 import type { CourseCategory } from "@/content/courses";
 import { CourseCard } from "@/components/courses/CourseCard";
+import { CoursesValueStrip } from "@/components/courses/CoursesValueStrip";
+import { CoursesFaqSection } from "@/components/courses/CoursesFaqSection";
 import { Button } from "@/components/ui/button";
 import { SITE_ORIGIN } from "@/config/site";
 import { searchCourses } from "@/lib/courses/search";
+import { useBlogPostsByRelatedCourses } from "@/lib/blog/queries";
+import { buildCoursesItemListJsonLd } from "@/lib/seo/courses-jsonld";
+import { buildCoursesFaqJsonLd } from "@/lib/seo/courses-faq-schema";
 import { tFor } from "@/i18n/quiz";
+
+// E25 Phase 2 — /courses catalog senior redesign.
+//
+// Before: text-only hero + emoji-card grid + bottom CTA.
+// After: text-only hero followed by a 3-tile value strip
+// (10 minutes · Real examples · Free), search + category filter,
+// card grid where each card carries a compact "Čítaj k tomu:" slot
+// linking to a related blog post (D6 — wire orphan), FAQ accordion,
+// and the bottom CTA.
+//
+// SEO: head() now emits TWO JSON-LD blobs (was: just ItemList). The
+// ItemList wraps each course as a ListItem (kept for catalog
+// signaling); a new FAQPage carries the 5 Q&As. Per-course Course
+// schema is emitted on the detail route (out of this scope), not
+// repeated on the catalog — Google penalizes duplicate Course blobs.
 
 export const Route = createFileRoute("/courses/")({
   head: () => {
@@ -29,17 +49,28 @@ export const Route = createFileRoute("/courses/")({
       scripts: [
         {
           type: "application/ld+json",
-          children: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            name: t("list_name"),
-            itemListElement: COURSES.map((c, i) => ({
-              "@type": "ListItem",
-              position: i + 1,
-              url: `${SITE_ORIGIN}/kurzy/${c.slug}`,
-              name: c.title,
-            })),
-          }),
+          children: JSON.stringify(
+            buildCoursesItemListJsonLd(
+              COURSES.map((c) => ({
+                slug: c.slug,
+                title: c.title,
+                tagline: c.tagline,
+                estimatedMinutes: c.estimatedMinutes,
+                publishedAt: c.publishedAt,
+                updatedAt: c.updatedAt,
+              })),
+              t("list_name"),
+            ),
+          ),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(
+            buildCoursesFaqJsonLd(
+              (key) => t(`faq_${key}`),
+              (key) => t(`faq_a${key.slice(1)}`),
+            ),
+          ),
         },
       ],
     };
@@ -71,6 +102,13 @@ function CoursesIndexPage() {
     return result;
   }, [activeCategories, query]);
 
+  // Batched cross-link fetch: one supabase round-trip for all visible
+  // course slugs instead of N per-card subscriptions. Stable because
+  // the slug list is sorted inside the hook's queryKey.
+  const allSlugs = useMemo(() => COURSES.map((c) => c.slug), []);
+  const relatedQuery = useBlogPostsByRelatedCourses(allSlugs);
+  const relatedMap = relatedQuery.data ?? {};
+
   function toggleCategory(cat: CourseCategory) {
     setActiveCategories((prev) => {
       const next = new Set(prev);
@@ -100,16 +138,20 @@ function CoursesIndexPage() {
   return (
     <div data-testid="courses-catalog-root" className="min-h-screen bg-background">
       <main className="mx-auto max-w-5xl px-4 pb-12 pt-12 sm:pt-16">
-        <header className="mb-10 text-center">
+        <header className="mb-8 text-center">
           <h1 data-testid="courses-catalog-heading" className="text-4xl font-black sm:text-5xl">
             {t("page_heading")}
           </h1>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg">
+          <p
+            data-testid="courses-catalog-intro"
+            className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg"
+          >
             {t("page_intro")}
           </p>
         </header>
 
-        {/* Search bar */}
+        <CoursesValueStrip />
+
         <div className="relative mb-4">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
@@ -181,7 +223,6 @@ function CoursesIndexPage() {
           </section>
         )}
 
-        {/* Result count */}
         {resultLine && <p className="mb-4 text-sm text-muted-foreground">{resultLine}</p>}
 
         {filtered.length === 0 ? (
@@ -195,14 +236,18 @@ function CoursesIndexPage() {
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
             {filtered.map((c) => (
-              <CourseCard key={c.slug} course={c} />
+              <CourseCard key={c.slug} course={c} relatedArticle={relatedMap[c.slug] ?? null} />
             ))}
           </div>
         )}
 
+        <CoursesFaqSection />
+
         <div className="mt-12 flex justify-center">
           <Button asChild>
-            <Link to="/test">{t("cta_test")}</Link>
+            <Link to="/test" data-testid="courses-catalog-cta-test">
+              {t("cta_test")}
+            </Link>
           </Button>
         </div>
       </main>
