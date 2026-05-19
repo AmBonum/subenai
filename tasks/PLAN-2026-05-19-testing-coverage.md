@@ -1,7 +1,7 @@
 # PLAN — Testing Coverage Epic (Security + UI)
 
 **Date:** 2026-05-19
-**Status:** AWAITING APPROVAL
+**Status:** ✅ APPROVED 2026-05-19 (decisions D1-D7 locked below)
 **Owner:** project owner
 **Inputs:** 4 parallel senior agents (test inventory, security/RLS design, UI E2E architecture, test infrastructure)
 
@@ -248,15 +248,15 @@ This is a **multi-session epic on its own**. Track separately. Don't block this 
 
 ## Decisions awaiting project owner
 
-| # | Decision | My recommendation | Confirm? |
-|---|---|---|---|
-| **D1** | Phase 0 RPC security fixes: fix the 3 bugs (get_peer_card uid check, session_token guard, finalize score bound) before any tests? | **Yes — fix first.** They're real holes; tests of buggy behavior would lock bugs in. | ☐ |
-| **D2** | Vitest coverage threshold | Start at 70% lines + functions; raise to 80% after Phase 3 un-skip lands ~30 more cases | ☐ |
-| **D3** | Phase 10 pgTAP epic: defer entirely (Recommended), run parallel to this epic, or skip | **Defer.** Mocked-Supabase coverage gets us to "ship safely"; pgTAP gets us to "audit-ready" — separate question | ☐ |
-| **D4** | Quiz flow E2E: against real backend (Recommended), or fully stubbed | **Real backend** — quiz questions are static, dev stack is always-on, full-stub adds maintenance burden | ☐ |
-| **D5** | GitHub Actions CI: do we have GitHub Actions enabled for this repo? | If yes — Phase 2 ships standard workflows. If no — keep local-only `npm` scripts; manual CI gate | ☐ |
-| **D6** | Existing `e2e/seed.spec.ts` (empty placeholder): delete (Recommended) or write content? | **Delete** — purposeless artifact | ☐ |
-| **D7** | Auth fixture session_token approach for Phase 0 respondent RPC fix: 7-day backwards-compat window (Recommended), or hard cut-over | **7-day window** — accept missing token for live in-flight respondents | ☐ |
+| # | Decision | Resolved |
+|---|---|---|
+| **D1** | Phase 0 RPC security fixes before tests | ✅ **Yes — fix first** (3 migrations + types sync + UI updates) |
+| **D2** | Vitest coverage threshold | ✅ **70% start, raise to 80% after Phase 3** |
+| **D3** | Phase 10 pgTAP epic | ✅ **Defer fully** as separate epic |
+| **D4** | Quiz flow E2E backend | ✅ **Real backend** (dev stack always on) |
+| **D5** | CI workflows | ✅ **GitHub Actions free tier** (2000 min/month for private repo) — `ci.yml` + `e2e.yml`. Cloudflare Pages already builds the SSR bundle, that's a parallel free signal. |
+| **D6** | `e2e/seed.spec.ts` empty placeholder | ✅ **Delete** |
+| **D7** | session_token rollout in Phase 0 RPC fix | ✅ **7-day backwards-compat window** before enforcing |
 
 ---
 
