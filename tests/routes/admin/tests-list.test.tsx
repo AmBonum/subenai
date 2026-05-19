@@ -14,7 +14,7 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
-import { Route } from "@/routes/admin/tests.lazy";
+import { Route } from "@/routes/admin/tests.index.lazy";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;

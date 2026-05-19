@@ -74,6 +74,9 @@ import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
+import { Route as AdminTestsIndexRouteImport } from './routes/admin/tests.index'
+import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
+import { Route as AdminAnswerSetsIndexRouteImport } from './routes/admin/answer-sets.index'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
 import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
 import { Route as AppTestsTestIdRouteImport } from './routes/app.tests.$testId'
@@ -331,7 +334,7 @@ const AdminTestsRoute = AdminTestsRouteImport.update({
   id: '/tests',
   path: '/tests',
   getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/tests.lazy').then((d) => d.Route))
+} as any)
 const AdminSupportRoute = AdminSupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -388,7 +391,7 @@ const AdminPagesRoute = AdminPagesRouteImport.update({
   id: '/pages',
   path: '/pages',
   getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/pages.lazy').then((d) => d.Route))
+} as any)
 const AdminNavigationRoute = AdminNavigationRouteImport.update({
   id: '/navigation',
   path: '/navigation',
@@ -427,14 +430,33 @@ const AdminAnswerSetsRoute = AdminAnswerSetsRouteImport.update({
   id: '/answer-sets',
   path: '/answer-sets',
   getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/answer-sets.lazy').then((d) => d.Route),
-)
+} as any)
 const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
   id: '/tests/',
   path: '/tests/',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminTestsIndexRoute = AdminTestsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminTestsRoute,
+} as any).lazy(() =>
+  import('./routes/admin/tests.index.lazy').then((d) => d.Route),
+)
+const AdminPagesIndexRoute = AdminPagesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminPagesRoute,
+} as any).lazy(() =>
+  import('./routes/admin/pages.index.lazy').then((d) => d.Route),
+)
+const AdminAnswerSetsIndexRoute = AdminAnswerSetsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminAnswerSetsRoute,
+} as any).lazy(() =>
+  import('./routes/admin/answer-sets.index.lazy').then((d) => d.Route),
+)
 const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
   id: '/test/zostava/$id',
   path: '/test/zostava/$id',
@@ -576,6 +598,9 @@ export interface FileRoutesByFullPath {
   '/app/tests/$testId': typeof AppTestsTestIdRoute
   '/app/tests/new': typeof AppTestsNewRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
+  '/admin/pages/': typeof AdminPagesIndexRoute
+  '/admin/tests/': typeof AdminTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
@@ -592,14 +617,12 @@ export interface FileRoutesByTo {
   '/schools': typeof SchoolsRoute
   '/signup': typeof SignupRoute
   '/support': typeof SupportRoute
-  '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dsr': typeof AdminDsrRoute
   '/admin/footer': typeof AdminFooterRoute
   '/admin/header': typeof AdminHeaderRoute
   '/admin/navigation': typeof AdminNavigationRoute
-  '/admin/pages': typeof AdminPagesRouteWithChildren
   '/admin/questions': typeof AdminQuestionsRoute
   '/admin/quick-test': typeof AdminQuickTestRoute
   '/admin/reports': typeof AdminReportsRoute
@@ -608,7 +631,6 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
-  '/admin/tests': typeof AdminTestsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/audiences': typeof AppAudiencesRoute
@@ -651,6 +673,9 @@ export interface FileRoutesByTo {
   '/app/tests/$testId': typeof AppTestsTestIdRoute
   '/app/tests/new': typeof AppTestsNewRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/admin/answer-sets': typeof AdminAnswerSetsIndexRoute
+  '/admin/pages': typeof AdminPagesIndexRoute
+  '/admin/tests': typeof AdminTestsIndexRoute
   '/app/tests': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
@@ -730,6 +755,9 @@ export interface FileRoutesById {
   '/app/tests/$testId': typeof AppTestsTestIdRoute
   '/app/tests/new': typeof AppTestsNewRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
+  '/admin/pages/': typeof AdminPagesIndexRoute
+  '/admin/tests/': typeof AdminTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
@@ -810,6 +838,9 @@ export interface FileRouteTypes {
     | '/app/tests/$testId'
     | '/app/tests/new'
     | '/test/zostava/$id'
+    | '/admin/answer-sets/'
+    | '/admin/pages/'
+    | '/admin/tests/'
     | '/app/tests/'
     | '/test/zostava/$id/vysledky'
   fileRoutesByTo: FileRoutesByTo
@@ -826,14 +857,12 @@ export interface FileRouteTypes {
     | '/schools'
     | '/signup'
     | '/support'
-    | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
     | '/admin/dsr'
     | '/admin/footer'
     | '/admin/header'
     | '/admin/navigation'
-    | '/admin/pages'
     | '/admin/questions'
     | '/admin/quick-test'
     | '/admin/reports'
@@ -842,7 +871,6 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/share-card'
     | '/admin/support'
-    | '/admin/tests'
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
@@ -885,6 +913,9 @@ export interface FileRouteTypes {
     | '/app/tests/$testId'
     | '/app/tests/new'
     | '/test/zostava/$id'
+    | '/admin/answer-sets'
+    | '/admin/pages'
+    | '/admin/tests'
     | '/app/tests'
     | '/test/zostava/$id/vysledky'
   id:
@@ -963,6 +994,9 @@ export interface FileRouteTypes {
     | '/app/tests/$testId'
     | '/app/tests/new'
     | '/test/zostava/$id'
+    | '/admin/answer-sets/'
+    | '/admin/pages/'
+    | '/admin/tests/'
     | '/app/tests/'
     | '/test/zostava/$id/vysledky'
   fileRoutesById: FileRoutesById
@@ -1457,6 +1491,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTestsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/tests/': {
+      id: '/admin/tests/'
+      path: '/'
+      fullPath: '/admin/tests/'
+      preLoaderRoute: typeof AdminTestsIndexRouteImport
+      parentRoute: typeof AdminTestsRoute
+    }
+    '/admin/pages/': {
+      id: '/admin/pages/'
+      path: '/'
+      fullPath: '/admin/pages/'
+      preLoaderRoute: typeof AdminPagesIndexRouteImport
+      parentRoute: typeof AdminPagesRoute
+    }
+    '/admin/answer-sets/': {
+      id: '/admin/answer-sets/'
+      path: '/'
+      fullPath: '/admin/answer-sets/'
+      preLoaderRoute: typeof AdminAnswerSetsIndexRouteImport
+      parentRoute: typeof AdminAnswerSetsRoute
+    }
     '/test/zostava/$id': {
       id: '/test/zostava/$id'
       path: '/test/zostava/$id'
@@ -1539,10 +1594,12 @@ declare module '@tanstack/react-router' {
 
 interface AdminAnswerSetsRouteChildren {
   AdminAnswerSetsSetIdRoute: typeof AdminAnswerSetsSetIdRoute
+  AdminAnswerSetsIndexRoute: typeof AdminAnswerSetsIndexRoute
 }
 
 const AdminAnswerSetsRouteChildren: AdminAnswerSetsRouteChildren = {
   AdminAnswerSetsSetIdRoute: AdminAnswerSetsSetIdRoute,
+  AdminAnswerSetsIndexRoute: AdminAnswerSetsIndexRoute,
 }
 
 const AdminAnswerSetsRouteWithChildren = AdminAnswerSetsRoute._addFileChildren(
@@ -1551,10 +1608,12 @@ const AdminAnswerSetsRouteWithChildren = AdminAnswerSetsRoute._addFileChildren(
 
 interface AdminPagesRouteChildren {
   AdminPagesPageIdRoute: typeof AdminPagesPageIdRoute
+  AdminPagesIndexRoute: typeof AdminPagesIndexRoute
 }
 
 const AdminPagesRouteChildren: AdminPagesRouteChildren = {
   AdminPagesPageIdRoute: AdminPagesPageIdRoute,
+  AdminPagesIndexRoute: AdminPagesIndexRoute,
 }
 
 const AdminPagesRouteWithChildren = AdminPagesRoute._addFileChildren(
@@ -1563,10 +1622,12 @@ const AdminPagesRouteWithChildren = AdminPagesRoute._addFileChildren(
 
 interface AdminTestsRouteChildren {
   AdminTestsTestIdRoute: typeof AdminTestsTestIdRoute
+  AdminTestsIndexRoute: typeof AdminTestsIndexRoute
 }
 
 const AdminTestsRouteChildren: AdminTestsRouteChildren = {
   AdminTestsTestIdRoute: AdminTestsTestIdRoute,
+  AdminTestsIndexRoute: AdminTestsIndexRoute,
 }
 
 const AdminTestsRouteWithChildren = AdminTestsRoute._addFileChildren(
