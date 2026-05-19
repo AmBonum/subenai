@@ -32,17 +32,17 @@ export const Route = createFileRoute("/blog/kategoria/$slug")({
     if (!cat) {
       return {
         meta: [
-          { title: "kategória nenájdená | subenai blog" },
+          { title: "kategória nenájdená | akadémia subenai" },
           { name: "robots", content: "noindex, nofollow" },
         ],
       };
     }
     const url = `${SITE_ORIGIN}/blog/kategoria/${params.slug}`;
-    const title = cat.seo_title ?? `${cat.name} | subenai blog`;
+    const title = cat.seo_title ?? `${cat.name} | akadémia subenai`;
     const description =
       cat.seo_description ??
       cat.description ??
-      `články o ${cat.name.toLowerCase()} na subenai blogu.`;
+      `články o ${cat.name.toLowerCase()} na akadémia subenaiu.`;
     return {
       meta: [
         { title },

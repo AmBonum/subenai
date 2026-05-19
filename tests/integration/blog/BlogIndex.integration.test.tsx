@@ -63,9 +63,9 @@ describe("/blog index — happy paths", () => {
     mockList([PILLAR_PHISHING]);
     render(<BlogIndexPage />);
     expect(screen.getByTestId("blog-index-root")).toBeInTheDocument();
-    expect(screen.getByTestId("blog-index-eyebrow")).toHaveTextContent("subenai blog");
+    expect(screen.getByTestId("blog-index-eyebrow")).toHaveTextContent("akadémia subenai");
     expect(screen.getByTestId("blog-index-title")).toHaveTextContent(
-      "blog o internetových podvodoch",
+      "akadémia internetovej bezpečnosti",
     );
     expect(screen.getByTestId("blog-index-description").textContent ?? "").toMatch(
       /návody, ako rozpoznať scam/i,
@@ -241,6 +241,44 @@ describe("/blog index — negative paths", () => {
     expect(
       screen.getByTestId(`blog-search-empty-pillar-${PILLAR_PHISHING.slug}`),
     ).toBeInTheDocument();
+  });
+
+  it("TC-19a: pillars section IS visible by default (no search)", () => {
+    mockList([PILLAR_PHISHING, CLUSTER_PHISHING_1]);
+    render(<BlogIndexPage />);
+    expect(screen.getByTestId("blog-index-pillars-section")).toBeInTheDocument();
+  });
+
+  it("TC-19b: pillars section HIDES when search query is ≥ 2 chars", () => {
+    mockList([PILLAR_PHISHING, CLUSTER_PHISHING_1]);
+    render(<BlogIndexPage />);
+    fireEvent.change(screen.getByTestId("blog-search-input"), { target: { value: "ph" } });
+    expect(screen.queryByTestId("blog-index-pillars-section")).toBeNull();
+  });
+
+  it("TC-19c: pillars section STAYS visible when search is 1 char (below threshold)", () => {
+    mockList([PILLAR_PHISHING, CLUSTER_PHISHING_1]);
+    render(<BlogIndexPage />);
+    fireEvent.change(screen.getByTestId("blog-search-input"), { target: { value: "p" } });
+    expect(screen.getByTestId("blog-index-pillars-section")).toBeInTheDocument();
+  });
+
+  it("TC-19d: pillars section STAYS visible when filtering by category (no search)", () => {
+    mockList([PILLAR_PHISHING, CLUSTER_PHISHING_1, CLUSTER_PHISHING_2]);
+    render(<BlogIndexPage />);
+    fireEvent.click(screen.getByTestId("blog-category-filter-phishing-a-emaily"));
+    // Pillars are editorial anchors of every category — chip filter
+    // must NOT hide them; only the cluster grid below narrows.
+    expect(screen.getByTestId("blog-index-pillars-section")).toBeInTheDocument();
+  });
+
+  it("TC-19e: clearing search via empty-state restores the pillars section", () => {
+    mockList([PILLAR_PHISHING, CLUSTER_PHISHING_1]);
+    render(<BlogIndexPage />);
+    fireEvent.change(screen.getByTestId("blog-search-input"), { target: { value: "qzqzqz" } });
+    expect(screen.queryByTestId("blog-index-pillars-section")).toBeNull();
+    fireEvent.click(screen.getByTestId("blog-search-empty-clear"));
+    expect(screen.getByTestId("blog-index-pillars-section")).toBeInTheDocument();
   });
 
   it("TC-19: 'vymazať hľadanie' clears both the search input AND the category chip", () => {

@@ -30,14 +30,15 @@ export const Route = createFileRoute("/blog/autor/$slug")({
     if (!author) {
       return {
         meta: [
-          { title: "autor nenájdený | subenai blog" },
+          { title: "autor nenájdený | akadémia subenai" },
           { name: "robots", content: "noindex, nofollow" },
         ],
       };
     }
     const url = `${SITE_ORIGIN}/blog/autor/${params.slug}`;
-    const title = `${author.display_name} | subenai blog`;
-    const description = author.bio ?? `články od autora ${author.display_name} na subenai blogu.`;
+    const title = `${author.display_name} | akadémia subenai`;
+    const description =
+      author.bio ?? `články od autora ${author.display_name} na akadémia subenaiu.`;
     return {
       meta: [
         { title },

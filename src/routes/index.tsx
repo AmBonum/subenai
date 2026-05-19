@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { supabase } from "@/integrations/supabase/client";
+import { BlogHomeSection } from "@/components/home/BlogHomeSection";
 import { ROUTES } from "@/config/routes";
 import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/marketing";
@@ -427,6 +428,9 @@ function Index() {
             decoding="async"
           />
         </section>
+
+        {/* Akadémia — featured blog content (3 pillar articles) */}
+        <BlogHomeSection />
 
         {/* FAQ */}
         <section className="mt-20">

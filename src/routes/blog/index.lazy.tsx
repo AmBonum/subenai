@@ -136,7 +136,7 @@ function BlogIndexPage() {
           className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary"
           data-testid="blog-index-eyebrow"
         >
-          <span aria-hidden="true">🛡</span> subenai blog
+          <span aria-hidden="true">🎓</span> {t("eyebrow")}
         </p>
         <h1
           className="mt-6 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl"
@@ -183,8 +183,14 @@ function BlogIndexPage() {
         />
       )}
 
-      {/* Featured pillars — top-of-page editorial anchors */}
-      {pillars.length > 0 && (
+      {/* Featured pillars — top-of-page editorial anchors.
+          Hidden during an active search (≥ 2 chars) because the
+          reader has expressed a specific topical intent and the
+          pillar grid becomes pure visual noise that pushes the
+          actual matches below the fold. Category-only filtering
+          keeps pillars visible — pillars ARE the editorial spine
+          of every category. */}
+      {pillars.length > 0 && normalizedSearch.length < 2 && (
         <section
           id="sprievodcovia"
           className="mt-16 scroll-mt-24 border-t border-border pt-12"
