@@ -15,18 +15,54 @@ import remarkGfm from "remark-gfm";
 // Keeps 80 existing MDX files untouched — they already use this pattern
 // liberally ("**Tip:** ...", "**Pozor:** ...", "**Príklad:** ...").
 
+// Maps bold-prefixed paragraph leaders ("**X:** …") to a styled
+// callout. Keys are normalized to lowercase with trailing colon/space
+// stripped. The list reflects the dictionary the existing 80 MDX
+// articles actually use (audited via grep) — pros/cons rows, product
+// reviews, scam-feature taxonomy, red flags, rules.
 const CALLOUT_KEYWORDS: Record<string, { tone: CalloutTone; label: string }> = {
+  // Pros / cons (12+12 occurrences across comparison articles)
+  plus: { tone: "pos", label: "✓ plus" },
+  mínus: { tone: "neg", label: "✗ mínus" },
+  minus: { tone: "neg", label: "✗ mínus" },
+  // Product review verdicts
+  verdikt: { tone: "info", label: "🏁 verdikt" },
+  "pre koho": { tone: "info", label: "🎯 pre koho" },
+  "komu odporúčame": { tone: "info", label: "🎯 komu odporúčame" },
+  "komu odporucame": { tone: "info", label: "🎯 komu odporúčame" },
+  cena: { tone: "neutral", label: "💰 cena" },
+  "cena (k 2026-05)": { tone: "neutral", label: "💰 cena (2026-05)" },
+  // Scam-feature taxonomy
+  "detekčný znak": { tone: "warn", label: "🔍 detekčný znak" },
+  "detekcny znak": { tone: "warn", label: "🔍 detekčný znak" },
+  "červená vlajka": { tone: "warn", label: "🚩 červená vlajka" },
+  "cervena vlajka": { tone: "warn", label: "🚩 červená vlajka" },
+  "červené vlajky vzoru": { tone: "warn", label: "🚩 červené vlajky" },
+  // Definitions
+  "čo to je": { tone: "neutral", label: "📖 čo to je" },
+  "co to je": { tone: "neutral", label: "📖 čo to je" },
+  "čo je": { tone: "neutral", label: "📖 čo je" },
+  "co je": { tone: "neutral", label: "📖 čo je" },
+  "ako vyzerá": { tone: "neutral", label: "📖 ako vyzerá" },
+  "ako vyzera": { tone: "neutral", label: "📖 ako vyzerá" },
+  // Phishing email/SMS anatomy
+  odosielateľ: { tone: "neutral", label: "✉ odosielateľ" },
+  odosielatel: { tone: "neutral", label: "✉ odosielateľ" },
+  predmet: { tone: "neutral", label: "📩 predmet" },
+  // Rules & summaries
+  "zlaté pravidlo": { tone: "info", label: "⭐ zlaté pravidlo" },
+  "zlate pravidlo": { tone: "info", label: "⭐ zlaté pravidlo" },
+  zhrnutie: { tone: "info", label: "🧾 zhrnutie" },
+  // Generic safety net (kept so future editors can use them too)
   tip: { tone: "info", label: "💡 tip" },
   pozor: { tone: "warn", label: "⚠ pozor" },
   varovanie: { tone: "warn", label: "⚠ varovanie" },
-  pozn: { tone: "info", label: "📌 poznámka" },
   poznámka: { tone: "info", label: "📌 poznámka" },
   poznamka: { tone: "info", label: "📌 poznámka" },
   príklad: { tone: "neutral", label: "📖 príklad" },
   priklad: { tone: "neutral", label: "📖 príklad" },
   príbeh: { tone: "neutral", label: "📖 príbeh" },
   pribeh: { tone: "neutral", label: "📖 príbeh" },
-  zhrnutie: { tone: "info", label: "🧾 zhrnutie" },
   dôležité: { tone: "warn", label: "⚠ dôležité" },
   dolezite: { tone: "warn", label: "⚠ dôležité" },
   fakt: { tone: "info", label: "📊 fakt" },
@@ -34,12 +70,14 @@ const CALLOUT_KEYWORDS: Record<string, { tone: CalloutTone; label: string }> = {
   cislo: { tone: "info", label: "📊 číslo" },
 };
 
-type CalloutTone = "info" | "warn" | "neutral";
+type CalloutTone = "info" | "warn" | "neutral" | "pos" | "neg";
 
 const TONE_CLASSES: Record<CalloutTone, string> = {
-  info: "border-primary/30 bg-primary/5 text-foreground",
-  warn: "border-warning/40 bg-warning/10 text-foreground",
-  neutral: "border-border bg-card text-foreground",
+  info: "border-l-primary bg-primary/5 text-foreground",
+  warn: "border-l-warning bg-warning/10 text-foreground",
+  neutral: "border-l-border bg-card text-foreground",
+  pos: "border-l-success bg-success/10 text-foreground",
+  neg: "border-l-destructive bg-destructive/10 text-foreground",
 };
 
 interface CalloutMatch {
@@ -48,28 +86,53 @@ interface CalloutMatch {
   rest: ReactNode;
 }
 
+// Recursively flatten any React children into a single string. Handles
+// strings, numbers, arrays, fragments and React elements (whose own
+// children get walked) — gracefully returns "" for unrenderable nodes.
+function reactNodeToText(node: ReactNode): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (typeof node === "string") return node;
+  if (typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(reactNodeToText).join("");
+  if (typeof node === "object" && "props" in node) {
+    const inner = (node as { props?: { children?: ReactNode } }).props?.children;
+    return reactNodeToText(inner);
+  }
+  return "";
+}
+
 // Detect "<strong>Keyword:</strong> rest of paragraph" and return a
-// callout config + the remaining children. Returns null if not a
-// callout.
+// callout config + the remaining children. The detection is tolerant
+// of leading whitespace text-nodes and of children coming in as a
+// single ReactElement vs. an array.
 function detectCallout(children: ReactNode): CalloutMatch | null {
-  const arr = Array.isArray(children) ? children : [children];
+  const arr = Array.isArray(children) ? [...children] : [children];
+  // Skip leading whitespace-only text nodes so a paragraph that starts
+  // with a single space before <strong> still matches.
+  while (arr.length > 0 && typeof arr[0] === "string" && (arr[0] as string).trim() === "") {
+    arr.shift();
+  }
   if (arr.length === 0) return null;
   const first = arr[0];
   if (typeof first !== "object" || first === null || !("props" in first)) return null;
   const node = first as { type?: unknown; props?: { children?: ReactNode } };
-  if (node.type !== "strong") return null;
-  const inner = node.props?.children;
-  const text = typeof inner === "string" ? inner : Array.isArray(inner) ? inner.join("") : "";
-  // Trim trailing colon — accepts "Tip", "Tip:", "Tip: "
+  // react-markdown can hand the custom `strong` override either as the
+  // string tag "strong" or as the function component we registered;
+  // accept both. (The function path appears when nested formatting is
+  // present; the string path is the common single-line case.)
+  const type = node.type;
+  const isStrong =
+    type === "strong" ||
+    (typeof type === "function" && (type as { name?: string }).name === "strong");
+  if (!isStrong) return null;
+  const text = reactNodeToText(node.props?.children);
   const normalized = text
     .replace(/[:\s]+$/u, "")
     .trim()
     .toLowerCase();
   const match = CALLOUT_KEYWORDS[normalized];
   if (!match) return null;
-  // Drop leading whitespace text node + the <strong> itself; keep rest.
   const rest = arr.slice(1);
-  // If the remaining starts with ": ", trim that opener.
   if (typeof rest[0] === "string") {
     rest[0] = (rest[0] as string).replace(/^[:\s]+/u, "");
   }
