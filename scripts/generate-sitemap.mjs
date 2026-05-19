@@ -39,6 +39,24 @@ const STATIC_ROUTES = [
 // lives here for the build-time sitemap. When new categories are added,
 // update both files together. Per-article URLs land in a follow-up
 // (dynamic /blog/sitemap.xml route querying Supabase at request time).
+// Pillar slugs get higher sitemap priority (0.7) than clusters (0.5).
+// Source of truth: each MDX file's `pillar: true` frontmatter — but DB
+// rows don't have a `pillar` boolean column (seed script collapsed it
+// into `pillar_post_id` which we then left null), so we maintain a
+// hardcoded list here. If a new pillar lands, add its slug below.
+const PILLAR_SLUGS = new Set([
+  "phishing-kompletny-sprievodca",
+  "scam-sms-a-podvodne-hovory",
+  "fake-eshopy-ako-odhalit",
+  "podvody-na-socialnych-sietach",
+  "ai-a-moderne-podvody-deepfake-voice-cloning",
+  "digitalna-bezpecnost-kompletny-navod",
+  "psychologia-internetovych-podvodov",
+  "bezpecnost-pre-rodicov-deti-seniorov",
+  "bezpecne-nakupovanie-online-slovensko",
+  "internet-safety-pre-studentov",
+]);
+
 const BLOG_CATEGORY_SLUGS = [
   "phishing-a-emaily",
   "sms-a-telefon",
@@ -100,6 +118,43 @@ async function loadCmsPublishedSlugs() {
 
 const cmsSlugs = await loadCmsPublishedSlugs();
 
+async function loadPublishedBlogPosts() {
+  // E16.3 Phase 2: per-article URLs for the sitemap. Queries Supabase
+  // PostgREST at build time (anon publishable key — RLS already filters
+  // to status='published' AND published_at <= now()). If env vars are
+  // missing (e.g. local dev offline), returns [] and the sitemap drops
+  // blog article URLs — does NOT fail the build.
+  const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+  const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY;
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    console.warn(
+      "[sitemap] Skipping blog posts: VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY not set",
+    );
+    return [];
+  }
+  const select = "slug,published_at,updated_at,pillar_post_id";
+  const url = `${SUPABASE_URL}/rest/v1/blog_posts?status=eq.published&order=published_at.desc&select=${encodeURIComponent(select)}`;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Accept: "application/json",
+      },
+    });
+    if (!res.ok) {
+      console.warn(`[sitemap] Supabase fetch returned ${res.status}; skipping blog posts.`);
+      return [];
+    }
+    return await res.json();
+  } catch (err) {
+    console.warn(`[sitemap] Supabase fetch failed: ${err.message}; skipping blog posts.`);
+    return [];
+  }
+}
+
+const blogPosts = await loadPublishedBlogPosts();
+
 const urls = [
   ...STATIC_ROUTES.map((r) => ({ ...r, lastmod: TODAY })),
   ...courses.map((c) => ({
@@ -126,6 +181,12 @@ const urls = [
     changefreq: slug === "news-a-trendy" ? "daily" : "weekly",
     lastmod: TODAY,
   })),
+  ...blogPosts.map((post) => ({
+    loc: `/blog/${post.slug}`,
+    priority: PILLAR_SLUGS.has(post.slug) ? "0.7" : "0.5",
+    changefreq: "monthly",
+    lastmod: (post.updated_at ?? post.published_at ?? TODAY).slice(0, 10),
+  })),
 ];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -145,7 +206,7 @@ ${urls
 
 await writeFile(resolve(ROOT, "public/sitemap.xml"), xml, "utf8");
 console.log(
-  `Sitemap written: ${urls.length} URLs (${courses.length} courses, ${packs.length} packs, ${cmsSlugs.length} cms)`,
+  `Sitemap written: ${urls.length} URLs (${courses.length} courses, ${packs.length} packs, ${cmsSlugs.length} cms, ${blogPosts.length} blog posts)`,
 );
 
 // Allow being invoked via `node scripts/generate-sitemap.mjs` directly
