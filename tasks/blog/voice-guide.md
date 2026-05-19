@@ -14,6 +14,46 @@
 
 ---
 
+## Locked decisions (2026-05-19) — supersede all `(proposed)` markers below
+
+The four decisions in this block are final. Any `(proposed — confirm with
+user)` marker further down the file that conflicts with these decisions
+is OVERRIDDEN. Downstream agents MUST honor these four rules.
+
+1. **Brand capitalization → lowercase `subenai` everywhere.** Body prose,
+   headings, CTAs, social snippets, OG image overlays all use the
+   lowercase form. The domain `subenai.sk` continues lowercase too.
+   Never write `SubenAI` or `Subenai` or `SUBENAI` in any blog content.
+   Rationale: consistency with the existing production surface (cookie
+   banner, footer, FAQ).
+2. **Reader address → informal `ty` universally.** Every article tycká,
+   including the seniors and parents cluster (`rodicia-a-seniori`) and
+   the educational student cluster (`studenti`). Verbs use 2nd person
+   singular ("klikneš", "nezadávaj", "skontroluj si"). Never switch to
+   `vy` mid-article, never address as `Vy` with capital V. Rationale:
+   matches the existing site's informal register; modern SK digital
+   safety content from peer brands (Tatra banka, SK-CERT social) uses
+   `ty`.
+3. **Product term → `test` exclusively.** The 15-question public IQ test
+   is always "test", never "kvíz". Inline interactive scenarios (the
+   `BlogScenarioCard` component) are called "test", "mini-test", or
+   "rýchla úloha" — never "kvíz". Rationale: production UI uses "test"
+   exclusively; introducing "kvíz" would split SEO entity authority and
+   confuse the reader.
+4. **Removed CTAs (do not use).** The following two CTAs are removed
+   from the approved list because they imply features not shipping in
+   E16. Do not include them in any article ending until E17 implements
+   the underlying features:
+   - ~~`Pošli to rodičom →`~~ (requires Web Share or family-share infra)
+   - ~~`Stiahni si checklist →`~~ (requires PDF generator / download)
+
+   Approved end-of-article CTAs remain: `Otestuj sa →`, `Pozri si
+   ďalšie scamy →`, `Spravím si test →`, and the cluster-internal
+   "Čítaj ďalej:" link list. Other approved CTAs in section 7 below
+   that do not depend on removed features stay valid.
+
+---
+
 ## 1. Brand persona
 
 SubenAI píše ako **technicky zdatný kamarát, ktorý ti vysvetlí podvod
