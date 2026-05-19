@@ -102,19 +102,64 @@ async function loadSlugs(dirRel) {
 const courses = await loadSlugs("src/content/courses");
 const packs = await loadSlugs("src/content/test-packs");
 
-async function loadCmsPublishedSlugs() {
-  // AH-9.9: enumerate published CMS slugs for the sitemap. In the
-  // mock-only AH-9 phase, parse the seed array in cms-mock-store.ts.
-  // AH-11 swaps this for a Supabase query at build time.
+// E30 — fetch published CMS slugs from Supabase at build time.
+// Mirror of loadPublishedBlogPosts: env-var-guarded, graceful fallback.
+// Returns Array<{slug, updated_at}> on success, null on missing creds
+// or network failure (caller falls back to the mock-store seed).
+async function loadCmsPublishedSlugsFromSupabase() {
+  const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+  const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY;
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    console.warn(
+      "[sitemap] Skipping live CMS pages: VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY not set; falling back to mock store",
+    );
+    return null;
+  }
+  const select = "slug,updated_at,published_at";
+  const url = `${SUPABASE_URL}/rest/v1/cms_pages?status=eq.published&published_at=not.is.null&order=updated_at.desc&select=${encodeURIComponent(select)}`;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Accept: "application/json",
+      },
+    });
+    if (!res.ok) {
+      console.warn(`[sitemap] Supabase fetch returned ${res.status}; falling back to mock store`);
+      return null;
+    }
+    const rows = await res.json();
+    return rows.map((r) => ({
+      slug: r.slug,
+      updated_at: r.updated_at ?? r.published_at ?? TODAY,
+    }));
+  } catch (err) {
+    console.warn(`[sitemap] Supabase fetch failed: ${err.message}; falling back to mock store`);
+    return null;
+  }
+}
+
+// Mock-store fallback. Reads the seed slugs from the dev-only mock
+// module — used when Supabase env vars are missing (local dev / CI
+// without secrets / offline builds) so the committed sitemap.xml
+// still includes the well-known /s/o-projekte-rozsirene entry.
+async function loadCmsPublishedSlugsFromMock() {
   const { readFile } = await import("node:fs/promises");
   const src = await readFile(resolve(ROOT, "src/lib/admin/cms-mock-store.ts"), "utf8");
   const blockRe = /slug:\s*"([a-z0-9-]+)"[\s\S]*?status:\s*"(published|draft)"/g;
   const slugs = [];
   let m;
   while ((m = blockRe.exec(src)) !== null) {
-    if (m[2] === "published") slugs.push(m[1]);
+    if (m[2] === "published") slugs.push({ slug: m[1], updated_at: TODAY });
   }
   return slugs;
+}
+
+async function loadCmsPublishedSlugs() {
+  const live = await loadCmsPublishedSlugsFromSupabase();
+  if (live !== null) return live;
+  return loadCmsPublishedSlugsFromMock();
 }
 
 const cmsSlugs = await loadCmsPublishedSlugs();
@@ -170,11 +215,11 @@ const urls = [
     changefreq: "monthly",
     lastmod: p.lastmod,
   })),
-  ...cmsSlugs.map((slug) => ({
-    loc: `/s/${slug}`,
+  ...cmsSlugs.map((c) => ({
+    loc: `/s/${c.slug}`,
     priority: "0.5",
     changefreq: "monthly",
-    lastmod: TODAY,
+    lastmod: (c.updated_at ?? TODAY).slice(0, 10),
   })),
   ...BLOG_CATEGORY_SLUGS.map((slug) => ({
     loc: `/blog/kategoria/${slug}`,
