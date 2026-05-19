@@ -50,6 +50,12 @@ type FormState = {
   sources: BlogPostSource[];
   related_course_slug: string;
   status: BlogPostStatus;
+  // Carry the row's original published_at through the form. Setting
+  // it to new Date().toISOString() on every save would corrupt the
+  // canonical publish date on already-published posts (shifts them
+  // forward in the date-sorted public feed). The publish/unpublish
+  // mutations handle the actual state transition.
+  published_at: string | null;
 };
 
 function detailToForm(post: AdminBlogPostDetail): FormState {
@@ -72,6 +78,7 @@ function detailToForm(post: AdminBlogPostDetail): FormState {
     sources: post.sources_jsonb,
     related_course_slug: post.related_course_slug ?? "",
     status: post.status,
+    published_at: post.published_at,
   };
 }
 
@@ -95,6 +102,7 @@ function emptyForm(categoryId: string, authorId: string): FormState {
     sources: [],
     related_course_slug: "",
     status: "draft",
+    published_at: null,
   };
 }
 
@@ -120,7 +128,13 @@ function formToInput(state: FormState): AdminBlogPostInput {
     sources_jsonb: state.sources,
     related_course_slug: state.related_course_slug.trim() || null,
     status: state.status,
-    published_at: state.status === "published" ? new Date().toISOString() : null,
+    // Preserve the original published_at on every save. Transitions
+    // (draft → published, published → draft) are owned by the
+    // dedicated publish / unpublish mutations, not this generic save
+    // path. If status flipped via the form somehow without going
+    // through those mutations, fall back to null (the publish mutation
+    // will stamp a fresh time when it runs).
+    published_at: state.status === "published" ? state.published_at : null,
   };
 }
 
