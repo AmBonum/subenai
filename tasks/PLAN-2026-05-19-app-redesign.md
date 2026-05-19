@@ -1,7 +1,7 @@
 # PLAN — /app + Header Redesign (Educator-Retention)
 
 **Date:** 2026-05-19
-**Status:** AWAITING APPROVAL
+**Status:** ✅ APPROVED 2026-05-19 (decisions D1-D9 locked below)
 **Owner:** project owner
 **Inputs:** 5 parallel senior-agent reports (codebase audit, UX/IA, UX copy, marketing positioning, dev architecture)
 **Locked decisions (project owner, this session):**
@@ -376,17 +376,49 @@ CREATE TABLE public.retest_reminders (
 
 ## Decisions awaiting project owner (numbered)
 
-| # | Decision | My recommendation | Confirm? |
+| # | Decision | Resolved | Note |
 |---|---|---|---|
-| **D1** | Mega-menu top-level items: 5 (Marketing/Copy) or 6 (UX) | 5 — Marketing's anti-paywall argument outweighs UX's "rightmost emphasis" | ☐ |
-| **D2** | Sidebar groups expanded or collapsed by default | Expanded — Slovak SaaS expectation | ☐ |
-| **D3** | Retention surfaces: sidebar links or dashboard cards | Hybrid — Notifications stays in sidebar; Digest/Recommendations/Retest = dashboard cards only | ☐ |
-| **D4** | Profile preferences storage: new table or `profiles.preferences` jsonb | (B) jsonb column on profiles — matches existing pattern, no FK overhead | ☐ |
-| **D5** | Digest cadence: weekly or monthly | Weekly, but only fires if signal exists (data-driven, not editorial) | ☐ |
-| **D6** | Brand sidebar label rebrand: `SubenAI · Workspace` → `SubenAI · Pre lektorov` | Ship it — persona-flag, high leverage, zero cost | ☐ |
-| **D7** | Header CTA stays `Spustiť rýchly test`, never `Podporiť projekt` | Locked by Marketing §F; document only | ☐ |
-| **D8** | Peer-card: include in initial 6-PR plan or defer | Defer — requires UX research + PNG share infra | ☐ |
-| **D9** | Remove `/admin` from public footer + sitemap | Yes — visitor confusion, no cost | ☐ |
+| **D1** | Mega-menu top-level items count | ✅ **5 items** | Rýchly test · Sady testov · Školenia · Pre školy a lektorov · Podpora projektu |
+| **D2** | Sidebar groups expanded/collapsed | ✅ **Expanded by default** | A/B test collapse later |
+| **D3** | Retention surfaces: sidebar or cards | ✅ **Hybrid** | Notifikácie v sidebar; Digest/Recommendations/Retest = dashboard cards only |
+| **D4** | Profile preferences storage | ✅ **New table `profile_preferences`** | (overrides my jsonb rec) Better validation + query semantics |
+| **D5** | Digest cadence | ✅ **Weekly, only if signal exists** | Data-driven, no human author burden |
+| **D6** | Sidebar brand rebrand | ✅ **Ship `SubenAI · Pre lektorov`** | Persona-flag every page load |
+| **D7** | Header CTA | ✅ **Locked: `Spustiť rýchly test`** | Never Podporiť projekt — anti-paywall positioning |
+| **D8** | Peer-card scope | ✅ **Include as Phase 7** | (overrides my defer rec) Marketing leverage; UX research + PNG can be sub-phase |
+| **D9** | Hide `/admin` from public chrome | ✅ **Yes — remove from footer + sitemap** | Visitor confusion fix |
+
+### Implications of D4 override (new table instead of jsonb)
+
+Phase 3 schema changes:
+```sql
+CREATE TABLE public.profile_preferences (
+  user_id            uuid PRIMARY KEY REFERENCES profiles(id) ON DELETE CASCADE,
+  audience_kind      text,                  -- enum-like: 'class' | 'colleagues' | 'clients' | 'other'
+  scam_interests     text[] DEFAULT '{}',   -- multi-select chips: phishing, voice_clone, marketplace, ...
+  digest_cadence     text DEFAULT 'weekly', -- 'weekly' | 'monthly' | 'off'
+  digest_quiet_weeks boolean DEFAULT false, -- send empty-week digest?
+  onboarded_at       timestamptz,           -- merged from profiles.onboarded_at into the prefs table
+  created_at         timestamptz NOT NULL DEFAULT now(),
+  updated_at         timestamptz NOT NULL DEFAULT now()
+);
+
+-- RLS: owner-read/write only
+CREATE POLICY profile_prefs_owner ON profile_preferences
+  FOR ALL TO authenticated
+  USING (user_id = auth.uid())
+  WITH CHECK (user_id = auth.uid());
+```
+
+Note: `onboarded_at` moves from `profiles` to `profile_preferences` so all onboarding state lives in one table. The `app.tsx` `beforeLoad` reads it via a joined query (already cached via TanStack Query).
+
+### Implications of D8 override (Peer-card included as Phase 7)
+
+Phase 7 split into 7a + 7b:
+- **Phase 7a** — In-app peer card: `get_peer_card(uuid)` RPC + dashboard card. Lightweight, no PNG infra.
+- **Phase 7b** — Share-PNG generator: server-side PNG renderer (Cloudflare Worker via Browser Rendering API or canvas-based). Strips PII. **Gated on R8 emotional-valence research from 5 real educator interviews.**
+
+Phasing total: now **7 phases over ~8.5 sessions** instead of 6.
 
 ---
 
