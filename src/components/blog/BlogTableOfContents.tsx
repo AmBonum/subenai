@@ -58,6 +58,9 @@ export function BlogTableOfContents({ mdx, label }: BlogTableOfContentsProps) {
 
   useEffect(() => {
     if (items.length === 0) return undefined;
+    // jsdom (vitest) + older Safari don't expose IntersectionObserver;
+    // gracefully skip the active-section highlighting in that case.
+    if (typeof IntersectionObserver === "undefined") return undefined;
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries

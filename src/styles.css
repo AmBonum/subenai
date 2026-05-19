@@ -269,4 +269,20 @@
   .shadow-card, .shadow-glow {
     box-shadow: none !important;
   }
+  /* E16.4 — strip blog chrome that doesn't survive the printed page:
+     hero gradient placeholders, TOC sidebar, reading progress bar,
+     scenario card (interactive only), share row, related-articles
+     grid. Sources + body remain so the printout is a citable record. */
+  [data-testid="blog-reading-progress"],
+  [data-testid="blog-toc"],
+  [data-testid="blog-post-hero-fallback"],
+  [data-testid="blog-scenario-card"],
+  [data-testid="blog-share-row"],
+  [data-testid="blog-article-cta"],
+  [data-testid="blog-related-articles"] {
+    display: none !important;
+  }
+  [data-testid="blog-post-body"] {
+    max-width: none !important;
+  }
 }

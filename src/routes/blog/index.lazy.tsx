@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
+import { BlogSearchInput } from "@/components/blog/BlogSearchInput";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { tFor } from "@/i18n/blog";
 import { isPillarSlug } from "@/lib/blog/pillar-slugs";
@@ -16,6 +17,8 @@ function BlogIndexPage() {
   const t = tFor("index");
   const query = useBlogPostList();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const normalizedSearch = searchQuery.trim().toLowerCase();
 
   // Split into pillars + clusters once; the filter chip then narrows
   // the "clusters" list. Pillars stay visible on the hero row even when
@@ -42,9 +45,19 @@ function BlogIndexPage() {
   }, [posts]);
 
   const filteredClusters = useMemo(() => {
-    if (!activeCategory) return clusters;
-    return clusters.filter((p) => p.category.slug === activeCategory);
-  }, [clusters, activeCategory]);
+    let out = clusters;
+    if (activeCategory) {
+      out = out.filter((p) => p.category.slug === activeCategory);
+    }
+    if (normalizedSearch.length > 1) {
+      out = out.filter(
+        (p) =>
+          p.title.toLowerCase().includes(normalizedSearch) ||
+          p.excerpt.toLowerCase().includes(normalizedSearch),
+      );
+    }
+    return out;
+  }, [clusters, activeCategory, normalizedSearch]);
 
   return (
     <main className="container mx-auto px-4 py-12" data-testid="blog-index-root">
@@ -68,6 +81,9 @@ function BlogIndexPage() {
         >
           {t("description")}
         </p>
+        <div className="mt-8 flex justify-center" data-testid="blog-index-search-wrapper">
+          <BlogSearchInput value={searchQuery} onChange={setSearchQuery} />
+        </div>
       </header>
 
       {query.isLoading && (

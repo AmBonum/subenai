@@ -1,11 +1,13 @@
 import { createLazyFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useMemo } from "react";
 
+import { SITE_ORIGIN } from "@/config/site";
 import { ArticleCTABanner } from "@/components/blog/ArticleCTABanner";
 import { BlogHeroFallback } from "@/components/blog/BlogHeroFallback";
 import { BlogPostBody } from "@/components/blog/BlogPostBody";
 import { BlogPostSources } from "@/components/blog/BlogPostSources";
 import { BlogScenarioCard } from "@/components/blog/BlogScenarioCard";
+import { BlogShareRow } from "@/components/blog/BlogShareRow";
 import { BlogTableOfContents } from "@/components/blog/BlogTableOfContents";
 import { CategoryBadge } from "@/components/blog/CategoryBadge";
 import { ReadingProgress } from "@/components/blog/ReadingProgress";
@@ -214,6 +216,7 @@ function BlogPostPage() {
             <BlogPostBody mdx={post.body_mdx} />
             <div className="mx-auto max-w-3xl">
               <BlogPostSources sources={post.sources} />
+              <BlogShareRow url={`${SITE_ORIGIN}/blog/${post.slug}`} title={post.title} />
               <ArticleCTABanner />
               <BlogScenarioCard questionId={FALLBACK_SCENARIO_QUESTION_ID} />
             </div>
