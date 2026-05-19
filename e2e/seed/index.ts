@@ -11,6 +11,7 @@ export { seedTeam, type TeamRow } from "./teams";
 export { seedTestWithQuestions, type SeedTestWithQuestionsOptions } from "./composition";
 export { seedCategory, seedTopic, type CategoryRow, type TopicRow } from "./categories";
 export { seedRespondent, type RespondentRow } from "./respondents";
+export { seedTraining, type TrainingRow } from "./trainings";
 export { seedCmsPage, type CmsPageRow } from "./cms-pages";
 export {
   seedBlogCategory,
