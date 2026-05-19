@@ -31,6 +31,11 @@ import { STRIPE_API_VERSION } from "../../../functions/api/stripe-webhook";
 const WEBHOOK_PATH = "/api/stripe-webhook";
 const BASE_URL = process.env.STRIPE_E2E_BASE_URL ?? "http://localhost:8788";
 
+// This spec is structurally local-only — see the file header. The skip
+// guard moves into `beforeAll` below so loadDevVars() can't throw
+// before we evaluate the condition.
+const HAS_DEV_VARS = fs.existsSync(path.resolve(process.cwd(), ".dev.vars"));
+
 interface DevVars {
   STRIPE_WEBHOOK_SECRET: string;
   SUPABASE_URL: string;
@@ -69,6 +74,14 @@ let stripeForSigning: Stripe;
 const TEST_PREFIX = `cus_test_e2e_${Date.now()}_`;
 
 test.beforeAll(() => {
+  // Skip every test in this file when .dev.vars is absent (CI runs
+  // never have it; local devs do once they've copied .dev.vars.example).
+  // The skip MUST run before loadDevVars() — otherwise the throw aborts
+  // beforeAll and Playwright reports a failure instead of a skip.
+  test.skip(
+    !HAS_DEV_VARS,
+    "skipped: local-only — needs .dev.vars + `npm run dev:stripe` (see file header)",
+  );
   devVars = loadDevVars();
   supabase = createClient(devVars.SUPABASE_URL, devVars.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
