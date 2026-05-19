@@ -200,6 +200,31 @@ export const ADMIN_SESSION: AuthSession = makeSession({
   factor_id: ADMIN_FACTOR_ID,
 });
 
+/**
+ * Admin-role user who has a verified TOTP factor but has NOT yet completed
+ * the AAL2 step-up for this session. Used to assert that the /admin gate
+ * redirects to /login/verify-2fa rather than granting access.
+ */
+export const ADMIN_AAL1_SESSION: AuthSession = makeSession({
+  user: makeUser({
+    id: ADMIN_USER_ID,
+    email: "admin@e2e.test",
+    user_metadata: { has_role: ["admin"] },
+    factors: [
+      {
+        id: ADMIN_FACTOR_ID,
+        friendly_name: "primary",
+        factor_type: "totp",
+        status: "verified",
+        created_at: NOW,
+        updated_at: NOW,
+      },
+    ],
+  }),
+  aal: "aal1",
+  factor_id: null,
+});
+
 export interface PrimeAuthSessionOptions {
   /**
    * Supabase project ref used to compose the storage key. Defaults to
