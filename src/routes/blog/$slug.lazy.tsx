@@ -1,7 +1,16 @@
 import { createLazyFileRoute, Link, useParams } from "@tanstack/react-router";
 
+import { BlogPostBody } from "@/components/blog/BlogPostBody";
+import { BlogPostSources } from "@/components/blog/BlogPostSources";
+import { BlogScenarioCard } from "@/components/blog/BlogScenarioCard";
 import { tFor } from "@/i18n/blog";
 import { useBlogPost } from "@/lib/blog/queries";
+
+// Inline scenario embed for v1. Per locked decision #6 the article body
+// includes a single BlogScenarioCard; selecting it per-article from the
+// quiz bank moves to a `scenario_question_id` column on `blog_posts`
+// in a later epic. Until then every article shows the same fallback.
+const FALLBACK_SCENARIO_QUESTION_ID = "p-sms-posta-1";
 
 export const Route = createLazyFileRoute("/blog/$slug")({
   component: BlogPostPage,
@@ -67,7 +76,15 @@ function BlogPostPage() {
 
       <header className="mt-8">
         <p className="text-sm text-muted-foreground" data-testid="blog-post-category">
-          {t("in_category")} {post.category.name}
+          {t("in_category")}{" "}
+          <Link
+            to="/blog/kategoria/$slug"
+            params={{ slug: post.category.slug }}
+            className="underline hover:text-foreground"
+            data-testid="blog-post-category-link"
+          >
+            {post.category.name}
+          </Link>
         </p>
         <h1 className="mt-2 text-4xl font-bold" data-testid="blog-post-title">
           {post.title}
@@ -78,8 +95,16 @@ function BlogPostPage() {
           </p>
         )}
         <p className="mt-6 text-sm text-muted-foreground" data-testid="blog-post-meta">
-          {t("author_prefix")} {post.author.display_name} ·{" "}
-          {t("published_on", { date: publishedDate })}
+          {t("author_prefix")}{" "}
+          <Link
+            to="/blog/autor/$slug"
+            params={{ slug: post.author.slug }}
+            className="underline hover:text-foreground"
+            data-testid="blog-post-author-link"
+          >
+            {post.author.display_name}
+          </Link>{" "}
+          · {t("published_on", { date: publishedDate })}
           {post.reading_minutes != null && (
             <> · {t("reading_time", { minutes: String(post.reading_minutes) })}</>
           )}
@@ -95,15 +120,11 @@ function BlogPostPage() {
         />
       )}
 
-      {/* MDX rendering deferred to D2.B once the markdown package is wired.
-          Placeholder renders body as preformatted text so the route compiles
-          and reads sensibly during pre-launch QA. */}
-      <article
-        className="prose prose-lg mt-8 max-w-none whitespace-pre-wrap"
-        data-testid="blog-post-body"
-      >
-        {post.body_mdx}
-      </article>
+      <BlogPostBody mdx={post.body_mdx} />
+
+      <BlogPostSources sources={post.sources} />
+
+      <BlogScenarioCard questionId={FALLBACK_SCENARIO_QUESTION_ID} />
     </main>
   );
 }

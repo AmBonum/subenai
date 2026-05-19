@@ -138,7 +138,7 @@ verdict. Severity ≥ medium on any gate blocks merge.
 
 | Gate | Skill / Agent | Pass criterion |
 |---|---|---|
-| Research depth | `general-purpose` + WebSearch | ≥3 unique SK or EU sources cited, recency check (no source >18 months old unless evergreen) |
+| Research depth | `general-purpose` + WebSearch | Sources rendered via `blog_posts.sources_jsonb` (not inline links): pillars ≥4 unique sources, clusters ≥3, news-trend clusters ≥3 incl. ≥1 same-week source; recency check (no source >18 months old unless evergreen). Preferred tier order: SK authorities → SK banks/ISPs → SK quality press → SK tech press → international. See `tasks/blog/voice-guide.md` §12. |
 | Outline match-to-intent | `marketing:content-creation` | H1 matches primary keyword; H2 structure covers top 5 PAA questions for the keyword |
 | Slovak voice | `marketing:brand-review` against `tasks/blog/voice-guide.md` | No banned phrases ("v dnešnej dobe", "v digitálnom svete"), tone matches scam-awareness register |
 | UX copy on CTAs | `design:ux-copy` | Every CTA has an action verb, ≤6 words, links to a valid in-app route |

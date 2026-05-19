@@ -470,6 +470,7 @@ export type Database = {
           search_intent: string | null;
           reading_minutes: number | null;
           faq_jsonb: Json | null;
+          sources_jsonb: Json;
           status: Database["public"]["Enums"]["test_status"];
           published_at: string | null;
           created_at: string;
@@ -495,6 +496,7 @@ export type Database = {
           search_intent?: string | null;
           reading_minutes?: number | null;
           faq_jsonb?: Json | null;
+          sources_jsonb?: Json;
           status?: Database["public"]["Enums"]["test_status"];
           published_at?: string | null;
           created_at?: string;
@@ -520,6 +522,7 @@ export type Database = {
           search_intent?: string | null;
           reading_minutes?: number | null;
           faq_jsonb?: Json | null;
+          sources_jsonb?: Json;
           status?: Database["public"]["Enums"]["test_status"];
           published_at?: string | null;
           created_at?: string;

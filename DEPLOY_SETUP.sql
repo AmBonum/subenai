@@ -3604,6 +3604,26 @@ CREATE POLICY "blog_images_admin_delete"
   USING (bucket_id = 'blog-images' AND public.has_role(auth.uid(), 'admin'));
 
 -- ============================================================================
+-- E16.2 — sources_jsonb column on blog_posts (mirror of 20260520010000)
+-- ============================================================================
+
+ALTER TABLE public.blog_posts
+  ADD COLUMN IF NOT EXISTS sources_jsonb jsonb NOT NULL DEFAULT '[]'::jsonb;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'blog_posts_sources_jsonb_is_array'
+  ) THEN
+    ALTER TABLE public.blog_posts
+      ADD CONSTRAINT blog_posts_sources_jsonb_is_array
+      CHECK (jsonb_typeof(sources_jsonb) = 'array');
+  END IF;
+END;
+$$;
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT

@@ -364,6 +364,66 @@ is a yes/no question; severity ≥ medium on any **No** blocks merge.
 
 ---
 
+## 12. Sources and citations
+
+Every article ships with a structured citation list stored on the
+`blog_posts.sources_jsonb` column (added in migration
+`20260520010000_blog_post_sources.sql`) and rendered at the end of the
+article by the `<BlogPostSources>` component. Citations are NOT
+inlined as markdown links inside the body — they live in the
+structured column so the per-article quality gate can count them and
+E16.3 can surface them in `Article.citation` JSON-LD.
+
+**Per-article minimums** (drafted agents MUST meet or exceed these
+before the article passes the research gate):
+
+- **Pillar articles (P1–P10)**: ≥4 unique sources.
+- **Cluster articles (C1–C70)**: ≥3 unique sources.
+- **News-trend articles (cluster wave 12)**: ≥3 unique sources, at
+  least 1 from the same week as the article ships.
+- Every numeric statistic, named scam campaign, named company, or
+  quoted figure MUST be backed by a source row whose `accessed_at`
+  date is within 18 months of the article's publish date (evergreen
+  topics like "how phishing works" relax this to "no specific
+  recency requirement").
+
+**Preferred SK source order** (use the strongest available; downstream
+agents pick the highest-tier source they can find):
+
+1. **Tier A — Slovak authorities**: SK-CERT (skcert.sk), NBÚ
+   (nbu.gov.sk), NBS (nbs.sk), Finančná správa SR, Polícia SR
+   (minv.sk).
+2. **Tier B — Slovak banks and ISPs** (security alerts): Tatra banka,
+   Slovenská sporiteľňa, VÚB, ČSOB, O2, Slovak Telekom security pages.
+3. **Tier C — Slovak quality press**: Denník N, SME, Pravda, Trend.
+4. **Tier D — Slovak tech press**: Živé.sk, ZDNet SK, TouchIT.
+5. **Tier E — International sources** (when no SK source exists):
+   ENISA, ECRC, Krebs on Security, ESET / Avast / Bitdefender research
+   blogs, peer-reviewed papers.
+
+**Citation row shape** (validated at read in `src/lib/blog/queries.ts`):
+
+```ts
+interface BlogPostSource {
+  label: string;     // visible link text, Slovak, sentence-case
+  url: string;       // absolute URL
+  publisher?: string; // e.g. "SK-CERT", "Pravda", "ENISA"
+  accessed_at?: string; // ISO date (YYYY-MM-DD)
+}
+```
+
+**Anchor text rules** (same register as body text per locked decision
+#2): `ty` form, lowercase first letter, full Slovak diacritics. The
+`label` should describe what the source proves, not what it is — prefer
+"SK-CERT: aktívna phishingová kampaň proti Slovenskej pošte" over
+"SK-CERT alert".
+
+**Outbound links** open in a new tab with `rel="noopener noreferrer
+nofollow"` (set by the component) — `nofollow` is intentional, we cite
+but do not endorse PageRank flow to every cited site.
+
+---
+
 ## Critical rules to confirm with the user before downstream agents start drafting
 
 These are the rules most likely to bias all 80 articles. Flagged for
