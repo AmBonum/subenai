@@ -1,0 +1,187 @@
+---
+slug: phishing-kompletny-sprievodca
+title: "phishing — kompletný sprievodca: čo to je, ako funguje, ako sa brániť"
+subtitle: "10-sekundové znaky, psychológia útoku a prvá pomoc po kliknutí"
+excerpt: "phishing je najčastejší online podvod na slovenskom internete. tento sprievodca ti ukáže, ako ho rozpoznáš za desať sekúnd, prečo funguje aj na opatrných ľudí a čo presne robiť, keď nechtiac klikneš."
+category_slug: phishing-a-emaily
+author_slug: subenai-editorial
+primary_keyword: phishing
+search_intent: informational
+reading_minutes: 13
+hero_image_url: null
+og_image_url: null
+seo_title: "phishing — ako ho rozpoznať a chrániť sa | subenai"
+seo_description: "phishing je najčastejší slovenský podvod. tu nájdeš 10-sekundové znaky, psychológiu útoku a presné kroky, keď klikneš na podvodný odkaz."
+canonical_url: null
+pillar: true
+sources:
+  - label: "sk-cert: varovanie pred phishingovou kampaňou zneužívajúcou identitu slovenskej pošty"
+    url: "https://www.sk-cert.sk/en/urgent-warning-against-a-phishing-campaign-that-abuses-the-identity-of-slovenska-posta/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "sk-cert: varovanie pred zvýšeným rizikom kybernetických bezpečnostných útokov"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "národná banka slovenska: internetové podvody a ako sa im brániť"
+    url: "https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/"
+    publisher: "NBS"
+    accessed_at: "2026-05-19"
+  - label: "polícia sr (minv.sk): podvodné e-maily a falošné predvolania"
+    url: "https://www.minv.sk/?podvodne_emaily="
+    publisher: "Polícia SR"
+    accessed_at: "2026-05-19"
+  - label: "nbs: upozornenie na nový typ podvodu zneužívajúci značku nbs"
+    url: "https://nbs.sk/aktuality/upozornenie-na-novy-typ-podvodu-zneuzivajuci-znacku-nbs/"
+    publisher: "NBS"
+    accessed_at: "2026-05-19"
+  - label: "keepnet labs: qr code phishing (quishing) trendy a štatistiky 2025"
+    url: "https://keepnetlabs.com/blog/qr-code-phishing-trends-in-depth-analysis-of-rising-quishing-statistics"
+    publisher: "Keepnet Labs"
+    accessed_at: "2026-05-19"
+---
+
+phishing je najstarší trik v online podvodoch a stále funguje, lebo sa vyvíja rýchlejšie než si stíhame zvyknúť. tento sprievodca ti ukáže, ako presne phishing — *podvodný e-mail alebo správa vydávajúca sa za známu značku* — vyzerá na slovenskom internete v roku 2026. od falošných e-mailov z banky cez SMS-ky tváriace sa ako slovenská pošta až po AI-generované správy, ktoré ti hovoria menom. žiadne všeobecné rady. konkrétne vzory, konkrétne kroky, konkrétny krízový plán, keď ti niečo praskne.
+
+začnime tým, čo musíš vedieť o sebe skôr než o útočníkovi.
+
+## čo je phishing v 60 sekundách
+
+phishing je každý pokus prinútiť ťa odovzdať heslo, číslo karty, kód z SMS alebo peniaze tým, že sa útočník vydáva za niekoho, komu by si normálne veril. banka. pošta. kuriér. finančná správa. polícia. kamarát.
+
+forma je vedľajšia. môže to byť e-mail, SMS (vtedy hovoríme o *smishingu — phishingu cez SMS*), telefonát (*vishing — phishing cez telefónny hovor*), správa na facebooku, QR kód v reštaurácii, dokonca push notifikácia z aplikácie. jediné, čo všetky tieto kanály spája, je rovnaký cieľ: vytiahnuť z teba niečo, čo by si dobrovoľne neodovzdal.
+
+slovo phishing pochádza z anglického *fishing* — rybolov. útočník hodí návnadu, ty zaberieš. rozdiel je, že rybár chytá jednu rybu za hodinu. phisher posiela milión návnad denne a stačí, aby zaberalo pol percenta.
+
+a presne to sa deje. národné centrum kybernetickej bezpečnosti [sk-cert pravidelne varuje pred phishingovými vlnami zneužívajúcimi identitu slovenskej pošty, kuriérov aj bánk](https://www.sk-cert.sk/en/urgent-warning-against-a-phishing-campaign-that-abuses-the-identity-of-slovenska-posta/index.html) [1]. národná banka slovenska v posledných dvoch rokoch [vydala viacero upozornení na podvody zneužívajúce jej vlastnú značku](https://nbs.sk/aktuality/upozornenie-na-novy-typ-podvodu-zneuzivajuci-znacku-nbs/) [5]. polícia sr má samostatnú stránku [pre podvodné e-maily a falošné predvolania](https://www.minv.sk/?podvodne_emaily=) [4]. tri najsilnejšie slovenské autority hlásia to isté: phishing nie je okrajová téma, je to každodenný šum tvojho inboxu.
+
+## prečo to funguje (aj na teba)
+
+ak si práve myslíš *„mňa nedostanú, ja som opatrný"* — gratulujem, si presne ten typ, ktorého phisheri milujú. samoľúby čitateľ je rovnako klikateľný ako paničkujúci, len má lepšiu výhovorku.
+
+phishing funguje, lebo zneužíva tri veci, ktoré má každý ľudský mozog hardvérovo:
+
+1. **autoritu** — keď ti napíše „polícia", „banka" alebo „finančná správa", tvoj mozog skratkou predpokladá, že hovoríš so štátom. kontrola ide bokom.
+2. **naliehavosť** — *„zaplaťte do 24 hodín, inak prídete o…"* odoberá schopnosť rozmýšľať. čím kratší časový rámec, tým menej premýšľaš.
+3. **strach alebo lakomstvo** — *„váš účet bol napadnutý"* (strach) alebo *„vrátenie dane 348 €"* (lakomstvo). oboje zapína konanie skôr než logiku.
+
+dobrý phishing kombinuje všetky tri. „polícia ti píše, že máš 24 hodín na zaplatenie pokuty, inak vyhotoví zatykač" — to nie je text pre racionálnu analýzu, to je text pre adrenalín. a adrenalín kliká.
+
+druhá vec, ktorú musíš pochopiť: **moderný phishing nie je zle napísaná správa s preklepom**. v rokoch 2005 – 2015 sme všetkých učili pozerať sa na chyby v slovenčine. dnes phisheri používajú generatívne ai modely a ich slovenčina je často lepšia než tvoja. preklep ostáva užitočným signálom, ale jeho neprítomnosť nič nedokazuje. detailný rozbor najnovších vektorov (quishing, AI generované varianty, deepfake hlasy) nájdeš v [nové techniky phishingu 2026](/blog/nove-techniky-phishingu-2026) a v širšom kontexte v pillarovom článku [ai phishing — nová generácia útokov](/blog/ai-a-moderne-podvody-deepfake-voice-cloning).
+
+## slovenský phishingový krajinopis 2026
+
+nech sa pozrieš kamkoľvek po slovenskom inboxe, narazíš na štyri-päť opakujúcich sa vzorov. nie sú nové — sk-cert ich hlási v rôznych verziách už od roku 2020 — ale tvária sa stále presvedčivejšie.
+
+**slovenská pošta a kuriéri.** najčastejší vzor. SMS alebo e-mail s odkazom *„balík čaká, doplaťte 1,99 € za doručenie"*. odkaz vedie na stránku, ktorá vyzerá ako platobná brána a pýta si číslo karty plus kód z SMS. realita: tým kódom útočník nahodí tvoju kartu do apple pay alebo google pay a od tej chvíle minie, čo na nej máš. [sk-cert popisuje tento útok krok za krokom v oficiálnom varovaní](https://www.sk-cert.sk/en/urgent-warning-against-a-phishing-campaign-that-abuses-the-identity-of-slovenska-posta/index.html) [1]. tému doručovateľov rozoberáme detailne v [phishing cez balíkové zásielky](/blog/phishing-na-balikovu-zasielku) a pre 2026 špeciálne v [slovak post podvodné domény](/blog/rebrand-slovenska-posta-slovak-post-podvody).
+
+**banky.** falošné e-maily s textom typu *„zaznamenali sme neoprávnené prihlásenie, potvrďte identitu"* sú evergreen. cieľ je vždy ten istý: dostať ťa na podvodnú napodobeninu internet bankingu, kde zadáš prihlasovacie údaje. banka ti nikdy neposiela odkaz na prihlásenie e-mailom — toto je pravidlo, ktoré ti zachráni peniaze. konkrétny rozbor pre piatich najväčších hráčov (slsp, vúb, tatra banka, čsob, mbank) nájdeš v [falošné emaily z banky](/blog/podvodne-emaily-z-banky-ako-spoznat).
+
+**finančná správa.** *„vrátenie dane 187 €, vyplňte údaje pre prevod."* žiadny štátny systém nevracia peniaze cez e-mailový odkaz. nikdy. ani v marci, ani v máji, ani na vianoce.
+
+**polícia a štátne úrady.** [polícia sr opakovane upozorňuje na falošné predvolania, ktoré chodia z gmailových adries typu `minvpoliciask1@gmail.com`](https://www.minv.sk/?podvodne_emaily=) [4]. ozajstná polícia predvoláva poštou. nikdy nie e-mailom. nikdy nie z gmailu.
+
+**faktúry a dodávatelia.** klasický vektor proti firmám aj SZČO. „faktúra na úhradu 1 240 €" v prílohe ako PDF alebo word — príloha obsahuje makro alebo odkaz, ktorý ti pripne malware. ak si firma, prečítaj si [falošná faktúra v emaile](/blog/falosna-faktura-email-co-robit), kde ide o detail jednoznačne. cielenú variantu, kde si útočník urobí domáce úlohy a vie tvoje meno aj projekt, máme v [spear phishing vysvetlený](/blog/spear-phishing-vs-bezny-phishing).
+
+okrem toho sa v 2026 etabloval ďalší vektor, ktorý ešte mnohí Slováci nezachytili: **phishing cez google formuláre.** útočník vytvorí pravý formulár na `docs.google.com` (čiže URL vyzerá legitímne) a pýta si v ňom heslo alebo údaje. pretože doména je naozaj google, antivírus nezasiahne. detail v [phishing cez google formuláre](/blog/phishing-cez-google-formulare).
+
+## ako rozpoznať phishing za 10 sekúnd
+
+toto je tvoj kontrolný zoznam. nečítaj celý e-mail. prejdi týmto za desať sekúnd, prv než klikneš čokoľvek.
+
+1. **odosielateľ.** klikni na meno odosielateľa a pozri si skutočnú e-mailovú adresu. nie zobrazované meno — celú adresu. ak je tam `slovenska-posta.support@gmail.com`, `info@slovenska-posta-doplatok.com` alebo `noreply@sIovenska-posta.sk` (s veľkým „i" namiesto malého „l"), je to podvod.
+2. **doména odkazu.** ukáž kurzorom na odkaz, **neklikni**. v ľavom dolnom rohu (alebo na mobile po dlhom podržaní) sa ti zobrazí skutočná URL. ak nesedí s tým, kto ti údajne píše, končíš.
+3. **naliehavosť.** je tam slovo *„okamžite", „do 24 hodín", „inak vám zablokujeme účet"*? červená vlajka. seriózne inštitúcie ti nedávajú ultimáta cez e-mail.
+4. **prosba o údaje.** žiada od teba heslo, číslo karty, CVV, kód z SMS alebo OTP? **žiadna banka, pošta ani úrad to nikdy nepýta e-mailom.** koniec diskusie.
+
+ak ti čo i len jeden z týchto štyroch bodov škrípe, neklikni. zatvor e-mail. ak chceš overiť, či bola správa pravá, otvor si banku alebo poštu z vlastného obľúbenca v prehliadači, prihlás sa cez zvyčajný kanál a pozri si svoje notifikácie tam. trvá to 30 sekúnd a šetrí to tisíce eur.
+
+celý rozšírený checklist s konkrétnymi screenshotmi nájdeš v [rozpoznať phishing za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund). ak sa chceš rovno otestovať na reálnych slovenských príkladoch, skús [otestuj sa na phishingu](/blog/kviz-rozpoznas-phishingovy-email).
+
+### červené vlajky, ktoré stoja za zapamätanie
+
+- doména `.com` alebo `.info` namiesto `.sk` u inštitúcie, ktorá pôsobí len v sr
+- generické oslovenie *„vážený zákazník"* od služby, ktorá tvoje meno pozná
+- príloha v PDF, ZIP alebo DOC od odosielateľa, ktorého si nepoznal pred minútou
+- platobná brána, ktorá ti pýta okrem čísla karty aj heslo do internet bankingu (nikdy sa to nedeje pri legitímnej platbe)
+- QR kód v e-maile s textom *„naskenujte pre overenie účtu"* (klasický quishing vzor)
+
+## prečo nestačí byť opatrný — psychológia útoku
+
+opatrnosť je dobrá. nestačí.
+
+človek nedokáže byť ostražitý 16 hodín denne. unaví sa, rozptýli, klikne v autobuse, kde mu vedľa kričí dieťa. presne na tieto momenty phisheri čakajú. analýza správania obetí, ktorú [nbs uvádza vo svojich materiáloch o internetových podvodoch](https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/) [3], hovorí jasne: drvivá väčšina obetí má vyššie vzdelanie a vedela by phishing v učebnicovej forme rozpoznať. zlyhali pod tlakom alebo pri rozptýlení.
+
+riešenie nie je *„byť opatrnejší"*. riešenie sú vrstvy, ktoré ti pomôžu **aj keď klikneš**:
+
+- **dvojfaktorové overenie (2FA) cez aplikáciu**, nie cez SMS. ak útočník ukradne tvoje heslo, bez druhého faktora sa nedostane dnu. pozor: SMS 2FA má známu zraniteľnosť (SIM swap), preto authenticator app (Authy, Google Authenticator, Microsoft Authenticator) je výrazne lepšia.
+- **passkeys** alebo **hardvérový kľúč** (yubikey, google titan). passkey nahrádza heslo úplne a phisheri ho jednoducho nedokážu od teba vytiahnuť — kryptograficky to nejde. detail v [obrana cez 2fa a passkeys](/blog/ochrana-pred-phishingom-2fa-passkey) a porovnanie hardvérových kľúčov v [hardvérové kľúče porovnané](/blog/yubikey-vs-google-titan-vs-passkey).
+- **správca hesiel.** dôvod nie je len pohodlie, ale to, že správca odmietne vyplniť heslo na falošnej doméne. ak ti 1password nechce vyplniť prihlasovacie údaje na stránke „slovenska-posta.com", to je tvoj prvý a najdôležitejší signál, že stránka je falošná.
+- **monitoring tvojich účtov.** banka má notifikácie pre každú platbu. zapni ich.
+
+## ai-rozšírený phishing — čo sa zmenilo v posledných dvoch rokoch
+
+posledné dva roky priniesli kvalitatívny skok. generatívne modely vedia produkovať slovenský text bez gramatických chýb, deepfake nástroje vedia naklonovať hlas z troch sekúnd nahrávky a [podľa medzinárodných štatistík kybernetických analytikov tvoria QR kódové (quishing) phishing útoky už okolo 12 % všetkých phishingových správ — nárast z 0,8 % v roku 2021](https://keepnetlabs.com/blog/qr-code-phishing-trends-in-depth-analysis-of-rising-quishing-statistics) [6].
+
+konkrétne vektory, ktoré sa cez slovenský inbox preliali v 2025 a 2026:
+
+- **personalizovaný spear phishing.** útočník zoškrabe tvoje meno, zamestnávateľa a kolegov z linkedinu, potom ai napíše presný e-mail menom tvojho šéfa. „pošli mi prosím faktúru za X, treba to dnes." takmer neodhaliteľné, ak nemáš zavedené pravidlo *„nikdy neposielam peniaze ani citlivé súbory na základe samotného e-mailu"*.
+- **voice cloning vishing.** zavolá ti „dcéra" z čísla, ktoré nepoznáš, plačúca, *„mama, mala som autonehodu, potrebujem 1 200 €, pošli to na účet, hneď"*. hlas je naklonovaný z videa, ktoré tvoja dcéra zverejnila na tiktoku. obrana: dohodnite si v rodine kontrolnú otázku alebo heslo, ktoré phisher nemôže poznať.
+- **quishing.** QR kód v e-maile alebo nálepka prilepená na parkovacom automate. naskenuješ, dostaneš sa na falošnú platobnú bránu. mobilné prehliadače historicky horšie ukazujú celú URL, takže zachytenie podvodu je ťažšie.
+- **AI-generované varianty známych kampaní.** útočník vezme šablónu „doplatok za balík" a požiada ai, aby ho preložila do dokonalej spisovnej slovenčiny s diakritikou, vytvorila 50 variantov a každému adresátovi pošle inú verziu, aby spamové filtre nemohli celú vlnu zachytiť.
+
+[sk-cert v rámci svojich aktuálnych varovaní](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [2] aj [nbs vo varovaniach pred AI podporovaným zneužitím značky](https://nbs.sk/aktuality/upozornenie-na-novy-typ-podvodu-zneuzivajuci-znacku-nbs/) [5] tieto trendy potvrdzujú a očakávajú, že rok 2026 a 2027 prinesie ďalšie skomplikovanie ich detekcie. preto sa nedá zostať pri „pozeraj na preklepy" — to je rok 2010.
+
+## klikol som. čo teraz?
+
+nepanikár. zachyť to do troch minút a stratu vieš často úplne zastaviť.
+
+1. **odpoj sa od internetu**, ak si stiahol prílohu. wifi off, mobilné dáta off. obmedzí to ďalšiu komunikáciu prípadného malvéru.
+2. **zmeň heslo k službe, ktorú útok napodobnil**, z iného zariadenia, ktoré nebolo kompromitované. ak útok bol „banka", zmeň heslo do internet bankingu z iného počítača alebo mobilu.
+3. **zavolaj banke z čísla na karte**, nie z čísla v SMS. povedz im, čo sa stalo. blokácia karty trvá 30 sekúnd a stojí nulu — naopak, dokáže ti zachrániť celý zostatok.
+4. **zapni 2FA všade**, kde si ho ešte nemal. e-mail, banka, instagram, facebook, daňový portál. od tohto momentu povinné.
+5. **skontroluj transakcie posledných 24 hodín.** ak vidíš čokoľvek, čo si nerobil, hláseš banke ako neoprávnenú transakciu.
+6. **nahlás incident sk-cert** na incident@nbu.gov.sk. nezabudne, že pomáhaš ďalším — sk-cert na základe hlásení vydáva nové varovania, ktoré chránia ostatných.
+7. **ak ti útočník už vybral peniaze**, podaj trestné oznámenie na polícii. priprav si všetky e-maily, screenshoty, čas a sumu.
+
+celý krízový protokol s detailmi pre rôzne typy útokov nájdeš v [čo robiť po kliknutí](/blog/co-robit-ked-som-klikol-na-phishing).
+
+## prevencia, ktorá ťa stojí 30 minút raz za rok
+
+dobrá správa: drvivá väčšina phishingových útokov stroskotá na štyroch jednoduchých vrstvách. nastavíš ich raz a chránia ťa potom dlhodobo.
+
+- **správca hesiel.** každý účet má unikátne 16-znakové heslo, ktoré si ani nepamätáš. ak ti uniknú prihlasovacie údaje na jednej službe, na ostatných nezáleží.
+- **2FA cez authenticator app.** banka, e-mail, sociálne siete, daňový portál.
+- **passkey alebo hardvérový kľúč** pre účty, ktoré ťa najviac bolia ich strata (e-mail je číslo jedna — z neho útočník reštartuje heslá všade inde).
+- **e-mailový filter.** moderné inboxy (gmail, outlook, proton) majú silnú phishingovú heuristiku. zapni ju a hláseš podozrivé e-maily ako spam — pomáha to systému učiť sa.
+
+a navrch jedno pravidlo, ktoré stojí za všetky technické vrstvy: **ak ťa niekto pod tlakom žiada o peniaze, údaje alebo akciu, zlož telefón, zatvor e-mail a over si to druhým kanálom.** zavolaj na oficiálne číslo. otvor stránku z bookmarku. spýtaj sa kolegu osobne. žiadna naliehavá situácia neprežije týchto 60 sekúnd overenia.
+
+## zhrnutie
+
+- phishing je každý pokus získať od teba heslo, peniaze alebo údaje vydávaním sa za niekoho iného.
+- funguje na autorite, naliehavosti a strachu — nie na hlúposti obete.
+- moderný phishing je gramaticky správny, personalizovaný a často podporený ai. preklepy ako jediná obrana sú prežité.
+- 10-sekundový check: odosielateľ, doména odkazu, naliehavosť, prosba o údaje. ak škrípe čokoľvek, neklikni.
+- vrstvy obrany (2FA, passkey, správca hesiel, monitoring) ti pomôžu **aj keď klikneš**. spoľahnúť sa len na opatrnosť nestačí.
+- po kliknutí zachyť: odpoj sieť, zmeň heslo z iného zariadenia, zavolaj banke z čísla na karte, nahlás sk-certu.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [rozpoznať phishing za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund)
+- [phishing cez google formuláre](/blog/phishing-cez-google-formulare)
+- [spear phishing vysvetlený](/blog/spear-phishing-vs-bezny-phishing)
+- [falošné emaily z banky](/blog/podvodne-emaily-z-banky-ako-spoznat)
+- [phishing cez balíkové zásielky](/blog/phishing-na-balikovu-zasielku)
+- [čo robiť po kliknutí](/blog/co-robit-ked-som-klikol-na-phishing)
+- [obrana cez 2fa a passkeys](/blog/ochrana-pred-phishingom-2fa-passkey)
+- [otestuj sa na phishingu](/blog/kviz-rozpoznas-phishingovy-email)
+- [falošná faktúra v emaile](/blog/falosna-faktura-email-co-robit)
+- [nové techniky phishingu 2026](/blog/nove-techniky-phishingu-2026)
+- [slovak post podvodné domény](/blog/rebrand-slovenska-posta-slovak-post-podvody)
+- [hardvérové kľúče porovnané](/blog/yubikey-vs-google-titan-vs-passkey)
+- [ai phishing — nová generácia útokov](/blog/ai-a-moderne-podvody-deepfake-voice-cloning)
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
