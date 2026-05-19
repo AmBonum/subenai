@@ -6,6 +6,7 @@ import { getPackBySlug, type TestPack } from "@/content/test-packs";
 import { getQuestionById, type Question } from "@/lib/quiz/bank/questions";
 import { TestFlow } from "@/components/quiz/flow/TestFlow";
 import { RelatedTestPackArticleCard } from "@/components/test-packs/RelatedTestPackArticleCard";
+import { RelatedTestPacks } from "@/components/test-packs/RelatedTestPacks";
 import { TestPackHeroFallback } from "@/components/test-packs/TestPackHeroFallback";
 import { Button } from "@/components/ui/button";
 import { buildPackQuizJsonLd, INDUSTRY_LABEL } from "@/lib/seo/quiz-jsonld";
@@ -189,6 +190,8 @@ function PackPage() {
         )}
 
         <RelatedTestPackArticleCard packSlug={pack.slug} />
+
+        <RelatedTestPacks current={pack} />
 
         <p className="mt-10 border-t border-border/60 pt-4 text-center text-xs text-muted-foreground">
           {t("pack_copyright", {
