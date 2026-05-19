@@ -18,7 +18,7 @@ vi.mock("@/hooks/useConsent", () => ({
   useConsent: () => ({ openPreferences: vi.fn(), record: null }),
 }));
 
-import { ManageSupportForm } from "@/routes/spravovat-podporu";
+import { ManageSupportForm } from "@/routes/manage-support";
 
 beforeEach(() => {
   vi.restoreAllMocks();
@@ -28,7 +28,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("ManageSupportForm (/spravovat-podporu)", () => {
+describe("ManageSupportForm (/manage-support)", () => {
   it("disables submit until a plausible e-mail is entered", () => {
     render(<ManageSupportForm />);
     const submit = screen.getByRole("button", { name: /Poslať odkaz/i });

@@ -4,7 +4,7 @@ import changelog from "@/content/changelog.generated.json";
 import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/marketing";
 
-const PAGE_URL = `${SITE_ORIGIN}/zmeny`;
+const PAGE_URL = `${SITE_ORIGIN}/changelog`;
 const tZmeny = tFor("marketing");
 
 interface ChangelogEntry {
@@ -75,7 +75,7 @@ const articleJsonLd = {
   })),
 };
 
-export const Route = createFileRoute("/zmeny")({
+export const Route = createFileRoute("/changelog")({
   head: () => ({
     meta: [
       { title: tZmeny("zmeny.meta_title") },

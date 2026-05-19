@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/quiz";
 
-export const Route = createFileRoute("/testy/")({
+export const Route = createFileRoute("/tests/")({
   head: () => {
     const t = tFor("testy");
-    const url = `${SITE_ORIGIN}/testy`;
+    const url = `${SITE_ORIGIN}/tests`;
     const packs = listPublishedPacks();
     return {
       meta: [
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/testy/")({
             itemListElement: packs.map((p, i) => ({
               "@type": "ListItem",
               position: i + 1,
-              url: `${SITE_ORIGIN}/testy/${p.slug}`,
+              url: `${SITE_ORIGIN}/tests/${p.slug}`,
               name: p.title,
             })),
           }),
@@ -146,7 +146,7 @@ function FirmaIndexPage() {
             <Link to="/test">{t("cta_standard")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/skolenia">{t("cta_courses")}</Link>
+            <Link to="/courses">{t("cta_courses")}</Link>
           </Button>
         </div>
       </main>

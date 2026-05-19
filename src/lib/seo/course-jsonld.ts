@@ -17,7 +17,7 @@ export function buildCourseJsonLd(course: Course): Record<string, unknown> {
     isAccessibleForFree: true,
     educationalLevel: course.difficulty,
     timeRequired: `PT${course.estimatedMinutes}M`,
-    url: `${SITE_ORIGIN}/skolenia/${course.slug}`,
+    url: `${SITE_ORIGIN}/courses/${course.slug}`,
     datePublished: course.publishedAt,
     dateModified: course.updatedAt,
     provider: {

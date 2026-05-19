@@ -11,7 +11,7 @@ import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/quiz";
 const COPYRIGHT_HOLDER = "subenai";
 
-export const Route = createFileRoute("/skolenia/$slug")({
+export const Route = createFileRoute("/courses/$slug")({
   loader: ({ params }) => {
     const course = getCourseBySlug(params.slug);
     if (!course) throw notFound();
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/skolenia/$slug")({
   head: ({ loaderData: course }) => {
     if (!course) return { meta: [] };
     const t = tFor("skolenia");
-    const url = `${SITE_ORIGIN}/skolenia/${course.slug}`;
+    const url = `${SITE_ORIGIN}/courses/${course.slug}`;
     return {
       meta: [
         { title: t("detail_meta_title", { title: course.title }) },
@@ -102,7 +102,7 @@ function CoursePage() {
             <Link to="/test">{t("detail_cta_test")}</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/skolenia">{t("detail_cta_back")}</Link>
+            <Link to="/courses">{t("detail_cta_back")}</Link>
           </Button>
         </div>
 

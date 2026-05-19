@@ -3,15 +3,15 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Footer } from "@/components/layout/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { formatMonthYear } from "@/lib/sponsors";
-import { type PublicSponsor } from "./sponzori";
+import { type PublicSponsor } from "./sponsors";
 import { SITE_ORIGIN, CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
 const tSponzori = tFor("sponzori");
-const PAGE_URL = `${SITE_ORIGIN}/sponzori/vsetci`;
+const PAGE_URL = `${SITE_ORIGIN}/sponsors/all`;
 const FETCH_LIMIT = 500;
 
-export const Route = createFileRoute("/sponzori/vsetci")({
+export const Route = createFileRoute("/sponsors/all")({
   head: () => ({
     meta: [
       { title: tSponzori("head_title_all") },

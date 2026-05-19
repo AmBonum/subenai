@@ -29,8 +29,8 @@ describe("AH-9.9 sitemap.xml", () => {
 
   it("preserves the existing top-level entries", () => {
     expect(xml).toContain("https://subenai.sk/");
-    expect(xml).toContain("https://subenai.sk/testy");
-    expect(xml).toContain("https://subenai.sk/o-projekte");
+    expect(xml).toContain("https://subenai.sk/tests");
+    expect(xml).toContain("https://subenai.sk/about");
   });
 });
 

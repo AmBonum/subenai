@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Build-time changelog parser. Reads CHANGELOG.md (Keep a Changelog 1.1
 // format) and writes a typed JSON snapshot to
-// src/content/changelog.generated.json that the /zmeny route imports.
+// src/content/changelog.generated.json that the /changelog route imports.
 //
 // Run via `npm run changelog` or as part of `npm run build`.
 //

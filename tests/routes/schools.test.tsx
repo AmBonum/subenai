@@ -25,9 +25,9 @@ vi.mock("@/components/layout/Footer", () => ({
   Footer: () => null,
 }));
 
-import { Route } from "@/routes/skoly";
+import { Route } from "@/routes/schools";
 
-describe("/skoly — author guide page (E12.5)", () => {
+describe("/schools — author guide page (E12.5)", () => {
   it("renders the 4 numbered steps + GDPR + FAQ headings", () => {
     const Comp = Route.options.component as React.ComponentType;
     render(<Comp />);

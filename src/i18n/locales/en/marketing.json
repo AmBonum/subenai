@@ -137,7 +137,7 @@
     "field_name_hint": "Required for the invoice under § 74 of Act No. 222/2004.",
     "field_tax_id": "VAT ID (optional)",
     "field_tax_id_hint": "Fill in only if you are a VAT payer and want a deduction.",
-    "show_in_list": "I want to appear on the sponsors list (/sponzori)",
+    "show_in_list": "I want to appear on the sponsors list (/sponsors)",
     "display_name": "Display name",
     "display_link": "Link (https://, optional)",
     "display_link_hint_invalid": "The link must begin with https://",
@@ -186,7 +186,7 @@
     "breakdown_link_about": "About the project",
     "unpaid_title": "Payment did not go through",
     "unpaid_body": "It looks like the payment was not completed. Please try again or contact us at ",
-    "unpaid_cta": "Back to /podpora",
+    "unpaid_cta": "Back to /support",
     "timeout_title": "Still processing…",
     "timeout_body_prefix": "Stripe hasn't sent us a confirmation yet. Your payment is most likely fine — Stripe will e-mail you the invoice as soon as it is processed. If it takes longer than 10 minutes, write to us at ",
     "timeout_body_suffix": " with the payment ID from the Stripe e-mail.",
@@ -258,7 +258,7 @@
     "vsetci_count_all": "Showing {shown} (all {total})",
     "vsetci_refund_note": "The donation was refunded at the donor's request.",
     "vsetci_empty_filtered": "Nothing matches the filter. Try a different name or year.",
-    "vsetci_empty_none": "Nobody is here yet. Be the first — support the project at /podpora.",
+    "vsetci_empty_none": "Nobody is here yet. Be the first — support the project at /support.",
     "vsetci_footer_note": "The list is voluntary — many sponsors choose anonymity. We never show amounts or payment counts. You can revoke your publication consent by e-mailing "
   },
   "home": {

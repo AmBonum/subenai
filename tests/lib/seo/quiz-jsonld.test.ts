@@ -32,9 +32,9 @@ describe("buildPackQuizJsonLd", () => {
     expect(json.about).toBe(INDUSTRY_LABEL.eshop);
   });
 
-  it("URL points at canonical /testy/<slug>", () => {
+  it("URL points at canonical /tests/<slug>", () => {
     const json = buildPackQuizJsonLd(fixture);
-    expect(json.url).toBe("https://subenai.sk/testy/fixture-pack");
+    expect(json.url).toBe("https://subenai.sk/tests/fixture-pack");
   });
 
   it("numberOfQuestions matches questionIds length", () => {

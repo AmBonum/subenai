@@ -55,7 +55,7 @@ export function refundAlertEmail(input: {
   const html = wrap(`
     <p style="font-size:15px;line-height:1.6">
       Stripe oznámil refund. Odporúčam manuálne overiť záznam a (ak to bolo top-tier sponzorstvo)
-      aktualizovať footer / <code>/sponzori</code> per E11.5 SOP.
+      aktualizovať footer / <code>/sponsors</code> per E11.5 SOP.
     </p>
     <ul style="font-size:14px;line-height:1.6">
       <li><strong>Suma:</strong> ${input.refundedEur.toFixed(2)} ${input.currency}</li>

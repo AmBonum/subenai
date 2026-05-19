@@ -124,7 +124,7 @@ describe("SurveyCard — E2.3 growth questions", () => {
     expect(payload.interests).toBeUndefined();
   });
 
-  it("after success with wantsCourses=true, thank-you state shows /skolenia CTA", async () => {
+  it("after success with wantsCourses=true, thank-you state shows /courses CTA", async () => {
     render(<SurveyCard shareId="ABC12345" />);
     expand();
     fireEvent.click(screen.getByRole("radio", { name: "Áno" }));
@@ -136,7 +136,7 @@ describe("SurveyCard — E2.3 growth questions", () => {
     ).toBeInTheDocument();
   });
 
-  it("after success with wantsCourses=false, thank-you state has NO /skolenia CTA", async () => {
+  it("after success with wantsCourses=false, thank-you state has NO /courses CTA", async () => {
     render(<SurveyCard shareId="ABC12345" />);
     expand();
     fireEvent.click(screen.getByRole("radio", { name: "Nie" }));

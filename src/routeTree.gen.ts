@@ -9,37 +9,37 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ZmenyRouteImport } from './routes/zmeny'
-import { Route as SpravovatPodporuRouteImport } from './routes/spravovat-podporu'
-import { Route as SponzoriRouteImport } from './routes/sponzori'
-import { Route as SkolyRouteImport } from './routes/skoly'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as SponsorsRouteImport } from './routes/sponsors'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SchoolsRouteImport } from './routes/schools'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as PodporaRouteImport } from './routes/podpora'
-import { Route as OProjekteRouteImport } from './routes/o-projekte'
+import { Route as ManageSupportRouteImport } from './routes/manage-support'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TestyIndexRouteImport } from './routes/testy.index'
+import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
-import { Route as SponzoriIndexRouteImport } from './routes/sponzori.index'
-import { Route as SkoleniaIndexRouteImport } from './routes/skolenia.index'
+import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
+import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as TestySlugRouteImport } from './routes/testy.$slug'
+import { Route as ThankYouSessionIdRouteImport } from './routes/thank-you.$sessionId'
+import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
 import { Route as TestZostavRouteImport } from './routes/test.zostav'
 import { Route as TShareIdRouteImport } from './routes/t.$shareId'
-import { Route as SponzoriVsetciRouteImport } from './routes/sponzori.vsetci'
-import { Route as SkoleniaSlugRouteImport } from './routes/skolenia.$slug'
+import { Route as SponsorsAllRouteImport } from './routes/sponsors.all'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
-import { Route as PodakovanieSessionIdRouteImport } from './routes/podakovanie.$sessionId'
 import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
 import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
+import { Route as CoursesSlugRouteImport } from './routes/courses.$slug'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AppTemplatesRouteImport } from './routes/app.templates'
@@ -81,24 +81,14 @@ import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$page
 import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
 import { Route as TestZostavaIdVysledkyRouteImport } from './routes/test.zostava.$id.vysledky'
 
-const ZmenyRoute = ZmenyRouteImport.update({
-  id: '/zmeny',
-  path: '/zmeny',
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SpravovatPodporuRoute = SpravovatPodporuRouteImport.update({
-  id: '/spravovat-podporu',
-  path: '/spravovat-podporu',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SponzoriRoute = SponzoriRouteImport.update({
-  id: '/sponzori',
-  path: '/sponzori',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SkolyRoute = SkolyRouteImport.update({
-  id: '/skoly',
-  path: '/skoly',
+const SponsorsRoute = SponsorsRouteImport.update({
+  id: '/sponsors',
+  path: '/sponsors',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoute = SignupRouteImport.update({
@@ -106,29 +96,24 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SchoolsRoute = SchoolsRouteImport.update({
+  id: '/schools',
+  path: '/schools',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PodporaRoute = PodporaRouteImport.update({
-  id: '/podpora',
-  path: '/podpora',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OProjekteRoute = OProjekteRouteImport.update({
-  id: '/o-projekte',
-  path: '/o-projekte',
+const ManageSupportRoute = ManageSupportRouteImport.update({
+  id: '/manage-support',
+  path: '/manage-support',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const KontaktRoute = KontaktRouteImport.update({
-  id: '/kontakt',
-  path: '/kontakt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
@@ -141,6 +126,16 @@ const CookiesRoute = CookiesRouteImport.update({
   path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangelogRoute = ChangelogRouteImport.update({
+  id: '/changelog',
+  path: '/changelog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -151,14 +146,19 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TestyIndexRoute = TestyIndexRouteImport.update({
-  id: '/testy/',
-  path: '/testy/',
+const TestsIndexRoute = TestsIndexRouteImport.update({
+  id: '/tests/',
+  path: '/tests/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TestIndexRoute = TestIndexRouteImport.update({
@@ -166,14 +166,14 @@ const TestIndexRoute = TestIndexRouteImport.update({
   path: '/test/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SponzoriIndexRoute = SponzoriIndexRouteImport.update({
+const SponsorsIndexRoute = SponsorsIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => SponzoriRoute,
+  getParentRoute: () => SponsorsRoute,
 } as any)
-const SkoleniaIndexRoute = SkoleniaIndexRouteImport.update({
-  id: '/skolenia/',
-  path: '/skolenia/',
+const CoursesIndexRoute = CoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -186,9 +186,14 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const TestySlugRoute = TestySlugRouteImport.update({
-  id: '/testy/$slug',
-  path: '/testy/$slug',
+const ThankYouSessionIdRoute = ThankYouSessionIdRouteImport.update({
+  id: '/thank-you/$sessionId',
+  path: '/thank-you/$sessionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestsSlugRoute = TestsSlugRouteImport.update({
+  id: '/tests/$slug',
+  path: '/tests/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TestZostavRoute = TestZostavRouteImport.update({
@@ -201,15 +206,10 @@ const TShareIdRoute = TShareIdRouteImport.update({
   path: '/t/$shareId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SponzoriVsetciRoute = SponzoriVsetciRouteImport.update({
-  id: '/vsetci',
-  path: '/vsetci',
-  getParentRoute: () => SponzoriRoute,
-} as any)
-const SkoleniaSlugRoute = SkoleniaSlugRouteImport.update({
-  id: '/skolenia/$slug',
-  path: '/skolenia/$slug',
-  getParentRoute: () => rootRouteImport,
+const SponsorsAllRoute = SponsorsAllRouteImport.update({
+  id: '/all',
+  path: '/all',
+  getParentRoute: () => SponsorsRoute,
 } as any)
 const SSlugRoute = SSlugRouteImport.update({
   id: '/s/$slug',
@@ -221,11 +221,6 @@ const RShareIdRoute = RShareIdRouteImport.update({
   path: '/r/$shareId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PodakovanieSessionIdRoute = PodakovanieSessionIdRouteImport.update({
-  id: '/podakovanie/$sessionId',
-  path: '/podakovanie/$sessionId',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginVerify2faRoute = LoginVerify2faRouteImport.update({
   id: '/login_/verify-2fa',
   path: '/login/verify-2fa',
@@ -234,6 +229,11 @@ const LoginVerify2faRoute = LoginVerify2faRouteImport.update({
 const LoginEnroll2faRoute = LoginEnroll2faRouteImport.update({
   id: '/login_/enroll-2fa',
   path: '/login/enroll-2fa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoursesSlugRoute = CoursesSlugRouteImport.update({
+  id: '/courses/$slug',
+  path: '/courses/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
@@ -439,20 +439,20 @@ const TestZostavaIdVysledkyRoute = TestZostavaIdVysledkyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/changelog': typeof ChangelogRoute
+  '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
-  '/o-projekte': typeof OProjekteRoute
-  '/podpora': typeof PodporaRoute
+  '/manage-support': typeof ManageSupportRoute
   '/privacy': typeof PrivacyRoute
+  '/schools': typeof SchoolsRoute
   '/signup': typeof SignupRoute
-  '/skoly': typeof SkolyRoute
-  '/sponzori': typeof SponzoriRouteWithChildren
-  '/spravovat-podporu': typeof SpravovatPodporuRoute
-  '/zmeny': typeof ZmenyRoute
+  '/sponsors': typeof SponsorsRouteWithChildren
+  '/support': typeof SupportRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -481,22 +481,22 @@ export interface FileRoutesByFullPath {
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/courses/$slug': typeof CoursesSlugRoute
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
-  '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
-  '/skolenia/$slug': typeof SkoleniaSlugRoute
-  '/sponzori/vsetci': typeof SponzoriVsetciRoute
+  '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
   '/test/zostav': typeof TestZostavRoute
-  '/testy/$slug': typeof TestySlugRoute
+  '/tests/$slug': typeof TestsSlugRoute
+  '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
-  '/skolenia/': typeof SkoleniaIndexRoute
-  '/sponzori/': typeof SponzoriIndexRoute
+  '/courses/': typeof CoursesIndexRoute
+  '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
-  '/testy/': typeof TestyIndexRoute
+  '/tests/': typeof TestsIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
@@ -512,17 +512,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/changelog': typeof ChangelogRoute
+  '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
-  '/o-projekte': typeof OProjekteRoute
-  '/podpora': typeof PodporaRoute
+  '/manage-support': typeof ManageSupportRoute
   '/privacy': typeof PrivacyRoute
+  '/schools': typeof SchoolsRoute
   '/signup': typeof SignupRoute
-  '/skoly': typeof SkolyRoute
-  '/spravovat-podporu': typeof SpravovatPodporuRoute
-  '/zmeny': typeof ZmenyRoute
+  '/support': typeof SupportRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -551,22 +551,22 @@ export interface FileRoutesByTo {
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/courses/$slug': typeof CoursesSlugRoute
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
-  '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
-  '/skolenia/$slug': typeof SkoleniaSlugRoute
-  '/sponzori/vsetci': typeof SponzoriVsetciRoute
+  '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
   '/test/zostav': typeof TestZostavRoute
-  '/testy/$slug': typeof TestySlugRoute
+  '/tests/$slug': typeof TestsSlugRoute
+  '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
-  '/skolenia': typeof SkoleniaIndexRoute
-  '/sponzori': typeof SponzoriIndexRoute
+  '/courses': typeof CoursesIndexRoute
+  '/sponsors': typeof SponsorsIndexRoute
   '/test': typeof TestIndexRoute
-  '/testy': typeof TestyIndexRoute
+  '/tests': typeof TestsIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
@@ -583,20 +583,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/changelog': typeof ChangelogRoute
+  '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
   '/forgot-password': typeof ForgotPasswordRoute
-  '/kontakt': typeof KontaktRoute
   '/login': typeof LoginRoute
-  '/o-projekte': typeof OProjekteRoute
-  '/podpora': typeof PodporaRoute
+  '/manage-support': typeof ManageSupportRoute
   '/privacy': typeof PrivacyRoute
+  '/schools': typeof SchoolsRoute
   '/signup': typeof SignupRoute
-  '/skoly': typeof SkolyRoute
-  '/sponzori': typeof SponzoriRouteWithChildren
-  '/spravovat-podporu': typeof SpravovatPodporuRoute
-  '/zmeny': typeof ZmenyRoute
+  '/sponsors': typeof SponsorsRouteWithChildren
+  '/support': typeof SupportRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -625,22 +625,22 @@ export interface FileRoutesById {
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/courses/$slug': typeof CoursesSlugRoute
   '/login_/enroll-2fa': typeof LoginEnroll2faRoute
   '/login_/verify-2fa': typeof LoginVerify2faRoute
-  '/podakovanie/$sessionId': typeof PodakovanieSessionIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
-  '/skolenia/$slug': typeof SkoleniaSlugRoute
-  '/sponzori/vsetci': typeof SponzoriVsetciRoute
+  '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
   '/test/zostav': typeof TestZostavRoute
-  '/testy/$slug': typeof TestySlugRoute
+  '/tests/$slug': typeof TestsSlugRoute
+  '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
-  '/skolenia/': typeof SkoleniaIndexRoute
-  '/sponzori/': typeof SponzoriIndexRoute
+  '/courses/': typeof CoursesIndexRoute
+  '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
-  '/testy/': typeof TestyIndexRoute
+  '/tests/': typeof TestsIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
@@ -658,20 +658,20 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/admin'
     | '/app'
+    | '/changelog'
+    | '/contact'
     | '/cookies'
     | '/forgot-password'
-    | '/kontakt'
     | '/login'
-    | '/o-projekte'
-    | '/podpora'
+    | '/manage-support'
     | '/privacy'
+    | '/schools'
     | '/signup'
-    | '/skoly'
-    | '/sponzori'
-    | '/spravovat-podporu'
-    | '/zmeny'
+    | '/sponsors'
+    | '/support'
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
@@ -700,22 +700,22 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/auth/callback'
     | '/auth/reset-password'
+    | '/courses/$slug'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
-    | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/s/$slug'
-    | '/skolenia/$slug'
-    | '/sponzori/vsetci'
+    | '/sponsors/all'
     | '/t/$shareId'
     | '/test/zostav'
-    | '/testy/$slug'
+    | '/tests/$slug'
+    | '/thank-you/$sessionId'
     | '/admin/'
     | '/app/'
-    | '/skolenia/'
-    | '/sponzori/'
+    | '/courses/'
+    | '/sponsors/'
     | '/test/'
-    | '/testy/'
+    | '/tests/'
     | '/admin/answer-sets/$setId'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
@@ -731,17 +731,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/changelog'
+    | '/contact'
     | '/cookies'
     | '/forgot-password'
-    | '/kontakt'
     | '/login'
-    | '/o-projekte'
-    | '/podpora'
+    | '/manage-support'
     | '/privacy'
+    | '/schools'
     | '/signup'
-    | '/skoly'
-    | '/spravovat-podporu'
-    | '/zmeny'
+    | '/support'
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
@@ -770,22 +770,22 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/auth/callback'
     | '/auth/reset-password'
+    | '/courses/$slug'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
-    | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/s/$slug'
-    | '/skolenia/$slug'
-    | '/sponzori/vsetci'
+    | '/sponsors/all'
     | '/t/$shareId'
     | '/test/zostav'
-    | '/testy/$slug'
+    | '/tests/$slug'
+    | '/thank-you/$sessionId'
     | '/admin'
     | '/app'
-    | '/skolenia'
-    | '/sponzori'
+    | '/courses'
+    | '/sponsors'
     | '/test'
-    | '/testy'
+    | '/tests'
     | '/admin/answer-sets/$setId'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
@@ -801,20 +801,20 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/admin'
     | '/app'
+    | '/changelog'
+    | '/contact'
     | '/cookies'
     | '/forgot-password'
-    | '/kontakt'
     | '/login'
-    | '/o-projekte'
-    | '/podpora'
+    | '/manage-support'
     | '/privacy'
+    | '/schools'
     | '/signup'
-    | '/skoly'
-    | '/sponzori'
-    | '/spravovat-podporu'
-    | '/zmeny'
+    | '/sponsors'
+    | '/support'
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
@@ -843,22 +843,22 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/auth/callback'
     | '/auth/reset-password'
+    | '/courses/$slug'
     | '/login_/enroll-2fa'
     | '/login_/verify-2fa'
-    | '/podakovanie/$sessionId'
     | '/r/$shareId'
     | '/s/$slug'
-    | '/skolenia/$slug'
-    | '/sponzori/vsetci'
+    | '/sponsors/all'
     | '/t/$shareId'
     | '/test/zostav'
-    | '/testy/$slug'
+    | '/tests/$slug'
+    | '/thank-you/$sessionId'
     | '/admin/'
     | '/app/'
-    | '/skolenia/'
-    | '/sponzori/'
+    | '/courses/'
+    | '/sponsors/'
     | '/test/'
-    | '/testy/'
+    | '/tests/'
     | '/admin/answer-sets/$setId'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
@@ -875,65 +875,51 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
+  ChangelogRoute: typeof ChangelogRoute
+  ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
-  KontaktRoute: typeof KontaktRoute
   LoginRoute: typeof LoginRoute
-  OProjekteRoute: typeof OProjekteRoute
-  PodporaRoute: typeof PodporaRoute
+  ManageSupportRoute: typeof ManageSupportRoute
   PrivacyRoute: typeof PrivacyRoute
+  SchoolsRoute: typeof SchoolsRoute
   SignupRoute: typeof SignupRoute
-  SkolyRoute: typeof SkolyRoute
-  SponzoriRoute: typeof SponzoriRouteWithChildren
-  SpravovatPodporuRoute: typeof SpravovatPodporuRoute
-  ZmenyRoute: typeof ZmenyRoute
+  SponsorsRoute: typeof SponsorsRouteWithChildren
+  SupportRoute: typeof SupportRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  CoursesSlugRoute: typeof CoursesSlugRoute
   LoginEnroll2faRoute: typeof LoginEnroll2faRoute
   LoginVerify2faRoute: typeof LoginVerify2faRoute
-  PodakovanieSessionIdRoute: typeof PodakovanieSessionIdRoute
   RShareIdRoute: typeof RShareIdRoute
   SSlugRoute: typeof SSlugRoute
-  SkoleniaSlugRoute: typeof SkoleniaSlugRoute
   TShareIdRoute: typeof TShareIdRoute
   TestZostavRoute: typeof TestZostavRoute
-  TestySlugRoute: typeof TestySlugRoute
-  SkoleniaIndexRoute: typeof SkoleniaIndexRoute
+  TestsSlugRoute: typeof TestsSlugRoute
+  ThankYouSessionIdRoute: typeof ThankYouSessionIdRoute
+  CoursesIndexRoute: typeof CoursesIndexRoute
   TestIndexRoute: typeof TestIndexRoute
-  TestyIndexRoute: typeof TestyIndexRoute
+  TestsIndexRoute: typeof TestsIndexRoute
   TestZostavaIdRoute: typeof TestZostavaIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/zmeny': {
-      id: '/zmeny'
-      path: '/zmeny'
-      fullPath: '/zmeny'
-      preLoaderRoute: typeof ZmenyRouteImport
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/spravovat-podporu': {
-      id: '/spravovat-podporu'
-      path: '/spravovat-podporu'
-      fullPath: '/spravovat-podporu'
-      preLoaderRoute: typeof SpravovatPodporuRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sponzori': {
-      id: '/sponzori'
-      path: '/sponzori'
-      fullPath: '/sponzori'
-      preLoaderRoute: typeof SponzoriRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/skoly': {
-      id: '/skoly'
-      path: '/skoly'
-      fullPath: '/skoly'
-      preLoaderRoute: typeof SkolyRouteImport
+    '/sponsors': {
+      id: '/sponsors'
+      path: '/sponsors'
+      fullPath: '/sponsors'
+      preLoaderRoute: typeof SponsorsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup': {
@@ -943,6 +929,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/schools': {
+      id: '/schools'
+      path: '/schools'
+      fullPath: '/schools'
+      preLoaderRoute: typeof SchoolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -950,18 +943,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/podpora': {
-      id: '/podpora'
-      path: '/podpora'
-      fullPath: '/podpora'
-      preLoaderRoute: typeof PodporaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/o-projekte': {
-      id: '/o-projekte'
-      path: '/o-projekte'
-      fullPath: '/o-projekte'
-      preLoaderRoute: typeof OProjekteRouteImport
+    '/manage-support': {
+      id: '/manage-support'
+      path: '/manage-support'
+      fullPath: '/manage-support'
+      preLoaderRoute: typeof ManageSupportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -969,13 +955,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/kontakt': {
-      id: '/kontakt'
-      path: '/kontakt'
-      fullPath: '/kontakt'
-      preLoaderRoute: typeof KontaktRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-password': {
@@ -992,6 +971,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/changelog': {
+      id: '/changelog'
+      path: '/changelog'
+      fullPath: '/changelog'
+      preLoaderRoute: typeof ChangelogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -1006,6 +999,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -1013,11 +1013,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/testy/': {
-      id: '/testy/'
-      path: '/testy'
-      fullPath: '/testy/'
-      preLoaderRoute: typeof TestyIndexRouteImport
+    '/tests/': {
+      id: '/tests/'
+      path: '/tests'
+      fullPath: '/tests/'
+      preLoaderRoute: typeof TestsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/test/': {
@@ -1027,18 +1027,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sponzori/': {
-      id: '/sponzori/'
+    '/sponsors/': {
+      id: '/sponsors/'
       path: '/'
-      fullPath: '/sponzori/'
-      preLoaderRoute: typeof SponzoriIndexRouteImport
-      parentRoute: typeof SponzoriRoute
+      fullPath: '/sponsors/'
+      preLoaderRoute: typeof SponsorsIndexRouteImport
+      parentRoute: typeof SponsorsRoute
     }
-    '/skolenia/': {
-      id: '/skolenia/'
-      path: '/skolenia'
-      fullPath: '/skolenia/'
-      preLoaderRoute: typeof SkoleniaIndexRouteImport
+    '/courses/': {
+      id: '/courses/'
+      path: '/courses'
+      fullPath: '/courses/'
+      preLoaderRoute: typeof CoursesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -1055,11 +1055,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/testy/$slug': {
-      id: '/testy/$slug'
-      path: '/testy/$slug'
-      fullPath: '/testy/$slug'
-      preLoaderRoute: typeof TestySlugRouteImport
+    '/thank-you/$sessionId': {
+      id: '/thank-you/$sessionId'
+      path: '/thank-you/$sessionId'
+      fullPath: '/thank-you/$sessionId'
+      preLoaderRoute: typeof ThankYouSessionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tests/$slug': {
+      id: '/tests/$slug'
+      path: '/tests/$slug'
+      fullPath: '/tests/$slug'
+      preLoaderRoute: typeof TestsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/test/zostav': {
@@ -1076,19 +1083,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TShareIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sponzori/vsetci': {
-      id: '/sponzori/vsetci'
-      path: '/vsetci'
-      fullPath: '/sponzori/vsetci'
-      preLoaderRoute: typeof SponzoriVsetciRouteImport
-      parentRoute: typeof SponzoriRoute
-    }
-    '/skolenia/$slug': {
-      id: '/skolenia/$slug'
-      path: '/skolenia/$slug'
-      fullPath: '/skolenia/$slug'
-      preLoaderRoute: typeof SkoleniaSlugRouteImport
-      parentRoute: typeof rootRouteImport
+    '/sponsors/all': {
+      id: '/sponsors/all'
+      path: '/all'
+      fullPath: '/sponsors/all'
+      preLoaderRoute: typeof SponsorsAllRouteImport
+      parentRoute: typeof SponsorsRoute
     }
     '/s/$slug': {
       id: '/s/$slug'
@@ -1104,13 +1104,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RShareIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/podakovanie/$sessionId': {
-      id: '/podakovanie/$sessionId'
-      path: '/podakovanie/$sessionId'
-      fullPath: '/podakovanie/$sessionId'
-      preLoaderRoute: typeof PodakovanieSessionIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login_/verify-2fa': {
       id: '/login_/verify-2fa'
       path: '/login/verify-2fa'
@@ -1123,6 +1116,13 @@ declare module '@tanstack/react-router' {
       path: '/login/enroll-2fa'
       fullPath: '/login/enroll-2fa'
       preLoaderRoute: typeof LoginEnroll2faRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/courses/$slug': {
+      id: '/courses/$slug'
+      path: '/courses/$slug'
+      fullPath: '/courses/$slug'
+      preLoaderRoute: typeof CoursesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/reset-password': {
@@ -1530,18 +1530,18 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
-interface SponzoriRouteChildren {
-  SponzoriVsetciRoute: typeof SponzoriVsetciRoute
-  SponzoriIndexRoute: typeof SponzoriIndexRoute
+interface SponsorsRouteChildren {
+  SponsorsAllRoute: typeof SponsorsAllRoute
+  SponsorsIndexRoute: typeof SponsorsIndexRoute
 }
 
-const SponzoriRouteChildren: SponzoriRouteChildren = {
-  SponzoriVsetciRoute: SponzoriVsetciRoute,
-  SponzoriIndexRoute: SponzoriIndexRoute,
+const SponsorsRouteChildren: SponsorsRouteChildren = {
+  SponsorsAllRoute: SponsorsAllRoute,
+  SponsorsIndexRoute: SponsorsIndexRoute,
 }
 
-const SponzoriRouteWithChildren = SponzoriRoute._addFileChildren(
-  SponzoriRouteChildren,
+const SponsorsRouteWithChildren = SponsorsRoute._addFileChildren(
+  SponsorsRouteChildren,
 )
 
 interface TestZostavaIdRouteChildren {
@@ -1558,34 +1558,34 @@ const TestZostavaIdRouteWithChildren = TestZostavaIdRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
+  ChangelogRoute: ChangelogRoute,
+  ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
-  KontaktRoute: KontaktRoute,
   LoginRoute: LoginRoute,
-  OProjekteRoute: OProjekteRoute,
-  PodporaRoute: PodporaRoute,
+  ManageSupportRoute: ManageSupportRoute,
   PrivacyRoute: PrivacyRoute,
+  SchoolsRoute: SchoolsRoute,
   SignupRoute: SignupRoute,
-  SkolyRoute: SkolyRoute,
-  SponzoriRoute: SponzoriRouteWithChildren,
-  SpravovatPodporuRoute: SpravovatPodporuRoute,
-  ZmenyRoute: ZmenyRoute,
+  SponsorsRoute: SponsorsRouteWithChildren,
+  SupportRoute: SupportRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
+  CoursesSlugRoute: CoursesSlugRoute,
   LoginEnroll2faRoute: LoginEnroll2faRoute,
   LoginVerify2faRoute: LoginVerify2faRoute,
-  PodakovanieSessionIdRoute: PodakovanieSessionIdRoute,
   RShareIdRoute: RShareIdRoute,
   SSlugRoute: SSlugRoute,
-  SkoleniaSlugRoute: SkoleniaSlugRoute,
   TShareIdRoute: TShareIdRoute,
   TestZostavRoute: TestZostavRoute,
-  TestySlugRoute: TestySlugRoute,
-  SkoleniaIndexRoute: SkoleniaIndexRoute,
+  TestsSlugRoute: TestsSlugRoute,
+  ThankYouSessionIdRoute: ThankYouSessionIdRoute,
+  CoursesIndexRoute: CoursesIndexRoute,
   TestIndexRoute: TestIndexRoute,
-  TestyIndexRoute: TestyIndexRoute,
+  TestsIndexRoute: TestsIndexRoute,
   TestZostavaIdRoute: TestZostavaIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport

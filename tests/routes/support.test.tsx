@@ -19,7 +19,7 @@ vi.mock("@/hooks/useConsent", () => ({
   useConsent: () => ({ openPreferences: vi.fn(), record: null }),
 }));
 
-import { DonateForm } from "@/routes/podpora";
+import { DonateForm } from "@/routes/support";
 
 const originalLocation = window.location;
 
@@ -44,7 +44,7 @@ function fillRequiredFields() {
   fireEvent.click(screen.getByLabelText(/spracovanie mojich osobných údajov/i));
 }
 
-describe("DonateForm (/podpora)", () => {
+describe("DonateForm (/support)", () => {
   it("disables submit until amount, identity and both consents are set", () => {
     render(<DonateForm />);
     const submit = screen.getByRole("button", { name: /Pokračovať na platbu/i });

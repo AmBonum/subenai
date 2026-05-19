@@ -6,7 +6,7 @@ export function CourseCard({ course }: { course: Course }) {
   const t = tFor("courses_misc");
   return (
     <Link
-      to="/skolenia/$slug"
+      to="/courses/$slug"
       params={{ slug: course.slug }}
       className="group block rounded-2xl border border-border/60 bg-card/70 p-5 transition hover:border-primary/50 hover:bg-card focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >

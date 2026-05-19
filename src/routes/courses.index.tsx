@@ -10,10 +10,10 @@ import { SITE_ORIGIN } from "@/config/site";
 import { searchCourses } from "@/lib/courses/search";
 import { tFor } from "@/i18n/quiz";
 
-export const Route = createFileRoute("/skolenia/")({
+export const Route = createFileRoute("/courses/")({
   head: () => {
     const t = tFor("skolenia");
-    const url = `${SITE_ORIGIN}/skolenia`;
+    const url = `${SITE_ORIGIN}/courses`;
     return {
       meta: [
         { title: t("meta_title") },

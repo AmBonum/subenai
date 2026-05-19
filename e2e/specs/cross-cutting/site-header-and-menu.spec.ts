@@ -30,34 +30,34 @@ test.describe("Site header and responsive navigation menu", () => {
         await expect(header.navLink("kontakt")).toBeVisible();
       });
 
-      await test.step('Click "Testy" and verify it routes to /testy', async () => {
+      await test.step('Click "Testy" and verify it routes to /tests', async () => {
         await header.navLink("testy").click();
-        await expect(page).toHaveURL(/\/testy$/);
+        await expect(page).toHaveURL(/\/tests$/);
       });
 
-      await test.step('Return home, click "Školenia" and verify it routes to /skolenia', async () => {
+      await test.step('Return home, click "Školenia" and verify it routes to /courses', async () => {
         await page.goto("/");
         await header.navLink("skolenia").click();
-        await expect(page).toHaveURL(/\/skolenia$/);
+        await expect(page).toHaveURL(/\/courses$/);
       });
 
-      await test.step('Return home, click "Podporiť projekt" and verify it routes to /podpora', async () => {
+      await test.step('Return home, click "Podporiť projekt" and verify it routes to /support', async () => {
         await page.goto("/");
         await header.navLink("podpora").click();
-        await expect(page).toHaveURL(/\/podpora$/);
+        await expect(page).toHaveURL(/\/support$/);
       });
 
-      await test.step('Return home, click "Kontakt" and verify it routes to /kontakt', async () => {
+      await test.step('Return home, click "Kontakt" and verify it routes to /contact', async () => {
         await page.goto("/");
         await header.navLink("kontakt").click();
-        await expect(page).toHaveURL(/\/kontakt$/);
+        await expect(page).toHaveURL(/\/contact$/);
       });
     });
 
     test("TC-02: The logo links to the home page from any route", async ({ page, header }) => {
-      await test.step("Set desktop viewport and open /testy", async () => {
+      await test.step("Set desktop viewport and open /tests", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto("/testy");
+        await page.goto("/tests");
       });
 
       await test.step("Click the logo and verify navigation to / with the header still rendered", async () => {
@@ -142,17 +142,17 @@ test.describe("Site header and responsive navigation menu", () => {
         await header.sheetNavLink("testy").click();
       });
 
-      await test.step("Verify navigation to /testy and that the sheet auto-closed", async () => {
-        await expect(page).toHaveURL(/\/testy$/);
+      await test.step("Verify navigation to /tests and that the sheet auto-closed", async () => {
+        await expect(page).toHaveURL(/\/tests$/);
         await expect(header.sheet).toBeHidden();
         await expect(header.hamburgerTrigger).toBeVisible();
       });
     });
 
     test("TC-06: Active route is highlighted in the desktop nav", async ({ page, header }) => {
-      await test.step("Set desktop viewport and open /skolenia", async () => {
+      await test.step("Set desktop viewport and open /courses", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto("/skolenia");
+        await page.goto("/courses");
       });
 
       await test.step('Verify only "Školenia" carries the active foreground class', async () => {
@@ -162,20 +162,20 @@ test.describe("Site header and responsive navigation menu", () => {
         await expect(header.navLink("kontakt")).toHaveClass(/text-muted-foreground/);
       });
 
-      await test.step('Navigate to /podpora and verify the active highlight follows to "Podporiť projekt"', async () => {
-        await page.goto("/podpora");
+      await test.step('Navigate to /support and verify the active highlight follows to "Podporiť projekt"', async () => {
+        await page.goto("/support");
         await expect(header.navLink("podpora")).toHaveClass(/text-foreground/);
         await expect(header.navLink("skolenia")).toHaveClass(/text-muted-foreground/);
       });
     });
 
-    test("TC-07: A nested route (/testy/eshop) highlights only the most-specific matching nav entry", async ({
+    test("TC-07: A nested route (/tests/eshop) highlights only the most-specific matching nav entry", async ({
       page,
       header,
     }) => {
-      await test.step("Set desktop viewport and open /testy/eshop", async () => {
+      await test.step("Set desktop viewport and open /tests/eshop", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto("/testy/eshop");
+        await page.goto("/tests/eshop");
       });
 
       await test.step('Verify only "Testy" is highlighted, the other three remain muted', async () => {
@@ -187,9 +187,9 @@ test.describe("Site header and responsive navigation menu", () => {
     });
 
     test("TC-08: Active route is highlighted inside the mobile Sheet", async ({ page, header }) => {
-      await test.step("Set mobile viewport, open /skolenia and open the sheet", async () => {
+      await test.step("Set mobile viewport, open /courses and open the sheet", async () => {
         await page.setViewportSize({ width: 375, height: 667 });
-        await page.goto("/skolenia");
+        await page.goto("/courses");
         await header.openMobileMenu();
       });
 
@@ -448,7 +448,7 @@ test.describe("Site header and responsive navigation menu", () => {
 
       await test.step('Click "Školenia" inside the sheet and verify the sheet auto-closed', async () => {
         await header.sheetNavLink("skolenia").click();
-        await expect(page).toHaveURL(/\/skolenia$/);
+        await expect(page).toHaveURL(/\/courses$/);
         await expect(header.sheet).toBeHidden();
       });
 
@@ -478,9 +478,9 @@ test.describe("Site header and responsive navigation menu", () => {
       page,
       header,
     }) => {
-      await test.step("Set desktop viewport and open /skolenia", async () => {
+      await test.step("Set desktop viewport and open /courses", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto("/skolenia");
+        await page.goto("/courses");
       });
 
       await test.step("Scroll the page down by 1000 px", async () => {
@@ -514,13 +514,13 @@ test.describe("Site header and responsive navigation menu", () => {
       });
     });
 
-    test("TC-23: Path-prefix collision — /skolenia/$slug highlights only Školenia, never Testy", async ({
+    test("TC-23: Path-prefix collision — /courses/$slug highlights only Školenia, never Testy", async ({
       page,
       header,
     }) => {
-      await test.step("Set desktop viewport and open /skolenia/sms-smishing", async () => {
+      await test.step("Set desktop viewport and open /courses/sms-smishing", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto("/skolenia/sms-smishing");
+        await page.goto("/courses/sms-smishing");
       });
 
       await test.step('Verify only "Školenia" is highlighted', async () => {
@@ -528,8 +528,8 @@ test.describe("Site header and responsive navigation menu", () => {
         await expect(header.navLink("testy")).toHaveClass(/text-muted-foreground/);
       });
 
-      await test.step('Navigate to /testy/eshop and verify the highlight follows to "Testy"', async () => {
-        await page.goto("/testy/eshop");
+      await test.step('Navigate to /tests/eshop and verify the highlight follows to "Testy"', async () => {
+        await page.goto("/tests/eshop");
         await expect(header.navLink("testy")).toHaveClass(/text-foreground/);
         await expect(header.navLink("skolenia")).toHaveClass(/text-muted-foreground/);
       });

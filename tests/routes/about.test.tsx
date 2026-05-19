@@ -21,9 +21,9 @@ vi.mock("@/hooks/useConsent", () => ({
   }),
 }));
 
-import { AboutPage } from "@/routes/o-projekte";
+import { AboutPage } from "@/routes/about";
 
-describe("AboutPage (/o-projekte)", () => {
+describe("AboutPage (/about)", () => {
   it("renders the hero with project name and tagline", () => {
     render(<AboutPage />);
     expect(screen.getByRole("heading", { level: 1, name: /Čo je subenai/i })).toBeInTheDocument();

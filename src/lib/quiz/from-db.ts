@@ -4,7 +4,7 @@
 // + visual + correct only), so the mapper substitutes an empty
 // string. The full bank — including explanations — stays in
 // `src/lib/quiz/bank/questions.ts` for composer, test-packs, and
-// `/testy/$slug` until a later epic migrates those onto the DB.
+// `/tests/$slug` until a later epic migrates those onto the DB.
 
 import type { Category, Difficulty, Option, Question, Visual } from "@/lib/quiz/bank/questions";
 import type { QuickTestQuestionRow } from "@/lib/platform/queries";

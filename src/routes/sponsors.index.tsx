@@ -13,7 +13,7 @@ import { SITE_ORIGIN, CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
 const tSponzori = tFor("sponzori");
-const SPONZORI_URL = `${SITE_ORIGIN}/sponzori`;
+const SPONZORI_URL = `${SITE_ORIGIN}/sponsors`;
 const HOMEPAGE_LIMIT = 5;
 
 export interface PublicSponsor {
@@ -25,7 +25,7 @@ export interface PublicSponsor {
   has_refund: boolean;
 }
 
-export const Route = createFileRoute("/sponzori/")({
+export const Route = createFileRoute("/sponsors/")({
   head: () => ({
     meta: [
       { title: tSponzori("head_title") },

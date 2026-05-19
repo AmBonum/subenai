@@ -18,19 +18,19 @@ const TODAY = new Date().toISOString().slice(0, 10);
 
 const STATIC_ROUTES = [
   { loc: "/", priority: "1.0", changefreq: "weekly" },
-  { loc: "/testy", priority: "0.9", changefreq: "weekly" },
-  { loc: "/skolenia", priority: "0.9", changefreq: "weekly" },
+  { loc: "/tests", priority: "0.9", changefreq: "weekly" },
+  { loc: "/courses", priority: "0.9", changefreq: "weekly" },
   { loc: "/cookies", priority: "0.3", changefreq: "yearly" },
   { loc: "/privacy", priority: "0.3", changefreq: "yearly" },
-  { loc: "/o-projekte", priority: "0.5", changefreq: "monthly" },
-  { loc: "/kontakt", priority: "0.5", changefreq: "yearly" },
-  { loc: "/podpora", priority: "0.6", changefreq: "monthly" },
-  { loc: "/sponzori", priority: "0.4", changefreq: "weekly" },
-  { loc: "/sponzori/vsetci", priority: "0.3", changefreq: "weekly" },
-  { loc: "/spravovat-podporu", priority: "0.3", changefreq: "yearly" },
-  { loc: "/zmeny", priority: "0.4", changefreq: "weekly" },
+  { loc: "/about", priority: "0.5", changefreq: "monthly" },
+  { loc: "/contact", priority: "0.5", changefreq: "yearly" },
+  { loc: "/support", priority: "0.6", changefreq: "monthly" },
+  { loc: "/sponsors", priority: "0.4", changefreq: "weekly" },
+  { loc: "/sponsors/all", priority: "0.3", changefreq: "weekly" },
+  { loc: "/manage-support", priority: "0.3", changefreq: "yearly" },
+  { loc: "/changelog", priority: "0.4", changefreq: "weekly" },
   { loc: "/test/zostav", priority: "0.7", changefreq: "monthly" },
-  { loc: "/skoly", priority: "0.7", changefreq: "monthly" },
+  { loc: "/schools", priority: "0.7", changefreq: "monthly" },
 ];
 
 async function loadSlugs(dirRel) {
@@ -79,13 +79,13 @@ const cmsSlugs = await loadCmsPublishedSlugs();
 const urls = [
   ...STATIC_ROUTES.map((r) => ({ ...r, lastmod: TODAY })),
   ...courses.map((c) => ({
-    loc: `/skolenia/${c.slug}`,
+    loc: `/courses/${c.slug}`,
     priority: "0.8",
     changefreq: "monthly",
     lastmod: c.lastmod,
   })),
   ...packs.map((p) => ({
-    loc: `/testy/${p.slug}`,
+    loc: `/tests/${p.slug}`,
     priority: "0.85",
     changefreq: "monthly",
     lastmod: p.lastmod,

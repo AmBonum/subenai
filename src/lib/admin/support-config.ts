@@ -7,7 +7,7 @@
 //
 // NOTE: this is the contact-channel config, distinct from the
 // donation/Stripe `support-config` originally in admin-hub. The
-// donation flow already has its own surface under /podpora — this
+// donation flow already has its own surface under /support — this
 // file scopes to support-desk contact details (email, phone, hours).
 
 export interface SupportChannelConfig {

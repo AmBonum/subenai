@@ -100,7 +100,7 @@ export async function onRequestGet(ctx: RequestContext): Promise<Response> {
     if (error) {
       // Don't 500 here: the frontend polls every 3s for up to 30s, and a
       // transient Supabase blip (cold start, conn pool warmup) right after
-      // Stripe redirects to /podakovanie shouldn't abort the success page
+      // Stripe redirects to /thank-you shouldn't abort the success page
       // permanently. Log loudly so persistent breakage is visible in CF
       // Pages function logs; donation stays undefined and the response is
       // "pending" so the poller retries.

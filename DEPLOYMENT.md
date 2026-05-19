@@ -228,19 +228,19 @@ našiel sitemapu a indexoval len tie stránky, ktoré majú byť verejné.
 Tieto routy majú zostať `index, follow` a majú byť v `sitemap.xml`:
 
 - `/`
-- `/testy`
-- `/testy/$slug`
-- `/skolenia`
-- `/skolenia/$slug`
-- `/podpora`
-- `/sponzori`
-- `/sponzori/vsetci`
-- `/spravovat-podporu`
+- `/tests`
+- `/tests/$slug`
+- `/courses`
+- `/courses/$slug`
+- `/support`
+- `/sponsors`
+- `/sponsors/all`
+- `/manage-support`
 - `/privacy`
 - `/cookies`
-- `/o-projekte`
-- `/zmeny`
-- `/kontakt`
+- `/about`
+- `/changelog`
+- `/contact`
 
 ### Čo nemá byť indexované
 
@@ -249,7 +249,7 @@ Tieto routy musia zostať mimo indexu a nesmú byť v `sitemap.xml`:
 - `/test`
 - `/test/zostav`
 - `/test/zostava/$id`
-- `/podakovanie/$sessionId`
+- `/thank-you/$sessionId`
 - `/r/$shareId`
 
 Pravidlo je jednoduché: ak je route session-based, share-based alebo dočasne
@@ -260,7 +260,7 @@ vypnutá, patrí `noindex` a nesmie sa objaviť v sitemape.
 - `public/robots.txt` povoľuje crawl a odkazuje na `https://subenai.sk/sitemap.xml`
 - `scripts/generate-sitemap.mjs` generuje len verejné routy
 - `/test` a `/test/zostav` sú už odstránené zo sitemap
-- dynamické súkromné routy ako `/podakovanie/$sessionId` a `/test/zostava/$id`
+- dynamické súkromné routy ako `/thank-you/$sessionId` a `/test/zostava/$id`
   majú zostať `noindex, nofollow`
 
 Ak pridáš novú verejnú landing page, musíš spraviť všetky 3 kroky:
@@ -304,11 +304,11 @@ Po deployi a po Cloudflare zmene sprav toto:
 2. V `Sitemaps` pošli `https://subenai.sk/sitemap.xml`
 3. Cez `URL Inspection` otestuj:
    - `/`
-   - `/testy`
-   - `/skolenia`
-   - `/podpora`
-   - jeden konkrétny `/testy/$slug`
-   - jeden konkrétny `/skolenia/$slug`
+   - `/tests`
+   - `/courses`
+   - `/support`
+   - jeden konkrétny `/tests/$slug`
+   - jeden konkrétny `/courses/$slug`
 4. Ak `Live test` neukáže HTML z appky, ale challenge stránku, problém je stále
    Cloudflare, nie React appka
 5. Ak HTML sedí, daj `Request indexing` len na kľúčové landing pages; ostatné si

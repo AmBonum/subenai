@@ -32,7 +32,7 @@ vi.mock("@/integrations/supabase/client", () => {
   return { supabase: { from: vi.fn(() => makeBuilder()) } };
 });
 
-import { SponzoriView, type PublicSponsor } from "@/routes/sponzori";
+import { SponzoriView, type PublicSponsor } from "@/routes/sponsors";
 import { ROUTES } from "@/config/routes";
 
 function makeSponsor(overrides: Partial<PublicSponsor> = {}): PublicSponsor {
@@ -47,7 +47,7 @@ function makeSponsor(overrides: Partial<PublicSponsor> = {}): PublicSponsor {
   };
 }
 
-describe("SponzoriView (/sponzori)", () => {
+describe("SponzoriView (/sponsors)", () => {
   it("renders the empty state with a CTA when no public sponsors exist", async () => {
     const fetchSponsors = vi.fn(async () => [] as PublicSponsor[]);
     render(<SponzoriView fetchSponsors={fetchSponsors} />);
@@ -82,7 +82,7 @@ describe("SponzoriView (/sponzori)", () => {
     expect(bobLink).toHaveAttribute("rel", "noopener noreferrer");
   });
 
-  it("links to /sponzori/vsetci so the user can reach the filterable full list", async () => {
+  it("links to /sponsors/all so the user can reach the filterable full list", async () => {
     const fetchSponsors = vi.fn(async () => [makeSponsor({ display_name: "Anna" })]);
     render(<SponzoriView fetchSponsors={fetchSponsors} />);
     await waitFor(() => expect(screen.getByText("Anna")).toBeInTheDocument());

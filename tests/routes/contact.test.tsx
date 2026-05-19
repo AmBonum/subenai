@@ -21,10 +21,10 @@ vi.mock("@/hooks/useConsent", () => ({
   }),
 }));
 
-import { KontaktPage } from "@/routes/kontakt";
+import { KontaktPage } from "@/routes/contact";
 import { CONTACT_EMAIL } from "@/config/site";
 
-describe("KontaktPage (/kontakt)", () => {
+describe("KontaktPage (/contact)", () => {
   it("renders the page heading and CONTACT_EMAIL primary CTA", () => {
     render(<KontaktPage />);
     expect(screen.getByRole("heading", { level: 1, name: /Kontakt/i })).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe("KontaktPage (/kontakt)", () => {
     }
   });
 
-  it('shows operator identity block with "sídlo" + ORSR (unique to /kontakt body)', () => {
+  it('shows operator identity block with "sídlo" + ORSR (unique to /contact body)', () => {
     render(<KontaktPage />);
     const main = screen.getByRole("main");
     // am.bonum + IČO appear in Footer too; sídlo + ORSR are unique to this page.

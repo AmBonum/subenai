@@ -137,7 +137,7 @@
     "field_name_hint": "Povinné pre faktúru per § 74 zákona č. 222/2004 Z. z.",
     "field_tax_id": "DIČ (voliteľné)",
     "field_tax_id_hint": "Vyplň iba ak si platca DPH a chceš odpočet.",
-    "show_in_list": "Chcem byť na zozname sponzorov (/sponzori)",
+    "show_in_list": "Chcem byť na zozname sponzorov (/sponsors)",
     "display_name": "Zobrazované meno",
     "display_link": "Odkaz (https://, voliteľné)",
     "display_link_hint_invalid": "Odkaz musí začínať https://",
@@ -186,7 +186,7 @@
     "breakdown_link_about": "O projekte",
     "unpaid_title": "Platba ešte neprešla",
     "unpaid_body": "Vyzerá to, že platba nebola dokončená. Skús to prosím znova alebo nás kontaktuj na ",
-    "unpaid_cta": "Späť na /podpora",
+    "unpaid_cta": "Späť na /support",
     "timeout_title": "Stále spracúvame…",
     "timeout_body_prefix": "Stripe nám ešte neposlal potvrdenie. Tvoja platba je pravdepodobne v poriadku — Stripe ti pošle faktúru e-mailom hneď ako ju spracuje. Ak to bude trvať dlhšie ako 10 minút, napíš nám na ",
     "timeout_body_suffix": " s ID platby z e-mailu od Stripe.",
@@ -258,7 +258,7 @@
     "vsetci_count_all": "Zobrazených {shown} (všetkých {total})",
     "vsetci_refund_note": "Príspevok bol vrátený na žiadosť prispievateľa.",
     "vsetci_empty_filtered": "Nič nezodpovedá filtru. Skús iné meno alebo rok.",
-    "vsetci_empty_none": "Zatiaľ tu nikto nie je. Buď prvý — podpor projekt na /podpora.",
+    "vsetci_empty_none": "Zatiaľ tu nikto nie je. Buď prvý — podpor projekt na /support.",
     "vsetci_footer_note": "Zoznam je dobrovoľný — mnohí sponzori si zvolili anonymitu. Žiadne sumy ani počty platieb tu neukazujeme. Súhlas so zverejnením môžeš odvolať e-mailom na "
   },
   "home": {

@@ -418,7 +418,7 @@ export const categoryDistribution = mockCategories.map((c) => ({
   color: c.color,
 }));
 
-// ---- Tests (https://subenai.sk/testy) -----------------------------------
+// ---- Tests (https://subenai.sk/tests) -----------------------------------
 
 const TEST_SEEDS: {
   title: string;
@@ -535,7 +535,7 @@ export const defaultShareCard: ShareCardConfig = {
   enabled: true,
   title_template: "Som {label} {emoji}",
   subtitle_template: "Skóre: {score}/{total} ({percent}%)",
-  footer_text: "Otestuj sa aj ty na subenai.sk/testy",
+  footer_text: "Otestuj sa aj ty na subenai.sk/tests",
   background_from: "#0f172a",
   background_to: "#6366f1",
   text_color: "#ffffff",

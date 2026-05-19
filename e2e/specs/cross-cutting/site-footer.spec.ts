@@ -36,28 +36,28 @@ test.describe("Site footer", () => {
         );
       });
 
-      await test.step("Verify the version link has the correct aria-label and href=/zmeny", async () => {
+      await test.step("Verify the version link has the correct aria-label and href=/changelog", async () => {
         await expect(footer.versionLink).toHaveAttribute(
           "aria-label",
           /^Aktuálna verzia v[0-9]+\.[0-9]+\.[0-9]+ — zoznam zmien$/,
         );
-        await expect(footer.versionLink).toHaveAttribute("href", "/zmeny");
+        await expect(footer.versionLink).toHaveAttribute("href", "/changelog");
         await expect(footer.versionLink).toContainText(/^v[0-9]+\.[0-9]+\.[0-9]+$/);
       });
     });
 
-    test("TC-02: Clicking the version link routes to /zmeny", async ({ page, footer }) => {
+    test("TC-02: Clicking the version link routes to /changelog", async ({ page, footer }) => {
       await test.step("Set desktop viewport (1280×800) and open the home page", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
         await page.goto("/");
       });
 
-      await test.step("Click the version link and verify the URL changes to /zmeny", async () => {
+      await test.step("Click the version link and verify the URL changes to /changelog", async () => {
         await footer.versionLink.click();
-        await expect(page).toHaveURL(/\/zmeny$/);
+        await expect(page).toHaveURL(/\/changelog$/);
       });
 
-      await test.step("Verify the footer remains rendered on /zmeny", async () => {
+      await test.step("Verify the footer remains rendered on /changelog", async () => {
         await expect(footer.root).toBeVisible();
       });
     });
@@ -76,25 +76,25 @@ test.describe("Site footer", () => {
         await expect(footer.navLink("test")).toHaveText("Spustiť test");
         await expect(footer.navLink("test")).toHaveAttribute("href", "/test");
         await expect(footer.navLink("testy")).toHaveText("Sada testov");
-        await expect(footer.navLink("testy")).toHaveAttribute("href", "/testy");
+        await expect(footer.navLink("testy")).toHaveAttribute("href", "/tests");
         await expect(footer.navLink("skolenia")).toHaveText("Školenia");
-        await expect(footer.navLink("skolenia")).toHaveAttribute("href", "/skolenia");
+        await expect(footer.navLink("skolenia")).toHaveAttribute("href", "/courses");
         await expect(footer.navLink("skoly")).toHaveText("Pre školy");
-        await expect(footer.navLink("skoly")).toHaveAttribute("href", "/skoly");
+        await expect(footer.navLink("skoly")).toHaveAttribute("href", "/schools");
       });
 
       await test.step("Verify the Projekt column heading and its five links", async () => {
         await expect(footer.columnProjektHeading).toHaveText("Projekt");
         await expect(footer.navLink("o-projekte")).toHaveText("O projekte");
-        await expect(footer.navLink("o-projekte")).toHaveAttribute("href", "/o-projekte");
+        await expect(footer.navLink("o-projekte")).toHaveAttribute("href", "/about");
         await expect(footer.navLink("kontakt")).toHaveText("Kontakt");
-        await expect(footer.navLink("kontakt")).toHaveAttribute("href", "/kontakt");
+        await expect(footer.navLink("kontakt")).toHaveAttribute("href", "/contact");
         await expect(footer.navLink("podpora")).toHaveText("Podporiť projekt");
-        await expect(footer.navLink("podpora")).toHaveAttribute("href", "/podpora");
+        await expect(footer.navLink("podpora")).toHaveAttribute("href", "/support");
         await expect(footer.navLink("sponzori")).toHaveText("Sponzori");
-        await expect(footer.navLink("sponzori")).toHaveAttribute("href", "/sponzori");
+        await expect(footer.navLink("sponzori")).toHaveAttribute("href", "/sponsors");
         await expect(footer.navLink("zmeny")).toHaveText("Zmeny a verzie");
-        await expect(footer.navLink("zmeny")).toHaveAttribute("href", "/zmeny");
+        await expect(footer.navLink("zmeny")).toHaveAttribute("href", "/changelog");
       });
 
       await test.step("Verify the Právne column heading and its three links", async () => {
@@ -108,7 +108,7 @@ test.describe("Site footer", () => {
         );
         await expect(footer.navLink("spravovat-podporu")).toHaveAttribute(
           "href",
-          "/spravovat-podporu",
+          "/manage-support",
         );
       });
     });
@@ -165,13 +165,13 @@ test.describe("Site footer", () => {
       });
     });
 
-    test("TC-06: Footer renders identically on a nested route (/skolenia)", async ({
+    test("TC-06: Footer renders identically on a nested route (/courses)", async ({
       page,
       footer,
     }) => {
-      await test.step("Set desktop viewport (1280×800) and open /skolenia", async () => {
+      await test.step("Set desktop viewport (1280×800) and open /courses", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto("/skolenia");
+        await page.goto("/courses");
       });
 
       await test.step("Verify the brand block is rendered", async () => {
@@ -191,10 +191,10 @@ test.describe("Site footer", () => {
         await expect(footer.cookiesButton).toBeVisible();
       });
 
-      await test.step("Verify nav link targets match TC-03 assertions on /skolenia", async () => {
+      await test.step("Verify nav link targets match TC-03 assertions on /courses", async () => {
         await expect(footer.navLink("test")).toHaveAttribute("href", "/test");
-        await expect(footer.navLink("testy")).toHaveAttribute("href", "/testy");
-        await expect(footer.navLink("o-projekte")).toHaveAttribute("href", "/o-projekte");
+        await expect(footer.navLink("testy")).toHaveAttribute("href", "/tests");
+        await expect(footer.navLink("o-projekte")).toHaveAttribute("href", "/about");
         await expect(footer.navLink("privacy")).toHaveAttribute("href", "/privacy");
       });
     });
@@ -219,14 +219,14 @@ test.describe("Site footer", () => {
 
       await test.step("Click the Sada testov link in the Obsah column", async () => {
         await footer.navLink("testy").click();
-        await expect(page).toHaveURL(/\/testy$/);
+        await expect(page).toHaveURL(/\/tests$/);
       });
 
       await test.step("Verify no full-page load event fired (client-side navigation)", async () => {
         expect(loadFired).toBe(false);
       });
 
-      await test.step("Verify the footer on /testy renders with its links intact", async () => {
+      await test.step("Verify the footer on /tests renders with its links intact", async () => {
         await expect(footer.root).toBeVisible();
         await expect(footer.navLink("testy")).toBeVisible();
       });
@@ -302,10 +302,10 @@ test.describe("Site footer", () => {
         await expect(footer.sponsorLink("b")).not.toHaveAttribute("href");
       });
 
-      await test.step("Verify the všetci sponzori link points to /sponzori", async () => {
+      await test.step("Verify the všetci sponzori link points to /sponsors", async () => {
         await expect(footer.sponsorAllLink).toBeVisible();
         await expect(footer.sponsorAllLink).toHaveText("všetci sponzori →");
-        await expect(footer.sponsorAllLink).toHaveAttribute("href", "/sponzori");
+        await expect(footer.sponsorAllLink).toHaveAttribute("href", "/sponsors");
       });
     });
   });
@@ -609,9 +609,9 @@ test.describe("Site footer", () => {
         await expect(footer.root).toBeVisible();
       });
 
-      await test.step("SPA-navigate to /skolenia via the header nav link (second footer mount)", async () => {
+      await test.step("SPA-navigate to /courses via the header nav link (second footer mount)", async () => {
         await header.navLink("skolenia").click();
-        await expect(page).toHaveURL(/\/skolenia$/);
+        await expect(page).toHaveURL(/\/courses$/);
         await expect(footer.root).toBeVisible();
       });
 

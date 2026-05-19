@@ -116,7 +116,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   try {
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: customer.id,
-      return_url: `${origin}/o-projekte`,
+      return_url: `${origin}/about`,
       locale: "sk",
     });
     portalUrl = portalSession.url;

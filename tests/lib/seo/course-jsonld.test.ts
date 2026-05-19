@@ -31,9 +31,9 @@ describe("buildCourseJsonLd", () => {
     expect(json.timeRequired).toBe("PT12M");
   });
 
-  it("URL points at the canonical /skolenia/<slug> path", () => {
+  it("URL points at the canonical /courses/<slug> path", () => {
     const json = buildCourseJsonLd(fixture);
-    expect(json.url).toBe("https://subenai.sk/skolenia/test-course");
+    expect(json.url).toBe("https://subenai.sk/courses/test-course");
   });
 
   it("provider is the site Organization", () => {

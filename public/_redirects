@@ -2,3 +2,16 @@
 /kurzy/* /skolenia/:splat 301
 /test/firma /testy 301
 /test/firma/* /testy/:splat 301
+/testy /tests 301
+/testy/* /tests/:splat 301
+/podpora /support 301
+/podakovanie/* /thank-you/:splat 301
+/sponzori /sponsors 301
+/sponzori/vsetci /sponsors/all 301
+/spravovat-podporu /manage-support 301
+/zmeny /changelog 301
+/kontakt /contact 301
+/skoly /schools 301
+/o-projekte /about 301
+/skolenia /courses 301
+/skolenia/* /courses/:splat 301

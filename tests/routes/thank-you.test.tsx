@@ -19,7 +19,7 @@ vi.mock("@/hooks/useConsent", () => ({
   useConsent: () => ({ openPreferences: vi.fn(), record: null }),
 }));
 
-import { ThankYouView } from "@/routes/podakovanie.$sessionId";
+import { ThankYouView } from "@/routes/thank-you.$sessionId";
 
 const originalLocation = window.location;
 
@@ -45,7 +45,7 @@ function mockStatusOnce(payload: unknown, init: { status?: number } = {}) {
   );
 }
 
-describe("ThankYouView (/podakovanie/$sessionId)", () => {
+describe("ThankYouView (/thank-you/$sessionId)", () => {
   it("renders donation summary + invoice link when status=ready", async () => {
     mockStatusOnce({
       status: "ready",

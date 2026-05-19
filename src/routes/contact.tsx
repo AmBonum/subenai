@@ -51,7 +51,7 @@ function buildMailto(prefix: string, subject: string): string {
   return `mailto:${CONTACT_EMAIL}?${params.toString()}`;
 }
 
-export const Route = createFileRoute("/kontakt")({
+export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: tKontakt("kontakt.meta_title") },

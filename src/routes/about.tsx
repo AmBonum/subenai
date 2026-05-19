@@ -4,7 +4,7 @@ import { SITE_ORIGIN } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
 
-const ABOUT_URL = `${SITE_ORIGIN}/o-projekte`;
+const ABOUT_URL = `${SITE_ORIGIN}/about`;
 const tAbout = tFor("marketing");
 
 const aboutJsonLd = {
@@ -26,7 +26,7 @@ const aboutJsonLd = {
   },
 };
 
-export const Route = createFileRoute("/o-projekte")({
+export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: tAbout("about.meta_title") },
@@ -148,7 +148,7 @@ export function AboutPage() {
             </ul>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t("about.money_zmeny_prefix")}
-              <code className="rounded bg-muted px-1 py-0.5 text-xs">/zmeny</code>
+              <code className="rounded bg-muted px-1 py-0.5 text-xs">/changelog</code>
               {t("about.money_zmeny_suffix")}
             </p>
           </section>
@@ -166,7 +166,7 @@ export function AboutPage() {
             <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
               <li>
                 {t("about.sponsors_li1_prefix")}
-                <code className="rounded bg-muted px-1 py-0.5 text-xs">/sponzori</code>
+                <code className="rounded bg-muted px-1 py-0.5 text-xs">/sponsors</code>
                 {t("about.sponsors_li1_suffix")}
               </li>
               <li>{t("about.sponsors_li2")}</li>

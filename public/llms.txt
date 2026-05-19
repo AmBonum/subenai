@@ -10,7 +10,7 @@ Stránka je v slovenčine a cieli na slovenských používateľov internetu od 1
 
 - [Domov a kvíz](https://subenai.sk/): Spustenie testu, krátky popis a "Časté otázky".
 - [Test](https://subenai.sk/test): Samotný 15-otázkový kvíz s časomierou a okamžitou recenziou.
-- [Školenia](https://subenai.sk/skolenia): Krátke bezplatné školenia podľa kategórie podvodu (smishing, phishing, vishing, marketplace, investičné, romance, BEC, data hygiene a ďalšie).
+- [Školenia](https://subenai.sk/courses): Krátke bezplatné školenia podľa kategórie podvodu (smishing, phishing, vishing, marketplace, investičné, romance, BEC, data hygiene a ďalšie).
 - [Cookies](https://subenai.sk/cookies): Detailné zásady cookies (GDPR + ePrivacy + zákon č. 452/2021 Z. z.).
 - [Súkromie](https://subenai.sk/privacy): Privacy policy, dátové toky, retention.
 

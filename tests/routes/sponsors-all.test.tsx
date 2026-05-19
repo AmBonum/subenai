@@ -29,9 +29,9 @@ vi.mock("@/integrations/supabase/client", () => {
   return { supabase: { from: vi.fn(() => makeBuilder()) } };
 });
 
-import { AllSponsorsView } from "@/routes/sponzori.vsetci";
+import { AllSponsorsView } from "@/routes/sponsors.all";
 import { ROUTES } from "@/config/routes";
-import type { PublicSponsor } from "@/routes/sponzori";
+import type { PublicSponsor } from "@/routes/sponsors";
 
 function makeSponsor(overrides: Partial<PublicSponsor>): PublicSponsor {
   return {
@@ -55,7 +55,7 @@ const SAMPLE: PublicSponsor[] = [
   makeSponsor({ display_name: "Cyril", created_at: "2025-03-20T10:00:00Z" }),
 ];
 
-describe("AllSponsorsView (/sponzori/vsetci)", () => {
+describe("AllSponsorsView (/sponsors/all)", () => {
   it("renders every sponsor when no filter is active", async () => {
     render(<AllSponsorsView fetchSponsors={async () => SAMPLE} />);
     await waitFor(() => expect(screen.getByText("Anna")).toBeInTheDocument());
@@ -146,7 +146,7 @@ describe("AllSponsorsView (/sponzori/vsetci)", () => {
     expect(danielaHeading?.className).toMatch(/line-through/);
   });
 
-  it("renders the back link to /sponzori", async () => {
+  it("renders the back link to /sponsors", async () => {
     render(<AllSponsorsView fetchSponsors={async () => SAMPLE} />);
     await waitFor(() => expect(screen.getByText("Anna")).toBeInTheDocument());
     const back = screen.getByRole("link", { name: /Späť na najnovších sponzorov/i });

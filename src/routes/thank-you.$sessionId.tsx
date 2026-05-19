@@ -26,7 +26,7 @@ interface DonationStatusResponse {
   has_customer?: boolean;
 }
 
-export const Route = createFileRoute("/podakovanie/$sessionId")({
+export const Route = createFileRoute("/thank-you/$sessionId")({
   head: () => ({
     meta: [
       { title: "Ďakujeme za podporu — subenai" },
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/podakovanie/$sessionId")({
 });
 
 function PodakovaniePage() {
-  const { sessionId } = useParams({ from: "/podakovanie/$sessionId" });
+  const { sessionId } = useParams({ from: "/thank-you/$sessionId" });
   return <ThankYouView sessionId={sessionId} />;
 }
 

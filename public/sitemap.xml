@@ -2,253 +2,253 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://subenai.sk/</loc>
-    <lastmod>2026-05-17</lastmod>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/testy</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://subenai.sk/tests</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://subenai.sk/courses</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://subenai.sk/cookies</loc>
-    <lastmod>2026-05-17</lastmod>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://subenai.sk/privacy</loc>
-    <lastmod>2026-05-17</lastmod>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/o-projekte</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://subenai.sk/about</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/kontakt</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://subenai.sk/contact</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/podpora</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://subenai.sk/support</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/sponzori</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://subenai.sk/sponsors</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/sponzori/vsetci</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://subenai.sk/sponsors/all</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/spravovat-podporu</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://subenai.sk/manage-support</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/zmeny</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://subenai.sk/changelog</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://subenai.sk/test/zostav</loc>
-    <lastmod>2026-05-17</lastmod>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skoly</loc>
-    <lastmod>2026-05-17</lastmod>
+    <loc>https://subenai.sk/schools</loc>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/ai-bezpecnost-co-nezdielat</loc>
+    <loc>https://subenai.sk/courses/ai-bezpecnost-co-nezdielat</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/ai-hlasove-a-deepfake-podvody</loc>
+    <loc>https://subenai.sk/courses/ai-hlasove-a-deepfake-podvody</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/ai-pomocnik-kazdy-den</loc>
+    <loc>https://subenai.sk/courses/ai-pomocnik-kazdy-den</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/bec-pracovisko-fake-ceo</loc>
+    <loc>https://subenai.sk/courses/bec-pracovisko-fake-ceo</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/chran-svojich-blizkych</loc>
+    <loc>https://subenai.sk/courses/chran-svojich-blizkych</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/data-hygiene</loc>
+    <loc>https://subenai.sk/courses/data-hygiene</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/email-phishing</loc>
+    <loc>https://subenai.sk/courses/email-phishing</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/fyzicke-podvody</loc>
+    <loc>https://subenai.sk/courses/fyzicke-podvody</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/investicne-podvody-krypto-ai</loc>
+    <loc>https://subenai.sk/courses/investicne-podvody-krypto-ai</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/kradez-kont-socialnych-sieti</loc>
+    <loc>https://subenai.sk/courses/kradez-kont-socialnych-sieti</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/malvertising-fake-reklamy</loc>
+    <loc>https://subenai.sk/courses/malvertising-fake-reklamy</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/marketplace-bazos-podvody</loc>
+    <loc>https://subenai.sk/courses/marketplace-bazos-podvody</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/brigady-a-pracovne-podvody</loc>
+    <loc>https://subenai.sk/courses/brigady-a-pracovne-podvody</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/pig-butchering-podvod</loc>
+    <loc>https://subenai.sk/courses/pig-butchering-podvod</loc>
     <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/qr-quishing</loc>
+    <loc>https://subenai.sk/courses/qr-quishing</loc>
     <lastmod>2026-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/romance-scams-catfishing</loc>
+    <loc>https://subenai.sk/courses/romance-scams-catfishing</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/sms-smishing</loc>
+    <loc>https://subenai.sk/courses/sms-smishing</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/skolenia/vishing-telefonicke-podvody</loc>
+    <loc>https://subenai.sk/courses/vishing-telefonicke-podvody</loc>
     <lastmod>2026-04-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/testy/autoservis</loc>
+    <loc>https://subenai.sk/tests/autoservis</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/testy/eshop</loc>
+    <loc>https://subenai.sk/tests/eshop</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/testy/gastro-horeca</loc>
+    <loc>https://subenai.sk/tests/gastro-horeca</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/testy/it-vyvoj</loc>
+    <loc>https://subenai.sk/tests/it-vyvoj</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/testy/seniori</loc>
+    <loc>https://subenai.sk/tests/seniori</loc>
     <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/testy/studenti</loc>
+    <loc>https://subenai.sk/tests/studenti</loc>
     <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/testy/verejne-sluzby</loc>
+    <loc>https://subenai.sk/tests/verejne-sluzby</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/testy/vseobecny</loc>
+    <loc>https://subenai.sk/tests/vseobecny</loc>
     <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/testy/ziaci-do-16</loc>
+    <loc>https://subenai.sk/tests/ziaci-do-16</loc>
     <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://subenai.sk/s/o-projekte-rozsirene</loc>
-    <lastmod>2026-05-17</lastmod>
+    <lastmod>2026-05-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

@@ -10,7 +10,7 @@ import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/quiz";
 const COPYRIGHT_HOLDER = "am.bonum s. r. o.";
 
-export const Route = createFileRoute("/testy/$slug")({
+export const Route = createFileRoute("/tests/$slug")({
   loader: ({ params }) => {
     const pack = getPackBySlug(params.slug);
     if (!pack) throw notFound();
@@ -19,7 +19,7 @@ export const Route = createFileRoute("/testy/$slug")({
   head: ({ loaderData: pack }) => {
     if (!pack) return { meta: [] };
     const t = tFor("testy");
-    const url = `${SITE_ORIGIN}/testy/${pack.slug}`;
+    const url = `${SITE_ORIGIN}/tests/${pack.slug}`;
     return {
       meta: [
         {

@@ -87,15 +87,15 @@ export const seedFooter: CmsFooter = {
       title: "Obsah",
       links: [
         { id: newId("lnk"), label: "Spustiť test", url: "/test" },
-        { id: newId("lnk"), label: "Sada testov", url: "/testy" },
+        { id: newId("lnk"), label: "Sada testov", url: "/tests" },
       ],
     },
     {
       id: newId("col"),
       title: "Projekt",
       links: [
-        { id: newId("lnk"), label: "O projekte", url: "/o-projekte" },
-        { id: newId("lnk"), label: "Kontakt", url: "/kontakt" },
+        { id: newId("lnk"), label: "O projekte", url: "/about" },
+        { id: newId("lnk"), label: "Kontakt", url: "/contact" },
       ],
     },
   ],
@@ -106,7 +106,7 @@ export const seedNavigation: CmsNavItem[] = [
   {
     id: newId("nav"),
     label: "Testy",
-    url: "/testy",
+    url: "/tests",
     position: 1,
     visible: true,
     open_in_new_tab: false,
@@ -115,7 +115,7 @@ export const seedNavigation: CmsNavItem[] = [
   {
     id: newId("nav"),
     label: "Školenia",
-    url: "/skolenia",
+    url: "/courses",
     position: 2,
     visible: true,
     open_in_new_tab: false,
@@ -124,7 +124,7 @@ export const seedNavigation: CmsNavItem[] = [
   {
     id: newId("nav"),
     label: "Podporiť projekt",
-    url: "/podpora",
+    url: "/support",
     position: 3,
     visible: true,
     open_in_new_tab: false,

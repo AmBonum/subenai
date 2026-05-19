@@ -5,7 +5,7 @@ import { SITE_ORIGIN, CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
 const tManage = tFor("spravovat_podporu");
-const PAGE_URL = `${SITE_ORIGIN}/spravovat-podporu`;
+const PAGE_URL = `${SITE_ORIGIN}/manage-support`;
 const TURNSTILE_SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
 
@@ -31,7 +31,7 @@ declare global {
   }
 }
 
-export const Route = createFileRoute("/spravovat-podporu")({
+export const Route = createFileRoute("/manage-support")({
   head: () => ({
     meta: [
       { title: tManage("head_title") },

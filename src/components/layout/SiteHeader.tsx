@@ -26,7 +26,7 @@ export function SiteHeader() {
     setOpen(false);
   }, [pathname]);
 
-  // Most-specific match wins so nested routes (e.g. /testy/eshop)
+  // Most-specific match wins so nested routes (e.g. /tests/eshop)
   // highlight only the deepest registered nav entry instead of every prefix.
   const activeTo = NAV_ITEM_DEFS.reduce<string | null>((acc, item) => {
     const matches = pathname === item.to || pathname.startsWith(item.to + "/");

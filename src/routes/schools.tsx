@@ -6,7 +6,7 @@ import { tFor } from "@/i18n/marketing";
 
 const tSkoly = tFor("marketing");
 
-export const Route = createFileRoute("/skoly")({
+export const Route = createFileRoute("/schools")({
   head: () => ({
     meta: [
       { title: tSkoly("skoly.meta_title") },

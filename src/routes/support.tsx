@@ -17,7 +17,7 @@ interface PodporaSearch {
   cancelled?: 1;
 }
 
-export const Route = createFileRoute("/podpora")({
+export const Route = createFileRoute("/support")({
   validateSearch: (search: Record<string, unknown>): PodporaSearch => ({
     cancelled: search.cancelled === "1" || search.cancelled === 1 ? 1 : undefined,
   }),
@@ -37,11 +37,11 @@ export const Route = createFileRoute("/podpora")({
           "Podpor bezplatný vzdelávací projekt o digitálnej bezpečnosti — jednorazovo alebo mesačne.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: `${SITE_ORIGIN}/podpora` },
+      { property: "og:url", content: `${SITE_ORIGIN}/support` },
       { property: "og:locale", content: "sk_SK" },
       { name: "twitter:card", content: "summary" },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/podpora` }],
+    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/support` }],
   }),
   component: PodporaPage,
 });
@@ -50,7 +50,7 @@ type Mode = "oneoff" | "monthly";
 type CustomState = "preset" | "custom";
 
 export function PodporaPage() {
-  const search = useSearch({ from: "/podpora" });
+  const search = useSearch({ from: "/support" });
   return <DonateForm cancelled={search.cancelled === 1} />;
 }
 
