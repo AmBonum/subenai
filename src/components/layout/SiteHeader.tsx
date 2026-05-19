@@ -15,15 +15,13 @@ import { ROUTES } from "@/config/routes";
 import { useAuth } from "@/hooks/useAuth";
 import { tFor } from "@/i18n/marketing";
 
-// Phase 1 menu structure — locked per D1 (5 top-level items, no /contact).
+// Phase 1 menu structure — 4 top-level items + right-side CTA pill that
+// links to /test (the quick-test entry). The CTA pill is the SINGULAR
+// surface for "Spustiť rýchly test" — removing the duplicate "Rýchly test"
+// mega-menu item that pointed to the same /test route (UX feedback,
+// 2026-05-19).
 // Static for v1; future upgrade may drive from `cms_navigation`.
 const MEGA_ITEMS: readonly MegaMenuItemDef[] = [
-  {
-    slug: "rychly_test",
-    labelKey: "label",
-    descKey: "desc",
-    href: ROUTES.test,
-  },
   {
     slug: "testy",
     labelKey: "label",
