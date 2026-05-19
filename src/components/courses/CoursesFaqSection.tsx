@@ -1,59 +1,61 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Gift, Clock, Award, Users, Share2 } from "lucide-react";
+
+import { FaqAccordion, type FaqAccordionItemKey } from "@/components/ui/faq/FaqAccordion";
+import { ROUTES } from "@/config/routes";
 import { COURSES_FAQ_KEYS } from "@/lib/seo/courses-faq-schema";
 import { tFor } from "@/i18n/quiz";
 
-// E25 Phase 2 — flat FAQ accordion for /courses.
+// E26 — senior-level FAQ rewrite for /courses.
 //
-// Same single-level pattern as TestsFaqSection. 5 hand-picked
-// questions covering the highest-friction first-time-visitor
-// concerns specific to free courses: payment, time, certificates,
-// audience, sharing.
-//
-// SEO: parallel JSON-LD FAQPage emitted from the route head().
+// Mirror of TestsFaqSection. Same shared FaqAccordion ui component,
+// different copy + different icon mapping per course-specific Q
+// concerns:
+//   q1 Gift          — "Sú školenia platené?"
+//   q2 Clock         — "Ako dlho trvá?"
+//   q3 Award         — "Dostanem certifikát?"
+//   q4 Users         — "Pre koho sú určené?"
+//   q5 Share2        — "Môžem poslať kolegom?"
+
+const COURSES_FAQ_ICONS = {
+  q1: Gift,
+  q2: Clock,
+  q3: Award,
+  q4: Users,
+  q5: Share2,
+} as const;
 
 export function CoursesFaqSection() {
   const t = tFor("skolenia");
+  const items: FaqAccordionItemKey[] = COURSES_FAQ_KEYS.map((key) => ({
+    key,
+    icon: COURSES_FAQ_ICONS[key],
+  }));
   return (
-    <section
-      className="mt-16"
-      data-testid="courses-faq-section"
-      aria-labelledby="courses-faq-heading"
-    >
-      <h2
-        id="courses-faq-heading"
-        data-testid="courses-faq-heading"
-        className="mb-6 text-2xl font-bold"
-      >
-        {t("faq_heading")}
-      </h2>
-      <Accordion type="single" collapsible className="flex flex-col gap-3">
-        {COURSES_FAQ_KEYS.map((key) => (
-          <AccordionItem
-            key={key}
-            value={key}
-            className="rounded-xl border border-border/60 bg-card/40 px-5"
-            data-testid={`courses-faq-item-${key}`}
-          >
-            <AccordionTrigger
-              className="text-left text-base font-semibold hover:no-underline"
-              data-testid={`courses-faq-trigger-${key}`}
-            >
-              {t(`faq_${key}`)}
-            </AccordionTrigger>
-            <AccordionContent
-              className="text-sm leading-relaxed text-muted-foreground"
-              data-testid={`courses-faq-answer-${key}`}
-            >
-              {t(`faq_a${key.slice(1)}`)}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </section>
+    <FaqAccordion
+      items={items}
+      getQ={(key) => t(`faq_${key}`)}
+      getA={(key) => t(`faq_a${key.slice(1)}`)}
+      testIdPrefix="courses-faq"
+      anchorPrefix="faq-courses"
+      heading={t("faq_heading")}
+      eyebrow={t("faq_eyebrow")}
+      subheading={t("faq_subheading")}
+      popularBadge={t("faq_popular_badge")}
+      expandAllLabel={t("faq_expand_all")}
+      collapseAllLabel={t("faq_collapse_all")}
+      footerLabel={t("faq_footer_label")}
+      footerCtas={[
+        {
+          label: t("faq_footer_cta_blog"),
+          href: ROUTES.blog,
+          testid: "courses-faq-footer-cta-blog",
+        },
+        {
+          label: t("faq_footer_cta_contact"),
+          href: ROUTES.kontakt,
+          testid: "courses-faq-footer-cta-contact",
+        },
+      ]}
+    />
   );
 }
