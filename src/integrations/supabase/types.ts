@@ -368,6 +368,208 @@ export type Database = {
         Update: { id?: string; session_id?: string; type?: string; payload?: Json; at?: string };
         Relationships: [];
       };
+      blog_authors: {
+        Row: {
+          id: string;
+          slug: string;
+          display_name: string;
+          bio: string | null;
+          avatar_url: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          display_name: string;
+          bio?: string | null;
+          avatar_url?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          display_name?: string;
+          bio?: string | null;
+          avatar_url?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      blog_categories: {
+        Row: {
+          id: string;
+          slug: string;
+          name: string;
+          description: string | null;
+          sort_order: number;
+          seo_title: string | null;
+          seo_description: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          name: string;
+          description?: string | null;
+          sort_order?: number;
+          seo_title?: string | null;
+          seo_description?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          name?: string;
+          description?: string | null;
+          sort_order?: number;
+          seo_title?: string | null;
+          seo_description?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      blog_post_tags: {
+        Row: { post_id: string; tag_id: string };
+        Insert: { post_id: string; tag_id: string };
+        Update: { post_id?: string; tag_id?: string };
+        Relationships: [
+          {
+            foreignKeyName: "blog_post_tags_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "blog_posts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "blog_post_tags_tag_id_fkey";
+            columns: ["tag_id"];
+            isOneToOne: false;
+            referencedRelation: "blog_tags";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      blog_posts: {
+        Row: {
+          id: string;
+          slug: string;
+          language: string;
+          category_id: string;
+          author_id: string;
+          pillar_post_id: string | null;
+          title: string;
+          subtitle: string | null;
+          excerpt: string;
+          body_mdx: string;
+          hero_image_url: string | null;
+          og_image_url: string | null;
+          seo_title: string | null;
+          seo_description: string | null;
+          canonical_url: string | null;
+          primary_keyword: string | null;
+          search_intent: string | null;
+          reading_minutes: number | null;
+          faq_jsonb: Json | null;
+          status: Database["public"]["Enums"]["test_status"];
+          published_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          language?: string;
+          category_id: string;
+          author_id: string;
+          pillar_post_id?: string | null;
+          title: string;
+          subtitle?: string | null;
+          excerpt: string;
+          body_mdx: string;
+          hero_image_url?: string | null;
+          og_image_url?: string | null;
+          seo_title?: string | null;
+          seo_description?: string | null;
+          canonical_url?: string | null;
+          primary_keyword?: string | null;
+          search_intent?: string | null;
+          reading_minutes?: number | null;
+          faq_jsonb?: Json | null;
+          status?: Database["public"]["Enums"]["test_status"];
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          language?: string;
+          category_id?: string;
+          author_id?: string;
+          pillar_post_id?: string | null;
+          title?: string;
+          subtitle?: string | null;
+          excerpt?: string;
+          body_mdx?: string;
+          hero_image_url?: string | null;
+          og_image_url?: string | null;
+          seo_title?: string | null;
+          seo_description?: string | null;
+          canonical_url?: string | null;
+          primary_keyword?: string | null;
+          search_intent?: string | null;
+          reading_minutes?: number | null;
+          faq_jsonb?: Json | null;
+          status?: Database["public"]["Enums"]["test_status"];
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: false;
+            referencedRelation: "blog_categories";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "blog_posts_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "blog_authors";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "blog_posts_pillar_post_id_fkey";
+            columns: ["pillar_post_id"];
+            isOneToOne: false;
+            referencedRelation: "blog_posts";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      blog_tags: {
+        Row: {
+          id: string;
+          slug: string;
+          name: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          name: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          name?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       categories: {
         Row: {
           id: string;
