@@ -11,8 +11,10 @@
   },
   "post": {
     "back_to_blog": "späť na blog",
-    "reading_time": "{{minutes}} min čítania",
-    "published_on": "publikované {{date}}",
+    "reading_time": "{minutes} min čítania",
+    "reading_time_suffix": "min čítania",
+    "published_on": "publikované {date}",
+    "published_label": "publikované",
     "in_category": "v kategórii",
     "tags_heading": "tagy",
     "related_heading": "čítaj ďalej v tomto tematickom celku",
@@ -36,7 +38,7 @@
   },
   "sources": {
     "heading": "zdroje",
-    "accessed": "navštívené {{date}}"
+    "accessed": "navštívené {date}"
   },
   "category": {
     "back_to_blog": "späť na blog",

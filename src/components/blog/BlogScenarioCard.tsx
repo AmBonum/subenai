@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { tFor } from "@/i18n/blog";
@@ -86,13 +87,13 @@ export function BlogScenarioCard({ questionId }: { questionId: string }) {
             {pickedOption.correct ? t("answer_correct") : t("answer_wrong")}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">{question.explanation}</p>
-          <a
-            href="/test"
+          <Link
+            to="/tests"
             className="mt-4 inline-block text-sm font-medium underline underline-offset-2"
             data-testid={`blog-scenario-card-cta-${question.id}`}
           >
             {t("show_more")}
-          </a>
+          </Link>
         </div>
       )}
     </aside>

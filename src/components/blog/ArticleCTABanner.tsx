@@ -9,7 +9,7 @@ export function ArticleCTABanner() {
     <aside
       className="mt-12 overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/15 via-accent/10 to-transparent p-6 md:p-8"
       data-testid="blog-article-cta"
-      aria-label="Pozvánka na test internetovej bezpečnosti"
+      aria-label="pozvánka na test internetovej bezpečnosti"
     >
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
         <div>

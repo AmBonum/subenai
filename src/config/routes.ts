@@ -18,4 +18,5 @@ export const ROUTES = {
   oProjecte: "/about",
   zmeny: "/changelog",
   kontakt: "/contact",
+  blog: "/blog",
 } as const;

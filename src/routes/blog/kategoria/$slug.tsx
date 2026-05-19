@@ -32,7 +32,7 @@ export const Route = createFileRoute("/blog/kategoria/$slug")({
     if (!cat) {
       return {
         meta: [
-          { title: "Kategória nenájdená | subenai blog" },
+          { title: "kategória nenájdená | subenai blog" },
           { name: "robots", content: "noindex, nofollow" },
         ],
       };

@@ -46,6 +46,10 @@
       "podpora": {
         "label": "Podpora projektu",
         "desc": "Hosting, obsah a údržba. Bez reklám, bez paywallu — funguje zo sponzorstva."
+      },
+      "blog": {
+        "label": "Blog",
+        "desc": "Návody, ako rozpoznať scam — phishing, SMS podvody, fake e-shopy, AI."
       }
     },
     "cta": {
@@ -68,7 +72,8 @@
           "test": "Spustiť test",
           "testy": "Sada testov",
           "skolenia": "Školenia",
-          "skoly": "Pre školy"
+          "skoly": "Pre školy",
+          "blog": "Blog"
         }
       },
       "projekt": {

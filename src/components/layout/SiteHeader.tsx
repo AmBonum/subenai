@@ -79,6 +79,12 @@ const MEGA_ITEMS: readonly MegaMenuItemDef[] = [
     href: ROUTES.skoly,
   },
   {
+    slug: "blog",
+    labelKey: "label",
+    descKey: "desc",
+    href: ROUTES.blog,
+  },
+  {
     slug: "podpora",
     labelKey: "label",
     descKey: "desc",

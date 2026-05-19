@@ -65,12 +65,14 @@ export function BlogHeroFallback({
           testid={`category-illustration-${categorySlug}`}
         />
       </div>
+      {/* Banner variant previously rendered a second <h1> overlay,
+          duplicating the article page's own <h1> (already rendered in
+          the article header above the hero). HTML semantics demand one
+          H1; screen readers also read the image's aria-label as the
+          title, so a third title surface was redundant. The gradient
+          overlay is kept for visual depth even without text. */}
       {variant === "banner" && (
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-6 md:p-10">
-          <h1 className="text-2xl font-bold text-white drop-shadow-md md:text-4xl lg:text-5xl">
-            {title}
-          </h1>
-        </div>
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" />
       )}
     </div>
   );

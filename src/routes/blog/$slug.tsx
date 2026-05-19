@@ -48,7 +48,7 @@ export const Route = createFileRoute("/blog/$slug")({
     if (!post) {
       return {
         meta: [
-          { title: "Článok nenájdený | subenai" },
+          { title: "článok nenájdený | subenai" },
           { name: "robots", content: "noindex, nofollow" },
         ],
       };

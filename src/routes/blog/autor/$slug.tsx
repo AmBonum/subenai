@@ -30,7 +30,7 @@ export const Route = createFileRoute("/blog/autor/$slug")({
     if (!author) {
       return {
         meta: [
-          { title: "Autor nenájdený | subenai blog" },
+          { title: "autor nenájdený | subenai blog" },
           { name: "robots", content: "noindex, nofollow" },
         ],
       };

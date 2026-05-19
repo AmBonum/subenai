@@ -177,12 +177,22 @@ function BlogPostPage() {
               </Link>
             </span>
             <span aria-hidden="true">·</span>
-            <span>{t("published_on", { date: publishedDate })}</span>
+            <span data-testid="blog-post-published">
+              {t("published_label")}{" "}
+              <time
+                dateTime={post.published_at}
+                className="font-medium text-foreground"
+                data-testid="blog-post-published-value"
+              >
+                {publishedDate}
+              </time>
+            </span>
             {post.reading_minutes != null && (
               <>
                 <span aria-hidden="true">·</span>
                 <span data-testid="blog-post-reading-time">
-                  {t("reading_time", { minutes: String(post.reading_minutes) })}
+                  <span className="font-medium text-foreground">{post.reading_minutes}</span>{" "}
+                  {t("reading_time_suffix")}
                 </span>
               </>
             )}

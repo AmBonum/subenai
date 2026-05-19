@@ -60,7 +60,7 @@ export function BlogShareRow({ url, title }: BlogShareRowProps) {
             href={l.href}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Zdieľať na ${l.name}`}
+            aria-label={`zdieľať na ${l.name}`}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card font-bold text-foreground transition-colors hover:border-primary hover:text-primary"
             data-testid={l.testid}
           >

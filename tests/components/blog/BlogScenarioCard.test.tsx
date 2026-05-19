@@ -1,5 +1,16 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import type { ComponentProps, ReactNode } from "react";
+
+// Mock TanStack Link with a plain <a> so the component can render
+// without a Router context (the in-card CTA at the end uses <Link>).
+vi.mock("@tanstack/react-router", () => ({
+  Link: ({ to, children, ...rest }: { to: unknown; children: ReactNode } & ComponentProps<"a">) => (
+    <a href={typeof to === "string" ? to : "#"} {...rest}>
+      {children}
+    </a>
+  ),
+}));
 
 import { BlogScenarioCard } from "@/components/blog/BlogScenarioCard";
 import { QUESTIONS } from "@/lib/quiz/bank/questions";
@@ -46,7 +57,10 @@ describe("BlogScenarioCard", () => {
     expect(explanation).toHaveTextContent(sampleQuestion.explanation);
 
     const cta = screen.getByTestId(`blog-scenario-card-cta-${sampleQuestion.id}`);
-    expect(cta).toHaveAttribute("href", "/test");
+    // CTA was changed from /test (legacy quiz) to /tests (suite landing)
+    // in E16.4 — both routes existed but only /tests is the canonical
+    // conversion target for blog readers.
+    expect(cta).toHaveAttribute("href", "/tests");
 
     // After reveal every option button is disabled — second click is a no-op.
     for (const option of sampleQuestion.options) {

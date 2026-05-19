@@ -67,13 +67,13 @@ andrea sa pozerá na obrazovku. dashboard sa neukáže. namiesto neho stránka n
 
 príde druhá sms od skutočnej banky: *„potvrdenie prevodu 1 200 €, kód: 318 944“*. andrea kód zadá — myslí si, že **ruší** ten podozrivý prevod. v skutočnosti ho práve **autorizovala**. peniaze odchádzajú z účtu.
 
-príde tretia sms: *„potvrdenie prevodu 1 600 €, kód: 552 011“*. andrea zadá. štvrtá: 800 €. piata: 1 200 €. **každú sms andrea číta letmo, lebo na obrazovke jej páchatelia stále držia stránku s textom *„overujeme, prosím nezatvárajte“* a počítadlom 30 sekúnd, ktoré jej tlačí na čas.**
+príde tretia sms: *„potvrdenie prevodu 1 600 €, kód: 552 011“*. andrea zadá. štvrtá: 800 €. piata: 1 200 €. **každú sms andrea číta letmo, lebo na obrazovke jej páchatelia stále drţia stránku s textom *„overujeme, prosím nezatvárajte“* a počítadlom 30 sekúnd, ktoré jej tlačí na čas.**
 
 [polícia sr v slovenských prípadoch z roku 2025 popisuje presne túto fázu](https://www.minv.sk/?sprava=proti-podvodom-a-hoaxom-aj-na-facebooku-pz) [2]: páchatelia rozdelia sumu na **viacero malých prevodov pod 2 000 €**, aby každý prešiel bez dodatočného overenia (telefonát z banky pri vyšších sumách), a posielajú ich na **rôzne účty tzv. money mules** — ľudí, ktorých páchatelia zverbovali za províziu, aby na svoj účet prijali a poslali ďalej cudzie peniaze.
 
 ## 19:54 — andrea otvára pravú bankovú appku
 
-prešlo dvanásť minút. stránka konečne hodí chybu *„overenie zlyhalo, skúste znova neskôr“*. andrea sa zľakne, že sa niečo pokazilo a transakcia z amazonu **prešla**. otvorí **pravú appku svojej banky** — tú, ktorú má nainštalovanú v telefóne s biometrickým prihlásením.
+prešlo dvanásť minút. stránka konečne hodí chybu *„overenie zlyhalo, skúste znova neskôr“*. andrea sa zľakne, ţe sa niečo pokazilo a transakcia z amazonu **prešla**. otvorí **pravú appku svojej banky** — tú, ktorú má nainštalovanú v telefóne s biometrickým prihlásením.
 
 zostatok: **42,30 €.** v účte mala pred dvanástimi minútami 4 853,11 €.
 
@@ -104,11 +104,11 @@ andrea sa odvolá. po ďalších štyroch mesiacoch banka rozhodne, že **kompen
 
 keď si neskôr s vyšetrovateľkou prešli krok po kroku, vyšiel jeden moment, kde sa to dalo zastaviť bez akejkoľvek expertízy:
 
-**druhá sms od banky.** keby si andrea v tej druhej sms — *„potvrdenie prevodu 1 200 €, kód: 318 944“* — **prečítala prvú vetu pomaly**, videla by, že sms nehovorí *„ruším prevod“* alebo *„zastavujem podozrivú transakciu“*. hovorí *„potvrdenie prevodu“*. **slovo *„prevod“* znamená, že peniaze odchádzajú z účtu, nie že banka niečo ruší.**
+**druhá sms od banky.** keby si andrea v tej druhej sms — *„potvrdenie prevodu 1 200 €, kód: 318 944“* — **prečítala prvú vetu pomaly**, videla by, ţe sms nehovorí *„ruším prevod“* alebo *„zastavujem podozrivú transakciu“*. hovorí *„potvrdenie prevodu“*. **slovo *„prevod“* znamená, ţe peniaze odchádzajú z účtu, nie ţe banka niečo ruší.**
 
-[tatra banka, slsp aj vúb v roku 2026 explicitne pridali do svojich autorizačných sms povinný text *„zadaním kódu autorizujete prevod XXX €“*](https://nbs.sk/pozor-na-podvody/) [1] — presne preto, aby tento moment bol nemožný prehliadnuť. ale v stave, v ktorom andrea bola, oči preleteli sms za sekundu, zachytili kód a vrátili sa na obrazovku počítadlom 30 sekúnd.
+[tatra banka, slsp aj vúb v roku 2026 explicitne pridali do svojich autorizačných sms povinný text *„zadaním kódu autorizujete prevod XXX €“*](https://nbs.sk/pozor-na-podvody/) [1] — presne preto, aby tento moment bol nemoţný prehliadnuť. ale v stave, v ktorom andrea bola, oči preleteli sms za sekundu, zachytili kód a vrátili sa na obrazovku počítadlom 30 sekúnd.
 
-**pravidlo, ktoré by zachránilo 4 800 €:** keď príde sms s kódom, **pred zadaním kódu si prečítaj celý text — minimálne 4 sekundy.** spýtaj sa: *„čo presne tento kód autorizuje?“* ak text hovorí *„prevod“*, *„platba“*, *„payment“* — a ty si žiadny prevod neiniciovala — **nezadávaj**. zatvor stránku. zavolaj banke z čísla na karte.
+**pravidlo, ktoré by zachránilo 4 800 €:** keď príde sms s kódom, **pred zadaním kódu si prečítaj celý text — minimálne 4 sekundy.** spýtaj sa: *„čo presne tento kód autorizuje?“* ak text hovorí *„prevod“*, *„platba“*, *„payment“* — a ty si ţiadny prevod neiniciovala — **nezadávaj**. zatvor stránku. zavolaj banke z čísla na karte.
 
 druhý moment, kde sa to dalo zastaviť: **nekliknúť na link v sms vôbec.** v explainer článku [sms z banky — ako za 20 sekúnd overiť, či je pravá](/blog/sms-z-banky-overit-ci-je-pravda) je presný 20-sekundový postup pre tatra banku, slsp aj vúb. žiadna z týchto bánk neposiela linky v sms na overenie transakcií.
 
@@ -116,14 +116,14 @@ druhý moment, kde sa to dalo zastaviť: **nekliknúť na link v sms vôbec.** v
 
 ak čítaš tento príbeh, lebo si pred chvíľou zadal/a sms kódy do stránky, na ktorú si klikol/la z sms — **toto sú kroky, ktoré rozhodujú o tom, koľko sa vráti**:
 
-1. **okamžite zavolaj banku z čísla na karte.** každá minúta znižuje šancu na sepa instant recall. nečakaj do rána. linky bánk fungujú 24/7.
+1. **okamţite zavolaj banku z čísla na karte.** každá minúta zniţuje šancu na sepa instant recall. nečakaj do rána. linky bánk fungujú 24/7.
 2. **zmraz aktivnu kartu a online banking** cez appku, ak ešte máš prístup, alebo nech to urobí operátorka.
 3. **odfoť obrazovku falošnej stránky a sms** skôr, ako čokoľvek zatvoríš — bude to dôkaz pre vyšetrovateľa.
 4. **podaj trestné oznámenie na polícii sr** — osobne na obvodnom oddelení alebo online cez [stránku polície sr](https://www.minv.sk/?sprava=proti-podvodom-a-hoaxom-aj-na-facebooku-pz) [2]. vyšetrovatelia vzor poznajú; nikoho nešokuješ.
 5. **zmeň heslo** k online bankingu aj k e-mailu, ku ktorému banka posiela správy.
 6. **reklamáciu v banke podaj písomne do 13 mesiacov** od neautorizovanej transakcie — to je zákonný limit. v praxi do 24 hodín, lebo banka má vtedy reálnu šancu peniaze vrátiť.
 
-a nakoniec — **nehanbi sa**. andrea sa po prvých dvoch týždňoch začala s príbehom zverovať blízkym kolegyniam v práci. **dve z nich povedali, že sa im pred dvomi mesiacmi stalo to isté**, len o menších sumách (180 € a 320 €) a nikomu o tom nepovedali. *„som ten/tá hlúpy/-a, ktorý/-á by tomu nikdy nemal naletieť“* — to je presne ten obrázok seba, ktorý páchatelia využívajú, aby si mlčal/a. mlčanie ich chráni; tvoj telefonát banke a polícii ho rozbíja.
+a nakoniec — **nehanbi sa**. andrea sa po prvých dvoch týždňoch začala s príbehom zverovať blízkym kolegyniam v práci. **dve z nich povedali, ţe sa im pred dvomi mesiacmi stalo to isté**, len o menších sumách (180 € a 320 €) a nikomu o tom nepovedali. *„som ten/tá hlúpy/-a, ktorý/-á by tomu nikdy nemal naletieť“* — to je presne ten obrázok seba, ktorý páchatelia využívajú, aby si mlčal/a. mlčanie ich chráni; tvoj telefonát banke a polícii ho rozbíja.
 
 ## čítaj ďalej
 
@@ -134,6 +134,6 @@ a nakoniec — **nehanbi sa**. andrea sa po prvých dvoch týždňoch začala s 
 - [čo robiť, keď som klikol na phishing](/blog/co-robit-ked-som-klikol-na-phishing) — krízový plán hodina po hodine.
 - [nechcené platby z účtu — čo robiť](/blog/nechcene-platby-z-uctu-co-robit) — reklamačné lehoty a postup voči banke.
 
-ak chceš zistiť, či by si podobnú sms o podozrivej transakcii spoznal/a skôr, než klikneš, otestuj sa na 15 otázkach za 90 sekúnd. bez registrácie.
+ak chceš zistiť, či by si podobnú sms o podozrivej transakcii spoznal/a skôr, neţ klikneš, otestuj sa na 15 otázkach za 90 sekúnd. bez registrácie.
 
 **otestuj sa za 90 sekúnd →** `/test`

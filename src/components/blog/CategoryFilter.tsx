@@ -22,8 +22,8 @@ export function CategoryFilter({ options, activeSlug, onChange, totalCount }: Ca
   return (
     <div
       className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 md:flex-wrap md:overflow-visible md:pb-0"
-      role="tablist"
-      aria-label="Filter podľa kategórie"
+      role="group"
+      aria-label="filter podľa kategórie"
       data-testid="blog-category-filter"
     >
       <FilterChip
@@ -75,8 +75,7 @@ function FilterChip({ active, label, count, onClick, glyph, accentHex, testid }:
   return (
     <button
       type="button"
-      role="tab"
-      aria-selected={active}
+      aria-pressed={active}
       onClick={onClick}
       style={baseStyle}
       className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all ${

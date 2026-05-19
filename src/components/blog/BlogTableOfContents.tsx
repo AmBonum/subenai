@@ -81,7 +81,7 @@ export function BlogTableOfContents({ mdx, label }: BlogTableOfContentsProps) {
 
   return (
     <nav
-      aria-label="Obsah článku"
+      aria-label="obsah článku"
       className="hidden xl:block xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto"
       data-testid="blog-toc"
     >
