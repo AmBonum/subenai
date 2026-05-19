@@ -1,0 +1,171 @@
+---
+slug: spravca-hesiel-porovnanie
+title: "správca hesiel — porovnanie 4 možností pre rok 2026"
+subtitle: "bitwarden vs. 1password vs. apple passwords vs. heslá v prehliadači — kto vyhráva, kde a pre koho"
+excerpt: "vlastné heslo pre každú zo 150 služieb si nezapamätáš. preto existuje správca hesiel. v tomto porovnaní si pozrieme 4 najreálnejšie možnosti pre slováka v roku 2026 — koľko stoja, čo vedia, kde sa rozbijú a ktorá z nich je pre teba najlepšia."
+category_slug: digitalna-bezpecnost
+author_slug: subenai-editorial
+primary_keyword: spravca hesiel
+search_intent: commercial
+reading_minutes: 9
+hero_image_url: null
+og_image_url: null
+seo_title: "správca hesiel porovnanie 2026 — bitwarden, 1password, apple, prehliadač | subenai"
+seo_description: "porovnanie 4 správcov hesiel pre slováka v roku 2026 — bitwarden, 1password, apple passwords, prehliadač. ceny, výhody, limity a ako migrovať z jedného na druhý."
+canonical_url: null
+pillar: false
+sources:
+  - label: "sk-cert: varovanie pred zvýšeným rizikom kybernetických bezpečnostných útokov"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "nbú sr: odporúčania k bezpečnosti hesiel a viacfaktorovej autentifikácii"
+    url: "https://www.nbu.gov.sk/kyberneticka-bezpecnost/varovania/index.html"
+    publisher: "NBÚ SR"
+    accessed_at: "2026-05-19"
+  - label: "bitwarden: oficiálny cenník password manager (2026)"
+    url: "https://bitwarden.com/pricing/"
+    publisher: "Bitwarden"
+    accessed_at: "2026-05-19"
+  - label: "1password: oficiálny cenník password manager (2026)"
+    url: "https://1password.com/pricing/password-manager"
+    publisher: "1Password"
+    accessed_at: "2026-05-19"
+  - label: "apple support: nastavenie iCloud Keychain a aplikácie Passwords"
+    url: "https://support.apple.com/en-us/109016"
+    publisher: "Apple"
+    accessed_at: "2026-05-19"
+  - label: "fido alliance: passkeys — passwordless authentication"
+    url: "https://fidoalliance.org/passkeys/"
+    publisher: "FIDO Alliance"
+    accessed_at: "2026-05-19"
+---
+
+priemerný slovák má dnes okolo 150 účtov, ktoré sa pýtajú heslo — gmail, banka, alza, netflix, packeta, e-shopy, fóra. unikátne 16-znakové heslo pre každý si nezapamätáš. preto si väčšina ľudí zvolí najhoršiu možnú stratégiu: jedno-dve heslá, recyklované všade. presne na to čaká útočník s ukradnutou databázou z minuloročného úniku.
+
+riešenie sa volá **správca hesiel** — aplikácia, ktorá za teba generuje, ukladá, šifruje a vypĺňa heslá. ty si pamätáš jedinú vec: master heslo. pre širší kontext, prečo tento nástroj patrí medzi tri najdôležitejšie vrstvy obrany bežného slováka, začni v [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod). tu si rozoberieme štyri konkrétne možnosti.
+
+## podľa čoho ich porovnávame
+
+päť kritérií, ktoré odlišujú serióznu aplikáciu od marketingu:
+
+1. **zero-knowledge šifrovanie.** trezor sa otvára až na tvojom zariadení, master heslo neopúšťa počítač. ak služba toto nemá, **nie je to password manager**.
+2. **2fa na samotnom manageri.** master heslo + druhý faktor. aj keď master unikne, útočník bez druhého faktora dnu nedostane.
+3. **kontrola únikov.** integrácia s [haveibeenpwned alebo vlastnou breach databázou](/blog/uniknute-heslo-overit-haveibeenpwned), aby ti manager hlásil, ktoré heslo treba zmeniť.
+4. **podpora passkeys.** v roku 2026 už nestačí ukladať heslá — manager musí vedieť aj uchovávať [passkeys, ktoré v mnohých prípadoch heslo úplne nahrádzajú](/blog/silne-heslo-2026-vs-passkey).
+5. **anti-phishingová obrana.** manager vyplní heslo len na **presne tej doméne**, kde si ho uložil. ak vyzerá ako slovenská sporiteľňa, ale doména je `slsp-overenie.online`, manager nevyplní — to je signál, že stránka je falošná.
+
+## bitwarden — najlepší default pre väčšinu slovákov
+
+**čo je:** open-source správca hesiel od americkej firmy Bitwarden Inc. kód je verejne auditovaný; nikto nenašiel zadné dvierka. zero-knowledge šifrovanie, klient-side AES-256.
+
+**cena (k 2026-05):**
+
+- **free tier** — neobmedzený počet hesiel, sync naprieč zariadeniami, základný 2fa cez TOTP. pre 90 % slovákov stačí donekonečna.
+- **premium individuálny** — 19,80 USD ročne (cca 18 €/rok). pridáva hardvérový 2fa kľúč, reporty o zdraví trezoru, 5 GB úložiska.
+- **family plan** — 47,88 USD ročne (cca 44 €/rok), pre **6 členov**. v januári 2026 bitwarden zdražil prvýkrát po desiatich rokoch z 39,99 — stále najlacnejší rodinný plán na trhu.
+
+**plus:** otvorený zdrojový kód. free tier je skutočne použiteľný, nie marketingový teaser. self-hosting cez Vaultwarden. klienty pre všetky platformy plus rozšírenia pre každý prehliadač.
+
+**mínus:** ux je o triedu menej polírované než 1password. mobilné aplikácie v 2025–2026 občas „chytajú dych" pri trezore nad ~2 000 položiek.
+
+**pre koho:** **pre väčšinu slovákov, ktorí ešte nemajú žiadny správca hesiel.** ak si na začiatku a nevieš sa rozhodnúť, založ bitwarden free. neexistuje dôvod, prečo by si **aspoň** toto nemal mať.
+
+## 1password — najlepšie ux a rodinné funkcie
+
+**čo je:** komerčný správca od kanadskej firmy 1Password. žiadny free tier (iba 14-dňová skúška). najpolírovanejšie ux na trhu, externé audity (PwC 2025), bug bounty cez Bugcrowd.
+
+**cena (k 2026-05, po marcovom zdražení):**
+
+- **individual** — 47,88 USD/rok (cca 44 €/rok). v marci 2026 zdražilo z 35,88 na 47,88 (+33 %).
+- **family** — 71,88 USD/rok (cca 67 €/rok), pre **5 členov**.
+
+**plus:**
+
+- **Travel Mode** — pred cestou cez hranice si v jednom kliku dočasne odstrániš citlivé položky z mobilu. unikátna funkcia.
+- **Watchtower** — integrované varovanie pred uniknutými heslami, slabými mastrami, znovupoužitými heslami. najlepšia v triede.
+- **shared vaults** v rodinnej licencii — manželia zdieľajú netflix a wifi, deti majú vlastný trezor s nastaviteľnými rolami.
+- ux, ktoré pochopí senior tetka po desiatich minútach.
+
+**mínus:** žiadny free tier. closed source — kód si neoveríš. cena: za rok 1password dostaneš dva roky bitwardenu.
+
+**pre koho:** **rodiny s 3+ členmi, cestovatelia, power useri.** ak máš v rodine 4–5 ľudí a každý ti vola raz mesačne, lebo si nepamätá heslo do gmailu — 1password family za 67 €/rok ti zaplatí pokoj.
+
+## apple passwords / iCloud Keychain — zadarmo a stačí, ak žiješ v apple
+
+**čo je:** apple v septembri 2024 preimenoval *iCloud Keychain* na samostatnú aplikáciu **Passwords** (ios 18, macos sequoia). funkčne tá istá vec — apple-native správca zabudovaný do iphonu a macu, syncuje cez icloud. súčasť icloudu, žiadny upgrade.
+
+**cena:** zadarmo (ak máš iphone, máš to automaticky).
+
+**plus:** vstavané v systéme — žiadna inštalácia. odomykanie cez face id / touch id. **prvotriedna podpora passkeys** — apple je jedným z troch zakladateľov FIDO passkey štandardu, iphone vie passkey natívne vygenerovať a použiť. od 2024 existuje *iCloud Passwords* pre windows + rozšírenie pre chrome.
+
+**mínus:** **android prakticky nepodporovaný.** ak máš v rodine android, k heslám sa natívne nedostaneš. existuje QR-cross-flow (FIDO CTAP 2.2), ale je to friction, nie sync. **žiadne plnohodnotné zdieľané rodinné trezory** — funkcia „Shared Groups" je obmedzenejšia než v 1password / bitwarden a vyžaduje, aby všetci boli v apple. kontrola únikov existuje, ale je menej detailná než Watchtower.
+
+**pre koho:** **pre čistých apple-userov bez androidu v rodine.** apple passwords ti pokryje 100 % potrieb zadarmo. **akonáhle sa v rovnici objaví android telefón — vypadne.**
+
+## heslá uložené v prehliadači (chrome, edge, safari, firefox) — nie
+
+**čo je:** každý prehliadač sa pri prvom prihlásení pýta *"chcete uložiť heslo?"*. ak klikneš áno, uloží sa do prehliadačovej databázy a syncuje cez tvoj google / microsoft / apple účet. **cena:** zadarmo.
+
+**prečo *nie*:**
+
+1. **najslabšia obrana pred malwarom.** ak ti počítač napadne info-stealer (lumma, redline, raccoon — aktívne kampane v slovensku 2025–2026), prvá vec, ktorú urobí, je vyexportovať chrome / edge password databázu. samostatný manager tieto stealery v drvivej väčšine prípadov **otvoriť nevedia** — je šifrovaný iným kľúčom.
+2. **slabá obrana pred phishingom.** chrome / edge občas vyplnia heslo aj na podozrivej doméne, ak je dosť podobná. samostatný manager je prísnejší.
+3. **žiadne pokročilé zdieľanie.** zdieľať heslo s manželkou znamená poslať jej to cez whatsapp. v 2026.
+4. **viazaný na jeden prehliadač.** chrome doma a safari na iphone medzi sebou nesyncujú.
+
+**pre koho:** **pre nikoho ako primárny správca.** chrome built-in je lepší než žiadne heslá vôbec, ale **vždy** je to dočasné riešenie. prvý krok je vyexportovať heslá z prehliadača do bitwardenu a v prehliadači to vypnúť.
+
+## ako migrovať — 30 minút v sobotu
+
+povedzme, že si sa rozhodol pre bitwarden. aktuálne máš heslá v chrome. takto na to:
+
+1. **založ účet** v bitwardene. master heslo nastav ako [heslovú frázu zo štyroch náhodných slovenských slov](/blog/silne-heslo-2026-vs-passkey). zapíš si ju na papier do trezoru.
+2. **zapni 2fa na samotnom manageri** (aegis, 2fas, raivo, alebo hardvérový kľúč). ulož recovery kódy.
+3. **vyexportuj heslá z chromu.** `chrome://settings/passwords` → tri bodky → *Export passwords*. dostaneš csv.
+4. **importuj do bitwardenu** cez File → Import Data → Chrome (csv). rovnaký postup pre 1password, lastpass, firefox.
+5. **vymaž csv** zo zložky downloads — obsahuje všetky heslá v plain texte.
+6. **vypni ukladanie hesiel v chrome**, inak ti vznikne druhý súbežný trezor.
+7. **prejdi Reports → Exposed Passwords.** bitwarden ti ukáže, ktoré z importovaných hesiel sú v breach databáze. najdôležitejšie hneď zmeň — princíp je rovnaký ako pri [overení cez haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned).
+8. **na nasledujúci mesiac** pri každom prihlásení manager auto-vyplní heslo. ak je recyklované, klikni *generate new*. po mesiaci máš trezor zdravý.
+
+## master heslo — pravidlá
+
+- **dlhé.** štyri slovenské náhodné slová (`modry slon kosak vianoce`). 23 znakov, zapamätateľné, bilióny kombinácií.
+- **unikátne.** nesmie sa zhodovať so žiadnym iným heslom. nikde.
+- **zapísané na papieri v trezore, ak máš obavy zabudnúť.** lepšie papierik v trezore (fyzický útočník zriedkavý) než stratiť celý trezor.
+- **2fa povinné.** aj keď master unikne, bez druhého faktora trezor neotvorí.
+
+konečné porovnanie:
+
+| kritérium | bitwarden | 1password | apple passwords | chrome built-in |
+|---|---|---|---|---|
+| cena | free / 18 €/rok | 44 €/rok | zadarmo | zadarmo |
+| family plán | 44 €/rok pre 6 | 67 €/rok pre 5 | obmedzené | nie |
+| platformy | všetko | všetko | iOS/macOS/Win | iba chrome |
+| zero-knowledge | áno | áno | áno | čiastočne |
+| open source | áno | nie | nie | nie |
+| obrana pred stealermi | silná | silná | silná | slabá |
+| passkeys | áno | áno | áno (prvotriedne) | áno |
+
+ak hľadáš detailnejšiu komerčnú porovnávaciu tabuľku s proton pass, nordpass a dashlane, pozri [najlepší správca hesiel 2026](/blog/najlepsi-spravca-hesiel-porovnanie-2026).
+
+## zhrnutie
+
+- **správca hesiel je nástroj číslo 1 v digitálnej bezpečnosti.** unikátne heslá pre 150 účtov si inak nezapamätáš.
+- **bitwarden** — najlepší default pre väčšinu slovákov. free tier reálne stačí; family za 44 €/rok je najlacnejší na trhu.
+- **1password** — najlepšie ux a rodinné funkcie. drahšie (44 €/rok individuál, 67 €/rok family), za pokoj v rodine s 4–5 ľuďmi sa to oplatí.
+- **apple passwords** — zadarmo a stačí, **ak v rodine nikoho s androidom nemáš**.
+- **heslá v prehliadači** — iba dočasné riešenie. info-stealery vedia chrome trezor otvoriť za sekundu, samostatný manager nie.
+- **master heslo = heslová fráza + 2fa + recovery kód na papieri v trezore.**
+
+## čítaj ďalej v tomto tematickom celku
+
+- [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod)
+- [silné heslo 2026 vs. passkey](/blog/silne-heslo-2026-vs-passkey)
+- [uniknuté heslo — overenie cez haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned)
+- [najlepší správca hesiel 2026](/blog/najlepsi-spravca-hesiel-porovnanie-2026)
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
