@@ -1,8 +1,8 @@
 ---
 slug: silne-heslo-2026-vs-passkey
 title: "silné heslo v roku 2026 — alebo prečo už dávno máme passkeys"
-subtitle: "prečo „K0mpl1k0van3!" nie je bezpečné, ako vyzerá poriadna heslová fráza a kde už dnes vieš heslo úplne vyhodiť"
-excerpt: "klasická rada „dvanásť znakov, veľké, malé, číslo, špeciálny znak" je z roku 2003 a útočníkom dnes nerobí ani malú vrásku. v tomto texte ti ukážem, prečo, čo ju nahrádza, a kde v 2026 vieš heslo úplne vymeniť za passkey."
+subtitle: "prečo „K0mpl1k0van3!“ nie je bezpečné, ako vyzerá poriadna heslová fráza a kde už dnes vieš heslo úplne vyhodiť"
+excerpt: "klasická rada „dvanásť znakov, veľké, malé, číslo, špeciálny znak“ je z roku 2003 a útočníkom dnes nerobí ani malú vrásku. v tomto texte ti ukážem, prečo, čo ju nahrádza, a kde v 2026 vieš heslo úplne vymeniť za passkey."
 category_slug: digitalna-bezpecnost
 author_slug: subenai-editorial
 primary_keyword: silne heslo
@@ -11,7 +11,7 @@ reading_minutes: 11
 hero_image_url: null
 og_image_url: null
 seo_title: "silné heslo v roku 2026 vs. passkey — čo je naozaj bezpečné | subenai"
-seo_description: "heslová fráza, password manager a passkey — tri vrstvy, ktoré nahrádzajú starú radu „dvanásť znakov a špeciálny znak". návod, kde už dnes vieš heslo vyhodiť."
+seo_description: "heslová fráza, password manager a passkey — tri vrstvy, ktoré nahrádzajú starú radu „dvanásť znakov a špeciálny znak“. návod, kde už dnes vieš heslo vyhodiť."
 canonical_url: null
 pillar: false
 sources:
@@ -41,11 +41,11 @@ sources:
     accessed_at: "2026-05-19"
 ---
 
-ak ti niekto v roku 2026 ešte stále radí *„heslo aspoň dvanásť znakov, veľké a malé písmeno, číslo a špeciálny znak"*, hovorí ti pravidlo z čias, keď internet behal cez ISDN a najväčšia hrozba bol vírus na diskete. moderná kryptografia, [aktualizované odporúčania nist-u](https://pages.nist.gov/800-63-3/sp800-63b.html) [3] aj zdravý sedliacky rozum hovoria niečo iné: **dĺžka poráža zložitosť, pamätateľnosť poráža papierik pod klávesnicou, a v roku 2026 už pri väčšine veľkých účtov nepotrebuješ heslo vôbec.**
+ak ti niekto v roku 2026 ešte stále radí *„heslo aspoň dvanásť znakov, veľké a malé písmeno, číslo a špeciálny znak“*, hovorí ti pravidlo z čias, keď internet behal cez ISDN a najväčšia hrozba bol vírus na diskete. moderná kryptografia, [aktualizované odporúčania nist-u](https://pages.nist.gov/800-63-3/sp800-63b.html) [3] aj zdravý sedliacky rozum hovoria niečo iné: **dĺžka poráža zložitosť, pamätateľnosť poráža papierik pod klávesnicou, a v roku 2026 už pri väčšine veľkých účtov nepotrebuješ heslo vôbec.**
 
 tento text rozoberie tri vrstvy modernej hesielovej hygieny — heslová fráza, password manager, passkey — a povie ti presne, kde je každá z nich na mieste. pre širší kontext začni v [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod), tu ideme do detailu jedného konkrétneho mechanizmu.
 
-## prečo „K0mpl1k0van3!" nie je silné heslo
+## prečo „K0mpl1k0van3!“ nie je silné heslo
 
 mýtus znie takto: čím viac špeciálnych znakov, tým bezpečnejšie. realita: útočník nezadáva tvoje heslo ručne. púšťa proti ukradnutej databáze hesiel **slovník naučený z predošlých únikov** — a v ňom je `K0mpl1k0van3!`, `Heslo123!`, `Password1!`, `Letmein2024!` aj 14 ďalších variácií, ktoré ľudský mozog vymyslí pod tlakom firemnej password policy.
 
@@ -54,9 +54,9 @@ dva problémy v jednom:
 1. **substitúcie sú predvídateľné.** zamena `o → 0`, `i → 1`, `a → @`, `e → 3` je v slovníku každého poriadneho cracking toolu od roku 2008. heslo `K0mpl1k0van3!` má prakticky rovnakú entropiu ako `Komplikovane!`.
 2. **dĺžka je len 13 znakov.** moderný GPU rig pri offline útoku skúša miliardy hashov za sekundu. trinásťznakový heslo so známym vzorom padne za hodiny.
 
-[nist v aktuálnej verzii SP 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html) [3] preto **explicitne odporúča prestať vynucovať pravidlo „veľké + malé + číslo + špeciálny znak"** — robí heslá horšie, nie lepšie, lebo nutí ľudí používať predvídateľné vzory. nahrádza ho jedno pravidlo: **minimum 8 znakov, kontrola proti zoznamu uniknutých hesiel, žiadne ďalšie composition requirements.**
+[nist v aktuálnej verzii SP 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html) [3] preto **explicitne odporúča prestať vynucovať pravidlo „veľké + malé + číslo + špeciálny znak“** — robí heslá horšie, nie lepšie, lebo nutí ľudí používať predvídateľné vzory. nahrádza ho jedno pravidlo: **minimum 8 znakov, kontrola proti zoznamu uniknutých hesiel, žiadne ďalšie composition requirements.**
 
-## heslová fráza: 4 náhodné slová poráža 12-znakové „silné" heslo
+## heslová fráza: 4 náhodné slová poráža 12-znakové „silné“ heslo
 
 riešenie je banálne. namiesto:
 
@@ -70,7 +70,7 @@ použi:
 modry slon kosak vianoce
 ```
 
-dvadsaťtri znakov. zapamätateľné na prvý pokus. **vyše bilióna kombinácií**, ak vyberáš zo zoznamu cca 7 000 slovenských slov. [xkcd to v roku 2011 ilustroval na obrázku „correct horse battery staple"](https://xkcd.com/936/) [5] — fráza zo štyroch náhodných anglických slov má entropiu okolo 44 bitov, čo je viac než typické zmesné heslo s rovnakým počtom znakov. v slovenčine s diakritickými variantami sa dostávaš nad 50 bitov bez akéhokoľvek úsilia.
+dvadsaťtri znakov. zapamätateľné na prvý pokus. **vyše bilióna kombinácií**, ak vyberáš zo zoznamu cca 7 000 slovenských slov. [xkcd to v roku 2011 ilustroval na obrázku „correct horse battery staple“](https://xkcd.com/936/) [5] — fráza zo štyroch náhodných anglických slov má entropiu okolo 44 bitov, čo je viac než typické zmesné heslo s rovnakým počtom znakov. v slovenčine s diakritickými variantami sa dostávaš nad 50 bitov bez akéhokoľvek úsilia.
 
 kľúčové slovo je **náhodné**. nie:
 
@@ -94,7 +94,7 @@ pre bežného slováka v 2026 prichádzajú do úvahy tri možnosti:
 
 detailné porovnanie funkcií, cien a recovery procesov nájdeš v [správca hesiel — porovnanie](/blog/spravca-hesiel-porovnanie) a v komerčnom buyer's guide [najlepší správca hesiel 2026](/blog/najlepsi-spravca-hesiel-porovnanie-2026).
 
-### „a čo keď zabudnem master heslo?"
+### „a čo keď zabudnem master heslo?“
 
 najčastejšia obava pred password managerom — a oprávnená. master heslo je jediný kľúč ku všetkému, takže ho nikto neukladá v plain texte (ani služba sama, ak je seriózna). bitwarden ani 1password ti ho nedokážu obnoviť.
 
@@ -115,7 +115,7 @@ passkey je kryptografický pár kľúčov založený na štandarde **FIDO2 / Web
 dva rozdiely oproti heslu, ktoré menia hru:
 
 - **nič tajné necestuje sieťou.** heslo môže útočník zachytiť, ukradnúť z databázy úniku, vypýtať si phishingom. súkromný kľúč nikdy neopustí tvoj telefón.
-- **passkey je viazaný na doménu.** browser podpíše výzvu **len pre originálnu doménu** (slsp.sk, nie slsp-overenie.com). aj keby ti niekto poslal dokonalý phishing s perfektne zhodnou stránkou, passkey odmietne podpísať. [fido alliance to popisuje ako „phishing-resistant by design"](https://fidoalliance.org/passkeys/) [4] — nejde o reklamný slogan, je to matematicky vlastnosť protokolu.
+- **passkey je viazaný na doménu.** browser podpíše výzvu **len pre originálnu doménu** (slsp.sk, nie slsp-overenie.com). aj keby ti niekto poslal dokonalý phishing s perfektne zhodnou stránkou, passkey odmietne podpísať. [fido alliance to popisuje ako „phishing-resistant by design“](https://fidoalliance.org/passkeys/) [4] — nejde o reklamný slogan, je to matematicky vlastnosť protokolu.
 
 ### kde passkey funguje v 2026
 
@@ -139,7 +139,7 @@ pre prehĺbenie 2FA stratégie pozri [ochrana pred phishingom — 2fa a passkeys
 
 ## najslabší článok: e-mail
 
-ak si z celého textu zoberieš jednu vec, nech je to toto. **tvoj e-mailový účet je jediná páka, cez ktorú útočník reštartuje heslá na všetkých ostatných službách.** banka, sociálne siete, e-shopy — všetko má v UX flow tlačidlo *„zabudol som heslo"* a všetko posiela reset link tam, kde čaká útočník, ak má prístup do tvojej inboxu.
+ak si z celého textu zoberieš jednu vec, nech je to toto. **tvoj e-mailový účet je jediná páka, cez ktorú útočník reštartuje heslá na všetkých ostatných službách.** banka, sociálne siete, e-shopy — všetko má v UX flow tlačidlo *„zabudol som heslo“* a všetko posiela reset link tam, kde čaká útočník, ak má prístup do tvojej inboxu.
 
 dôsledok: **e-mailové heslo musí byť úplne najsilnejšie zo všetkých**, a e-mail musí mať **najtvrdšie zapnuté 2FA / passkey, aké máš k dispozícii**.
 
@@ -155,7 +155,7 @@ raz za pol roka skontroluj na [haveibeenpwned.com](https://haveibeenpwned.com/) 
 
 ## zhrnutie
 
-- **„K0mpl1k0van3!" nie je silné heslo** — substitúcie sú v slovníku každého cracking toolu z roku 2008. dĺžka poráža zložitosť.
+- **„K0mpl1k0van3!“ nie je silné heslo** — substitúcie sú v slovníku každého cracking toolu z roku 2008. dĺžka poráža zložitosť.
 - **heslová fráza** = 4 náhodné slovenské slová oddelené medzerou. zapamätateľné, vyše bilióna kombinácií. **slová musia byť náhodné**, nie z tvojho života.
 - **password manager** generuje a ukladá unikátne heslá pre 150 účtov. bitwarden zadarmo, 1password platený, apple keychain pre čistú apple domácnosť.
 - **passkey** je kryptografický kľúč viazaný na doménu — phishing-resistant by design. v 2026 ho podporujú google, apple, microsoft, meta, github, paypal, slovenské banky.

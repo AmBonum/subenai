@@ -54,8 +54,8 @@ tento návod ti dá presne to: odtlačok siedmich bánk, jediné spoľahlivé pr
 skôr než pôjdeme po jednotlivých inštitúciách, zapamätaj si tri pravidlá, ktoré platia pre **každú** banku pôsobiacu na slovensku. nie sú to odporúčania — sú to záväzné štandardy, ktoré [národná banka slovenska v materiáloch o internetových podvodoch potvrdzuje opakovane](https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/) [1].
 
 1. **banka ti nikdy nepýta heslo, pin, cvv ani celé číslo karty cez email.** ani časť tohto vymenovania. nikdy. ak to email pýta, je to podvod, bodka.
-2. **banka ťa nikdy nelinkuje cez email na prihlásenie do internet bankingu.** legitímne notifikácie ti povedia „prihlás sa do svojho bankingu", nikdy ti nedajú odkaz typu *„kliknite sem pre overenie".*
-3. **banka identifikuje transakciu konkrétnym detailom** — posledné štyri číslice karty, presná suma, čas. „zaznamenali sme podozrivú aktivitu" bez čísel je phishing.
+2. **banka ťa nikdy nelinkuje cez email na prihlásenie do internet bankingu.** legitímne notifikácie ti povedia „prihlás sa do svojho bankingu“, nikdy ti nedajú odkaz typu *„kliknite sem pre overenie“.*
+3. **banka identifikuje transakciu konkrétnym detailom** — posledné štyri číslice karty, presná suma, čas. „zaznamenali sme podozrivú aktivitu“ bez čísel je phishing.
 
 tieto tri pravidlá ti samé osebe odfiltrujú asi 95 % bankového phishingu. zvyšok dorieši doménový odtlačok.
 
@@ -68,20 +68,20 @@ každá banka má jednu alebo dve oficiálne domény pre korešpondenciu a pre w
 - email odosielateľa pravej správy: **`@tatrabanka.sk`** (najčastejšie `notifikacie@tatrabanka.sk`, `info@tatrabanka.sk`)
 - web a banking: **`tatrabanka.sk`**, banking pod `moja.tatrabanka.sk`
 - **červené vlajky**, ktoré sme videli v slovenskom inboxe: `@tatrabanka-secure.com`, `@tatrabanka-info.eu`, `@tatra-bank.sk` (pomlčka), `@tatrabanka.sk.support-login.com`
-- správanie: tatra preferuje notifikácie cez aplikáciu, email používa najmä na produktové novinky. ak ti príde „bezpečnostný alert" emailom mimo aplikácie, predvolene mu never.
+- správanie: tatra preferuje notifikácie cez aplikáciu, email používa najmä na produktové novinky. ak ti príde „bezpečnostný alert“ emailom mimo aplikácie, predvolene mu never.
 
 ### slovenská sporiteľňa (slsp)
 
 - email odosielateľa: **`@slsp.sk`** (typicky `info@slsp.sk`, `noreply@slsp.sk`)
 - web a banking: **`slsp.sk`**, george banking pod `business24.sk` (firemný) a `george.slsp.sk` (retail)
-- červené vlajky: `@slsp-security.com`, `@slsp-overenie.com`, `@s1sp.sk` (číslo 1 namiesto „l"), `@slovenska-sporitelna.eu`
+- červené vlajky: `@slsp-security.com`, `@slsp-overenie.com`, `@s1sp.sk` (číslo 1 namiesto „l“), `@slovenska-sporitelna.eu`
 - slsp má dlhodobo silnú [bezpečnostnú stránku, kde aktívne zverejňuje aktuálne phishingové vlny](https://www.slsp.sk/sk/bezpecnost) [5]. ak ti niečo nesedí, prvý overovací bod.
 
 ### vúb banka
 
 - email odosielateľa: **`@vub.sk`** (zvyčajne `info@vub.sk`, `notifikacie@vub.sk`)
 - web a banking: **`vub.sk`**, banking pod `ib.vub.sk`
-- červené vlajky: `@vub-overenie.com`, `@vub-secure.eu`, `@vub-banking.online`, akákoľvek doména s pomlčkou za „vub"
+- červené vlajky: `@vub-overenie.com`, `@vub-secure.eu`, `@vub-banking.online`, akákoľvek doména s pomlčkou za „vub“
 - správanie: vúb v posledných dvoch rokoch presúva bezpečnostnú komunikáciu prioritne do mobilnej aplikácie. push notifikácia v appke je dôveryhodnejší kanál než akýkoľvek email. detail na [bezpečnostnej stránke vúb](https://www.vub.sk/bezpecnost/) [6].
 
 ### čsob
@@ -95,7 +95,7 @@ každá banka má jednu alebo dve oficiálne domény pre korešpondenciu a pre w
 
 - email odosielateľa: **`@mbank.sk`** (najčastejšie `kontakt@mbank.sk`, `info@mbank.sk`)
 - web a banking: **`mbank.sk`**, banking pod `online.mbank.sk`
-- červené vlajky: `@mbank-secure.com`, `@m-bank.sk`, `@mbank-overenie.eu`, akýkoľvek prefix typu „secure-", „verify-", „login-" pred slovom mbank
+- červené vlajky: `@mbank-secure.com`, `@m-bank.sk`, `@mbank-overenie.eu`, akýkoľvek prefix typu „secure-“, „verify-“, „login-“ pred slovom mbank
 - mbank má relatívne menšiu klientsku bázu na slovensku, takže phishingové vlny mierené na mbank sú redšie, ale o to lepšie zamerané — útočníci pri spear varianta vedia, že obeť používa práve mbank.
 
 ### unicredit bank
@@ -110,7 +110,7 @@ každá banka má jednu alebo dve oficiálne domény pre korešpondenciu a pre w
 - email odosielateľa: **`@postovabanka.sk`** (`info@postovabanka.sk`, `noreply@postovabanka.sk`)
 - web a banking: **`postovabanka.sk`**, banking pod `moja.postovabanka.sk`
 - červené vlajky: `@postova-banka.sk` (pomlčka), `@postovabanka-overenie.com`, akýkoľvek odkaz vedúci na poštové operácie cez `slovenskaposta.*` (to je úplne iná inštitúcia)
-- špecifikum: phisheri pravidelne kombinujú „poštová banka" s „balíkové zásielky", aby vyrobili hybridný scam typu *„doplatok za balík cez poštovú banku"*. ak vidíš túto kombináciu, je to phishing v 100 % prípadov.
+- špecifikum: phisheri pravidelne kombinujú „poštová banka“ s „balíkové zásielky“, aby vyrobili hybridný scam typu *„doplatok za balík cez poštovú banku“*. ak vidíš túto kombináciu, je to phishing v 100 % prípadov.
 
 ## ako rozoznáš falošný email za 20 sekúnd
 
@@ -119,7 +119,7 @@ máš v ruke email tváriaci sa ako banka. nemáš sa ako rozhodnúť. takto:
 1. **klikni na meno odosielateľa**, aby sa ti zobrazila celá adresa (nie zobrazované meno). porovnaj ju s odtlačkom hore. ak doména nesedí presne — končíš, je to podvod.
 2. **podrž kurzor nad odkazom** (na mobile dlho podrž prst). ak vedie inam než na oficiálnu doménu banky, končíš.
 3. **prečítaj prvé dve vety.** je tam konkrétna suma, posledné štyri číslice karty alebo presný čas transakcie? ak nie, takmer isto je to phishing — banka by detaily uviedla.
-4. **kontroluj subjekt.** *„overte si účet okamžite", „blokácia účtu do 24 hodín", „dôležité bezpečnostné upozornenie"* — typický register naliehavosti, ktorý seriózna banka nepoužíva. všetky tieto frázy sú [popísané sk-certom ako klasické phishingové návnady](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [3].
+4. **kontroluj subjekt.** *„overte si účet okamžite“, „blokácia účtu do 24 hodín“, „dôležité bezpečnostné upozornenie“* — typický register naliehavosti, ktorý seriózna banka nepoužíva. všetky tieto frázy sú [popísané sk-certom ako klasické phishingové návnady](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [3].
 
 ak prešiel email cez všetky štyri body a stále si neistý, použi jediné pravidlo, ktoré nikdy nesklame.
 
@@ -127,7 +127,7 @@ ak prešiel email cez všetky štyri body a stále si neistý, použi jediné pr
 
 stojí to za zopakovanie veľkými písmenami v hlave: **nikdy sa neprihlasuj do banky cez odkaz v emaile. otvor banking app priamo z plochy mobilu alebo si zadaj doménu banky ručne v prehliadači.**
 
-dôvod je technický a brutálne jednoduchý: aj keby email bol pravý, klikanie cez odkaz si trénuje zlozvyk, ktorý ťa raz dostane. phisher potrebuje od teba presne túto reakciu — *„veď to bola predsa banka"* — aby jeho falošná verzia o mesiac zaberala rovnako. ak si stanovíš pravidlo *„banking otváram len z aplikácie alebo zo záložky"*, phishing prestane existovať ako vektor proti tebe.
+dôvod je technický a brutálne jednoduchý: aj keby email bol pravý, klikanie cez odkaz si trénuje zlozvyk, ktorý ťa raz dostane. phisher potrebuje od teba presne túto reakciu — *„veď to bola predsa banka“* — aby jeho falošná verzia o mesiac zaberala rovnako. ak si stanovíš pravidlo *„banking otváram len z aplikácie alebo zo záložky“*, phishing prestane existovať ako vektor proti tebe.
 
 [tatra banka to vo svojich bezpečnostných odporúčaniach formuluje rovnako jednoznačne](https://www.tatrabanka.sk/sk/bezpecnost/) [4] a všetky ostatné banky to v rôznych podobách opakujú: kanál na prihlásenie iniciuješ ty, nie email.
 
@@ -143,7 +143,7 @@ máš falošný email. zmazať a ísť ďalej nestačí. nahlásenie pomáha ban
    - mbank → `abuse@mbank.sk`
    - unicredit → `abuse@unicreditbank.sk`
    - poštová banka → `abuse@postovabanka.sk`
-2. **prepošli ako prílohu**, nie ako preposlanú správu. v gmaile *„viac → preposlať ako prílohu"*, v outlooku pravým klikom *„preposlať ako prílohu"*. dôvod: hlavičky emailu zostanú zachované a banka vie odsledovať server, z ktorého phishing prišiel.
+2. **prepošli ako prílohu**, nie ako preposlanú správu. v gmaile *„viac → preposlať ako prílohu“*, v outlooku pravým klikom *„preposlať ako prílohu“*. dôvod: hlavičky emailu zostanú zachované a banka vie odsledovať server, z ktorého phishing prišiel.
 3. **zmaž originál zo schránky.** týmto si zabezpečíš, že ho omylom o týždeň neotvoríš ešte raz a neklikneš.
 4. **ak si klikol** — prečítaj [čo robiť po kliknutí](/blog/co-robit-ked-som-klikol-na-phishing) a postupuj podľa krízového protokolu. najmä prvé tri minúty rozhodujú o tom, či útok dorazí k peniazom.
 

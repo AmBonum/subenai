@@ -55,7 +55,7 @@ slovenská obchodná inšpekcia ([soi vedie verejne dostupný zoznam rizikových
 
 ďalšiu vrstvu rizika tvoria phishingové kampane. národné centrum kybernetickej bezpečnosti [sk-cert pravidelne hlási vlny falošných eshopov a falošných doručovacích portálov tváriacich sa ako reálni kuriéri](https://www.sk-cert.sk/sk/varovania/index.html) [5]. cieľ je rovnaký: dostať z teba číslo karty plus kód z SMS a tým nahrať tvoju kartu do digitálnej peňaženky útočníka.
 
-dobrá správa: dve minúty pred kliknutím na *„kúpiť"* dokážu rozdiel medzi pekným nákupom a stratenou stovkou. tu je presný postup.
+dobrá správa: dve minúty pred kliknutím na *„kúpiť“* dokážu rozdiel medzi pekným nákupom a stratenou stovkou. tu je presný postup.
 
 ## krok 1 — overenie eshopu pred nákupom
 
@@ -63,11 +63,11 @@ prv než vytiahneš peňaženku, sprav rýchly štvor-bodový sken. trvá to dve
 
 **a) skontroluj soi zoznamy.** otvor [zoznam rizikových obchodov soi](https://www.soi.sk/informacie-pre-verejnost/internetove-obchody/rizikove-internetove-obchody) [1] a [zoznam podvodných stránok](https://www.soi.sk/informacie-pre-verejnost/internetove-obchody/podvodne-internetove-stranky-1) [2]. ctrl+f názov domény. ak ho tam nájdeš, hra končí — žiadny nákup, žiaden experiment.
 
-**b) over identitu prevádzkovateľa.** každý slovenský eshop musí v päte alebo na stránke „kontakty" uvádzať IČO, DIČ, presnú adresu a meno právnickej osoby. zoberi IČO a pretlač cez [register právnických osôb finstat.sk](https://finstat.sk) alebo priamy [obchodný register sr](https://www.orsr.sk). ak firma neexistuje, je v likvidácii alebo má sídlo v paneláku v tirane — ďakujeme, neobjednávame.
+**b) over identitu prevádzkovateľa.** každý slovenský eshop musí v päte alebo na stránke „kontakty“ uvádzať IČO, DIČ, presnú adresu a meno právnickej osoby. zoberi IČO a pretlač cez [register právnických osôb finstat.sk](https://finstat.sk) alebo priamy [obchodný register sr](https://www.orsr.sk). ak firma neexistuje, je v likvidácii alebo má sídlo v paneláku v tirane — ďakujeme, neobjednávame.
 
-**c) vek domény a https.** otvor [whois.com](https://www.whois.com) a vlož doménu. obchod, ktorý sa volá *„svetznackovejmody.eu"* a doménu registrovali pred tromi týždňami pred čiernym piatkom, je signál, nie zlosť. seriózny obchod existuje roky. https je dnes minimum (nie záruka legitimity — útočníci tiež vedia https) a doména `.com` alebo `.eu` u obchodu, ktorý sa tvári výhradne slovensky, je ďalšia červená vlajka.
+**c) vek domény a https.** otvor [whois.com](https://www.whois.com) a vlož doménu. obchod, ktorý sa volá *„svetznackovejmody.eu“* a doménu registrovali pred tromi týždňami pred čiernym piatkom, je signál, nie zlosť. seriózny obchod existuje roky. https je dnes minimum (nie záruka legitimity — útočníci tiež vedia https) a doména `.com` alebo `.eu` u obchodu, ktorý sa tvári výhradne slovensky, je ďalšia červená vlajka.
 
-**d) reverse image search a trustpilot.** zoberi produktovú fotku, ktorá ti príde podozrivá (najmä pri „luxusných" zľavách 80 %), a pretlač ju cez [google obrázky](https://images.google.com) alebo [tineye.com](https://tineye.com). ak tú istú fotku používa 40 podobných eshopov, je to dropshipping z aliexpressu s päťnásobnou maržou. paralelne otvor [trustpilot.com](https://www.trustpilot.com) a hľadaj recenzie obchodu. pozor — k recenziám sa vrátim v krok 5, lebo aj recenzie sa dnes kupujú vo veľkom.
+**d) reverse image search a trustpilot.** zoberi produktovú fotku, ktorá ti príde podozrivá (najmä pri „luxusných“ zľavách 80 %), a pretlač ju cez [google obrázky](https://images.google.com) alebo [tineye.com](https://tineye.com). ak tú istú fotku používa 40 podobných eshopov, je to dropshipping z aliexpressu s päťnásobnou maržou. paralelne otvor [trustpilot.com](https://www.trustpilot.com) a hľadaj recenzie obchodu. pozor — k recenziám sa vrátim v krok 5, lebo aj recenzie sa dnes kupujú vo veľkom.
 
 celý sedem-krokový rozšírený protokol s konkrétnymi screenshotmi nájdeš v [ako overiť eshop pred nákupom za 7 krokov](/blog/ako-overit-eshop-pred-nakupom-7-krokov). pre c2c nákupy (bazoš, vinted, facebook marketplace) si prečítaj [bazoš, vinted a marketplace podvody](/blog/bazos-vinted-marketplace-podvody), tam platia iné pravidlá. ak rieš špecificky falošný eshop ako kategóriu, choď na sister-pillar [fake eshopy: ako odhaliť podvodný obchod](/blog/fake-eshopy-ako-odhalit).
 
@@ -79,15 +79,15 @@ nie všetky platobné metódy ti dávajú rovnaké zbrane, keď sa niečo pokaš
 
 **1. platba kartou cez 3D Secure (chargeback-safe).** najlepšia voľba pre väčšinu nákupov. ak ti tovar nepríde, príde poškodený alebo dorazí padělok, máš právo na **chargeback** — reklamáciu cez vlastnú banku. banka stiahne platbu späť od obchodníkovho banky a obchodník musí dokázať, že dodal. lehota je zvyčajne 120 dní od transakcie (závisí od banky a karetnej schémy visa/mastercard). 3D Secure je verifikácia cez biometriu alebo kód z banky — útočník bez tvojho telefónu transakciu neprejde. **kľúčové pravidlo: kód z 3D Secure SMS nikdy nikomu nečítaj ani neopisuj do žiadneho formulára okrem oficiálnej platobnej brány.**
 
-**2. virtuálna jednorazová karta cez revolut, wise alebo banky.** o krok lepšia, ak nakupuješ u nového obchodu, ktorému príliš neveríš. vygeneruješ kartu s presnou sumou, pri prvej platbe sa „spáli" a útočník s ňou viac neurobí nič. v slovenskom prostredí to ponúka revolut, wise, fio (typ virtuálna karta), a niektoré komerčné banky. detailné porovnanie a setup nájdeš v [virtuálne platobné karty: revolut, wise, banky](/blog/platobne-karty-virtualne-revolut-wise) — silne odporúčam ako ďalšie čítanie.
+**2. virtuálna jednorazová karta cez revolut, wise alebo banky.** o krok lepšia, ak nakupuješ u nového obchodu, ktorému príliš neveríš. vygeneruješ kartu s presnou sumou, pri prvej platbe sa „spáli“ a útočník s ňou viac neurobí nič. v slovenskom prostredí to ponúka revolut, wise, fio (typ virtuálna karta), a niektoré komerčné banky. detailné porovnanie a setup nájdeš v [virtuálne platobné karty: revolut, wise, banky](/blog/platobne-karty-virtualne-revolut-wise) — silne odporúčam ako ďalšie čítanie.
 
 **3. paypal s buyer protection.** dobrá voľba pre zahraničné nákupy menšieho rozsahu, kde nemáš kartové chargeback rights. paypal má vlastný proces *buyer protection* s lehotou zvyčajne 180 dní. nevýhoda: trvá dlhšie než kartový chargeback a paypal nie je neutrálny — je to firma, ktorá rozhoduje o spore. lepšie než nič, horšie než karta.
 
-**4. dobierka.** prekvapivo bezpečnejšia než si myslíš pri nákupe od neznámeho slovenského obchodu — neplatíš nič vopred a balík vidíš v ruke. nevýhoda: niektoré scam obchody posielajú prázdnu krabicu alebo úplne iný tovar, a kuriér ti nedovolí krabicu otvoriť pred zaplatením. praktický trik: vyžiadaj si v podmienkach kuriéra **„kontrolu pred prevzatím"** (slovenský packeta a slovak post to umožňujú za poplatok). ak obchod takúto možnosť neumožňuje, opatrnosť.
+**4. dobierka.** prekvapivo bezpečnejšia než si myslíš pri nákupe od neznámeho slovenského obchodu — neplatíš nič vopred a balík vidíš v ruke. nevýhoda: niektoré scam obchody posielajú prázdnu krabicu alebo úplne iný tovar, a kuriér ti nedovolí krabicu otvoriť pred zaplatením. praktický trik: vyžiadaj si v podmienkach kuriéra **„kontrolu pred prevzatím“** (slovenský packeta a slovak post to umožňujú za poplatok). ak obchod takúto možnosť neumožňuje, opatrnosť.
 
 **5. bankový prevod IBAN. ❌ posledná voľba.** tu nemáš prakticky žiadnu ochranu. peniaze sú preč v momente potvrdenia v banke a stiahnúť ich späť je možné iba ak banka prijímateľa dobrovoľne spolupracuje, čo sa pri scamových účtoch nikdy nestane. **ak ti predajca tlačí na bankový prevod a odmieta kartu alebo dobierku, je to v 95 % prípadov scam.**
 
-zlaté pravidlo: **prvý nákup u nového obchodu vždy kartou cez 3D Secure alebo virtuálnou jednorazovou kartou.** žiadne IBAN-y, žiadne kryptopodvody „lebo je to lacnejšie pre nás obidvoch".
+zlaté pravidlo: **prvý nákup u nového obchodu vždy kartou cez 3D Secure alebo virtuálnou jednorazovou kartou.** žiadne IBAN-y, žiadne kryptopodvody „lebo je to lacnejšie pre nás obidvoch“.
 
 ## krok 3 — garančné práva, ktoré ti štát aj eú dávajú zadarmo
 
@@ -121,19 +121,19 @@ prečo? sezónne nakupovanie ti zapne tri zraniteľné stavy naraz: časový tla
 
 konkrétne techniky, na ktoré si treba dať pozor:
 
-**fake countdown timery.** stránka tvrdí *„zľava končí za 02:47:21"*. odpočet v skutočnosti beží od momentu, keď si otvoril stránku — počítadlo sa resetuje pri každej návšteve. seriózny obchod má termín v dátume („akcia do 30. 11. 2026 23:59"), nie v stopkách spúšťajúcich sa pri prvom kliku.
+**fake countdown timery.** stránka tvrdí *„zľava končí za 02:47:21“*. odpočet v skutočnosti beží od momentu, keď si otvoril stránku — počítadlo sa resetuje pri každej návšteve. seriózny obchod má termín v dátume („akcia do 30. 11. 2026 23:59“), nie v stopkách spúšťajúcich sa pri prvom kliku.
 
-**ceny zdvihnuté pred zľavou.** klasika čierneho piatku, dokumentovaná medzinárodne aj v slovenských spotrebiteľských reportoch. obchod zdvihne v októbri cenu zo 199 € na 349 €, v novembri ju zľaví na 219 € a inzeruje *„zľava 37 %"*. britský consumer watchdog [which? rok čo rok dokumentuje, že väčšina „najväčších" black friday zliav je buď v rovnakej cene počas roka alebo lacnejšia mimo black friday](https://www.which.co.uk/news/article/black-friday-deals-investigation) [7]. obrana:
+**ceny zdvihnuté pred zľavou.** klasika čierneho piatku, dokumentovaná medzinárodne aj v slovenských spotrebiteľských reportoch. obchod zdvihne v októbri cenu zo 199 € na 349 €, v novembri ju zľaví na 219 € a inzeruje *„zľava 37 %“*. britský consumer watchdog [which? rok čo rok dokumentuje, že väčšina „najväčších“ black friday zliav je buď v rovnakej cene počas roka alebo lacnejšia mimo black friday](https://www.which.co.uk/news/article/black-friday-deals-investigation) [7]. obrana:
 
-- **sleduj históriu ceny.** v eú existuje smernica „omnibus" (transponovaná aj do slovenského práva), ktorá obchodu nariaďuje uvádzať pri zľave **najnižšiu cenu za posledných 30 dní**. ak ju neuvádza, podaj sťažnosť na soi.
+- **sleduj históriu ceny.** v eú existuje smernica „omnibus“ (transponovaná aj do slovenského práva), ktorá obchodu nariaďuje uvádzať pri zľave **najnižšiu cenu za posledných 30 dní**. ak ju neuvádza, podaj sťažnosť na soi.
 - **medzinárodné nástroje** pre history-trackery (camelcamelcamel pre amazon, keepa) — pre slovenský trh systematický agregátor zatiaľ chýba, takže si pred sezónou zaznamenaj ceny v exceli alebo si tovar pridaj do košíka a sleduj 2 týždne predtým.
 - **porovnaj cenu medzi obchodmi.** [heureka.sk](https://www.heureka.sk) a [pricemania.sk](https://www.pricemania.sk) ti ukážu rozsah cien u rôznych slovenských obchodov.
 
-**„extrémne zľavy" — pravidlo 70 %.** ak je zľava väčšia ako 70 % z bežnej ceny na nový produkt známej značky, je to s 90 % istotou buď podvod, šedý import bez záruky, alebo padělok. apple airpods za 49 €, levi's džínsy za 19 €, gucci kabelka za 89 € — žiadne z toho nie je legitímne. luxusné značky neriešia distribučné prebytky cez náhodné slovenské eshopy s tromi mesiacmi v whois.
+**„extrémne zľavy“ — pravidlo 70 %.** ak je zľava väčšia ako 70 % z bežnej ceny na nový produkt známej značky, je to s 90 % istotou buď podvod, šedý import bez záruky, alebo padělok. apple airpods za 49 €, levi's džínsy za 19 €, gucci kabelka za 89 € — žiadne z toho nie je legitímne. luxusné značky neriešia distribučné prebytky cez náhodné slovenské eshopy s tromi mesiacmi v whois.
 
-**phishingové reklamy v sezóne.** [sk-cert každoročne pred sviatkami vydáva sezónne varovania pred falošnými reklamami a falošnými doručovacími SMS](https://www.sk-cert.sk/sk/varovania/index.html) [5]. mechanika: reklama na facebooku alebo instagrame vedie na falošný eshop „limited edition" — všetko len zinkasovať platbu a zmiznúť. detail tohto kanálu rozoberáme v [podvodné reklamy na facebooku a instagrame](/blog/podvodne-reklamy-facebook-instagram-eshop).
+**phishingové reklamy v sezóne.** [sk-cert každoročne pred sviatkami vydáva sezónne varovania pred falošnými reklamami a falošnými doručovacími SMS](https://www.sk-cert.sk/sk/varovania/index.html) [5]. mechanika: reklama na facebooku alebo instagrame vedie na falošný eshop „limited edition“ — všetko len zinkasovať platbu a zmiznúť. detail tohto kanálu rozoberáme v [podvodné reklamy na facebooku a instagrame](/blog/podvodne-reklamy-facebook-instagram-eshop).
 
-**„kuriér potrebuje 1,99 €."** SMS po objednávke s odkazom na zaplatenie „colných poplatkov" alebo „dodatočného doručovacieho poplatku". ak si objednal v eú, žiadne colné poplatky neexistujú. ak si objednal mimo eú, kuriér si naozaj môže pýtať colný poplatok — ale **vždy** osobne pri doručení alebo cez oficiálnu aplikáciu kuriéra, **nikdy** cez odkaz v SMS. detail v [phishing cez balíkové zásielky](/blog/phishing-na-balikovu-zasielku).
+**„kuriér potrebuje 1,99 €.“** SMS po objednávke s odkazom na zaplatenie „colných poplatkov“ alebo „dodatočného doručovacieho poplatku“. ak si objednal v eú, žiadne colné poplatky neexistujú. ak si objednal mimo eú, kuriér si naozaj môže pýtať colný poplatok — ale **vždy** osobne pri doručení alebo cez oficiálnu aplikáciu kuriéra, **nikdy** cez odkaz v SMS. detail v [phishing cez balíkové zásielky](/blog/phishing-na-balikovu-zasielku).
 
 praktický kalendár na rok: v posledných dvoch novembrových týždňoch zvýš opatrnosť o jeden stupeň. všetko, čo dorazí cez reklamu na sociálnych sieťach, prejde plným štvorbodovým testom z kroku 1.
 
@@ -143,7 +143,7 @@ recenzie sú dnes trhom samé o sebe. v anglickom internete sa cena 100 piatch-h
 
 vzory, podľa ktorých rozpoznáš platenú alebo botovú recenziu:
 
-**1. rovnaké formulácie.** ak desať recenzií píše *„skvelý obchod, super doručenie, určite odporúčam!"* takmer slovo za slovom, je to copy-paste recenzný balík. autentickí ľudia píšu rôzne — niekto si všimne obal, iný kvalitu, tretí službu.
+**1. rovnaké formulácie.** ak desať recenzií píše *„skvelý obchod, super doručenie, určite odporúčam!“* takmer slovo za slovom, je to copy-paste recenzný balík. autentickí ľudia píšu rôzne — niekto si všimne obal, iný kvalitu, tretí službu.
 
 **2. profily bez histórie.** klikneš na meno recenzenta a vidíš jednu recenziu, ktorá je práve tá pre tento obchod. žiadna iná aktivita. plus účet je starý dva týždne. typický kúpený profil.
 
@@ -151,7 +151,7 @@ vzory, podľa ktorých rozpoznáš platenú alebo botovú recenziu:
 
 **4. nezdravý pomer 5/1.** zdravý obchod má rozdelenie 5\*-4\*-3\*-2\*-1\* zhruba 70-15-7-3-5 %. obchod s 99 % päťhviezdičkových recenzií a žiadnou nepriaznivou je buď zázrak alebo bot farma. zázraky sú vzácne.
 
-**5. preklady, ktoré pripomínajú stroj.** *„ja som veľmi spokojný s môj nákup a tovar prísť rýchlo"* — ak slovenčina ide do kolien, prešla google translate-om z čínštiny alebo angličtiny. legitímny slovák napíše bežnú slovenčinu.
+**5. preklady, ktoré pripomínajú stroj.** *„ja som veľmi spokojný s môj nákup a tovar prísť rýchlo“* — ak slovenčina ide do kolien, prešla google translate-om z čínštiny alebo angličtiny. legitímny slovák napíše bežnú slovenčinu.
 
 **nástroje na overenie:**
 
@@ -161,7 +161,7 @@ vzory, podľa ktorých rozpoznáš platenú alebo botovú recenziu:
 
 detailný rozbor v [falošné recenzie: ako ich spoznáš](/blog/recenzie-na-eshope-falosne-rozpoznat).
 
-## kontrolný zoznam — 60 sekúnd pred kliknutím „kúpiť"
+## kontrolný zoznam — 60 sekúnd pred kliknutím „kúpiť“
 
 1. doména obchodu nie je na soi zozname rizík ani podvodných stránok
 2. v päte je IČO, sídlo a meno právnickej osoby, ktoré sedia s obchodným registrom
@@ -169,7 +169,7 @@ detailný rozbor v [falošné recenzie: ako ich spoznáš](/blog/recenzie-na-esh
 4. zľava nie je len pred 30 dňami zdvihnutá cena
 5. recenzie sa nejavia ako kúpený balík (rovnaké frázy, jednorazové profily, vlna v jeden deň)
 6. obchod neumožňuje len bankový prevod IBAN — má kartu alebo paypal
-7. https je v adresnom riadku a doména je naozaj tá, kam si chcel ísť (nie sIovenska-posta.com s veľkým „i")
+7. https je v adresnom riadku a doména je naozaj tá, kam si chcel ísť (nie sIovenska-posta.com s veľkým „i“)
 8. pri platbe použiješ kartu cez 3D Secure alebo virtuálnu jednorazovú kartu, nie IBAN
 
 ak prejdeš všetkých osem, klikni. ak škrípe čo i len jeden, zatvor tab a hľadaj inde. svet je plný legitímnych obchodov.
@@ -201,7 +201,7 @@ ak ti útočník nahral kartu do digitálnej peňaženky cez phishingovú strán
 - overenie obchodu pred nákupom má štyri body: soi zoznamy, register právnických osôb, vek domény, reverse image search plus trustpilot. dve minúty času, desiatky eur ušetrené.
 - platba kartou cez 3D Secure alebo virtuálnou jednorazovou kartou je chargeback-safe. IBAN prevod je posledná voľba a u nového obchodu prakticky vždy signál scamu.
 - v eú máš 14-dňové právo na odstúpenie bez dôvodu, dvojročnú záruku a pri chýbajúcich informáciách sa lehota predlžuje na rok a 14 dní. obchodník to nemôže zmluvou obmedziť.
-- čierny piatok a vianoce vyrábajú fake countdown timery, predzdvihnuté ceny zľavnené naspäť, „extrémne zľavy" nad 70 % a phishingové reklamy. zvýš opatrnosť o jeden stupeň od polovice novembra.
+- čierny piatok a vianoce vyrábajú fake countdown timery, predzdvihnuté ceny zľavnené naspäť, „extrémne zľavy“ nad 70 % a phishingové reklamy. zvýš opatrnosť o jeden stupeň od polovice novembra.
 - fake recenzie spoznáš podľa rovnakých formulácií, profilov bez histórie, vĺn v jeden deň, nereálneho pomeru 5\*/1\* a strojových prekladov.
 - po podvode: dôkazy, e-mail obchodu, chargeback v banke, sťažnosť soi, eú esc pre cezhraničné, polícia pri jednoznačnom úmysle, sk-cert pri phishingovej doméne.
 

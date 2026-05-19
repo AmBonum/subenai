@@ -43,22 +43,22 @@ sources:
 
 falošná faktúra v emaile je v 2026 najtichší a najdrahší podvod, ktorý slovenská firma zažíva. nikto nekričí, nikto si nepýta heslo. iba ti príde pdf, ktoré vyzerá ako od dodávateľa, ktorému platíš mesačne — len číslo účtu je iné. zaplatíš, o tri týždne volá pravý dodávateľ, že čaká na peniaze. vtedy je neskoro.
 
-tento návod je pre SZČO, eseročku do 20 ľudí a každého, kto stláča *„schváliť úhradu"*. dostaneš anatómiu útoku, štyri vzory v slovenskom inboxe, obranu za 30 minút setupu a krízový protokol, keď peniaze odišli.
+tento návod je pre SZČO, eseročku do 20 ľudí a každého, kto stláča *„schváliť úhradu“*. dostaneš anatómiu útoku, štyri vzory v slovenskom inboxe, obranu za 30 minút setupu a krízový protokol, keď peniaze odišli.
 
 ## prečo je faktúrový podvod taký drahý
 
-bežný phishing ti vytiahne 50 € z karty cez „doplatok 1,99 € za balík". podvodná faktúra je iná hra. priemerná suma je 1 500 – 25 000 €, lebo útočník nepýta o korunu — pýta presne toľko, koľko by pravý dodávateľ vyfakturoval. ty schváliš platbu, ktorá vyzerá normálne, a banka ju vykoná, lebo neexistuje technická chyba — prevod ide z tvojho účtu, ktorý si autorizoval, na účet, ktorý si zadal.
+bežný phishing ti vytiahne 50 € z karty cez „doplatok 1,99 € za balík“. podvodná faktúra je iná hra. priemerná suma je 1 500 – 25 000 €, lebo útočník nepýta o korunu — pýta presne toľko, koľko by pravý dodávateľ vyfakturoval. ty schváliš platbu, ktorá vyzerá normálne, a banka ju vykoná, lebo neexistuje technická chyba — prevod ide z tvojho účtu, ktorý si autorizoval, na účet, ktorý si zadal.
 
 odborne sa tomu hovorí **BEC — business email compromise**. [sk-cert v opakovaných varovaniach hlási nárast prípadov, kedy útočník zneužíva identitu finančnej správy aj reálnych dodávateľov a smeruje platby na podstrčený účet](https://www.sk-cert.sk/en/update-warning-against-fraud-abusing-the-identity-of-financial-administration/index.html) [1]. [europol popisuje, že bec je medzi prvými typmi podvodov merané priamou finančnou stratou — celosvetovo 1,77 mld. usd ročne](https://www.europol.europa.eu/sites/default/files/documents/sk_0.pdf) [5].
 
-rozdiel proti klasickému phishingu: u faktúrového podvodu **banka nie je povinná peniaze vrátiť**. ty si dal pokyn. ty si zadal IBAN. v štatistikách to ide ako „autorizovaná platba" a takmer nikdy sa nevráti v plnej výške.
+rozdiel proti klasickému phishingu: u faktúrového podvodu **banka nie je povinná peniaze vrátiť**. ty si dal pokyn. ty si zadal IBAN. v štatistikách to ide ako „autorizovaná platba“ a takmer nikdy sa nevráti v plnej výške.
 
 ## anatómia útoku — ako sa to deje krok za krokom
 
 scenár, ktorý sa opakuje od roku 2018 a v 2026 sa len zdokonalil:
 
 1. útočník mesiace sleduje verejne dostupné stopy tvojej firmy — orsr, registre, linkedin, kontakty na tvojom webe.
-2. zistí, kto u teba schvaľuje platby, mená účtovníčky a kľúčových dodávateľov. často stačí *„kto je váš účtovník"* zadané do googlu plus orsr.
+2. zistí, kto u teba schvaľuje platby, mená účtovníčky a kľúčových dodávateľov. často stačí *„kto je váš účtovník“* zadané do googlu plus orsr.
 3. variant A: útočník prelomí schránku **dodávateľa** (slabé heslo, žiadne 2FA), prečíta si históriu komunikácie a pošle faktúru z **pravej** adresy. variant B: zaregistruje doménu o jedno písmeno odlišnú (`firma-sk.sk` namiesto `firma.sk`, `rn` namiesto `m`) a imituje štýl dodávateľa.
 4. pdf je vizuálne identický s pravými faktúrami. logo, IČO, DIČ sedia. zmenený je iba IBAN — často **slovenský**, nie zahraničný, prenajatý cez mulu, ktorá ho do 24 hodín po prevode vyberie a peniaze posunie ďalej.
 5. ty zaplatíš. faktúru si možno overíš podľa sumy a IČO. čo neoveríš, je IBAN.
@@ -70,27 +70,27 @@ scenár, ktorý sa opakuje od roku 2018 a v 2026 sa len zdokonalil:
 
 ## štyri vzory, ktoré dnes obiehajú slovenský B2B inbox
 
-### 1. dodávateľ s „novým" číslom účtu
+### 1. dodávateľ s „novým“ číslom účtu
 
-najklasickejší a najnebezpečnejší vzor. faktúra od dodávateľa, ktorému platíš mesačne (web hosting, eset licencie, google workspace, prima, slovak telekom, marketingová agentúra). v hlavičke textu nenápadná veta: *„z dôvodu zmeny banky vás prosíme o úhradu na nové číslo účtu uvedené nižšie."*
+najklasickejší a najnebezpečnejší vzor. faktúra od dodávateľa, ktorému platíš mesačne (web hosting, eset licencie, google workspace, prima, slovak telekom, marketingová agentúra). v hlavičke textu nenápadná veta: *„z dôvodu zmeny banky vás prosíme o úhradu na nové číslo účtu uvedené nižšie.“*
 
 znak: žiadny seriózny dodávateľ nemení IBAN bez samostatného oznámenia podpísaným osobitným listom alebo cez svoj zákaznícky portál. zmena IBAN je vždy minimálne dvojkanálová udalosť.
 
-### 2. „faktúra od finančnej správy" alebo „doplatok DPH"
+### 2. „faktúra od finančnej správy“ alebo „doplatok DPH“
 
 email tvrdí, že tvoja firma má nedoplatok dane vo výške 487 € a má 24 hodín na úhradu, inak nasleduje exekúcia. v pdf je predvyplnený platobný príkaz s qr kódom. [sk-cert a finančná správa opakovane upozorňujú, že fs sr nikdy nedoručuje výzvy na úhradu emailom — komunikácia ide výlučne cez portál finančnej správy a osobnú internetovú zónu](https://www.financnasprava.sk/sk/pre-media/novinky/archiv-noviniek/detail-novinky/_podvodne-aktivity-ts/bc) [3].
 
 ak má tvoja firma reálny daňový nedoplatok, dozvieš sa to v eDanovom portáli, nie cez gmail.
 
-### 3. „doména vám vyprší" / hosting renewal
+### 3. „doména vám vyprší“ / hosting renewal
 
-email tvrdí, že tvoja doména `tvojafirma.sk` vyprší o 5 dní a treba ju obnoviť úhradou 89 € na priložený IBAN. odosielateľom je „SK-Domain Registry" alebo „Slovak Domain Authority" — ani jedna z týchto inštitúcií neexistuje. správca .sk domén je sk-nic a faktúruje výlučne cez tvojho registrátora (websupport, gigaserver, exohosting), s ktorým si doménu pôvodne zakladal.
+email tvrdí, že tvoja doména `tvojafirma.sk` vyprší o 5 dní a treba ju obnoviť úhradou 89 € na priložený IBAN. odosielateľom je „SK-Domain Registry“ alebo „Slovak Domain Authority“ — ani jedna z týchto inštitúcií neexistuje. správca .sk domén je sk-nic a faktúruje výlučne cez tvojho registrátora (websupport, gigaserver, exohosting), s ktorým si doménu pôvodne zakladal.
 
-variant: „obnovenie ssl certifikátu" s rovnakým schémom.
+variant: „obnovenie ssl certifikátu“ s rovnakým schémom.
 
-### 4. predplatné, ktoré ti „automaticky pokračuje"
+### 4. predplatné, ktoré ti „automaticky pokračuje“
 
-faktúra za softvér, ktorý poznáš (microsoft 365, adobe, quickbooks, mailchimp), s notifikáciou *„vaše predplatné bolo obnovené na rok, suma 412 € bude stiahnutá z karty alebo uhradíte bankovým prevodom"*. cieľ je dvojaký: buď klikneš na *„zrušiť predplatné"* odkaz (vedie na phishingovú prihlasovaciu stránku, kde stratíš účet), alebo zaplatíš na podstrčený IBAN, lebo si myslíš, že je to legitímne.
+faktúra za softvér, ktorý poznáš (microsoft 365, adobe, quickbooks, mailchimp), s notifikáciou *„vaše predplatné bolo obnovené na rok, suma 412 € bude stiahnutá z karty alebo uhradíte bankovým prevodom“*. cieľ je dvojaký: buď klikneš na *„zrušiť predplatné“* odkaz (vedie na phishingovú prihlasovaciu stránku, kde stratíš účet), alebo zaplatíš na podstrčený IBAN, lebo si myslíš, že je to legitímne.
 
 pravé predplatné vždy fakturuje cez kartu, ktorú si zaregistroval, alebo cez svoj zákaznícky portál. nikdy nepýta nový bankový prevod ad hoc.
 
@@ -103,7 +103,7 @@ prejdi nasledujúce body **predtým**, než platbu vôbec zaradíš do schvaľov
 - **IBAN, ktorý nikdy predtým nebol na faktúre.** každý dodávateľ má historicky stabilný účet. ak sa zmení, znak číslo jedna na pauzu.
 - **zahraničný IBAN bez kontextu.** český, maďarský, litovský IBAN od dodávateľa, ktorý ti dva roky fakturoval na slovenský účet, je takmer vždy mula.
 - **podpis a štýl sa nezhoduje s históriou.** chýba pravidelný footer, iný formát čísla faktúry, iný jazyk DPH zápisu. otvor poslednú pravú faktúru a porovnaj.
-- **naliehavosť.** *„úhrada do 24 hodín, inak penalizácia"*. dobrý dodávateľ má splatnosť 14 alebo 30 dní a nikdy ťa nehoní cez email.
+- **naliehavosť.** *„úhrada do 24 hodín, inak penalizácia“*. dobrý dodávateľ má splatnosť 14 alebo 30 dní a nikdy ťa nehoní cez email.
 - **chýbajúce náležitosti.** legitímna slovenská faktúra musí obsahovať IČO, DIČ (a IČ DPH ak je platiteľ), evidenčné číslo, dátum dodania a splatnosti. ak niektorý údaj chýba alebo je nezmyselný, koniec.
 
 celý generický 10-sekundový check na podvodné emaily je v [rozpoznať phishing za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund), faktúrový kontext nadstavuje to navrch.
@@ -150,7 +150,7 @@ zachyť to do 24 hodín a šanca na vrátenie peňazí prudko stúpa.
 ## zhrnutie
 
 - falošná faktúra v emaile je najtichší a najdrahší B2B podvod 2026. priemerná škoda na slovensku rastie a banka peniaze takmer nikdy nevracia.
-- štyri vzory: dodávateľ s „novým" účtom, falošná faktúra od finančnej správy, „doména vám vyprší", podvodné predplatné.
+- štyri vzory: dodávateľ s „novým“ účtom, falošná faktúra od finančnej správy, „doména vám vyprší“, podvodné predplatné.
 - jediné pravidlo, ktoré ťa zachráni: **každá zmena IBANu = telefonát na známe číslo druhým kanálom, predtým než zaplatíš.**
 - whitelist dodávateľských účtov v účtovnom softvéri, dvojpodpis nad 5 000 €, 2FA na e-mail, kontrola domény character-by-character.
 - ak peniaze odišli: do 24 hodín volaj banke (SEPA recall), trestné oznámenie na polícii, hlásenie sk-certu, upozorni pravého dodávateľa.

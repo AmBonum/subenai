@@ -43,11 +43,11 @@ tento návod ti ukáže, čo ešte ide vidno aj počuť, kde ti pomôže reverse
 
 ## čo presne hľadať na tvári a perách
 
-deepfake — *ai-generované video alebo audio napodobňujúce reálnu osobu*. najnovšie modely sú dobré, ale nie dokonalé. zostalo pár miest, kde generovanie ešte „potkne".
+deepfake — *ai-generované video alebo audio napodobňujúce reálnu osobu*. najnovšie modely sú dobré, ale nie dokonalé. zostalo pár miest, kde generovanie ešte „potkne“.
 
-- **mikrosynchronizácia pier** — pri spoluhláskových zhlukoch *štr*, *pšt*, *str* sa pohyb pier o zlomok sekundy líši od zvuku. pozri si video 2× a sústreď sa iba na ústa. ak máš pocit, že „niečo nesedí" a nevieš povedať čo — zvyčajne je to toto.
-- **vnútro úst pri širokom otvorení** — jazyk a podnebie zostávajú slabou stránkou. keď osoba kričí alebo otvára ústa do „á", vnútro pôsobí buď príliš tmavo, alebo má nesprávnu hĺbku.
-- **línia čeľuste a ucha** — pri otočení hlavy o viac než 30° sa generovaná tvár stretáva s pôvodnou hlavou. ucho býva deformované, šperk sa „vlní", okraj vlasov pulzuje. zastav video v momente otáčania a zoomni si na ucho.
+- **mikrosynchronizácia pier** — pri spoluhláskových zhlukoch *štr*, *pšt*, *str* sa pohyb pier o zlomok sekundy líši od zvuku. pozri si video 2× a sústreď sa iba na ústa. ak máš pocit, že „niečo nesedí“ a nevieš povedať čo — zvyčajne je to toto.
+- **vnútro úst pri širokom otvorení** — jazyk a podnebie zostávajú slabou stránkou. keď osoba kričí alebo otvára ústa do „á“, vnútro pôsobí buď príliš tmavo, alebo má nesprávnu hĺbku.
+- **línia čeľuste a ucha** — pri otočení hlavy o viac než 30° sa generovaná tvár stretáva s pôvodnou hlavou. ucho býva deformované, šperk sa „vlní“, okraj vlasov pulzuje. zastav video v momente otáčania a zoomni si na ucho.
 - **frekvencia žmurkania** — bývala ľahkou stopou; v 2026 ai žmurká prirodzene, ale pri 60+ sekúnd statickom zábere stále ujde rytmus — človek mení frekvenciu podľa emócie, ai ju drží mechanicky stabilnú.
 
 úprimne: pri 10-sekundovej facebook reklame zameranej na seniora väčšina týchto signálov nepomôže. preto pokračujeme.
@@ -56,29 +56,29 @@ deepfake — *ai-generované video alebo audio napodobňujúce reálnu osobu*. n
 
 deepfake audio (voice cloning) má v 2026 vlastné typické zlomy.
 
-- **prozodia** — ai-generovaný hlas často „nevie", kde má v slovenskej vete melódia stúpnuť a kde klesnúť. chýba klesanie na konci oznamovacej vety, stúpanie pred opytovacím slovom. znie to ako čítanie textu bez interpunkcie.
-- **dýchanie a pauzy** — buď chýbajú úplne (hlas „nedýcha"), alebo sú v zlých miestach (pauza uprostred slovesa). reálny človek dýcha medzi vetami a niekedy aj uprostred dlhšej myšlienky.
-- **emocionálna konzistencia** — v dramatických nahrávkach (plač, panika) sa ai „resetuje" každých 15–30 sekúnd. tón sa vráti do neutrálu a znova nabehne. človek emóciu drží.
+- **prozodia** — ai-generovaný hlas často „nevie“, kde má v slovenskej vete melódia stúpnuť a kde klesnúť. chýba klesanie na konci oznamovacej vety, stúpanie pred opytovacím slovom. znie to ako čítanie textu bez interpunkcie.
+- **dýchanie a pauzy** — buď chýbajú úplne (hlas „nedýcha“), alebo sú v zlých miestach (pauza uprostred slovesa). reálny človek dýcha medzi vetami a niekedy aj uprostred dlhšej myšlienky.
+- **emocionálna konzistencia** — v dramatických nahrávkach (plač, panika) sa ai „resetuje“ každých 15–30 sekúnd. tón sa vráti do neutrálu a znova nabehne. človek emóciu drží.
 - **konkrétne mená a čísla** — voice clone z troch sekúnd audia nepozná, ako tvoj syn vyslovuje meno susedy alebo prezývku svojho psa. ai si vymyslí alebo sa vyhne.
 
 ## pozadie, svetlo a artefakty mimo tváre
 
 väčšina detekcie sa pozerá na tvár. **podvodníci to vedia** a často nechávajú pozadie originálne — vystrihnú len tvár z reálneho videa a prilepia do novej pózy. paradoxne to znamená, že **na chybách v pozadí spoznáš deepfake skôr než na tvári**:
 
-- **svetlo na tvári vs. v miestnosti** — ak za hovoriacim vidno okno z ľavej strany, svetlo by malo padať z ľavej strany aj na tvár. deepfake si svetlo „dorobí" generatívne a často nesedí so smerom dominantného zdroja.
+- **svetlo na tvári vs. v miestnosti** — ak za hovoriacim vidno okno z ľavej strany, svetlo by malo padať z ľavej strany aj na tvár. deepfake si svetlo „dorobí“ generatívne a často nesedí so smerom dominantného zdroja.
 - **odraz v okuliaroch** — generátory dlhodobo zlyhávajú v odrazoch. ak má osoba okuliare, hľadaj odraz okolia: mal by zodpovedať pozadiu za ňou.
-- **pixel artefakty po obvode tváre** — pri zastavenom snímku zoomni na okraj tváre. vidno mierne rozmazanie, „pulzovanie" pixelov alebo seam line. tam sa generovaný obsah napája na pôvodné video.
+- **pixel artefakty po obvode tváre** — pri zastavenom snímku zoomni na okraj tváre. vidno mierne rozmazanie, „pulzovanie“ pixelov alebo seam line. tam sa generovaný obsah napája na pôvodné video.
 - **gestikulácia rúk** — rýchle mávanie a ukazovanie stále produkuje deformácie prstov.
 
 ## context check — najsilnejšia detekčná technika
 
 pravda, ktorú si vendori detekčného softvéru nevypýtajú na slidu: **detekcia podľa kontextu funguje lepšie než akýkoľvek model**. podvodník síce vyrobí dokonalé video, ale rovnako dokonalý kontext nie. spýtaj sa tri otázky.
 
-1. **odkiaľ video príde?** linkuje ho banka z `slsp.sk`, alebo facebook reklama z účtu „investovanie info 24" s tromi sledovateľmi? zaplatená reklama, ktorá hovorí v mene inštitúcie, je v 95 % prípadov scam. inštitúcie nepublikujú dôležité oznamy ako sponzored post.
+1. **odkiaľ video príde?** linkuje ho banka z `slsp.sk`, alebo facebook reklama z účtu „investovanie info 24“ s tromi sledovateľmi? zaplatená reklama, ktorá hovorí v mene inštitúcie, je v 95 % prípadov scam. inštitúcie nepublikujú dôležité oznamy ako sponzored post.
 2. **kto ho zverejnil?** klikni na profil. vznikol pred dvomi týždňami? má profilovú fotku z fotobanky? publikuje 12× denne reklamy na rôzne investičné platformy? máš odpoveď.
 3. **prečo by to ten človek hovoril?** žiadny riaditeľ banky v histórii sveta neodporúčal investičný produkt cez facebook reklamu. žiadny premiér nikdy nepozval voličov investovať do kryptomeny cez tiktok. **ak to video tvrdí, je to deepfake — bez ohľadu na to, ako presvedčivo vyzerá**. táto jednoduchá heuristika ti ušetrí 99 % pochybností.
 
-[nbs vo svojom oficiálnom upozornení píše presne to: deepfake videá sa v slovenskom kontexte najčastejšie zneužívajú v investičných podvodoch s tvárami politikov, športovcov a riaditeľov bánk — a primárny obranný krok nie je detekcia, ale overenie zdroja](https://nbs.sk/aktuality/upozornenie-coraz-castejsie-deepfake-videa-testuju-nasu-obozretnost/) [1]. [fontech sumarizuje slovenské prípady z rokov 2024–2026, kde sa identické videá so šablónou „celebrita odporúča platformu" objavovali v desiatkach variantov mesačne](https://fontech.startitup.sk/spravy/nbs-upozornuje-na-deepfake-videa-pouzivaju-aj-podvodnici-s-investicnymi-ponukami/) [2].
+[nbs vo svojom oficiálnom upozornení píše presne to: deepfake videá sa v slovenskom kontexte najčastejšie zneužívajú v investičných podvodoch s tvárami politikov, športovcov a riaditeľov bánk — a primárny obranný krok nie je detekcia, ale overenie zdroja](https://nbs.sk/aktuality/upozornenie-coraz-castejsie-deepfake-videa-testuju-nasu-obozretnost/) [1]. [fontech sumarizuje slovenské prípady z rokov 2024–2026, kde sa identické videá so šablónou „celebrita odporúča platformu“ objavovali v desiatkach variantov mesačne](https://fontech.startitup.sk/spravy/nbs-upozornuje-na-deepfake-videa-pouzivaju-aj-podvodnici-s-investicnymi-ponukami/) [2].
 
 ## reverse search snímok — 60 sekúnd, ktoré zachránia hodiny
 
@@ -95,7 +95,7 @@ reverse search nepokryje všetko — pri krátkom alebo lokálnom zdroji google 
 vendori predávajú deepfake detekciu ako vyriešený problém. nie je. úprimný stav:
 
 - **intel fakecatcher** — analyzuje mikrozmeny farby pokožky spôsobené krvným obehom. na laboratórnych datasetoch [hlási 98 % presnosť, ale nezávislé audity tieto čísla v adversárnych podmienkach zatiaľ nezreplikovali](https://www.cloudsek.com/knowledge-base/best-ai-deepfake-detection-tools) [4]. padá na kompresovaných facebook reklamách.
-- **microsoft video authenticator** — pravdepodobnostné skóre manipulácie pre snímok. užitočné pre fact-checking redakcie, **ale** [bol pretrénovaný na korpuse 900 miliónov syntetických vzoriek od 2024, a aj tak generátory typu „gan-attack framework" pridajú adversárny šum, ktorý detekciu obíde](https://verodate.ca/blog/deepfake-detection-ai-safety-2026) [5].
+- **microsoft video authenticator** — pravdepodobnostné skóre manipulácie pre snímok. užitočné pre fact-checking redakcie, **ale** [bol pretrénovaný na korpuse 900 miliónov syntetických vzoriek od 2024, a aj tak generátory typu „gan-attack framework“ pridajú adversárny šum, ktorý detekciu obíde](https://verodate.ca/blog/deepfake-detection-ai-safety-2026) [5].
 - **deepware scanner / sensity** — komerčné scanery pre upload klipu. vyžadujú registráciu, niektoré sú platené, väčšina v angličtine. praktická použiteľnosť pre seniora = nulová.
 
 **každý detektor zaostáva za generátormi o 6–12 mesiacov**. nový model vyjde, detektor naň ešte nie je trénovaný, podvod prejde. preto sa nemôžeš spoľahnúť na nástroj — musíš sa spoľahnúť na proces.
@@ -104,19 +104,15 @@ vendori predávajú deepfake detekciu ako vyriešený problém. nie je. úprimn�
 
 ## sibling vektor — ai-generované fotky
 
-deepfake video je príbuzný s ai-generovanými fotografiami vo falošných profiloch. iný formát, rovnaká logika: nájsť drobné artefakty (uši, šperky, pozadie, asymetria), urobiť reverse search a hlavne overiť kontext zverejnenia. detailný vizuálny rozbor statických ai fotiek máme v [ai generované fotky vo falošných profiloch](/blog/ai-generovane-fotky-fake-profily). širší obraz, ako deepfake video, voice cloning a ai phishing tvoria spolu novú scam scénu, je v pillarovom prehľade [ai a moderné podvody — deepfake, voice cloning a ai phishing](/blog/ai-a-moderne-podvody-deepfake-voice-cloning).
+deepfake video je príbuzný s ai-generovanými fotografiami vo falošných profiloch. iný formát, rovnaká logika: drobné artefakty (uši, šperky, pozadie, asymetria), reverse search, kontext zverejnenia. detail máme v [ai generované fotky vo falošných profiloch](/blog/ai-generovane-fotky-fake-profily). širší obraz toho, ako deepfake, voice cloning a ai phishing tvoria spolu novú scam scénu, je v pillarovom prehľade [ai a moderné podvody — deepfake, voice cloning a ai phishing](/blog/ai-a-moderne-podvody-deepfake-voice-cloning).
 
 ## bezpečnostná fráza s rodinou — finálna obrana
 
-predstav si scenár: zavolá ti dcéra cez videohovor. na obrazovke je jej tvár, jej hlas, plače, hovorí, že mala autonehodu a potrebuje 4 500 € na advokáta. video je presvedčivé. neviem ti pomôcť spoznať taký deepfake v reálnom čase pod tlakom emócií. preto ti dávam jednoduchšiu obranu: **bezpečnostnú frázu**.
+predstav si: zavolá ti dcéra cez videohovor. jej tvár, jej hlas, plače, mala autonehodu a potrebuje 4 500 € na advokáta. video je presvedčivé. taký deepfake v reálnom čase pod tlakom emócií nespoznáš. preto je obrana jednoduchšia: **bezpečnostná fráza**.
 
-posaď sa dnes večer s rodinou (deti, rodičia, súrodenci, partner) a dohodnite si **jedno slovo alebo krátku frázu**, ktorú phisher nemôže poznať. niečo, čo nie je v žiadnom verejnom poste, na facebooku, v škole, na linkedine. príklady:
+posaď sa dnes večer s rodinou a dohodnite si **jedno slovo alebo krátku frázu**, ktorú podvodník nemôže poznať — nie je v žiadnom verejnom poste, na facebooku ani na linkedine. príklady: meno detskej plyšovej hračky, prezývka starej mamy nepoužívaná pred cudzími, nezvyčajná dvojica slov ako *„modrý medveď“*.
 
-- meno detskej plyšovej hračky, ktorú nikto okrem rodiny nepozná
-- prezývka starej mamy, ktorá sa nepoužíva pred cudzími
-- nezvyčajná kombinácia dvoch slov: *„modrý medveď"*, *„krivý jeleň"*
-
-pravidlo: **ak ti niekto z rodiny zavolá v ohrození a žiada peniaze, prv než urobíš čokoľvek, spýtaš sa na frázu**. ak nevie odpovedať alebo sa vyhne, zlož telefón a zavolaj jej späť na jej overené číslo. presný postup nastavenia, vrátane jednoduchého rozhovoru pre seniorov a detí, máme v [klonovanie hlasu — podvod „syn v tiesni"](/blog/klonovanie-hlasu-podvod-volanie-rodina).
+pravidlo: **ak ti niekto z rodiny zavolá v ohrození a žiada peniaze, prv než urobíš čokoľvek, spýtaš sa na frázu**. ak nevie odpovedať, zlož a zavolaj späť na jej overené číslo. presný postup, vrátane rozhovoru pre seniorov a detí, máme v [klonovanie hlasu — podvod „syn v tiesni“](/blog/klonovanie-hlasu-podvod-volanie-rodina).
 
 deepfake video sa dá vyrobiť. deepfake video, ktoré pozná, ako sa volá tvoja stará plyšová žirafa, sa vyrobiť nedá.
 
@@ -131,7 +127,7 @@ pri každom podozrivom videu prejdi týmito šiestimi krokmi v poradí:
 5. **reverse search snímky** — google lens, tineye, yandex. ak existuje pôvodné video, zvyčajne ho nájdeš do minúty.
 6. **druhý kanál** — ak ide o peniaze alebo osobnú žiadosť, overuj cez kanál, ktorý nesúvisí s tým, kde si video videl. zavolaj na overené číslo. otvor oficiálnu stránku banky. fyzicky sa stretni. **bezpečnostnú frázu použi pri každej rodinnej naliehavej žiadosti o peniaze.**
 
-a jedna meta-rada: **pomalosť je tvoj najlacnejší antivírus**. deepfake potrebuje rýchlosť, lebo rýchlosť vypína rozmýšľanie. odoberieš mu rýchlosť — *„rozmyslím si to do zajtra"*, *„zavolám späť za 10 minút"* — odoberieš mu zbraň.
+a jedna meta-rada: **pomalosť je tvoj najlacnejší antivírus**. deepfake potrebuje rýchlosť, lebo rýchlosť vypína rozmýšľanie. odoberieš mu rýchlosť — *„rozmyslím si to do zajtra“*, *„zavolám späť za 10 minút“* — odoberieš mu zbraň.
 
 eu ai act od augusta 2026 zavádza povinné označovanie deepfake obsahu pre legitímnych poskytovateľov modelov. čo to v praxi mení (a hlavne nemení) pre teba pri obrane proti slovenským scamom, rozoberáme v [eu ai akt 2026 — čo znamená pre teba](/blog/ai-akt-eu-co-znamena-pre-bezneho-cloveka).
 

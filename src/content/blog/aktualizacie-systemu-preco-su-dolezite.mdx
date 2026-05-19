@@ -2,7 +2,7 @@
 slug: aktualizacie-systemu-preco-su-dolezite
 title: "prečo sú aktualizácie systému dôležitejšie, než si myslíš"
 subtitle: "od zverejnenia chyby k masovému skenovaniu siete trvá útočníkovi sedem dní — toto je tvoje okno"
-excerpt: "väčšina hacknutých počítačov v 2026 nepadne na nový sofistikovaný útok. padne na chybu, ktorá bola opravená pred mesiacmi. tento návod ti ukáže, ako vyzerá životný cyklus zraniteľnosti od dňa nula po masové skenovanie a prečo „aktualizujem cez víkend" je často neskoro."
+excerpt: "väčšina hacknutých počítačov v 2026 nepadne na nový sofistikovaný útok. padne na chybu, ktorá bola opravená pred mesiacmi. tento návod ti ukáže, ako vyzerá životný cyklus zraniteľnosti od dňa nula po masové skenovanie a prečo „aktualizujem cez víkend“ je často neskoro."
 category_slug: digitalna-bezpecnost
 author_slug: subenai-editorial
 primary_keyword: aktualizacie systemu bezpecnost
@@ -37,9 +37,9 @@ sources:
     accessed_at: "2026-05-19"
 ---
 
-väčšina ľudí si predstavuje hekerov ako tínedžerov v kapucniach, ktorí 17 hodín kódujú nový super-útok. drvivá realita 2026 je nudnejšia: útočník si stiahne **patch z minulého utorka**, za pár hodín z neho vyextrahuje, čo presne microsoft opravil, napíše exploit a začne skenovať internet. obeťou nie je ten s najslabším heslom — je to ten, kto „update spravím cez víkend, teraz nestíham".
+väčšina ľudí si predstavuje hekerov ako tínedžerov v kapucniach, ktorí 17 hodín kódujú nový super-útok. drvivá realita 2026 je nudnejšia: útočník si stiahne **patch z minulého utorka**, za pár hodín z neho vyextrahuje, čo presne microsoft opravil, napíše exploit a začne skenovať internet. obeťou nie je ten s najslabším heslom — je to ten, kto „update spravím cez víkend, teraz nestíham“.
 
-tento návod ti ukáže, ako presne vyzerá ten týždeň medzi objavením chyby a masovým útokom, prečo „aktualizujem zajtra" je v praxi často neskoro a ktoré zariadenia doma sú dnes najpravdepodobnejšia diera do tvojho života.
+tento návod ti ukáže, ako presne vyzerá ten týždeň medzi objavením chyby a masovým útokom, prečo „aktualizujem zajtra“ je v praxi často neskoro a ktoré zariadenia doma sú dnes najpravdepodobnejšia diera do tvojho života.
 
 ## životný cyklus chyby — od dňa nula po masové skenovanie
 
@@ -47,7 +47,7 @@ každá softvérová zraniteľnosť (oficiálne **CVE — common vulnerabilities
 
 **deň 0 — chybu niekto objaví.** môže to byť bezpečnostný výskumník, vendor sám, alebo štátna spravodajská skupina (apt). výskumník ju nahlási vendorovi cez bug bounty. štát ju drží v tajnosti a používa.
 
-**deň X — vendor vydá patch.** microsoft to robí každý druhý utorok v mesiaci („patch tuesday"). apple, google, cisco v menej pravidelnom rytme. patch je zverejnený, ale **zatiaľ s minimálnym opisom** — len číslo CVE a severity skóre.
+**deň X — vendor vydá patch.** microsoft to robí každý druhý utorok v mesiaci („patch tuesday“). apple, google, cisco v menej pravidelnom rytme. patch je zverejnený, ale **zatiaľ s minimálnym opisom** — len číslo CVE a severity skóre.
 
 **deň X+1 — publikuje sa technický advisory.** vendor opíše, čo chyba robí. cisa, sk-cert a národné cert tímy vydajú varovania. v tomto bode už vie verejnosť, kde je problém.
 
@@ -83,7 +83,7 @@ operačné systémy v 2026 majú automatické aktualizácie zapnuté väčšinou
 **1. operačný systém.** otvor *nastavenia → windows update* (alebo macos *software update*, ios/android *system update*) a over, že:
 - automatické aktualizácie sú **zapnuté**.
 - posledná inštalovaná aktualizácia nie je staršia než **mesiac**.
-- ak máš windows 10 → naplánuj prechod na win 11 alebo výmenu zariadenia. žiadne „ale funguje to". funguje to do prvého úspešného skenu.
+- ak máš windows 10 → naplánuj prechod na win 11 alebo výmenu zariadenia. žiadne „ale funguje to“. funguje to do prvého úspešného skenu.
 
 **2. prehliadač.** chrome a edge sa updatujú samé, ale len pri reštarte. **zatvor a otvor prehliadač raz za týždeň.** v adresnom riadku zadaj `chrome://version` a pozri si verziu — porovnaj s aktuálnym release na [chrome releases blogu](https://chromereleases.googleblog.com/search/label/Stable%20updates).
 
@@ -98,7 +98,7 @@ operačné systémy v 2026 majú automatické aktualizácie zapnuté väčšinou
 
 ## antivírus nie je náhrada za patche
 
-častý mýtus: *„mám antivírus, takže môžem patche odložiť."* nie. antivírus deteguje **známy malware** podľa signatúr alebo správania. ak útočník použije čerstvý exploit na nepatchnutú zraniteľnosť, prvá fáza útoku (získanie prístupu) sa odohrá **na úrovni jadra systému**, kde antivírus často ani nevie reagovať. patch tú dieru zatvára priamo. antivírus chytí, čo sa do nej dostalo — možno. ak chceš vrstvený obraz, prečítaj si [najlepší antivírus 2026 pre slovensko](/blog/najlepsi-antivirus-2026-slovensko) a hlavne [eset vs. bitdefender vs. kaspersky](/blog/eset-vs-bitdefender-vs-kaspersky) — oba články to hovoria explicitne: **patching > av**.
+častý mýtus: *„mám antivírus, takže môžem patche odložiť.“* nie. antivírus deteguje **známy malware** podľa signatúr alebo správania. ak útočník použije čerstvý exploit na nepatchnutú zraniteľnosť, prvá fáza útoku (získanie prístupu) sa odohrá **na úrovni jadra systému**, kde antivírus často ani nevie reagovať. patch tú dieru zatvára priamo. antivírus chytí, čo sa do nej dostalo — možno. ak chceš vrstvený obraz, prečítaj si [najlepší antivírus 2026 pre slovensko](/blog/najlepsi-antivirus-2026-slovensko) a hlavne [eset vs. bitdefender vs. kaspersky](/blog/eset-vs-bitdefender-vs-kaspersky) — oba články to hovoria explicitne: **patching > av**.
 
 aktualizácie pokrývajú odhadom **60 % praktického útokového povrchu domácnosti**. zostávajúcich 40 % je phishing, slabé heslá, a sociálne inžinierstvo — to rieši zvyšok obrany, ktorý popisujeme v [digitálnej bezpečnosti — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod). a keďže ransomware sa cieli aj na domácnosti, paralelne potrebuješ vrstvu pre prípad, že prvá obrana padne — to detailne pokrýva sibling článok [zálohovanie dát — pravidlo 3-2-1](/blog/zalohovanie-dat-3-2-1-pravidlo). pre prehľad, čo všetko v 2026 cieli na slovákov, [top podvody slovensko 2026](/blog/top-podvody-slovensko-2026).
 

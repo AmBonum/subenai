@@ -33,7 +33,7 @@ sources:
     accessed_at: "2026-05-19"
 ---
 
-opatrnosť ako jediná obrana je hra, ktorú s phisherom prehráš. pretože ty potrebuješ byť ostražitý 16 hodín denne, on potrebuje, aby si raz klikol unavený o jedenástej večer. preto sa serióznou obranou pred phishingom nemyslia rady typu *„dávaj si pozor"*, ale **vrstvy, ktoré ťa zachytia aj vtedy, keď heslo už dáš preč**. tento článok ti zoradí všetky bežné možnosti od najslabšej po najsilnejšiu a povie ti, kam patrí ktorá. ak ešte nevieš, [čo je vlastne phishing](/blog/phishing-kompletny-sprievodca) ako koncept, začni tým.
+opatrnosť ako jediná obrana je hra, ktorú s phisherom prehráš. pretože ty potrebuješ byť ostražitý 16 hodín denne, on potrebuje, aby si raz klikol unavený o jedenástej večer. preto sa serióznou obranou pred phishingom nemyslia rady typu *„dávaj si pozor“*, ale **vrstvy, ktoré ťa zachytia aj vtedy, keď heslo už dáš preč**. tento článok ti zoradí všetky bežné možnosti od najslabšej po najsilnejšiu a povie ti, kam patrí ktorá. ak ešte nevieš, [čo je vlastne phishing](/blog/phishing-kompletny-sprievodca) ako koncept, začni tým.
 
 ## prečo samotné heslo už dávno nestačí
 
@@ -48,7 +48,7 @@ druhý faktor mal pôvodne tento problém vyriešiť. v praxi sa ukázalo, že *
 najznámejšia forma 2fa. banka ti pošle 6-ciferný kód, ty ho prepíšeš. lepšie ako nič. **ale dve veľké diery**:
 
 - **sim swap.** útočník presvedčí telekom operátora, že stratil sim kartu, a nechá si tvoje číslo aktivovať na svojej. tvoj telefón ostane nemý. všetky tvoje sms kódy odteraz chodia jemu. [nbs vo svojich materiáloch o internetových podvodoch opakovane uvádza sim swap ako reálnu hrozbu pre slovenských klientov](https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/) [2].
-- **aitm phishing.** útočník ti pošle falošnú prihlasovaciu stránku, ty zadáš meno, heslo aj sms kód — on ich v tej istej minute zadá na pravú stránku banky. kód má platnosť 60 sekúnd, to mu úplne stačí. [nist v sp 800-63b výslovne degraduje sms-based mfa ako „restricted" autentikátor](https://pages.nist.gov/800-63-3/sp800-63b.html) [4] — americká vládna autorita ho neodporúča pre nové systémy.
+- **aitm phishing.** útočník ti pošle falošnú prihlasovaciu stránku, ty zadáš meno, heslo aj sms kód — on ich v tej istej minute zadá na pravú stránku banky. kód má platnosť 60 sekúnd, to mu úplne stačí. [nist v sp 800-63b výslovne degraduje sms-based mfa ako „restricted“ autentikátor](https://pages.nist.gov/800-63-3/sp800-63b.html) [4] — americká vládna autorita ho neodporúča pre nové systémy.
 
 verdikt: lepšie než žiadne 2fa. ak je to jediné, čo ti banka ponúka, zapni si ho. ale plánuj prechod na niečo silnejšie.
 
@@ -64,7 +64,7 @@ verdikt: výrazné zlepšenie. minimum pre e-mail, sociálne siete a všetko, kd
 
 ### 3. push notifikácia v aplikácii banky
 
-väčšina slovenských bánk (slsp, vúb, tatra banka, čsob, mbank, 365.bank) má vlastnú mobilnú app, ktorá ti pri prihlásení alebo platbe pošle push notifikáciu — *„chceš schváliť prihlásenie?"*. potvrdíš biometriou alebo pinom.
+väčšina slovenských bánk (slsp, vúb, tatra banka, čsob, mbank, 365.bank) má vlastnú mobilnú app, ktorá ti pri prihlásení alebo platbe pošle push notifikáciu — *„chceš schváliť prihlásenie?“*. potvrdíš biometriou alebo pinom.
 
 **silné stránky**: app vidí kontext — vie, z akej ip sa pokus deje, či je to nezvyčajné zariadenie, a vie ti zobraziť detail (sumu, príjemcu, krajinu). útočník ti ten kontext nedokáže sfalšovať.
 
@@ -76,9 +76,9 @@ verdikt: pre banking solídna obrana, ak používaš banku, ktorá implementuje 
 
 passkey je párový kryptografický kľúč, ktorý žije v tvojom telefóne, počítači alebo cloudovom keychaine (icloud keychain, google password manager, 1password). pri registrácii sa vygeneruje pár — privátna časť ostane u teba, verejnú dostane služba. pri prihlásení podpíšeš výzvu privátnym kľúčom, ten sa nikdy z tvojho zariadenia neodošle.
 
-**prečo to phisher nedokáže ukradnúť**: protokol je **viazaný na doménu**. tvoj passkey pre `slsp.sk` matematicky nepodpíše výzvu z falošnej `slsp-overenie.com` — prehliadač to odmietne ešte pred tým, než si stihol klepnúť na *„potvrdiť"*. [fido alliance to popisuje ako phishing-resistant by design](https://fidoalliance.org/passkeys/) [3] a od roku 2024 je passkey podporovaný natívne v apple, google aj microsoft ekosystéme.
+**prečo to phisher nedokáže ukradnúť**: protokol je **viazaný na doménu**. tvoj passkey pre `slsp.sk` matematicky nepodpíše výzvu z falošnej `slsp-overenie.com` — prehliadač to odmietne ešte pred tým, než si stihol klepnúť na *„potvrdiť“*. [fido alliance to popisuje ako phishing-resistant by design](https://fidoalliance.org/passkeys/) [3] a od roku 2024 je passkey podporovaný natívne v apple, google aj microsoft ekosystéme.
 
-slovenské banky postupne nasadzujú passkey ako alternatívu k sms 2fa — sleduj sekciu *„bezpečnosť"* v tvojom internet bankingu. e-mail giganti (gmail, outlook, proton mail), všetky veľké sociálne siete a väčšina password managerov passkey podporujú už dnes.
+slovenské banky postupne nasadzujú passkey ako alternatívu k sms 2fa — sleduj sekciu *„bezpečnosť“* v tvojom internet bankingu. e-mail giganti (gmail, outlook, proton mail), všetky veľké sociálne siete a väčšina password managerov passkey podporujú už dnes.
 
 **kde passkey naráža**: zatiaľ nie všade. niektoré slovenské služby (daňový portál, eservices) stále trvajú na sms alebo eid. ale momentum je jednoznačný a passkey adopcia v 2026 zrýchľuje.
 
@@ -127,7 +127,7 @@ facebook, instagram, tiktok, x, linkedin, reddit — všetky podporujú passkey 
 
 binance, coinbase, kraken, ledger, metamask — peniaze tu zmiznú za sekundy a sú nezvratné.
 
-- **hardvérový kľúč mandatórny.** žiadne *„zatiaľ stačí totp"*. ak nemáš yubikey alebo titan, nemaj na burze viac, než si môžeš dovoliť stratiť.
+- **hardvérový kľúč mandatórny.** žiadne *„zatiaľ stačí totp“*. ak nemáš yubikey alebo titan, nemaj na burze viac, než si môžeš dovoliť stratiť.
 - pre veľké zostatky: hardvérová peňaženka (ledger, trezor) + samostatný yubikey pre prístup k burze.
 
 ### password manager

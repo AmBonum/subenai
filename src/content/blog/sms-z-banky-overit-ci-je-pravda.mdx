@@ -37,23 +37,23 @@ sources:
     accessed_at: "2026-05-19"
 ---
 
-práve ti prišla SMS *„vážený klient, na vašom účte sme zaznamenali podozrivú aktivitu. potvrďte identitu kliknutím: tatrabank-verify.com"*. odosielateľ vyzerá ako *„TatraBanka"*, čas sedí, ide o utorok ráno. máš dve možnosti: kliknúť — a možno za 30 sekúnd nemáš na účte nič. alebo to overiť — a vrátiť sa k tomu istému utorku, ako keby sa nič nestalo. tento návod ti dáva 20-sekundový postup, ktorý funguje pre tatra banku, slsp aj vúb, plus jedno pravidlo, ktoré budeš pamätať aj o pol roka.
+práve ti prišla SMS *„vážený klient, na vašom účte sme zaznamenali podozrivú aktivitu. potvrďte identitu kliknutím: tatrabank-verify.com“*. odosielateľ vyzerá ako *„TatraBanka“*, čas sedí, ide o utorok ráno. máš dve možnosti: kliknúť — a možno za 30 sekúnd nemáš na účte nič. alebo to overiť — a vrátiť sa k tomu istému utorku, ako keby sa nič nestalo. tento návod ti dáva 20-sekundový postup, ktorý funguje pre tatra banku, slsp aj vúb, plus jedno pravidlo, ktoré budeš pamätať aj o pol roka.
 
 žiadne všeobecné rady. konkrétne kroky, konkrétne čísla, konkrétne čo banka *naozaj* robí a čo nikdy.
 
 ## prečo bankové SMS podvody fungujú aj na opatrných ľudí
 
-falošná SMS z banky je dnes najúspešnejší typ smishingu na slovensku, lebo láme jednu mentálnu skratku: *„keď je v hlavičke názov mojej banky, je to z banky"*. nie je. odosielateľa SMS sa dá v 2026 spoofovať tak ľahko, že ti správa môže prísť priamo do existujúcej konverzácie s pravou TatraBankou, vmiešaná medzi reálne 3D-secure kódy. mozog ju automaticky priradí k „bezpečnému" vlákno a klik ide cez instinct, nie cez rozum.
+falošná SMS z banky je dnes najúspešnejší typ smishingu na slovensku, lebo láme jednu mentálnu skratku: *„keď je v hlavičke názov mojej banky, je to z banky“*. nie je. odosielateľa SMS sa dá v 2026 spoofovať tak ľahko, že ti správa môže prísť priamo do existujúcej konverzácie s pravou TatraBankou, vmiešaná medzi reálne 3D-secure kódy. mozog ju automaticky priradí k „bezpečnému“ vlákno a klik ide cez instinct, nie cez rozum.
 
-[národná banka slovenska v aktuálnom varovaní opisuje, že útočníci kombinujú smishing s vishing hovorom](https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/) [1]: najprv ti príde SMS, potom o tri minúty zavolá „pracovník banky", aby ti pomohol *„zabezpečiť účet"*. dvojvrstvový útok má 4× vyššiu úspešnosť než samotná SMS. ak chceš širší kontext o tom, prečo to funguje a ako vyzerajú ďalšie kanály, máme to v hub článku [scam sms a hovory v kocke](/blog/scam-sms-a-podvodne-hovory).
+[národná banka slovenska v aktuálnom varovaní opisuje, že útočníci kombinujú smishing s vishing hovorom](https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/) [1]: najprv ti príde SMS, potom o tri minúty zavolá „pracovník banky“, aby ti pomohol *„zabezpečiť účet“*. dvojvrstvový útok má 4× vyššiu úspešnosť než samotná SMS. ak chceš širší kontext o tom, prečo to funguje a ako vyzerajú ďalšie kanály, máme to v hub článku [scam sms a hovory v kocke](/blog/scam-sms-a-podvodne-hovory).
 
-druhá pravda, ktorú musíš poznať: **banka ti nikdy neposiela odkaz na prihlásenie v SMS**. žiadna slovenská banka. nikdy. ani vo „výnimočnom" prípade, ani pri „neoprávnenom prihlásení", ani keď „treba urgentne potvrdiť údaje". toto pravidlo nemá výnimky a je to jediná najdôležitejšia veta v tomto článku.
+druhá pravda, ktorú musíš poznať: **banka ti nikdy neposiela odkaz na prihlásenie v SMS**. žiadna slovenská banka. nikdy. ani vo „výnimočnom“ prípade, ani pri „neoprávnenom prihlásení“, ani keď „treba urgentne potvrdiť údaje“. toto pravidlo nemá výnimky a je to jediná najdôležitejšia veta v tomto článku.
 
 ## 20-sekundový overovací postup (univerzálny)
 
 keď ti príde podozrivá SMS s názvom banky v hlavičke, prejdi týmto:
 
-1. **nedotýkaj sa odkazu.** ani „len pozrieť, ako vyzerá stránka". moderné phishingové kity registrujú IP a fingerprint pri prvom načítaní; útočník to vie použiť pri následnom vishing hovore.
+1. **nedotýkaj sa odkazu.** ani „len pozrieť, ako vyzerá stránka“. moderné phishingové kity registrujú IP a fingerprint pri prvom načítaní; útočník to vie použiť pri následnom vishing hovore.
 2. **otvor mobilnú aplikáciu svojej banky.** nie prehliadač, nie odkaz, nie google. priamo appku z home screenu.
 3. **prihlás sa štandardnou cestou** (biometria alebo PIN). pozri si:
    - **notifikácie / správy** v appke (každá banka má vlastný in-app inbox)
@@ -69,45 +69,45 @@ ak appku z nejakého dôvodu nemáš, postup je rovnaký, len cez web banking �
 
 ### tatra banka
 
-legitímna SMS od tatra banky chodí z odosielateľa **„TatraBanka"** (bez medzery, presne tak) a nikdy neobsahuje klikateľný odkaz na externú doménu. 3D-secure kódy chodia ako 6-miestne číslo s textom o sume a obchodníkovi — bez odkazu kamkoľvek.
+legitímna SMS od tatra banky chodí z odosielateľa **„TatraBanka“** (bez medzery, presne tak) a nikdy neobsahuje klikateľný odkaz na externú doménu. 3D-secure kódy chodia ako 6-miestne číslo s textom o sume a obchodníkovi — bez odkazu kamkoľvek.
 
-[tatra banka vo svojich materiáloch pre digitálnu bezpečnosť opakuje, že banka nikdy nežiada zaslanie citlivých informácií cez SMS](https://www.tatrabanka.sk/predigitalnubezpecnost/hrozba/chrante-sa-pred-podvodnymi-sms/) [2]. typické podvodné formulácie, ktoré majú s tatra bankou nulový súvis: *„potrebujeme si overiť bezpečnosť vášho účtu"*, *„aktivácia zabezpečenia bankového účtu"*, *„váš účet bol pozastavený, kliknite pre obnovu"*.
+[tatra banka vo svojich materiáloch pre digitálnu bezpečnosť opakuje, že banka nikdy nežiada zaslanie citlivých informácií cez SMS](https://www.tatrabanka.sk/predigitalnubezpecnost/hrozba/chrante-sa-pred-podvodnymi-sms/) [2]. typické podvodné formulácie, ktoré majú s tatra bankou nulový súvis: *„potrebujeme si overiť bezpečnosť vášho účtu“*, *„aktivácia zabezpečenia bankového účtu“*, *„váš účet bol pozastavený, kliknite pre obnovu“*.
 
 verifikačný kanál: **DIALOG Live** na bezplatnom čísle ***1100** (z mobilu) alebo 0850 111 100 (z pevnej linky). ak máš čo i len 5 % pochybnosť, zavolaj tam — nestratíš nič a operátor ti overí v 30 sekundách, či banka poslala čokoľvek.
 
 ### slovenská sporiteľňa (slsp)
 
-slsp posiela SMS z odosielateľa **„SLSP"** alebo **„Slovenska sporitelna"**. aplikácia, ktorá ti spravuje účet, sa volá **George** — všetky bezpečnostné notifikácie chodia tam ako push, nie ako SMS s odkazom.
+slsp posiela SMS z odosielateľa **„SLSP“** alebo **„Slovenska sporitelna“**. aplikácia, ktorá ti spravuje účet, sa volá **George** — všetky bezpečnostné notifikácie chodia tam ako push, nie ako SMS s odkazom.
 
-[slsp má samostatnú stránku „overenie sms s linkou", kde popisuje konkrétny vzor podvodu](https://www.slsp.sk/sk/ludia/bezpecnost/overenie-sms-s-linkou) [3]: útočník pošle SMS, že banka zaznamenala podozrivú transakciu a treba zavolať na priložené číslo. keď zavoláš, „pracovník banky" si pýta autorizačný kód z práve doručenej SMS. ten kód v skutočnosti potvrdzuje prevod peňazí na útočníkov účet. **nikomu nehovor SMS kód cez telefón. nikdy. ani „pracovníkovi banky", ani „polícii", ani „technikovi z it oddelenia".**
+[slsp má samostatnú stránku „overenie sms s linkou“, kde popisuje konkrétny vzor podvodu](https://www.slsp.sk/sk/ludia/bezpecnost/overenie-sms-s-linkou) [3]: útočník pošle SMS, že banka zaznamenala podozrivú transakciu a treba zavolať na priložené číslo. keď zavoláš, „pracovník banky“ si pýta autorizačný kód z práve doručenej SMS. ten kód v skutočnosti potvrdzuje prevod peňazí na útočníkov účet. **nikomu nehovor SMS kód cez telefón. nikdy. ani „pracovníkovi banky“, ani „polícii“, ani „technikovi z it oddelenia“.**
 
 verifikačný kanál: **+421 2 5826 8111** alebo cez chat priamo v George appke (chat ide overovateľne k operátorom slsp).
 
 ### vúb banka
 
-vúb posiela SMS z odosielateľa **„VUB"** (bez diakritiky) alebo **„VUB Banka"**. mobilný banking sa volá **VÚB Mobil Banking** a podobne ako u ostatných — žiadny odkaz cez SMS na prihlásenie neexistuje.
+vúb posiela SMS z odosielateľa **„VUB“** (bez diakritiky) alebo **„VUB Banka“**. mobilný banking sa volá **VÚB Mobil Banking** a podobne ako u ostatných — žiadny odkaz cez SMS na prihlásenie neexistuje.
 
-[vúb v aktuálnych varovaniach popisuje hlavné podvodné vzory roku 2026](https://www.vub.sk/ludia/tlacove-centrum/vub-novinky/dajte-si-pozor-na-aktualne-podvody.html) [4]: SMS *„váš účet bol zablokovaný z dôvodu podozrivej aktivity, pre odblokovanie sa prihláste: [odkaz]"* a paralelná vlna falošných „investičných" článkov tváriacich sa, že ich zverejnili známi slovenskí novinári. obe využívajú meno banky a sú stopercentne podvodné.
+[vúb v aktuálnych varovaniach popisuje hlavné podvodné vzory roku 2026](https://www.vub.sk/ludia/tlacove-centrum/vub-novinky/dajte-si-pozor-na-aktualne-podvody.html) [4]: SMS *„váš účet bol zablokovaný z dôvodu podozrivej aktivity, pre odblokovanie sa prihláste: [odkaz]“* a paralelná vlna falošných „investičných“ článkov tváriacich sa, že ich zverejnili známi slovenskí novinári. obe využívajú meno banky a sú stopercentne podvodné.
 
 verifikačný kanál: **0850 123 000** (klientske centrum vúb), 24/7.
 
 ### ostatné banky v skratke
 
-- **čsob**: odosielateľ „CSOB", appka „ČSOB SmartBanking", linka 0850 111 777.
-- **mbank**: odosielateľ „mBank", appka „mBank Mobile Banking", linka 0850 60 60 50.
-- **365.bank**: odosielateľ „365.bank", appka „365.bank", chat priamo v appke.
-- **unicredit**: odosielateľ „UniCredit", appka „Smart Banking", linka 0800 14 33 55.
+- **čsob**: odosielateľ „CSOB“, appka „ČSOB SmartBanking“, linka 0850 111 777.
+- **mbank**: odosielateľ „mBank“, appka „mBank Mobile Banking“, linka 0850 60 60 50.
+- **365.bank**: odosielateľ „365.bank“, appka „365.bank“, chat priamo v appke.
+- **unicredit**: odosielateľ „UniCredit“, appka „Smart Banking“, linka 0800 14 33 55.
 
 pravidlo zostáva univerzálne: **prihlás sa do svojej appky a pozri tam**. ak nič nesedí, je to podvod.
 
 ## 6 znakov falošnej SMS, ktoré zachytíš za 5 sekúnd
 
-1. **odkaz s podozrivou doménou.** pravé domény: `tatrabanka.sk`, `slsp.sk`, `vub.sk`, `csob.sk`, `mbank.sk`. červené vlajky: `tatra-banka-overenie.com`, `slsp-secure.info`, `vub-online.eu`, `tatrabank.sk` (chýba „a"), `sIsp.sk` (veľké „I" namiesto „l"). ak doména nesedí presne, končíš.
-2. **prosba o kliknutie na „overenie", „obnovu" alebo „aktiváciu"** účtu/karty/identity. banka nikdy.
-3. **naliehavý časový rámec** — *„do 2 hodín", „inak vám účet zablokujeme"*. banka nedáva ultimáta cez SMS.
+1. **odkaz s podozrivou doménou.** pravé domény: `tatrabanka.sk`, `slsp.sk`, `vub.sk`, `csob.sk`, `mbank.sk`. červené vlajky: `tatra-banka-overenie.com`, `slsp-secure.info`, `vub-online.eu`, `tatrabank.sk` (chýba „a“), `sIsp.sk` (veľké „I“ namiesto „l“). ak doména nesedí presne, končíš.
+2. **prosba o kliknutie na „overenie“, „obnovu“ alebo „aktiváciu“** účtu/karty/identity. banka nikdy.
+3. **naliehavý časový rámec** — *„do 2 hodín“, „inak vám účet zablokujeme“*. banka nedáva ultimáta cez SMS.
 4. **prosba o údaje** (číslo karty, CVV, PIN, heslo, kód z SMS). banka to nikdy nepýta — ani cez SMS, ani cez hovor, ani cez e-mail.
 5. **odosielateľ je obyčajné mobilné číslo** (+421 90X XXX XXX). pravé bankové SMS chodia z named-sender hlavičky, nie z bežného mobilného čísla.
-6. **lámaná slovenčina alebo chýbajúca diakritika** v texte, ktorý sa tvári ako oficiálna komunikácia. moderné podvody to už zvládajú, ale ešte stále občas prejde *„Vas ucet bol zablokovany"* bez mäkčeňov.
+6. **lámaná slovenčina alebo chýbajúca diakritika** v texte, ktorý sa tvári ako oficiálna komunikácia. moderné podvody to už zvládajú, ale ešte stále občas prejde *„Vas ucet bol zablokovany“* bez mäkčeňov.
 
 kompletný katalóg 12 najčastejších vzorov, ktoré práve teraz kolujú slovenskými telefónmi, máme v [12 najčastejších scam sms](/blog/12-najcastejsich-podvodnych-sms-2026). a ak ti rovnaký scenár prišiel ako e-mail, nie ako SMS — postup je čiastočne rovnaký, čiastočne iný, máme ho v [bankové emaily vs sms](/blog/podvodne-emaily-z-banky-ako-spoznat).
 
@@ -126,10 +126,10 @@ panika ti neporadí, rýchlosť áno. máš okno asi 5–10 minút, kým útočn
 
 ## zhrnutie
 
-- žiadna slovenská banka ti neposiela odkaz na prihlásenie cez SMS. ani omylom, ani „výnimočne". toto pravidlo nemá výnimky.
+- žiadna slovenská banka ti neposiela odkaz na prihlásenie cez SMS. ani omylom, ani „výnimočne“. toto pravidlo nemá výnimky.
 - 20-sekundový overovací postup: neklikni → otvor appku → prihlás sa štandardne → pozri notifikácie a transakcie → ak nič nesedí, SMS je podvod.
-- tatra banka volá z DIALOG Live (*1100), slsp z chatu v George alebo +421 2 5826 8111, vúb z 0850 123 000. kontaktné čísla majú zmysel len keď voláš ty banke, nikdy keď ti volá „banka" tebe.
-- 6 znakov falošnej SMS: podozrivá doména, prosba o kliknutie na „overenie", naliehavosť, prosba o údaje, odosielateľ je obyčajné číslo, lámaná slovenčina.
+- tatra banka volá z DIALOG Live (*1100), slsp z chatu v George alebo +421 2 5826 8111, vúb z 0850 123 000. kontaktné čísla majú zmysel len keď voláš ty banke, nikdy keď ti volá „banka“ tebe.
+- 6 znakov falošnej SMS: podozrivá doména, prosba o kliknutie na „overenie“, naliehavosť, prosba o údaje, odosielateľ je obyčajné číslo, lámaná slovenčina.
 - ak si klikol: blokuj kartu cez DIALOG/klientske centrum, zmeň heslá z iného zariadenia, nahlás SMS na +421 903 993 706, polícia 158 ak prišli peniaze.
 
 **otestuj sa za 90 sekúnd →** `/test`

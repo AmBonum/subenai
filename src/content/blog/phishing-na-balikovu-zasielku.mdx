@@ -1,7 +1,7 @@
 ---
 slug: phishing-na-balikovu-zasielku
 title: "phishing cez balíkové zásielky — packeta, slovak post, gls a ako ich rozoznať"
-subtitle: "Doplatenie 1 €, „balík sa vrátil" a falošná platobná brána. Konkrétne vzory roku 2026."
+subtitle: "Doplatenie 1 €, „balík sa vrátil“ a falošná platobná brána. Konkrétne vzory roku 2026."
 excerpt: "Balíkový phishing je v 2026 najúspešnejší slovenský scam. Pošta a kuriéri ti naozaj posielajú SMS — podvodník to vie a stavia na tom. Tu sú konkrétne vzory pre Slovak Post, Packetu, GLS, DPD a DHL a presný checklist, ako ich za 15 sekúnd odhaliť."
 category_slug: phishing-a-emaily
 author_slug: subenai-editorial
@@ -37,7 +37,7 @@ sources:
     accessed_at: "2026-05-19"
 ---
 
-máš objednané dva balíky. jeden zo zaľubky, druhý z aliexpressu. nepamätáš si presne, ktorý kuriér čo vezie. v tom príde SMS: *„balík packeta čaká na vyzdvihnutie, doplaťte 1 € poplatok: pcta-doruc.sk/zaplatit"*. trvá to 5 sekúnd a klikneš — lebo balík **naozaj** čakáš. presne v tom je celý trik: skutočné SMS od pošty a kuriérov existujú, vyzerajú podobne a chodia ti pravidelne. tvoj mozog je natrénovaný klikať. podvodník to vie.
+máš objednané dva balíky. jeden zo zaľubky, druhý z aliexpressu. nepamätáš si presne, ktorý kuriér čo vezie. v tom príde SMS: *„balík packeta čaká na vyzdvihnutie, doplaťte 1 € poplatok: pcta-doruc.sk/zaplatit“*. trvá to 5 sekúnd a klikneš — lebo balík **naozaj** čakáš. presne v tom je celý trik: skutočné SMS od pošty a kuriérov existujú, vyzerajú podobne a chodia ti pravidelne. tvoj mozog je natrénovaný klikať. podvodník to vie.
 
 tento článok je konkrétny katalóg vzorov, ktoré sa po slovenskom inboxe pohybujú v 2026 pod značkami slovak post (premenovaná slovenská pošta), packeta, gls, dpd a dhl, plus presný 15-sekundový check, ako ich oddeliť od pravých správ. ak chceš najprv širší obraz, máme [kompletný sprievodca phishingom](/blog/phishing-kompletny-sprievodca) pre P1 kontext.
 
@@ -46,36 +46,36 @@ tento článok je konkrétny katalóg vzorov, ktoré sa po slovenskom inboxe poh
 tri dôvody:
 
 1. **objem reálnych SMS.** každý druhý balík cez packetu, slovak post alebo gls dnes generuje aspoň jednu SMS s trackingom alebo notifikáciou o pripravenom vyzdvihnutí. tvoj mozog je naučený, že táto kategória správ je legitímna a klikateľná.
-2. **rebrand slovenskej pošty na slovak post (2024).** výmena loga a domén vytvorila výborné podmienky pre podvodníkov, ktorí teraz môžu hrať na neistotu *„aha, asi nový dizajn"*. detailný rozbor čisto rebrandových domén máme v [slovak post podvodné domény](/blog/rebrand-slovenska-posta-slovak-post-podvody).
+2. **rebrand slovenskej pošty na slovak post (2024).** výmena loga a domén vytvorila výborné podmienky pre podvodníkov, ktorí teraz môžu hrať na neistotu *„aha, asi nový dizajn“*. detailný rozbor čisto rebrandových domén máme v [slovak post podvodné domény](/blog/rebrand-slovenska-posta-slovak-post-podvody).
 3. **AI prekladače.** kým v roku 2020 mali balíkové scamy preklepy a anglické zvyšky, dnes sa lokalizujú dokonale. niet sa o čo zaprieť oko.
 
 sk-cert tieto kampane sleduje dlhodobo a v poslednom oficiálnom [varovaní k phishingu zneužívajúcemu identitu slovenskej pošty](https://www.sk-cert.sk/en/urgent-warning-against-a-phishing-campaign-that-abuses-the-identity-of-slovenska-posta/index.html) [1] popisuje presný flow, ktorý opakujú aj kampane mierené na packetu a kuriérov.
 
 ## 4 najčastejšie vzory v 2026
 
-### 1. slovak post: „doplaťte 1 €/1,99 € colný poplatok"
+### 1. slovak post: „doplaťte 1 €/1,99 € colný poplatok“
 
-**ako vyzerá:** SMS alebo e-mail z odosielateľa „Slovak Post" / „SP info" s textom typu *„Vaša zásielka čaká, doplaťte 1,99 € colný poplatok: spost-doplatok.sk/balik"*. niekedy s pomenovaným číslom zásielky („zásielka SK123456789").
+**ako vyzerá:** SMS alebo e-mail z odosielateľa „Slovak Post“ / „SP info“ s textom typu *„Vaša zásielka čaká, doplaťte 1,99 € colný poplatok: spost-doplatok.sk/balik“*. niekedy s pomenovaným číslom zásielky („zásielka SK123456789“).
 
 **čo sa stane po kliknutí:** otvorí sa stránka, ktorá vyzerá ako legitímna platobná brána slovak postu (logo, farby, slovenský text). pýta si meno, číslo karty, dátum platnosti, CVV a kód z SMS od banky. kód z SMS je v skutočnosti 3D Secure potvrdenie pre **registráciu tvojej karty do apple pay alebo google pay scammera**. odtiaľ ti minie zostatok v obchodoch, pokým si to nevšimneš.
 
 **čo robí ozajstný slovak post:** colné poplatky nikdy nepýta cez SMS odkaz. ak ide o reálnu zásielku z tretej krajiny, dostaneš zásielkový lístok do schránky alebo notifikáciu v aplikácii **slovak post** / **balík**, kde platbu spravíš v aplikácii s overením cez tvoju banku. nikdy nie cez nezvyčajnú doménu v SMS.
 
-### 2. packeta: „vyzdvihnutie cez sms platbu"
+### 2. packeta: „vyzdvihnutie cez sms platbu“
 
-**ako vyzerá:** *„Zásielka Packeta — pre vyzdvihnutie zaplaťte rezervačný poplatok 0,80 €: packeta-pay.sk"*. niekedy beží paralelne aj „depák skenoval váš balík, doplaťte sklad" verzia.
+**ako vyzerá:** *„Zásielka Packeta — pre vyzdvihnutie zaplaťte rezervačný poplatok 0,80 €: packeta-pay.sk“*. niekedy beží paralelne aj „depák skenoval váš balík, doplaťte sklad“ verzia.
 
 **realita packety:** packeta neúčtuje rezervačný poplatok cez SMS odkaz. vyzdvihnutie z výdajného miesta sa robí cez QR kód v aplikácii alebo cez heslo, ktoré dostaneš spolu s notifikáciou. ak by si platil za uskladnenie, prebehne to v aplikácii alebo na mieste. nikdy nie cez náhodný link.
 
-### 3. gls / dpd / dhl: „balík sa vrátil, prepošlite na adresu"
+### 3. gls / dpd / dhl: „balík sa vrátil, prepošlite na adresu“
 
-**ako vyzerá:** e-mail v profesionálnom vizuále kuriéra: *„Balík sa nepodarilo doručiť, opätovne ho prepošleme po doplnení adresy a poplatku 2,99 €: gls-redelivery.eu"*. doména je takmer vždy `.eu`, `.com`, `.info` alebo iná, ktorá s oficiálnou doménou (`gls-slovakia.sk`, `dpd.sk`, `dhl.com`) nemá nič spoločné.
+**ako vyzerá:** e-mail v profesionálnom vizuále kuriéra: *„Balík sa nepodarilo doručiť, opätovne ho prepošleme po doplnení adresy a poplatku 2,99 €: gls-redelivery.eu“*. doména je takmer vždy `.eu`, `.com`, `.info` alebo iná, ktorá s oficiálnou doménou (`gls-slovakia.sk`, `dpd.sk`, `dhl.com`) nemá nič spoločné.
 
 **realita kuriérov:** ak kuriér zásielku nedoručí (zastihol prázdny byt), nechá oznámenie o uložení a zásielku odovzdá v partnerskom mieste alebo prinesie nasledujúci pracovný deň. nikdy nepýta peniaze za opakované doručenie cez e-mailový link. ak je prirážka legitímna (extra ďaleký dovoz), kuriér to rieši cez objednávateľa (e-shop), nie cez teba mailom.
 
-### 4. „skrytá karta": SMS bez sumy, len odkaz
+### 4. „skrytá karta“: SMS bez sumy, len odkaz
 
-**ako vyzerá:** dvojriadková SMS s holým linkom: *„Vaša zásielka https://pst-info.sk/track/8x4q"*. žiadny text, žiadny doplatok, žiadny dôvod. cieľ je proste vystrašiť ťa, že prídeš o balík, ak nepoklikáš.
+**ako vyzerá:** dvojriadková SMS s holým linkom: *„Vaša zásielka https://pst-info.sk/track/8x4q“*. žiadny text, žiadny doplatok, žiadny dôvod. cieľ je proste vystrašiť ťa, že prídeš o balík, ak nepoklikáš.
 
 **čo to robí:** stránka v prvom kroku **iba** zistí, či používaš mobil, aký prehliadač máš a tvoju zhruba polohu. v druhom kroku ti ukáže buď phishingový formulár, alebo ťa presmeruje na malware download (typický scenár na Androide). klasická AI-generovaná kampaň, ktorú [sk-cert v aktuálnom varovaní zaraďuje medzi najrýchlejšie rastúce vektory roku 2026](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [5].
 
@@ -89,7 +89,7 @@ sk-cert tieto kampane sleduje dlhodobo a v poslednom oficiálnom [varovaní k ph
 | DPD | `dpd.sk` | `dpd-doplata.eu`, `dpdsk.info` |
 | DHL | `dhl.com` | `dhl-sk.info`, `dhl-redeliver.eu` |
 
-pravidlo: ak doména **nesedí 1 : 1** s tým, čo by ti zobrazila google search na meno kuriéra, ide o podvod. žiadne výnimky, žiadne „možno mám nový brand". slovak post upozorňuje [na svojej oficiálnej stránke s podvodnými správami](https://www.slovakpost.sk/sk/aktuality/upozornenie-podvodne-spravy) [2], že legitímne notifikácie vždy odkazujú na `slovakpost.sk` a packeta to isté potvrdzuje [vo svojom bezpečnostnom upozornení](https://www.packeta.sk/o-nas/upozornenie-na-podvodne-spravy) [3].
+pravidlo: ak doména **nesedí 1 : 1** s tým, čo by ti zobrazila google search na meno kuriéra, ide o podvod. žiadne výnimky, žiadne „možno mám nový brand“. slovak post upozorňuje [na svojej oficiálnej stránke s podvodnými správami](https://www.slovakpost.sk/sk/aktuality/upozornenie-podvodne-spravy) [2], že legitímne notifikácie vždy odkazujú na `slovakpost.sk` a packeta to isté potvrdzuje [vo svojom bezpečnostnom upozornení](https://www.packeta.sk/o-nas/upozornenie-na-podvodne-spravy) [3].
 
 ## 15-sekundový check pred kliknutím
 
@@ -106,7 +106,7 @@ ak hocikde škrípe, **otvor si aplikáciu kuriéra alebo jeho web manuálne** (
 
 dych. zachyť to do 3 minút a stratu vieš zastaviť.
 
-1. **zavolaj banke z čísla na zadnej strane karty** a požiadaj o **blokáciu karty + reklamáciu transakcií**. blokácia trvá 30 sekúnd. nepýtaj „možno počkáme" — neprezliekaj sa, blokuj hneď.
+1. **zavolaj banke z čísla na zadnej strane karty** a požiadaj o **blokáciu karty + reklamáciu transakcií**. blokácia trvá 30 sekúnd. nepýtaj „možno počkáme“ — neprezliekaj sa, blokuj hneď.
 2. **z iného zariadenia** (telefón, ak útok bol cez pc, alebo naopak) sa prihlás do internet bankingu a skontroluj transakcie. čokoľvek, čo si nerobil, hlás bance ako neoprávnenú transakciu.
 3. ak ti podvodník už stiahol peniaze, postupuj podľa [nechcené platby z účtu — čo robiť](/blog/nechcene-platby-z-uctu-co-robit) — máš nárok na chargeback a banky pri kartových podvodoch zvyčajne vracajú peniaze do 10 pracovných dní.
 4. **nahlás incident**: sk-cert (`incident@nbu.gov.sk`) plus prípadné trestné oznámenie na polícii. polícia sr má samostatnú stránku [pre tieto typy podvodov](https://www.minv.sk/?podvodne_emaily=) [4].
@@ -125,7 +125,7 @@ a jedna metavrstva navrch: balíkové podvody chodia často aj cez SMS bez akéh
 ## zhrnutie
 
 - balíkový phishing funguje, lebo skutočné SMS od slovak postu, packety a gls **existujú a sú časté**. tvoj mozog je natrénovaný klikať.
-- 4 hlavné vzory v 2026: colný doplatok 1 €, packeta rezervačný poplatok, „balík sa vrátil" od kuriérov, holý link bez kontextu.
+- 4 hlavné vzory v 2026: colný doplatok 1 €, packeta rezervačný poplatok, „balík sa vrátil“ od kuriérov, holý link bez kontextu.
 - doména v odkaze je rozhodujúca. ak nesedí 1 : 1 s oficiálnou doménou kuriéra, je to podvod. ber to ako binárne pravidlo.
 - pravé kuriérske platby idú **vždy** cez aplikáciu, nikdy cez SMS link.
 - ak si zadal kartu: blokuj kartu hneď, reklamuj transakcie v banke, nahláse sk-certu, chargeback.

@@ -45,7 +45,7 @@ sources:
     accessed_at: "2026-05-19"
 ---
 
-phishing v roku 2026 už nie je „nigerijský princ s preklepom". v posledných dvanástich mesiacoch sa objavilo niekoľko techník, ktoré obchádzajú spam filtre, SMS dvojfaktorovku, antivírus aj klasickú radu *„skontroluj si doménu odkazu"*. niektoré používajú legitímne služby ako platformu, iné kombinujú fyzický svet s digitálnym, ďalšie nasadzujú generatívnu ai na personalizáciu. spoločného menovateľa nemajú — práve preto je dôležité poznať každú zvlášť.
+phishing v roku 2026 už nie je „nigerijský princ s preklepom“. v posledných dvanástich mesiacoch sa objavilo niekoľko techník, ktoré obchádzajú spam filtre, SMS dvojfaktorovku, antivírus aj klasickú radu *„skontroluj si doménu odkazu“*. niektoré používajú legitímne služby ako platformu, iné kombinujú fyzický svet s digitálnym, ďalšie nasadzujú generatívnu ai na personalizáciu. spoločného menovateľa nemajú — práve preto je dôležité poznať každú zvlášť.
 
 tento text je krátky rozbor ôsmich vektorov, ktoré sa cez slovenský aj globálny inbox preliali v 2025–2026. ku každému ide jeden odsek mechanizmu a jeden konkrétny detekčný znak. ak hľadáš základy phishingu, začni pillarovým sprievodcom [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca). ak chceš celkový prehľad aktuálnych slovenských podvodov mimo phishingu, pozri [top podvody na slovensku 2026](/blog/top-podvody-slovensko-2026).
 
@@ -69,7 +69,7 @@ detail celého mechanizmu s konkrétnymi screenshotmi máme v samostatnom člán
 
 ## 3. multi-channel phishing — SMS + e-mail + whatsapp v tandeme
 
-klasický phishing prišiel jedným kanálom: SMS alebo e-mail. moderný útok orchestruje viac kanálov v sekvencii, ktorá zvyšuje dôveryhodnosť. najprv ti príde e-mail z „banky", o 10 minút SMS s overovacím kódom, potom volá „pracovník banky" s číslom, ktoré sa zhoduje s oficiálnym (cez spoofing). každá správa odkazuje na predchádzajúcu a ťaží zo zdania kontinuity.
+klasický phishing prišiel jedným kanálom: SMS alebo e-mail. moderný útok orchestruje viac kanálov v sekvencii, ktorá zvyšuje dôveryhodnosť. najprv ti príde e-mail z „banky“, o 10 minút SMS s overovacím kódom, potom volá „pracovník banky“ s číslom, ktoré sa zhoduje s oficiálnym (cez spoofing). každá správa odkazuje na predchádzajúcu a ťaží zo zdania kontinuity.
 
 [sk-cert v aktuálnych varovaniach popisuje práve tieto kombinované kampane ako jeden z najúspešnejších vektorov roku 2025](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [2]. obeť, ktorá by samostatnú SMS odmietla, pri kombinácii troch kanálov ustúpi.
 
@@ -79,13 +79,13 @@ klasický phishing prišiel jedným kanálom: SMS alebo e-mail. moderný útok o
 
 aitm je technicky najpokročilejší vektor v zozname. útočník neukáže obeti falošnú prihlasovaciu stránku — namiesto toho cez svoj proxy server doslova relayuje reálnu komunikáciu s ozajstnou bankou alebo službou. keď obeť zadá heslo, ide na pravý server. keď príde SMS s OTP, obeť ho zadá, útočník ho v reálnom čase použije a okamžite je prihlásený. SMS dvojfaktorovka v tomto modeli neochráni nikoho — kód platí 30 sekúnd a útočník ho použije ako prvý.
 
-[microsoft threat intelligence v máji 2026 zverejnil rozbor kampane „code of conduct", ktorá takto kompromitovala viac než 35 000 účtov v 26 krajinách za 48 hodín — všetko cez phishing-as-a-service platformu tycoon2fa](https://www.microsoft.com/en-us/security/blog/2026/05/04/breaking-the-code-multi-stage-code-of-conduct-phishing-campaign-leads-to-aitm-token-compromise/) [4]. obete dostali e-mail tváriaci sa ako interný compliance dotazník, klikli, prihlásili sa do skutočného microsoftu (cez aitm proxy), potvrdili OTP a útočník mal v ruke session token, ktorý 2FA obišiel.
+[microsoft threat intelligence v máji 2026 zverejnil rozbor kampane „code of conduct“, ktorá takto kompromitovala viac než 35 000 účtov v 26 krajinách za 48 hodín — všetko cez phishing-as-a-service platformu tycoon2fa](https://www.microsoft.com/en-us/security/blog/2026/05/04/breaking-the-code-multi-stage-code-of-conduct-phishing-campaign-leads-to-aitm-token-compromise/) [4]. obete dostali e-mail tváriaci sa ako interný compliance dotazník, klikli, prihlásili sa do skutočného microsoftu (cez aitm proxy), potvrdili OTP a útočník mal v ruke session token, ktorý 2FA obišiel.
 
 **detekčný znak:** prihlasovanie cez odkaz z e-mailu je vždy podozrivé, aj keď URL vyzerá legitímne — aitm proxy doménu napodobní písmeno po písmene a certifikát je tiež platný. **obrana, ktorá aitm zastaví, je passkey alebo hardvérový kľúč** (yubikey, google titan). kryptograficky sa viažu na pravú doménu a phisher ich nedokáže relayovať. detail v [obrana cez 2fa a passkeys](/blog/ochrana-pred-phishingom-2fa-passkey) a porovnanie v [hardvérové kľúče porovnané](/blog/yubikey-vs-google-titan-vs-passkey).
 
 ## 5. ai-personalizovaný spear phishing — linkedin scrape a llm text
 
-útočník skripte zoškrabe tvoj linkedin profil, mená kolegov, projekty, ku ktorým si sa nedávno hlásil, a podsunie všetko llm modelu s pokynom „napíš e-mail menom môjho šéfa". výsledok je správa, ktorá pozná tvoje meno, oddelenie, projekt, dokonca aj interný slang vašej firmy. preklepy z roku 2010 sú preč — slovenčina je často lepšia než tvoja vlastná.
+útočník skripte zoškrabe tvoj linkedin profil, mená kolegov, projekty, ku ktorým si sa nedávno hlásil, a podsunie všetko llm modelu s pokynom „napíš e-mail menom môjho šéfa“. výsledok je správa, ktorá pozná tvoje meno, oddelenie, projekt, dokonca aj interný slang vašej firmy. preklepy z roku 2010 sú preč — slovenčina je často lepšia než tvoja vlastná.
 
 [microsoft v q1 2026 reporte pripisuje generatívnym ai modelom najväčší podiel na kvalitatívnom skoku presnosti spear phishingu — clickthrough rate stúpol v porovnaní s 2023 viac než trojnásobne](https://www.microsoft.com/en-us/security/blog/2026/04/30/email-threat-landscape-q1-2026-trends-and-insights/) [5]. priestor pre širší kontext v pillarovom článku [ai phishing — nová generácia útokov](/blog/ai-a-moderne-podvody-deepfake-voice-cloning) a v cluster článku [ai phishing — keď ai píše podvody na mieru](/blog/ai-phishing-personalizovany-podvod).
 
@@ -93,19 +93,19 @@ aitm je technicky najpokročilejší vektor v zozname. útočník neukáže obet
 
 ## 6. voice cloning callback — overovanie hlasom, ktoré ti naklonovali
 
-útočník naklonuje hlas obete (alebo jej blízkej osoby) z troch sekúnd audia z tiktoku alebo voicemailu. potom zavolá na podporu banky, vydá sa za majiteľa účtu a žiada zmenu telefónneho čísla alebo prevod. variant útočiaci na rodinu: zavolá ti „dcéra" plačúca z neznámeho čísla — *„mama, mala som autonehodu, potrebujem 1 200 €, pošli to teraz"*. hlas je naklonovaný z videa, ktoré dcéra zverejnila online.
+útočník naklonuje hlas obete (alebo jej blízkej osoby) z troch sekúnd audia z tiktoku alebo voicemailu. potom zavolá na podporu banky, vydá sa za majiteľa účtu a žiada zmenu telefónneho čísla alebo prevod. variant útočiaci na rodinu: zavolá ti „dcéra“ plačúca z neznámeho čísla — *„mama, mala som autonehodu, potrebujem 1 200 €, pošli to teraz“*. hlas je naklonovaný z videa, ktoré dcéra zverejnila online.
 
-detailný rozbor s tým, ako si v rodine nastaviť kontrolnú otázku, máme v [klonovanie hlasu — keď ti zavolá „dcéra"](/blog/klonovanie-hlasu-podvod-volanie-rodina).
+detailný rozbor s tým, ako si v rodine nastaviť kontrolnú otázku, máme v [klonovanie hlasu — keď ti zavolá „dcéra“](/blog/klonovanie-hlasu-podvod-volanie-rodina).
 
 **detekčný znak:** akékoľvek volanie, ktoré pod tlakom žiada okamžitý prevod peňazí, neprijímaj. **zlož telefón a zavolaj späť na známe číslo** (z kontaktov, nie z displeja prichádzajúceho hovoru). dohodnite si v rodine slovo alebo otázku, ktorú phisher nemôže poznať — napríklad meno zvieratka z detstva.
 
 ## 7. browser-in-browser — popup, ktorý vyzerá ako prihlásenie cez google
 
-útočník na falošnej stránke vykreslí pomocou HTML a CSS *vnútri prehliadača* presnú napodobeninu okna „prihlás sa cez google" alebo „prihlás sa cez microsoft". okno vyzerá ako samostatný popup s adresnou lištou, X tlačidlom, dokonca s padajúcou doménou `accounts.google.com`. v skutočnosti je to obrázok — celá interakcia ostáva v rámci útočníkovej stránky.
+útočník na falošnej stránke vykreslí pomocou HTML a CSS *vnútri prehliadača* presnú napodobeninu okna „prihlás sa cez google“ alebo „prihlás sa cez microsoft“. okno vyzerá ako samostatný popup s adresnou lištou, X tlačidlom, dokonca s padajúcou doménou `accounts.google.com`. v skutočnosti je to obrázok — celá interakcia ostáva v rámci útočníkovej stránky.
 
 [microsoft v q1 2026 popisuje variantu, kde browser-in-browser popupy kombinujú s captcha-gated phishingom — pred zobrazením prihlasovacieho okna ťa stránka prinúti vyriešiť captcha, čo navonok pôsobí legitímne a obchádza automatické scannery](https://www.microsoft.com/en-us/security/blog/2026/04/30/email-threat-landscape-q1-2026-trends-and-insights/) [5].
 
-**detekčný znak:** skutočný popup prihlásenia cez google sa dá presunúť **mimo okna prehliadača** — chyť ho a potiahni von z hlavného okna. ak ostáva uväznený v stránke, je to fake. lepšia obrana: nikdy sa neprihlasuj cez „social login" popup z odkazu v e-maile. otvor si službu sám z bookmarku.
+**detekčný znak:** skutočný popup prihlásenia cez google sa dá presunúť **mimo okna prehliadača** — chyť ho a potiahni von z hlavného okna. ak ostáva uväznený v stránke, je to fake. lepšia obrana: nikdy sa neprihlasuj cez „social login“ popup z odkazu v e-maile. otvor si službu sám z bookmarku.
 
 ## 8. legitímne domény ako platforma — finančná správa, .gov.sk imitácie
 
@@ -115,9 +115,9 @@ detailný rozbor s tým, ako si v rodine nastaviť kontrolnú otázku, máme v [
 
 ## čo z toho vyplýva pre teba
 
-osem techník, jeden záver: **rada „pozeraj na preklepy a podozrivé domény" je v roku 2026 nedostatočná**. všetky nové vektory sú gramaticky čisté, domény vyzerajú legitímne (alebo sú aj naozaj legitímne, ako pri google forms), a niektoré útoky obchádzajú aj klasickú SMS dvojfaktorovku.
+osem techník, jeden záver: **rada „pozeraj na preklepy a podozrivé domény“ je v roku 2026 nedostatočná**. všetky nové vektory sú gramaticky čisté, domény vyzerajú legitímne (alebo sú aj naozaj legitímne, ako pri google forms), a niektoré útoky obchádzajú aj klasickú SMS dvojfaktorovku.
 
-obrana sa preto presúva z „rozpoznať podvod" na „mať vrstvy, ktoré ťa chránia aj keď klikneš":
+obrana sa preto presúva z „rozpoznať podvod“ na „mať vrstvy, ktoré ťa chránia aj keď klikneš“:
 
 - **passkey alebo hardvérový kľúč** namiesto SMS 2FA — kryptograficky odolný voči aitm relayingu.
 - **správca hesiel** ako prvý filter — ak nevyplní heslo na doméne, doména nesedí.
@@ -135,7 +135,7 @@ ak si chceš overiť, ako rýchlo rozpoznáš nové vzory phishingu, otestuj sa 
 - [top podvody na slovensku 2026](/blog/top-podvody-slovensko-2026)
 - [obrana cez 2fa a passkeys](/blog/ochrana-pred-phishingom-2fa-passkey)
 - [hardvérové kľúče porovnané](/blog/yubikey-vs-google-titan-vs-passkey)
-- [klonovanie hlasu — keď ti zavolá „dcéra"](/blog/klonovanie-hlasu-podvod-volanie-rodina)
+- [klonovanie hlasu — keď ti zavolá „dcéra“](/blog/klonovanie-hlasu-podvod-volanie-rodina)
 - [ai phishing — nová generácia útokov](/blog/ai-a-moderne-podvody-deepfake-voice-cloning)
 
 **otestuj sa za 90 sekúnd →** `/test`

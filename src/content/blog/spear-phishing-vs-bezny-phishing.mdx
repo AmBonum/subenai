@@ -39,7 +39,7 @@ ak ešte nevieš, čo je *phishing — podvodný e-mail alebo správa vydávajú
 
 ## bežný phishing — masový blast, nízka úspešnosť, nízka cena
 
-bežný phishing funguje na štatistike. útočník kúpi alebo zoškrabe milión e-mailových adries, pripraví jednu šablónu „balík čaká, doplaťte 1,99 €" alebo „banka zaznamenala neoprávnené prihlásenie" a rozpošle ju naraz. obsah je generický — *vážený zákazník*, žiadne meno, žiadny kontext. konverzia je biedna: priemerne 1 z 1 000 príjemcov klikne, z toho ešte menšie percento zadá údaje.
+bežný phishing funguje na štatistike. útočník kúpi alebo zoškrabe milión e-mailových adries, pripraví jednu šablónu „balík čaká, doplaťte 1,99 €“ alebo „banka zaznamenala neoprávnené prihlásenie“ a rozpošle ju naraz. obsah je generický — *vážený zákazník*, žiadne meno, žiadny kontext. konverzia je biedna: priemerne 1 z 1 000 príjemcov klikne, z toho ešte menšie percento zadá údaje.
 
 útočníkovi to však aj tak vychádza, lebo:
 
@@ -69,49 +69,49 @@ Tomáš pracuje v účtovníctve, Veronika je jeho šéfka, klient je reálny, s
 
 bežný phishing odhalíš podľa generického oslovenia a podľa toho, že nesedí kontext. spear phishing nemá kde uchopiť:
 
-- **pozná tvoje meno.** žiadne *„vážený zákazník"*. píše ti *„ahoj Tomáš"*, lebo si to skutočne je.
+- **pozná tvoje meno.** žiadne *„vážený zákazník“*. píše ti *„ahoj Tomáš“*, lebo si to skutočne je.
 - **pozná tvojho šéfa.** podpis sedí, meno sedí, dokonca aj jazyk, akým tvoja šéfka píše — útočník si jej posledné e-maily zoškrabal z firemného webu alebo z prelomeného účtu kolegu.
-- **pozná tvoj projekt.** spomenie reálneho klienta, reálnu sumu, reálny termín. tvoj mozog tieto detaily skontroluje za pol sekundy a vyhodnotí: *„toto musí byť pravé, lebo cudzinec by tieto veci nevedel."*
-- **má reálnu naliehavosť.** *„som na rokovaní"*, *„do konca dňa"*, *„klient čaká"*. tvoja šéfka má naliehavé veci stále — toto nevyznieva podozrivo.
+- **pozná tvoj projekt.** spomenie reálneho klienta, reálnu sumu, reálny termín. tvoj mozog tieto detaily skontroluje za pol sekundy a vyhodnotí: *„toto musí byť pravé, lebo cudzinec by tieto veci nevedel.“*
+- **má reálnu naliehavosť.** *„som na rokovaní“*, *„do konca dňa“*, *„klient čaká“*. tvoja šéfka má naliehavé veci stále — toto nevyznieva podozrivo.
 
-osobnosť pod tlakom + autorita + verný kontext = klikneš a zaplatíš. žiadny preklep, žiadny generický pozdrav, žiadna podozrivá doména na prvý pohľad. presne preto [sk-cert vo svojich aktuálnych varovaniach](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) zaraďuje spear phishing medzi najnebezpečnejšie vektory pre slovenské firmy a kritickú infraštruktúru — bežný používateľský tréning *„pozeraj na preklepy"* tu zlyháva o sto percent.
+osobnosť pod tlakom + autorita + verný kontext = klikneš a zaplatíš. žiadny preklep, žiadny generický pozdrav, žiadna podozrivá doména na prvý pohľad. presne preto [sk-cert vo svojich aktuálnych varovaniach](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) zaraďuje spear phishing medzi najnebezpečnejšie vektory pre slovenské firmy a kritickú infraštruktúru — bežný používateľský tréning *„pozeraj na preklepy“* tu zlyháva o sto percent.
 
 ## whaling, BEC a deepfake — sub-typy, ktoré stoja najviac
 
 spear phishing je strešný pojem. pod ním sa pohybujú tri varianty, ktoré v slovenskom prostredí v 2025 a 2026 robia najväčšie škody.
 
-**whaling.** spear phishing zacielený na vrcholový manažment — CEO, CFO, predstavenstvo. útočník nezacieli na účtovníka, ale priamo na riaditeľa, lebo riaditeľ má vyššie limity prevodov a menej kontrol nad sebou. typický scenár: e-mail od „advokátskej kancelárie" o dôvernom akvizičnom rokovaní, ktoré nemôže riaditeľ s nikým konzultovať, treba previesť depozit, dokumenty nasledujú.
+**whaling.** spear phishing zacielený na vrcholový manažment — CEO, CFO, predstavenstvo. útočník nezacieli na účtovníka, ale priamo na riaditeľa, lebo riaditeľ má vyššie limity prevodov a menej kontrol nad sebou. typický scenár: e-mail od „advokátskej kancelárie“ o dôvernom akvizičnom rokovaní, ktoré nemôže riaditeľ s nikým konzultovať, treba previesť depozit, dokumenty nasledujú.
 
 **BEC — Business Email Compromise.** *BEC — Business Email Compromise, podvod cez napadnutý alebo napodobnený firemný e-mail.* najdrahší typ. útočník buď prelomí reálny e-mail dodávateľa, alebo si zaregistruje veľmi podobnú doménu a vstúpi do existujúcej komunikácie. v okamihu, keď faktúra prichádza, zmení iba číslo účtu — všetko ostatné sedí. firma prevedie peniaze, dodávateľ ich nikdy nedostane, mesiace trvá, kým sa to vôbec zistí, a vtedy už je účet prázdny. detailný rozbor falošnej faktúry s konkrétnymi znakmi nájdeš v [falošné faktúry v emailoch](/blog/falosna-faktura-email-co-robit).
 
-**deepfake-asistovaný spear phishing.** najnovšia generácia. útočník naklonuje hlas alebo video CFO firmy z verejných videí a zavolá účtovníkovi cez teams alebo zoom. *„videl si môj e-mail, potrebujem ten prevod, som teraz medzi rokovaniami."* hlas sedí, tvár sedí, naliehavosť sedí. firma platí. konkrétny zdokumentovaný prípad — kde slovenskí podvodníci použili ai na živú video komunikáciu s finančným riaditeľom — máme rozobratý v [príbeh deepfake ceo](/blog/pribeh-deepfake-ceo-firma).
+**deepfake-asistovaný spear phishing.** najnovšia generácia. útočník naklonuje hlas alebo video CFO firmy z verejných videí a zavolá účtovníkovi cez teams alebo zoom. *„videl si môj e-mail, potrebujem ten prevod, som teraz medzi rokovaniami.“* hlas sedí, tvár sedí, naliehavosť sedí. firma platí. konkrétny zdokumentovaný prípad — kde slovenskí podvodníci použili ai na živú video komunikáciu s finančným riaditeľom — máme rozobratý v [príbeh deepfake ceo](/blog/pribeh-deepfake-ceo-firma).
 
 ## obrana, ktorá funguje aj na cielený útok
 
-ak si dočítal sem, vidíš, že proti spear phishingu nepomôže *„buď opatrný"*. opatrný si bol aj Tomáš. obrana musí byť **systémová a vo vrstvách**, lebo žiadna jednotlivá vrstva nezachytí všetko.
+ak si dočítal sem, vidíš, že proti spear phishingu nepomôže *„buď opatrný“*. opatrný si bol aj Tomáš. obrana musí byť **systémová a vo vrstvách**, lebo žiadna jednotlivá vrstva nezachytí všetko.
 
 ### technická vrstva (IT-správca to nasadí raz)
 
-- **DMARC, DKIM a SPF** na firemnej doméne. zabráni útočníkovi posielať e-maily „v mene" tvojej domény. minimum, ktoré dnes neimplementovať je profesionálna nedbanlivosť.
+- **DMARC, DKIM a SPF** na firemnej doméne. zabráni útočníkovi posielať e-maily „v mene“ tvojej domény. minimum, ktoré dnes neimplementovať je profesionálna nedbanlivosť.
 - **silný spam filter s heuristikou na podvodné domény.** moderné nástroje (microsoft 365 defender, proofpoint, mimecast) označia e-maily z domén, ktoré sú o jedno písmeno odlišné od pravej.
 - **2FA na všetkých firemných účtoch.** ak útočník získa heslo, bez druhého faktora sa nedostane do mailboxu a nemôže prevziať identitu kolegu. detail v [obrana cez 2fa a passkeys](/blog/ochrana-pred-phishingom-2fa-passkey).
-- **monitoring zaregistrovaných „lookalike" domén** — služby ako dnstwist alebo komerčné brand-protection produkty ti pošlú výstrahu, keď si niekto zaregistruje doménu podobnú tvojej.
+- **monitoring zaregistrovaných „lookalike“ domén** — služby ako dnstwist alebo komerčné brand-protection produkty ti pošlú výstrahu, keď si niekto zaregistruje doménu podobnú tvojej.
 
 ### procesná vrstva (firma to musí mať na papieri)
 
-tu sa rozhoduje o väčšine škôd. drvivá väčšina BEC útokov padá nie na technike, ale na tom, že firma nemá pravidlo *„prevod nad X € sa overí druhým kanálom"*.
+tu sa rozhoduje o väčšine škôd. drvivá väčšina BEC útokov padá nie na technike, ale na tom, že firma nemá pravidlo *„prevod nad X € sa overí druhým kanálom“*.
 
 - **každý prevod nad dohodnutý prah (typicky 1 000 €) si vyžaduje hlasové potvrdenie** zo známeho čísla. nie z čísla, ktoré je v e-maile — z čísla, ktoré máš v telefónnom zozname od minulého roka.
 - **každá zmena bankového účtu dodávateľa** sa overí telefonicky cez existujúci kontakt. žiadna výnimka, ani pre dlhoročných partnerov. naopak — útočníci si vyberajú práve dlhoročné vzťahy, lebo tam je dôvera najvyššia.
 - **dvojfaktorová autorizácia platieb** v internet bankingu pre obchodný účet. jedna osoba pripravuje, druhá schvaľuje. spear phisher musí prelomiť dvoch ľudí naraz — exponenciálne ťažšie.
-- **písomný proces pre „urgentné" žiadosti od vedenia.** ak CEO „píše" o 18:30 a chce prevod do 19:00, musí to prejsť rovnakou kontrolou ako bežná faktúra. naliehavosť **nie je dôvod** preskočiť proces — je *signál*, že treba spomaliť.
+- **písomný proces pre „urgentné“ žiadosti od vedenia.** ak CEO „píše“ o 18:30 a chce prevod do 19:00, musí to prejsť rovnakou kontrolou ako bežná faktúra. naliehavosť **nie je dôvod** preskočiť proces — je *signál*, že treba spomaliť.
 
 ### ľudská vrstva (tréning, ktorý nie je o preklepoch)
 
-školenie *„hľadaj preklepy v e-maile"* je v roku 2026 prežité. moderný spear phishing je gramaticky perfektný. zmysluplný tréning vyzerá inak:
+školenie *„hľadaj preklepy v e-maile“* je v roku 2026 prežité. moderný spear phishing je gramaticky perfektný. zmysluplný tréning vyzerá inak:
 
 - **simulované phishingové kampane raz za kvartál.** zamestnanci dostanú reálne vyzerajúce cielené e-maily a tí, ktorí kliknú, prejdú krátkym 5-minútovým doškoľovaním. žiadne hanbenie, žiadny verejný zoznam. cieľ je tréning, nie trest.
-- **pravidlo „over druhým kanálom"** drilované do reflexu. ak ti niekto pod tlakom pýta peniaze alebo údaje, **zlož telefón, zatvor e-mail, zavolaj na číslo zo svojho zoznamu, nie z tej správy**.
+- **pravidlo „over druhým kanálom“** drilované do reflexu. ak ti niekto pod tlakom pýta peniaze alebo údaje, **zlož telefón, zatvor e-mail, zavolaj na číslo zo svojho zoznamu, nie z tej správy**.
 - **otestovať aktuálny stav.** ak chceš zistiť, ako tvoj tím obstojí proti cielenému útoku, vyskúšaj si na sebe a kolegoch 15-otázkový test reálnych slovenských scenárov — odkaz na firemnú verziu nájdeš v [internet iq test pre firmy](/blog/internet-iq-test-pre-firmy-zamestnancov).
 
 ## ako rozpoznať spear phishing v reálnom čase
@@ -119,9 +119,9 @@ tu sa rozhoduje o väčšine škôd. drvivá väčšina BEC útokov padá nie na
 konkrétny kontrolný zoznam pre 15 sekúnd predtým, než klikneš alebo prevedieš:
 
 1. **adresa odosielateľa, znak po znaku.** `veronika.k@firma.sk` versus `veronika.k@firma-sro.com` — rozdiel je drobný a tvoj mozog ho preskočí, ak nepozrieš zámerne.
-2. **odpoveď do nového e-mailu.** ak chceš odpísať, **neklikni „odpovedať"** — napíš nový e-mail na adresu, ktorú máš v kontaktoch alebo na firemnom webe. tým eliminuješ skryté `reply-to:` hlavičky.
+2. **odpoveď do nového e-mailu.** ak chceš odpísať, **neklikni „odpovedať“** — napíš nový e-mail na adresu, ktorú máš v kontaktoch alebo na firemnom webe. tým eliminuješ skryté `reply-to:` hlavičky.
 3. **kontextový test.** robí Veronika prevody cez e-mail? alebo to riešite cez interný systém? ak ti pýta niečo, čo by normálne neurobila, je to varovný signál bez ohľadu na adresu.
-4. **„dnes do konca dňa".** každá urgentná žiadosť, ktorá ti znemožňuje overiť, je podozrivá z definície. legitímne urgentné požiadavky znesú overenie cez telefón.
+4. **„dnes do konca dňa“.** každá urgentná žiadosť, ktorá ti znemožňuje overiť, je podozrivá z definície. legitímne urgentné požiadavky znesú overenie cez telefón.
 5. **prosba o citlivý súbor alebo prevod ako prvý kontakt.** ak ti niekto, kto inak komunikuje, posiela prílohu alebo pýta prevod ako *jediný* obsah správy — over druhým kanálom, vždy.
 
 ## zhrnutie
@@ -129,7 +129,7 @@ konkrétny kontrolný zoznam pre 15 sekúnd predtým, než klikneš alebo preved
 - **bežný phishing** je masový blast, generická šablóna, 1 z 1 000 klikne. obrana: spamový filter a 10-sekundový check.
 - **spear phishing** je cielený, personalizovaný, výskumom podložený útok. obíde tvoju ostražitosť, lebo nemá ako škrípať — pozná meno, šéfa, projekt, sumu.
 - **whaling** = spear phishing na vrcholový manažment. **BEC** = jeho najdrahšia forma, falošná faktúra alebo zmena účtu existujúceho dodávateľa.
-- proti cielenému útoku nepomôže opatrnosť. pomáhajú **vrstvy**: technická (DMARC, 2FA, anti-spoofing), procesná (pravidlo druhého kanálu, dvojitá autorizácia platieb) a ľudská (simulované tréningy, drilovaný reflex „over druhým kanálom").
+- proti cielenému útoku nepomôže opatrnosť. pomáhajú **vrstvy**: technická (DMARC, 2FA, anti-spoofing), procesná (pravidlo druhého kanálu, dvojitá autorizácia platieb) a ľudská (simulované tréningy, drilovaný reflex „over druhým kanálom“).
 - jedno pravidlo, ktoré stojí za všetky technické vrstvy: **každá urgentná žiadosť o peniaze, údaje alebo akciu sa overuje druhým kanálom — telefonicky, zo známeho čísla, vždy bez výnimky.**
 
 ## čítaj ďalej v tomto tematickom celku

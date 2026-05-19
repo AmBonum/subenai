@@ -41,7 +41,7 @@ sources:
     accessed_at: "2026-05-19"
 ---
 
-predstav si tento e-mail. v inboxe máš správu od „tatra banky", text píše o podozrivej transakcii a žiada, aby si si potvrdil identitu cez priložený odkaz. klikneš. otvorí sa formulár, ktorý sa pýta na meno, prihlasovacie heslo do internet bankingu a kód z SMS, ktorý ti práve prišiel. všetko vyzerá štandardne. a hore v adresnom riadku svieti `docs.google.com` — adresa, ktorú tvoj prehliadač pozná, antivírus ju ignoruje a password manager ju má v zozname dôveryhodných.
+predstav si tento e-mail. v inboxe máš správu od „tatra banky“, text píše o podozrivej transakcii a žiada, aby si si potvrdil identitu cez priložený odkaz. klikneš. otvorí sa formulár, ktorý sa pýta na meno, prihlasovacie heslo do internet bankingu a kód z SMS, ktorý ti práve prišiel. všetko vyzerá štandardne. a hore v adresnom riadku svieti `docs.google.com` — adresa, ktorú tvoj prehliadač pozná, antivírus ju ignoruje a password manager ju má v zozname dôveryhodných.
 
 toto nie je hypotetická hrozba. je to konkrétny vzor, ktorý sa cez slovenský inbox preliali v posledných mesiacoch a [podľa malwarebytes sa rozšíril najmä v začiatku 2026 ako súčasť kampaní na krádež google účtov](https://www.malwarebytes.com/blog/scams/2026/02/job-scam-uses-fake-google-forms-site-to-harvest-google-logins) [3]. pre čitateľa pillarového sprievodcu [čo je phishing celkovo](/blog/phishing-kompletny-sprievodca) ide o jasnú evolúciu: útok ostáva rovnaký, ale obal sa schoval za doménu, ktorej dôverujeme všetci.
 
@@ -51,12 +51,12 @@ google formuláre (`forms.google.com`, alternatívne `docs.google.com/forms`) s�
 
 útočník postupuje jednoducho:
 
-1. **vytvorí formulár** s názvom *„overenie identity — tatra banka"* alebo *„balík čaká — slovenská pošta, doplaťte 1,99 €"*.
+1. **vytvorí formulár** s názvom *„overenie identity — tatra banka“* alebo *„balík čaká — slovenská pošta, doplaťte 1,99 €“*.
 2. **nahrá logo a brand cieľovej značky** ako obrázok v hlavičke formulára.
 3. **rozošle odkaz** v phishingovom e-maile alebo SMS. odkaz vedie na pravú google doménu — `docs.google.com/forms/d/...`.
 4. **zozbiera vyplnené odpovede** v google sheets a má tvoje heslo skôr, než si stihneš všimnúť, čo si práve urobil.
 
-celý setup trvá tridsať minút a nestojí ani cent. [sophos popisuje tento vektor ako jeden z najlacnejších spôsobov hosting-as-a-service phishingu, lebo google poskytuje TLS šifrovanie, doménovú reputáciu aj infraštruktúru zadarmo](https://www.sophos.com/en-us/blog/phishing-and-malware-actors-abuse-google-forms-for-credentials-data-exfiltration) [4]. pre obeť to znamená, že každý technický indikátor, ktorý sme ju roky učili kontrolovať — HTTPS zámok, certifikát, doména — hovorí „bezpečné".
+celý setup trvá tridsať minút a nestojí ani cent. [sophos popisuje tento vektor ako jeden z najlacnejších spôsobov hosting-as-a-service phishingu, lebo google poskytuje TLS šifrovanie, doménovú reputáciu aj infraštruktúru zadarmo](https://www.sophos.com/en-us/blog/phishing-and-malware-actors-abuse-google-forms-for-credentials-data-exfiltration) [4]. pre obeť to znamená, že každý technický indikátor, ktorý sme ju roky učili kontrolovať — HTTPS zámok, certifikát, doména — hovorí „bezpečné“.
 
 ## prečo doména `google.com` zlyháva ako signál bezpečia
 
@@ -65,8 +65,8 @@ slovenský používateľ, ktorý si zvykol pozerať na URL pred kliknutím, sa n
 konkrétne dôsledky:
 
 - **antivírus a e-mailový filter neprehrabujú obsah formulárov**. služba je legitímna, jej URL je whitelistovaná, jej certifikát je platný. malware skener sa o stránku nezaujíma. [eset (welivesecurity) priamo upozorňuje, že väčšina mainstreamových bezpečnostných nástrojov sa pri google doménach zastaví a nepozrie sa, čo formulár vlastne pýta](https://www.welivesecurity.com/en/scams/how-fraudsters-abuse-google-forms-spread-scams/) [5].
-- **password manager nezačervená**. drvivá väčšina správcov hesiel kontroluje, či doména stránky sedí s tou, kde bolo heslo uložené. ak útok nezahŕňa konkrétnu napodobeninu tatra banky na falošnej doméne, ale len formulár na google, password manager nemá s čím porovnávať. ponuka „vyplniť" sa nezobrazí (čo by malo byť tvoje varovanie), ale ty si predsa kopíruješ z hlavy.
-- **prehliadač neukáže žiadne upozornenie**. žiadne červené pozadie, žiadne „pozor, podvod". safe browsing reputáciu má `google.com` perfektnú.
+- **password manager nezačervená**. drvivá väčšina správcov hesiel kontroluje, či doména stránky sedí s tou, kde bolo heslo uložené. ak útok nezahŕňa konkrétnu napodobeninu tatra banky na falošnej doméne, ale len formulár na google, password manager nemá s čím porovnávať. ponuka „vyplniť“ sa nezobrazí (čo by malo byť tvoje varovanie), ale ty si predsa kopíruješ z hlavy.
+- **prehliadač neukáže žiadne upozornenie**. žiadne červené pozadie, žiadne „pozor, podvod“. safe browsing reputáciu má `google.com` perfektnú.
 
 celý technický rámec, ktorý posledné desaťročie chránil bežných používateľov, sa pri tomto vektore neuplatní. ostáva už len jedna obrana: tvoja vlastná pozornosť.
 
@@ -74,27 +74,27 @@ celý technický rámec, ktorý posledné desaťročie chránil bežných použ�
 
 dobrá správa: google si je tohto zneužitia vedomý a [vo svojej politike proti zneužitiu explicitne zakazuje používať formuláre na zber hesiel, finančných údajov a citlivých informácií](https://support.google.com/docs/answer/148505?hl=en) [6]. praktickým dôsledkom je veta, ktorá je pravdepodobne najdôležitejším riadkom celého tohto článku:
 
-**každý google formulár, ktorý pýta heslo, číslo karty alebo CVV, zobrazuje hore výrazné upozornenie: *„nikdy neposielajte heslá cez google formuláre."***
+**každý google formulár, ktorý pýta heslo, číslo karty alebo CVV, zobrazuje hore výrazné upozornenie: *„nikdy neposielajte heslá cez google formuláre.“***
 
 je to malý sivý baner v hornej časti formulára, presne nad poliami. v slovenčine alebo angličtine, podľa toho, akú má prehliadač jazykovú predvoľbu. ak ti formulár pýta heslo a tento baner tam **je** — google ti hovorí, že práve patríš do podvodu. ak baner **nie je** a pýta sa len na e-mail, meno, mesto, dátum (nie heslo), formulár je technicky v poriadku, ale stále môže byť súčasťou väčšej kampane (pozri ďalej).
 
-zlá správa: útočníci sa baner pokúšajú maskovať. niekedy ho prekryjú nahraným obrázkom v hlavičke, niekedy formulár štruktúrujú tak, aby používateľ scrolloval dole skôr, než ho vôbec uvidí. preto pravidlo nie je *„hľadaj baner"*, ale **žiadny google formulár nikdy nemá legitímny dôvod pýtať tvoje heslo, kód z SMS ani CVV. nikdy. ani od banky, ani od pošty, ani od polície, ani od google.**
+zlá správa: útočníci sa baner pokúšajú maskovať. niekedy ho prekryjú nahraným obrázkom v hlavičke, niekedy formulár štruktúrujú tak, aby používateľ scrolloval dole skôr, než ho vôbec uvidí. preto pravidlo nie je *„hľadaj baner“*, ale **žiadny google formulár nikdy nemá legitímny dôvod pýtať tvoje heslo, kód z SMS ani CVV. nikdy. ani od banky, ani od pošty, ani od polície, ani od google.**
 
 ## červené vlajky špecifické pre tento vektor
 
 ak ti niekto pošle odkaz na google formulár v mene inštitúcie, prejdi týmto za 10 sekúnd:
 
 - **pýta sa heslo, OTP, CVV alebo PIN?** — okamžite zavri tab. žiadny legitímny scenár toto cez formulár nepýta.
-- **vidíš upozornenie google *„nikdy neposielajte heslá"*?** — to je tvoja vlajka. ak ho vidíš, formulár je už klasifikovaný ako podozrivý aj na strane google.
+- **vidíš upozornenie google *„nikdy neposielajte heslá“*?** — to je tvoja vlajka. ak ho vidíš, formulár je už klasifikovaný ako podozrivý aj na strane google.
 - **kto je odosielateľ formulára?** — v hornej časti google ukazuje, **kto** formulár vytvoril. ak meno znie ako náhodné `martin novak123@gmail.com` a formulár sa tvári ako banka, je to podvod.
 - **je tam logo banky ako obrázok, ale text formulára obsahuje preklepy alebo cudzie značky?** — generická šablóna prerobená pre slovenský trh.
-- **má ti formulár potvrdiť „identitu" alebo „bezpečnosť účtu"?** — banky a pošta nikdy neoverujú identitu cez google formuláre. pravidlo bez výnimky.
+- **má ti formulár potvrdiť „identitu“ alebo „bezpečnosť účtu“?** — banky a pošta nikdy neoverujú identitu cez google formuláre. pravidlo bez výnimky.
 
 ak chceš trénovať tento reflex na širšom okruhu signálov, pomôže ti checklist v [rozpoznať phishing za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund). pre kontext, ako tento vzor zapadá do širšej vlny 2026 (qr kódy, ai personalizácia, deepfake voice), si pozri [nové techniky phishingu 2026](/blog/nove-techniky-phishingu-2026).
 
 ## čo robí google a kde sú jeho limity
 
-google formuláre majú interné detekčné systémy, ktoré [podľa abuse policy](https://support.google.com/docs/answer/148505?hl=en) [6] automaticky vyhľadávajú podozrivé vzory — kombinácie polí typu „heslo + kód z SMS + číslo karty", pomenovania s názvami bánk, masívne zdieľanie z jedného účtu. po detekcii google formulár buď zablokuje, alebo zobrazí varovný baner pre návštevníkov.
+google formuláre majú interné detekčné systémy, ktoré [podľa abuse policy](https://support.google.com/docs/answer/148505?hl=en) [6] automaticky vyhľadávajú podozrivé vzory — kombinácie polí typu „heslo + kód z SMS + číslo karty“, pomenovania s názvami bánk, masívne zdieľanie z jedného účtu. po detekcii google formulár buď zablokuje, alebo zobrazí varovný baner pre návštevníkov.
 
 limity tohto systému sú dva. prvý: detekcia funguje **reaktívne**. medzi vytvorením podvodu a jeho zablokovaním zvyčajne ubehne niekoľko hodín — a presne tieto hodiny stačia útočníkovi na zber stoviek vyplnených údajov. druhý: útočníci formuláre **rotujú**. zablokuje sa jeden, vznikne druhý, link v phishingovom e-maile sa aktualizuje. preto ti odkaz, ktorý ti chodí v utorok, môže ráno fungovať a večer už nie — to však neznamená, že kampaň zomrela, len že útočník presunul URL.
 
@@ -108,7 +108,7 @@ zachyť do troch minút. ak si vyplnil len e-mail a meno, riziko je nízke — �
 2. **zruš aktívne relácie**. v gmaile: nastavenia → bezpečnosť → moje zariadenia → odhlásiť všade. v internet bankingu rovnako: aktívne prihlásenia → zrušiť. ak útočník už stihol prihlásenie, toto ho vyhodí von.
 3. **zavolaj banke z čísla na karte**, ak išlo o bankové údaje. nahláseš pokus o phishing, požiadaš o sledovanie transakcií a podľa situácie aj o blokáciu karty. trvá to dve minúty.
 4. **zapni 2FA**, ak si ho ešte nemal. authenticator app, nie SMS — pri SIM swape útočník dostane aj SMS kódy. detaily v [obrana cez 2fa a passkeys](/blog/ochrana-pred-phishingom-2fa-passkey).
-5. **nahlás formulár google**: priamo v ňom tlačidlo *„nahlásiť zneužitie"* dole. zrýchľuje to blokovanie pre ďalšie obete.
+5. **nahlás formulár google**: priamo v ňom tlačidlo *„nahlásiť zneužitie“* dole. zrýchľuje to blokovanie pre ďalšie obete.
 6. **nahlás incident sk-cert** na incident@nbu.gov.sk a [pozri si aktuálne varovania](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [1] — ak je tvoj prípad súčasťou väčšej vlny, hláseš ich tým rýchlejšie informovaní.
 
 celý krízový protokol pre rôzne typy útokov nájdeš v [čo robiť po kliknutí](/blog/co-robit-ked-som-klikol-na-phishing). pre čitateľov, ktorí hľadajú širší obraz prečo na to ľudia naletia ([nbs vo svojich materiáloch o internetových podvodoch hovorí, že obete nie sú menej inteligentné — sú len pod tlakom](https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/) [2]), je dôležité jedno: hanba ti tu nepatrí. systém bol postavený tak, aby si dôveroval doméne google. útočník to vedel a využil.
@@ -117,7 +117,7 @@ celý krízový protokol pre rôzne typy útokov nájdeš v [čo robiť po klikn
 
 - google formuláre sú legitímna služba, ktorú útočníci zneužívajú na hosting phishingu, pretože doména `google.com` vyzerá bezpečne a obchádza antivírus aj password manager.
 - žiadny legitímny google formulár nikdy nepýta heslo, kód z SMS, CVV ani PIN. ak ho pýta, je to podvod — bez výnimky.
-- google zobrazuje varovný baner *„nikdy neposielajte heslá"* pri detekovaných formulároch, ale útočníci ho maskujú a detekcia ide s oneskorením.
+- google zobrazuje varovný baner *„nikdy neposielajte heslá“* pri detekovaných formulároch, ale útočníci ho maskujú a detekcia ide s oneskorením.
 - 10-sekundový check: pýta sa formulár citlivé údaje? kto je jeho autor? je tam google baner?
 - po vyplnení: zmena hesla, zrušenie aktívnych relácií, banka, 2FA, nahlásenie formulára aj sk-cert. v tomto poradí.
 

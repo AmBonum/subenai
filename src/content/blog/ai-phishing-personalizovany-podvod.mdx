@@ -41,7 +41,7 @@ sources:
     accessed_at: "2026-05-19"
 ---
 
-do roku 2023 sa slovenský phishing dal rozpoznať za päť sekúnd. polámaná diakritika, doslovný preklad z angličtiny, oslovenie *„Vážený zákazník"* tam, kde by reálna pošta napísala *„Dobrý deň, pán Novák"*. odporúčanie znelo jednoducho: *„pozeraj na preklepy a zlú slovenčinu"*.
+do roku 2023 sa slovenský phishing dal rozpoznať za päť sekúnd. polámaná diakritika, doslovný preklad z angličtiny, oslovenie *„Vážený zákazník“* tam, kde by reálna pošta napísala *„Dobrý deň, pán Novák“*. odporúčanie znelo jednoducho: *„pozeraj na preklepy a zlú slovenčinu“*.
 
 v roku 2026 toto pravidlo zomrelo. llm-y (large language models — modely typu chatgpt, claude, gemini) píšu po slovensky lepšie než priemerný copywriter banky. vedia tykanie aj vykanie podľa kontextu, držia register e-mailovej etikety a oslovia menom, titulom aj funkciou. preklep sa už nestane.
 
@@ -60,14 +60,14 @@ dôsledok: kde mal klasický phishing konverziu 1 z 1 000, ai-augmented spear ph
 
 ## prečo zlá slovenčina prestala byť signálom
 
-pre slovenský trh bola gramatika dlho najlacnejšou prvou líniou obrany. ruský alebo nigerijský podvodník, ktorý kupoval šablónu z phishing-as-a-service trhu, jednoducho nevedel po slovensky — google translate dával výsledky, ktoré rodený hovorca okamžite spoznal. *„Vaš účet bol pozastavený, prosím vy potvrďte vaše udaje"* — také vety si vyradil bez čítania.
+pre slovenský trh bola gramatika dlho najlacnejšou prvou líniou obrany. ruský alebo nigerijský podvodník, ktorý kupoval šablónu z phishing-as-a-service trhu, jednoducho nevedel po slovensky — google translate dával výsledky, ktoré rodený hovorca okamžite spoznal. *„Vaš účet bol pozastavený, prosím vy potvrďte vaše udaje“* — také vety si vyradil bez čítania.
 
 llm-y túto bariéru zrovnali. moderné modely zvládajú slovenčinu v štyroch dimenziách, ktoré donedávna unikali:
 
 - **diakritika** — dlhé samohlásky, mäkčene, aj zriedkavejšie znaky (ô, ľ, ŕ) sú správne na prvý pokus.
-- **register** — ai vie napísať formálny e-mail z banky („vážený pán novák, dovoľujeme si vás upozorniť…") aj tykajúci ton z e-shopu („ahoj martin, tvoja objednávka čaká…").
-- **idiomatika** — slovenské zvraty (*„dať si pozor"*, *„v prípade potreby"*, *„v najbližších dňoch"*) sedia kontextuálne, nie sú to doslovné kalky.
-- **kontextové vsuvky** — model dokáže do textu prirodzene zapracovať údaj z linkedinu („ako CTO acme s.r.o. iste viete…"), bez toho, aby to znelo nalepené.
+- **register** — ai vie napísať formálny e-mail z banky („vážený pán novák, dovoľujeme si vás upozorniť…“) aj tykajúci ton z e-shopu („ahoj martin, tvoja objednávka čaká…“).
+- **idiomatika** — slovenské zvraty (*„dať si pozor“*, *„v prípade potreby“*, *„v najbližších dňoch“*) sedia kontextuálne, nie sú to doslovné kalky.
+- **kontextové vsuvky** — model dokáže do textu prirodzene zapracovať údaj z linkedinu („ako CTO acme s.r.o. iste viete…“), bez toho, aby to znelo nalepené.
 
 [anthropic vo svojej threat-intelligence správe potvrdzuje, že útočníci používajú frontier modely najmä na *bulk-tailoring* — generovanie tisícov variantov rovnakej phishingovej kampane, kde každý príjemca dostane jazykovo aj kontextovo iný text](https://www.anthropic.com/news/detecting-countering-misuse-aug-2024). [openai v paralelnej správe dokumentuje účty, ktoré zneužívali api na masovú lokalizáciu phishingových správ do desiatok jazykov vrátane slovanských](https://openai.com/index/disrupting-malicious-uses-of-ai-by-state-affiliated-threat-actors/). [microsoft threat intelligence eviduje rovnaký vzor — ai sa využíva na *enhancement* už existujúcich phishing playbookov, nie na vytvorenie nových typov útokov](https://www.microsoft.com/en-us/security/blog/2024/02/14/staying-ahead-of-threat-actors-in-the-age-of-ai/).
 
@@ -77,7 +77,7 @@ dve veci stojí za to z týchto správ vziať seriózne. po prvé: ai laboratór
 
 konkrétne tri vzory, ktoré sa cez slovenský firemný a osobný inbox preliali v 2025–2026:
 
-### vzor 1: linkedin → e-mail z „nadriadeného"
+### vzor 1: linkedin → e-mail z „nadriadeného“
 
 cieľ: martin, finančný účtovník v stredne veľkej slovenskej firme. útočník otvorí jeho linkedin, vidí pozíciu, vidí meno cfo (verejne uvedené), vidí, že firma robí v stavebníctve. čas prípravy: 4 minúty. text generuje ai:
 
@@ -93,13 +93,13 @@ cieľ: martin, finančný účtovník v stredne veľkej slovenskej firme. útoč
 
 > *Dobrý deň, pán Novák, zaznamenali sme neúspešný pokus o prihlásenie do vášho účtu Slovenskej sporiteľne z neznámeho zariadenia (Praha, ČR, 19. 5. 2026, 14:32). Z bezpečnostných dôvodov sme vám dočasne pozastavili prístup k internet bankingu. Pre odblokovanie účtu prosím potvrďte identitu na odkaze nižšie do 24 hodín. S pozdravom, oddelenie bezpečnosti Slovenskej sporiteľne*
 
-formálny register, ktorý reálna banka používa. žiadne preklepy. logické pravidlo „zariadenie v inej krajine". **jediný signál, ktorý ai nemení: doména odkazu.** odkaz vedie na `slsp-overenie-uctu.eu` alebo na `bit.ly/...`, nie na `slsp.sk`. 10-sekundový postup overenia domény máme v [ako rozpoznať phishingový e-mail za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund).
+formálny register, ktorý reálna banka používa. žiadne preklepy. logické pravidlo „zariadenie v inej krajine“. **jediný signál, ktorý ai nemení: doména odkazu.** odkaz vedie na `slsp-overenie-uctu.eu` alebo na `bit.ly/...`, nie na `slsp.sk`. 10-sekundový postup overenia domény máme v [ako rozpoznať phishingový e-mail za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund).
 
 ### vzor 3: text + voice combo
 
-najmodernejší vzor 2026: ai phishing e-mail príde dopoludnia, pripraví pôdu („tvoja banka zaznamenala podozrivý pohyb, čoskoro ti zavoláme"). v ten istý deň poobede zazvoní telefón. v slúchadle slovenský hlas „pracovníka oddelenia bezpečnosti", ktorý ťa vedie cez postup overenia. hlas je naklonovaný z verejného zdroja (banker zo skutočného rozhovoru v médiách) alebo úplne syntetický. e-mail dodal kontext, telefonát doviedol akciu — *„prečítaj mi prosím sms kód, ktorý ti práve prišiel"*.
+najmodernejší vzor 2026: ai phishing e-mail príde dopoludnia, pripraví pôdu („tvoja banka zaznamenala podozrivý pohyb, čoskoro ti zavoláme“). v ten istý deň poobede zazvoní telefón. v slúchadle slovenský hlas „pracovníka oddelenia bezpečnosti“, ktorý ťa vedie cez postup overenia. hlas je naklonovaný z verejného zdroja (banker zo skutočného rozhovoru v médiách) alebo úplne syntetický. e-mail dodal kontext, telefonát doviedol akciu — *„prečítaj mi prosím sms kód, ktorý ti práve prišiel“*.
 
-tento vzor kombinuje dve ai technológie a je výrazne nebezpečnejší než jednotlivé časti samostatne. detail klonovania hlasu, vrátane praktického rodinného protokolu, je v [klonovanie hlasu — podvod „syn v tiesni"](/blog/klonovanie-hlasu-podvod-volanie-rodina). ďalšie nové vektory roku 2026 — quishing, aitm relay, multi-stage kampane — pokrýva [nové techniky phishingu, ktoré sa objavili v roku 2026](/blog/nove-techniky-phishingu-2026).
+tento vzor kombinuje dve ai technológie a je výrazne nebezpečnejší než jednotlivé časti samostatne. detail klonovania hlasu, vrátane praktického rodinného protokolu, je v [klonovanie hlasu — podvod „syn v tiesni“](/blog/klonovanie-hlasu-podvod-volanie-rodina). ďalšie nové vektory roku 2026 — quishing, aitm relay, multi-stage kampane — pokrýva [nové techniky phishingu, ktoré sa objavili v roku 2026](/blog/nove-techniky-phishingu-2026).
 
 ## čo z klasických signálov stále platí
 
@@ -107,7 +107,7 @@ dobré správy: ai zmenila *povrch* správy, nezmenila *infraštruktúru*. tieto
 
 1. **doména odosielateľa.** ai vie napísať dokonalý slovenský text, ale e-mailovú schránku banky si útočník nezíska. `slovenska-posta@gmail.com`, `slsp.zabezpecenie@outlook.cz`, alebo doména s prehodeným písmenom (`rn` namiesto `m`, `0` namiesto `o`) — to sú stále stopercentné scam signály.
 2. **doména odkazu.** podrž kurzor (alebo na mobile dlho stlač) a pozri si skutočnú URL skôr, než klikneš. banka, štát, pošta odkazujú vždy na svoju oficiálnu doménu, nikdy na bitly, na nečakanú `.eu` doménu ani na ip adresu.
-3. **e-mailové hlavičky (SPF, DKIM, DMARC).** ai phishing často neprejde technickými overovaniami autentičnosti odosielateľa. gmail, outlook, proton dnes v UI ukazujú indikátor *„e-mail bol overený"* alebo *„odosielateľa sa nepodarilo overiť"*. ak v reálnom e-maile z banky vidíš varovanie, je to pravdepodobne phishing — nezáleží na tom, ako pekne je text napísaný.
+3. **e-mailové hlavičky (SPF, DKIM, DMARC).** ai phishing často neprejde technickými overovaniami autentičnosti odosielateľa. gmail, outlook, proton dnes v UI ukazujú indikátor *„e-mail bol overený“* alebo *„odosielateľa sa nepodarilo overiť“*. ak v reálnom e-maile z banky vidíš varovanie, je to pravdepodobne phishing — nezáleží na tom, ako pekne je text napísaný.
 4. **prosba o údaje, platbu alebo SMS kód.** banky, pošta, štát ani daňový úrad nikdy nepýtajú heslo, číslo karty, CVV ani SMS overovací kód cez e-mail alebo telefón. ak to pýta čokoľvek, čo sa za nich vydáva, je to scam. [sk-cert toto pravidlo opakuje vo svojich odporúčaniach pre online bezpečnosť](https://www.sk-cert.sk/en/tips-and-tricks/security-recommendations/online-safety-basics/phishing/index.html) — žiadna výnimka.
 
 inými slovami, prestaň hľadať preklepy. začni overovať **odkiaľ správa prišla a kam ťa vedie**.
@@ -118,19 +118,19 @@ pretože detekcia samotného textu prestáva byť spoľahlivá, obrana sa musí 
 
 **vrstva 1 — phishing-resistant autentifikácia.** klasické dvojfaktorové overovanie cez SMS alebo cez aplikáciu (TOTP kód) dokáže ai-rozšírený phisher obísť (zavolá ti, vypýta si kód, ty mu ho prečítaš). **passkeys a hardvérové bezpečnostné kľúče (yubikey, google titan) sú phishing-resistant by design** — kryptograficky overujú, že sa prihlasuješ na skutočnú doménu. ak ti útočník podstrčí falošnú stránku, passkey jednoducho odmietne podpísať. [fido alliance má jednoduchý prehľad, ako passkeys eliminujú celú triedu phishing útokov](https://fidoalliance.org/passkeys/). detail zapnutia máš v [obrana cez 2fa a passkeys](/blog/ochrana-pred-phishingom-2fa-passkey).
 
-**vrstva 2 — druhý kanál pri každom finančnom rozhodnutí.** ak ti niekto pod tlakom telefonuje, píše alebo videohovorí o platbe, prevode alebo overení účtu, **vždy over cez nezávislý kanál**. zlož telefón, otvor oficiálnu stránku banky napísanú ručne (nie cez odkaz v e-maile), zavolaj na číslo z rubu karty. žiadne reálne urgentné rozhodnutie banky neprežije 60 sekúnd overenia. ak útočník trvá na „rýchlo, nemáme čas", je to scam — bod.
+**vrstva 2 — druhý kanál pri každom finančnom rozhodnutí.** ak ti niekto pod tlakom telefonuje, píše alebo videohovorí o platbe, prevode alebo overení účtu, **vždy over cez nezávislý kanál**. zlož telefón, otvor oficiálnu stránku banky napísanú ručne (nie cez odkaz v e-maile), zavolaj na číslo z rubu karty. žiadne reálne urgentné rozhodnutie banky neprežije 60 sekúnd overenia. ak útočník trvá na „rýchlo, nemáme čas“, je to scam — bod.
 
-**vrstva 3 — školenie, ktoré nestojí na hľadaní preklepov.** firmy, ktoré stále trénujú zamestnancov pravidlom *„pozeraj na zlú slovenčinu"*, ich trénujú na phishing pred dvomi rokmi. moderné školenie sa zameriava na proces („každú platbu nad limit potvrď druhým kanálom"), na atribúciu („overuj doménu, nie text") a na simulácie ai-personalizovaného phishingu s reálnymi prvkami z linkedinu. ak HR vo vašej firme stále posiela tréningový phishing s preklepmi, požiadaj o aktualizáciu.
+**vrstva 3 — školenie, ktoré nestojí na hľadaní preklepov.** firmy, ktoré stále trénujú zamestnancov pravidlom *„pozeraj na zlú slovenčinu“*, ich trénujú na phishing pred dvomi rokmi. moderné školenie sa zameriava na proces („každú platbu nad limit potvrď druhým kanálom“), na atribúciu („overuj doménu, nie text“) a na simulácie ai-personalizovaného phishingu s reálnymi prvkami z linkedinu. ak HR vo vašej firme stále posiela tréningový phishing s preklepmi, požiadaj o aktualizáciu.
 
 ## limity ai bezpečnosti — čo zachytia laboratóriá a čo nie
 
-ai spoločnosti zneužitie aktívne hľadajú. zachytia účty, ktoré generujú phishingové šablóny vo veľkom objeme, účty napojené na známych state-aktérov a pokusy o jailbreaks. **nezachytia** útočníkov, ktorí používajú open-source modely lokálne (llama, mistral, qwen — tie nevidí žiadne laboratórium), útočníkov, ktorí prosia model o „pomôcku s legitímnym e-mailom z banky" v štýloch, čo nespustia klasifikátor, a útočníkov, ktorí kombinujú legitímny ai output s manuálnymi úpravami. [sk-cert vo svojom aktuálnom varovaní reflektuje rovnaký záver — obrana musí byť vrstvená, nie spoliehať sa na jeden nástroj](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html).
+ai spoločnosti zneužitie aktívne hľadajú. zachytia účty, ktoré generujú phishingové šablóny vo veľkom objeme, účty napojené na známych state-aktérov a pokusy o jailbreaks. **nezachytia** útočníkov, ktorí používajú open-source modely lokálne (llama, mistral, qwen — tie nevidí žiadne laboratórium), útočníkov, ktorí prosia model o „pomôcku s legitímnym e-mailom z banky“ v štýloch, čo nespustia klasifikátor, a útočníkov, ktorí kombinujú legitímny ai output s manuálnymi úpravami. [sk-cert vo svojom aktuálnom varovaní reflektuje rovnaký záver — obrana musí byť vrstvená, nie spoliehať sa na jeden nástroj](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html).
 
 ## čo si z toho odnies
 
 - ai nezmenila phishing ako kategóriu. zmenila ekonomiku — personalizácia za sekundy, dokonalá slovenčina ako default.
-- klasické pravidlo *„pozeraj na preklepy"* je mŕtve. nepoužívaj ho ani sám, ani ho neuč svojich rodičov.
-- klasické pravidlo *„over doménu odosielateľa a doménu odkazu"* žije. ai gramatiku neopravuje, doménu nemení magicky.
+- klasické pravidlo *„pozeraj na preklepy“* je mŕtve. nepoužívaj ho ani sám, ani ho neuč svojich rodičov.
+- klasické pravidlo *„over doménu odosielateľa a doménu odkazu“* žije. ai gramatiku neopravuje, doménu nemení magicky.
 - pasieys a hardvérové kľúče sú phishing-resistant by design. ak máš kde, prejdi naň ešte dnes.
 - druhý kanál pri každom finančnom rozhodnutí. žiadne urgentné rozhodnutie neprežije 60 sekúnd overenia.
 - ai laboratóriá zachytia časť zneužitia, nezachytia open-source modely lokálne. nespoliehaj sa na to, že phishing vymizne — spoliehaj sa na svoje procesy.
@@ -141,7 +141,7 @@ ai spoločnosti zneužitie aktívne hľadajú. zachytia účty, ktoré generujú
 - [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca)
 - [ako rozpoznať phishingový e-mail za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund)
 - [nové techniky phishingu, ktoré sa objavili v roku 2026](/blog/nove-techniky-phishingu-2026)
-- [klonovanie hlasu — podvod „syn v tiesni"](/blog/klonovanie-hlasu-podvod-volanie-rodina)
+- [klonovanie hlasu — podvod „syn v tiesni“](/blog/klonovanie-hlasu-podvod-volanie-rodina)
 - [spear phishing vs. bežný phishing](/blog/spear-phishing-vs-bezny-phishing)
 - [obrana cez 2fa a passkeys](/blog/ochrana-pred-phishingom-2fa-passkey)
 

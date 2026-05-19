@@ -63,10 +63,10 @@ celý setup stojí jednorazovo 50–80 € za externý disk a 2–4 € mesačne
 
 ## pozor — synchronizácia ≠ záloha
 
-toto je najdrahšia mylná predstava na slovenskom internete: *„však mám fotky v icloude, to je moja záloha."* nie je. **cloudová synchronizácia kopíruje aj chyby.**
+toto je najdrahšia mylná predstava na slovenskom internete: *„však mám fotky v icloude, to je moja záloha.“* nie je. **cloudová synchronizácia kopíruje aj chyby.**
 
 tri typické scenáre:
-- zašifruje ti notebook ransomware → onedrive verne zosynchronizuje zašifrované verzie do cloudu → tvoja „záloha" je nepoužiteľná spolu s originálom.
+- zašifruje ti notebook ransomware → onedrive verne zosynchronizuje zašifrované verzie do cloudu → tvoja „záloha“ je nepoužiteľná spolu s originálom.
 - omylom vymažeš zložku s diplomovkou → cloud ju vymaže tiež → po pár mesiacoch už nie je v koši.
 - editor ti corruptne excel s účtovníctvom → cloud ti corruptnutý súbor zosynchronizuje preč.
 
@@ -76,7 +76,7 @@ skutočná záloha musí mať **verzionovanie** alebo **snapshoty** — schopnos
 |---|---|---|
 | icloud drive | áno, automaticky | 30 dní pre väčšinu typov súborov |
 | onedrive (personal) | áno | 30 dní vo verzionovaní, 30 dní v koši |
-| google drive | áno | 30 dní vo verzionovaní + neobmedzene cez „verzie" v UI |
+| google drive | áno | 30 dní vo verzionovaní + neobmedzene cez „verzie“ v UI |
 | dropbox | áno (basic = 30 dní, plus = 180 dní) | závisí od plánu |
 | proton drive | áno, end-to-end šifrované | 10 verzií / súbor |
 
@@ -86,8 +86,8 @@ skutočná záloha musí mať **verzionovanie** alebo **snapshoty** — schopnos
 
 ak máš mac, máš o polovicu cesty menej:
 
-1. **time machine** (kópia 2). pripoj externý SSD (~70 € za 1 TB), otvor *Nastavenia → Time Machine*, daj „pridať disk". time machine drží hodinové snapshoty 24 hodín, denné posledný mesiac, týždenné navždy — **vstavané verzionovanie** cez „Enter Time Machine".
-2. **icloud drive** (kópia 3). *Nastavenia → Apple ID → iCloud → iCloud Drive*, zapni „Optimize Mac Storage" a presuň dokumenty + plochu do icloud drivu. 200 GB stoja 2,99 €/mesiac, 2 TB 9,99 €/mesiac.
+1. **time machine** (kópia 2). pripoj externý SSD (~70 € za 1 TB), otvor *Nastavenia → Time Machine*, daj „pridať disk“. time machine drží hodinové snapshoty 24 hodín, denné posledný mesiac, týždenné navždy — **vstavané verzionovanie** cez „Enter Time Machine“.
+2. **icloud drive** (kópia 3). *Nastavenia → Apple ID → iCloud → iCloud Drive*, zapni „Optimize Mac Storage“ a presuň dokumenty + plochu do icloud drivu. 200 GB stoja 2,99 €/mesiac, 2 TB 9,99 €/mesiac.
 3. **bonus pre paranoidných**: druhý externý SSD, ktorý pripojíš raz za mesiac, inak je odpojený. ransomware na neho nedosiahne. volá sa to *cold backup*.
 
 ## konkrétny setup — windows
@@ -95,15 +95,15 @@ ak máš mac, máš o polovicu cesty menej:
 windows má dva natívne nástroje, ktoré stačia:
 
 1. **file history** (kópia 2). pripoj externý disk, *Nastavenia → Aktualizácia a zabezpečenie → Zálohovanie → Pridať jednotku*. zálohuje tvoje knižnice (dokumenty, obrázky, plocha) hodinovo a drží verzie do zaplnenia disku.
-2. **onedrive** (kópia 3). predinštalovaný vo windows 11. cez ikonu v paneli zapni „Zálohovanie zložky Plocha, Dokumenty a Obrázky". 100 GB za 2 €/mesiac, 1 TB s microsoft 365 za 7 €/mesiac. verzie nájdeš pravým klikom → *Verzie histórie*.
+2. **onedrive** (kópia 3). predinštalovaný vo windows 11. cez ikonu v paneli zapni „Zálohovanie zložky Plocha, Dokumenty a Obrázky“. 100 GB za 2 €/mesiac, 1 TB s microsoft 365 za 7 €/mesiac. verzie nájdeš pravým klikom → *Verzie histórie*.
 3. **alternatíva**: macrium reflect free alebo veeam agent for windows (oba zadarmo) — robia plný image disku. odporúčané pre živnostníkov.
 
 ## konkrétny setup — telefón
 
 telefón obsahuje viac fotiek, sms-iek a kontaktov, než si uvedomuješ. zálohuj ho rovnako:
 
-- **iphone**: *Nastavenia → Apple ID → iCloud → iCloud Backup* → „Backup This iPhone". záloha bežne každú noc na nabíjačke a wifi. 50 GB za 0,99 €/mesiac, 200 GB za 2,99 €/mesiac.
-- **android**: *Nastavenia → Google → Záloha* → „Záloha do Google One". obsahuje fotky cez google photos, kontakty, sms-ky a aplikačné dáta. 100 GB za 2 €/mesiac.
+- **iphone**: *Nastavenia → Apple ID → iCloud → iCloud Backup* → „Backup This iPhone“. záloha bežne každú noc na nabíjačke a wifi. 50 GB za 0,99 €/mesiac, 200 GB za 2,99 €/mesiac.
+- **android**: *Nastavenia → Google → Záloha* → „Záloha do Google One“. obsahuje fotky cez google photos, kontakty, sms-ky a aplikačné dáta. 100 GB za 2 €/mesiac.
 
 ak máš deti, ich telefón patrí do toho istého plánu — fotky z prvého roka života nie sú téma, na ktorej šetríš na 1 € mesačne.
 
@@ -113,7 +113,7 @@ ransomware sa dostane do tvojho zariadenia najčastejšie cez phishingový e-mai
 
 čo **nedostane**: kópiu v cloude s verzionovaním (vie sa vrátiť pred útok) alebo na externom disku, ktorý je fyzicky odpojený. **toto je dôvod, prečo offsite + verzionovanie je nezdolaný kombat** voči ransomvéru.
 
-[nbú vo svojich odporúčaniach pre verejnosť](https://www.nbu.gov.sk/kyberneticka-bezpecnost/odporucania/index.html) [2] explicitne hovorí: ak si zálohou pravidelne a má snapshot/verzionovanie schopnosti, **ransomware ti nemôže urobiť nič horšie, než stratu posledných pár hodín práce.** to je rozdiel medzi „nepríjemnosť" a „katastrofa".
+[nbú vo svojich odporúčaniach pre verejnosť](https://www.nbu.gov.sk/kyberneticka-bezpecnost/odporucania/index.html) [2] explicitne hovorí: ak si zálohou pravidelne a má snapshot/verzionovanie schopnosti, **ransomware ti nemôže urobiť nič horšie, než stratu posledných pár hodín práce.** to je rozdiel medzi „nepríjemnosť“ a „katastrofa“.
 
 a posledný argument, prečo platiť výkupné nie je riešenie: portál [no more ransom](https://www.nomoreransom.org/sk/index.html) [5], ktorý spravuje europol spolu s národnými CERT-mi, drží voľne dostupné dešifrovacie nástroje pre vyše 160 ransomvérových rodín. ak ťa to chytí, **najprv skús no more ransom**, potom uvažuj o čomkoľvek inom. a hlavne nahláste prípad sk-certu a polícii — viď [polícia sr — kyberkriminalita](https://www.minv.sk/?kyberkriminalita) [3].
 
@@ -134,7 +134,7 @@ trvá to 5 minút. zachráni ti to nervy v deň, keď to budeš naozaj potrebova
 
 aby si nemyslel, že je to akademická téma:
 - [enisa threat landscape 2025](https://www.enisa.europa.eu/publications/enisa-threat-landscape-2025) [4] eviduje, že **ransomware sa v EÚ presúva z firemných cieľov aj na malé domácnosti**, lebo kampane sú automatizované a obete platia častejšie ako firmy.
-- [sk-cert pravidelne hlási kampane](https://www.sk-cert.sk/sk/varovanie-pred-ransomverovymi-utokmi/index.html) [1], ktoré sa šíria cez phishingové prílohy v slovenských e-mailoch — falošné faktúry, zásielkové oznámenia, výzvy z „daňového úradu".
+- [sk-cert pravidelne hlási kampane](https://www.sk-cert.sk/sk/varovanie-pred-ransomverovymi-utokmi/index.html) [1], ktoré sa šíria cez phishingové prílohy v slovenských e-mailoch — falošné faktúry, zásielkové oznámenia, výzvy z „daňového úradu“.
 - priemerná výška výkupného pre domácnosť: 300–800 €. priemerná obnova zo zálohy: **2–4 hodiny** (oproti 2–4 týždňom bez zálohy).
 
 phishing je dnes najčastejší vstupný vektor ransomvéru — útočníkovi stačí, aby si raz klikol na falošnú prílohu, a do hodiny ti šifruje disk. pochopiť mechanizmus a včas spoznať podozrivý e-mail vysvetľuje [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca). a anti-ransomware funkcie v komerčných antivírusoch (behaviorálna detekcia šifrovacích vzorov) sú smysluplný doplnok zálohy, nie náhrada — porovnanie aktuálnych v [najlepší antivírus 2026 pre slovensko](/blog/najlepsi-antivirus-2026-slovensko).
@@ -144,8 +144,8 @@ phishing je dnes najčastejší vstupný vektor ransomvéru — útočníkovi st
 ak si dočítal až sem, dohodneme sa: v sobotu večer si sadneš s kávou a do 30 minút máš hotovo.
 
 1. **(5 min)** kúp si externý SSD 1 TB (samsung T7, sandisk extreme, crucial X8 — všetky okolo 70 €).
-2. **(10 min)** zapni natívnu lokálnu zálohu — time machine na macu, file history na windowse. pripoj disk, daj „použiť ako záloha", a zatvor okno.
-3. **(10 min)** zapni cloud na zložku dokumenty a fotky — icloud drive, onedrive alebo google drive. v nastaveniach zapni „verzionovanie" / „verzie histórie".
+2. **(10 min)** zapni natívnu lokálnu zálohu — time machine na macu, file history na windowse. pripoj disk, daj „použiť ako záloha“, a zatvor okno.
+3. **(10 min)** zapni cloud na zložku dokumenty a fotky — icloud drive, onedrive alebo google drive. v nastaveniach zapni „verzionovanie“ / „verzie histórie“.
 4. **(5 min)** na telefóne over, že icloud backup / google one backup je zapnutý a posledná záloha je z dnešnej noci.
 5. **(o 6 mesiacov)** test restore — 3 náhodné súbory, skús obnoviť, otvor, over.
 

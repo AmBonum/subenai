@@ -37,7 +37,7 @@ sources:
     accessed_at: "2026-05-19"
 ---
 
-ak si dočítal [sprievodcu ochranou pred phishingom](/blog/ochrana-pred-phishingom-2fa-passkey) a teraz váhaš medzi tým, či ti stačí passkey v telefóne alebo si máš kúpiť fyzický kľúč za 60 €, tento článok je pre teba. rozhodnutie nie je *„drahšie je lepšie"*. rozhodnutie je *„aký účet chránim a koho sa bojím"*. odpoveď na obe otázky určuje, či ti stačí softvérový passkey, alebo musíš siahnuť po yubikey.
+ak si dočítal [sprievodcu ochranou pred phishingom](/blog/ochrana-pred-phishingom-2fa-passkey) a teraz váhaš medzi tým, či ti stačí passkey v telefóne alebo si máš kúpiť fyzický kľúč za 60 €, tento článok je pre teba. rozhodnutie nie je *„drahšie je lepšie“*. rozhodnutie je *„aký účet chránim a koho sa bojím“*. odpoveď na obe otázky určuje, či ti stačí softvérový passkey, alebo musíš siahnuť po yubikey.
 
 ## prečo vôbec porovnávame softvér a hardvér
 
@@ -129,7 +129,7 @@ pre bežného kupujúceho: **yubikey alebo titan**. open-hardware rieš len ak m
 | limitovaný rozpočet, ale chceš hardvér | 2x google titan (~60 € za pár) |
 | firemné prostredie, smartcard prihlasovanie | yubikey 5 séria — piv smartcard funkcia |
 
-ak ešte len začínaš a tvoja primárna obava je *„nech mi nehackneru gmail"* — začni softvérovým passkey, [nastavenom podľa návodu v sprievodcovi ochranou pred phishingom](/blog/ochrana-pred-phishingom-2fa-passkey). hardvér si môžeš dokúpiť neskôr, keď budeš mať konkrétny dôvod.
+ak ešte len začínaš a tvoja primárna obava je *„nech mi nehackneru gmail“* — začni softvérovým passkey, [nastavenom podľa návodu v sprievodcovi ochranou pred phishingom](/blog/ochrana-pred-phishingom-2fa-passkey). hardvér si môžeš dokúpiť neskôr, keď budeš mať konkrétny dôvod.
 
 ## kde kúpiť na slovensku (a kde nie)
 
@@ -150,12 +150,12 @@ google titan na slovensku oficiálne cez slovenský retail nedostaneš. musíš 
 
 **toto je najdôležitejší odsek celého článku**. kúpiť jeden hardvérový kľúč je horšie ako nemať žiadny. dôvod: ak ho stratíš, ukradnú ti ho alebo sa zlomí, **stratíš účet definitívne**. bez záložného kľúča nemáš ako sa prihlásiť — a recovery cez sms 2fa si si práve vypol, lebo si si predsa kúpil hardvérový kľúč.
 
-[nist v sp 800-63b výslovne odporúča *„multiple authenticators of equivalent or higher aal"*](https://pages.nist.gov/800-63-3/sp800-63b.html) [5] — americká vládna autorita to nepíše ako luxus, ale ako základnú podmienku robustného hardvérového setupu.
+[nist v sp 800-63b výslovne odporúča *„multiple authenticators of equivalent or higher aal“*](https://pages.nist.gov/800-63-3/sp800-63b.html) [5] — americká vládna autorita to nepíše ako luxus, ale ako základnú podmienku robustného hardvérového setupu.
 
 **ako to spraviť správne**:
 
 1. kúp dva kľúče naraz. ideálne ten istý model, aby si si kompatibilitu vyriešil raz.
-2. **oba zaregistruj** v každej kritickej službe (gmail, microsoft, github, banka). nie *„druhý zaregistrujem keď budem mať čas"* — zaregistruj dnes, kým si pri pamäti.
+2. **oba zaregistruj** v každej kritickej službe (gmail, microsoft, github, banka). nie *„druhý zaregistrujem keď budem mať čas“* — zaregistruj dnes, kým si pri pamäti.
 3. **primárny** nos pri sebe na kľúčenke.
 4. **záložný** ulož vo fyzickom trezore doma, alebo u dôveryhodnej osoby v zalepenej obálke. ideálne v inej fyzickej lokácii než primárny — ak ti vykradnú byt, kľúč v práci alebo u rodičov ťa zachráni.
 5. **záchranné kódy** (recovery codes) z každej služby si vytlač a ulož tiež — sú tretia vrstva, keď prídeš o oba kľúče naraz.
@@ -191,7 +191,7 @@ slsp, tatra banka, vúb v 2026 testujú fido2 pre web banking. sleduj nastavenia
 | 2x yubikey 5c nfc + softvérový passkey ako záloha | ~126 € jednorazovo | citlivý e-mail / banking / krypto |
 | 2x yubikey + nitrokey + bezpečné skladovanie | ~200 € jednorazovo | profesionálne citlivý threat model |
 
-**rozdiel medzi 0 € a 126 €** je často jediná vec medzi *„môj účet je dosť chránený"* a *„môj účet odolá aj cieleného útočníkovi"*. pre bežného slováka nepotrebuješ to druhé. pre niekoho s krypto v päťcifernej sume alebo s prístupom k citlivým klientom je 126 € najlacnejšie poistenie aké existuje.
+**rozdiel medzi 0 € a 126 €** je často jediná vec medzi *„môj účet je dosť chránený“* a *„môj účet odolá aj cieleného útočníkovi“*. pre bežného slováka nepotrebuješ to druhé. pre niekoho s krypto v päťcifernej sume alebo s prístupom k citlivým klientom je 126 € najlacnejšie poistenie aké existuje.
 
 ## čítaj ďalej
 

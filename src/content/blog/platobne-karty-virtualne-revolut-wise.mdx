@@ -59,7 +59,7 @@ virtuálna karta nie je magická — má presne tých istých 16 číslic ako be
 
 1. **e-shop sa pokašle alebo unikne.** kúpiš tričko za 19 €, e-shop o tri mesiace hackne útočník a tvoje číslo karty + cvv mu vypadne v databáze. ak si platil hlavnou kartou, útočník skúsi 200 e-shopov a aspoň jeden ti prejde. ak si platil **jednorazovou virtuálnou kartou**, ktorá sa po prvej platbe spálila, útočník drží zbytočné číslo. presne tento mechanizmus rozoberáme aj v [nechcené platby z účtu — čo robiť](/blog/nechcene-platby-z-uctu-co-robit) ako recovery scenár.
 
-2. **trial alebo subscription, ktorému neveríš.** každý druhý zahraničný „free trial" sa po 7 dňoch automaticky preklopí na 49,99 € mesačne. virtuálna karta s presne nastaveným limitom 1 € prejde úvodným poplatkom a ďalšie strhnutie odmietne — banka vráti **insufficient funds** a service ti môže nanajvýš pozastaviť účet. žiadne strhávanie cez prsty.
+2. **trial alebo subscription, ktorému neveríš.** každý druhý zahraničný „free trial“ sa po 7 dňoch automaticky preklopí na 49,99 € mesačne. virtuálna karta s presne nastaveným limitom 1 € prejde úvodným poplatkom a ďalšie strhnutie odmietne — banka vráti **insufficient funds** a service ti môže nanajvýš pozastaviť účet. žiadne strhávanie cez prsty.
 
 jedno pravidlo nad všetky: **nikdy nedávaj hlavnú kartu obchodu, ktorý nepoznáš.** ak nemáš čas overiť eshop podľa [7-krokového protokolu](/blog/ako-overit-eshop-pred-nakupom-7-krokov), aspoň zaplať virtuálkou.
 
@@ -67,7 +67,7 @@ jedno pravidlo nad všetky: **nikdy nedávaj hlavnú kartu obchodu, ktorý nepoz
 
 než pôjdeme do porovnania, dva pojmy:
 
-**jednorazová virtuálna karta (disposable).** pri každej novej transakcii vygeneruje banka nové číslo. po prvej platbe sa to konkrétne číslo „spáli" a v systéme zostane už len história. ak ti ho útočník neskôr ukradne z databázy obchodu, nemá s čím pracovať — číslo neexistuje. tento režim dnes na slovenskom trhu plnohodnotne ponúka iba **revolut**.
+**jednorazová virtuálna karta (disposable).** pri každej novej transakcii vygeneruje banka nové číslo. po prvej platbe sa to konkrétne číslo „spáli“ a v systéme zostane už len história. ak ti ho útočník neskôr ukradne z databázy obchodu, nemá s čím pracovať — číslo neexistuje. tento režim dnes na slovenskom trhu plnohodnotne ponúka iba **revolut**.
 
 **klasická virtuálna karta (long-lived).** má stále jedno číslo, ale existuje len v aplikácii, môžeš ju kedykoľvek zmraziť, pozastaviť, znova aktivovať, alebo jej nastaviť limit. od bežnej plastovej sa líši hlavne tým, že je samostatná — krádež čísla nezničí tvoj hlavný účet. toto dnes ponúka väčšina slovenských bánk aj fintechov.
 
@@ -98,7 +98,7 @@ wise (predtým transferwise) je primárne pre cezhraničné prevody, ale má aj 
 - multi-mena bez fx mark-upu pre majorové meny pri prevode (toto je hlavný argument wise oproti revolutu pre zahraničie).
 - 3D Secure: áno, potvrdenie cez push v appke.
 
-**kedy siahnuť po wise**: nakupuješ menej často, ale v zahraničí, a chceš najlacnejšie fx prevody. wise virtuálka je dobrá ako „druhá karta", ktorú si naplníš pred konkrétnym nákupom a zase ju vyprázdniš.
+**kedy siahnuť po wise**: nakupuješ menej často, ale v zahraničí, a chceš najlacnejšie fx prevody. wise virtuálka je dobrá ako „druhá karta“, ktorú si naplníš pred konkrétnym nákupom a zase ju vyprázdniš.
 
 ### tatra banka — virtuálka v appke zadarmo
 
@@ -110,7 +110,7 @@ tatra banka ako prvá slovenská banka spropagovala virtuálnu kartu pre bežnú
 - jednorazové číslo: nie, ide o long-lived virtuálku.
 - poplatky: typicky bez mesačného poplatku v rámci balíkov; aktuálny cenník si over priamo u banky.
 
-**kedy siahnuť po tatra banke**: si klient tb a chceš mať samostatnú kartu na online nákupy bez prepojenia na hlavnú plastovú kartu. najlepšia voľba „bez registrácie nového účtu kdesi v londýne".
+**kedy siahnuť po tatra banke**: si klient tb a chceš mať samostatnú kartu na online nákupy bez prepojenia na hlavnú plastovú kartu. najlepšia voľba „bez registrácie nového účtu kdesi v londýne“.
 
 ### slovenská sporiteľňa — digitálna karta v george
 
@@ -154,9 +154,9 @@ našiel si v google reklame e-shop, ktorý ti predáva slúchadlá za 39 €. ne
 3. zaplať, potvrď 3D Secure push.
 4. po nákupe si limit stiahni na 0 € alebo kartu zmraz.
 
-### scenár 2 — neistý zahraničný „free trial"
+### scenár 2 — neistý zahraničný „free trial“
 
-stránka ti ponúka 7-dňový trial nejakej ai aplikácie, vyžaduje kartu „len na overenie". v podmienkach malým písmom: po 7 dňoch 49,99 € mesačne, automatické predĺženie.
+stránka ti ponúka 7-dňový trial nejakej ai aplikácie, vyžaduje kartu „len na overenie“. v podmienkach malým písmom: po 7 dňoch 49,99 € mesačne, automatické predĺženie.
 
 **setup**:
 
@@ -165,7 +165,7 @@ stránka ti ponúka 7-dňový trial nejakej ai aplikácie, vyžaduje kartu „le
 3. po skončení trialu service skúsi strhnúť 49,99 €. limit nestačí → odmietnutie → trial ti odpadne sám.
 4. ak chceš pokračovať, kartu odmrazíš a zvýšiš limit. ak nie, máš pokoj bez telefonátov o ukončenie.
 
-(pozor — niektoré servisy detegujú toto a vyžadujú „valid card" pre samotnú registráciu. v tomto prípade je signál pre teba, či ti za to služba stojí.)
+(pozor — niektoré servisy detegujú toto a vyžadujú „valid card“ pre samotnú registráciu. v tomto prípade je signál pre teba, či ti za to služba stojí.)
 
 ### scenár 3 — subscription, kde máš negatívne tušenie
 
@@ -195,7 +195,7 @@ prihlasuješ sa na slovenský fitness portál alebo zahraničný streaming, ktor
 
 ## čo robiť, ak ti aj tak strhli viac než si očakával
 
-stane sa to. niekedy obchod skúsi „prekvapenie" cez subscription, niekedy ti naozaj unikne číslo karty. presný postup nájdeš v [nechcené platby z účtu — čo robiť krok za krokom](/blog/nechcene-platby-z-uctu-co-robit). v skratke: dôkazy, kontakt na obchod, chargeback v tvojej banke, sťažnosť nbs ak banka neodpovedá ([nbs ochrana spotrebiteľa](https://nbs.sk/dohlad-nad-financnym-trhom/ochrana-financneho-spotrebitela/)).
+stane sa to. niekedy obchod skúsi „prekvapenie“ cez subscription, niekedy ti naozaj unikne číslo karty. presný postup nájdeš v [nechcené platby z účtu — čo robiť krok za krokom](/blog/nechcene-platby-z-uctu-co-robit). v skratke: dôkazy, kontakt na obchod, chargeback v tvojej banke, sťažnosť nbs ak banka neodpovedá ([nbs ochrana spotrebiteľa](https://nbs.sk/dohlad-nad-financnym-trhom/ochrana-financneho-spotrebitela/)).
 
 ak ide o phishingovú stránku, ktorá ti vylákala číslo karty + 3D Secure kód, scenár je krízovejší — útočník pravdepodobne nahral kartu do digitálnej peňaženky a strhne ti účet do dvoch minút. opísali sme to v [čo robiť, keď si klikol na phishing](/blog/co-robit-ked-som-klikol-na-phishing).
 
