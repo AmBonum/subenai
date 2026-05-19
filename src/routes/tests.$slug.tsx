@@ -1,9 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
+import { ListChecks, Target, Building2 } from "lucide-react";
+
 import { getPackBySlug, type TestPack } from "@/content/test-packs";
 import { getQuestionById, type Question } from "@/lib/quiz/bank/questions";
 import { TestFlow } from "@/components/quiz/flow/TestFlow";
 import { RelatedTestPackArticleCard } from "@/components/test-packs/RelatedTestPackArticleCard";
+import { TestPackHeroFallback } from "@/components/test-packs/TestPackHeroFallback";
 import { Button } from "@/components/ui/button";
 import { buildPackQuizJsonLd, INDUSTRY_LABEL } from "@/lib/seo/quiz-jsonld";
 import { SITE_ORIGIN } from "@/config/site";
@@ -85,10 +88,22 @@ function PackPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-3xl px-4 pb-12 pt-12 sm:pt-16">
-        <header className="text-center">
-          <div className="text-7xl">{pack.industryEmoji}</div>
-          <h1 data-testid="test-pack-heading" className="mt-4 text-3xl font-black sm:text-4xl">
+      <main className="mx-auto max-w-3xl px-4 pb-12 pt-8 sm:pt-12">
+        {/* E28 — detail-page hero alignment with catalog. The flat 7xl
+            emoji on white bg created a jarring visual discontinuity
+            after clicking through from the gradient-hero catalog card.
+            Reusing TestPackHeroFallback variant="featured" (originally
+            added for the catalog's spotlight slot) closes the gap with
+            zero new component code. */}
+        <TestPackHeroFallback
+          industry={pack.industry}
+          emoji={pack.industryEmoji}
+          title={pack.title}
+          variant="featured"
+          testid="test-pack-hero"
+        />
+        <header className="mt-6 text-center">
+          <h1 data-testid="test-pack-heading" className="text-3xl font-black sm:text-4xl">
             {pack.title}
           </h1>
           <p
@@ -98,15 +113,33 @@ function PackPage() {
             {pack.tagline}
           </p>
           <p className="mt-4 text-sm text-muted-foreground">{pack.targetPersona}</p>
-          <p data-testid="test-pack-meta" className="mt-4 text-sm text-muted-foreground">
-            <span aria-label={t("pack_questions_aria")}>
+          <ul
+            data-testid="test-pack-meta"
+            className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs"
+            aria-label={t("pack_questions_aria")}
+          >
+            <li
+              data-testid="test-pack-meta-questions"
+              className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-foreground"
+            >
+              <ListChecks className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
               {t("pack_questions_inline", { n: questions.length })}
-            </span>
-            {" · "}
-            <span>{t("pack_threshold", { threshold: pack.passingThreshold })}</span>
-            {" · "}
-            <span>{INDUSTRY_LABEL[pack.industry]}</span>
-          </p>
+            </li>
+            <li
+              data-testid="test-pack-meta-threshold"
+              className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-foreground"
+            >
+              <Target className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+              {t("pack_threshold", { threshold: pack.passingThreshold })}
+            </li>
+            <li
+              data-testid="test-pack-meta-industry"
+              className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-foreground"
+            >
+              <Building2 className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+              {INDUSTRY_LABEL[pack.industry]}
+            </li>
+          </ul>
         </header>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
