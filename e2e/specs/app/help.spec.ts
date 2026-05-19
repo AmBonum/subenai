@@ -1,8 +1,11 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../../fixtures/base";
+import { setupEducator } from "../../setup/app-shell";
 import { AppHelpPage } from "../../poms/app/AppHelpPage";
 
 test.describe("/app/help", () => {
-  test.skip(true, "AH-11 provides an authenticated-session fixture");
+  test.beforeEach(async ({ context, page }) => {
+    await setupEducator(context, page);
+  });
 
   test("renders FAQ list and contact CTA", async ({ page }) => {
     const help = new AppHelpPage(page);

@@ -1,8 +1,22 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../../fixtures/base";
+import { setupEducator } from "../../setup/app-shell";
 import { NewTestWizardPage } from "../../poms/app/NewTestWizardPage";
 
+// The wizard's question picker comes from a non-Supabase in-memory mock
+// store (see comment in src/routes/app.tests.new.tsx), so we don't need
+// to seed the `questions` table. The publish step calls useCreateTest →
+// INSERT into `tests`; the mockSupabase POST handler returns the row.
+
 test.describe("/app/tests/new wizard", () => {
-  test.skip(true, "AH-11 provides an authenticated-session fixture");
+  test.beforeEach(async ({ context, page }) => {
+    await setupEducator(context, page, {
+      tables: {
+        templates: [],
+        respondent_groups: [],
+        // tests + test seed lives in mockSupabase defaults; INSERT appends rows.
+      },
+    });
+  });
 
   test("walks all four steps and emits a /t/<shareId> link", async ({ page }) => {
     const wizard = new NewTestWizardPage(page);

@@ -1,8 +1,11 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../../fixtures/base";
+import { setupEducator } from "../../setup/app-shell";
 import { AppAccountProfilePage } from "../../poms/app/AppAccountProfilePage";
 
 test.describe("/app/account/profile", () => {
-  test.skip(true, "AH-11 provides an authenticated-session fixture");
+  test.beforeEach(async ({ context, page }) => {
+    await setupEducator(context, page);
+  });
 
   test("renders the profile form with name/email/avatar fields", async ({ page }) => {
     const profile = new AppAccountProfilePage(page);

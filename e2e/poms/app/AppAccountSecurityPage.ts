@@ -31,12 +31,16 @@ export class AppAccountSecurityPage extends BasePage {
     return this.page.getByTestId("app-account-security-submit-password");
   }
 
-  get twoFaToggle() {
-    return this.page.getByTestId("app-account-security-2fa-toggle");
+  get twoFaActivateButton() {
+    return this.page.getByTestId("app-account-security-2fa-activate-button");
   }
 
-  get twoFaTooltip() {
-    return this.page.getByTestId("app-account-security-2fa-tooltip");
+  get twoFaActiveBadge() {
+    return this.page.getByTestId("app-account-security-2fa-active-badge");
+  }
+
+  get twoFaDeactivateButton() {
+    return this.page.getByTestId("app-account-security-2fa-deactivate-button");
   }
 
   get sessionsList() {

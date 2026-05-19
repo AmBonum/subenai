@@ -1,8 +1,27 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../../fixtures/base";
+import { setupEducator } from "../../setup/app-shell";
+import { EDUCATOR_SESSION } from "../../fixtures/auth";
+import { seedTest } from "../../seed";
 import { TestEditorPage } from "../../poms/app/TestEditorPage";
 
 test.describe("/app/tests/$testId editor", () => {
-  test.skip(true, "AH-11 provides an authenticated-session fixture");
+  test.beforeEach(async ({ context, page }) => {
+    const t1 = seedTest({
+      id: "tst_002",
+      slug: "e2e-edit-target",
+      share_id: "e2e-share-1234",
+      owner_id: EDUCATOR_SESSION.user.id,
+      title: "Editor target",
+      status: "draft",
+    });
+    await setupEducator(context, page, {
+      tables: {
+        tests: [t1],
+        test_questions: [],
+        sessions: [],
+      },
+    });
+  });
 
   test("tab switching + ShareDialog copy", async ({ page }) => {
     const editor = new TestEditorPage(page);

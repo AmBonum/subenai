@@ -89,7 +89,14 @@ const ADMIN_USER_ID = "00000000-0000-0000-0000-000000000003";
 const ADMIN_FACTOR_ID = "00000000-0000-0000-0000-0000000000f0";
 
 const NOW = "2026-05-19T00:00:00.000Z";
-const ONE_HOUR_FROM_NOW = Math.floor(Date.parse("2026-05-19T01:00:00.000Z") / 1000);
+// `expires_at` is consumed by supabase-js to decide whether the access
+// token is stale. The 2026-05-19T01:00 value drifts into the past once
+// the test clock crosses 01:00 UTC, causing supabase-js to fire an
+// endless `/auth/v1/token?grant_type=refresh_token` loop that steals
+// the navigator.locks auth lock from in-flight `auth.getUser()` calls.
+// Use a far-future epoch so the client never schedules a refresh
+// during a test run.
+const ONE_HOUR_FROM_NOW = Math.floor(Date.parse("2099-01-01T00:00:00.000Z") / 1000);
 
 function makeUser(overrides: Partial<AuthUser>): AuthUser {
   return {
@@ -110,9 +117,41 @@ function makeUser(overrides: Partial<AuthUser>): AuthUser {
   };
 }
 
+/**
+ * Encode `value` as base64url (no padding) — matches the format
+ * `decodeJWT` in `@supabase/auth-js` expects for each of the three
+ * dot-separated JWT segments.
+ */
+function base64Url(value: string): string {
+  const b64 = Buffer.from(value, "utf8").toString("base64");
+  return b64.replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_");
+}
+
+/**
+ * Build a structurally-valid (unsigned) JWT carrying the `aal` claim.
+ * Supabase JS's `getAuthenticatorAssuranceLevel` reads `payload.aal`
+ * from `decodeJWT(access_token)` — it never verifies the signature,
+ * so an unsigned token with the right shape is enough for tests.
+ */
+function fakeJwt(payload: Record<string, unknown>): string {
+  const header = base64Url(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+  const body = base64Url(JSON.stringify(payload));
+  // base64url-encoded "signature" — content doesn't matter, only shape.
+  const signature = base64Url("e2e-signature");
+  return `${header}.${body}.${signature}`;
+}
+
 function makeSession(overrides: Partial<AuthSession> & { user: AuthUser }): AuthSession {
+  const aal = overrides.aal ?? "aal1";
   return {
-    access_token: `e2e-access-token-${overrides.user.id}`,
+    access_token: fakeJwt({
+      sub: overrides.user.id,
+      email: overrides.user.email,
+      aal,
+      exp: ONE_HOUR_FROM_NOW,
+      iat: Math.floor(Date.parse(NOW) / 1000),
+      role: "authenticated",
+    }),
     refresh_token: `e2e-refresh-token-${overrides.user.id}`,
     expires_at: ONE_HOUR_FROM_NOW,
     expires_in: 3600,

@@ -1,10 +1,10 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../../fixtures/base";
+import { setupEducator } from "../../setup/app-shell";
 import { AppShellPage } from "../../poms/app/AppShellPage";
 
-// AH-3.1 ships /app/* behind `requireSupabaseAuth`. Until AH-11 wires an
-// authenticated-session test fixture, the shell smoke specs are skipped.
-// The /login redirect is covered by the integration tests below (it does
-// not require an auth session — that is exactly what we are asserting).
+// /app/* sits behind `requireSupabaseAuth({ requireOnboarded: true })`.
+// The unauthenticated → /login redirect is fixture-free; the authenticated
+// shell checks rely on the Phase 1 auth + Supabase mocks.
 
 test.describe("/app shell — auth gate", () => {
   test("unauthenticated visit to /app redirects to /login", async ({ page }) => {
@@ -14,7 +14,9 @@ test.describe("/app shell — auth gate", () => {
 });
 
 test.describe("/app shell — authenticated", () => {
-  test.skip(true, "AH-11 provides an authenticated-session fixture");
+  test.beforeEach(async ({ context, page }) => {
+    await setupEducator(context, page);
+  });
 
   test("sidebar renders all primary nav links", async ({ page }) => {
     const shell = new AppShellPage(page);

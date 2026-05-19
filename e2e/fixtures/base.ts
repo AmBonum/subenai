@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { test as base } from "@playwright/test";
 import { ConsentBanner } from "../poms/shared/ConsentBanner";
 import { SiteHeader } from "../poms/shared/SiteHeader";
@@ -5,6 +7,32 @@ import { SiteFooter } from "../poms/shared/SiteFooter";
 import { NotFoundPage } from "../poms/shared/NotFoundPage";
 import { HomePage } from "../poms/quiz/HomePage";
 import { PodporaPage } from "../poms/sponsorship/PodporaPage";
+
+// Minimal .env loader so specs don't need playwright.config.ts to import
+// dotenv (kept dependency-free). `VITE_SUPABASE_PROJECT_ID` is read by
+// the auth fixture to derive the `sb-<ref>-auth-token` localStorage key.
+// Idempotent: re-importing this module does not overwrite already-set vars.
+(() => {
+  const envPath = resolve(process.cwd(), ".env");
+  if (!existsSync(envPath)) return;
+  const text = readFileSync(envPath, "utf8");
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    const eq = line.indexOf("=");
+    if (eq < 0) continue;
+    const key = line.slice(0, eq).trim();
+    if (process.env[key] !== undefined) continue;
+    let value = line.slice(eq + 1).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+    process.env[key] = value;
+  }
+})();
 
 /**
  * Composed test fixture — the canonical way to access POMs and shared

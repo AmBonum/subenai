@@ -24,7 +24,11 @@ export abstract class BasePage {
    */
   async goto(path: string): Promise<Response | null> {
     const response = await this.page.goto(path, { waitUntil: "domcontentloaded" });
-    await this.page.waitForLoadState("networkidle").catch(() => {
+    // Bounded networkidle wait — supabase-js schedules a low-frequency
+    // visibility-change refresh that, under playwright mocks, never
+    // settles to fully idle. 3s is enough for legitimate page bootstrap
+    // and short enough that the test stays interactive.
+    await this.page.waitForLoadState("networkidle", { timeout: 3000 }).catch(() => {
       /* networkidle can be flaky on long-lived poll endpoints — domcontentloaded is the contract */
     });
     return response;
