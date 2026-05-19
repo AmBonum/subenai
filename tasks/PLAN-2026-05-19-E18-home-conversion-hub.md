@@ -201,5 +201,5 @@ Spreadsheet exercise (not code): for every of 15 blog categories, identify: pill
 - [ ] E17.1 DB migration `related_course_slug`
 - [ ] E17.2 Article → course UI
 - [ ] E17.3 Course → article UI
-- [ ] E17.4 Test result recommendations
+- [x] E17.4 Test result recommendations ✅
 - [ ] E17.5 Topic content map audit doc

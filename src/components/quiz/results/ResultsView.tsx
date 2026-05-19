@@ -15,6 +15,7 @@ import { SurveyCard } from "@/components/quiz/survey/SurveyCard";
 import { SocialShareGrid } from "@/components/quiz/share/SocialShareGrid";
 import { ManualShareCard } from "@/components/quiz/share/ManualShareCard";
 import { TrapDialog } from "@/components/quiz/results/TrapDialog";
+import { WeakCategoryRecommendations } from "@/components/quiz/results/WeakCategoryRecommendations";
 import { tFor } from "@/i18n/quiz";
 
 const AnswerReviewSection = lazy(() => import("@/components/quiz/review/AnswerReviewSection"));
@@ -396,6 +397,10 @@ export function ResultsView({
               ))}
             </div>
           </div>
+
+          {/* E17.4 — weak-category recommendations (course + article per
+              weak category). Renders only when ≥1 category < 50 %. */}
+          <WeakCategoryRecommendations breakdown={result.breakdown} />
 
           {/* Insights */}
           {result.insights.length > 0 && (
