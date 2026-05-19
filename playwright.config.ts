@@ -54,12 +54,20 @@ export default defineConfig({
   // (npm run dev:api + npm run dev) so HMR + console output stay in your
   // terminals. In CI we boot `vite preview` against the built bundle —
   // faster than HMR and no need for the API mock dev server.
-  webServer: process.env.CI
-    ? {
-        command: "npm run preview",
-        url: BASE_URL,
-        reuseExistingServer: false,
-        timeout: 120_000,
-      }
-    : undefined,
+  //
+  // SKIP_WEBSERVER=1 disables the webServer even in CI. Use this when:
+  //   - the suite hits a remote BASE_URL (preview deploy / staging) and
+  //     doesn't need a local server, OR
+  //   - the job runs only the `integration` project, which does not build
+  //     the bundle and would otherwise fail with "Timed out waiting for
+  //     config.webServer" because there's no `dist/` to preview.
+  webServer:
+    process.env.CI && !process.env.SKIP_WEBSERVER
+      ? {
+          command: "npm run preview",
+          url: BASE_URL,
+          reuseExistingServer: false,
+          timeout: 120_000,
+        }
+      : undefined,
 });

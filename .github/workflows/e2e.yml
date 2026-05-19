@@ -1,21 +1,23 @@
 name: E2E
 
-# E20 — selective e2e execution at PR level.
+# E20 — opt-in browser e2e + always-on integration tests on PR.
 #
-# Triggers:
-#   - push to main:        always runs the FULL browser suite
-#   - PR targeting main:   runs only the domains whose source files changed,
-#                          plus cross-cutting (smoke, header, footer, locale)
-#   - workflow_dispatch:   always runs the FULL suite
+# Default policy (chosen 2026-05-19 after measuring chromium e2e at ~8 min
+# wall-clock making PR feedback painfully slow):
+#   - PR targeting main:    integration tests run by default (~1 min).
+#                           Browser tests are OPT-IN via a label.
+#   - push to main:         FULL browser suite runs as post-merge safety net.
+#   - workflow_dispatch:    FULL browser suite, manual trigger.
 #
-# Integration tests (request-fixture API specs at e2e/integration/**) are
-# light (~30 s), need no build, and run in a separate job that is effectively
-# unconditional. They are gated only by the e2e:skip label combined with a
-# push event override.
-#
-# Override labels on the PR:
-#   - e2e:full   → force the full browser suite even on a single-domain change
-#   - e2e:skip   → skip the browser job entirely (integration still runs)
+# PR labels:
+#   - e2e:browser  → run browser tests with selective filtering by changed
+#                    source paths (only the relevant domain specs + cross-cutting).
+#                    Use this when reviewing UI-critical changes.
+#   - e2e:full     → run the FULL browser suite, no path filtering.
+#                    Use this when changing shared infra (design tokens,
+#                    auth flow, supabase schema).
+#   - e2e:skip     → skip integration tests too. Use for docs-only PRs
+#                    where even the API smoke is noise.
 #
 # Path → domain mapping is documented in
 # tasks/PLAN-2026-05-19-E20-selective-e2e-ci.md and reproduced in the
@@ -158,29 +160,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
-    # Run on:
-    #   - any push event (post-merge main verification, always full)
-    #   - workflow_dispatch (manual trigger, always full)
-    #   - PR with at least one domain flag set AND not labelled e2e:skip
+    # Browser tests are OPT-IN on PR. The chromium suite is expensive
+    # (~3-8 min) and the typical PR doesn't need it — the reviewer or
+    # author applies `e2e:browser` (selective) or `e2e:full` (no filter)
+    # when the change is UI-critical. Post-merge push to main always
+    # runs the full suite as a safety net.
     if: |
       github.event_name == 'push' ||
       github.event_name == 'workflow_dispatch' ||
       (
         github.event_name == 'pull_request' &&
-        !contains(github.event.pull_request.labels.*.name, 'e2e:skip') &&
         (
-          needs.changes.outputs.full == 'true' ||
-          needs.changes.outputs.marketing == 'true' ||
-          needs.changes.outputs.admin == 'true' ||
-          needs.changes.outputs.app == 'true' ||
-          needs.changes.outputs.auth == 'true' ||
-          needs.changes.outputs.consent == 'true' ||
-          needs.changes.outputs.sponsorship == 'true' ||
-          needs.changes.outputs.composer == 'true' ||
-          needs.changes.outputs.quiz == 'true' ||
-          needs.changes.outputs.courses == 'true' ||
-          needs.changes.outputs.blog == 'true' ||
-          needs.changes.outputs.test-packs == 'true'
+          contains(github.event.pull_request.labels.*.name, 'e2e:browser') ||
+          contains(github.event.pull_request.labels.*.name, 'e2e:full')
         )
       )
     env:
@@ -293,13 +285,18 @@ jobs:
 
       # Integration specs hit BASE_URL via Playwright's `request` fixture.
       # Set vars.E2E_BASE_URL in repo Settings → Secrets and variables →
-      # Actions → Variables. Falls back to localhost:8080 (no live server
-      # in CI; the suite will refuse to connect — expected if the variable
-      # is unset, surfacing the misconfiguration loudly).
+      # Actions → Variables. Falls back to subenai.sk (production) so the
+      # suite has a live target even when the variable is unset — safer
+      # than localhost which surely refuses connections in a CI runner.
+      #
+      # SKIP_WEBSERVER=1 prevents Playwright from trying to boot
+      # `npm run preview` (no `dist/` exists in this job — we skip
+      # `npm run build` deliberately to keep the integration job fast).
       - name: Run integration tests
         run: npx playwright test --project=integration
         env:
-          BASE_URL: ${{ vars.E2E_BASE_URL || 'http://localhost:8080' }}
+          BASE_URL: ${{ vars.E2E_BASE_URL || 'https://subenai.sk' }}
+          SKIP_WEBSERVER: "1"
 
       - name: Upload integration report
         if: failure()

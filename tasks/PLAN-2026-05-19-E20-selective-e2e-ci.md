@@ -6,13 +6,16 @@
 
 ## 1. Goal
 
-Replace the monolithic Playwright run on every PR with a path-filtered
-matrix that executes only the spec domains whose source files
-changed. A PR touching only `src/content/blog/**` should run the
-`blog` domain (plus cross-cutting), not auth, app, admin, and
-sponsorship. Estimated savings: 70-80 % of free-tier CI minutes per
-average PR. Full suite still runs unconditionally on every push to
-`main` and on any change to the cross-cutting surface.
+Make PR-level CI fast by default: only the cheap integration suite
+runs automatically, the heavy chromium browser suite is OPT-IN via a
+label, and the post-merge push to `main` always runs the full
+browser suite as a safety net. When the browser suite IS triggered
+(via label or push), selective path-filtering picks only the
+relevant domain specs + cross-cutting.
+
+Final policy after iteration on this same epic (see also § "Policy
+revisions" below): default PR runs ~3 min instead of ~10 min; full
+safety net runs at merge time + manually-tagged risky PRs.
 
 ## 2. Status quo + audit
 
@@ -26,24 +29,35 @@ content commit touches no auth or app code yet runs both suites.
 
 ## 3. Design decisions
 
-1. **Single job with positional spec-path filtering, not a matrix of
-   separate jobs.** Matrix multiplies build cost (one build per job or
-   one artifact upload + N downloads); single job builds once. `workers:1`
+1. **Browser tests are OPT-IN on PR.** Default PR runs only the
+   integration suite (~1 min) — fast feedback. Reviewer/author
+   applies `e2e:browser` (selective) or `e2e:full` (no filtering)
+   when the change is UI-critical. Push to main always runs the
+   full browser suite as post-merge safety net.
+2. **Integration tests are always-on** (except `e2e:skip`). They
+   are API-only (`request` fixture, no browser, no build) and cost
+   ~1 min including npm install.
+3. **`SKIP_WEBSERVER` env var** disables the Playwright global
+   `webServer` config so integration jobs (which skip `npm run build`)
+   don't fail with "Timed out waiting for config.webServer". Wired
+   in `playwright.config.ts`.
+4. **Single job with positional spec-path filtering** (when browser
+   does run), not a matrix. Matrix multiplies build cost. `workers:1`
    serializes specs anyway.
-2. **`dorny/paths-filter@v3.0.2` pinned to commit SHA** for
+5. **`dorny/paths-filter@v3.0.2` pinned to commit SHA** for
    changed-file detection. Battle-tested, no Marketplace lock-in.
-3. **Cross-cutting always runs** — smoke + locale-lock + site-header +
-   site-footer. 4 specs, no opt-out.
-4. **Full-suite fallback triggers**: changes to `src/components/ui/**`,
-   `src/styles.css`, `tailwind.config*`, `package*.json`, `tsconfig*.json`,
-   `vite.config.ts`, `vitest.config.ts`, `playwright.config.ts`,
-   `e2e/**`, `.github/workflows/**`, `src/integrations/supabase/client.ts`,
-   `src/integrations/supabase/types.ts`.
-5. **`main` push is always full**, regardless of paths.
-6. **PR label escape hatches**: `e2e:full` forces full suite,
-   `e2e:skip` skips browser specs entirely. Integration still runs
-   in both cases (it's cheap).
-7. **Integration project is unconditional** — API-only, < 30 seconds.
+6. **Cross-cutting always runs WHEN browser job runs** — smoke +
+   locale-lock + site-header + site-footer. 4 specs, no opt-out.
+7. **Full-suite fallback for browser** (when triggered): changes to
+   `src/components/ui/**`, `src/styles.css`, `tailwind.config*`,
+   `package*.json`, `tsconfig*.json`, `vite.config.ts`, `vitest.config.ts`,
+   `playwright.config.ts`, `e2e/**`, `.github/workflows/**`,
+   `src/integrations/supabase/client.ts`, `src/integrations/supabase/types.ts`.
+8. **`main` push runs both jobs at full**, regardless of paths.
+9. **PR labels**:
+   - `e2e:browser` → run chromium with selective filtering
+   - `e2e:full` → run chromium with FULL suite (no filtering)
+   - `e2e:skip` → skip integration too (docs-only PRs)
 
 ## 4. Path → domain mapping
 
