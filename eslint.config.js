@@ -6,7 +6,11 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".output", ".vinxi", ".wrangler", "admin-hub"] },
+  // `.claude/worktrees/**` are sibling agent worktrees — each is its own
+  // clone of the repo. Linting them produces 1300+ duplicate errors that
+  // mask real issues in the main tree. The main lint excludes them entirely;
+  // each worktree's own lint config still applies inside it.
+  { ignores: ["dist", ".output", ".vinxi", ".wrangler", "admin-hub", ".claude/worktrees/**"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
