@@ -42,7 +42,12 @@ const MEGA_ITEMS: readonly MegaMenuItemDef[] = [
           links: [{ key: "composer", labelKey: "panel_link_composer", href: ROUTES.zostav }],
         },
       ],
-      featured: { labelKey: "panel_featured", href: ROUTES.testy },
+      featured: {
+        labelKey: "panel_featured",
+        href: ROUTES.testy,
+        icon: "ClipboardCheck",
+        tone: "tests",
+      },
     },
   },
   {
@@ -69,7 +74,12 @@ const MEGA_ITEMS: readonly MegaMenuItemDef[] = [
           ],
         },
       ],
-      featured: { labelKey: "panel_featured", href: ROUTES.skoly },
+      featured: {
+        labelKey: "panel_featured",
+        href: ROUTES.skoly,
+        icon: "GraduationCap",
+        tone: "schools",
+      },
     },
   },
   {

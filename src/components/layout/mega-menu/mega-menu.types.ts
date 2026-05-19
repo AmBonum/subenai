@@ -19,9 +19,29 @@ export interface MegaMenuPanelSection {
   links: MegaMenuPanelLink[];
 }
 
+/**
+ * Icon name driving the featured tile visual. Maps internally in
+ * MegaMenuPanel to a lucide-react component so callers stay decoupled
+ * from the icon library import. Add new keys here as new tones land.
+ */
+export type MegaMenuFeaturedIcon = "ClipboardCheck" | "GraduationCap" | "Sparkles";
+
+/**
+ * Semantic tone driving the gradient palette on the featured tile.
+ * The component owns the actual Tailwind classes — callers pick
+ * intent, not styling.
+ */
+export type MegaMenuFeaturedTone = "tests" | "schools" | "neutral";
+
 export interface MegaMenuFeatured {
   labelKey: string;
   href: string;
+  /** Optional visual treatment. When `icon` is set the featured tile
+   *  renders a two-zone card (gradient + icon on top, label below);
+   *  when both `icon` and `tone` are omitted the tile falls back to
+   *  the legacy text-only card. */
+  icon?: MegaMenuFeaturedIcon;
+  tone?: MegaMenuFeaturedTone;
 }
 
 export interface MegaMenuPanel {
