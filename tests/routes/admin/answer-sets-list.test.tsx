@@ -25,7 +25,7 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
-import { Route } from "@/routes/admin/answer-sets.lazy";
+import { Route } from "@/routes/admin/answer-sets.index.lazy";
 import { adminRepo } from "@/lib/admin/mock-store";
 
 type RouteConfig = { component: () => JSX.Element };

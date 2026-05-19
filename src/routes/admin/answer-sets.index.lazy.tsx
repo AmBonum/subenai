@@ -29,7 +29,7 @@ import {
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/questions";
 
-export const Route = createLazyFileRoute("/admin/answer-sets")({
+export const Route = createLazyFileRoute("/admin/answer-sets/")({
   component: AnswerSetsPage,
 });
 

@@ -33,7 +33,7 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
-import { Route } from "@/routes/admin/pages.lazy";
+import { Route } from "@/routes/admin/pages.index.lazy";
 import {
   adminMockRecorded,
   resetAdminMockRecorded,
