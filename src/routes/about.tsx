@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
+
 import { SITE_ORIGIN } from "@/config/site";
 import { ROUTES } from "@/config/routes";
+import { HomeFaqSection, type FaqSection } from "@/components/home/HomeFaqSection";
 import { tFor } from "@/i18n/marketing";
 
 const ABOUT_URL = `${SITE_ORIGIN}/about`;
@@ -161,7 +164,13 @@ export function AboutPage() {
             </ul>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t("about.money_zmeny_prefix")}
-              <code className="rounded bg-muted px-1 py-0.5 text-xs">/changelog</code>
+              <Link
+                to={ROUTES.zmeny}
+                data-testid="about-money-changelog-link"
+                className="underline underline-offset-2"
+              >
+                /changelog
+              </Link>
               {t("about.money_zmeny_suffix")}
             </p>
           </section>
@@ -180,7 +189,13 @@ export function AboutPage() {
             <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
               <li>
                 {t("about.sponsors_li1_prefix")}
-                <code className="rounded bg-muted px-1 py-0.5 text-xs">/sponsors</code>
+                <Link
+                  to={ROUTES.sponzori}
+                  data-testid="about-sponsors-link"
+                  className="underline underline-offset-2"
+                >
+                  /sponsors
+                </Link>
                 {t("about.sponsors_li1_suffix")}
               </li>
               <li>{t("about.sponsors_li2")}</li>
@@ -233,6 +248,8 @@ export function AboutPage() {
             </ul>
           </section>
 
+          <AboutFaq />
+
           <section
             aria-labelledby="podporit"
             className="space-y-4 rounded-2xl border border-primary/40 bg-card p-6 text-center sm:p-8"
@@ -264,6 +281,69 @@ export function AboutPage() {
           </section>
         </article>
       </main>
+    </div>
+  );
+}
+
+// E21.5 — FAQ section added to /about. Reuses the home accordion
+// adapter (HomeFaqSection) parametrised via `testIdPrefix="about-faq"`
+// (introduced in E19.5). 5 questions cover the most common
+// objections that arrive in support emails about identity,
+// independence, monetisation, and data scope.
+function AboutFaq() {
+  const t = tFor("marketing");
+  const sections = useMemo<FaqSection[]>(
+    () => [
+      {
+        slug: "identity",
+        title: t("about.faq_section_identity"),
+        items: [
+          {
+            id: "kto",
+            question: t("about.faq_kto_q"),
+            answer: t("about.faq_kto_a"),
+          },
+          {
+            id: "independent",
+            question: t("about.faq_independent_q"),
+            answer: t("about.faq_independent_a"),
+          },
+        ],
+      },
+      {
+        slug: "model",
+        title: t("about.faq_section_model"),
+        items: [
+          {
+            id: "free",
+            question: t("about.faq_free_q"),
+            answer: t("about.faq_free_a"),
+          },
+          {
+            id: "data",
+            question: t("about.faq_data_q"),
+            answer: t("about.faq_data_a"),
+          },
+          {
+            id: "ai",
+            question: t("about.faq_ai_q"),
+            answer: t("about.faq_ai_a"),
+          },
+        ],
+      },
+    ],
+    [t],
+  );
+
+  return (
+    <div data-testid="about-faq">
+      <HomeFaqSection
+        sections={sections}
+        heading={t("about.faq_heading")}
+        subheading={t("about.faq_subheading")}
+        testIdPrefix="about-faq"
+        docsHint={null}
+      />
     </div>
   );
 }
