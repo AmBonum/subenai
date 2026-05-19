@@ -13,6 +13,10 @@ vi.mock("@tanstack/react-router", () => ({
     () =>
     <T,>(opts: T) =>
       opts,
+  createLazyFileRoute:
+    () =>
+    <T,>(opts: T) =>
+      opts,
 }));
 
 vi.mock("@/hooks/useConsent", () => ({
@@ -59,7 +63,7 @@ vi.mock("@/integrations/supabase/client", () => {
   };
 });
 
-import { ZostavaView } from "@/routes/test.zostava.$id";
+import { ZostavaView } from "@/routes/test.zostava.$id.lazy";
 import { QUESTIONS } from "@/lib/quiz/bank/questions";
 
 const realIds = QUESTIONS.slice(0, 6).map((q) => q.id);

@@ -200,7 +200,7 @@ const TestZostavRoute = TestZostavRouteImport.update({
   id: '/test/zostav',
   path: '/test/zostav',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/test.zostav.lazy').then((d) => d.Route))
 const TShareIdRoute = TShareIdRouteImport.update({
   id: '/t/$shareId',
   path: '/t/$shareId',
@@ -405,7 +405,9 @@ const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
   id: '/test/zostava/$id',
   path: '/test/zostava/$id',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/test.zostava.$id.lazy').then((d) => d.Route),
+)
 const AppTestsNewRoute = AppTestsNewRouteImport.update({
   id: '/tests/new',
   path: '/tests/new',
@@ -461,7 +463,9 @@ const TestZostavaIdVysledkyRoute = TestZostavaIdVysledkyRouteImport.update({
   id: '/vysledky',
   path: '/vysledky',
   getParentRoute: () => TestZostavaIdRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/test.zostava.$id.vysledky.lazy').then((d) => d.Route),
+)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute

@@ -36,6 +36,10 @@ vi.mock("@tanstack/react-router", () => ({
     () =>
     <T,>(opts: T) =>
       opts,
+  createLazyFileRoute:
+    () =>
+    <T,>(opts: T) =>
+      opts,
 }));
 
 vi.mock("@/hooks/useConsent", () => ({
@@ -79,7 +83,7 @@ vi.mock("@/lib/browser/clipboard", () => ({
   copyToClipboard: (text: string) => clipboardMock.write(text),
 }));
 
-import { ComposerPage } from "@/routes/test.zostav";
+import { ComposerPage } from "@/routes/test.zostav.lazy";
 import { QUESTIONS } from "@/lib/quiz/bank/questions";
 import { encodeConfig } from "@/lib/quiz/composer";
 
