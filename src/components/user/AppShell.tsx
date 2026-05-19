@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { useCurrentProfile, useNotifications } from "@/lib/platform/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
+import { Toaster } from "@/components/ui/sonner";
 import { tFor } from "@/i18n/app-shell";
 
 type NavKey =
@@ -246,6 +247,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           {children}
         </main>
       </div>
+      <Toaster position="bottom-right" />
     </div>
   );
 }

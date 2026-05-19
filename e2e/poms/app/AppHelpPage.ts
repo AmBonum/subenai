@@ -30,4 +30,24 @@ export class AppHelpPage extends BasePage {
   faqItem(index: number) {
     return this.page.getByTestId(`app-help-faq-item-${index}`);
   }
+
+  faqTrigger(index: number) {
+    return this.page.getByTestId(`app-help-faq-trigger-${index}`);
+  }
+
+  faqContent(index: number) {
+    return this.page.getByTestId(`app-help-faq-content-${index}`);
+  }
+
+  get contactCard() {
+    return this.page.getByTestId("app-help-contact-card");
+  }
+
+  get contactSubtitle() {
+    return this.page.getByTestId("app-help-contact-subtitle");
+  }
+
+  get pageHeader() {
+    return this.page.getByTestId("app-help-page-header");
+  }
 }

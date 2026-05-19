@@ -78,8 +78,10 @@ function HelpPage() {
       <Accordion type="single" collapsible className="w-full" data-testid="app-help-faq-list">
         {filtered.map(({ question, answer }, i) => (
           <AccordionItem key={question} value={`i${i}`} data-testid={`app-help-faq-item-${i}`}>
-            <AccordionTrigger>{question}</AccordionTrigger>
-            <AccordionContent>{answer}</AccordionContent>
+            <AccordionTrigger data-testid={`app-help-faq-trigger-${i}`}>
+              {question}
+            </AccordionTrigger>
+            <AccordionContent data-testid={`app-help-faq-content-${i}`}>{answer}</AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
@@ -88,7 +90,9 @@ function HelpPage() {
         <CardContent className="flex items-center justify-between p-4">
           <div>
             <p className="font-medium">{t("contact_question")}</p>
-            <p className="text-sm text-muted-foreground">{t("contact_subtitle")}</p>
+            <p className="text-sm text-muted-foreground" data-testid="app-help-contact-subtitle">
+              {t("contact_subtitle")}
+            </p>
           </div>
           <Button asChild className="btn-primary" data-testid="app-help-contact-cta">
             <a href="mailto:support@subenai.sk">

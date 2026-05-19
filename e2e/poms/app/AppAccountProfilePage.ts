@@ -46,4 +46,16 @@ export class AppAccountProfilePage extends BasePage {
   get reset() {
     return this.page.getByTestId("app-account-profile-reset");
   }
+
+  get badgeDirty() {
+    return this.page.getByTestId("app-account-profile-badge-dirty");
+  }
+
+  get badgeSaved() {
+    return this.page.getByTestId("app-account-profile-badge-saved");
+  }
+
+  get gotoSecurity() {
+    return this.page.getByTestId("app-account-profile-goto-security");
+  }
 }
