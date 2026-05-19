@@ -50,6 +50,9 @@ interface CreateResponse {
   results_url?: string;
   error?: string;
   detail?: string;
+  // TEMP DIAGNOSTIC 2026-05-20 — see hash_failed handler. Remove with revert.
+  debug_message?: string;
+  debug_code?: string | null;
 }
 
 const AUTHOR_PASSWORD_MIN_LEN = 8;
@@ -157,7 +160,14 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     });
     if (hashError || typeof hashData !== "string") {
       console.error("test-sets hash_test_set_password", { ip, message: hashError?.message });
-      return jsonResponse(500, { error: "hash_failed" });
+      // TEMP DIAGNOSTIC 2026-05-20 — expose the supabase-js error message in
+      // the response so we can diagnose the prod hash_failed P0 without
+      // Cloudflare Workers Logs access. REMOVE after the issue is resolved.
+      return jsonResponse(500, {
+        error: "hash_failed",
+        debug_message: hashError?.message ?? `data_type=${typeof hashData}`,
+        debug_code: (hashError as { code?: string })?.code ?? null,
+      } as CreateResponse);
     }
     authorPasswordHash = hashData;
   }
