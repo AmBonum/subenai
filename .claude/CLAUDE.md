@@ -142,6 +142,16 @@
 
 ## Non-negotiables
 - Never `git push` without an explicit ask in the current turn.
+- **Always `git fetch origin <branch>` before pushing** and compare
+  `HEAD` vs `origin/<branch>`. If remote moved (another agent or the
+  user pushed in parallel — happens in multi-session work, including
+  the cross-branch blog merges of 2026-05-19), rebase your local
+  commits onto `origin/<branch>` BEFORE pushing. Prefer rebase over
+  merge for a linear history; only fall back to merge if a conflict
+  resolution requires preserving both parent histories. The check is
+  proactive — don't wait for `! [rejected] (fetch first)` to discover
+  drift; that wastes a round-trip and risks pushing stale state if
+  someone else is force-pushing concurrently.
 - Never use `--no-verify` / `--no-gpg-sign`. If a hook fails, fix the
   cause and create a NEW commit (never amend).
 - Never edit `.claude/settings.json` or `.github/**` without asking.
