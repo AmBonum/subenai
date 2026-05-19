@@ -73,6 +73,7 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
           </label>
           <input
             id="picker-search"
+            data-testid="composer-picker-search"
             type="search"
             value={search}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
@@ -85,6 +86,7 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
       <div className="flex items-center justify-between text-sm">
         <p
           aria-live="polite"
+          data-testid="composer-picker-selected-count"
           className={`font-semibold ${atMax ? "text-amber-500" : "text-foreground"}`}
         >
           {t("selected_count", { count: selectedIds.size, max: COMPOSER_LIMITS.maxQuestions })}

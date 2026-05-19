@@ -74,6 +74,7 @@ export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
         <div className="relative">
           <input
             id={passwordId}
+            data-testid="vysledky-gate-password-input"
             type={revealed ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}

@@ -10,6 +10,7 @@ export function TestPackCard({ pack }: { pack: TestPack }) {
     <Link
       to={ROUTES.testySlug}
       params={{ slug: pack.slug }}
+      data-testid={`tests-catalog-card-${pack.slug}`}
       className="group block rounded-2xl border border-border/60 bg-card/70 p-5 transition hover:border-primary/50 hover:bg-card focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >
       <div className="mb-3 flex items-start justify-between gap-3">
@@ -20,9 +21,17 @@ export function TestPackCard({ pack }: { pack: TestPack }) {
           {INDUSTRY_LABEL[pack.industry]}
         </span>
       </div>
-      <h3 className="text-lg font-bold text-foreground group-hover:text-primary">{pack.title}</h3>
+      <h3
+        data-testid={`tests-catalog-card-title-${pack.slug}`}
+        className="text-lg font-bold text-foreground group-hover:text-primary"
+      >
+        {pack.title}
+      </h3>
       <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{pack.tagline}</p>
-      <p className="mt-3 text-xs text-muted-foreground">
+      <p
+        data-testid={`tests-catalog-card-meta-${pack.slug}`}
+        className="mt-3 text-xs text-muted-foreground"
+      >
         {t("pack_card_meta", { n: pack.questionIds.length, threshold: pack.passingThreshold })}
       </p>
     </Link>

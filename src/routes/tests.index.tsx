@@ -76,8 +76,13 @@ function FirmaIndexPage() {
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-5xl px-4 pb-12 pt-12 sm:pt-16">
         <header className="mb-8 text-center">
-          <h1 className="text-4xl font-black sm:text-5xl">{t("page_heading")}</h1>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg">
+          <h1 data-testid="tests-catalog-heading" className="text-4xl font-black sm:text-5xl">
+            {t("page_heading")}
+          </h1>
+          <p
+            data-testid="tests-catalog-intro"
+            className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg"
+          >
             {t("page_intro")}
           </p>
         </header>
@@ -133,7 +138,10 @@ function FirmaIndexPage() {
             {t("empty")}
           </p>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            data-testid="tests-catalog-grid"
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          >
             {filtered.map((p) => (
               <TestPackCard key={p.slug} pack={p} />
             ))}

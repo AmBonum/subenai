@@ -312,7 +312,12 @@ export function ResultsView({
           {t("score_label")}
         </div>
         <div className="mt-2 inline-flex items-baseline gap-2 font-display">
-          <span className="text-7xl font-black sm:text-8xl tabular-nums">{animatedScore}</span>
+          <span
+            data-testid="quiz-results-score-value"
+            className="text-7xl font-black sm:text-8xl tabular-nums"
+          >
+            {animatedScore}
+          </span>
           <span className="text-2xl text-muted-foreground">/ 100</span>
         </div>
         {showRest && (
@@ -380,7 +385,10 @@ export function ResultsView({
           </div>
 
           {/* Breakdown */}
-          <div className="mt-6 animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-card">
+          <div
+            data-testid="quiz-results-breakdown"
+            className="mt-6 animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-card"
+          >
             <h3 className="text-base font-bold">{t("breakdown_title")}</h3>
             <div className="mt-4 space-y-3">
               {(Object.keys(result.breakdown) as (keyof typeof result.breakdown)[]).map((k) => (
@@ -447,7 +455,10 @@ export function ResultsView({
           {shareId && <SurveyCard shareId={shareId} />}
 
           {/* Share section */}
-          <div className="mt-8 animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-card">
+          <div
+            data-testid="quiz-results-share-section"
+            className="mt-8 animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-card"
+          >
             <h3 className="text-base font-bold">{t("share_title")}</h3>
             <p className="mt-1 text-sm text-muted-foreground">{t("share_body")}</p>
 
@@ -459,6 +470,7 @@ export function ResultsView({
               {shareUrl && (
                 <div className="flex gap-2">
                   <input
+                    data-testid="quiz-results-share-url"
                     readOnly
                     value={shareUrl}
                     onClick={(e) => e.currentTarget.select()}
@@ -553,6 +565,7 @@ export function ResultsView({
           {/* CTAs */}
           <div className="mt-8 flex flex-col gap-3 animate-fade-in-up">
             <button
+              data-testid="quiz-results-restart"
               onClick={onRestart}
               className="rounded-xl border-2 border-border bg-card px-6 py-3 font-semibold transition-colors hover:border-primary/60"
             >

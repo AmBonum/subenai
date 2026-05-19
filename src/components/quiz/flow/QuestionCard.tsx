@@ -66,12 +66,17 @@ export function QuestionCard({ question, index, total, onAnswer }: Props) {
   const timerWarn = secondsLeft <= 3 && !revealed;
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:py-12">
+    <div
+      data-testid="quiz-flow-question-card"
+      className="mx-auto w-full max-w-2xl px-4 py-8 sm:py-12"
+    >
       {/* Progress + timer */}
       <div className="mb-6 flex items-center justify-between gap-4">
         <div className="flex-1">
           <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            <span>{t("question_progress", { n: index + 1, total })}</span>
+            <span data-testid="quiz-flow-progress">
+              {t("question_progress", { n: index + 1, total })}
+            </span>
             <span className="text-primary">{question.category}</span>
           </div>
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -82,6 +87,7 @@ export function QuestionCard({ question, index, total, onAnswer }: Props) {
           </div>
         </div>
         <div
+          data-testid="quiz-flow-timer"
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 font-mono text-lg font-bold tabular-nums ${
             timerWarn
               ? "border-destructive text-destructive animate-pulse-ring"
@@ -94,7 +100,10 @@ export function QuestionCard({ question, index, total, onAnswer }: Props) {
       </div>
 
       {/* Prompt */}
-      <h2 className="text-balance text-2xl font-bold leading-tight sm:text-3xl">
+      <h2
+        data-testid="quiz-flow-prompt"
+        className="text-balance text-2xl font-bold leading-tight sm:text-3xl"
+      >
         {question.prompt}
       </h2>
 
@@ -114,6 +123,7 @@ export function QuestionCard({ question, index, total, onAnswer }: Props) {
           return (
             <button
               key={opt.id}
+              data-testid={`quiz-flow-option-${opt.id}`}
               onClick={() => handleSubmit(opt.id)}
               disabled={revealed}
               className={`group flex items-center gap-3 rounded-xl border-2 px-4 py-4 text-left text-base font-medium transition-all

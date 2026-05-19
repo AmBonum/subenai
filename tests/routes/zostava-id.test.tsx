@@ -63,7 +63,10 @@ vi.mock("@/integrations/supabase/client", () => {
   };
 });
 
-import { ZostavaView } from "@/routes/test.zostava.$id.lazy";
+// `ZostavaView` moved from `test.zostava.$id.lazy` to
+// `test.zostava.$id.index.lazy` on 2026-05-19 (Outlet refactor — parent
+// now renders <Outlet /> and the page content lives in the index sibling).
+import { ZostavaView } from "@/routes/test.zostava.$id.index.lazy";
 import { QUESTIONS } from "@/lib/quiz/bank/questions";
 
 const realIds = QUESTIONS.slice(0, 6).map((q) => q.id);

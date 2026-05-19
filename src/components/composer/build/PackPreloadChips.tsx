@@ -20,6 +20,7 @@ export function PackPreloadChips({ packs, selectedSlugs, onToggle }: Props) {
           <li key={p.slug}>
             <button
               type="button"
+              data-testid={`composer-pack-chip-${p.slug}`}
               onClick={() => onToggle(p.slug)}
               aria-pressed={active}
               title={t("button_title", { n: p.questionIds.length, title: p.title })}

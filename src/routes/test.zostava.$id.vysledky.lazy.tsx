@@ -125,13 +125,16 @@ export function VysledkyView({ id }: Props) {
   }
   if (phase === "needs_auth") {
     return (
-      <div className="min-h-screen bg-background">
+      <div data-testid="vysledky-auth-gate" className="min-h-screen bg-background">
         <main className="mx-auto max-w-md px-4 pb-12 pt-12 sm:pt-16">
           <header>
             <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
               ← {tCommon("back_home")}
             </Link>
-            <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+            <h1
+              data-testid="vysledky-gate-heading"
+              className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl"
+            >
               {t("heading_gate")}
             </h1>
           </header>
@@ -146,7 +149,7 @@ export function VysledkyView({ id }: Props) {
   if (!data) return null;
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div data-testid="vysledky-dashboard" className="min-h-screen bg-background pb-24">
       <main className="mx-auto max-w-4xl px-4 pt-12 sm:px-6 sm:pt-16">
         <header className="flex flex-wrap items-start justify-between gap-3">
           <div>

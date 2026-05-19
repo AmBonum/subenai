@@ -87,12 +87,17 @@ function PackPage() {
       <main className="mx-auto max-w-3xl px-4 pb-12 pt-12 sm:pt-16">
         <header className="text-center">
           <div className="text-7xl">{pack.industryEmoji}</div>
-          <h1 className="mt-4 text-3xl font-black sm:text-4xl">{pack.title}</h1>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg">
+          <h1 data-testid="test-pack-heading" className="mt-4 text-3xl font-black sm:text-4xl">
+            {pack.title}
+          </h1>
+          <p
+            data-testid="test-pack-tagline"
+            className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg"
+          >
             {pack.tagline}
           </p>
           <p className="mt-4 text-sm text-muted-foreground">{pack.targetPersona}</p>
-          <p className="mt-4 text-sm text-muted-foreground">
+          <p data-testid="test-pack-meta" className="mt-4 text-sm text-muted-foreground">
             <span aria-label={t("pack_questions_aria")}>
               {t("pack_questions_inline", { n: questions.length })}
             </span>
@@ -104,7 +109,12 @@ function PackPage() {
         </header>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Button size="lg" onClick={() => setStarted(true)} disabled={questions.length === 0}>
+          <Button
+            size="lg"
+            data-testid="test-pack-start-button"
+            onClick={() => setStarted(true)}
+            disabled={questions.length === 0}
+          >
             {t("pack_start")}
           </Button>
           <Button asChild variant="outline">

@@ -94,6 +94,7 @@ import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$page
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
 import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
 import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
+import { Route as TestZostavaIdIndexRouteImport } from './routes/test.zostava.$id.index'
 import { Route as TestZostavaIdVysledkyRouteImport } from './routes/test.zostava.$id.vysledky'
 
 const SupportRoute = SupportRouteImport.update({
@@ -567,6 +568,13 @@ const AdminAnswerSetsSetIdRoute = AdminAnswerSetsSetIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/answer-sets.$setId.lazy').then((d) => d.Route),
 )
+const TestZostavaIdIndexRoute = TestZostavaIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TestZostavaIdRoute,
+} as any).lazy(() =>
+  import('./routes/test.zostava.$id.index.lazy').then((d) => d.Route),
+)
 const TestZostavaIdVysledkyRoute = TestZostavaIdVysledkyRouteImport.update({
   id: '/vysledky',
   path: '/vysledky',
@@ -662,6 +670,7 @@ export interface FileRoutesByFullPath {
   '/admin/tests/': typeof AdminTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
+  '/test/zostava/$id/': typeof TestZostavaIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -737,13 +746,13 @@ export interface FileRoutesByTo {
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
-  '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
   '/admin/answer-sets': typeof AdminAnswerSetsIndexRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/pages': typeof AdminPagesIndexRoute
   '/admin/tests': typeof AdminTestsIndexRoute
   '/app/tests': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
+  '/test/zostava/$id': typeof TestZostavaIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -833,6 +842,7 @@ export interface FileRoutesById {
   '/admin/tests/': typeof AdminTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
+  '/test/zostava/$id/': typeof TestZostavaIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -923,6 +933,7 @@ export interface FileRouteTypes {
     | '/admin/tests/'
     | '/app/tests/'
     | '/test/zostava/$id/vysledky'
+    | '/test/zostava/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -998,13 +1009,13 @@ export interface FileRouteTypes {
     | '/app/tests/new'
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
-    | '/test/zostava/$id'
     | '/admin/answer-sets'
     | '/admin/blog'
     | '/admin/pages'
     | '/admin/tests'
     | '/app/tests'
     | '/test/zostava/$id/vysledky'
+    | '/test/zostava/$id'
   id:
     | '__root__'
     | '/'
@@ -1093,6 +1104,7 @@ export interface FileRouteTypes {
     | '/admin/tests/'
     | '/app/tests/'
     | '/test/zostava/$id/vysledky'
+    | '/test/zostava/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1729,6 +1741,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnswerSetsSetIdRouteImport
       parentRoute: typeof AdminAnswerSetsRoute
     }
+    '/test/zostava/$id/': {
+      id: '/test/zostava/$id/'
+      path: '/'
+      fullPath: '/test/zostava/$id/'
+      preLoaderRoute: typeof TestZostavaIdIndexRouteImport
+      parentRoute: typeof TestZostavaIdRoute
+    }
     '/test/zostava/$id/vysledky': {
       id: '/test/zostava/$id/vysledky'
       path: '/vysledky'
@@ -1899,10 +1918,12 @@ const SponsorsRouteWithChildren = SponsorsRoute._addFileChildren(
 
 interface TestZostavaIdRouteChildren {
   TestZostavaIdVysledkyRoute: typeof TestZostavaIdVysledkyRoute
+  TestZostavaIdIndexRoute: typeof TestZostavaIdIndexRoute
 }
 
 const TestZostavaIdRouteChildren: TestZostavaIdRouteChildren = {
   TestZostavaIdVysledkyRoute: TestZostavaIdVysledkyRoute,
+  TestZostavaIdIndexRoute: TestZostavaIdIndexRoute,
 }
 
 const TestZostavaIdRouteWithChildren = TestZostavaIdRoute._addFileChildren(

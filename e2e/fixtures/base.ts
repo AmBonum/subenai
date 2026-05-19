@@ -7,6 +7,9 @@ import { SiteHeader } from "../poms/shared/SiteHeader";
 import { SiteFooter } from "../poms/shared/SiteFooter";
 import { NotFoundPage } from "../poms/shared/NotFoundPage";
 import { HomePage } from "../poms/quiz/HomePage";
+import { ComposerPage } from "../poms/quiz/ComposerPage";
+import { QuizFlowPage } from "../poms/quiz/QuizFlowPage";
+import { ShareResultPage } from "../poms/quiz/ShareResultPage";
 import { MarketingHomePage } from "../poms/marketing/HomePage";
 import { AboutPage } from "../poms/marketing/AboutPage";
 import { ContactPage } from "../poms/marketing/ContactPage";
@@ -16,6 +19,7 @@ import { SponsorsPage } from "../poms/marketing/SponsorsPage";
 import { ManageSupportPage } from "../poms/marketing/ManageSupportPage";
 import { PodporaPage } from "../poms/sponsorship/PodporaPage";
 import { PrivacyPage, CookiesPage, ChangelogPage } from "../poms/marketing/LegalPages";
+import { TestsDirectoryPage } from "../poms/quiz/TestsDirectoryPage";
 
 // Minimal .env loader so specs don't need playwright.config.ts to import
 // dotenv (kept dependency-free). `VITE_SUPABASE_PROJECT_ID` is read by
@@ -65,6 +69,10 @@ import { PrivacyPage, CookiesPage, ChangelogPage } from "../poms/marketing/Legal
  */
 type Fixtures = {
   home: HomePage;
+  composer: ComposerPage;
+  testsDirectory: TestsDirectoryPage;
+  quizFlow: QuizFlowPage;
+  shareResult: ShareResultPage;
   marketingHome: MarketingHomePage;
   about: AboutPage;
   contact: ContactPage;
@@ -86,6 +94,18 @@ type Fixtures = {
 export const test = base.extend<Fixtures>({
   home: async ({ page }, use) => {
     await use(new HomePage(page));
+  },
+  composer: async ({ page }, use) => {
+    await use(new ComposerPage(page));
+  },
+  testsDirectory: async ({ page }, use) => {
+    await use(new TestsDirectoryPage(page));
+  },
+  quizFlow: async ({ page }, use) => {
+    await use(new QuizFlowPage(page));
+  },
+  shareResult: async ({ page }, use) => {
+    await use(new ShareResultPage(page));
   },
   marketingHome: async ({ page }, use) => {
     await use(new MarketingHomePage(page));

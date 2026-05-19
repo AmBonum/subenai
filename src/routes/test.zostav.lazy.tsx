@@ -322,7 +322,10 @@ export function ComposerPage() {
           <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
             ← {tFor("common")("back_home")}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1
+            data-testid="composer-page-heading"
+            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+          >
             {t("page_heading")}
           </h1>
           <p className="mt-3 text-base text-muted-foreground sm:text-lg">
@@ -335,11 +338,13 @@ export function ComposerPage() {
         {staleNotice ? (
           <div
             role="status"
+            data-testid="composer-stale-notice"
             className="mb-6 flex items-start justify-between gap-3 rounded-xl border border-amber-500/40 bg-amber-500/10 p-3 text-sm text-foreground"
           >
             <p className="leading-relaxed">{staleNotice}</p>
             <button
               type="button"
+              data-testid="composer-stale-dismiss"
               onClick={() => setStaleNotice(null)}
               aria-label={t("dismiss_notice_aria")}
               className="shrink-0 rounded p-1 text-muted-foreground hover:text-foreground"
@@ -354,7 +359,11 @@ export function ComposerPage() {
             {t("form_aria_heading")}
           </h2>
 
-          <section aria-labelledby="step-1-h" className="space-y-3">
+          <section
+            aria-labelledby="step-1-h"
+            data-testid="composer-pack-chips"
+            className="space-y-3"
+          >
             <h3 id="step-1-h" className="text-lg font-semibold text-foreground">
               <span className="text-primary">1.</span> {t("step_1_heading")}{" "}
               <span className="text-sm font-normal text-muted-foreground">
@@ -371,6 +380,7 @@ export function ComposerPage() {
 
           <section
             aria-labelledby="step-2-h"
+            data-testid="composer-question-picker"
             className="space-y-3 rounded-2xl border border-border/60 bg-card/40 p-5 sm:p-6"
           >
             <h3 id="step-2-h" className="text-lg font-semibold text-foreground">
@@ -385,6 +395,7 @@ export function ComposerPage() {
 
           <section
             aria-labelledby="step-3-h"
+            data-testid="composer-settings"
             className="space-y-4 rounded-2xl border border-border/60 bg-card/40 p-5 sm:p-6"
           >
             <h3 id="step-3-h" className="text-lg font-semibold text-foreground">
@@ -411,6 +422,7 @@ export function ComposerPage() {
           {error ? (
             <div
               role="alert"
+              data-testid="composer-error-alert"
               className="rounded-xl border border-destructive/60 bg-destructive/10 p-3 text-sm text-foreground"
             >
               {t("error_block_prefix")} <code>{error}</code>
@@ -424,6 +436,7 @@ export function ComposerPage() {
         <div
           role="status"
           aria-live="polite"
+          data-testid="composer-share-toast"
           className="fixed inset-x-0 bottom-24 z-40 mx-auto w-fit max-w-[90vw] rounded-full bg-foreground px-4 py-2 text-sm font-semibold text-background shadow-lg"
         >
           {shareToast}
@@ -433,12 +446,14 @@ export function ComposerPage() {
       <div
         role="region"
         aria-label={t("actions_region_aria")}
+        data-testid="composer-actions-region"
         className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-background/95 px-4 py-3 backdrop-blur sm:px-6"
       >
         <div className="mx-auto flex max-w-3xl flex-col gap-2">
           <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
             <p
               aria-live="polite"
+              data-testid="composer-selection-summary"
               className={`text-sm font-semibold ${canRun ? "text-foreground" : "text-muted-foreground"}`}
             >
               {!meetsMin
@@ -456,6 +471,7 @@ export function ComposerPage() {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
+                data-testid="composer-clear-button"
                 onClick={clearAll}
                 disabled={selectedCount === 0 || submitting}
                 className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
@@ -464,6 +480,7 @@ export function ComposerPage() {
               </button>
               <button
                 type="button"
+                data-testid="composer-run-self-button"
                 onClick={runForSelf}
                 disabled={!canSelfRun}
                 title={collectsResponses ? t("run_self_disabled_title") : undefined}
@@ -473,6 +490,7 @@ export function ComposerPage() {
               </button>
               <button
                 type="button"
+                data-testid="composer-submit-button"
                 onClick={() => {
                   const form = document.querySelector("form") as HTMLFormElement | null;
                   form?.requestSubmit();
@@ -493,6 +511,7 @@ export function ComposerPage() {
             <p className="text-right text-xs text-muted-foreground">
               <button
                 type="button"
+                data-testid="composer-url-copy-button"
                 onClick={copyShareUrl}
                 className="underline underline-offset-2 hover:text-foreground"
               >
