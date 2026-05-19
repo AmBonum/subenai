@@ -84,4 +84,8 @@ export class AnswerSetEditorPage extends BasePage {
   get notFound() {
     return this.page.getByTestId("answer-set-detail-not-found");
   }
+
+  get errorMessage() {
+    return this.page.getByTestId("answer-set-editor-error");
+  }
 }

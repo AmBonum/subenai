@@ -9,3 +9,5 @@ export { seedAnswerSet, type AnswerSetRow } from "./answer-sets";
 export { seedNotification, type NotificationRow } from "./notifications";
 export { seedTeam, type TeamRow } from "./teams";
 export { seedTestWithQuestions, type SeedTestWithQuestionsOptions } from "./composition";
+export { seedCategory, seedTopic, type CategoryRow, type TopicRow } from "./categories";
+export { seedRespondent, type RespondentRow } from "./respondents";

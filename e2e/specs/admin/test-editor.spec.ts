@@ -4,22 +4,12 @@ import { ADMIN_SESSION } from "../../fixtures/auth";
 import { seedTest } from "../../seed";
 import { AdminTestEditorPage } from "../../poms/admin/TestEditorPage";
 
-// PHASE-3 blocked: nested admin routes never reach the editor component.
-// `src/routes/admin/tests.tsx` declares `createFileRoute("/admin/tests")({})`
-// (no component → TanStack defaults to <Outlet/>) but
-// `src/routes/admin/tests.lazy.tsx` then registers a `component:
-// AdminTestsListPage` that does NOT render `<Outlet/>`. The lazy component
-// wins, so /admin/tests/$testId renders the list page, not the
-// `AdminTestEditorPage`. Same defect on admin/answer-sets, admin/pages —
-// every nested `$id` route landed on a parent that lost its outlet in the
-// AH lazy-load refactor (commit 70aa4b1 "perf(admin): lazy-load /admin/*
-// routes via createLazyFileRoute"). Fix is to add `<Outlet/>` to
-// each parent .lazy.tsx — out of scope for the testing-coverage epic;
-// re-enable this spec once the routing fix lands.
+// Outlet fix landed in task #53 (Phase 3 follow-up). Re-enabled
+// 2026-05-19 once Phase 7 mock infra (HEAD count, merge-duplicates,
+// Toaster) was stable enough for the editor flow to drive without
+// flake.
 
 test.describe("/admin/tests/$testId editor", () => {
-  test.skip(true, "PHASE-3 blocked: admin nested routes missing <Outlet/>");
-
   test.beforeEach(async ({ context, page }) => {
     const t1 = seedTest({
       id: "test_001",

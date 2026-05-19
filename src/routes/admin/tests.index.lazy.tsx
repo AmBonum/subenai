@@ -237,7 +237,12 @@ function AdminTestsListPage() {
                         />
                       </TableCell>
                       <TableCell className="max-w-md">
-                        <p className="line-clamp-1 text-sm font-medium">{x.title}</p>
+                        <p
+                          className="line-clamp-1 text-sm font-medium"
+                          data-testid={`admin-tests-list-row-title-${x.id}`}
+                        >
+                          {x.title}
+                        </p>
                         <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
                           {x.description}
                         </p>
