@@ -21,7 +21,19 @@
   "errors": {
     "not_found_title": "Stránka nenájdená",
     "not_found_body": "Stránka, ktorú hľadáš, neexistuje alebo bola presunutá.",
-    "code_404": "404"
+    "code_404": "404",
+    "not_found_kicker": "chyba 404 — strata orientácie",
+    "not_found_hint": "Možno hľadáš jednu z týchto sekcií:",
+    "not_found_suggestions": {
+      "test_title": "Spusti rýchly test",
+      "test_desc": "5-minútový anonymný test rozpoznávania online podvodov",
+      "academy_title": "Otvor akadémiu",
+      "academy_desc": "80+ sprievodcov a článkov o online podvodoch",
+      "courses_title": "Pozri školenia",
+      "courses_desc": "Krátke interaktívne kurzy podľa kategórií scamov",
+      "schools_title": "Pre školy a učiteľov",
+      "schools_desc": "Edu mód — otestuj triedu, bez registrácií"
+    }
   },
   "composer": {
     "meta_title": "Zostav vlastný test pre tím — subenai",

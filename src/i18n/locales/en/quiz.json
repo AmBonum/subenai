@@ -21,7 +21,19 @@
   "errors": {
     "not_found_title": "Page not found",
     "not_found_body": "The page you're looking for doesn't exist or has been moved.",
-    "code_404": "404"
+    "code_404": "404",
+    "not_found_kicker": "error 404 — wrong turn",
+    "not_found_hint": "You might be looking for one of these:",
+    "not_found_suggestions": {
+      "test_title": "Take the quick test",
+      "test_desc": "5-minute anonymous scam-recognition test",
+      "academy_title": "Open the academy",
+      "academy_desc": "80+ guides and articles on online scams",
+      "courses_title": "Browse courses",
+      "courses_desc": "Short interactive courses by scam category",
+      "schools_title": "For schools and teachers",
+      "schools_desc": "Edu mode — test a class, no signups"
+    }
   },
   "composer": {
     "meta_title": "Build a custom test for your team — subenai",
