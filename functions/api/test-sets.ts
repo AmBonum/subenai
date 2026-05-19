@@ -53,6 +53,8 @@ interface CreateResponse {
   // TEMP DIAGNOSTIC 2026-05-20 — see hash_failed handler. Remove with revert.
   debug_message?: string;
   debug_code?: string | null;
+  debug_key_fingerprint?: string;
+  debug_url?: string;
 }
 
 const AUTHOR_PASSWORD_MIN_LEN = 8;
@@ -160,13 +162,22 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     });
     if (hashError || typeof hashData !== "string") {
       console.error("test-sets hash_test_set_password", { ip, message: hashError?.message });
-      // TEMP DIAGNOSTIC 2026-05-20 — expose the supabase-js error message in
-      // the response so we can diagnose the prod hash_failed P0 without
-      // Cloudflare Workers Logs access. REMOVE after the issue is resolved.
+      // TEMP DIAGNOSTIC 2026-05-20 — also fingerprint the env-vars the
+      // Function actually sees at runtime, so we can compare against what
+      // .dev.vars has. First/last 12 chars + length is safe (full key never
+      // exposed). REMOVE after the issue is resolved.
+      const key = env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+      const keyFingerprint =
+        key.length === 0
+          ? "EMPTY"
+          : `len=${key.length} head=${key.slice(0, 12)} tail=${key.slice(-12)}`;
+      const url = env.SUPABASE_URL ?? "";
       return jsonResponse(500, {
         error: "hash_failed",
         debug_message: hashError?.message ?? `data_type=${typeof hashData}`,
         debug_code: (hashError as { code?: string })?.code ?? null,
+        debug_key_fingerprint: keyFingerprint,
+        debug_url: url,
       } as CreateResponse);
     }
     authorPasswordHash = hashData;
