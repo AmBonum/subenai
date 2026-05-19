@@ -40,6 +40,16 @@ export class AppShellPage extends BasePage {
     return this.page.getByTestId("app-shell-header-logout");
   }
 
+  /** Wrapper div for the header LocaleSwitcher slot (always in DOM; empty while flag is off). */
+  get headerLocaleSlot() {
+    return this.page.getByTestId("app-shell-header-locale");
+  }
+
+  /** The locale-switcher trigger — only present when LOCALE_SWITCHER_ENABLED = true. */
+  get localeSwitcherTrigger() {
+    return this.page.getByTestId("locale-switcher-trigger");
+  }
+
   get sidebar() {
     return this.page.getByTestId("app-shell-sidebar");
   }

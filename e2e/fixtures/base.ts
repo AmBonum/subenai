@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { test as base } from "@playwright/test";
 import { ConsentBanner } from "../poms/shared/ConsentBanner";
+import { ConsentPreferencesDialog } from "../poms/shared/ConsentPreferencesDialog";
 import { SiteHeader } from "../poms/shared/SiteHeader";
 import { SiteFooter } from "../poms/shared/SiteFooter";
 import { NotFoundPage } from "../poms/shared/NotFoundPage";
@@ -57,6 +58,7 @@ import { PodporaPage } from "../poms/sponsorship/PodporaPage";
 type Fixtures = {
   home: HomePage;
   consent: ConsentBanner;
+  consentDialog: ConsentPreferencesDialog;
   header: SiteHeader;
   footer: SiteFooter;
   notFound: NotFoundPage;
@@ -69,6 +71,9 @@ export const test = base.extend<Fixtures>({
   },
   consent: async ({ page }, use) => {
     await use(new ConsentBanner(page));
+  },
+  consentDialog: async ({ page }, use) => {
+    await use(new ConsentPreferencesDialog(page));
   },
   header: async ({ page }, use) => {
     await use(new SiteHeader(page));

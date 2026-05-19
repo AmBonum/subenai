@@ -101,6 +101,31 @@ export class SiteHeader {
     return this.page.getByTestId(`header-nav-link-${slug}`);
   }
 
+  /** Wrapper div for the desktop LocaleSwitcher slot (always in DOM; empty while flag is off). */
+  get desktopLocaleSlot(): Locator {
+    return this.page.getByTestId("header-desktop-locale");
+  }
+
+  /** Wrapper div for the mobile sheet LocaleSwitcher slot (always in DOM; empty while flag is off). */
+  get mobileLocaleSlot(): Locator {
+    return this.page.getByTestId("header-mobile-locale");
+  }
+
+  /** The locale-switcher trigger — only present when LOCALE_SWITCHER_ENABLED = true. */
+  get localeSwitcherTrigger(): Locator {
+    return this.page.getByTestId("locale-switcher-trigger");
+  }
+
+  /** The locale-switcher dropdown menu — only present when LOCALE_SWITCHER_ENABLED = true. */
+  get localeSwitcherMenu(): Locator {
+    return this.page.getByTestId("locale-switcher-menu");
+  }
+
+  /** The locale-switcher current-locale label — only present when LOCALE_SWITCHER_ENABLED = true. */
+  get localeSwitcherCurrent(): Locator {
+    return this.page.getByTestId("locale-switcher-current");
+  }
+
   get ctaPill(): Locator {
     return this.page.getByTestId("header-cta-pill");
   }

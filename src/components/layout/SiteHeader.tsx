@@ -173,7 +173,10 @@ export function SiteHeader() {
               {t("nav.app")}
             </Link>
           )}
-          <LocaleSwitcher />
+          {/* Slot is empty while LOCALE_SWITCHER_ENABLED = false */}
+          <div data-testid="header-desktop-locale">
+            <LocaleSwitcher />
+          </div>
           <CtaPill ariaLabel={ctaLong} />
         </div>
 

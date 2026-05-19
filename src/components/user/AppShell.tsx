@@ -160,7 +160,10 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
           </Link>
           <div className="flex items-center gap-3 text-sm">
-            <LocaleSwitcher />
+            {/* Slot is empty while LOCALE_SWITCHER_ENABLED = false */}
+            <div data-testid="app-shell-header-locale">
+              <LocaleSwitcher />
+            </div>
             <div
               className="flex items-center gap-2 rounded-full border border-border/60 bg-card py-1 pl-1 pr-3"
               data-testid="app-shell-header-user"

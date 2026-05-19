@@ -1,28 +1,48 @@
-import type { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 
 /**
- * Cookie consent banner. Composed via fixtures (not inheritance) — every
- * page may show or hide it depending on localStorage state, and tests
- * frequently want to dismiss it before the actual feature interaction.
+ * Cookie consent banner POM.
  *
- * Locators target stable IDs / accessible names so they survive style
- * refactors. If you change the underlying selectors, update them HERE,
- * not in the spec files.
+ * All locators use `data-testid` (added to ConsentBanner.tsx in the same
+ * changeset). Specs MUST NOT call page.locator / page.getByTestId directly.
  */
 export class ConsentBanner {
   constructor(private readonly page: Page) {}
 
-  private get root() {
-    return this.page.locator("#consent-banner-title").locator("..").locator("..");
+  get root(): Locator {
+    return this.page.getByTestId("consent-banner-root");
   }
 
-  /**
-   * The consent preferences modal opened by the banner's "Nastavenia"
-   * button OR by the footer's "Nastavenia cookies" button. Same Radix
-   * dialog regardless of trigger.
-   */
-  get preferencesDialog() {
-    return this.page.getByRole("dialog");
+  get title(): Locator {
+    return this.page.getByTestId("consent-banner-title");
+  }
+
+  get badge(): Locator {
+    return this.page.getByTestId("consent-banner-badge");
+  }
+
+  get body(): Locator {
+    return this.page.getByTestId("consent-banner-body");
+  }
+
+  get acceptAllButton(): Locator {
+    return this.page.getByTestId("consent-banner-accept-all");
+  }
+
+  get rejectAllButton(): Locator {
+    return this.page.getByTestId("consent-banner-reject-all");
+  }
+
+  get settingsButton(): Locator {
+    return this.page.getByTestId("consent-banner-settings-button");
+  }
+
+  get cookiesLink(): Locator {
+    return this.page.getByTestId("consent-banner-cookies-link");
+  }
+
+  get privacyLink(): Locator {
+    return this.page.getByTestId("consent-banner-privacy-link");
   }
 
   async isVisible(): Promise<boolean> {
@@ -30,16 +50,16 @@ export class ConsentBanner {
   }
 
   async acceptAll(): Promise<void> {
-    await this.page.getByRole("button", { name: /Prijať všetko/i }).click();
+    await this.acceptAllButton.click();
     await this.root.waitFor({ state: "hidden" });
   }
 
   async rejectAll(): Promise<void> {
-    await this.page.getByRole("button", { name: /Odmietnuť všetko/i }).click();
+    await this.rejectAllButton.click();
     await this.root.waitFor({ state: "hidden" });
   }
 
   async openPreferences(): Promise<void> {
-    await this.page.getByRole("button", { name: /Nastavenia/i }).click();
+    await this.settingsButton.click();
   }
 }

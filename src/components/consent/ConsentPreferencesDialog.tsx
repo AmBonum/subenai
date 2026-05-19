@@ -68,19 +68,30 @@ export function ConsentPreferencesDialog() {
         if (!open) closePreferences();
       }}
     >
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+      <DialogContent
+        data-testid="consent-dialog-root"
+        className="max-h-[90vh] overflow-y-auto sm:max-w-lg"
+      >
         <DialogHeader>
           <DialogTitle>{t("dialog.title")}</DialogTitle>
           <DialogDescription>
             {t("dialog.description_prefix")}
             <DialogClose asChild>
-              <Link to="/cookies" className="underline underline-offset-2 hover:text-foreground">
+              <Link
+                to="/cookies"
+                data-testid="consent-dialog-cookies-link"
+                className="underline underline-offset-2 hover:text-foreground"
+              >
                 {t("dialog.description_link_cookies")}
               </Link>
             </DialogClose>
             {t("dialog.description_and")}
             <DialogClose asChild>
-              <Link to="/privacy" className="underline underline-offset-2 hover:text-foreground">
+              <Link
+                to="/privacy"
+                data-testid="consent-dialog-privacy-link"
+                className="underline underline-offset-2 hover:text-foreground"
+              >
                 {t("dialog.description_link_privacy")}
               </Link>
             </DialogClose>
@@ -114,6 +125,7 @@ export function ConsentPreferencesDialog() {
                   </div>
                   <Switch
                     id={`consent-${cat.id}`}
+                    data-testid={`consent-dialog-toggle-${cat.id}`}
                     checked={draft[cat.id]}
                     disabled={cat.locked}
                     onCheckedChange={(checked) => toggle(cat.id, checked)}
@@ -126,13 +138,23 @@ export function ConsentPreferencesDialog() {
         </div>
 
         <DialogFooter className="gap-2 sm:gap-2">
-          <Button variant="outline" onClick={() => saveCategories(ALL_REJECTED)}>
+          <Button
+            variant="outline"
+            data-testid="consent-dialog-reject-all"
+            onClick={() => saveCategories(ALL_REJECTED)}
+          >
             {t("dialog.reject_all")}
           </Button>
-          <Button variant="outline" onClick={() => saveCategories(ALL_ACCEPTED)}>
+          <Button
+            variant="outline"
+            data-testid="consent-dialog-accept-all"
+            onClick={() => saveCategories(ALL_ACCEPTED)}
+          >
             {t("dialog.accept_all")}
           </Button>
-          <Button onClick={() => saveCategories(draft)}>{t("dialog.save")}</Button>
+          <Button data-testid="consent-dialog-save" onClick={() => saveCategories(draft)}>
+            {t("dialog.save")}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
