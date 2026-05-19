@@ -31,7 +31,7 @@ import { useAdminTests, useDeleteTest } from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/tests";
 
-export const Route = createLazyFileRoute("/admin/tests")({
+export const Route = createLazyFileRoute("/admin/tests/")({
   component: AdminTestsListPage,
 });
 

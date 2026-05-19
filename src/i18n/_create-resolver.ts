@@ -49,10 +49,19 @@ function interpolate(template: string, vars?: Record<string, string | number>): 
 }
 
 function pickSection(root: Json, section: string): Json {
-  if (typeof root === "object" && root !== null && section in root) {
-    return (root as Record<string, Json>)[section];
+  // Walks dotted section paths so `tFor("account.profile")` reaches the
+  // nested `account → profile` subtree, mirroring how `resolve` walks
+  // dotted key paths. Without this, the resolver did a single-level
+  // `"account.profile" in root` check, returned root unchanged, and
+  // every key in /app/account/* surfaced as the raw key in production
+  // (2026-05-19: card_personal_title, label_display_name, badge_dirty…).
+  if (typeof root !== "object" || root === null) return root;
+  let cur: Json = root;
+  for (const part of section.split(".")) {
+    if (typeof cur !== "object" || cur === null || !(part in cur)) return root;
+    cur = (cur as Record<string, Json>)[part];
   }
-  return root;
+  return cur;
 }
 
 export function createResolver(opts: { sk: Json; loaders: LazyLoaders }) {

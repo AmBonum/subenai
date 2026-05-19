@@ -28,7 +28,7 @@ import type { CmsPage, PageStatus } from "@/lib/admin/cms-types";
 import { useCmsPages, useCreateCmsPage, useDeleteCmsPage } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/cms";
 
-export const Route = createLazyFileRoute("/admin/pages")({
+export const Route = createLazyFileRoute("/admin/pages/")({
   component: AdminCmsPagesPage,
 });
 
