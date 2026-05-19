@@ -1,0 +1,202 @@
+---
+slug: najlepsi-spravca-hesiel-porovnanie-2026
+title: "najlepší správca hesiel 2026 — 1password, bitwarden, proton pass a ďalší"
+subtitle: "5-way porovnanie pre slováka, ktorý sa chce konečne rozhodnúť — ceny, funkcie, eu privacy a buyer matrix"
+excerpt: "ak si rozhodnutý, že potrebuješ správca hesiel, ale váhaš medzi 1password, bitwardenom, proton pass, dashlane a nordpass — tu je päť-stranové porovnanie s konkrétnym odporúčaním pre štyri typické situácie slovenského používateľa v roku 2026."
+category_slug: digitalna-bezpecnost
+author_slug: subenai-editorial
+primary_keyword: najlepsi spravca hesiel 2026
+search_intent: commercial
+reading_minutes: 10
+hero_image_url: null
+og_image_url: null
+seo_title: "najlepší správca hesiel 2026 — 1password, bitwarden, proton pass | subenai"
+seo_description: "porovnanie 5 najpoužívanejších správcov hesiel pre slováka v 2026 — 1password, bitwarden, proton pass, dashlane, nordpass. ceny, funkcie a odporúčanie pre 4 typické situácie."
+canonical_url: null
+pillar: false
+sources:
+  - label: "sk-cert: odporúčania k bezpečnému narábaniu s heslami"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "nist sp 800-63b: digital identity guidelines — memorized secrets"
+    url: "https://pages.nist.gov/800-63-3/sp800-63b.html"
+    publisher: "NIST"
+    accessed_at: "2026-05-19"
+  - label: "av-test: password manager test reports (2025–2026)"
+    url: "https://www.av-test.org/en/news/"
+    publisher: "AV-TEST"
+    accessed_at: "2026-05-19"
+  - label: "1password: oficiálny cenník password manager (2026)"
+    url: "https://1password.com/pricing/password-manager"
+    publisher: "1Password"
+    accessed_at: "2026-05-19"
+  - label: "bitwarden: oficiálny cenník (2026)"
+    url: "https://bitwarden.com/pricing/"
+    publisher: "Bitwarden"
+    accessed_at: "2026-05-19"
+  - label: "proton pass: cenník a privacy policy (2026)"
+    url: "https://proton.me/pass/pricing"
+    publisher: "Proton"
+    accessed_at: "2026-05-19"
+  - label: "fido alliance: passkeys — passwordless authentication"
+    url: "https://fidoalliance.org/passkeys/"
+    publisher: "FIDO Alliance"
+    accessed_at: "2026-05-19"
+---
+
+ak si rozhodnutý, že potrebuješ správca hesiel, a hľadáš konkrétny produkt — tu je päť-stranové porovnanie. ak ešte stále nevieš, **čo to správca hesiel vôbec je** a prečo ho chceš, začni v [správca hesiel — porovnanie 4 možností](/blog/spravca-hesiel-porovnanie). tento článok je o krok ďalej: päť konkrétnych komerčných produktov, kategórie typu „kúpiť dnes večer", a odporúčanie pre štyri typické situácie slovenského používateľa v roku 2026.
+
+širší rámec — kam správca hesiel zapadá medzi ostatné vrstvy obrany — nájdeš v [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod).
+
+## ako sme vyberali
+
+päť kritérií, ktoré sme bodovali na každom produkte:
+
+1. **zero-knowledge architektúra.** trezor sa otvára iba lokálne na tvojom zariadení, master heslo neopúšťa hardvér. ak vendor toto nemá, na zoznam sa nedostal. NIST SP 800-63B (sekcia o memorized secrets) odporúča presne tento model.
+2. **passkeys natívne.** v 2026 už nie je voľba, je to baseline. správca musí vedieť uložiť aj passkey, nielen klasické heslo — princíp [silné heslo verzus passkey](/blog/silne-heslo-2026-vs-passkey) sa premieta priamo do toho, ktoré produkty si vôbec zaslúžia pozornosť.
+3. **breach monitoring.** zabudovaná kontrola, či sa tvoje heslo objavilo v úniku. najlepšie produkty robia presne to, čo by si si inak musel robiť ručne na [haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned).
+4. **2fa na samotnom trezore.** podpora TOTP, hardvérového kľúča (yubikey, google titan — pozri [yubikey vs. titan vs. passkey](/blog/yubikey-vs-google-titan-vs-passkey)) alebo biometriky.
+5. **eu / privacy stopa.** kde vendor sídli, aké súdne príkazy môže dostať, či má self-host možnosť, či šifruje aj metadáta (URL záznamov, nielen heslá).
+
+ceny sú k máju 2026 a sú v eurách — prepočet z USD podľa kurzu ~0,92 €/USD.
+
+## 1password — power-user voľba s najlepším ux
+
+**čo to je:** komerčný správca od kanadskej firmy 1Password (založená 2005). closed source, ale s pravidelnými externými auditmi (PwC, NCC Group) a bug bounty cez Bugcrowd. najdlhšie na trhu zo všetkých päť.
+
+**cena (k 2026-05):**
+
+- **individual** — 47,88 USD/rok (~44 €/rok). v marci 2026 zdražilo z 35,88 (+33 %).
+- **family** — 71,88 USD/rok (~67 €/rok), pre 5 členov.
+- **business** — 95,88 USD/rok/používateľ (~89 €).
+
+**plus:**
+
+- **watchtower** — integrovaný monitoring únikov, slabých hesiel, znovupoužitých hesiel a expirujúcich SSL certifikátov. najpodrobnejšie reporty na trhu.
+- **travel mode** — pred prechodom cez hranice (čínska imigrácia, ruská imigrácia) si jedným klikom dočasne odstrániš citlivé položky z mobilu. po príchode ich obnovíš. unikátna funkcia.
+- **shared vaults** — manželia zdieľajú netflix a wifi, deti majú vlastný trezor s rolami a auditom prístupov.
+- ux: AV-TEST pravidelne hodnotí 1password ako najpolírovanejší klient v kategórii. tetka po 60-tke ho pochopí za desať minút.
+
+**mínus:** žiadny free tier — iba 14-dňová skúška. closed source. cena: za rok 1password kúpiš dva roky bitwardenu.
+
+**pre koho:** **rodiny s 3+ členmi, cestovatelia, power useri.**
+
+## bitwarden — najlepší free tier na trhu
+
+**čo to je:** open-source správca od americkej firmy Bitwarden Inc. kód je verejne auditovaný (Cure53 audit 2023, opakované security reviews). zero-knowledge, klient-side AES-256.
+
+**cena (k 2026-05):**
+
+- **free** — neobmedzený počet hesiel, sync naprieč zariadeniami, základný 2fa (TOTP). pre 90 % slovákov stačí donekonečna.
+- **premium** — 19,80 USD/rok (~18 €/rok). pridáva hardvérový 2fa (yubikey, titan), reporty o zdraví trezoru, 5 GB šifrované úložisko.
+- **family** — 47,88 USD/rok (~44 €/rok), pre 6 členov. v januári 2026 zdražilo prvýkrát po desiatich rokoch z 39,99.
+
+**plus:** open source — kód si môžeš auditovať alebo self-hostnúť cez Vaultwarden. free tier reálne použiteľný, nie marketingový teaser. klienty pre všetky platformy plus rozšírenia pre každý prehliadač.
+
+**mínus:** ux je o triedu menej polírované než 1password. mobilná aplikácia v 2025–2026 občas zaváha pri trezore nad ~2 000 položiek. premium reporty sú menej detailné než watchtower.
+
+**pre koho:** **kto chce reálnu bezpečnosť zadarmo, alebo do 18 €/rok.** ak ešte nikdy nemal správca hesiel, bitwarden free je default odpoveď.
+
+## proton pass — eu-based, súčasť proton balíka
+
+**čo to je:** najnovší z porovnávaných produktov (launch 2023) od švajčiarskej firmy Proton AG, tej istej, ktorá robí Proton Mail a Proton VPN. open source klient, zero-knowledge, end-to-end šifrovanie aj metadát (URL).
+
+**cena (k 2026-05):**
+
+- **free** — neobmedzené heslá, 10 hide-my-email aliasov, 50 2fa kódov, jedna zariadenie-aktívne. funkčne porovnateľné s bitwarden free.
+- **pass plus** — 4,99 €/mesiac alebo 47,88 €/rok ak platíš ročne (~48 €/rok). neobmedzené aliasy, neobmedzené 2fa, dark web monitoring.
+- **proton unlimited** — 9,99 €/mesiac (~120 €/rok). pass + mail + vpn + drive v jednom balíku. **toto je hot deal** ak chceš naraz porovnať [hardvérový kľúč](/blog/yubikey-vs-google-titan-vs-passkey), e-mail a vpn.
+
+**plus:**
+
+- **švajčiarsko + eu GDPR jurisdikcia.** US súd nedoručí súdny príkaz priamo, vendor musí prejsť cez švajčiarsky súdny proces.
+- **šifruje aj metadáta** — 1password aj bitwarden šifrujú heslo, ale URL a názov záznamu zostáva v plain texte na serveri. proton pass šifruje aj toto.
+- **hide-my-email aliasy zabudované** — vygeneruješ jednorazový e-mail pre každý e-shop, ak unikne, vieš, kto ho predal.
+- bundling: ak už platíš proton mail / vpn, pass je v cene.
+
+**mínus:** najmladší produkt — funkčný roadmap stále dobieha 1password (zatiaľ chýba ekvivalent travel mode, shared vaults sú obmedzenejšie). mobilná aplikácia v 2025 mala niekoľko sync incidentov, situácia sa zlepšila počas 2026.
+
+**pre koho:** **kto má eu privacy ako prioritu, alebo už používa proton mail/vpn.** v slovenských privacy-citlivých kruhoch (novinári, advokáti) najrýchlejšie rastúci produkt.
+
+## dashlane — niche voľba s vpn-om navyše
+
+**čo to je:** francúzsko-americký vendor (založený 2009), pôvodne lídrový hráč, dnes ustúpil do menšinového postavenia. web-first prístup — desktop app v 2022 odstránili, všetko ide cez prehliadač.
+
+**cena (k 2026-05):** **premium** — 4,99 USD/mes (~55 €/rok). **family** — 7,49 USD/mes pre 10 členov (~83 €/rok). free tier obmedzený na 25 hesiel a jedno zariadenie.
+
+**plus:** v cene zabudovaný **Hotspot Shield VPN** (neobmedzená dáta). breach monitoring solídny. ux nadpriemerné, blízko 1password.
+
+**mínus:** drahšie než ekvivalentný 1password. web-only klient — pomalšie, závislé na browser extension. eu privacy stopa horšia ako proton.
+
+**pre koho:** **kto chce password manager + vpn v jednej fakturácii** a nevadí mu vyššia cena. inak nemá unikátny argument oproti 1password ani proton pass.
+
+## nordpass — od nordvpn parent, najlacnejší z komerčných
+
+**čo to je:** od litovskej firmy Nord Security (tá istá ako NordVPN, NordLayer). založené 2019. zero-knowledge, XChaCha20 šifrovanie (modernejšie než AES-256, ekvivalent z hľadiska bezpečnosti).
+
+**cena (k 2026-05):** **premium** — 1,99 USD/mes pri 2-ročnom prepay (~22 €/rok), bežne 2,99 USD/mes (~33 €/rok). **family** — 4,49 USD/mes pre 6 členov (~49 €/rok). free tier slušný, ale sync iba na jednom zariadení.
+
+**plus:** najlacnejší komerčný produkt v zozname. ux čisté. zabudovaný data breach scanner.
+
+**mínus:** v 2018 mal **NordVPN incident** (jeden z troch dátových centier neoprávnený prístup); reakcia bola transparentná, ale niektorých to dodnes odrádza od ich produktov. closed source. eu privacy stopa horšia ako proton (litva je EU, ale firma má US holding štruktúru).
+
+**pre koho:** **kto už používa NordVPN a chce jednu fakturáciu**, alebo hľadá najnižšiu komerčnú cenu.
+
+## buy matrix — kto čo má kúpiť
+
+ak nemáš čas čítať detaily, tabuľka rozhodnutí:
+
+| situácia | odporúčanie | dôvod |
+|---|---|---|
+| **chcem reálnu obranu zadarmo** | bitwarden free | jediný free tier, kde si naozaj nič neobmedzíš pre osobné použitie |
+| **eu privacy je priorita** | proton pass | švajčiarska jurisdikcia, šifruje aj metadáta, bundling s proton mail/vpn |
+| **rodina 4–5 ľudí, chcem polished ux** | 1password family | watchtower + travel mode + shared vaults, 67 €/rok pre 5 |
+| **iba apple, žiadny android v rodine** | apple passwords (zadarmo) | natívne, prvotriedna passkey podpora; pozri [c29 detail](/blog/spravca-hesiel-porovnanie) |
+| **už platím nordvpn** | nordpass | jedna fakturácia, najnižšia cena |
+| **už platím proton mail/vpn** | proton pass (zadarmo v unlimited) | žiadny extra náklad |
+| **chcem manager + vpn v jednom** | proton unlimited alebo dashlane | proton unlimited výhodnejší dlhodobo |
+
+## konečné porovnanie
+
+| | 1password | bitwarden | proton pass | dashlane | nordpass |
+|---|---|---|---|---|---|
+| cena individuál | 44 €/rok | free / 18 €/rok | free / 48 €/rok | 55 €/rok | 22 €/rok |
+| cena family | 67 €/rok pre 5 | 44 €/rok pre 6 | n/a (cez unlimited) | 83 €/rok pre 10 | 49 €/rok pre 6 |
+| free tier použiteľný | nie | áno | áno | obmedzený | obmedzený |
+| open source | nie | áno | áno (klient) | nie | nie |
+| eu privacy | nie (canada) | nie (us) | áno (švajčiarsko) | nie (fr/us) | čiastočne (lt) |
+| passkeys | áno | áno | áno | áno | áno |
+| breach monitoring | watchtower (najlepší) | premium reports | dark web monitor | solídny | data breach scanner |
+| hardvérový 2fa | áno | premium | áno | áno | áno |
+| ux | top | dobré | dobré | dobré | dobré |
+| zaujímavá feature | travel mode | self-host (vaultwarden) | hide-my-email aliasy | vpn v cene | xchacha20 |
+
+## master heslo a prechod na passkeys
+
+bez ohľadu na to, ktorého vendora si vyberieš, dve pravidlá ti zachránia trezor:
+
+- **master heslo = heslová fráza** zo štyroch náhodných slovenských slov. 22+ znakov, zapamätateľné, bilióny kombinácií. presne tak, ako rozpisuje [silné heslo verzus passkey](/blog/silne-heslo-2026-vs-passkey).
+- **2fa na samotnom manageri.** aj keď master unikne, druhý faktor útočníka zastaví. ak chceš ten najsilnejší druhý faktor, hardvérový kľúč — porovnanie troch [v yubikey vs. titan vs. passkey](/blog/yubikey-vs-google-titan-vs-passkey).
+
+passkeys roadmap k 2026: všetkých päť porovnávaných produktov ich už ukladá. apple, google a microsoft podpísali FIDO2 alliance commitment, gmail, github, microsoft account, dropbox, ebay a paypal ich akceptujú. **realistický cieľ pre 2026**: passkey všade, kde služba podporuje (cca 30 % tvojich účtov), klasické heslo cez správcu hesiel pre zvyšok.
+
+## zhrnutie
+
+- **bitwarden** je default zadarmo. ak nemáš dôvod ísť inde, je to bitwarden.
+- **proton pass** je voľba s eu privacy stopou; ak už používaš proton mail/vpn, je v cene.
+- **1password** je polished family voľba s travel mode a najlepším watchtower monitoringom.
+- **dashlane** a **nordpass** sú niche — kupuj iba ak chceš bundling s vpn alebo už si v príslušnom ekosystéme.
+- **bez ohľadu na vendor**: master heslo ako heslová fráza, 2fa povinné, passkeys všade kde idú.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod)
+- [správca hesiel — porovnanie 4 možností](/blog/spravca-hesiel-porovnanie)
+- [silné heslo 2026 vs. passkey](/blog/silne-heslo-2026-vs-passkey)
+- [uniknuté heslo — overenie cez haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned)
+- [yubikey vs. google titan vs. passkey](/blog/yubikey-vs-google-titan-vs-passkey)
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
