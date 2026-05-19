@@ -50,19 +50,19 @@ describe("LocaleContext", () => {
     expect(getCurrentLocale()).toBe("sk");
   });
 
-  it("rehydrates the persisted locale from localStorage on mount", async () => {
+  it("ignores persisted localStorage while LOCALE_SWITCHER is disabled", () => {
+    // 2026-05-19: readInitialLocale temporarily returns DEFAULT_LOCALE
+    // regardless of localStorage. Even a saved "en" stays sk on mount.
+    // To restore the legacy rehydration test, see the file's pre-2026-05-19
+    // revision in git history.
     window.localStorage.setItem(STORAGE_KEY, "en");
     render(
       <LocaleProvider>
         <Probe />
       </LocaleProvider>,
     );
-    // Non-sk hydration awaits the lazy bundle preload before committing
-    // state; expect-poll until the dynamic import resolves.
-    await waitFor(() => {
-      expect(screen.getByTestId("probe-locale").textContent).toBe("en");
-    });
-    expect(getCurrentLocale()).toBe("en");
+    expect(screen.getByTestId("probe-locale").textContent).toBe("sk");
+    expect(getCurrentLocale()).toBe("sk");
   });
 
   it("setLocale persists to localStorage and dispatches a CustomEvent", async () => {

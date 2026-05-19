@@ -203,7 +203,19 @@
     "attempts_suffix": "(from {n} attempts)",
     "branch_ranks_heading": "Strongest areas",
     "privacy_note": "Comparison is generated from all anonymous attempts over the last 90 days. No personal data is used.",
-    "dashboard_card_label": "View comparison"
+    "dashboard_card_label": "View comparison",
+    "share": {
+      "download": "Download as image",
+      "generating": "Generating image...",
+      "downloaded": "Downloaded ✓",
+      "failed": "Download failed. Try again.",
+      "handle_label": "Your handle for shared images (optional)",
+      "handle_hint": "Shown next to your percentile stats. Leave blank for anonymous.",
+      "handle_placeholder": "e.g. \"Mr Smith\"",
+      "share_title": "Your audience vs. the UK",
+      "share_footer": "subenai.sk · comparison {date}",
+      "share_attempts": "{n} attempts"
+    }
   },
   "help": {
     "page_header_eyebrow": "Help centre",

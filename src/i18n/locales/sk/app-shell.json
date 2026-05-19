@@ -203,7 +203,19 @@
     "attempts_suffix": "(z {n} pokusov)",
     "branch_ranks_heading": "Najsilnejšie oblasti",
     "privacy_note": "Porovnanie sa generuje zo všetkých anonymných pokusov za posledných 90 dní. Žiadne osobné údaje sa nepoužívajú.",
-    "dashboard_card_label": "Detail porovnania"
+    "dashboard_card_label": "Detail porovnania",
+    "share": {
+      "download": "Stiahnuť ako obrázok",
+      "generating": "Vytváram obrázok...",
+      "downloaded": "Stiahnuté ✓",
+      "failed": "Stiahnutie zlyhalo. Skús znova.",
+      "handle_label": "Tvoja prezývka pre zdieľané obrázky (voliteľné)",
+      "handle_hint": "Zobrazí sa pri tvojich percentilových štatistikách. Nevyplnené = anonymné.",
+      "handle_placeholder": "napr. „p. Horváth\"",
+      "share_title": "Tvoja audience vs. Slovensko",
+      "share_footer": "subenai.sk · porovnanie {date}",
+      "share_attempts": "{n} pokusov"
+    }
   },
   "help": {
     "page_header_eyebrow": "Help centrum",

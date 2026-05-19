@@ -48,16 +48,17 @@ function isLocale(value: string | null | undefined): value is Locale {
   return value !== null && value !== undefined && LOCALES.includes(value as Locale);
 }
 
+// TEMPORARILY LOCKED to DEFAULT_LOCALE (2026-05-19) while the UI language
+// picker is hidden. The translation infrastructure (resolver, lazy locale
+// bundles, every en/cs JSON file) stays intact so engineering can keep
+// adding strings in all 3 locales. To re-enable user-driven switching:
+// restore the localStorage + navigator.language probe below and flip
+// LOCALE_SWITCHER_ENABLED in `src/components/i18n/LocaleSwitcher.tsx`.
 function readInitialLocale(): Locale {
-  if (typeof window === "undefined") return DEFAULT_LOCALE;
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (isLocale(stored)) return stored;
-  } catch {
-    // localStorage may throw in privacy-restricted contexts; fall through.
-  }
-  const browser = window.navigator.language.slice(0, 2).toLowerCase();
-  if (isLocale(browser)) return browser;
+  // LOCKED — see LOCALE_SWITCHER_DISABLED comment above. To restore
+  // user-driven detection, replace this body with the localStorage +
+  // navigator.language probe (preserved in git history at this file's
+  // pre-2026-05-19 revision).
   return DEFAULT_LOCALE;
 }
 

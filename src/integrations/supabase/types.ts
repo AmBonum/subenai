@@ -577,6 +577,7 @@ export type Database = {
           digest_cadence: string;
           digest_quiet_weeks: boolean;
           onboarded_at: string | null;
+          share_handle: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -587,6 +588,7 @@ export type Database = {
           digest_cadence?: string;
           digest_quiet_weeks?: boolean;
           onboarded_at?: string | null;
+          share_handle?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -597,6 +599,7 @@ export type Database = {
           digest_cadence?: string;
           digest_quiet_weeks?: boolean;
           onboarded_at?: string | null;
+          share_handle?: string | null;
           created_at?: string;
           updated_at?: string;
         };

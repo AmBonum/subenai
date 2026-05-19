@@ -1,5 +1,12 @@
 // AH-15.1 — globe-icon dropdown that switches the active UI locale.
 //
+// TEMPORARILY DISABLED (2026-05-19): the en + cs translations are all in
+// place and tFor() keeps resolving them, but the UI affordance is hidden
+// while we finalise copy + run UX research. To re-enable: delete the early
+// `return null` below + the matching `readInitialLocale` / `setLocale`
+// short-circuits in `locale-context.tsx`. No other code changes needed —
+// resolver + lazy locale bundles + every translated string stay intact.
+//
 // Visible labels stay native (Slovenčina / English / Čeština) regardless of
 // the current locale: that's how language pickers idiomatically render
 // (otherwise an English-only speaker who landed on a Slovak page can't find
@@ -14,6 +21,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LOCALES, useLocale, type Locale } from "@/i18n/locale-context";
 import { tFor } from "@/i18n/marketing";
+
+// Feature flag — flip to `true` to re-enable the language picker in the UI.
+const LOCALE_SWITCHER_ENABLED = false;
 
 const LABELS: Record<Locale, { name: string; flag: string }> = {
   sk: { name: "Slovenčina", flag: "🇸🇰" },
@@ -33,6 +43,7 @@ export function LocaleSwitcher({
   const { locale, setLocale } = useLocale();
   const current = LABELS[locale];
   const t = tFor("locale_switcher");
+  if (!LOCALE_SWITCHER_ENABLED) return null;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

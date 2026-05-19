@@ -203,7 +203,19 @@
     "attempts_suffix": "(z {n} pokusů)",
     "branch_ranks_heading": "Nejsilnější oblasti",
     "privacy_note": "Srovnání se generuje ze všech anonymních pokusů za posledních 90 dní. Žádné osobní údaje se nepoužívají.",
-    "dashboard_card_label": "Detail srovnání"
+    "dashboard_card_label": "Detail srovnání",
+    "share": {
+      "download": "Stáhnout jako obrázek",
+      "generating": "Vytvářím obrázek...",
+      "downloaded": "Staženo ✓",
+      "failed": "Stahování selhalo. Zkuste znovu.",
+      "handle_label": "Vaše přezdívka pro sdílené obrázky (volitelné)",
+      "handle_hint": "Zobrazí se u vašich percentilových statistik. Nevyplněno = anonymně.",
+      "handle_placeholder": "např. „p. Novák\"",
+      "share_title": "Vaše audience vs. Česko",
+      "share_footer": "subenai.sk · srovnání {date}",
+      "share_attempts": "{n} pokusů"
+    }
   },
   "help": {
     "page_header_eyebrow": "Centrum nápovědy",

@@ -147,8 +147,11 @@ export function SiteHeader() {
           className="flex items-center"
           aria-label={t("logo_aria")}
         >
-          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-9 w-9 sm:hidden" />
-          <img src="/logo.svg" alt="subenai" className="hidden sm:block h-9 w-auto md:h-10" />
+          {/* Below lg: show only the favicon S-mark — the mega-menu eats
+              the horizontal budget at md and the full wordmark would wrap.
+              From lg+ the layout has room for the wordmark. */}
+          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-9 w-9 lg:hidden" />
+          <img src="/logo.svg" alt="subenai" className="hidden lg:block h-10 w-auto" />
         </Link>
 
         {/* Desktop mega-menu (md+) */}

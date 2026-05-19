@@ -1,9 +1,13 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { BarChart3 } from "lucide-react";
+import { useRef, useState } from "react";
+import { BarChart3, Download } from "lucide-react";
+import { toast } from "sonner";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
-import { usePeerCard, type PeerCardData } from "@/lib/platform/retention-queries";
+import { usePeerCard, useShareHandle, type PeerCardData } from "@/lib/platform/retention-queries";
+import { PeerShareView } from "@/components/user/PeerShareView";
 import { tFor } from "@/i18n/app-shell";
 
 export const Route = createLazyFileRoute("/app/peer")({
@@ -82,10 +86,11 @@ function PeerDetail({ data, t }: DetailProps) {
             </span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground" data-testid="app-peer-percentile-body">
             {t("percentile_body", { p: percentile })}
           </p>
+          <PeerShareButton data={data} t={t} />
         </CardContent>
       </Card>
 
@@ -157,6 +162,63 @@ function PeerDetail({ data, t }: DetailProps) {
           </CardContent>
         </Card>
       )}
+    </>
+  );
+}
+
+function PeerShareButton({ data, t }: DetailProps) {
+  const shareViewRef = useRef<HTMLDivElement>(null);
+  const handleQ = useShareHandle();
+  const [busy, setBusy] = useState(false);
+
+  const onDownload = async () => {
+    if (!shareViewRef.current || busy) return;
+    setBusy(true);
+    try {
+      const { toPng } = await import("html-to-image");
+      const dataUrl = await toPng(shareViewRef.current, {
+        pixelRatio: 2,
+        cacheBust: true,
+        width: 1200,
+        height: 630,
+      });
+      const link = document.createElement("a");
+      link.download = `subenai-porovnanie-${new Date().toISOString().slice(0, 10)}.png`;
+      link.href = dataUrl;
+      link.click();
+      toast.success(t("share.downloaded"));
+    } catch {
+      toast.error(t("share.failed"));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <>
+      <Button
+        type="button"
+        size="sm"
+        onClick={onDownload}
+        disabled={busy}
+        data-testid="app-peer-share-download"
+      >
+        <Download className="mr-2 h-4 w-4" />
+        {busy ? t("share.generating") : t("share.download")}
+      </Button>
+      <div
+        ref={shareViewRef}
+        aria-hidden
+        style={{
+          position: "absolute",
+          left: -9999,
+          top: -9999,
+          pointerEvents: "none",
+          opacity: 0,
+        }}
+      >
+        <PeerShareView data={data} handle={handleQ.data ?? null} />
+      </div>
     </>
   );
 }

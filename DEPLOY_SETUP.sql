@@ -2601,6 +2601,21 @@ CREATE POLICY profile_prefs_owner_update ON public.profile_preferences
 
 GRANT SELECT, INSERT, UPDATE ON public.profile_preferences TO authenticated;
 
+-- Phase 7b — optional pseudonym for shareable peer-card PNG (opt-in).
+ALTER TABLE public.profile_preferences
+  ADD COLUMN IF NOT EXISTS share_handle text;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'prefs_share_handle_check'
+  ) THEN
+    ALTER TABLE public.profile_preferences
+      ADD CONSTRAINT prefs_share_handle_check
+      CHECK (share_handle IS NULL OR (length(share_handle) BETWEEN 2 AND 32));
+  END IF;
+END $$;
+
 -- ============================================================================
 -- Phase 4 — user_digests (weekly retention digest, signal-gated)
 -- ============================================================================

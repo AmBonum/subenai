@@ -300,3 +300,44 @@ export function usePeerCard() {
     staleTime: 1000 * 60 * 60,
   });
 }
+
+// ---------------------------------------------------------------------------
+// Phase 7b — opt-in pseudonym shown on shareable peer-card PNG.
+// ---------------------------------------------------------------------------
+const SHARE_HANDLE_KEY = ["user", "share_handle"] as const;
+
+export function useShareHandle() {
+  return useQuery({
+    queryKey: SHARE_HANDLE_KEY,
+    queryFn: async (): Promise<string | null> => {
+      const { data: auth } = await supabase.auth.getUser();
+      const uid = auth.user?.id;
+      if (!uid) return null;
+      const { data, error } = await supabase
+        .from("profile_preferences")
+        .select("share_handle")
+        .eq("user_id", uid)
+        .maybeSingle();
+      if (error) throw error;
+      return (data?.share_handle ?? null) as string | null;
+    },
+  });
+}
+
+export function useUpdateShareHandle() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (handle: string | null) => {
+      const { data: auth } = await supabase.auth.getUser();
+      const uid = auth.user?.id;
+      if (!uid) throw new Error("Not authenticated");
+      const trimmed = handle?.trim() ?? "";
+      const value = trimmed.length === 0 ? null : trimmed;
+      const { error } = await supabase
+        .from("profile_preferences")
+        .upsert({ user_id: uid, share_handle: value }, { onConflict: "user_id" });
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: SHARE_HANDLE_KEY }),
+  });
+}

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useCurrentProfile, useUpdateProfile } from "@/lib/platform/queries";
+import { useShareHandle, useUpdateShareHandle } from "@/lib/platform/retention-queries";
 import { PageHeader } from "@/components/app/page-header";
 import { AccountTabs } from "@/components/user/AccountTabs";
 import { tFor } from "@/i18n/app-shell";
@@ -279,6 +280,8 @@ function ProfilePage() {
         </CardContent>
       </Card>
 
+      <ShareHandleCard />
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -295,5 +298,67 @@ function ProfilePage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function ShareHandleCard() {
+  const t = tFor("peer");
+  const tProfile = tFor("account.profile");
+  const handleQ = useShareHandle();
+  const mut = useUpdateShareHandle();
+  const persisted = handleQ.data ?? "";
+  const [value, setValue] = useState(persisted);
+
+  useEffect(() => {
+    setValue(persisted);
+  }, [persisted]);
+
+  const dirty = value.trim() !== persisted;
+  const trimmed = value.trim();
+  const tooShort = trimmed.length > 0 && trimmed.length < 2;
+  const tooLong = trimmed.length > 32;
+  const invalid = tooShort || tooLong;
+
+  const onSave = () => {
+    if (invalid) return;
+    mut.mutate(trimmed.length === 0 ? null : trimmed, {
+      onSuccess: () => toast.success(tProfile("toast_saved")),
+      onError: (err) => toast.error(err.message),
+    });
+  };
+
+  return (
+    <Card data-testid="app-account-share-handle-card">
+      <CardHeader>
+        <CardTitle className="text-base">{t("share.handle_label")}</CardTitle>
+        <CardDescription>{t("share.handle_hint")}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="flex-1 min-w-[240px] space-y-2">
+            <Label htmlFor="share_handle" className="sr-only">
+              {t("share.handle_label")}
+            </Label>
+            <Input
+              id="share_handle"
+              value={value}
+              maxLength={32}
+              placeholder={t("share.handle_placeholder")}
+              onChange={(e) => setValue(e.target.value)}
+              aria-invalid={invalid}
+              data-testid="app-account-share-handle-input"
+            />
+          </div>
+          <Button
+            type="button"
+            onClick={onSave}
+            disabled={!dirty || invalid || mut.isPending}
+            data-testid="app-account-share-handle-save"
+          >
+            <Save className="mr-2 h-4 w-4" /> {tProfile("btn_save")}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
