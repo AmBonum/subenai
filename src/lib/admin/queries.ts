@@ -1343,6 +1343,12 @@ export function useCmsHeader() {
       return mapCmsHeader(data as CmsHeaderRow | null);
     },
     initialData: DEFAULT_HEADER,
+    // Without this, TanStack Query v5 treats `initialData` as fresh
+    // and the staleTime=30s default suppresses the queryFn fetch for
+    // 30s after mount — admin would see DEFAULT_HEADER placeholder
+    // instead of the real DB row (2026-05-19 finding from
+    // admin/navigation E2E generator agent).
+    initialDataUpdatedAt: 0,
   });
 }
 
@@ -1400,6 +1406,8 @@ export function useCmsFooter() {
       return mapCmsFooter(data as CmsFooterRow | null);
     },
     initialData: DEFAULT_FOOTER,
+    // See `useCmsHeader` comment — same staleTime+initialData trap.
+    initialDataUpdatedAt: 0,
   });
 }
 
@@ -1440,6 +1448,7 @@ export function useCmsNavigation() {
       return mapCmsNavigation(data as CmsNavigationRow | null);
     },
     initialData: [] as CmsNavItem[],
+    initialDataUpdatedAt: 0,
   });
 }
 
@@ -1493,6 +1502,8 @@ export function useCmsShareCard() {
       return mapShareCard(data as ShareCardRow | null);
     },
     initialData: DEFAULT_SHARE_CARD,
+    // See `useCmsHeader` comment — same staleTime+initialData trap.
+    initialDataUpdatedAt: 0,
   });
 }
 
@@ -1559,6 +1570,8 @@ export function useCmsQuickTestConfig() {
       return mapQuickTest(data as QuickTestRow | null);
     },
     initialData: DEFAULT_QUICK_TEST,
+    // See `useCmsHeader` comment — same staleTime+initialData trap.
+    initialDataUpdatedAt: 0,
   });
 }
 
