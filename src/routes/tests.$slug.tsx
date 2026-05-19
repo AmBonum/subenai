@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { getPackBySlug, type TestPack } from "@/content/test-packs";
 import { getQuestionById, type Question } from "@/lib/quiz/bank/questions";
 import { TestFlow } from "@/components/quiz/flow/TestFlow";
+import { RelatedTestPackArticleCard } from "@/components/test-packs/RelatedTestPackArticleCard";
 import { Button } from "@/components/ui/button";
 import { buildPackQuizJsonLd, INDUSTRY_LABEL } from "@/lib/seo/quiz-jsonld";
 import { SITE_ORIGIN } from "@/config/site";
@@ -153,6 +154,8 @@ function PackPage() {
             </ul>
           </section>
         )}
+
+        <RelatedTestPackArticleCard packSlug={pack.slug} />
 
         <p className="mt-10 border-t border-border/60 pt-4 text-center text-xs text-muted-foreground">
           {t("pack_copyright", {
