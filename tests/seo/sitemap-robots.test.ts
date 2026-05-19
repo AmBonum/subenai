@@ -15,6 +15,19 @@ describe("AH-9.9 sitemap.xml", () => {
     expect(xml).toContain("https://subenai.sk/s/o-projekte-rozsirene");
   });
 
+  it("E30 — generator script exports both Supabase + mock CMS loaders", () => {
+    // Sanity-check the senior fix: the generator must still produce
+    // the well-known seed slug even when Supabase env vars are
+    // missing (CI without secrets / offline build). The committed
+    // sitemap is itself proof — it was generated WITHOUT env vars
+    // and still contains /s/o-projekte-rozsirene from the mock
+    // fallback.
+    const generatorSrc = readFileSync(resolve(ROOT, "scripts", "generate-sitemap.mjs"), "utf-8");
+    expect(generatorSrc).toContain("loadCmsPublishedSlugsFromSupabase");
+    expect(generatorSrc).toContain("loadCmsPublishedSlugsFromMock");
+    expect(generatorSrc).toMatch(/cms_pages\?status=eq\.published/);
+  });
+
   it("does not include /app/* paths", () => {
     expect(xml).not.toMatch(/<loc>https:\/\/subenai\.sk\/app\//);
   });
