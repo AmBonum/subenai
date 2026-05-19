@@ -493,26 +493,32 @@ test.describe("Support page /support", () => {
     });
   });
 
-  // TC-16: Tablet viewport (768×1024) — form renders without layout breakage
-  //
-  // SKIPPED 2026-05-19 — finds a real production layout bug, NOT in
-  // /support but in `src/components/layout/SiteHeader.tsx`. At exactly
-  // 768px viewport the `md:` Tailwind breakpoint activates the desktop
-  // nav (~848px wide) inside a 768px viewport — horizontal scroll on
-  // every page at that width. Spawn task filed for the one-line header
-  // breakpoint fix (`md:` → `min-[820px]:`). Re-enable this TC after
-  // that lands; the form itself fits 768px fine (verified via
-  // `hasContentHorizontalOverflow()` scoped to <main> would pass).
-  test.skip("TC-16: Tablet viewport (768×1024) — form renders without layout breakage", async ({
+  // TC-16: Tablet viewport (768×1024) — form renders without layout breakage.
+  // Re-enabled 2026-05-19 after SiteHeader breakpoint fix
+  // (md:flex → min-[820px]:flex) — burger shows at 768px now,
+  // no horizontal scroll on the document.
+  test("TC-16: Tablet viewport (768×1024) — form renders without layout breakage", async ({
     page,
     support,
     footer,
   }) => {
-    await page.setViewportSize({ width: 768, height: 1024 });
-    await support.open();
-    await expect(support.form).toBeVisible();
-    expect(await support.hasHorizontalOverflow()).toBe(false);
-    await expect(footer.root).toBeVisible();
+    await test.step("Set tablet viewport 768×1024 and open /support", async () => {
+      await page.setViewportSize({ width: 768, height: 1024 });
+      await support.open();
+    });
+
+    await test.step("Verify the form card is visible and fully within the viewport", async () => {
+      await expect(support.form).toBeVisible();
+    });
+
+    await test.step("Verify there is no horizontal overflow", async () => {
+      const hasOverflow = await support.hasHorizontalOverflow();
+      expect(hasOverflow).toBe(false);
+    });
+
+    await test.step("Verify the site footer is present", async () => {
+      await expect(footer.root).toBeVisible();
+    });
   });
 
   // TC-17: Keyboard-only navigation reaches the submit button without a pointer device

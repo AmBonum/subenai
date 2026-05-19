@@ -256,8 +256,12 @@ test.describe("Schools page /schools", () => {
       await schools.open();
     });
 
-    await test.step("Verify the prose article content has no horizontal overflow", async () => {
-      const hasOverflow = await schools.hasContentHorizontalOverflow();
+    // Tightened from content-scoped to document-scoped 2026-05-19 after
+    // SiteHeader 768px overflow fix landed. Now asserts the entire
+    // document fits within 768px viewport (no horizontal scroll on the
+    // page at all), not just the <main> content.
+    await test.step("Verify no horizontal overflow on the document", async () => {
+      const hasOverflow = await schools.hasHorizontalOverflow();
       expect(hasOverflow).toBe(false);
     });
 
@@ -271,10 +275,10 @@ test.describe("Schools page /schools", () => {
       await expect(schools.gdprHeading).toBeVisible();
     });
 
-    await test.step("Expand the email template details and verify no content overflow is introduced", async () => {
+    await test.step("Expand the email template details and verify no overflow is introduced", async () => {
       await schools.emailTemplateSummary.click();
       await expect(schools.emailTemplatePre).toBeVisible();
-      const hasOverflow = await schools.hasContentHorizontalOverflow();
+      const hasOverflow = await schools.hasHorizontalOverflow();
       expect(hasOverflow).toBe(false);
     });
   });
