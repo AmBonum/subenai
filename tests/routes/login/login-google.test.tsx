@@ -56,4 +56,55 @@ describe("/login — Google + forgot-password links", () => {
     expect(screen.getByTestId("login-forgot-password")).toBeInTheDocument();
     expect(screen.getByTestId("login-to-signup")).toBeInTheDocument();
   });
+
+  it("passes a redirectTo option pointing at /auth/callback on the current origin", async () => {
+    signInWithOAuth.mockResolvedValue({ data: { url: "https://example" }, error: null });
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("login-google-button"));
+    await waitFor(() => {
+      expect(signInWithOAuth).toHaveBeenCalledTimes(1);
+    });
+    const arg = signInWithOAuth.mock.calls[0][0] as {
+      provider: string;
+      options?: { redirectTo?: string };
+    };
+    expect(arg.provider).toBe("google");
+    expect(arg.options?.redirectTo).toBe(`${window.location.origin}/auth/callback`);
+  });
+
+  it("disables the Google button while the OAuth call is in flight", async () => {
+    let resolveOAuth: (v: unknown) => void = () => {};
+    signInWithOAuth.mockReturnValue(
+      new Promise((res) => {
+        resolveOAuth = res;
+      }),
+    );
+    render(<Page />);
+    const button = screen.getByTestId("login-google-button") as HTMLButtonElement;
+    fireEvent.click(button);
+    await waitFor(() => {
+      expect(button).toBeDisabled();
+    });
+    resolveOAuth({ data: { url: "https://example" }, error: null });
+  });
+
+  it("shows the generic Slovak error and re-enables the button on OAuth throw", async () => {
+    signInWithOAuth.mockRejectedValue(new Error("network down"));
+    render(<Page />);
+    const button = screen.getByTestId("login-google-button") as HTMLButtonElement;
+    fireEvent.click(button);
+    await waitFor(() => {
+      expect(screen.getByTestId("login-error-message").textContent).toBe(
+        "Prihlásenie cez Google zlyhalo. Skús to znovu.",
+      );
+    });
+    expect(button).not.toBeDisabled();
+  });
+
+  it("renders the back-home link pointing to '/'", () => {
+    render(<Page />);
+    const back = screen.getByTestId("login-back-home") as HTMLAnchorElement;
+    expect(back).toBeInTheDocument();
+    expect(back.getAttribute("to")).toBe("/");
+  });
 });

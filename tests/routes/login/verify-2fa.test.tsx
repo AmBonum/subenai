@@ -81,4 +81,64 @@ describe("/login/verify-2fa", () => {
       expect(screen.getByTestId("verify-2fa-backup-error")).toBeInTheDocument();
     });
   });
+
+  it("renders Slovak invalid-code message when TOTP verify rejects with 'invalid' and does not navigate", async () => {
+    listFactors.mockResolvedValue({ totp: [{ id: "f1", status: "verified" }] });
+    challengeAndVerify.mockRejectedValue(new Error("Invalid TOTP code"));
+    navigate.mockClear();
+
+    render(<Page />);
+    fireEvent.change(screen.getByTestId("verify-2fa-code-input"), {
+      target: { value: "000000" },
+    });
+    fireEvent.click(screen.getByTestId("verify-2fa-submit-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("verify-2fa-error").textContent).toBe("Kód nie je správny.");
+    });
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("renders generic Slovak error on non-invalid (e.g. rate-limit) failure", async () => {
+    listFactors.mockResolvedValue({ totp: [{ id: "f1", status: "verified" }] });
+    challengeAndVerify.mockRejectedValue(new Error("429 Too Many Requests"));
+    navigate.mockClear();
+
+    render(<Page />);
+    fireEvent.change(screen.getByTestId("verify-2fa-code-input"), {
+      target: { value: "555555" },
+    });
+    fireEvent.click(screen.getByTestId("verify-2fa-submit-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("verify-2fa-error").textContent).toBe(
+        "Nastala chyba. Skúste to znova.",
+      );
+    });
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("uppercases backup-code input as the user types", () => {
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("verify-2fa-use-backup-link"));
+    const input = screen.getByTestId("verify-2fa-backup-input") as HTMLInputElement;
+    fireEvent.change(input, { target: { value: "aaaa-bbbb" } });
+    expect(input.value).toBe("AAAA-BBBB");
+  });
+
+  it("renders generic error when consumeBackupCode throws (network failure)", async () => {
+    consumeBackupCode.mockRejectedValue(new Error("network down"));
+    navigate.mockClear();
+
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("verify-2fa-use-backup-link"));
+    fireEvent.change(screen.getByTestId("verify-2fa-backup-input"), {
+      target: { value: "FFFF-EEEE" },
+    });
+    fireEvent.click(screen.getByTestId("verify-2fa-backup-submit-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("verify-2fa-backup-error").textContent).toBe(
+        "Nastala chyba. Skúste to znova.",
+      );
+    });
+    expect(navigate).not.toHaveBeenCalled();
+  });
 });

@@ -105,4 +105,113 @@ describe("/login/enroll-2fa", () => {
       expect(screen.getByTestId("enroll-2fa-error")).toBeInTheDocument();
     });
   });
+
+  it("renders Slovak invalid-code message verbatim when verify rejects with 'invalid'", async () => {
+    enrollTotp.mockResolvedValue({ factorId: "f1", qrCode: "QR", secret: "S", uri: "U" });
+    challengeAndVerify.mockRejectedValue(new Error("Invalid TOTP code"));
+
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("enroll-2fa-step-1-continue"));
+    await waitFor(() => screen.getByTestId("enroll-2fa-qr-image"));
+    fireEvent.click(screen.getByTestId("enroll-2fa-step-2-continue"));
+    fireEvent.change(screen.getByTestId("enroll-2fa-code-input"), {
+      target: { value: "111111" },
+    });
+    fireEvent.click(screen.getByTestId("enroll-2fa-verify-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("enroll-2fa-error").textContent).toBe(
+        "Kód nie je správny. Skúste znova.",
+      );
+    });
+    // Verify-failure must not advance to step 4 (no backup codes leaked).
+    expect(screen.queryByTestId("enroll-2fa-step-4")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("enroll-2fa-backup-codes-list")).not.toBeInTheDocument();
+  });
+
+  it("keeps step-2 continue disabled when enrollTotp fails (no QR materialises)", async () => {
+    enrollTotp.mockRejectedValue(new Error("network timeout"));
+
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("enroll-2fa-step-1-continue"));
+    await waitFor(() => {
+      expect(screen.getByTestId("enroll-2fa-step-2")).toBeInTheDocument();
+    });
+    // Let the rejected enrollTotp promise resolve.
+    await waitFor(() => {
+      expect(enrollTotp).toHaveBeenCalled();
+    });
+    expect(screen.queryByTestId("enroll-2fa-qr-image")).not.toBeInTheDocument();
+    expect(screen.getByTestId("enroll-2fa-step-2-continue")).toBeDisabled();
+    // User cannot advance to verify step, so no factorId leaked / orphaned.
+    expect(screen.queryByTestId("enroll-2fa-step-3")).not.toBeInTheDocument();
+  });
+
+  it("renders generic error (not invalid) when verify rejects with non-invalid message", async () => {
+    enrollTotp.mockResolvedValue({ factorId: "f1", qrCode: "QR", secret: "S", uri: "U" });
+    challengeAndVerify.mockRejectedValue(new Error("rate limit exceeded"));
+
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("enroll-2fa-step-1-continue"));
+    await waitFor(() => screen.getByTestId("enroll-2fa-qr-image"));
+    fireEvent.click(screen.getByTestId("enroll-2fa-step-2-continue"));
+    fireEvent.change(screen.getByTestId("enroll-2fa-code-input"), {
+      target: { value: "222222" },
+    });
+    fireEvent.click(screen.getByTestId("enroll-2fa-verify-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("enroll-2fa-error").textContent).toBe(
+        "Nastala chyba. Skúste to znova.",
+      );
+    });
+  });
+
+  it("does not log backup codes to console after successful verify", async () => {
+    enrollTotp.mockResolvedValue({ factorId: "f1", qrCode: "QR", secret: "S", uri: "U" });
+    challengeAndVerify.mockResolvedValue(undefined);
+    const codes = [
+      "AAAA-BBBB",
+      "CCCC-DDDD",
+      "EEEE-FFFF",
+      "GGGG-HHHH",
+      "IIII-JJJJ",
+      "KKKK-LLLL",
+      "MMMM-NNNN",
+      "OOOO-PPPP",
+    ];
+    generateBackupCodes.mockResolvedValue(codes);
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("enroll-2fa-step-1-continue"));
+    await waitFor(() => screen.getByTestId("enroll-2fa-qr-image"));
+    fireEvent.click(screen.getByTestId("enroll-2fa-step-2-continue"));
+    fireEvent.change(screen.getByTestId("enroll-2fa-code-input"), {
+      target: { value: "123456" },
+    });
+    fireEvent.click(screen.getByTestId("enroll-2fa-verify-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("enroll-2fa-step-4")).toBeInTheDocument();
+    });
+
+    const allCalls = [
+      ...logSpy.mock.calls,
+      ...errSpy.mock.calls,
+      ...warnSpy.mock.calls,
+      ...infoSpy.mock.calls,
+    ]
+      .flat()
+      .map((v) => (typeof v === "string" ? v : JSON.stringify(v)))
+      .join(" ");
+    for (const c of codes) {
+      expect(allCalls).not.toContain(c);
+    }
+
+    logSpy.mockRestore();
+    errSpy.mockRestore();
+    warnSpy.mockRestore();
+    infoSpy.mockRestore();
+  });
 });
