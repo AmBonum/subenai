@@ -1,7 +1,7 @@
-/kurzy /skolenia 301
-/kurzy/* /skolenia/:splat 301
-/test/firma /testy 301
-/test/firma/* /testy/:splat 301
+/kurzy /courses 301
+/kurzy/* /courses/:splat 301
+/test/firma /tests 301
+/test/firma/* /tests/:splat 301
 /testy /tests 301
 /testy/* /tests/:splat 301
 /podpora /support 301
