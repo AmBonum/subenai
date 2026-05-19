@@ -23,6 +23,7 @@
       "navigation": "Navigation",
       "header": "Header",
       "footer": "Footer",
+      "blog": "Blog",
       "settings": "Settings",
       "security": "Security"
     },

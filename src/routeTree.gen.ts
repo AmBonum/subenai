@@ -76,6 +76,7 @@ import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
+import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
 import { Route as BlogKategoriaSlugRouteImport } from './routes/blog/kategoria/$slug'
 import { Route as BlogAutorSlugRouteImport } from './routes/blog/autor/$slug'
@@ -87,6 +88,8 @@ import { Route as AppAccountSecurityRouteImport } from './routes/app.account.sec
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
 import { Route as AdminTestsTestIdRouteImport } from './routes/admin/tests.$testId'
 import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$pageId'
+import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
+import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
 import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
 import { Route as TestZostavaIdVysledkyRouteImport } from './routes/test.zostava.$id.vysledky'
 
@@ -449,6 +452,13 @@ const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
   path: '/tests/',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/blog/index.lazy').then((d) => d.Route),
+)
 const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
   id: '/test/zostava/$id',
   path: '/test/zostava/$id',
@@ -513,6 +523,20 @@ const AdminPagesPageIdRoute = AdminPagesPageIdRouteImport.update({
   getParentRoute: () => AdminPagesRoute,
 } as any).lazy(() =>
   import('./routes/admin/pages.$pageId.lazy').then((d) => d.Route),
+)
+const AdminBlogNewRoute = AdminBlogNewRouteImport.update({
+  id: '/blog/new',
+  path: '/blog/new',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/blog/new.lazy').then((d) => d.Route),
+)
+const AdminBlogIdRoute = AdminBlogIdRouteImport.update({
+  id: '/blog/$id',
+  path: '/blog/$id',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/blog/$id.lazy').then((d) => d.Route),
 )
 const AdminAnswerSetsSetIdRoute = AdminAnswerSetsSetIdRouteImport.update({
   id: '/$setId',
@@ -597,6 +621,8 @@ export interface FileRoutesByFullPath {
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
+  '/admin/blog/$id': typeof AdminBlogIdRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
@@ -608,6 +634,7 @@ export interface FileRoutesByFullPath {
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/admin/blog/': typeof AdminBlogIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
@@ -676,6 +703,8 @@ export interface FileRoutesByTo {
   '/test': typeof TestIndexRoute
   '/tests': typeof TestsIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
+  '/admin/blog/$id': typeof AdminBlogIdRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
@@ -687,6 +716,7 @@ export interface FileRoutesByTo {
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/admin/blog': typeof AdminBlogIndexRoute
   '/app/tests': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
@@ -759,6 +789,8 @@ export interface FileRoutesById {
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
+  '/admin/blog/$id': typeof AdminBlogIdRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
@@ -770,6 +802,7 @@ export interface FileRoutesById {
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/admin/blog/': typeof AdminBlogIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
 }
@@ -843,6 +876,8 @@ export interface FileRouteTypes {
     | '/test/'
     | '/tests/'
     | '/admin/answer-sets/$setId'
+    | '/admin/blog/$id'
+    | '/admin/blog/new'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
     | '/app/account/profile'
@@ -854,6 +889,7 @@ export interface FileRouteTypes {
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
     | '/test/zostava/$id'
+    | '/admin/blog/'
     | '/app/tests/'
     | '/test/zostava/$id/vysledky'
   fileRoutesByTo: FileRoutesByTo
@@ -922,6 +958,8 @@ export interface FileRouteTypes {
     | '/test'
     | '/tests'
     | '/admin/answer-sets/$setId'
+    | '/admin/blog/$id'
+    | '/admin/blog/new'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
     | '/app/account/profile'
@@ -933,6 +971,7 @@ export interface FileRouteTypes {
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
     | '/test/zostava/$id'
+    | '/admin/blog'
     | '/app/tests'
     | '/test/zostava/$id/vysledky'
   id:
@@ -1004,6 +1043,8 @@ export interface FileRouteTypes {
     | '/test/'
     | '/tests/'
     | '/admin/answer-sets/$setId'
+    | '/admin/blog/$id'
+    | '/admin/blog/new'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
     | '/app/account/profile'
@@ -1015,6 +1056,7 @@ export interface FileRouteTypes {
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
     | '/test/zostava/$id'
+    | '/admin/blog/'
     | '/app/tests/'
     | '/test/zostava/$id/vysledky'
   fileRoutesById: FileRoutesById
@@ -1527,6 +1569,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTestsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/blog/': {
+      id: '/admin/blog/'
+      path: '/blog'
+      fullPath: '/admin/blog/'
+      preLoaderRoute: typeof AdminBlogIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/test/zostava/$id': {
       id: '/test/zostava/$id'
       path: '/test/zostava/$id'
@@ -1604,6 +1653,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPagesPageIdRouteImport
       parentRoute: typeof AdminPagesRoute
     }
+    '/admin/blog/new': {
+      id: '/admin/blog/new'
+      path: '/blog/new'
+      fullPath: '/admin/blog/new'
+      preLoaderRoute: typeof AdminBlogNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/blog/$id': {
+      id: '/admin/blog/$id'
+      path: '/blog/$id'
+      fullPath: '/admin/blog/$id'
+      preLoaderRoute: typeof AdminBlogIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/answer-sets/$setId': {
       id: '/admin/answer-sets/$setId'
       path: '/$setId'
@@ -1678,6 +1741,9 @@ interface AdminRouteChildren {
   AdminTrainingsRoute: typeof AdminTrainingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminBlogIdRoute: typeof AdminBlogIdRoute
+  AdminBlogNewRoute: typeof AdminBlogNewRoute
+  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -1701,6 +1767,9 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminTrainingsRoute: AdminTrainingsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminBlogIdRoute: AdminBlogIdRoute,
+  AdminBlogNewRoute: AdminBlogNewRoute,
+  AdminBlogIndexRoute: AdminBlogIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

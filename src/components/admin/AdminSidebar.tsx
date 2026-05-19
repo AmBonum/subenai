@@ -118,6 +118,7 @@ const mainItems: NavItem[] = [
 ];
 
 const cmsItems: NavItem[] = [
+  { key: "blog", url: "/admin/blog", icon: FileText, testid: "admin-shell-sidebar-link-blog" },
   { key: "pages", url: "/admin/pages", icon: FileText, testid: "admin-shell-sidebar-link-pages" },
   {
     key: "navigation",
