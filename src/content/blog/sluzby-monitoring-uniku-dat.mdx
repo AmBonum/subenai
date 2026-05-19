@@ -1,0 +1,165 @@
+---
+slug: sluzby-monitoring-uniku-dat
+title: "služby monitoringu úniku dát — porovnanie pre slovenského používateľa (2026)"
+subtitle: "haveibeenpwned, mozilla monitor, 1password watchtower, bitdefender digital identity — čo z toho je zadarmo, čo má zmysel platiť a čo je pre slováka len marketing"
+excerpt: "monitoring únikov osobných údajov je dnes prakticky povinnosť — otázka je, či za to treba platiť. v tomto porovnaní si prejdeme bezplatné možnosti (hibp, mozilla monitor, password manager checkup) aj platené služby (1password watchtower, bitdefender, mozilla monitor plus) a povieme si, kedy 95 % hodnoty dostaneš zadarmo a kedy má platený plán pre teba reálny zmysel."
+category_slug: digitalna-bezpecnost
+author_slug: subenai-editorial
+primary_keyword: monitoring uniku dat
+search_intent: commercial
+reading_minutes: 10
+hero_image_url: null
+og_image_url: null
+seo_title: "monitoring úniku dát — porovnanie služieb 2026 (zadarmo aj platené) | subenai"
+seo_description: "porovnanie služieb na monitoring úniku osobných údajov pre slováka v roku 2026 — hibp, mozilla monitor, 1password watchtower, bitdefender digital identity. ceny, kvalita, kedy stačí zadarmo a kedy platiť."
+canonical_url: null
+pillar: false
+sources:
+  - label: "have i been pwned: notify me — bezplatný monitoring úniku e-mailu"
+    url: "https://haveibeenpwned.com/NotifyMe"
+    publisher: "Have I Been Pwned"
+    accessed_at: "2026-05-19"
+  - label: "mozilla monitor: free breach scan a monitor plus"
+    url: "https://monitor.mozilla.org/"
+    publisher: "Mozilla"
+    accessed_at: "2026-05-19"
+  - label: "sk-cert: varovanie pred zvýšeným rizikom kybernetických bezpečnostných útokov"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "1password watchtower: monitoring kompromitovaných hesiel"
+    url: "https://1password.com/features/watchtower"
+    publisher: "1Password"
+    accessed_at: "2026-05-19"
+  - label: "bitdefender digital identity protection: oficiálna stránka služby"
+    url: "https://www.bitdefender.com/solutions/digital-identity-protection.html"
+    publisher: "Bitdefender"
+    accessed_at: "2026-05-19"
+  - label: "google password manager: password checkup"
+    url: "https://passwords.google.com/intro/"
+    publisher: "Google"
+    accessed_at: "2026-05-19"
+---
+
+únik dát nie je niečo, čo sa stane „raz za desať rokov tej obrovskej firme". v 2026 je to v priemere **3–5 únikov ročne na jednu bežnú e-mailovú adresu** — sčítané prielomy fór, e-shopov, vernostných programov, sociálnych sietí a B2B SaaS služieb, na ktoré si sa kedysi registroval a už si ich dávno zabudol. otázka teda nie je *či* máš heslo niekde vonku, ale *či sa to dozvieš skôr ako útočník*.
+
+presne na tom stojí celý priemysel **služieb monitoringu úniku dát**. v tomto článku porovnáme realistické možnosti pre slováka v 2026 — od bezplatných nástrojov (haveibeenpwned, mozilla monitor, password manager checkup) po platené (1password watchtower, bitdefender, mozilla monitor plus) — a povieme si, kedy 95 % hodnoty dostaneš zadarmo a kedy má zmysel platiť. ak hľadáš širší kontext digitálnej obrany, začni v [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod).
+
+## čo presne tieto služby robia (a čo nerobia)
+
+monitoring úniku dát = nástroj, ktorý **periodicky kontroluje verejné aj neverejné databázy uniknutých údajov** a upozorní ťa, keď sa tvoj e-mail, telefón, prípadne číslo karty objaví v novom prielome. nie je to antivírus, nezastaví útok v reálnom čase a nevráti ti peniaze. dáva ti **čas reagovať** — typicky niekoľko hodín až dní výhody, kým útočníci stihnú heslo nasadiť do credential stuffing zoznamov.
+
+čo žiadna z týchto služieb **nerobí**:
+
+- **neodstráni** tvoje dáta z internetu (na to sú samostatné „data broker removal" služby, väčšinou US-only).
+- **nezruší** uniknuté hesla na cudzích serveroch — útočník ich má, bodka. tvoja jediná obrana je rýchla rotácia tam, kde si ich použil.
+- **negarantuje úplnosť** — ani najlepšie služby nevidia do uzavretých dark-web fór, kde sa časť prielomov nikdy verejne nezverejní.
+
+## bezplatné možnosti — 95 % hodnoty pre slováka
+
+### have i been pwned (hibp)
+
+priemyselný štandard od austrálskeho výskumníka troya hunta, v prevádzke od 2013. indexuje vyše 13 miliárd uniknutých záznamov z viac než 800 prielomov vrátane lokálnych slovenských a českých únikov (alza, heureka, drobné e-shopy, mobilní operátori).
+
+- **manuálna kontrola**: zadáš e-mail, dostaneš zoznam prielomov, v ktorých je. detailný návod krok za krokom je v [uniknuté heslo — overiť na haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned).
+- **automatický alert (notify me)**: zadáš e-mail, potvrdíš ho a od tej chvíle ti hibp pošle správu vždy, keď sa tvoja adresa objaví v novom úniku. bezplatné, žiadne reklamy, žiadny newsletter.
+- **pwned passwords**: k-anonymitná kontrola, či konkrétne heslo nie je v leakoch — bez toho, aby si ho komu posielal.
+
+používa ho [český nukib](https://www.irozhlas.cz/zpravy-domov/bezpecnost-hesla-hibp-nukib_2109061432_cib), britský NCSC, austrálska ACSC. [sk-cert](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [3] na neho odkazuje vo varovaniach o zvýšenom riziku útokov. pre 90 % slovákov je toto **jediný monitoring, ktorý reálne potrebujú**.
+
+### mozilla monitor (predtým firefox monitor)
+
+mozilla prevádzkuje vlastnú nadstavbu nad hibp dátami s priateľskejším rozhraním a slovenskou lokalizáciou. [funkčne identické dáta](https://monitor.mozilla.org/) [2], ale lepší UX pre netechnického používateľa — jasné kroky „čo robiť ďalej" pri každom úniku, čistejšie e-mailové notifikácie, podpora viacerých adries pod jedným kontom.
+
+praktická rada: ak používaš firefox alebo si v ekosystéme mozilly, vezmi mozilla monitor. ak chceš pôvodný zdroj a maximálnu transparentnosť, vezmi hibp. **používať obe naraz** nemá zmysel — sú to tie isté dáta v dvoch rozhraniach.
+
+### password manager s vstavanou kontrolou
+
+každý seriózny password manager dnes obsahuje breach check ako súčasť „security dashboard". periodicky kontroluje tvoje uložené heslá voči pwned passwords a vyznačí, ktoré sú v únikoch alebo opakovane použité:
+
+- **1password watchtower** — najprepracovanejší, pozri nižšie pri platených.
+- **bitwarden data breach report** — bezplatné v free pláne.
+- **google password manager** s [password checkup](https://passwords.google.com/intro/) [6] — bundled v každom google účte, kontroluje heslá uložené v chrome.
+- **apple iCloud keychain security recommendations** — bundled pre iCloud používateľov, upozorňuje na uniknuté a slabé heslá v aplikácii passwords.
+
+ak nemáš password manager, je to silný dôvod jeden zaviesť. konkrétne porovnanie možností je v [správca hesiel — porovnanie](/blog/spravca-hesiel-porovnanie).
+
+### **odporúčaný bezplatný stack pre slováka**
+
+1. **hibp notify me** alebo **mozilla monitor** — alert na e-mailové úniky.
+2. **password manager s vstavaným breach checkom** — kontinuálna kontrola hesiel.
+3. (bonus) **google / apple checkup** v telefóne — ak používaš ich heslá.
+
+toto pokryje úniky, na ktoré útočníci reálne idú v rámci credential stuffing — a to je dnes [najziskovejší útok na bežných ľudí](/blog/uniknute-heslo-overit-haveibeenpwned).
+
+## platené služby — kedy má zmysel doplatiť
+
+### mozilla monitor plus — €10 / mesiac
+
+[platený plán mozilly](https://monitor.mozilla.org/) [2] pridáva nad bezplatný monitor tri veci:
+
+- **dark-web sken** — kontrola voči databázam, ktoré hibp nemá (uzavreté underground fóra).
+- **automatické odstránenie z data brokerov** — relevantné prevažne v USA; pre slováka má obmedzenú hodnotu.
+- **monitoring nielen e-mailu**, ale aj telefónu, mena, adresy.
+
+zmysel: ak si **konkrétny terč** (verejná osoba, exekutíva, novinár, obeť doxxingu) alebo ti nedávno unikla kompletná identita a chceš preventívne sledovať dark web. pre bežného slováka v 2026 to **neodporúčame** — za 120 € ročne dostaneš funkcie, ktorých 60 % je US-only.
+
+### 1password watchtower — súčasť 1password ($2.99 / mes.)
+
+[watchtower](https://1password.com/features/watchtower) [4] je integrovaný dashboard, ktorý okrem pwned passwords kontroluje:
+
+- **slabé a duplicitné heslá** naprieč všetkými uloženými účtami.
+- **chýbajúce 2FA** na účtoch, ktoré ho ponúkajú.
+- **expirujúce certifikáty a karty.**
+- **zraniteľné weby** (zoznam služieb, kde sa hesla majú zmeniť).
+- **kompromitované e-maily** cez integráciu s hibp.
+
+zmysel: ak už platíš za 1password (alebo zvažuješ password manager), watchtower **je zadarmo súčasťou predplatného** a fakticky nahrádza samostatný monitoring nástroj. neplatíš si ho navyše — platíš si manager a monitoring dostaneš ako súčasť balíka.
+
+### bitdefender digital identity protection — €30–50 / rok
+
+[ponuka bitdefenderu](https://www.bitdefender.com/solutions/digital-identity-protection.html) [5] sa pozicionuje vyššie ako mozilla monitor: okrem dark-web skenu sleduje aj **sociálne siete** (či sa neobjavujú duplicitné profily na tvoje meno) a **doxxing risk** (verejne dostupné údaje o tebe). cena okolo €40 / rok je rozumná, ak ti záleží na ochrane mena na sociálnych sieťach a fake profile risk-u — typicky relevantné pre influencerov, podnikateľov a verejných ľudí.
+
+ako čo robiť, keď zistíš fake profil na tvoje meno, je v [fake profily na instagrame a tiktoku](/blog/fake-profily-instagram-tiktok).
+
+### americké služby — norton lifelock, experian, equifax
+
+`lifelock`, `experian credit monitoring`, `equifax id watch` sú postavené na americkom kreditnom systéme a SSN. **pre slováka nemajú zmysel** — kontrolujú credit reporty, ktoré v slovenskom finančnom systéme neexistujú v rovnakej podobe. neplatiť.
+
+## ako sa rozhodnúť — 4 otázky
+
+1. **mal si nedávno potvrdený únik kritickej služby?** (banka, e-mail, password manager) → bezplatný stack je nevyhnutné minimum, paid plán zváž ak chceš dark-web sken.
+2. **si verejne známa osoba, podnikateľ alebo exekutíva?** → bitdefender digital identity protection alebo mozilla monitor plus sa oplatia.
+3. **používaš platený password manager?** → 1password watchtower ti monitoring rieši ako súčasť. nedopláca sa nič.
+4. **si bežný používateľ s 3–5 hlavnými účtami a nikdy si nebol terčom?** → bezplatný stack (hibp + password manager checkup) ti stačí na 95 % rizík.
+
+## čo robiť, keď ti príde alert
+
+monitoring je len signál — hodnota vzniká v reakcii. presný protokol prvej pomoci, keď ti pristane notifikácia z hibp alebo mozilly, je v [uniknuté heslo — overiť na haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned). v krátkosti:
+
+1. **zmeň heslo na zasiahnutom účte** (a všade, kde si ho znova použil).
+2. **použi password manager** na vygenerovanie unikátneho hesla — návod a porovnanie v [správca hesiel — porovnanie](/blog/spravca-hesiel-porovnanie).
+3. **zapni 2FA** cez authenticator app — kontext, prečo nie SMS, je v pillari [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod).
+4. **odhlás aktívne relácie** v účte a zruš autorizované aplikácie, ktoré nepoznáš.
+5. **ak unikol e-mail**, kontroluj príchodzie správy na phishing — útočníci po úniku zvyknú posielať cielene personalizované e-maily. ako ich za 10 sekúnd spoznať je v [ako rozpoznať phishingový e-mail za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund).
+
+## zhrnutie
+
+- pre **95 % slovákov** je optimálny **bezplatný stack**: hibp notify me alebo mozilla monitor + password manager s vstavaným breach checkom.
+- **mozilla monitor plus** (€10 / mes.) a **bitdefender** (€30–50 / rok) sa oplatia len konkrétnym profilom — verejne známe osoby, podnikatelia, obete doxxingu.
+- **1password watchtower** dostávaš ako súčasť predplatného password managera — neplatí sa zvlášť.
+- **americké služby** (lifelock, experian, equifax) pre slováka nemajú zmysel — riešia US credit system, ktorý sa na slovensku nepoužíva.
+- monitoring je polovica obrany. druhá polovica je **rýchla reakcia** — unikátne heslá, password manager, 2FA, kontrola phishingu po úniku.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod)
+- [uniknuté heslo — overiť na haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned)
+- [správca hesiel — porovnanie](/blog/spravca-hesiel-porovnanie)
+- [silné heslo 2026 vs. passkey](/blog/silne-heslo-2026-vs-passkey)
+- [fake profily na instagrame a tiktoku](/blog/fake-profily-instagram-tiktok)
+- [ako rozpoznať phishingový e-mail za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund)
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
