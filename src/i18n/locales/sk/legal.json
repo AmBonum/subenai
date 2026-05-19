@@ -237,7 +237,8 @@
       "callout_emph": "autor testu",
       "callout_middle": ", nie my. My ako sprostredkovateľ vaše dáta len hostujeme a po pokyne autora ich vymažeme. Ak neviete, kto je autor, alebo nemá odpoveď, kontaktujte nás na ",
       "callout_code": "subenai.podpora@gmail.com",
-      "callout_suffix": " — pomôžeme vám autora identifikovať a postúpime žiadosť."
+      "callout_suffix": " — pomôžeme vám autora identifikovať a postúpime žiadosť.",
+      "schools_link_prefix": "Viac o nastavení edu testu pre školu nájdeš na stránke Pre školy"
     },
     "s9": {
       "heading": "9. Bezpečnosť",
@@ -358,13 +359,15 @@
       "heading": "4. Ako spravovať súhlas",
       "intro": "Tvoj výber môžeš kedykoľvek zmeniť kliknutím na tlačidlo nižšie alebo na odkaz „Nastavenia cookies\" v päte stránky. Odvolanie súhlasu nemá vplyv na zákonnosť spracúvania uskutočneného pred odvolaním.",
       "button": "Otvoriť nastavenia cookies",
-      "last_consent": "Tvoj posledný súhlas: {timestamp} (verzia {version})"
+      "last_consent": "Tvoj posledný súhlas: {timestamp} (verzia {version})",
+      "no_record": "Zatiaľ si súhlas neuložil/a — alebo si vyčistil/a localStorage. Klikni vyššie a vyber preferencie."
     },
     "s5": {
       "heading": "5. Vypnutie cez prehliadač",
       "prefix": "Cookies aj ",
       "code": "localStorage",
-      "suffix": " môžeš zakázať priamo v nastaveniach prehliadača. Bez nevyhnutnej kategórie sa ti však výsledok testu neuloží a stránka bude pri každom načítaní žiadať súhlas znova."
+      "suffix": " môžeš zakázať priamo v nastaveniach prehliadača. Bez nevyhnutnej kategórie sa ti však výsledok testu neuloží a stránka bude pri každom načítaní žiadať súhlas znova.",
+      "dnt_note": "Rešpektujeme aj signál Do Not Track (DNT) a Global Privacy Control (GPC), ktoré moderné prehliadače odosielajú automaticky. Keď ich máš zapnuté, kategórie Analytics a Marketing automaticky preskočíme aj keby si súhlas explicitne udelil/a — preferencie prehliadača majú prednosť."
     },
     "s6": {
       "heading": "6. Zmeny týchto zásad",
