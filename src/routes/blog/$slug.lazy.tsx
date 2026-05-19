@@ -158,12 +158,20 @@ function BlogPostPage() {
               testid="blog-post-category-badge"
             />
             {pillar && (
-              <span
-                className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-foreground"
+              // Clickable on the article page: takes the reader to the
+              // pillar section of /blog so they can browse the other 9
+              // sprievodcovia after finishing this one. Use a raw <a>
+              // (not Link) because TanStack Link doesn't append URL
+              // hashes — we need the fragment to scroll-mt-24 onto the
+              // section.
+              <a
+                href="/blog#sprievodcovia"
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-foreground transition-transform hover:scale-105"
+                title="Hĺbkový sprievodca — kliknutím prejdeš na zoznam všetkých sprievodcov."
                 data-testid="blog-post-pillar-badge"
               >
                 <span aria-hidden="true">★</span> sprievodca
-              </span>
+              </a>
             )}
           </div>
           <h1

@@ -4,7 +4,6 @@ import { getPackBySlug, type TestPack } from "@/content/test-packs";
 import { getQuestionById, type Question } from "@/lib/quiz/bank/questions";
 import { TestFlow } from "@/components/quiz/flow/TestFlow";
 import { Button } from "@/components/ui/button";
-import { Footer } from "@/components/layout/Footer";
 import { buildPackQuizJsonLd, INDUSTRY_LABEL } from "@/lib/seo/quiz-jsonld";
 import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/quiz";
@@ -152,7 +151,6 @@ function PackPage() {
           })}
         </p>
       </main>
-      <Footer />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Footer } from "@/components/layout/Footer";
 import { SITE_ORIGIN, CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
@@ -234,8 +233,6 @@ export function ManageSupportForm() {
             </button>
           </form>
         )}
-
-        <Footer />
       </main>
     </div>
   );

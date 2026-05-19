@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { createLazyFileRoute, Link, useParams } from "@tanstack/react-router";
-import { Footer } from "@/components/layout/Footer";
 import { TestFlow } from "@/components/quiz/flow/TestFlow";
 import { Button } from "@/components/ui/button";
 import {
@@ -162,7 +161,6 @@ export function ZostavaView({ id }: Props) {
               }}
             />
           </div>
-          <Footer />
         </main>
       </div>
     );
@@ -225,8 +223,6 @@ export function ZostavaView({ id }: Props) {
             {t("empty_questions")}
           </p>
         ) : null}
-
-        <Footer />
       </main>
     </div>
   );

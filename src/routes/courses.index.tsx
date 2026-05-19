@@ -4,7 +4,6 @@ import { Search, X } from "lucide-react";
 import { COURSES } from "@/content/courses";
 import type { CourseCategory } from "@/content/courses";
 import { CourseCard } from "@/components/courses/CourseCard";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { SITE_ORIGIN } from "@/config/site";
 import { searchCourses } from "@/lib/courses/search";
@@ -200,7 +199,6 @@ function CoursesIndexPage() {
           </Button>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

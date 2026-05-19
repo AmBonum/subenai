@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Footer } from "@/components/layout/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { formatMonthYear } from "@/lib/sponsors";
 import { type PublicSponsor } from "./sponsors";
@@ -178,8 +177,6 @@ export function AllSponsorsView({ fetchSponsors }: AllSponsorsViewProps) {
           </a>
           .
         </p>
-
-        <Footer />
       </main>
     </div>
   );

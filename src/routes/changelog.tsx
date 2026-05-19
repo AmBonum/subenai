@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Footer } from "@/components/layout/Footer";
 import changelog from "@/content/changelog.generated.json";
 import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/marketing";
@@ -131,8 +130,6 @@ function ZmenyPage() {
             ))}
           </ol>
         )}
-
-        <Footer />
       </main>
     </div>
   );

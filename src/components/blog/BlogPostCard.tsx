@@ -59,6 +59,7 @@ export function BlogPostCard({ post, variant = "default" }: BlogPostCardProps) {
           <span
             className="absolute left-3 top-3 rounded-full bg-primary px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-md"
             data-testid={`blog-post-card-pillar-badge-${post.slug}`}
+            title="Hĺbkový sprievodca — odporúčaný úvod do témy."
           >
             sprievodca
           </span>

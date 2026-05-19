@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Footer } from "@/components/layout/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { formatMonthYear } from "@/lib/sponsors";
 import { SITE_ORIGIN, CONTACT_EMAIL } from "@/config/site";
@@ -107,8 +106,6 @@ export function SponzoriView({ fetchSponsors }: SponzoriViewProps) {
           </a>
           .
         </p>
-
-        <Footer />
       </main>
     </div>
   );

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { createLazyFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
-import { Footer } from "@/components/layout/Footer";
 import { PackPreloadChips } from "@/components/composer/build/PackPreloadChips";
 import { QuestionPicker } from "@/components/composer/build/QuestionPicker";
 import { ComposerSettings } from "@/components/composer/build/ComposerSettings";
@@ -419,8 +418,6 @@ export function ComposerPage() {
             </div>
           ) : null}
         </form>
-
-        <Footer />
       </main>
 
       {shareToast ? (

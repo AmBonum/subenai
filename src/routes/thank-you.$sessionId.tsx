@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { Footer } from "@/components/layout/Footer";
 import { CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
@@ -162,8 +161,6 @@ export function ThankYouView({ sessionId }: ThankYouViewProps) {
         ) : (
           <ErrorState />
         )}
-
-        <Footer />
       </main>
     </div>
   );

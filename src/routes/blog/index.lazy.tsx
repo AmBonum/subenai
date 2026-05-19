@@ -186,16 +186,26 @@ function BlogIndexPage() {
       {/* Featured pillars — top-of-page editorial anchors */}
       {pillars.length > 0 && (
         <section
-          className="mt-16 border-t border-border pt-12"
+          id="sprievodcovia"
+          className="mt-16 scroll-mt-24 border-t border-border pt-12"
           data-testid="blog-index-pillars-section"
         >
           <div className="flex items-end justify-between gap-4">
-            <h2
-              className="text-2xl font-bold tracking-tight md:text-3xl"
-              data-testid="blog-index-pillars-heading"
-            >
-              {t("pillar_heading")}
-            </h2>
+            <div>
+              <h2
+                className="text-2xl font-bold tracking-tight md:text-3xl"
+                data-testid="blog-index-pillars-heading"
+              >
+                {t("pillar_heading")}
+              </h2>
+              <p
+                className="mt-2 max-w-2xl text-sm text-muted-foreground"
+                data-testid="blog-index-pillars-description"
+              >
+                hĺbkové sprievodce témami — najdôležitejšie články, do ktorých sa oplatí investovať
+                10+ minút. odporúčame ich ako prvé čítanie ku každej oblasti bezpečnosti.
+              </p>
+            </div>
             <p
               className="hidden text-sm text-muted-foreground md:block"
               data-testid="blog-index-pillars-subheading"

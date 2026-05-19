@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { createLazyFileRoute, Link, useParams } from "@tanstack/react-router";
-import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { AuthorPasswordGate } from "@/components/composer/edu/dashboard/AuthorPasswordGate";
 import { AggregateStats } from "@/components/composer/edu/dashboard/AggregateStats";
@@ -139,7 +138,6 @@ export function VysledkyView({ id }: Props) {
           <div className="mt-8">
             <AuthorPasswordGate setId={id} onAuthenticated={() => void fetchData()} />
           </div>
-          <Footer />
         </main>
       </div>
     );
@@ -184,8 +182,6 @@ export function VysledkyView({ id }: Props) {
             onDelete={handleDelete}
           />
         </div>
-
-        <Footer />
       </main>
     </div>
   );

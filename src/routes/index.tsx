@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Footer } from "@/components/layout/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { ROUTES } from "@/config/routes";
 import { SITE_ORIGIN } from "@/config/site";
@@ -462,8 +461,6 @@ function Index() {
             ))}
           </div>
         </section>
-
-        <Footer />
       </main>
     </div>
   );

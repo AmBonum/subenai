@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Footer } from "@/components/layout/Footer";
 import { useConsent } from "@/hooks/useConsent";
 import { CONSENT_VERSION } from "@/lib/consent";
 import { tFor } from "@/i18n/legal";
@@ -183,8 +182,6 @@ function CookiesPage() {
             </p>
           </section>
         </article>
-
-        <Footer />
       </main>
     </div>
   );

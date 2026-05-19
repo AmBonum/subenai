@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Footer } from "@/components/layout/Footer";
 import { SITE_ORIGIN } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
@@ -244,8 +243,6 @@ export function AboutPage() {
             </div>
           </section>
         </article>
-
-        <Footer />
       </main>
     </div>
   );

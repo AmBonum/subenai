@@ -1,6 +1,5 @@
 import { useMemo, useState, type FormEvent } from "react";
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
-import { Footer } from "@/components/layout/Footer";
 import { CONTACT_EMAIL, SITE_ORIGIN } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
@@ -476,8 +475,6 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
             </p>
           </div>
         </form>
-
-        <Footer />
       </main>
     </div>
   );

@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Footer } from "@/components/layout/Footer";
 import { CONTACT_EMAIL, SITE_ORIGIN } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
@@ -206,8 +205,6 @@ function SkolyPage() {
             <strong>{SITE_ORIGIN}</strong> · ©&nbsp;am.bonum s.&nbsp;r.&nbsp;o.
           </p>
         </div>
-
-        <Footer />
       </main>
     </div>
   );

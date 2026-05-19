@@ -21,5 +21,5 @@ export const Route = createFileRoute("/app/onboarding")({
   head: () => ({
     meta: [{ title: tHead("page_title") }, { name: "robots", content: "noindex,nofollow" }],
   }),
-  staticData: { hideSiteHeader: true },
+  staticData: { hideSiteHeader: true, hideSiteFooter: true },
 });

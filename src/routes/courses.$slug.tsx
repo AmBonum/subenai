@@ -5,7 +5,6 @@ import { CourseHero } from "@/components/courses/CourseHero";
 import { CourseSectionView } from "@/components/courses/sections/CourseSections";
 import { RelatedCourses } from "@/components/courses/RelatedCourses";
 import { Button } from "@/components/ui/button";
-import { Footer } from "@/components/layout/Footer";
 import { buildCourseJsonLd } from "@/lib/seo/course-jsonld";
 import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/quiz";
@@ -112,7 +111,6 @@ function CoursePage() {
           {t("detail_copyright", { year, holder: COPYRIGHT_HOLDER })}
         </p>
       </main>
-      <Footer />
     </article>
   );
 }
