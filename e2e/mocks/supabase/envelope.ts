@@ -41,8 +41,23 @@ export function buildPostgrestArrayResponse(
   if (opts.withCount) {
     const total = opts.total ?? rows.length;
     const start = opts.offset ?? 0;
-    const end = rows.length === 0 ? 0 : start + rows.length - 1;
+    // `end` is the inclusive index of the last record represented by
+    // this response — NOT the last record in the body. For HEAD
+    // count=exact, the body is empty but `total` is the real row
+    // count; real PostgREST emits `0-(total-1)/total`. Falling back
+    // to `rows.length` here breaks `.select(col, { count: 'exact',
+    // head: true })` reads (2026-05-19 finding from admin/index TC-02).
+    // Paginated GET (body has rows.length < total) still uses
+    // `rows.length` because the body IS the paginated slice.
+    const represented = rows.length > 0 ? rows.length : total;
+    const end = represented === 0 ? 0 : start + represented - 1;
     headers["Content-Range"] = `${start}-${end}/${total}`;
+    // Cross-origin browser fetches only expose Content-Range to JS
+    // when the response opts it in via Access-Control-Expose-Headers.
+    // Supabase's edge gateway does this for real PostgREST; the mock
+    // must mirror it or supabase-js sees `count: null` even though
+    // the header is on the wire.
+    headers["Access-Control-Expose-Headers"] = "content-range";
   }
   return {
     status: opts.status ?? 200,

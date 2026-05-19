@@ -54,14 +54,52 @@ test.describe("Admin dashboard index", () => {
     });
   });
 
-  // TC-02: Dashboard renders the error state when the stats query fails
-  test("TC-02: error state renders when the stats query fails", async ({ context, page }) => {
+  // TC-02: Stat counters reflect seeded row counts.
+  // Originally redesigned to an error-boundary test because `mockSupabase`
+  // returned 0 for HEAD count=exact regardless of seeded rows. Envelope
+  // fix landed 2026-05-19 (computes Content-Range end from total, not
+  // body length), so the test now asserts the real contract.
+  test("TC-02: stat counters render the seeded counts", async ({ context, page }) => {
     const dashboard = new AdminIndexPage(page);
 
-    await test.step("Set up admin session with a 500 error on the profiles table", async () => {
+    await test.step("Seed 5 profiles + 3 tests + 2 sessions + 1 open DSR", async () => {
       await setupAdmin(context, page, {
-        ...EMPTY_EXTRAS,
-        errors: { profiles: { status: 500, message: "internal server error" } },
+        tables: {
+          profiles: Array.from({ length: 5 }, (_, i) => ({
+            id: `u${i + 1}`,
+            email: `seed-${i + 1}@example.com`,
+            display_name: `Seed ${i + 1}`,
+            created_at: "2026-05-19T00:00:00Z",
+            updated_at: "2026-05-19T00:00:00Z",
+          })),
+          tests: Array.from({ length: 3 }, (_, i) => ({
+            id: `t${i + 1}`,
+            owner_id: "u1",
+            title: `Test ${i + 1}`,
+            status: "published",
+            created_at: "2026-05-19T00:00:00Z",
+          })),
+          sessions: Array.from({ length: 2 }, (_, i) => ({
+            id: `s${i + 1}`,
+            test_id: "t1",
+            status: "completed",
+            started_at: "2026-05-19T00:00:00Z",
+            finished_at: "2026-05-19T00:30:00Z",
+          })),
+          dsr_requests: [
+            {
+              id: "d1",
+              status: "open",
+              subject_email: "user@example.com",
+              type: "access",
+              created_at: "2026-05-19T00:00:00Z",
+            },
+          ],
+          questions: [],
+          reports: [],
+          trainings: [],
+          audit_log: [],
+        },
       });
     });
 
@@ -69,15 +107,11 @@ test.describe("Admin dashboard index", () => {
       await dashboard.open();
     });
 
-    await test.step("Verify the dashboard error element is visible", async () => {
-      // React Query retries 3 times with exponential backoff (1 s + 2 s + 4 s = 7 s).
-      // Extend the assertion timeout beyond that window so the test waits for the
-      // final failure before asserting the error UI is visible.
-      await expect(dashboard.errorState).toBeVisible({ timeout: 15_000 });
-    });
-
-    await test.step("Verify the stat card grid is not rendered", async () => {
-      await expect(dashboard.statCardUsers).not.toBeVisible();
+    await test.step("Verify each stat card value matches the seeded count", async () => {
+      await expect(dashboard.statCardUsersValue).toHaveText("5");
+      await expect(dashboard.statCardTestsValue).toHaveText("3");
+      await expect(dashboard.statCardSessionsValue).toHaveText("2");
+      await expect(dashboard.statCardDsrPendingValue).toHaveText("1");
     });
   });
 

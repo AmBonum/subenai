@@ -50,6 +50,42 @@ describe("buildPostgrestArrayResponse", () => {
     });
     expect(res.headers["Content-Range"]).toBe("10-10/50");
   });
+
+  // Regression: 2026-05-19 admin/index TC-02 finding. HEAD requests
+  // pass `[]` as the body (no rows leaked back) but must still surface
+  // the REAL total. Supabase JS's `.select(col, { count: 'exact', head: true })`
+  // path parses Content-Range's `/N` suffix and assigns it to the
+  // result's `count` field. Header form `0-(real-1)/real`, not
+  // `0-0/real`, matches what real PostgREST emits for a HEAD count.
+  it("emits Content-Range that reflects total, not body length, for HEAD count", () => {
+    const res = buildPostgrestArrayResponse([], {
+      withCount: true,
+      total: 3,
+    });
+    expect(res.headers["Content-Range"]).toBe("0-2/3");
+  });
+
+  it("falls back to 0-0/0 only when total really is 0", () => {
+    const res = buildPostgrestArrayResponse([], {
+      withCount: true,
+      total: 0,
+    });
+    expect(res.headers["Content-Range"]).toBe("0-0/0");
+  });
+
+  // CORS contract — browsers only expose Content-Range to JS when the
+  // server includes Access-Control-Expose-Headers. Supabase's edge
+  // gateway does this in production; without it, supabase-js sees
+  // `count: null` even when the header is on the wire.
+  it("opts in Content-Range via Access-Control-Expose-Headers when count is emitted", () => {
+    const res = buildPostgrestArrayResponse([{ id: "a" }], { withCount: true });
+    expect(res.headers["Access-Control-Expose-Headers"]).toBe("content-range");
+  });
+
+  it("does NOT opt in expose-headers when withCount is off (count not requested)", () => {
+    const res = buildPostgrestArrayResponse([{ id: "a" }]);
+    expect(res.headers["Access-Control-Expose-Headers"]).toBeUndefined();
+  });
 });
 
 describe("buildPostgrestSingleResponse", () => {
