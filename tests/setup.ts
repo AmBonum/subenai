@@ -131,6 +131,10 @@ beforeEach(() => {
   }
 });
 
-afterEach(() => {
+afterEach(async () => {
   cleanup();
+  const { clearActiveSession } = await import("./utils/auth-session-mock");
+  const { resetRpcStubs } = await import("./utils/rpc-mock");
+  clearActiveSession();
+  resetRpcStubs();
 });
