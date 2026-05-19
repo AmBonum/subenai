@@ -146,6 +146,7 @@ export const PILLAR_PHISHING_DETAIL: BlogPostDetail = {
   pillar_post_id: null,
   primary_keyword: "phishing",
   faq_jsonb: null,
+  related_course_slug: null,
   sources: [
     {
       label: "SK-CERT: Phishing a sociálne inžinierstvo",
@@ -174,5 +175,6 @@ export const CLUSTER_PHISHING_DETAIL: BlogPostDetail = {
   pillar_post_id: null,
   primary_keyword: null,
   faq_jsonb: null,
+  related_course_slug: null,
   sources: [],
 };

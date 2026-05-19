@@ -3643,6 +3643,26 @@ END;
 $$;
 
 -- ============================================================================
+-- E17.1 — related_course_slug column on blog_posts (mirror of 20260520020000)
+-- ============================================================================
+
+ALTER TABLE public.blog_posts
+  ADD COLUMN IF NOT EXISTS related_course_slug TEXT NULL;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'blog_posts_related_course_slug_format'
+  ) THEN
+    ALTER TABLE public.blog_posts
+      ADD CONSTRAINT blog_posts_related_course_slug_format
+      CHECK (related_course_slug IS NULL OR related_course_slug ~ '^[a-z0-9-]+$');
+  END IF;
+END;
+$$;
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT

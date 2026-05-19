@@ -471,6 +471,7 @@ export type Database = {
           reading_minutes: number | null;
           faq_jsonb: Json | null;
           sources_jsonb: Json;
+          related_course_slug: string | null;
           status: Database["public"]["Enums"]["test_status"];
           published_at: string | null;
           created_at: string;
@@ -497,6 +498,7 @@ export type Database = {
           reading_minutes?: number | null;
           faq_jsonb?: Json | null;
           sources_jsonb?: Json;
+          related_course_slug?: string | null;
           status?: Database["public"]["Enums"]["test_status"];
           published_at?: string | null;
           created_at?: string;
@@ -523,6 +525,7 @@ export type Database = {
           reading_minutes?: number | null;
           faq_jsonb?: Json | null;
           sources_jsonb?: Json;
+          related_course_slug?: string | null;
           status?: Database["public"]["Enums"]["test_status"];
           published_at?: string | null;
           created_at?: string;

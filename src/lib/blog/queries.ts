@@ -41,6 +41,11 @@ export interface BlogPostDetail extends BlogPostListItem {
   primary_keyword: string | null;
   faq_jsonb: unknown;
   sources: BlogPostSource[];
+  // E17.1 — optional slug of the matching course in
+  // src/content/courses. Used by ContinueWithCourseCard on the
+  // article page to drive readers from passive reading to active
+  // training. NULL = no related course wired up.
+  related_course_slug: string | null;
 }
 
 export function parseSources(raw: unknown): BlogPostSource[] {
@@ -89,7 +94,7 @@ export function useBlogPost(slug: string) {
         .select(
           `id, slug, title, subtitle, excerpt, body_mdx, hero_image_url, og_image_url,
            seo_title, seo_description, canonical_url, pillar_post_id, primary_keyword,
-           faq_jsonb, sources_jsonb, reading_minutes, published_at,
+           faq_jsonb, sources_jsonb, related_course_slug, reading_minutes, published_at,
            category:blog_categories!inner(slug, name),
            author:blog_authors!inner(slug, display_name)`,
         )

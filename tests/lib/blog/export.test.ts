@@ -34,6 +34,7 @@ const SAMPLE: AdminBlogPostDetail = {
   search_intent: "informational",
   reading_minutes: 7,
   faq_jsonb: null,
+  related_course_slug: null,
   sources_jsonb: [
     {
       label: "SK-CERT",

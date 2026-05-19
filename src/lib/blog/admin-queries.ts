@@ -42,6 +42,7 @@ export interface AdminBlogPostDetail extends AdminBlogPostListItem {
   reading_minutes: number | null;
   faq_jsonb: unknown;
   sources_jsonb: BlogPostSource[];
+  related_course_slug: string | null;
 }
 
 function parseSources(raw: unknown): BlogPostSource[] {
@@ -118,6 +119,7 @@ export interface AdminBlogPostInput {
   search_intent: string | null;
   reading_minutes: number | null;
   sources_jsonb: BlogPostSource[];
+  related_course_slug: string | null;
   status: BlogPostStatus;
   published_at: string | null;
 }

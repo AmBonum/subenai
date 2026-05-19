@@ -23,7 +23,7 @@ import { buildArticleJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo/blog-jsonld
 
 const POST_SELECT = `id, slug, title, subtitle, excerpt, body_mdx, hero_image_url, og_image_url,
   seo_title, seo_description, canonical_url, pillar_post_id, primary_keyword,
-  faq_jsonb, sources_jsonb, reading_minutes, published_at,
+  faq_jsonb, sources_jsonb, related_course_slug, reading_minutes, published_at,
   category:blog_categories!inner(slug, name),
   author:blog_authors!inner(slug, display_name)`;
 

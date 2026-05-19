@@ -3,6 +3,7 @@ import { useEffect, useMemo } from "react";
 
 import { SITE_ORIGIN } from "@/config/site";
 import { ArticleCTABanner } from "@/components/blog/ArticleCTABanner";
+import { ContinueWithCourseCard } from "@/components/blog/ContinueWithCourseCard";
 import {
   trackBlogPostView,
   trackBlogRelatedClick,
@@ -253,6 +254,10 @@ function BlogPostPage() {
             <BlogPostBody mdx={post.body_mdx} />
             <div className="mx-auto max-w-3xl">
               <BlogPostSources sources={post.sources} />
+              {/* E17.2 — article → course cross-link. Renders only if
+                  the editor wired a related_course_slug in the admin
+                  CMS; otherwise the component returns null. */}
+              <ContinueWithCourseCard courseSlug={post.related_course_slug} />
               <BlogShareRow
                 url={`${SITE_ORIGIN}/blog/${post.slug}`}
                 title={post.title}
