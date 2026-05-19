@@ -2,8 +2,25 @@
 
 **Owner:** Claude (synthesis) — senior agent, multi-lens audit
 **Date opened:** 2026-05-19
-**Status:** 🟡 PLAN DRAFTED — awaiting project-owner decisions D1–D8 before implementation phases start
+**Date closed:** 2026-05-20
+**Status:** ✅ DONE — all 4 phases shipped to main (PRs #35 → #38). D1–D8 locked at senior judgment, no decisions overridden by owner. The follow-up FAQ senior upgrade (E26 / PR #39) is not part of this plan but completed the same surface group on the same day.
 **Surfaces in scope:** `/tests` · `/courses` · the mega-menu `featured` tile (Sady testov + Školenia dropdowns)
+
+## Phase delivery log
+
+| Phase | PR | Date | Scope |
+|---|---|---|---|
+| 0 | #35 | 2026-05-19 | Mega-menu featured tile visual (icon over gradient) + 4-phase plan committed |
+| 1 | #36 | 2026-05-19 | `/tests` redesign: hero rewrite, value strip, sort, featured spotlight, FAQ + FAQPage JSON-LD, gradient card revamp |
+| 2 | #37 | 2026-05-19 | `/courses` redesign: parallel scope + orphan `RelatedAcademyArticleCard` wired on index + Course JSON-LD builder + batched related-articles query |
+| 3 | #38 | 2026-05-19 | Blog cross-linking: `related_test_slug` migration, `useBlogPostByRelatedTest` + `useFeaturedBlogPostsForTests`, `RelatedTestPackArticleCard` (wired on `/tests/$slug`), `TestsLearningStrip` (wired on `/tests` index between FAQ + CTAs) |
+
+**Related follow-up (out of this plan's scope, same surface group, same day):**
+- E26 (PR #39) — senior FAQ upgrade on both surfaces: shared `FaqAccordion` ui component, per-Q anchor IDs, expand-all toggle, Lucide icons, "Najčastejšia" badge, rescue footer.
+
+## SQL migrations applied to prod
+
+- `20260521000000_blog_related_test_slug.sql` ⏳ pending user apply
 
 ---
 

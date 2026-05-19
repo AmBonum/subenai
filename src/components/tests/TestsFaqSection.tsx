@@ -3,6 +3,7 @@ import { CircleDollarSign, Clock, Users, Shield, Share2 } from "lucide-react";
 import { FaqAccordion, type FaqAccordionItemKey } from "@/components/ui/faq/FaqAccordion";
 import { ROUTES } from "@/config/routes";
 import { TESTS_FAQ_KEYS } from "@/lib/seo/tests-faq-schema";
+import { linkifyPaths } from "@/lib/text/linkify-paths";
 import { tFor } from "@/i18n/quiz";
 
 // E26 — senior-level FAQ rewrite for /tests.
@@ -37,7 +38,7 @@ export function TestsFaqSection() {
     <FaqAccordion
       items={items}
       getQ={(key) => t(`faq_${key}`)}
-      getA={(key) => t(`faq_a${key.slice(1)}`)}
+      getA={(key) => linkifyPaths(t(`faq_a${key.slice(1)}`))}
       testIdPrefix="tests-faq"
       anchorPrefix="faq-tests"
       heading={t("faq_heading")}
