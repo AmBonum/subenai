@@ -23,11 +23,41 @@ function buildRequest(body: unknown, cookie?: string) {
 
 interface DeleteState {
   rowExists: boolean;
+  auditFails?: boolean;
 }
 
+interface CapturedRequest {
+  url: string;
+  method: string;
+  body: unknown;
+}
+
+const captured: { current: CapturedRequest[] } = { current: [] };
+
 function mockSupabase(state: DeleteState) {
-  return vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+  captured.current = [];
+  return vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
     const url = typeof input === "string" ? input : (input as Request).url;
+    const method =
+      (init?.method ?? (typeof input !== "string" ? (input as Request).method : "GET")) || "GET";
+    let body: unknown = null;
+    try {
+      const raw =
+        init?.body ?? (typeof input !== "string" ? await (input as Request).clone().text() : null);
+      body = typeof raw === "string" && raw.length > 0 ? JSON.parse(raw) : raw;
+    } catch {
+      body = null;
+    }
+    captured.current.push({ url, method, body });
+    if (url.includes("/rest/v1/audit_log")) {
+      if (state.auditFails) {
+        return new Response(JSON.stringify({ message: "audit insert failed" }), {
+          status: 500,
+          headers: { "content-type": "application/json" },
+        });
+      }
+      return new Response(JSON.stringify({}), { status: 201 });
+    }
     if (url.includes("/rest/v1/attempts")) {
       if (!state.rowExists) {
         return new Response(JSON.stringify(null), { status: 200 });
@@ -108,5 +138,45 @@ describe("POST /api/delete-edu-respondent", () => {
       env,
     });
     expect(r.status).toBe(404);
+  });
+
+  // Regression sentinel: /schools "Krok 4" promises "potvrdenie + audit log"
+  // on respondent delete. The audit-log call MUST follow every successful
+  // DELETE. Until 2026-05-19 the audit insert was missing; this test pins
+  // the GDPR Art. 30 obligation against silent regression.
+  it("writes audit_log row with PII flag on successful delete (regression: /schools Krok 4 promise)", async () => {
+    mockSupabase({ rowExists: true });
+    const cookieToken = await signEduAuthorToken("set-1", env.JWT_SECRET);
+    const r = await onRequestPost({
+      request: buildRequest({ set_id: "set-1", attempt_id: VALID_UUID }, cookieToken),
+      env,
+    });
+    expect(r.status).toBe(200);
+    const auditCalls = captured.current.filter(
+      (c) => c.url.includes("/rest/v1/audit_log") && c.method === "POST",
+    );
+    expect(auditCalls).toHaveLength(1);
+    const row = auditCalls[0].body as Record<string, unknown>;
+    expect(row.action).toBe("delete_edu_respondent");
+    expect(row.target_type).toBe("attempt");
+    expect(row.target_id).toBe(VALID_UUID);
+    expect(row.pii_access).toBe(true);
+    expect(row.actor_id).toBeNull();
+    expect(String(row.actor_name)).toBe("edu_author:set-1");
+    expect(row.details).toEqual({ set_id: "set-1" });
+  });
+
+  it("500 audit_failed when audit insert errors after successful delete", async () => {
+    // Failure mode kept distinct from delete_failed so the operator can
+    // tell whether the row is gone (it IS) vs not (it wasn't). Retries
+    // hit the 404 path; no double-delete risk.
+    mockSupabase({ rowExists: true, auditFails: true });
+    const cookieToken = await signEduAuthorToken("set-1", env.JWT_SECRET);
+    const r = await onRequestPost({
+      request: buildRequest({ set_id: "set-1", attempt_id: VALID_UUID }, cookieToken),
+      env,
+    });
+    expect(r.status).toBe(500);
+    expect((await r.json()).error).toBe("audit_failed");
   });
 });

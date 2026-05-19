@@ -102,5 +102,36 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     return jsonResponse(500, { error: "delete_failed" });
   }
   if (!data) return jsonResponse(404, { error: "attempt_not_found" });
+
+  // PII delete must leave an audit trail (GDPR Art. 30 + /schools Krok 4
+  // promise: "Možnosť zmazať konkrétneho respondenta (potvrdenie + audit
+  // log)"). The educator authenticates via the JWT cookie, not auth.uid(),
+  // so we can't use `log_audit_event` RPC (it requires has_role admin).
+  // Direct service-role insert bypasses RLS — same pattern as comment on
+  // `audit_log` table definition (migration 20260517000000): "INSERT
+  // happens via supabaseAdmin in createServerFn handlers (RLS bypass)".
+  // actor_id stays NULL (no Supabase user); actor_name carries the set_id
+  // so the audit row is attributable to the edu test owner-by-cookie.
+  const { error: auditError } = await supabase.from("audit_log").insert({
+    actor_id: null,
+    actor_name: `edu_author:${verification.claims.set_id}`,
+    action: "delete_edu_respondent",
+    target_type: "attempt",
+    target_id: body.attempt_id,
+    pii_access: true,
+    details: { set_id: verification.claims.set_id },
+  });
+  if (auditError) {
+    // Row is already deleted. Audit gap exists for this one transaction;
+    // surface 500 so the operator retries — retry hits the 404 path so
+    // no further state corruption. Logged for monitoring.
+    console.error("delete-edu-respondent.audit", {
+      set_id: verification.claims.set_id,
+      attempt_id: body.attempt_id,
+      message: auditError.message,
+    });
+    return jsonResponse(500, { error: "audit_failed" });
+  }
+
   return jsonResponse(200, { ok: true });
 }
