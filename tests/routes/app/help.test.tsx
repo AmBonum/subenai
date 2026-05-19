@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import type { ComponentProps, ReactNode } from "react";
 
 vi.mock("@tanstack/react-router", async () => {
   const actual =
@@ -7,6 +8,17 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    // E21.7 — quick-links section uses Link; without a real RouterProvider
+    // we mock to a plain anchor so the test can assert on the data-to attr.
+    Link: ({
+      to,
+      children,
+      ...rest
+    }: { to: unknown; children: ReactNode } & ComponentProps<"a">) => (
+      <a data-to={typeof to === "string" ? to : ""} {...rest}>
+        {children}
+      </a>
+    ),
   };
 });
 
@@ -34,5 +46,37 @@ describe("/app/help", () => {
     const filteredCount = screen.getAllByTestId(/^app-help-faq-item-/).length;
     expect(filteredCount).toBeLessThan(initialCount);
     expect(filteredCount).toBeGreaterThan(0);
+  });
+
+  it("renders quick-link cards to deep docs (E21.7 island fix)", () => {
+    render(<Page />);
+    expect(screen.getByTestId("app-help-quick-links")).toBeInTheDocument();
+    expect(screen.getByTestId("app-help-quick-link-privacy")).toHaveAttribute(
+      "data-to",
+      "/privacy",
+    );
+    expect(screen.getByTestId("app-help-quick-link-cookies")).toHaveAttribute(
+      "data-to",
+      "/cookies",
+    );
+    expect(screen.getByTestId("app-help-quick-link-changelog")).toHaveAttribute(
+      "data-to",
+      "/changelog",
+    );
+    expect(screen.getByTestId("app-help-quick-link-schools")).toHaveAttribute(
+      "data-to",
+      "/schools",
+    );
+  });
+
+  it("shows empty-state SVG + CTA when search yields no results", () => {
+    render(<Page />);
+    fireEvent.change(screen.getByTestId("app-help-search-input"), {
+      target: { value: "this-query-matches-nothing-xyzzy" },
+    });
+    expect(screen.getByTestId("app-help-empty-state")).toBeInTheDocument();
+    expect(screen.getByTestId("app-help-empty-title")).toBeInTheDocument();
+    expect(screen.getByTestId("app-help-empty-cta")).toBeInTheDocument();
+    expect(screen.queryByTestId("app-help-faq-list")).not.toBeInTheDocument();
   });
 });

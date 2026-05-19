@@ -225,6 +225,17 @@
     "contact_question": "Nenašiel si odpoveď?",
     "contact_subtitle": "Napíš nám na support@subenai.sk",
     "contact_button": "Kontaktovať support",
+    "quick_links": {
+      "heading": "Hľadáš dokumentáciu?",
+      "privacy": "Ochrana osobných údajov",
+      "cookies": "Cookies a súhlas",
+      "changelog": "Posledné zmeny",
+      "schools": "Pre školy"
+    },
+    "empty": {
+      "title": "Pre „{query}\" sme nič nenašli",
+      "body": "Skús iné kľúčové slovo alebo nám napíš — odpovieme do 1 pracovného dňa."
+    },
     "faq": {
       "items": [
         { "question": "Ako vytvorím nový test?", "answer": "Klikni na 'Nový test' v ľavom menu a prejdi 3-krokovým wizardom." },

@@ -547,7 +547,21 @@
     "support_heading": "Chceš projekt podporiť?",
     "support_body": "Akákoľvek čiastka pomáha pokryť hosting, tvorbu nového obsahu a údržbu. Mesačná podpora od 5 € alebo jednorazovo. Faktúru dostaneš e-mailom.",
     "support_cta_primary": "Podporiť projekt",
-    "support_cta_secondary": "Pozri sponzorov"
+    "support_cta_secondary": "Pozri sponzorov",
+    "faq_heading": "Časté otázky o projekte",
+    "faq_subheading": "Identita a financovanie · model fungovania a dáta",
+    "faq_section_identity": "Identita a nezávislosť",
+    "faq_section_model": "Model a dáta",
+    "faq_kto_q": "Kto za subenai stojí?",
+    "faq_kto_a": "Slovenská firma am.bonum s. r. o. Tvoríme nezávislý projekt s cieľom učiť ľudí rozpoznávať internetové podvody. Žiadny štátny príspevok, žiadna investorská zmluva, žiaden grant od reklamnej agentúry.",
+    "faq_independent_q": "Ste prepojení s nejakou bankou, poisťovňou alebo políciou?",
+    "faq_independent_a": "Nie. Spolupracujeme s odborníkmi z viacerých organizácií pri tvorbe obsahu (citujeme zdroje v každom článku), ale nemáme s nikým exkluzívnu zmluvu, redakčný dozor ani reklamné partnerstvo. Obsah píšeme my, podľa našej redakčnej politiky.",
+    "faq_free_q": "Bude subenai vždy zadarmo?",
+    "faq_free_a": "Áno, rýchly test aj akadémia zostávajú zadarmo a bez prihlásenia. Edu mód pre školy a lektorov je tiež zadarmo (čítaj sekciu Pre školy). Plánujeme prémiové funkcie (napr. analytika pre školy nad istou veľkosťou), ale verejný produkt nikdy nepôjde za paywall.",
+    "faq_data_q": "Aké dáta o mne ukladáte z testu?",
+    "faq_data_a": "Pri anonymnom teste: skóre, percentil, odpovede a typ chyby — bez mena, bez e-mailu, bez IP po viac ako 24 hodín. Pri edu teste (ktorý si nastaví učiteľ): meno + e-mail respondenta a jeho odpovede; meno + e-mail vymažeme po 12 mesiacoch automaticky. Detaily v sekcii Ochrana osobných údajov.",
+    "faq_ai_q": "Trénujete AI na mojich odpovediach?",
+    "faq_ai_a": "Nie. Tvoje odpovede slúžia iba na zobrazenie tvojho výsledku, na agregovaný benchmark (anonymizovaný percentil) a na zlepšenie kvality otázok (odhalovanie nejasných formulácií). Nikdy nepúšťame surové dáta do externých AI modelov ani neformulujeme z nich tréningové datasety na predaj."
   },
   "kontakt": {
     "meta_title": "Kontakt — subenai",

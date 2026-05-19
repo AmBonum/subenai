@@ -225,6 +225,17 @@
     "contact_question": "Couldn't find an answer?",
     "contact_subtitle": "Write to us at support@subenai.sk",
     "contact_button": "Contact support",
+    "quick_links": {
+      "heading": "Looking for docs?",
+      "privacy": "Privacy policy",
+      "cookies": "Cookies and consent",
+      "changelog": "Recent changes",
+      "schools": "For schools"
+    },
+    "empty": {
+      "title": "No results for \"{query}\"",
+      "body": "Try a different keyword or write to us — we reply within 1 business day."
+    },
     "faq": {
       "items": [
         { "question": "How do I create a new test?", "answer": "Click 'New test' in the left menu and follow the 3-step wizard." },
