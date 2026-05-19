@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowRight, Sparkles } from "lucide-react";
+
 import { supabase } from "@/integrations/supabase/client";
+import { SITE_ORIGIN } from "@/config/site";
 import { PERSONALITIES, pickPersonalityVariant, type ScoreResult } from "@/lib/quiz/score/scoring";
 import { parseAnswers, type AnswerRecordPersisted } from "@/lib/quiz/bank/schema";
 import { buildShareCaption } from "@/lib/share/intents";
@@ -11,15 +14,40 @@ import { tFor } from "@/i18n/quiz";
 const AnswerReviewSection = lazy(() => import("@/components/quiz/review/AnswerReviewSection"));
 
 export const Route = createFileRoute("/r/$shareId")({
+  // E23 — share-page head() expanded for viral conversion. Specifically:
+  //   - noindex: every share_id is a unique URL with personal-result
+  //     content; we don't want Google indexing thousands of these and
+  //     diluting domain authority. The viewer-facing SEO target is the
+  //     OG/Twitter card render (link preview on social), not the
+  //     organic-search position.
+  //   - canonical → site root: a backlink from a shared result still
+  //     credits the homepage in Google's link graph.
+  //   - full OG + Twitter set so the link preview on FB, LinkedIn, X
+  //     etc. shows our branding instead of a bare URL.
   head: ({ params }) => {
     const t = tFor("share");
+    const url = `${SITE_ORIGIN}/r/${params.shareId}`;
+    const ogImage = `${SITE_ORIGIN}/og-default.png`;
     return {
       meta: [
         { title: t("meta_title", { shareId: params.shareId }) },
         { name: "description", content: t("meta_description") },
+        { name: "robots", content: "noindex, nofollow" },
+        { name: "language", content: "sk-SK" },
         { property: "og:title", content: t("og_title") },
         { property: "og:description", content: t("og_description") },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
+        { property: "og:image", content: ogImage },
+        { property: "og:image:alt", content: t("og_image_alt") },
+        { property: "og:locale", content: "sk_SK" },
+        { property: "og:site_name", content: "subenai" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: t("og_title") },
+        { name: "twitter:description", content: t("og_description") },
+        { name: "twitter:image", content: ogImage },
       ],
+      links: [{ rel: "canonical", href: SITE_ORIGIN + "/" }],
     };
   },
   component: SharePageRoute,
@@ -208,6 +236,43 @@ export function SharePage({ shareId }: { shareId: string }) {
             </span>
             {t("percentile.suffix")}
           </div>
+        </div>
+
+        {/* E23 — primary conversion CTA elevated to top-of-page so a
+            first-time viewer arriving from a social link doesn't have
+            to scroll through the full result + share grid before seeing
+            the "try it yourself" path. Competitive framing
+            ("compare yourself") outperforms generic CTAs in viral
+            surfaces — the viewer just saw a friend's score and the
+            instinct is to find out where they stand. */}
+        <div
+          className="mt-8 overflow-hidden rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent p-5 md:p-6"
+          data-testid="share-compare-cta-card"
+        >
+          <p
+            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-primary"
+            data-testid="share-context-kicker"
+          >
+            <Sparkles className="size-3.5" aria-hidden="true" />
+            {t("context_kicker")}
+          </p>
+          <p
+            className="mt-2 text-sm leading-relaxed text-muted-foreground"
+            data-testid="share-context-body"
+          >
+            {t("context_body")}
+          </p>
+          <Link
+            to="/test"
+            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent-gradient px-5 py-3 text-base font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02] sm:w-auto"
+            data-testid="share-compare-cta"
+          >
+            {t("compare_cta")}
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+          <p className="mt-2 text-xs text-muted-foreground" data-testid="share-compare-cta-sub">
+            {t("compare_cta_sub")}
+          </p>
         </div>
 
         <div

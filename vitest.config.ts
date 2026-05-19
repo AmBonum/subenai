@@ -11,6 +11,13 @@ export default defineConfig({
     setupFiles: ["./tests/setup.ts"],
     include: ["tests/**/*.test.{ts,tsx}"],
     css: false,
+    // Default 5000ms was tight under parallel load — once the suite
+    // grew past ~180 files, userEvent + waitFor chains in heavy
+    // jsdom files (test-zostav composer) started timing out purely
+    // on scheduler contention, not real failures. 10s absorbs the
+    // jitter without masking real regressions; an assertion-failure
+    // still fires within milliseconds.
+    testTimeout: 10_000,
     coverage: {
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
