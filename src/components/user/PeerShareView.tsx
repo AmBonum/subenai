@@ -69,7 +69,7 @@ export function PeerShareView({ data, handle }: Props) {
           subenai
         </div>
         <div style={{ fontSize: 16, opacity: 0.75 }} data-testid="peer-share-view-eyebrow">
-          {t("share_title")}
+          {t("share.share_title")}
         </div>
       </header>
 
@@ -89,12 +89,12 @@ export function PeerShareView({ data, handle }: Props) {
             data-testid="peer-share-view-handle"
             style={{ fontSize: 22, opacity: 0.8, marginTop: 4 }}
           >
-            — {handle} · {t("share_attempts", { n: userAttempts })}
+            — {handle} · {t("share.share_attempts", { n: userAttempts })}
           </div>
         )}
         {!handle && (
           <div style={{ fontSize: 22, opacity: 0.7, marginTop: 4 }}>
-            {t("share_attempts", { n: userAttempts })}
+            {t("share.share_attempts", { n: userAttempts })}
           </div>
         )}
       </section>
@@ -143,7 +143,7 @@ export function PeerShareView({ data, handle }: Props) {
           paddingTop: 18,
         }}
       >
-        <span>{t("share_footer", { date: today })}</span>
+        <span>{t("share.share_footer", { date: today })}</span>
         <span style={{ fontWeight: 600 }}>subenai.sk</span>
       </footer>
     </div>
