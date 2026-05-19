@@ -31,6 +31,30 @@ const STATIC_ROUTES = [
   { loc: "/changelog", priority: "0.4", changefreq: "weekly" },
   { loc: "/test/zostav", priority: "0.7", changefreq: "monthly" },
   { loc: "/schools", priority: "0.7", changefreq: "monthly" },
+  { loc: "/blog", priority: "0.8", changefreq: "daily" },
+];
+
+// E16.3 — blog category archive pages. The 15 categories are seeded in
+// supabase/migrations/20260520000000_blog_schema.sql; the same slug list
+// lives here for the build-time sitemap. When new categories are added,
+// update both files together. Per-article URLs land in a follow-up
+// (dynamic /blog/sitemap.xml route querying Supabase at request time).
+const BLOG_CATEGORY_SLUGS = [
+  "phishing-a-emaily",
+  "sms-a-telefon",
+  "fake-eshopy",
+  "socialne-siete",
+  "ai-scamy",
+  "digitalna-bezpecnost",
+  "kvizy",
+  "pribehy",
+  "rodicia-a-seniori",
+  "psychologia",
+  "bezpecne-nakupovanie",
+  "cyber-hygiena",
+  "tech-explainers",
+  "news-a-trendy",
+  "studenti",
 ];
 
 async function loadSlugs(dirRel) {
@@ -94,6 +118,12 @@ const urls = [
     loc: `/s/${slug}`,
     priority: "0.5",
     changefreq: "monthly",
+    lastmod: TODAY,
+  })),
+  ...BLOG_CATEGORY_SLUGS.map((slug) => ({
+    loc: `/blog/kategoria/${slug}`,
+    priority: "0.6",
+    changefreq: slug === "news-a-trendy" ? "daily" : "weekly",
     lastmod: TODAY,
   })),
 ];

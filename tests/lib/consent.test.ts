@@ -13,8 +13,8 @@ describe("CONSENT_VERSION (AH-7.1)", () => {
     window.localStorage.clear();
   });
 
-  it("is pinned at 1.4.0 — the only bump in the admin-hub integration", () => {
-    expect(CONSENT_VERSION).toBe("1.4.0");
+  it("is pinned at 1.5.0 — bumped by E16.3 for the blog launch and GA4 disclosure", () => {
+    expect(CONSENT_VERSION).toBe("1.5.0");
   });
 
   it("re-shows the banner when a stored 1.3.0 record is encountered", () => {
@@ -32,7 +32,7 @@ describe("CONSENT_VERSION (AH-7.1)", () => {
   it("returns the freshly-saved record when version matches", () => {
     saveConsent(ALL_ACCEPTED);
     const rec = loadConsent();
-    expect(rec?.version).toBe("1.4.0");
+    expect(rec?.version).toBe("1.5.0");
     expect(rec?.categories.analytics).toBe(true);
   });
 });
