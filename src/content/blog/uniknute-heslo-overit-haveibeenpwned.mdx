@@ -1,0 +1,138 @@
+---
+slug: uniknute-heslo-overit-haveibeenpwned
+title: "uniklo mi heslo? ako to overiť na haveibeenpwned za 30 sekúnd"
+subtitle: "krok za krokom tutoriál — od prvej kontroly e-mailu po nastavenie alertu, aby ti budúci únik prišiel do schránky skôr než útočníkom do ruky"
+excerpt: "haveibeenpwned je celosvetový štandard na kontrolu, či ti heslo alebo e-mail uniklo do verejnej databázy. tu je presný návod — čo zadať, ako interpretovať výsledok, čo zmeniť ako prvé a ako si nastaviť automatický monitoring na budúce úniky."
+category_slug: digitalna-bezpecnost
+author_slug: subenai-editorial
+primary_keyword: uniknute heslo
+search_intent: informational
+reading_minutes: 9
+hero_image_url: null
+og_image_url: null
+seo_title: "uniklo mi heslo? overenie cez haveibeenpwned — návod 2026 | subenai"
+seo_description: "ako za 30 sekúnd overíš na haveibeenpwned, či ti uniklo heslo alebo e-mail, a presný postup čo zmeniť, zapnúť a sledovať, aby si únik nezistil až po výbere z účtu."
+canonical_url: null
+pillar: false
+sources:
+  - label: "have i been pwned: kontrola, či ti uniklo heslo alebo e-mail"
+    url: "https://haveibeenpwned.com/"
+    publisher: "Have I Been Pwned"
+    accessed_at: "2026-05-19"
+  - label: "sk-cert: varovanie pred zvýšeným rizikom kybernetických bezpečnostných útokov"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "eset bezpečne na nete: ako odhaliť, či vaše heslá unikli na internet"
+    url: "https://bezpecnenanete.eset.com/sk/cybernews/ako-odhalit-ci-vase-hesla-unikli-na-internet/"
+    publisher: "ESET"
+    accessed_at: "2026-05-19"
+  - label: "český nukib: spolupráca s have i been pwned pre štátnu sféru"
+    url: "https://www.irozhlas.cz/zpravy-domov/bezpecnost-hesla-hibp-nukib_2109061432_cib"
+    publisher: "Český rozhlas / NÚKIB"
+    accessed_at: "2026-05-19"
+  - label: "cloudflare: how to use pwned passwords api with k-anonymity"
+    url: "https://blog.cloudflare.com/validating-leaked-passwords-with-k-anonymity/"
+    publisher: "Cloudflare"
+    accessed_at: "2026-05-19"
+---
+
+predstav si, že si dnes ráno vstal a niekto sa cez noc prihlásil do tvojej gmail schránky. nie hekol ťa. ani sa nevlámal. **vzal heslo z databázy, ktorá unikla z úplne inej služby pred dvomi rokmi** — z fóra o akváriách, kde si si v 2019 spravil účet a použil to isté heslo ako na gmail. tomu sa hovorí *credential stuffing* a je to v 2026 najziskovejší útok na bežných ľudí. dobrá správa: existuje jeden web, kde za 30 sekúnd zistíš, či tvoje heslo už nie je v takej databáze.
+
+volá sa **haveibeenpwned.com** a v tomto návode ti ho prejdem krok za krokom — od prvej kontroly e-mailu po nastavenie automatického upozornenia na budúce úniky. ak hľadáš širší kontext digitálnej obrany, začni v [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod); tu ideme úplne do detailu jedného nástroja.
+
+## čo je haveibeenpwned a prečo mu môžeš veriť
+
+[haveibeenpwned](https://haveibeenpwned.com/) [1] (ľudovo HIBP) je verejne dostupná databáza uniknutých prihlasovacích údajov, ktorú od roku 2013 prevádzkuje austrálsky bezpečnostný výskumník troy hunt. služba dnes indexuje **vyše 13 miliárd uniknutých kont** z viac než 800 verejne známych prielomov — od linkedinu (2012, 167 miliónov účtov) cez adobe, dropbox, canva, twitter, facebook až po desiatky menších slovenských a českých e-shopov a fór.
+
+prečo mu môžeš dôverovať aj keď sa ho budeš pýtať na svoj e-mail:
+
+- **nepýta a neukladá heslá** — pýta sa len e-mail (alebo telefónne číslo) a vracia zoznam prielomov, v ktorých sa adresa nachádza.
+- **používajú ho štátne agentúry** — [český nukib s ním verejne spolupracuje a integroval ho do služieb pre štátnu sféru](https://www.irozhlas.cz/zpravy-domov/bezpecnost-hesla-hibp-nukib_2109061432_cib) [4]. britský NCSC, austrálska ACSC a desiatky ďalších CERT-ov ho odporúčajú vo svojich materiáloch.
+- **sk-cert nie je formálny partner**, ale vo svojich [varovaniach o zvýšenom riziku útokov](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [2] opakovane odkazuje na HIBP ako referenčný zdroj overenia.
+- **slovenský eset** v [aktuálnych materiáloch o únikoch hesiel](https://bezpecnenanete.eset.com/sk/cybernews/ako-odhalit-ci-vase-hesla-unikli-na-internet/) [3] tiež HIBP odporúča ako prvý krok kontroly.
+
+žiadna sk-špecifická alternatíva s rovnakým záberom dnes neexistuje, a aj pre slováka funguje úplne rovnako — HIBP zbiera slovenské lokálne úniky (alza.sk, heureka.sk, drobné e-shopy, telekomunikační operátori) presne tak ako veľké svetové.
+
+## krok 1: kontrola e-mailu — 10 sekúnd
+
+otvor [haveibeenpwned.com](https://haveibeenpwned.com/). v strede stránky je jedno textové pole a tlačidlo *„pwned?"*. zadaj tam adresu, ktorú chceš overiť, a klikni.
+
+odpoveď je binárna. buď **green („good news — no pwnage found")** — adresa v žiadnom známom úniku nie je. alebo **červené pozadie a zoznam** prielomov, v ktorých sa nachádza.
+
+zadaj postupne **každú e-mailovú adresu, ktorú dlhodobo používaš**. nielen hlavný gmail. aj starý zoznam.sk z gymnázia, pracovný outlook, alias na proton mail. zlomok ľudí má dnes len jednu adresu — väčšina má štyri až päť historických.
+
+## krok 2: ako čítať výsledok
+
+dostal si červený zoznam? pre každý prielom HIBP zobrazí:
+
+- **názov služby** (napr. „LinkedIn", „MyHeritage", „Adobe")
+- **dátum prielomu** (kedy útok skutočne prebehol)
+- **dátum verejného odhalenia** (často 1–3 roky neskôr)
+- **počet zasiahnutých účtov**
+- **aké údaje unikli** — najčastejšie e-mail + heslo, ale občas aj telefón, dátum narodenia, IP adresa, hashe odpovedí na bezpečnostné otázky
+
+pozorne sa pozri na riadok *„compromised data"*. ak je tam **„passwords"**, tvoje vtedajšie heslo je verejne dostupné. ak je tam len **„email addresses"** (napr. úniky cez scrapovanie), heslo zatiaľ nie je v databáze, ale tvoja adresa je v zozname, ktorý spammeri a útočníci aktívne používajú.
+
+## krok 3: prioritizácia — čo zmeniť ako prvé
+
+nemusíš panicky meniť heslo na 50 službách. preber zoznam cez tieto tri otázky:
+
+1. **používaš ten istý e-mail aj na kritických účtoch?** kritické = e-mail, internet banking, apple ID / google účet, password manager, vládne portály (slovensko.sk, eDane, eHealth). ak áno a v ktoromkoľvek z týchto miest máš **rovnaké alebo podobné heslo** ako v uniknutej službe, **prvé tri akcie sú: zmena hesla v banke, e-maile a apple/google účte. v tomto poradí.**
+2. **bola medzi únikmi tvoja banka, e-mail alebo cloudové úložisko priamo?** ak áno, **zmeň heslo OKAMŽITE** a uisti sa, že máš zapnuté dvojfaktorové overenie (pravidlo nižšie).
+3. **používal si dotknuté heslo aj inde?** ak na ktorúkoľvek z prvých dvoch otázok znie odpoveď „áno", odpoveď je s vysokou pravdepodobnosťou „áno aj na túto". credential stuffing presne s týmto počíta.
+
+## krok 4: zmena hesla — raz a poriadne
+
+nemení sa heslo z `Heslo123!` na `Heslo124!`. mení sa na **unikátne, dlhé, vygenerované** heslo, ktoré si ani nemusíš pamätať, lebo ho za teba uloží password manager. detailný rozbor, prečo heslová fráza poráža starú radu „dvanásť znakov a špeciálny znak", nájdeš v [silné heslo 2026 vs. passkey](/blog/silne-heslo-2026-vs-passkey); porovnanie konkrétnych manažérov v [správca hesiel — porovnanie](/blog/spravca-hesiel-porovnanie).
+
+dva praktické momenty:
+
+- **nezačni meniť heslá z toho istého počítača, na ktorom máš podozrenie na malvér.** ak si nedávno klikol na phishingový odkaz alebo si stiahol „faktúru.exe", zmena hesla z infikovaného zariadenia ho útočníkovi rovno odovzdá. presný protokol prvej pomoci po kliknutí je v [čo robiť, keď som klikol na phishing](/blog/co-robit-ked-som-klikol-na-phishing).
+- **nepoužívaj „obnoviť heslo" cez e-mail, ak je práve ten e-mail kompromitovaný.** najprv si zabezpeč e-mailovú schránku, potom z nej obnovuj všetko ostatné.
+
+## krok 5: zapni 2FA na všetkom, čo bolo v zozname
+
+aj keď zmeníš heslo, samotná zmena je len „papierová oprava" — útočník môže mať na účet pasívne pristupujúce relácie (session cookies, app passwords, autorizované zariadenia). preto pri každom účte, ktorý sa objavil v HIBP zozname:
+
+1. **zmeň heslo na nové, unikátne.**
+2. **odhlás všetky aktívne relácie** (v nastaveniach každej veľkej služby — gmail, facebook, microsoft, apple — je tlačidlo *„sign out all other sessions"*).
+3. **zruš autorizované aplikácie, ktoré nepoznáš.**
+4. **zapni 2FA cez authenticator app** (google authenticator, authy, 2fas, raivo). SMS je lepšia než nič, ale na slovensku je sim-swap reálna hrozba — pozri prečo a ako sa brániť v pillari [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod).
+
+ak je medzi zasiahnutými účtami **facebook**, pravdepodobne ti práve teraz niekto skúša prevziať profil. presný postup, ako účet vrátiť späť a uzamknúť, je v [hacknutý facebook účet — čo robiť](/blog/hacknuty-facebook-ucet-co-robit).
+
+## krok 6: nastav si notifikáciu na budúce úniky
+
+najdôležitejší krok urobíš teraz, pokiaľ si pri počítači. na HIBP otvor sekciu **„notify me"** v hornom menu, zadaj e-mail a potvrď ho cez odkaz v doručenej správe. od tej chvíle ti služba automaticky pošle e-mail vždy, keď sa tvoja adresa objaví v novom prielome.
+
+je to **bezplatné, neposiela nič iné** (žiadny newsletter, žiadne reklamy) a v praxi to znamená, že o budúcom úniku sa dozvieš v deň, keď ho HIBP zaindexuje — typicky o **týždne až mesiace skôr**, než by si si to všimol cez podivné platby alebo neznáme prihlásenia. ak chceš ísť ešte ďalej s monitoringom (kreditné karty, telefónne čísla, dark web alerts), pozri komerčné možnosti v [služby monitoringu úniku dát](/blog/sluzby-monitoring-uniku-dat).
+
+## bonus: pwned passwords — kontrola konkrétneho hesla bez toho, aby si ho posielal
+
+troy hunt prevádzkuje aj sesterskú službu **„pwned passwords"** — databázu vyše 850 miliónov hesiel zhrabnutých z únikov, ktorá ti vie povedať, či konkrétne heslo, ktoré používaš (alebo plánuješ použiť), je už v leakoch.
+
+a tu je inžinierska elegancia: **heslo neposielaš.** kontrola používa techniku zvanú **k-anonymita** — z hesla sa lokálne vyráta SHA-1 hash, pošle sa len **prvých päť znakov** hashu a server vráti zoznam všetkých hashov, ktoré tých päť znakov začínajú. tvoj prehliadač potom lokálne porovná zvyšok. server nikdy nevie ani tvoje heslo, ani jeho úplný hash, ani odpoveď. [presný technický popis aj s ukážkou implementácie publikoval cloudflare](https://blog.cloudflare.com/validating-leaked-passwords-with-k-anonymity/) [5], ak chceš detail.
+
+väčšina kvalitných password managerov (1password, bitwarden, dashlane) má túto kontrolu **vstavanú** ako funkciu *„password health"* alebo *„watchtower"* — periodicky kontrolujú všetky tvoje uložené heslá voči pwned passwords a vyznačia, ktoré sú v databáze. ak používaš PM, máš to defaultne; ak nie, je to ďalší silný dôvod, prečo PM zaviesť.
+
+## zhrnutie
+
+- **haveibeenpwned** je celosvetový štandard na kontrolu úniku hesiel — zadarmo, dôveryhodný, používaný štátnymi CERT-mi vrátane českého nukibu.
+- **kontrolu spustíš za 30 sekúnd**: zadaj e-mail, prečítaj červený zoznam, prioritizuj podľa kritičnosti účtov.
+- **zmena hesla bez zmeny zvyku nestačí** — unikátne heslo na každý účet, password manager, 2FA cez authenticator app.
+- **„notify me"** ti od dnes pošle e-mail pri každom budúcom úniku tvojej adresy.
+- **pwned passwords** cez k-anonymitu vie overiť konkrétne heslo bez toho, aby si ho komukoľvek posielal — a v každom rozumnom password manageri to ide automaticky.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod)
+- [silné heslo 2026 vs. passkey](/blog/silne-heslo-2026-vs-passkey)
+- [správca hesiel — porovnanie](/blog/spravca-hesiel-porovnanie)
+- [hacknutý facebook účet — čo robiť](/blog/hacknuty-facebook-ucet-co-robit)
+- [čo robiť, keď som klikol na phishing](/blog/co-robit-ked-som-klikol-na-phishing)
+- [služby monitoringu úniku dát](/blog/sluzby-monitoring-uniku-dat)
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
