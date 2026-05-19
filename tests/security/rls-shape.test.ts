@@ -60,6 +60,12 @@ function makeBuilder(perCallResolved: () => unknown): unknown {
   builder.not = chain("not");
   builder.order = chain("order");
   builder.limit = chain("limit");
+  // `insert(...).select().single()` and `update(...).select()` chains call
+  // `.select()` on the builder. Record it so mutation tests can introspect.
+  builder.select = (...args: unknown[]) => {
+    record("select", args);
+    return builder;
+  };
   builder.single = () => {
     record("single", []);
     return Promise.resolve(perCallResolved());
@@ -117,6 +123,8 @@ import {
   useNotifications,
   useMarkAllRead,
   useCurrentProfile,
+  useHistory,
+  useUserTeamMembers,
 } from "@/lib/platform/queries";
 import {
   useAdminQuestions,
@@ -124,6 +132,18 @@ import {
   useAdminDSRQueue,
   useAdminAuditLog,
   useAdminReports,
+  useCreateQuestion,
+  useUpdateQuestion,
+  useDeleteQuestion,
+  useCreateAnswerSet,
+  useUpdateAnswerSet,
+  useDeleteAnswerSet,
+  useCreateAnswer,
+  useUpdateAnswer,
+  useDeleteAnswer,
+  useCreateTest,
+  useUpdateTest,
+  useDeleteTest,
 } from "@/lib/admin/queries";
 
 function wrapper({ children }: { children: React.ReactNode }) {
@@ -146,6 +166,28 @@ function eqCalls(): Array<[string, unknown]> {
   return log.current.calls
     .filter((c) => c.op === "eq")
     .map((c) => [String(c.args[0] ?? ""), c.args[1]] as [string, unknown]);
+}
+
+function insertPayload(): Record<string, unknown> | null {
+  const entry = log.current.calls.find((c) => c.op === "insert");
+  if (!entry) return null;
+  const payload = entry.args[0];
+  return payload && typeof payload === "object" ? (payload as Record<string, unknown>) : null;
+}
+
+function updatePayload(): Record<string, unknown> | null {
+  const entry = log.current.calls.find((c) => c.op === "update");
+  if (!entry) return null;
+  const payload = entry.args[0];
+  return payload && typeof payload === "object" ? (payload as Record<string, unknown>) : null;
+}
+
+function fromCalls(): string[] {
+  return log.current.calls.filter((c) => c.op === "from").map((c) => String(c.args[0] ?? ""));
+}
+
+function allSelects(): string[] {
+  return log.current.calls.filter((c) => c.op === "select").map((c) => String(c.args[0] ?? ""));
 }
 
 beforeEach(() => {
@@ -281,5 +323,190 @@ describe("RLS shape contracts — admin queries", () => {
     expect(cols).not.toBe("*");
     expect(cols).toContain("target_type");
     expect(cols).toContain("reason");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Admin mutation shapes — same defense-in-depth as the reads. The DB enforces
+// RLS; these tests guarantee the client cannot bypass it accidentally by
+// targeting the wrong table, dropping the `.eq("id", id)` filter on
+// update/delete (would mutate every row visible under RLS), or smuggling
+// extra columns into insert payloads (the table grants on PG schemas reject
+// unknown columns, but a typed `as never` cast can hide regressions).
+// ---------------------------------------------------------------------------
+
+describe("RLS shape contracts — admin mutations", () => {
+  it("useCreateQuestion inserts into `questions` with a bounded payload (no created_by override)", async () => {
+    const { result } = renderHook(() => useCreateQuestion(), { wrapper });
+    await result.current.mutateAsync({ body: "What is phishing?" });
+    expect(log.current.table).toBe("questions");
+    const payload = insertPayload();
+    expect(payload).not.toBeNull();
+    expect(payload!.prompt).toBe("What is phishing?");
+    // RLS sets `created_by` via auth.uid(); client must not override.
+    expect(payload).not.toHaveProperty("created_by");
+    expect(payload).not.toHaveProperty("owner_id");
+  });
+
+  it("useUpdateQuestion targets `questions` with mandatory .eq('id', id)", async () => {
+    const { result } = renderHook(() => useUpdateQuestion(), { wrapper });
+    await result.current.mutateAsync({ id: "q-1", patch: { body: "updated" } });
+    expect(log.current.table).toBe("questions");
+    expect(hasCall("update")).toBe(true);
+    const idFilter = eqCalls().find(([col]) => col === "id");
+    expect(idFilter).toBeDefined();
+    expect(idFilter?.[1]).toBe("q-1");
+    const payload = updatePayload();
+    expect(payload?.prompt).toBe("updated");
+  });
+
+  it("useDeleteQuestion DELETE on `questions` carries mandatory .eq('id', id)", async () => {
+    const { result } = renderHook(() => useDeleteQuestion(), { wrapper });
+    await result.current.mutateAsync("q-9");
+    expect(log.current.table).toBe("questions");
+    expect(hasCall("delete")).toBe(true);
+    const idFilter = eqCalls().find(([col]) => col === "id");
+    expect(idFilter).toBeDefined();
+    expect(idFilter?.[1]).toBe("q-9");
+  });
+
+  it("useCreateAnswerSet inserts into `answer_sets` with bounded payload", async () => {
+    const { result } = renderHook(() => useCreateAnswerSet(), { wrapper });
+    await result.current.mutateAsync({ name: "Hostile e-mails" });
+    expect(log.current.table).toBe("answer_sets");
+    const payload = insertPayload();
+    expect(payload!.name).toBe("Hostile e-mails");
+    expect(payload).not.toHaveProperty("owner_id");
+  });
+
+  it("useUpdateAnswerSet targets `answer_sets` with .eq('id', id)", async () => {
+    const { result } = renderHook(() => useUpdateAnswerSet(), { wrapper });
+    await result.current.mutateAsync({ id: "as-3", patch: { name: "renamed" } });
+    expect(log.current.table).toBe("answer_sets");
+    expect(hasCall("update")).toBe(true);
+    expect(eqCalls().find(([c]) => c === "id")?.[1]).toBe("as-3");
+    expect(updatePayload()?.name).toBe("renamed");
+  });
+
+  it("useDeleteAnswerSet DELETE carries mandatory .eq('id', id)", async () => {
+    const { result } = renderHook(() => useDeleteAnswerSet(), { wrapper });
+    await result.current.mutateAsync("as-9");
+    expect(log.current.table).toBe("answer_sets");
+    expect(hasCall("delete")).toBe(true);
+    expect(eqCalls().find(([c]) => c === "id")?.[1]).toBe("as-9");
+  });
+
+  it("useCreateAnswer inserts into `answers` with set_id from input (FK enforced by RLS)", async () => {
+    const { result } = renderHook(() => useCreateAnswer(), { wrapper });
+    await result.current.mutateAsync({ set_id: "as-1", text: "Option A" });
+    expect(log.current.table).toBe("answers");
+    const payload = insertPayload();
+    expect(payload!.set_id).toBe("as-1");
+    expect(payload!.text).toBe("Option A");
+    expect(payload!.is_correct).toBe(false);
+  });
+
+  it("useUpdateAnswer targets `answers` with .eq('id', id)", async () => {
+    const { result } = renderHook(() => useUpdateAnswer(), { wrapper });
+    await result.current.mutateAsync({ id: "a-2", patch: { text: "edited" } });
+    expect(log.current.table).toBe("answers");
+    expect(hasCall("update")).toBe(true);
+    expect(eqCalls().find(([c]) => c === "id")?.[1]).toBe("a-2");
+    expect(updatePayload()?.text).toBe("edited");
+  });
+
+  it("useDeleteAnswer DELETE carries mandatory .eq('id', id)", async () => {
+    const { result } = renderHook(() => useDeleteAnswer(), { wrapper });
+    await result.current.mutateAsync("a-7");
+    expect(log.current.table).toBe("answers");
+    expect(hasCall("delete")).toBe(true);
+    expect(eqCalls().find(([c]) => c === "id")?.[1]).toBe("a-7");
+  });
+
+  it("useCreateTest inserts into `tests` with caller-passed owner_id (admin contract)", async () => {
+    // SECURITY NOTE: owner_id IS user-controlled at this layer, but the
+    // mutation is admin-only and the DB grants gate the INSERT. The test
+    // pins the current contract — a future tightening that forces
+    // auth.uid() server-side would update this assertion.
+    const { result } = renderHook(() => useCreateTest(), { wrapper });
+    await result.current.mutateAsync({ owner_id: "admin-x", title: "New Test" });
+    expect(log.current.table).toBe("tests");
+    const payload = insertPayload();
+    expect(payload!.owner_id).toBe("admin-x");
+    expect(payload!.title).toBe("New Test");
+    // share_id must be a UUID (crypto.randomUUID) — never user-controlled.
+    expect(String(payload!.share_id)).toMatch(/^[0-9a-f-]{36}$/i);
+  });
+
+  it("useUpdateTest targets `tests` with .eq('id', id), patch never includes owner_id", async () => {
+    const { result } = renderHook(() => useUpdateTest(), { wrapper });
+    await result.current.mutateAsync({
+      id: "t-1",
+      // @ts-expect-error — verifying client drops unknown fields from patch.
+      patch: { title: "Renamed", owner_id: "attacker" },
+    });
+    expect(log.current.table).toBe("tests");
+    expect(hasCall("update")).toBe(true);
+    expect(eqCalls().find(([c]) => c === "id")?.[1]).toBe("t-1");
+    const payload = updatePayload();
+    expect(payload?.title).toBe("Renamed");
+    // Ownership transfer via update is a privilege-escalation vector — the
+    // client filters to a known column whitelist, so owner_id must NOT
+    // appear in the UPDATE payload even if attacker smuggles it in.
+    expect(payload).not.toHaveProperty("owner_id");
+  });
+
+  it("useDeleteTest DELETE carries mandatory .eq('id', id)", async () => {
+    const { result } = renderHook(() => useDeleteTest(), { wrapper });
+    await result.current.mutateAsync("t-9");
+    expect(log.current.table).toBe("tests");
+    expect(hasCall("delete")).toBe(true);
+    expect(eqCalls().find(([c]) => c === "id")?.[1]).toBe("t-9");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Cross-table joins — when the client manually composes a join (parallel
+// query + map-merge instead of a PostgREST embed), each leg's column
+// projection MUST stay bounded. A `select("*")` on the joined-to table
+// would leak PII columns from a table the original RLS path never gates.
+// ---------------------------------------------------------------------------
+
+describe("RLS shape contracts — cross-table join column whitelists", () => {
+  it("useHistory first leg (sessions) has a bounded projection with no PII columns", async () => {
+    const { result } = renderHook(() => useHistory(50), { wrapper });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    // The mocked sessions response is empty, so the tests-table follow-up
+    // is gated off by `if (ids.length)`. Locking the first leg's shape
+    // is what guards client-side PII exposure regardless.
+    expect(fromCalls()[0]).toBe("sessions");
+    const cols = selectArgs();
+    expect(cols).not.toBe("*");
+    expect(cols).toContain("test_id");
+    expect(cols).toContain("score");
+    expect(cols).not.toMatch(/respondent_email/);
+    expect(cols).not.toMatch(/respondent_name/);
+  });
+
+  it("useUserTeamMembers first leg (team_members) bounded; no `*` projection", async () => {
+    const { result } = renderHook(() => useUserTeamMembers(), { wrapper });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(fromCalls()).toContain("team_members");
+    const cols = selectArgs();
+    expect(cols).not.toBe("*");
+    expect(cols).toContain("team_id");
+    expect(cols).toContain("user_id");
+    expect(cols).toContain("role");
+  });
+
+  it("useUserSessions: no `respondent_email`/`respondent_name` columns in the projection", async () => {
+    const { result } = renderHook(() => useUserSessions(), { wrapper });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    const cols = selectArgs();
+    // The view used here is attempts_anon-style — even if a future refactor
+    // joins respondents, the projection must stay PII-stripped at the
+    // CLIENT layer. RLS is defense in depth, not the sole gate.
+    expect(cols).not.toMatch(/respondent_email/);
+    expect(cols).not.toMatch(/respondent_name/);
   });
 });

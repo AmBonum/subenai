@@ -131,4 +131,54 @@ describe("/signup", () => {
       expect(signInWithOAuth).toHaveBeenCalledWith(expect.objectContaining({ provider: "google" }));
     });
   });
+
+  it("AUTH-SIGNUP-03: disables the submit button while signUp is in flight", async () => {
+    let resolveSignUp: (v: unknown) => void = () => {};
+    signUp.mockReturnValue(
+      new Promise((res) => {
+        resolveSignUp = res;
+      }),
+    );
+    render(<Page />);
+    fireEvent.change(screen.getByTestId("signup-email-input"), {
+      target: { value: "slow@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("signup-password-input"), {
+      target: { value: "Strong#Pass1234" },
+    });
+    fireEvent.change(screen.getByTestId("signup-password-confirm-input"), {
+      target: { value: "Strong#Pass1234" },
+    });
+    const button = screen.getByTestId("signup-submit-button") as HTMLButtonElement;
+    fireEvent.click(button);
+    await waitFor(() => {
+      expect(button).toBeDisabled();
+    });
+    expect(button.textContent).toBe("Vytváram účet...");
+    resolveSignUp({ data: { user: { id: "u1" } }, error: null });
+  });
+
+  it("AUTH-SIGNUP-04: passes emailRedirectTo pointing at /auth/callback on the current origin", async () => {
+    signUp.mockResolvedValue({ data: { user: { id: "u1" } }, error: null });
+    render(<Page />);
+    fireEvent.change(screen.getByTestId("signup-email-input"), {
+      target: { value: "new@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("signup-password-input"), {
+      target: { value: "Strong#Pass1234" },
+    });
+    fireEvent.change(screen.getByTestId("signup-password-confirm-input"), {
+      target: { value: "Strong#Pass1234" },
+    });
+    fireEvent.click(screen.getByTestId("signup-submit-button"));
+    await waitFor(() => {
+      expect(signUp).toHaveBeenCalledTimes(1);
+    });
+    const arg = signUp.mock.calls[0][0] as {
+      email: string;
+      password: string;
+      options?: { emailRedirectTo?: string };
+    };
+    expect(arg.options?.emailRedirectTo).toBe(`${window.location.origin}/auth/callback`);
+  });
 });

@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ConsentProvider } from "@/hooks/useConsent";
 import { TrapDialog } from "@/components/quiz/results/TrapDialog";
 import { TRAP_SEEN_STORAGE_KEY } from "@/lib/data-trap/copy";
+import { supabase } from "@/integrations/supabase/client";
 
 // Centralised guard against the design-invariant violations we care about
 // most. ANY non-flag write to localStorage, ANY fetch, ANY supabase write
@@ -50,6 +51,35 @@ describe("TrapDialog — design invariants (no I/O of field values)", () => {
     fireEvent.change(screen.getByLabelText(/OTP/i), { target: { value: "123456" } });
 
     expect(setItemSpy).not.toHaveBeenCalled();
+  });
+
+  // Phase 9e — PII matrix: explicit supabase guard. Earlier tests cover
+  // fetch + localStorage.setItem; the third channel a trap-popup could
+  // accidentally leak through is the supabase client. We spy on `from` /
+  // `rpc` and assert no writes happen while the user types into ANY field.
+  it("never calls supabase.from or supabase.rpc when the user types into any field", async () => {
+    const fromSpy = vi.spyOn(supabase, "from");
+    const rpcSpy = vi.spyOn(supabase, "rpc");
+    try {
+      renderTrap();
+      const rc = await screen.findByLabelText(/Rodné číslo/i);
+      fireEvent.change(rc, { target: { value: "950101/1234" } });
+      fireEvent.change(screen.getByLabelText(/Číslo karty/i), {
+        target: { value: "4242 4242 4242 4242" },
+      });
+      fireEvent.change(screen.getByLabelText(/CVV/i), { target: { value: "123" } });
+      fireEvent.change(screen.getByLabelText(/IBAN/i), {
+        target: { value: "SK31 1200 0000 1987 4263 7541" },
+      });
+      fireEvent.change(screen.getByLabelText(/Heslo/i), { target: { value: "hunter2" } });
+      fireEvent.change(screen.getByLabelText(/OTP/i), { target: { value: "123456" } });
+
+      expect(fromSpy).not.toHaveBeenCalled();
+      expect(rpcSpy).not.toHaveBeenCalled();
+    } finally {
+      fromSpy.mockRestore();
+      rpcSpy.mockRestore();
+    }
   });
 });
 

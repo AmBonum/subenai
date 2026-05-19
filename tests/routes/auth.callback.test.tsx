@@ -79,4 +79,66 @@ describe("/auth/callback", () => {
     });
     expect(exchangeCodeForSession).not.toHaveBeenCalled();
   });
+
+  it("AUTH-CB-01: error from provider renders the Slovak error and bounces to /login", async () => {
+    vi.useFakeTimers();
+    try {
+      currentSearch = { error: "access_denied", error_description: "User cancelled" };
+      render(<Page />);
+      await vi.waitFor(() => {
+        expect(screen.getByTestId("auth-callback-error").textContent).toBe(
+          "Prihlásenie zlyhalo. Skús to znovu.",
+        );
+      });
+      vi.advanceTimersByTime(1600);
+      await vi.waitFor(() => {
+        expect(navigate).toHaveBeenCalledWith({ to: "/login" });
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("AUTH-CB-02: renders the loading spinner copy before the exchange resolves", () => {
+    currentSearch = { code: "pkce-pending" };
+    // Leave exchangeCodeForSession unresolved so the loading state is observable.
+    exchangeCodeForSession.mockReturnValue(new Promise(() => {}));
+    render(<Page />);
+    expect(screen.getByTestId("auth-callback-loading").textContent).toBe("Overujem prihlásenie...");
+    expect(screen.queryByTestId("auth-callback-error")).not.toBeInTheDocument();
+  });
+
+  it("AUTH-CB-03: missing session after exchange shows the error then bounces to /login", async () => {
+    vi.useFakeTimers();
+    try {
+      currentSearch = { code: "no-session-code" };
+      exchangeCodeForSession.mockResolvedValue({ data: {}, error: null });
+      getSession.mockResolvedValue({ data: { session: null } });
+      render(<Page />);
+      await vi.waitFor(() => {
+        expect(screen.getByTestId("auth-callback-error")).toBeInTheDocument();
+      });
+      vi.advanceTimersByTime(1600);
+      await vi.waitFor(() => {
+        expect(navigate).toHaveBeenCalledWith({ to: "/login" });
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("AUTH-CB-04: ignores an off-site ?redirect= (not starting with '/') and falls back to /app", async () => {
+    currentSearch = { code: "c3", redirect: "https://evil.example/admin" };
+    exchangeCodeForSession.mockResolvedValue({ data: {}, error: null });
+    getSession.mockResolvedValue({ data: { session: { user: { id: "u1" } } } });
+    render(<Page />);
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith({ to: "/app" });
+    });
+    // Critical: the open-redirect attempt must not appear in any navigate call.
+    for (const call of navigate.mock.calls) {
+      const arg = call[0] as { to?: string };
+      expect(arg.to).not.toContain("evil.example");
+    }
+  });
 });

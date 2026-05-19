@@ -686,6 +686,88 @@ test.describe("Cookie consent banner — edge cases", () => {
     });
   });
 
+  // TC-21 (9e): "Odmietnuť všetko" → analytics_storage stays "denied" on the dataLayer.
+  // GA loads in denied-by-default mode via Consent Mode v2, so the right
+  // sentinel is not "no script" but "no granted state was ever pushed".
+  test("TC-21: 'Odmietnuť všetko' leaves analytics_storage denied on the dataLayer", async ({
+    page,
+    consent,
+  }) => {
+    await test.step("Navigate to home and confirm banner is visible", async () => {
+      await page.goto("/");
+      await expect(consent.root).toBeVisible();
+    });
+
+    await test.step("Click 'Odmietnuť všetko'", async () => {
+      await consent.rejectAllButton.click();
+      await expect(consent.root).toBeHidden();
+    });
+
+    await test.step("Verify the most recent gtag consent update has analytics_storage='denied'", async () => {
+      const latest = await page.evaluate(() => {
+        const dl = (window as unknown as { dataLayer?: unknown[] }).dataLayer ?? [];
+        // Find the LAST "consent","update", ... entry. dataLayer entries are
+        // either plain objects or arguments-like; we coerce defensively.
+        for (let i = dl.length - 1; i >= 0; i--) {
+          const entry = dl[i] as { [k: number]: unknown } | Record<string, unknown>;
+          // gtag pushes arguments-like objects keyed by numeric index.
+          if (typeof entry === "object" && entry !== null) {
+            const first = (entry as Record<number, unknown>)[0];
+            const second = (entry as Record<number, unknown>)[1];
+            const third = (entry as Record<number, unknown>)[2];
+            if (first === "consent" && second === "update") {
+              return third as Record<string, string> | undefined;
+            }
+          }
+        }
+        return undefined;
+      });
+      // Either no update fired (denied-by-default initial state survives)
+      // OR an explicit denied state was pushed. Both satisfy the contract.
+      if (latest) {
+        expect(latest.analytics_storage).toBe("denied");
+        expect(latest.ad_storage).toBe("denied");
+      }
+    });
+  });
+
+  // TC-22 (9e): "Prijať všetko" → analytics_storage is granted on the dataLayer.
+  // Counterpart sentinel: confirms TC-21 isn't passing because gtag is
+  // missing entirely. A reject must produce denied; an accept must produce
+  // granted. Together they prove the consent gate is wired both ways.
+  test("TC-22: 'Prijať všetko' pushes analytics_storage='granted' to gtag", async ({
+    page,
+    consent,
+  }) => {
+    await test.step("Navigate to home and accept all", async () => {
+      await page.goto("/");
+      await expect(consent.root).toBeVisible();
+      await consent.acceptAllButton.click();
+      await expect(consent.root).toBeHidden();
+    });
+
+    await test.step("Verify the most recent gtag consent update has analytics_storage='granted'", async () => {
+      const latest = await page.evaluate(() => {
+        const dl = (window as unknown as { dataLayer?: unknown[] }).dataLayer ?? [];
+        for (let i = dl.length - 1; i >= 0; i--) {
+          const entry = dl[i] as { [k: number]: unknown };
+          if (typeof entry === "object" && entry !== null) {
+            const first = (entry as Record<number, unknown>)[0];
+            const second = (entry as Record<number, unknown>)[1];
+            const third = (entry as Record<number, unknown>)[2];
+            if (first === "consent" && second === "update") {
+              return third as Record<string, string> | undefined;
+            }
+          }
+        }
+        return undefined;
+      });
+      expect(latest).toBeTruthy();
+      expect(latest!.analytics_storage).toBe("granted");
+      expect(latest!.ad_storage).toBe("granted");
+    });
+  });
+
   // TC-20: Dialog re-opens correctly after a previous "Odmietnuť všetko" from within the dialog
   test("TC-20: Dialog re-opens with all non-necessary switches unchecked after prior in-dialog rejection", async ({
     page,

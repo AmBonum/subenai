@@ -88,4 +88,81 @@ describe("/auth/reset-password", () => {
       expect(screen.getByTestId("reset-no-session")).toBeInTheDocument();
     });
   });
+
+  it("AUTH-RESET-01: blocks weak passwords client-side before calling supabase", async () => {
+    getSession.mockResolvedValue({ data: { session: { user: { id: "u1" } } } });
+    render(<Page />);
+    await waitFor(() => screen.getByTestId("reset-form"));
+    fireEvent.change(screen.getByTestId("reset-password-input"), {
+      target: { value: "abc" },
+    });
+    fireEvent.change(screen.getByTestId("reset-password-confirm-input"), {
+      target: { value: "abc" },
+    });
+    fireEvent.click(screen.getByTestId("reset-submit-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("reset-error-message").textContent).toBe(
+        "Heslo je príliš slabé. Použi aspoň 8 znakov.",
+      );
+    });
+    expect(updateUser).not.toHaveBeenCalled();
+  });
+
+  it("AUTH-RESET-02: disables the submit button while updateUser is in flight", async () => {
+    getSession.mockResolvedValue({ data: { session: { user: { id: "u1" } } } });
+    let resolveUpdate: (v: unknown) => void = () => {};
+    updateUser.mockReturnValue(
+      new Promise((res) => {
+        resolveUpdate = res;
+      }),
+    );
+    render(<Page />);
+    await waitFor(() => screen.getByTestId("reset-form"));
+    fireEvent.change(screen.getByTestId("reset-password-input"), {
+      target: { value: "Strong#Pass1234" },
+    });
+    fireEvent.change(screen.getByTestId("reset-password-confirm-input"), {
+      target: { value: "Strong#Pass1234" },
+    });
+    const button = screen.getByTestId("reset-submit-button") as HTMLButtonElement;
+    fireEvent.click(button);
+    await waitFor(() => {
+      expect(button).toBeDisabled();
+    });
+    expect(button.textContent).toBe("Ukladám...");
+    resolveUpdate({ data: { user: { id: "u1" } }, error: null });
+  });
+
+  it("AUTH-RESET-03: surfaces the generic Slovak error when updateUser fails", async () => {
+    getSession.mockResolvedValue({ data: { session: { user: { id: "u1" } } } });
+    updateUser.mockResolvedValue({
+      data: { user: null },
+      error: { message: "Session expired", status: 401 },
+    });
+    render(<Page />);
+    await waitFor(() => screen.getByTestId("reset-form"));
+    fireEvent.change(screen.getByTestId("reset-password-input"), {
+      target: { value: "Strong#Pass1234" },
+    });
+    fireEvent.change(screen.getByTestId("reset-password-confirm-input"), {
+      target: { value: "Strong#Pass1234" },
+    });
+    fireEvent.click(screen.getByTestId("reset-submit-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("reset-error-message").textContent).toBe(
+        "Zmena hesla zlyhala. Skús to znovu.",
+      );
+    });
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it("AUTH-RESET-04: no-session view links back to /forgot-password to request a fresh link", async () => {
+    getSession.mockResolvedValue({ data: { session: null } });
+    render(<Page />);
+    await waitFor(() => {
+      expect(screen.getByTestId("reset-no-session")).toBeInTheDocument();
+    });
+    const link = screen.getByTestId("reset-to-forgot") as HTMLAnchorElement;
+    expect(link.getAttribute("to")).toBe("/forgot-password");
+  });
 });
