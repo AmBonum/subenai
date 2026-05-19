@@ -116,8 +116,10 @@ test.describe("Tests directory — catalog + pack landing", () => {
       await page.goto("/tests/this-slug-does-not-exist");
     });
 
-    await test.step('Verify the 404 heading and "Stránka nenájdená" subheading are visible', async () => {
-      await expect(notFound.heading).toBeVisible();
+    await test.step('Verify the "Stránka nenájdená" subheading is visible', async () => {
+      // The 404 layout renders "Stránka nenájdená" as h1; no literal
+      // "404" heading exists (the "chyba 404" text is in a paragraph),
+      // so the subheading getter is the reliable anchor.
       await expect(notFound.subheading).toBeVisible();
     });
 

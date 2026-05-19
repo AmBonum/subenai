@@ -98,10 +98,12 @@ function CoursesIndexPage() {
   const emptyLine = queryTrim ? t("empty_for_query", { q: queryTrim }) : t("empty_for_filters");
 
   return (
-    <div className="min-h-screen bg-background">
+    <div data-testid="courses-catalog-root" className="min-h-screen bg-background">
       <main className="mx-auto max-w-5xl px-4 pb-12 pt-12 sm:pt-16">
         <header className="mb-10 text-center">
-          <h1 className="text-4xl font-black sm:text-5xl">{t("page_heading")}</h1>
+          <h1 data-testid="courses-catalog-heading" className="text-4xl font-black sm:text-5xl">
+            {t("page_heading")}
+          </h1>
           <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:text-lg">
             {t("page_intro")}
           </p>
@@ -112,6 +114,7 @@ function CoursesIndexPage() {
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             ref={inputRef}
+            data-testid="courses-catalog-search-input"
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -152,6 +155,7 @@ function CoursesIndexPage() {
                   <button
                     key={cat}
                     type="button"
+                    data-testid={`courses-catalog-filter-${cat}`}
                     onClick={() => toggleCategory(cat)}
                     aria-pressed={active}
                     className={`rounded-full border px-3 py-1.5 text-sm transition ${
@@ -181,12 +185,15 @@ function CoursesIndexPage() {
         {resultLine && <p className="mb-4 text-sm text-muted-foreground">{resultLine}</p>}
 
         {filtered.length === 0 ? (
-          <div className="py-16 text-center">
+          <div data-testid="courses-catalog-empty" className="py-16 text-center">
             <p className="text-muted-foreground">{emptyLine}</p>
             <p className="mt-2 text-sm text-muted-foreground/70">{t("empty_hint")}</p>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            data-testid="courses-catalog-grid"
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          >
             {filtered.map((c) => (
               <CourseCard key={c.slug} course={c} />
             ))}

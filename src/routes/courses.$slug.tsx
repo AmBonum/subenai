@@ -64,7 +64,12 @@ function CoursePage() {
   const course = Route.useLoaderData();
   const year = new Date(course.publishedAt).getFullYear();
   return (
-    <article className="min-h-screen bg-background" itemScope itemType="https://schema.org/Course">
+    <article
+      data-testid="course-detail-root"
+      className="min-h-screen bg-background"
+      itemScope
+      itemType="https://schema.org/Course"
+    >
       <main className="mx-auto max-w-3xl px-4 pb-12 pt-12 sm:pt-16">
         <CourseHero course={course} />
 
