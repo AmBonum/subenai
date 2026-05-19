@@ -110,6 +110,13 @@ if (typeof window !== "undefined") {
   if (typeof Element.prototype.setPointerCapture === "undefined") {
     Element.prototype.setPointerCapture = () => {};
   }
+
+  // `input-otp` calls `document.elementFromPoint` inside a setTimeout to
+  // detect slot hover; jsdom doesn't implement it. Tests pass without it
+  // but the unhandled exception pollutes the run report.
+  if (typeof document.elementFromPoint === "undefined") {
+    document.elementFromPoint = () => null;
+  }
 }
 
 // AH-15.2: jsdom's navigator.language defaults to en-US, which now resolves

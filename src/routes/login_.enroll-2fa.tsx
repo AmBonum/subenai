@@ -12,6 +12,12 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -241,19 +247,34 @@ function EnrollTwoFactorPage() {
               >
                 {t("step3_body")}
               </p>
-              <div className="space-y-2">
-                <Label htmlFor="enroll-2fa-code">{t("step3_code_label")}</Label>
-                <Input
-                  id="enroll-2fa-code"
-                  inputMode="numeric"
-                  pattern="[0-9]{6}"
-                  maxLength={6}
-                  autoComplete="one-time-code"
-                  required
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                  data-testid="enroll-2fa-code-input"
-                />
+              <div className="space-y-3">
+                <Label htmlFor="enroll-2fa-code" className="block text-center text-sm font-medium">
+                  {t("step3_code_label")}
+                </Label>
+                <div className={"flex justify-center " + (error ? "animate-otp-shake" : "")}>
+                  <InputOTP
+                    id="enroll-2fa-code"
+                    maxLength={6}
+                    autoFocus
+                    autoComplete="one-time-code"
+                    value={code}
+                    onChange={setCode}
+                    containerClassName="gap-2"
+                    data-testid="enroll-2fa-code-input"
+                  >
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} className="h-14 w-12 text-xl font-semibold" />
+                      <InputOTPSlot index={1} className="h-14 w-12 text-xl font-semibold" />
+                      <InputOTPSlot index={2} className="h-14 w-12 text-xl font-semibold" />
+                    </InputOTPGroup>
+                    <InputOTPSeparator />
+                    <InputOTPGroup>
+                      <InputOTPSlot index={3} className="h-14 w-12 text-xl font-semibold" />
+                      <InputOTPSlot index={4} className="h-14 w-12 text-xl font-semibold" />
+                      <InputOTPSlot index={5} className="h-14 w-12 text-xl font-semibold" />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
               </div>
               {error && (
                 <p

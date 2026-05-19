@@ -225,6 +225,24 @@
 }
 .animate-fade-in-up { animation: fade-in-up 0.5s ease-out both; }
 
+/* OTP feedback: horizontal shake on wrong code, brief pulse on success.
+   Used by the 2FA verify + enroll surfaces. */
+@keyframes otp-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+.animate-otp-shake { animation: otp-shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+
+@keyframes otp-success {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.animate-otp-success { animation: otp-success 0.45s ease-out both; }
+
 @media print {
   /* Print-friendly layout for course one-pagers and policy pages.
      Hide chrome (header, banner, dialog) and switch to plain colors. */
