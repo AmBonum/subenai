@@ -3554,10 +3554,17 @@ CREATE POLICY "blog_post_tags_admin_all"
 INSERT INTO public.blog_authors (slug, display_name, bio)
 VALUES (
   'subenai-editorial',
-  'SubenAI editorial',
-  'Tím SubenAI píše o internetových podvodoch, digitálnej bezpečnosti a tom, ako rozpoznať scam skôr, než vás dostane.'
+  'subenai editorial',
+  'Tím subenai píše o internetových podvodoch, digitálnej bezpečnosti a tom, ako rozpoznať scam skôr, než ťa dostane.'
 )
 ON CONFLICT (slug) DO NOTHING;
+
+UPDATE public.blog_authors
+SET display_name = 'subenai editorial',
+    bio = 'Tím subenai píše o internetových podvodoch, digitálnej bezpečnosti a tom, ako rozpoznať scam skôr, než ťa dostane.'
+WHERE slug = 'subenai-editorial'
+  AND (display_name <> 'subenai editorial'
+       OR bio <> 'Tím subenai píše o internetových podvodoch, digitálnej bezpečnosti a tom, ako rozpoznať scam skôr, než ťa dostane.');
 
 INSERT INTO public.blog_categories (slug, name, sort_order, description) VALUES
   ('phishing-a-emaily',    'Phishing a emailové podvody',          10, 'Ako rozpoznať podvodné e-maily a chrániť svoje účty.'),

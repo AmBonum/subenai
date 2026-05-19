@@ -7,6 +7,11 @@
 -- admin CMS edits these rows. anon reads only published rows; authenticated
 -- admin (via has_role('admin')) does all writes.
 --
+-- Idempotent: every CREATE uses IF NOT EXISTS, every CREATE POLICY is
+-- preceded by DROP POLICY IF EXISTS, every CREATE TRIGGER by
+-- DROP TRIGGER IF EXISTS. Safe to re-run on a DB that has already had
+-- DEPLOY_SETUP.sql applied (which is what happens in production setup).
+--
 -- Depends on (already present from AH-1, migration 20260517000000):
 --   public.app_role enum, public.has_role(uuid, app_role) function,
 --   public.test_status enum ('draft','published','archived')
@@ -16,7 +21,7 @@
 -- Tables
 -- ----------------------------------------------------------------------------
 
-CREATE TABLE public.blog_authors (
+CREATE TABLE IF NOT EXISTS public.blog_authors (
   id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   slug         text NOT NULL UNIQUE,
   display_name text NOT NULL,
@@ -25,7 +30,7 @@ CREATE TABLE public.blog_authors (
   created_at   timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE public.blog_categories (
+CREATE TABLE IF NOT EXISTS public.blog_categories (
   id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   slug            text NOT NULL UNIQUE,
   name            text NOT NULL,
@@ -36,7 +41,7 @@ CREATE TABLE public.blog_categories (
   created_at      timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE public.blog_tags (
+CREATE TABLE IF NOT EXISTS public.blog_tags (
   id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   slug       text NOT NULL UNIQUE,
   name       text NOT NULL,
@@ -46,7 +51,7 @@ CREATE TABLE public.blog_tags (
 -- language is reserved for E18 trilingual expansion (decision 4 in PLAN).
 -- pillar_post_id self-ref encodes hub-and-spoke cluster graph; a pillar's
 -- own pillar_post_id is NULL.
-CREATE TABLE public.blog_posts (
+CREATE TABLE IF NOT EXISTS public.blog_posts (
   id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   slug            text NOT NULL UNIQUE,
   language        text NOT NULL DEFAULT 'sk',
@@ -72,7 +77,7 @@ CREATE TABLE public.blog_posts (
   updated_at      timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE public.blog_post_tags (
+CREATE TABLE IF NOT EXISTS public.blog_post_tags (
   post_id uuid NOT NULL REFERENCES public.blog_posts(id) ON DELETE CASCADE,
   tag_id  uuid NOT NULL REFERENCES public.blog_tags(id)  ON DELETE CASCADE,
   PRIMARY KEY (post_id, tag_id)
@@ -82,10 +87,10 @@ CREATE TABLE public.blog_post_tags (
 -- Indexes
 -- ----------------------------------------------------------------------------
 
-CREATE INDEX idx_blog_posts_status_pub ON public.blog_posts (status, published_at DESC);
-CREATE INDEX idx_blog_posts_category   ON public.blog_posts (category_id, published_at DESC);
-CREATE INDEX idx_blog_posts_pillar     ON public.blog_posts (pillar_post_id) WHERE pillar_post_id IS NOT NULL;
-CREATE INDEX idx_blog_post_tags_tag    ON public.blog_post_tags (tag_id);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_status_pub ON public.blog_posts (status, published_at DESC);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_category   ON public.blog_posts (category_id, published_at DESC);
+CREATE INDEX IF NOT EXISTS idx_blog_posts_pillar     ON public.blog_posts (pillar_post_id) WHERE pillar_post_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_blog_post_tags_tag    ON public.blog_post_tags (tag_id);
 
 -- ----------------------------------------------------------------------------
 -- updated_at trigger
@@ -101,6 +106,7 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS blog_posts_updated_at ON public.blog_posts;
 CREATE TRIGGER blog_posts_updated_at
   BEFORE UPDATE ON public.blog_posts
   FOR EACH ROW EXECUTE FUNCTION public.tg_blog_posts_set_updated_at();
@@ -114,6 +120,17 @@ ALTER TABLE public.blog_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.blog_tags       ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.blog_posts      ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.blog_post_tags  ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "blog_posts_read_published"     ON public.blog_posts;
+DROP POLICY IF EXISTS "blog_authors_read_all"         ON public.blog_authors;
+DROP POLICY IF EXISTS "blog_categories_read_all"      ON public.blog_categories;
+DROP POLICY IF EXISTS "blog_tags_read_all"            ON public.blog_tags;
+DROP POLICY IF EXISTS "blog_post_tags_read_via_post"  ON public.blog_post_tags;
+DROP POLICY IF EXISTS "blog_posts_admin_all"          ON public.blog_posts;
+DROP POLICY IF EXISTS "blog_authors_admin_all"        ON public.blog_authors;
+DROP POLICY IF EXISTS "blog_categories_admin_all"     ON public.blog_categories;
+DROP POLICY IF EXISTS "blog_tags_admin_all"           ON public.blog_tags;
+DROP POLICY IF EXISTS "blog_post_tags_admin_all"      ON public.blog_post_tags;
 
 -- Public reads
 CREATE POLICY "blog_posts_read_published"
@@ -181,9 +198,21 @@ CREATE POLICY "blog_post_tags_admin_all"
 INSERT INTO public.blog_authors (slug, display_name, bio)
 VALUES (
   'subenai-editorial',
-  'SubenAI editorial',
-  'Tím SubenAI píše o internetových podvodoch, digitálnej bezpečnosti a tom, ako rozpoznať scam skôr, než vás dostane.'
-);
+  'subenai editorial',
+  'Tím subenai píše o internetových podvodoch, digitálnej bezpečnosti a tom, ako rozpoznať scam skôr, než ťa dostane.'
+)
+ON CONFLICT (slug) DO NOTHING;
+
+-- Catch-up update for any DB instance that ran an earlier draft of this
+-- migration with `SubenAI editorial` + `vás dostane` copy. Aligns the
+-- existing row with locked decisions #1 (lowercase subenai) and #2
+-- (informal `ty` register) — see tasks/blog/voice-guide.md preamble.
+UPDATE public.blog_authors
+SET display_name = 'subenai editorial',
+    bio = 'Tím subenai píše o internetových podvodoch, digitálnej bezpečnosti a tom, ako rozpoznať scam skôr, než ťa dostane.'
+WHERE slug = 'subenai-editorial'
+  AND (display_name <> 'subenai editorial'
+       OR bio <> 'Tím subenai píše o internetových podvodoch, digitálnej bezpečnosti a tom, ako rozpoznať scam skôr, než ťa dostane.');
 
 -- ----------------------------------------------------------------------------
 -- Seed: 15 categories from the user brief
@@ -204,7 +233,8 @@ INSERT INTO public.blog_categories (slug, name, sort_order, description) VALUES
   ('cyber-hygiena',        'Cyber hygiene a návyky',              120, 'Každodenné návyky pre lepšiu online bezpečnosť.'),
   ('tech-explainers',      'Tech explainers jednoducho',          130, 'Bezpečnostné pojmy vysvetlené normálnym jazykom.'),
   ('news-a-trendy',        'News & aktuálne scam trendy',         140, 'Najnovšie podvodné kampane a trendy.'),
-  ('studenti',             'Internet safety pre študentov',       150, 'Bezpečnosť na internete pre žiakov a študentov.');
+  ('studenti',             'Internet safety pre študentov',       150, 'Bezpečnosť na internete pre žiakov a študentov.')
+ON CONFLICT (slug) DO NOTHING;
 
 -- ----------------------------------------------------------------------------
 -- Storage bucket for blog images (hero + inline AI-generated visuals)
@@ -214,7 +244,11 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('blog-images', 'blog-images', true)
 ON CONFLICT (id) DO NOTHING;
 
--- Storage RLS: anon read, admin write
+DROP POLICY IF EXISTS "blog_images_public_read"   ON storage.objects;
+DROP POLICY IF EXISTS "blog_images_admin_insert"  ON storage.objects;
+DROP POLICY IF EXISTS "blog_images_admin_update"  ON storage.objects;
+DROP POLICY IF EXISTS "blog_images_admin_delete"  ON storage.objects;
+
 CREATE POLICY "blog_images_public_read"
   ON storage.objects FOR SELECT
   USING (bucket_id = 'blog-images');

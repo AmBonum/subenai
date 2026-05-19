@@ -17,8 +17,17 @@
 -- ============================================================================
 
 ALTER TABLE public.blog_posts
-  ADD COLUMN sources_jsonb jsonb NOT NULL DEFAULT '[]'::jsonb;
+  ADD COLUMN IF NOT EXISTS sources_jsonb jsonb NOT NULL DEFAULT '[]'::jsonb;
 
-ALTER TABLE public.blog_posts
-  ADD CONSTRAINT blog_posts_sources_jsonb_is_array
-  CHECK (jsonb_typeof(sources_jsonb) = 'array');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'blog_posts_sources_jsonb_is_array'
+  ) THEN
+    ALTER TABLE public.blog_posts
+      ADD CONSTRAINT blog_posts_sources_jsonb_is_array
+      CHECK (jsonb_typeof(sources_jsonb) = 'array');
+  END IF;
+END;
+$$;
