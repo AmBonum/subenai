@@ -1,0 +1,206 @@
+---
+slug: yubikey-vs-google-titan-vs-passkey
+title: "yubikey vs. google titan vs. softvérový passkey — ktorý kľúč si kúpiť"
+subtitle: "porovnanie hardvérových bezpečnostných kľúčov a softvérových passkeys s návodom kam ktorý nasadiť"
+excerpt: "softvérový passkey je zadarmo a stačí 95 % ľudí. yubikey 5c nfc stojí ~60 € a chráni účet aj keby ti niekto kompromitoval celý telefón. google titan je lacnejšia alternatíva. tento článok rozhodne za teba, ktorý si kúpiť — alebo či vôbec."
+category_slug: digitalna-bezpecnost
+author_slug: subenai-editorial
+primary_keyword: yubikey slovensko
+search_intent: commercial
+reading_minutes: 9
+hero_image_url: null
+og_image_url: null
+seo_title: "yubikey vs. google titan vs. passkey 2026 | subenai"
+seo_description: "porovnanie hardvérových kľúčov yubikey 5, google titan a softvérových passkeys — ceny v eur, kde kúpiť na slovensku, ktorý účet potrebuje hardvér a ktorému stačí softvér."
+canonical_url: null
+pillar: false
+sources:
+  - label: "sk-cert: varovanie pred phishingovou kampaňou zneužívajúcou identitu slovenskej pošty"
+    url: "https://www.sk-cert.sk/en/urgent-warning-against-a-phishing-campaign-that-abuses-the-identity-of-slovenska-posta/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "fido alliance: passkeys — phishing-resistant prihlasovanie založené na webauthn"
+    url: "https://fidoalliance.org/passkeys/"
+    publisher: "FIDO Alliance"
+    accessed_at: "2026-05-19"
+  - label: "yubico: yubikey 5 series — porovnávacia tabuľka a špecifikácie"
+    url: "https://www.yubico.com/products/yubikey-5-series/"
+    publisher: "Yubico"
+    accessed_at: "2026-05-19"
+  - label: "google: titan security key — oficiálna produktová stránka"
+    url: "https://store.google.com/product/titan_security_key"
+    publisher: "Google"
+    accessed_at: "2026-05-19"
+  - label: "nist sp 800-63b: digital identity guidelines — authenticator assurance levels"
+    url: "https://pages.nist.gov/800-63-3/sp800-63b.html"
+    publisher: "NIST"
+    accessed_at: "2026-05-19"
+---
+
+ak si dočítal [sprievodcu ochranou pred phishingom](/blog/ochrana-pred-phishingom-2fa-passkey) a teraz váhaš medzi tým, či ti stačí passkey v telefóne alebo si máš kúpiť fyzický kľúč za 60 €, tento článok je pre teba. rozhodnutie nie je *„drahšie je lepšie"*. rozhodnutie je *„aký účet chránim a koho sa bojím"*. odpoveď na obe otázky určuje, či ti stačí softvérový passkey, alebo musíš siahnuť po yubikey.
+
+## prečo vôbec porovnávame softvér a hardvér
+
+passkey a hardvérový kľúč fungujú **na rovnakom protokole** — fido2 / webauthn. obe podpisujú prihlasovaciu výzvu privátnym kľúčom, obe sú viazané na doménu, obe sú phishing-resistant by design. [fido alliance to popisuje ako jednu rodinu autentifikátorov](https://fidoalliance.org/passkeys/) [2] — rozdiel nie je v kryptografii, ale v tom, **kde privátny kľúč žije**.
+
+- **softvérový passkey** žije v tvojom keychaine — icloud keychain, google password manager, 1password, bitwarden, proton pass. synchronizuje sa medzi tvojimi zariadeniami end-to-end šifrovane.
+- **hardvérový kľúč** žije v plastovej škrupinke, ktorú držíš v ruke. nesynchronizuje sa nikam. ak ho stratíš a nemáš zálohu, je preč.
+
+obe ti zastavia phisher-a, ktorý by inak prečítal tvoje heslo aj sms kód v reálnom čase — [presne typ útoku, pred ktorým sk-cert varuje pri phishingu na slovenskú poštu](https://www.sk-cert.sk/en/urgent-warning-against-a-phishing-campaign-that-abuses-the-identity-of-slovenska-posta/index.html) [1]. rozdiel je v *threat modeli*: pred kým chceš byť chránený.
+
+## softvérový passkey — default pre 95 % ľudí
+
+apple keychain, google password manager, 1password, bitwarden, proton pass — všetky v 2026 podporujú passkey natívne. nastavenie trvá 10 sekúnd, použitie je rýchlejšie než zadávanie hesla.
+
+**čo dostaneš**:
+
+- zadarmo (alebo zahrnuté v predplatnom managera, ktoré aj tak platíš).
+- automatickú synchronizáciu medzi telefónom, tabletom a počítačom.
+- recovery cez tvoj apple / google / 1password účet — ak stratíš telefón, prihlásiš sa na novom a passkeys sa stiahnu.
+- phishing-resistance presne na úrovni hardvérového kľúča.
+
+**čo nedostaneš**:
+
+- ochranu pred kompromitáciou samotného ekosystému. ak phisher dostane tvoj icloud heslo a obíde apple 2fa, dostane aj tvoje passkeys. v praxi je to scenár pre cieleného útočníka, nie pre masový scam — ale ak si v hľadáčiku, na tom záleží.
+- možnosť mať kľúč úplne mimo cloudu. softvérový passkey *je* v cloude, len šifrovane.
+
+**verdikt**: pre bežného slováka — primárny e-mail, banking, sociálne siete, eshopy, daňový portál — softvérový passkey je správna odpoveď. nepotrebuješ míňať 60 € na yubikey, ak ti stačí ochrana pred 99 % útokov, ktoré skutočne na slovensku obiehajú.
+
+## yubikey 5 series — gold standard hardvéru
+
+yubico je dánsko-americká firma, ktorá fido2 hardvér v podstate vynašla a stále drží kategóriu. yubikey 5 séria je referenčný produkt — všetko ostatné sa porovnáva s ňou.
+
+**konkrétne modely (ceny z oficiálneho yubico shop-u, eu shipping, máj 2026)**:
+
+- **yubikey 5c nfc** — ~63 € — usb-c + nfc. univerzálny model. funguje s macbook-om, modernými windows notebookmi, androidom (cez usb-c aj nfc) a iphone-om (cez nfc po lightning ére). ak kupuješ jeden, kupuj tento.
+- **yubikey 5 nfc** — ~58 € — usb-a + nfc. pre staršie notebooky alebo desktop bez usb-c.
+- **yubikey 5ci** — ~83 € — usb-c + lightning. relevantný len ak máš ešte iphone s lightning konektorom; iphone 15+ má usb-c, pre ten kupuj 5c nfc.
+
+[yubico v oficiálnej porovnávacej tabuľke uvádza, že všetky modely 5-tej série podporujú fido2 / webauthn, fido u2f, smart card (piv), totp a openpgp](https://www.yubico.com/products/yubikey-5-series/) [3]. v praxi: jeden kľúč nahradí authenticator aplikáciu, smartcard pre firemné prihlásenie, gpg podpis pre git commits aj fido pre web logins.
+
+**silné stránky**:
+
+- hardvér je *tamper-evident* — nedá sa rozobrať bez stôp, privátny kľúč nikdy neopustí čip.
+- žiadna batéria, žiadny update firmvéru — kúpiš a používaš 10 rokov.
+- nfc funguje s androidom aj iphone-om bez kábla.
+
+**slabé miesta**:
+
+- 60 € za kus a kúpiť **musíš dva** — primárny a záložný. takže reálna investícia je 120 €.
+- ak stratíš oba kľúče, recovery závisí od toho, či ti služba ponúka záchranné kódy alebo iný backup faktor.
+- usb-c verzia v nfc móde funguje s iphone-om len pri službách, ktoré nfc podporujú — v praxi je to viac a viac, ale stále nie všetko.
+
+**verdikt**: ak chceš mať istotu, že tvoj kľúč nie je nikde v cloude a nikto ti ho nemôže ukradnúť na diaľku, yubikey 5c nfc je správna voľba. kúp dva.
+
+## google titan — solídna lacnejšia alternatíva
+
+google titan key je hardvérový fido2 kľúč od google-u. existuje vo dvoch verziách: usb-a + nfc a usb-c + nfc, obe za $30 v us obchode. [google ho predáva cez vlastný store s medzinárodným shippingom](https://store.google.com/product/titan_security_key) [4], dostupnosť pre slovensko je možná cez google store eu (v 2026 obmedzená na vybrané krajiny, slovensko nie vždy zahrnuté).
+
+**čo dostaneš**:
+
+- rovnakú fido2 funkcionalitu ako yubikey 5 pre web logins.
+- nfc pre mobilné prihlasovanie.
+- nižšiu cenu (~30 € vs. ~60 € yubikey).
+
+**čo nedostaneš**:
+
+- smartcard (piv), openpgp ani totp generátor. titan je *čisto fido2*.
+- jednoduchú dostupnosť na slovensku. yubikey kúpiš na alza.sk; titan musíš objednať zo zámoria a colné poplatky cenovú výhodu zožerú.
+
+**verdikt**: ak yubikey nie je dostupný alebo si citlivý na cenu, titan funguje. inak vyhráva yubikey — dostupnosť na slovensku je realistickejšia a smartcard funkcia príde vhod neskôr.
+
+## onlykey, nitrokey a iné — pre fajnšmekrov
+
+**onlykey** je open-hardware alternatíva s pin-padom na kľúči (pin zadávaš priamo na zariadení). ~50 €, niche.
+
+**nitrokey** je nemecká open-source alternatíva, kompatibilná s fido2, openpgp, smartcard. 50–80 €. ak chceš európsky pôvod a open-source firmvér, jediná seriózna voľba.
+
+pre bežného kupujúceho: **yubikey alebo titan**. open-hardware rieš len ak máš konkrétny dôvod (firemná policy, supply-chain paranoia).
+
+## ako si vybrať — rozhodovacia tabuľka
+
+| tvoja situácia | čo si kúpiť |
+|---|---|
+| bežný používateľ, primárny e-mail + banking + social | softvérový passkey (zadarmo, v keychaine) |
+| primárny e-mail je tvoj život (admin, journalista, freelancer) | 2x yubikey 5c nfc |
+| krypto burza s viac ako 1000 € zostatkom | 2x yubikey 5c nfc, povinne |
+| github / aws / cloudflare s prístupom k produkcii | 2x yubikey 5c nfc, povinne |
+| novinár, aktivista, právnik v citlivom prípade | 2x yubikey 5c nfc + nitrokey ako tretí kľúč v inom regióne |
+| limitovaný rozpočet, ale chceš hardvér | 2x google titan (~60 € za pár) |
+| firemné prostredie, smartcard prihlasovanie | yubikey 5 séria — piv smartcard funkcia |
+
+ak ešte len začínaš a tvoja primárna obava je *„nech mi nehackneru gmail"* — začni softvérovým passkey, [nastavenom podľa návodu v sprievodcovi ochranou pred phishingom](/blog/ochrana-pred-phishingom-2fa-passkey). hardvér si môžeš dokúpiť neskôr, keď budeš mať konkrétny dôvod.
+
+## kde kúpiť na slovensku (a kde nie)
+
+**oficiálne a bezpečné**:
+
+- **yubico eu shop** (`yubico.com`) — priamo z dánska, eu shipping 2–5 dní, dph zahrnutá. najistejšia cesta.
+- **alza.sk** — predáva yubikey 5 nfc a 5c nfc, oficiálne distribuované. ceny mierne vyššie než priamo z yubico, ale dostupnosť okamžitá.
+- **heuréka.sk** ako porovnávač — pozor, kupuj len od overených predajcov s recenziami, nie od neznámych marketplace-ov.
+
+**čomu sa vyhnúť**:
+
+- **aliexpress, ebay od neznámych predajcov, instagram reklamy** — falošné yubikey existujú. vyzerajú identicky, ale obsahujú podvrhnutý firmvér, ktorý môže odoslať tvoje kľúče útočníkovi. yubico tento problém [opakovane dokumentuje](https://www.yubico.com/products/yubikey-5-series/) [3]. pravidlo: kupuj len od yubico priamo alebo od certifikovaného slovenského predajcu.
+- **použité kľúče z bazošu / vintedu** — kúpiš kľúč, ktorý už niekto inicializoval. predchádzajúci majiteľ môže mať skopírovaný atestačný certifikát alebo iné stopy.
+
+google titan na slovensku oficiálne cez slovenský retail nedostaneš. musíš ho objednať cez google store (us) — 2–4 týždňový shipping, možné colné poplatky. **práve preto je yubikey praktickejšia voľba pre slováka**, aj keď je drahší.
+
+## prečo vždy kupuj dva kľúče
+
+**toto je najdôležitejší odsek celého článku**. kúpiť jeden hardvérový kľúč je horšie ako nemať žiadny. dôvod: ak ho stratíš, ukradnú ti ho alebo sa zlomí, **stratíš účet definitívne**. bez záložného kľúča nemáš ako sa prihlásiť — a recovery cez sms 2fa si si práve vypol, lebo si si predsa kúpil hardvérový kľúč.
+
+[nist v sp 800-63b výslovne odporúča *„multiple authenticators of equivalent or higher aal"*](https://pages.nist.gov/800-63-3/sp800-63b.html) [5] — americká vládna autorita to nepíše ako luxus, ale ako základnú podmienku robustného hardvérového setupu.
+
+**ako to spraviť správne**:
+
+1. kúp dva kľúče naraz. ideálne ten istý model, aby si si kompatibilitu vyriešil raz.
+2. **oba zaregistruj** v každej kritickej službe (gmail, microsoft, github, banka). nie *„druhý zaregistrujem keď budem mať čas"* — zaregistruj dnes, kým si pri pamäti.
+3. **primárny** nos pri sebe na kľúčenke.
+4. **záložný** ulož vo fyzickom trezore doma, alebo u dôveryhodnej osoby v zalepenej obálke. ideálne v inej fyzickej lokácii než primárny — ak ti vykradnú byt, kľúč v práci alebo u rodičov ťa zachráni.
+5. **záchranné kódy** (recovery codes) z každej služby si vytlač a ulož tiež — sú tretia vrstva, keď prídeš o oba kľúče naraz.
+
+## ako registrovať yubikey — krátky walkthrough
+
+**google účet**:
+
+`myaccount.google.com` → bezpečnosť → 2-step verification → security key → pridať. zasuň kľúč, dotkni sa kontaktnej plochy. zopakuj pre druhý kľúč. potom vypni sms 2fa — máš dva hardvérové faktory, sms už je len diera.
+
+**microsoft / outlook**:
+
+`account.microsoft.com` → bezpečnosť → rozšírené možnosti zabezpečenia → pridať novú metódu → security key. nfc cez telefón alebo usb cez počítač. zaregistruj oba kľúče.
+
+**github**:
+
+`github.com/settings/security` → two-factor authentication → security keys → register new security key. dôležité hlavne ak máš push prístup k produkčným repo-m.
+
+**slovenské banky**:
+
+slsp, tatra banka, vúb v 2026 testujú fido2 pre web banking. sleduj nastavenia bezpečnosti v internet bankingu. ak ti banka ponúkne registráciu hardvérového kľúča, prepni sa naň — push autorizácia v app je solídna, ale hardvér + push je nezničiteľné.
+
+**password manager**:
+
+1password, bitwarden, proton pass — všetky podporujú yubikey ako 2fa pre samotný manager. detail v [porovnaní správcov hesiel](/blog/spravca-hesiel-porovnanie) a v hlbšom rozbore [najlepších managerov pre rok 2026](/blog/najlepsi-spravca-hesiel-porovnanie-2026).
+
+## koľko ťa to bude stáť
+
+| setup | náklady | pre koho |
+|---|---|---|
+| softvérový passkey + password manager free | 0 € | bežný používateľ |
+| softvérový passkey + 1password (~ 36 €/rok) | ~36 € ročne | používateľ s viacerými zariadeniami a rodinou |
+| 2x yubikey 5c nfc + softvérový passkey ako záloha | ~126 € jednorazovo | citlivý e-mail / banking / krypto |
+| 2x yubikey + nitrokey + bezpečné skladovanie | ~200 € jednorazovo | profesionálne citlivý threat model |
+
+**rozdiel medzi 0 € a 126 €** je často jediná vec medzi *„môj účet je dosť chránený"* a *„môj účet odolá aj cieleného útočníkovi"*. pre bežného slováka nepotrebuješ to druhé. pre niekoho s krypto v päťcifernej sume alebo s prístupom k citlivým klientom je 126 € najlacnejšie poistenie aké existuje.
+
+## čítaj ďalej
+
+- [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca)
+- [ochrana pred phishingom — 2fa a passkey vysvetlené](/blog/ochrana-pred-phishingom-2fa-passkey)
+- [silné heslo verzus passkey](/blog/silne-heslo-2026-vs-passkey)
+- [porovnanie správcov hesiel](/blog/spravca-hesiel-porovnanie)
+- [najlepší správca hesiel 2026](/blog/najlepsi-spravca-hesiel-porovnanie-2026)
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
