@@ -1,7 +1,36 @@
 # PLAN — /app + Header Redesign (Educator-Retention)
 
 **Date:** 2026-05-19
-**Status:** ✅ APPROVED 2026-05-19 (decisions D1-D9 locked below)
+**Status:** ✅ DELIVERED 2026-05-19 (all 7 phases shipped to main; decisions D1-D9 locked below)
+
+## Phase delivery log
+
+| Phase | Commit | Notes |
+|---|---|---|
+| 0 — Pre-redesign bug fixes | `772eb54` | dead /docs, double-header, reset-pw race, broken Preview, /admin from public chrome |
+| 1 — Mega-menu header | `2569031` | Radix NavigationMenu, 5 items, mobile Sheet+Accordion fallback |
+| 2 — Sidebar reorg + dashboard | `429b11b` | 13→11 items, 3 groups, brand "Pre lektorov", dashboard rebuilt |
+| 3 — Onboarding + auth polish | `a796c33` | profile_preferences table, /app/onboarding, post-login-redirect helper, OAuth-only collision |
+| 4 — Weekly digest | `8452fa9` | user_digests + signal-gated cron, /app/digest, dashboard card |
+| 5 — Course recommendations | `3d43e0e` | course_recommendations + generator, /app/recommendations, dashboard card |
+| 6 — Retest reminders | `151d02e` | retest_reminders + daily cron, /app/retest, dashboard card |
+| 7a — Peer card RPC | `72e5e3f` | get_peer_card SECURITY DEFINER + k-anonymity guard, /app/peer, dashboard card |
+| 7b — Shareable PNG | `a9194f5` | html-to-image, PeerShareView 1200×630, opt-in handle, share_handle column. Bundled with locale-disable UX commit (race condition; code correct) |
+| UX follow-up — Locale lock + logo | `a9194f5` | LocaleSwitcher feature-flagged off, readInitialLocale → sk, favicon S-only below lg breakpoint |
+
+## SQL migrations applied to prod
+- `20260520100000_profile_preferences.sql` ✅
+- `20260520200000_user_digests.sql` ✅
+- `20260520300000_course_recommendations.sql` ✅
+- `20260520400000_retest_reminders.sql` ✅
+- `20260520500000_get_peer_card.sql` ⏳ pending user apply
+- `20260520600000_share_handle.sql` ⏳ pending user apply
+
+## Followups (not in this scope; tracked separately)
+- R8 — Peer-card emotional-valence research with 5 real educators (per UX agent §F + Marketing §D). Validates whether the percentile framing reads as validating vs demoralizing for the Slovak audience before we promote sharing.
+- pg_cron activation — all 3 cron stubs (`generate_weekly_digests`, `generate_course_recommendations`, `refresh_retest_reminders`) are commented out in their migrations per AH-1.8 convention. User activates by uncommenting + running the `cron.schedule(...)` lines manually after first prod test.
+- E2E specs under `e2e/specs/app/*` are all `test.skip(true, "AH-11 fixture")` — needs an authenticated-session Playwright fixture before regression coverage exists for the new dashboard surfaces.
+- Mock-store routes (app.library, app.tests.new, app.sets.$setId) still hitting mock data pending AH-12 schema enrichment.
 **Owner:** project owner
 **Inputs:** 5 parallel senior-agent reports (codebase audit, UX/IA, UX copy, marketing positioning, dev architecture)
 **Locked decisions (project owner, this session):**

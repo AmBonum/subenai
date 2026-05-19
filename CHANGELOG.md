@@ -13,6 +13,60 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > celý balík funkcionality (sponsorship, zber custom-test odpovedí, atď.)
 > kompletne otestovaný v reálnej prevádzke.
 
+## /app + hlavička — kompletný redesign pre lektorov
+
+Hlavná stránka subenai.sk i samotný workspace `/app` prešli redesignom
+postaveným na jednej otázke: prečo by sa lektor mal vrátiť budúci
+týždeň? Odpoveď je rozdaná naprieč siedmymi vlnami zmien.
+
+### Pridané
+- **Mega-menu hlavička** — kategórie *Rýchly test · Sady testov ·
+  Školenia · Pre školy a lektorov · Podpora projektu*. Hover na desktope
+  rozbalí podpanel; na mobile sa rozbaľuje akordeón v bočnom paneli.
+- **Pre školy a lektorov** povýšené z päty na top-nav — najsilnejší
+  conversion-bod pre školský segment.
+- **/app onboarding** — pri prvom prihlásení 3 voliteľné otázky
+  („koho budeš testovať / ktoré scamy ti vadia / chceš novinky"),
+  ktoré ladia odporúčania a frekvenciu súhrnov.
+- **Týždenný súhrn** — každý pondelok ráno pošleme prehľad
+  („{n} dokončení tento týždeň, najslabšia otázka: ...").
+  Pošleme len ak sa niečo udialo — nikdy prázdny e-mail.
+- **Odporúčané kurzy** — ak respondenti zaostávajú v téme, lektor
+  vidí kartu s krátkym kurzom na zaslanie. Jeden klik = poslané.
+- **Pripomienky retestov** — 90 dní po teste pripomenieme, aby si
+  zopakoval rovnaký test a porovnal dôkazy o zlepšení.
+- **Porovnanie s ostatnými** (peer card) — anonymné porovnanie tvojej
+  audience oproti slovenskému priemeru. K-anonymita zaručená
+  (≥10 respondentov v kohorte). Žiadne osobné údaje nikdy nepoužité.
+- **Zdieľateľný obrázok** — z `/app/peer` si stiahneš PNG (1200×630)
+  s tvojím percentilom a top oblasťami. Voliteľná prezývka, ak chceš
+  byť „p. Horváth", inak anonymne. Pre zdieľanie v zborovni alebo
+  v Viber skupine.
+- **/app sidebar** prerobený — z plochého zoznamu 14 položiek na
+  3 logické skupiny (Tvorba · Výsledky · Účet).
+- **Účet zlúčený** — profil, bezpečnosť a GDPR žiadosti teraz tabmi
+  na jednej stránke `/app/account/profile`.
+- **2FA prihlasovacie pole** s 6 samostatnými slotmi (autosubmit pri
+  6. cifre, shake animácia pri chybe, pulse pri úspechu).
+- **Brand v sidebare** — *„SubenAI · Pre lektorov"*.
+
+### Opravené
+- Rozbitý odkaz `/docs` v sidebare (404).
+- Dvojitá hlavička na `/app` a `/admin` (SiteHeader + AppShell
+  header sa rendrovali oba).
+- Race window v `/auth/reset-password` (krátky prázdny render po
+  tokenizácii).
+- Nefunkčný *Preview* button pri šablónach (zakázaný do AH-12).
+
+### Zmenené
+- `/admin` link odstránený z verejnej päty — používatelia ho čítali
+  ako *"spravovať moje výsledky"*. Adminci sa dostanú cez `/app`.
+- Logo v hlavičke sa pri stredných šírkach zmenšuje na `S` ikonu —
+  mega-menu zaberá viac priestoru než pôvodná navigácia.
+- Prepínač jazyka dočasne skrytý. Slovenčina je predvolený jazyk;
+  preklady do angličtiny a češtiny zostávajú v databáze + i18n
+  súboroch (pripravené na obnovenie jedným prepnutím).
+
 ## AH-15 — Trilingválna podpora (slovenčina / angličtina / čeština)
 
 Celá stránka — texty, otázky aj scam scenáre — je dostupná v troch
