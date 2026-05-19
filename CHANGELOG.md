@@ -13,6 +13,67 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > celý balík funkcionality (sponsorship, zber custom-test odpovedí, atď.)
 > kompletne otestovaný v reálnej prevádzke.
 
+## Pre školy, dokumentácia a stratená cesta
+
+Refresh dvoch oblastí pre senior vyzretosť: stránka *Pre školy* sa
+zmenila z dlhého prozaického návodu na konverzný landing s
+persona-segmentáciou, a všetky právne stránky (`/privacy`, `/cookies`)
+dostali navigáciu *Obsah* po pravej strane, štruktúrované dáta pre
+Google a viditeľnejšiu cestu k uplatneniu GDPR práv. Plus chytrejšia
+404 stránka, ktorá neponúkne len tlačidlo *„Späť na domov"*, ale
+priamo navrhne kam si pravdepodobne išiel/išla.
+
+### Pridané
+- **`/schools` kompletne prerobená** — kicker, outcome-first H1
+  „Otestuj triedu na rozpoznávanie scamov — bez registrácií, bez
+  ceny.", tri persona chips (*riaditeľ/DPO · IT koordinátor · učiteľ*),
+  porovnávacia tabuľka „čo dostane kto", štyri kroky postupu so
+  symbolickými ilustráciami, samostatná karta pre GDPR + viditeľný
+  CTA na DPA zmluvu, dvoj-úrovňová FAQ s kategóriami *Heslo a
+  prístup* / *Dáta a GDPR*. Na mobile aj sticky CTA na spodku.
+- **Sprievodca pre učiteľov v Akadémii** — nový pillar článok
+  *„Kybernetika vo výučbe — ako za 45 minút otestovať triedu na
+  rozpoznávanie podvodov"*. 45-minútový plán hodiny krok-za-krokom,
+  čo nehovoriť pred žiakmi, GDPR v skratke pre triedneho učiteľa,
+  checklist pre IT koordinátora školy.
+- **„Obsah" navigácia** na ľavej strane všetkých dlhých právnych
+  textov — `/privacy` (11 sekcií) a `/cookies` (7 sekcií). Na
+  mobile sa zbalí do otváracieho zoznamu na vrchu stránky. Klik
+  na položku posúva priamo k sekcii.
+- **GDPR samoobsluha** zvýraznená — žiadosť o prístup, opravu,
+  vymazanie už nie je schovaná v odstavci uprostred dlhého textu,
+  ale samostatná, výrazne ohraničená karta v sekcii *Tvoje práva*.
+- **Cookies — vidieť aktuálny stav súhlasu** — limetková karta s
+  dátumom a verziou, ak si súhlas dal/a; oranžová výzva ak ho ešte
+  nemáš.
+- **Pridaná zmienka o DNT a Global Privacy Control** v sekcii
+  o vypnutí cez prehliadač — keď máš tieto signály zapnuté,
+  analytiku a marketingové kategórie preskočíme aj keby si súhlas
+  explicitne dal/a.
+- **„Časté otázky o projekte" na `/o-projekte`** — kto za subenai
+  stojí, ako sa to financuje, či trénujeme AI na tvojich odpovediach
+  (nie), aké dáta sa ukladajú a ako dlho.
+- **`/app/pomoc` — rýchle linky** do dokumentácie (*Ochrana
+  osobných údajov · Cookies a súhlas · Posledné zmeny · Pre školy*)
+  priamo na vrchu, plus ilustrovaná stránka „nič sa nenašlo" keď
+  vyhľadávanie nemá výsledok.
+- **404 stránka prerobená** — namiesto holého čísla 404 dostaneš
+  ilustráciu strateného kompasu, krátky kontext, tlačidlo Domov a
+  štyri navrhnuté smerovania (*Rýchly test · Akadémia · Školenia ·
+  Pre školy*).
+
+### Zmenené
+- **`/o-projekte`** — referencie na *„/changelog"* a *„/sponsors"*,
+  ktoré boli formátované ako code (a teda neklikateľné), sú teraz
+  reálne linky na príslušné stránky.
+
+### Technicky (pre vývojárov projektu)
+- E2E testy pre PR-ové úrovne sú teraz **opt-in** cez label
+  `e2e:browser` (predtým bežali na každý PR aj keď nepotrebné).
+  Default PR bežia iba lint + vitest + integration testy — ~3
+  minúty namiesto ~10. Browser suite vždy beží po merge na main
+  ako safety net.
+
 ## Akadémia, prepojenia a domovská stránka pre konverziu
 
 Nová sekcia *Akadémia* (predtým „Blog") a tri prepojovacie karty, ktoré

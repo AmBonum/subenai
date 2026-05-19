@@ -21,7 +21,19 @@
   "errors": {
     "not_found_title": "Stránka nenalezena",
     "not_found_body": "Stránka, kterou hledáte, neexistuje nebo byla přesunuta.",
-    "code_404": "404"
+    "code_404": "404",
+    "not_found_kicker": "chyba 404 — ztracená orientace",
+    "not_found_hint": "Možná hledáte jednu z těchto sekcí:",
+    "not_found_suggestions": {
+      "test_title": "Spustit rychlý test",
+      "test_desc": "5minutový anonymní test rozpoznávání online podvodů",
+      "academy_title": "Otevřít akademii",
+      "academy_desc": "80+ průvodců a článků o online podvodech",
+      "courses_title": "Prohlédnout školení",
+      "courses_desc": "Krátká interaktivní školení podle kategorií scamů",
+      "schools_title": "Pro školy a učitele",
+      "schools_desc": "Edu režim — otestuj třídu, bez registrací"
+    }
   },
   "composer": {
     "meta_title": "Sestav vlastní test pro tým — subenai",
