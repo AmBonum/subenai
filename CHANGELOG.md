@@ -13,6 +13,91 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > celý balík funkcionality (sponsorship, zber custom-test odpovedí, atď.)
 > kompletne otestovaný v reálnej prevádzke.
 
+## Sady testov, školenia a častejšie otázky — senior refresh
+
+Veľký refresh troch *discovery* plôch, kde noví návštevníci pristávajú
+alebo si vyberajú: katalóg testov (`/tests`), katalóg školení
+(`/courses`) a *featured* karta v mega-menu hlavičky. Plus zdieľateľná
+stránka výsledku (`/r/`) dostala lepšie sociálne náhľady a konverzný
+CTA hore, a FAQ sekcie sú teraz *senior-level* — s ikonami, deep-link
+kotvami a záchrannou stopou, keď nenájdeš odpoveď.
+
+Cieľ: prvý pohľad na stránku má viac vizuálnej štruktúry, viac dôvodov
+zostať, a každá otázka, ktorú by si si položil/a, má buď okamžitú
+odpoveď alebo presmerovanie tam, kde ju nájdeš.
+
+### Pridané
+- **`/tests` kompletný redizajn** — nový H1 *„Otestuj svoju branžu.
+  Bez registrácie."* a 60-slovný úvod s konkrétnymi príkladmi
+  *(phishing v e-shope vyzerá inak ako vishing v call-centre, fake
+  faktúra v účtarni inak ako podozrivé SMS od kuriéra)*. Pod hlavičkou
+  *value strip*: **Anonymne · 5 minút · Zadarmo**. Triedenie podľa
+  *Najnovšie / Najviac otázok*. Najnovší pack dostane *featured
+  spotlight* na vrchu mriežky s *„⭐ Najnovší"* odznakom. Karty
+  packov majú teraz vizuálne *hero zone* s odvetvovou farbou a emoji,
+  nie len plochý chip + text.
+- **`/courses` kompletný redizajn** — paralelný refresh: nový H1
+  *„Bezplatné školenia v 5 témach — phishing, vishing, smishing,
+  fake e-shopy, investičné podvody."*, value strip
+  **10 minút · Reálne príklady · Bezplatné**, a každá karta školenia
+  má teraz pod metadátami slot *„Čítaj k tomu:"* s odkazom na článok
+  z akadémie, keď taký existuje. (Predtým bol *Súvisiace v akadémii*
+  prepoj len na detaile školenia.)
+- **„Učenie pred testom" prúžok na `/tests`** — pod FAQ sa zobrazia
+  4 najnovšie články z akadémie tagované ako študijný materiál pre
+  testy. Sekcia sa zobrazí len ak také články existujú; inak sa
+  nezobrazí vôbec (žiadne prázdne placeholdery).
+- **„Súvisiace v akadémii" karta na detaile sady testov** — na
+  `/tests/<slug>` (napr. `/tests/eshop`) sa pod testovacím tokom
+  zobrazí karta s odkazom na článok, ak je nejaký pre danú sadu
+  tagovaný. Symetrický náprotivok karty, ktorá už mesiace existovala
+  na detaile školení.
+- **FAQ sekcie sú teraz *senior-level*** — na `/tests` aj `/courses`:
+  ikona pri každej otázke pre rýchlu orientáciu (peniaze, čas,
+  publikum, súkromie, zdieľanie), *„Najčastejšia"* odznak pri prvej
+  otázke, *rozbaliť/zbaliť všetko* tlačítko, a hlavne **deep-link
+  kotvy** — URL ako `https://subenai.sk/tests#faq-tests-q-q1` otvorí
+  presne tú otázku. Pod sekciou: záchranná stopa *„Nenašiel si
+  odpoveď? Otvor akadémiu · Napíš nám"*. Cesty spomínané v
+  odpovediach (`/support`, `/test`, `/courses/email-phishing`, atď.)
+  sú **klikateľné** — kliknutie ťa rovno preneme na danú stránku
+  namiesto kopírovania URL ručne.
+- **Featured karta v mega-menu** (rozbalená *Sady testov* alebo
+  *Školenia* v hlavičke) má teraz vizuálny vrch — ikona nad farebným
+  gradientom. Predtým to bola plochá tmavá karta s textom, ktorá
+  vyzerala ako placeholder.
+- **Zdieľaný výsledok testu (`/r/<id>`)** ukáže na Messenger / Slack /
+  WhatsApp náhľade plnohodnotnú kartu s názvom, popisom a obrázkom —
+  predtým len textový odkaz. A konverzný CTA *„Porovnaj sa — otestuj
+  sa za 5 minút"* sa presunul **hore**, hneď za skóre, takže nemusíš
+  scrollovať cez celý výsledok ak práve vidíš výsledok kamaráta a
+  chceš si vyskúšať vlastný.
+
+### Zmenené
+- **Filter na `/tests`** sa volá teraz *„Pre koho je test:"*
+  namiesto generického *„Filter podľa branže"* — sprievodca, nie
+  databázové UI.
+- **Úvodný text `/courses`** vysvetľuje formát: *„Každé školenie
+  je 10-minútová stránka s reálnymi príkladmi zo slovenského
+  internetu — žiadne PDF na 60 strán."* — vyhraňuje sa proti
+  korporátnym LMS-kurzom.
+- **SEO meta na `/s/<slug>`** (admin-publikované stránky ako
+  `/s/o-projekte-rozsirene`) sú teraz kompletné — predtým chýbal
+  titulok, popis, OG karta aj kanonická URL, a Google ich
+  reálne nedokázal indexovať aj keď boli v sitemape.
+
+### Technicky (pre vývojárov projektu)
+- Nový stĺpec `blog_posts.related_test_slug` pre symetrický
+  blog ↔ test prepoj. Editorial-driven (žiadny FK na TS moduly).
+  Migrácia ide manuálne — viď `supabase/migrations/20260521000000_*.sql`.
+- Nový zdieľaný komponent `FaqAccordion` (`src/components/ui/faq/`)
+  konzumujú `TestsFaqSection` aj `CoursesFaqSection`. Senior upgrady
+  (deep-link kotvy, expand-all, ikony, rescue footer) tak žijú na
+  jednom mieste — ďalšie FAQ plochy ich dostanú zdarma.
+- JSON-LD: `/tests` a `/courses` emitujú `FAQPage` blob navyše k
+  existujúcemu `ItemList`. `/s/<slug>` má teraz `WebPage` schemu s
+  `datePublished` + `dateModified`.
+
 ## Pre školy, dokumentácia a stratená cesta
 
 Refresh dvoch oblastí pre senior vyzretosť: stránka *Pre školy* sa

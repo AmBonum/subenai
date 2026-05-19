@@ -3,6 +3,7 @@ import { Gift, Clock, Award, Users, Share2 } from "lucide-react";
 import { FaqAccordion, type FaqAccordionItemKey } from "@/components/ui/faq/FaqAccordion";
 import { ROUTES } from "@/config/routes";
 import { COURSES_FAQ_KEYS } from "@/lib/seo/courses-faq-schema";
+import { linkifyPaths } from "@/lib/text/linkify-paths";
 import { tFor } from "@/i18n/quiz";
 
 // E26 — senior-level FAQ rewrite for /courses.
@@ -34,7 +35,7 @@ export function CoursesFaqSection() {
     <FaqAccordion
       items={items}
       getQ={(key) => t(`faq_${key}`)}
-      getA={(key) => t(`faq_a${key.slice(1)}`)}
+      getA={(key) => linkifyPaths(t(`faq_a${key.slice(1)}`))}
       testIdPrefix="courses-faq"
       anchorPrefix="faq-courses"
       heading={t("faq_heading")}
