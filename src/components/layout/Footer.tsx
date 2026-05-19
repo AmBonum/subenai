@@ -99,7 +99,7 @@ function loadFooterSponsors(): Promise<FooterSponsor[]> {
 
 export function Footer() {
   const { openPreferences } = useConsent();
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [sponsors, setSponsors] = useState<FooterSponsor[]>([]);
   const t = tFor("footer");
 
@@ -178,17 +178,6 @@ export function Footer() {
                   {t("columns.platforma.links.app")}
                 </Link>
               </li>
-              {isAdmin && (
-                <li>
-                  <Link
-                    data-testid="footer-platform-link-admin"
-                    to="/admin"
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {t("columns.platforma.links.admin")}
-                  </Link>
-                </li>
-              )}
             </ul>
           </div>
         )}

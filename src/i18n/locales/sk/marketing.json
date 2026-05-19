@@ -56,8 +56,7 @@
       "platforma": {
         "title": "Platforma",
         "links": {
-          "app": "Tvorba testov",
-          "admin": "Administrácia"
+          "app": "Tvorba testov"
         }
       }
     },

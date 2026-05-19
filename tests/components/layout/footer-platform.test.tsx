@@ -65,7 +65,7 @@ describe("Footer Platforma column (AH-9.8)", () => {
     expect(screen.queryByTestId("footer-platform-link-admin")).not.toBeInTheDocument();
   });
 
-  it("shows /app link when authenticated non-admin; hides /admin", () => {
+  it("shows /app link when authenticated non-admin; never renders /admin", () => {
     authStateRef.current = { isAuthenticated: true, isAdmin: false };
     render(<Footer />);
     expect(screen.getByTestId("footer-platform-column")).toBeInTheDocument();
@@ -73,11 +73,11 @@ describe("Footer Platforma column (AH-9.8)", () => {
     expect(screen.queryByTestId("footer-platform-link-admin")).not.toBeInTheDocument();
   });
 
-  it("shows both /app and /admin when authenticated admin", () => {
+  it("hides /admin even when authenticated admin (Phase 0: removed from public chrome)", () => {
     authStateRef.current = { isAuthenticated: true, isAdmin: true };
     render(<Footer />);
     expect(screen.getByTestId("footer-platform-link-app")).toBeInTheDocument();
-    expect(screen.getByTestId("footer-platform-link-admin")).toBeInTheDocument();
+    expect(screen.queryByTestId("footer-platform-link-admin")).not.toBeInTheDocument();
   });
 
   it("preserves existing footer test-ids regardless of auth state", () => {

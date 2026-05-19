@@ -56,8 +56,7 @@
       "platforma": {
         "title": "Platform",
         "links": {
-          "app": "Test builder",
-          "admin": "Administration"
+          "app": "Test builder"
         }
       }
     },

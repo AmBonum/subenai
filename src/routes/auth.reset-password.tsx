@@ -46,16 +46,31 @@ function ResetPasswordPage() {
 
   useEffect(() => {
     let cancelled = false;
+    // Listen for the implicit token exchange that Supabase performs on
+    // recovery links — without this, a brief window after mount renders
+    // blank because getSession() may resolve before the exchange completes.
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (cancelled) return;
+      if (event === "SIGNED_IN" || event === "PASSWORD_RECOVERY") {
+        setHasSession(true);
+      } else if (event === "SIGNED_OUT") {
+        setHasSession(false);
+      } else if (session) {
+        setHasSession(true);
+      }
+    });
     void (async () => {
       try {
         const { data } = await supabase.auth.getSession();
-        if (!cancelled) setHasSession(!!data.session);
+        if (!cancelled && data.session) setHasSession(true);
+        else if (!cancelled) setHasSession((prev) => (prev === null ? false : prev));
       } catch {
-        if (!cancelled) setHasSession(false);
+        if (!cancelled) setHasSession((prev) => (prev === null ? false : prev));
       }
     })();
     return () => {
       cancelled = true;
+      sub.subscription.unsubscribe();
     };
   }, []);
 

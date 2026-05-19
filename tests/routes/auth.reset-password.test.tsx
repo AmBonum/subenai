@@ -4,6 +4,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 const navigate = vi.fn();
 const updateUser = vi.fn();
 const getSession = vi.fn();
+const unsubscribe = vi.fn();
 
 vi.mock("@tanstack/react-router", async () => {
   const actual =
@@ -23,6 +24,9 @@ vi.mock("@/integrations/supabase/client", () => ({
     auth: {
       updateUser: (...args: unknown[]) => updateUser(...args),
       getSession: () => getSession(),
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe } },
+      }),
     },
   },
 }));

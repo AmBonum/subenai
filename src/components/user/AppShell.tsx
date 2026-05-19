@@ -36,7 +36,6 @@ type NavKey =
   | "notifications"
   | "history"
   | "help"
-  | "docs"
   | "profile"
   | "security"
   | "dsr";
@@ -112,12 +111,6 @@ const NAV: NavItem[] = [
     to: "/app/help",
     testid: "app-shell-sidebar-link-help",
     icon: BookOpen,
-  },
-  {
-    key: "docs",
-    to: "/docs",
-    testid: "app-shell-sidebar-link-docs",
-    icon: FileText,
   },
   {
     key: "profile",

@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Eye, Layers, Search, Sparkles } from "lucide-react";
+import { Layers, Search, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -126,17 +126,9 @@ function TemplatesPage() {
                     {tpl.gdpr_purpose}
                   </Badge>
                   <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      data-testid={`templates-row-preview-${tpl.id}`}
-                      onClick={() => {
-                        // Preview is a no-op placeholder for the read-only browser.
-                      }}
-                    >
-                      <Eye className="mr-2 h-3 w-3" />
-                      {t("row_preview")}
-                    </Button>
+                    {/* Preview hidden until AH-12 schema enrichment lands the
+                        read-only question viewer. Shipping a no-op button
+                        violates the "no broken UI" rule. */}
                     <Button
                       size="sm"
                       onClick={() => onUse(tpl.id)}

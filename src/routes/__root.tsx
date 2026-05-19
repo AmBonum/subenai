@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Outlet, Link, createRootRoute } from "@tanstack/react-router";
+import { Outlet, Link, createRootRoute, useMatches } from "@tanstack/react-router";
 
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ConsentPreferencesDialog } from "@/components/consent/ConsentPreferencesDialog";
@@ -40,11 +40,15 @@ function NotFoundComponent() {
 }
 
 function RootComponent() {
+  const matches = useMatches();
+  const hideSiteHeader = matches.some(
+    (m) => (m.staticData as { hideSiteHeader?: boolean } | undefined)?.hideSiteHeader === true,
+  );
   return (
     <QueryClientProvider client={queryClient}>
       <LocaleProvider>
         <GoogleAnalyticsManager />
-        <SiteHeader />
+        {!hideSiteHeader && <SiteHeader />}
         <Outlet />
         <ConsentBanner />
         <ConsentPreferencesDialog />

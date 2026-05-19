@@ -21,6 +21,7 @@ export const Route = createFileRoute("/admin")({
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
+  staticData: { hideSiteHeader: true },
   component: AdminLayout,
 });
 

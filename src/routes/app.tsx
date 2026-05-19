@@ -7,6 +7,7 @@ export const Route = createFileRoute("/app")({
   head: () => ({
     meta: [{ name: "robots", content: "noindex,nofollow" }],
   }),
+  staticData: { hideSiteHeader: true },
   component: AppLayout,
 });
 
