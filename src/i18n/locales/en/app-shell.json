@@ -135,6 +135,20 @@
     "empty": "No notifications",
     "filter_unread": "Unread only"
   },
+  "digest": {
+    "page_title": "Weekly summary · SubenAI",
+    "page_header_eyebrow": "Summary",
+    "heading": "Weekly summary",
+    "subheading": "What happened in your tests over the last 7 days.",
+    "empty_title": "No summary yet",
+    "empty_body": "We'll send the first summary on Monday after your first completed test.",
+    "stat_sessions": "{count} completions",
+    "stat_completion_rate": "Pass rate {pct}%",
+    "stat_top_test": "Most active test",
+    "stat_weakest_question": "Weakest question",
+    "view_test_cta": "Open details",
+    "period_label": "Week of {start} – {end}"
+  },
   "help": {
     "page_header_eyebrow": "Help centre",
     "page_header_title": "Frequently asked questions",

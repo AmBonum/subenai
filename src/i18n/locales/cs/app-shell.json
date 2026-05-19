@@ -135,6 +135,20 @@
     "empty": "Žádné notifikace",
     "filter_unread": "Pouze nepřečtené"
   },
+  "digest": {
+    "page_title": "Týdenní souhrn · SubenAI",
+    "page_header_eyebrow": "Souhrn",
+    "heading": "Týdenní souhrn",
+    "subheading": "Co se stalo ve vašich testech za posledních 7 dní.",
+    "empty_title": "Zatím žádný souhrn",
+    "empty_body": "První souhrn vám pošleme v pondělí po prvním dokončeném testu.",
+    "stat_sessions": "{count} dokončení",
+    "stat_completion_rate": "Úspěšnost {pct}%",
+    "stat_top_test": "Nejaktivnější test",
+    "stat_weakest_question": "Nejslabší otázka",
+    "view_test_cta": "Otevřít detail",
+    "period_label": "Týden od {start} do {end}"
+  },
   "help": {
     "page_header_eyebrow": "Centrum nápovědy",
     "page_header_title": "Nejčastější dotazy",

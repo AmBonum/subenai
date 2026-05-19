@@ -1127,6 +1127,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      user_digests: {
+        Row: {
+          id: string;
+          user_id: string;
+          period_start: string;
+          period_end: string;
+          stats: Json;
+          generated_at: string;
+          opened_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          period_start: string;
+          period_end: string;
+          stats?: Json;
+          generated_at?: string;
+          opened_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          period_start?: string;
+          period_end?: string;
+          stats?: Json;
+          generated_at?: string;
+          opened_at?: string | null;
+        };
+        Relationships: [];
+      };
       user_roles: {
         Row: {
           id: string;
@@ -1287,6 +1317,10 @@ export type Database = {
           visual: Json | null;
           order_index: number;
         }[];
+      };
+      generate_weekly_digests: {
+        Args: Record<string, never>;
+        Returns: number;
       };
     };
     Enums: {

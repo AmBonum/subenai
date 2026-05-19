@@ -49,6 +49,7 @@ import { Route as AppNotificationsRouteImport } from './routes/app.notifications
 import { Route as AppLibraryRouteImport } from './routes/app.library'
 import { Route as AppHistoryRouteImport } from './routes/app.history'
 import { Route as AppHelpRouteImport } from './routes/app.help'
+import { Route as AppDigestRouteImport } from './routes/app.digest'
 import { Route as AppAudiencesRouteImport } from './routes/app.audiences'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminTrainingsRouteImport } from './routes/admin/trainings'
@@ -284,6 +285,11 @@ const AppHelpRoute = AppHelpRouteImport.update({
   path: '/help',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDigestRoute = AppDigestRouteImport.update({
+  id: '/digest',
+  path: '/digest',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() => import('./routes/app.digest.lazy').then((d) => d.Route))
 const AppAudiencesRoute = AppAudiencesRouteImport.update({
   id: '/audiences',
   path: '/audiences',
@@ -511,6 +517,7 @@ export interface FileRoutesByFullPath {
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/audiences': typeof AppAudiencesRoute
+  '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRoute
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
@@ -582,6 +589,7 @@ export interface FileRoutesByTo {
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/audiences': typeof AppAudiencesRoute
+  '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRoute
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
@@ -657,6 +665,7 @@ export interface FileRoutesById {
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/app/audiences': typeof AppAudiencesRoute
+  '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRoute
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
@@ -733,6 +742,7 @@ export interface FileRouteTypes {
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
+    | '/app/digest'
     | '/app/help'
     | '/app/history'
     | '/app/library'
@@ -804,6 +814,7 @@ export interface FileRouteTypes {
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
+    | '/app/digest'
     | '/app/help'
     | '/app/history'
     | '/app/library'
@@ -878,6 +889,7 @@ export interface FileRouteTypes {
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
+    | '/app/digest'
     | '/app/help'
     | '/app/history'
     | '/app/library'
@@ -1232,6 +1244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHelpRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/digest': {
+      id: '/app/digest'
+      path: '/digest'
+      fullPath: '/app/digest'
+      preLoaderRoute: typeof AppDigestRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/audiences': {
       id: '/app/audiences'
       path: '/audiences'
@@ -1545,6 +1564,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AppRouteChildren {
   AppAudiencesRoute: typeof AppAudiencesRoute
+  AppDigestRoute: typeof AppDigestRoute
   AppHelpRoute: typeof AppHelpRoute
   AppHistoryRoute: typeof AppHistoryRoute
   AppLibraryRoute: typeof AppLibraryRoute
@@ -1564,6 +1584,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAudiencesRoute: AppAudiencesRoute,
+  AppDigestRoute: AppDigestRoute,
   AppHelpRoute: AppHelpRoute,
   AppHistoryRoute: AppHistoryRoute,
   AppLibraryRoute: AppLibraryRoute,

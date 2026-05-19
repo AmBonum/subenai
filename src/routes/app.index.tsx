@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
 import { StatCard } from "@/components/admin/StatCard";
 import { ProfileCompletionBanner } from "@/components/auth/ProfileCompletionBanner";
+import { DigestDashboardCard } from "@/components/user/DigestDashboardCard";
 import { useTests, useUserRespondents, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/app-shell";
 
@@ -282,7 +283,10 @@ function AppDashboardPage() {
             </Card>
           )}
 
-          {/* Phase 4-7: digest, course recs, retest, peer cards land here */}
+          {/* Phase 4: Weekly digest card */}
+          <DigestDashboardCard />
+
+          {/* Phase 5-7: course recs, retest, peer cards land here */}
 
           <div className="space-y-3 pt-2" data-testid="app-dashboard-stats-section">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
