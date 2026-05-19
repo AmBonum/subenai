@@ -1106,6 +1106,8 @@ export type Database = {
           status: Database["public"]["Enums"]["training_status"];
           content: Json | null;
           created_at: string;
+          slug: string | null;
+          estimated_minutes: number | null;
         };
         Insert: {
           id?: string;
@@ -1115,6 +1117,8 @@ export type Database = {
           status?: Database["public"]["Enums"]["training_status"];
           content?: Json | null;
           created_at?: string;
+          slug?: string | null;
+          estimated_minutes?: number | null;
         };
         Update: {
           id?: string;
@@ -1123,6 +1127,47 @@ export type Database = {
           topic_slug?: string | null;
           status?: Database["public"]["Enums"]["training_status"];
           content?: Json | null;
+          created_at?: string;
+          slug?: string | null;
+          estimated_minutes?: number | null;
+        };
+        Relationships: [];
+      };
+      course_recommendations: {
+        Row: {
+          id: string;
+          user_id: string;
+          training_id: string;
+          reason_key: "low_score_branch" | "new_content" | "peer_popular";
+          score_at_rec: number | null;
+          branch_slug: string | null;
+          dismissed_at: string | null;
+          clicked_at: string | null;
+          sent_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          training_id: string;
+          reason_key: "low_score_branch" | "new_content" | "peer_popular";
+          score_at_rec?: number | null;
+          branch_slug?: string | null;
+          dismissed_at?: string | null;
+          clicked_at?: string | null;
+          sent_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          training_id?: string;
+          reason_key?: "low_score_branch" | "new_content" | "peer_popular";
+          score_at_rec?: number | null;
+          branch_slug?: string | null;
+          dismissed_at?: string | null;
+          clicked_at?: string | null;
+          sent_at?: string | null;
           created_at?: string;
         };
         Relationships: [];

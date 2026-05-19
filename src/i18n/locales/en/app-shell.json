@@ -149,6 +149,25 @@
     "view_test_cta": "Open details",
     "period_label": "Week of {start} – {end}"
   },
+  "recommendations": {
+    "page_title": "Recommended courses · SubenAI",
+    "page_header_eyebrow": "Learning",
+    "heading": "Recommended courses",
+    "subheading": "Short courses for topics where your respondents need support.",
+    "empty_title": "No recommendations yet",
+    "empty_body": "When respondents score lower on a topic, we'll suggest a matching course here.",
+    "card_title": "For educators: send a short course",
+    "reason_low_score": "Score in {branch}: {score}%",
+    "reason_low_score_no_branch": "Lower results: {score}%",
+    "reason_new_content": "New content",
+    "reason_peer_popular": "Popular with peers",
+    "minutes_label": "{minutes} min",
+    "view_course_cta": "Open course",
+    "mark_sent_cta": "Mark as sent",
+    "marked_sent": "Sent {time}",
+    "dismiss_cta": "Dismiss",
+    "view_all_cta": "View all"
+  },
   "help": {
     "page_header_eyebrow": "Help centre",
     "page_header_title": "Frequently asked questions",

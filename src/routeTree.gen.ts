@@ -44,6 +44,7 @@ import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-passw
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AppTemplatesRouteImport } from './routes/app.templates'
 import { Route as AppTeamsRouteImport } from './routes/app.teams'
+import { Route as AppRecommendationsRouteImport } from './routes/app.recommendations'
 import { Route as AppOnboardingRouteImport } from './routes/app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
 import { Route as AppLibraryRouteImport } from './routes/app.library'
@@ -258,6 +259,13 @@ const AppTeamsRoute = AppTeamsRouteImport.update({
   path: '/teams',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRecommendationsRoute = AppRecommendationsRouteImport.update({
+  id: '/recommendations',
+  path: '/recommendations',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() =>
+  import('./routes/app.recommendations.lazy').then((d) => d.Route),
+)
 const AppOnboardingRoute = AppOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -523,6 +531,7 @@ export interface FileRoutesByFullPath {
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
+  '/app/recommendations': typeof AppRecommendationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -595,6 +604,7 @@ export interface FileRoutesByTo {
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
+  '/app/recommendations': typeof AppRecommendationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -671,6 +681,7 @@ export interface FileRoutesById {
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
+  '/app/recommendations': typeof AppRecommendationsRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -748,6 +759,7 @@ export interface FileRouteTypes {
     | '/app/library'
     | '/app/notifications'
     | '/app/onboarding'
+    | '/app/recommendations'
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
@@ -820,6 +832,7 @@ export interface FileRouteTypes {
     | '/app/library'
     | '/app/notifications'
     | '/app/onboarding'
+    | '/app/recommendations'
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
@@ -895,6 +908,7 @@ export interface FileRouteTypes {
     | '/app/library'
     | '/app/notifications'
     | '/app/onboarding'
+    | '/app/recommendations'
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
@@ -1207,6 +1221,13 @@ declare module '@tanstack/react-router' {
       path: '/teams'
       fullPath: '/app/teams'
       preLoaderRoute: typeof AppTeamsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/recommendations': {
+      id: '/app/recommendations'
+      path: '/recommendations'
+      fullPath: '/app/recommendations'
+      preLoaderRoute: typeof AppRecommendationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/onboarding': {
@@ -1570,6 +1591,7 @@ interface AppRouteChildren {
   AppLibraryRoute: typeof AppLibraryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
+  AppRecommendationsRoute: typeof AppRecommendationsRoute
   AppTeamsRoute: typeof AppTeamsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -1590,6 +1612,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLibraryRoute: AppLibraryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
+  AppRecommendationsRoute: AppRecommendationsRoute,
   AppTeamsRoute: AppTeamsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
   AppIndexRoute: AppIndexRoute,

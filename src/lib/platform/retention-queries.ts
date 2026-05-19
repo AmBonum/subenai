@@ -95,3 +95,72 @@ export function useMarkDigestOpened() {
     },
   });
 }
+
+// ---------------------------------------------------------------------------
+// Phase 5 — course recommendations.
+// ---------------------------------------------------------------------------
+export interface CourseRecommendation {
+  id: string;
+  training_id: string;
+  reason_key: "low_score_branch" | "new_content" | "peer_popular";
+  score_at_rec: number | null;
+  branch_slug: string | null;
+  dismissed_at: string | null;
+  clicked_at: string | null;
+  sent_at: string | null;
+  created_at: string;
+  training?: {
+    id: string;
+    title: string;
+    slug: string | null;
+    estimated_minutes: number | null;
+  } | null;
+}
+
+const COURSE_REC_KEY = ["user", "course_recommendations"] as const;
+
+export function useCourseRecommendations() {
+  return useQuery({
+    queryKey: COURSE_REC_KEY,
+    queryFn: async (): Promise<CourseRecommendation[]> => {
+      const { data, error } = await supabase
+        .from("course_recommendations")
+        .select(
+          "id, training_id, reason_key, score_at_rec, branch_slug, dismissed_at, clicked_at, sent_at, created_at, training:trainings(id, title, slug, estimated_minutes)",
+        )
+        .is("dismissed_at", null)
+        .order("created_at", { ascending: false })
+        .limit(20);
+      if (error) throw error;
+      return (data ?? []) as unknown as CourseRecommendation[];
+    },
+  });
+}
+
+function useRecommendationTimestampMutation(column: "dismissed_at" | "clicked_at" | "sent_at") {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (recId: string) => {
+      const { error } = await supabase
+        .from("course_recommendations")
+        .update({ [column]: new Date().toISOString() })
+        .eq("id", recId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: COURSE_REC_KEY });
+    },
+  });
+}
+
+export function useDismissRecommendation() {
+  return useRecommendationTimestampMutation("dismissed_at");
+}
+
+export function useClickRecommendation() {
+  return useRecommendationTimestampMutation("clicked_at");
+}
+
+export function useMarkRecommendationSent() {
+  return useRecommendationTimestampMutation("sent_at");
+}

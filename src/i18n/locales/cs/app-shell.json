@@ -149,6 +149,25 @@
     "view_test_cta": "Otevřít detail",
     "period_label": "Týden od {start} do {end}"
   },
+  "recommendations": {
+    "page_title": "Doporučené kurzy · SubenAI",
+    "page_header_eyebrow": "Vzdělávání",
+    "heading": "Doporučené kurzy",
+    "subheading": "Krátké kurzy pro témata, kde vaši respondenti potřebují podporu.",
+    "empty_title": "Zatím žádná doporučení",
+    "empty_body": "Když respondenti odpoví slabě v nějakém tématu, nabídneme vám zde vhodný kurz.",
+    "card_title": "Pro lektory: pošlete krátký kurz",
+    "reason_low_score": "Skóre v {branch}: {score}%",
+    "reason_low_score_no_branch": "Slabší výsledky: {score}%",
+    "reason_new_content": "Nový obsah",
+    "reason_peer_popular": "Oblíbené u kolegů",
+    "minutes_label": "{minutes} min",
+    "view_course_cta": "Otevřít kurz",
+    "mark_sent_cta": "Označit jako odeslané",
+    "marked_sent": "Odesláno {time}",
+    "dismiss_cta": "Zavřít",
+    "view_all_cta": "Zobrazit vše"
+  },
   "help": {
     "page_header_eyebrow": "Centrum nápovědy",
     "page_header_title": "Nejčastější dotazy",
