@@ -4,14 +4,41 @@ import type { ComponentProps, ReactNode } from "react";
 
 import type { AdminBlogPostListItem } from "@/lib/blog/admin-queries";
 
-// Router Link stub — admin table only uses <Link to="/admin/blog/$id">
+const navigateSpy = vi.fn();
+
+// Router Link + useNavigate stubs. BlogRowActions calls useNavigate
+// after a successful duplicate; we capture the destination instead of
+// actually navigating.
 vi.mock("@tanstack/react-router", () => ({
   Link: ({ to, children, ...rest }: { to: unknown; children: ReactNode } & ComponentProps<"a">) => (
     <a role="link" data-to={typeof to === "string" ? to : ""} {...rest}>
       {children}
     </a>
   ),
+  useNavigate: () => navigateSpy,
 }));
+
+// Mutations live inside BlogRowActions; stub them at the hook level so
+// the table tests don't have to drive Supabase. Tests focused on the
+// BlogRowActions component itself live in their own file.
+vi.mock("@/lib/blog/admin-queries", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/blog/admin-queries")>(
+    "@/lib/blog/admin-queries",
+  );
+  const stub = () => ({
+    mutate: vi.fn(),
+    mutateAsync: vi.fn().mockResolvedValue({ id: "new-id" }),
+    isPending: false,
+  });
+  return {
+    ...actual,
+    useDuplicateBlogPost: stub,
+    useDeleteBlogPost: stub,
+    usePublishBlogPost: stub,
+    useUnpublishBlogPost: stub,
+    useArchiveBlogPost: stub,
+  };
+});
 
 import { BlogListTable } from "@/components/admin/blog/BlogListTable";
 

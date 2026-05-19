@@ -3,6 +3,7 @@ import { ArrowDown, ArrowUp, ArrowUpDown, Search, X } from "lucide-react";
 import { useId, useMemo, useState } from "react";
 
 import { StatusBadge } from "@/components/admin/StatusBadge";
+import { BlogRowActions } from "@/components/admin/blog/BlogRowActions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,6 +27,7 @@ export const COLUMN_KEYS = [
   "status",
   "published_at",
   "updated_at",
+  "actions",
 ] as const;
 export type ColumnKey = (typeof COLUMN_KEYS)[number];
 
@@ -36,11 +38,17 @@ const COLUMN_LABEL: Record<ColumnKey, string> = {
   status: "Stav",
   published_at: "Publikované",
   updated_at: "Aktualizované",
+  actions: "Akcie",
 };
 
-// Columns that are NEVER hidden — the title is the only way to open
-// the editor (the row link lives on the title cell), so we lock it on.
-const REQUIRED_COLUMNS: ReadonlySet<ColumnKey> = new Set(["title"]);
+// Columns that are NEVER hidden — the title carries the editor link,
+// and Actions is the only way to delete/duplicate/restatus from the
+// list (hiding it would force users to open every article to act).
+const REQUIRED_COLUMNS: ReadonlySet<ColumnKey> = new Set(["title", "actions"]);
+
+// Columns that are NOT sortable (no semantic ordering). Sort UI
+// stays hidden on these headers.
+const UNSORTABLE_COLUMNS: ReadonlySet<ColumnKey> = new Set(["actions"]);
 
 type SortDirection = "asc" | "desc";
 
@@ -232,16 +240,22 @@ export function BlogListTable({ posts }: BlogListTableProps) {
           <TableHeader>
             <TableRow>
               {COLUMN_KEYS.filter((key) => visibleColumns.has(key)).map((key) => (
-                <TableHead key={key}>
-                  <button
-                    type="button"
-                    onClick={() => onHeaderClick(key)}
-                    className="inline-flex items-center gap-1 font-medium hover:text-foreground"
-                    data-testid={`admin-blog-sort-${key}`}
-                  >
-                    {COLUMN_LABEL[key]}
-                    <SortIcon active={sort.key === key} direction={sort.direction} />
-                  </button>
+                <TableHead key={key} className={key === "actions" ? "w-[170px] text-right" : ""}>
+                  {UNSORTABLE_COLUMNS.has(key) ? (
+                    <span className="font-medium" data-testid={`admin-blog-header-${key}`}>
+                      {COLUMN_LABEL[key]}
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => onHeaderClick(key)}
+                      className="inline-flex items-center gap-1 font-medium hover:text-foreground"
+                      data-testid={`admin-blog-sort-${key}`}
+                    >
+                      {COLUMN_LABEL[key]}
+                      <SortIcon active={sort.key === key} direction={sort.direction} />
+                    </button>
+                  )}
                 </TableHead>
               ))}
             </TableRow>
@@ -298,6 +312,13 @@ export function BlogListTable({ posts }: BlogListTableProps) {
                   {visibleColumns.has("updated_at") && (
                     <TableCell className="text-sm text-muted-foreground">
                       {new Date(post.updated_at).toLocaleDateString("sk-SK")}
+                    </TableCell>
+                  )}
+                  {visibleColumns.has("actions") && (
+                    <TableCell className="text-right">
+                      <div className="flex justify-end">
+                        <BlogRowActions post={post} />
+                      </div>
                     </TableCell>
                   )}
                 </TableRow>
@@ -542,6 +563,8 @@ function sortValue(post: AdminBlogPostListItem, key: ColumnKey): string | number
       return post.published_at ?? "";
     case "updated_at":
       return post.updated_at;
+    case "actions":
+      return "";
   }
 }
 

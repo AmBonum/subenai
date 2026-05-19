@@ -198,6 +198,54 @@ export function useArchiveBlogPost() {
   };
 }
 
+// E16.5 — duplicate an existing article. Reads the full source row,
+// clones every editable field, mutates slug + title to make the new
+// row distinguishable, and forces status=draft + published_at=null so
+// the duplicate never accidentally ships before the editor reviews it.
+//
+// Returns the new id so the caller can navigate to /admin/blog/<id>.
+//
+// The slug becomes `<source-slug>-kopia` on the first duplicate; if
+// that slug is already taken (e.g. user duplicates twice), the unique
+// CHECK on blog_posts.slug raises and the error bubbles up — caller
+// surfaces it. We deliberately don't auto-suffix with -2/-3 because
+// "kopia-kopia-kopia" file proliferation is worse than a clear
+// "duplicate already exists, rename it first" failure.
+export function useDuplicateBlogPost() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (sourceId: string): Promise<{ id: string }> => {
+      const { data: source, error: readErr } = await supabase
+        .from("blog_posts")
+        .select(
+          `slug, title, subtitle, excerpt, body_mdx, category_id, author_id,
+           pillar_post_id, hero_image_url, og_image_url, seo_title, seo_description,
+           canonical_url, primary_keyword, search_intent, reading_minutes,
+           sources_jsonb, faq_jsonb, language`,
+        )
+        .eq("id", sourceId)
+        .single();
+      if (readErr) throw readErr;
+      const row = source as unknown as Record<string, unknown>;
+      const insert = {
+        ...row,
+        slug: `${row.slug as string}-kopia`,
+        title: `${row.title as string} (kópia)`,
+        status: "draft" as const,
+        published_at: null,
+      };
+      const { data: created, error: insertErr } = await supabase
+        .from("blog_posts")
+        .insert(insert)
+        .select("id")
+        .single();
+      if (insertErr) throw insertErr;
+      return { id: (created as { id: string }).id };
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["blog"] }),
+  });
+}
+
 export function useBlogCategoriesList() {
   return useQuery({
     queryKey: ["blog", "categories", "all"],
