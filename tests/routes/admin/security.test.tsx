@@ -13,6 +13,7 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    createLazyFileRoute: () => (config: unknown) => config,
     useNavigate: () => navigateMock,
     Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => (
       <a {...rest}>{children}</a>
@@ -27,7 +28,7 @@ vi.mock("@/lib/auth/mfa", () => ({
   remainingBackupCodes: () => remainingBackupCodesMock(),
 }));
 
-import { Route } from "@/routes/admin/security";
+import { Route } from "@/routes/admin/security.lazy";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;

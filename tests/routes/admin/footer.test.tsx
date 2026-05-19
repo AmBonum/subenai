@@ -23,10 +23,11 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    createLazyFileRoute: () => (config: unknown) => config,
   };
 });
 
-import { Route } from "@/routes/admin/footer";
+import { Route } from "@/routes/admin/footer.lazy";
 import { seedFooter } from "@/lib/admin/cms-mock-store";
 import {
   adminMockRecorded,

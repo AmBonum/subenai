@@ -7,13 +7,14 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    createLazyFileRoute: () => (config: unknown) => config,
     Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
       <a href={to}>{children}</a>
     ),
   };
 });
 
-import { Route } from "@/routes/admin/users";
+import { Route } from "@/routes/admin/users.lazy";
 import { adminRepo } from "@/lib/admin/mock-store";
 
 type RouteConfig = { component: () => JSX.Element };

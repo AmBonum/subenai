@@ -31,6 +31,13 @@ vi.mock("@tanstack/react-router", async () => {
         useParams: () => paramsRef.current,
       };
     },
+    createLazyFileRoute: () => (config: unknown) => {
+      const c = config as { component: () => JSX.Element };
+      return {
+        ...c,
+        useParams: () => paramsRef.current,
+      };
+    },
     useNavigate: () => vi.fn(),
     Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => (
       <a {...(rest as Record<string, unknown>)}>{children}</a>
@@ -38,7 +45,7 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
-import { Route } from "@/routes/admin/pages.$pageId";
+import { Route } from "@/routes/admin/pages.$pageId.lazy";
 import { seedPages } from "@/lib/admin/cms-mock-store";
 import {
   adminMockRecorded,

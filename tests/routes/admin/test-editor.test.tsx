@@ -9,6 +9,7 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    createLazyFileRoute: () => (config: unknown) => config,
     useParams: () => params,
     useNavigate: () => () => {},
     Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => (
@@ -17,7 +18,7 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
-import { Route } from "@/routes/admin/tests.$testId";
+import { Route } from "@/routes/admin/tests.$testId.lazy";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;

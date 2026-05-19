@@ -185,7 +185,7 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() => import('./routes/admin/index.lazy').then((d) => d.Route))
 const ThankYouSessionIdRoute = ThankYouSessionIdRouteImport.update({
   id: '/thank-you/$sessionId',
   path: '/thank-you/$sessionId',
@@ -285,97 +285,117 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() => import('./routes/admin/users.lazy').then((d) => d.Route))
 const AdminTrainingsRoute = AdminTrainingsRouteImport.update({
   id: '/trainings',
   path: '/trainings',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/trainings.lazy').then((d) => d.Route),
+)
 const AdminTestsRoute = AdminTestsRouteImport.update({
   id: '/tests',
   path: '/tests',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() => import('./routes/admin/tests.lazy').then((d) => d.Route))
 const AdminSupportRoute = AdminSupportRouteImport.update({
   id: '/support',
   path: '/support',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() => import('./routes/admin/support.lazy').then((d) => d.Route))
 const AdminShareCardRoute = AdminShareCardRouteImport.update({
   id: '/share-card',
   path: '/share-card',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/share-card.lazy').then((d) => d.Route),
+)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/settings.lazy').then((d) => d.Route),
+)
 const AdminSecurityRoute = AdminSecurityRouteImport.update({
   id: '/security',
   path: '/security',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/security.lazy').then((d) => d.Route),
+)
 const AdminRespondentsRoute = AdminRespondentsRouteImport.update({
   id: '/respondents',
   path: '/respondents',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/respondents.lazy').then((d) => d.Route),
+)
 const AdminReportsRoute = AdminReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() => import('./routes/admin/reports.lazy').then((d) => d.Route))
 const AdminQuickTestRoute = AdminQuickTestRouteImport.update({
   id: '/quick-test',
   path: '/quick-test',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/quick-test.lazy').then((d) => d.Route),
+)
 const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
   id: '/questions',
   path: '/questions',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/questions.lazy').then((d) => d.Route),
+)
 const AdminPagesRoute = AdminPagesRouteImport.update({
   id: '/pages',
   path: '/pages',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() => import('./routes/admin/pages.lazy').then((d) => d.Route))
 const AdminNavigationRoute = AdminNavigationRouteImport.update({
   id: '/navigation',
   path: '/navigation',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/navigation.lazy').then((d) => d.Route),
+)
 const AdminHeaderRoute = AdminHeaderRouteImport.update({
   id: '/header',
   path: '/header',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() => import('./routes/admin/header.lazy').then((d) => d.Route))
 const AdminFooterRoute = AdminFooterRouteImport.update({
   id: '/footer',
   path: '/footer',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() => import('./routes/admin/footer.lazy').then((d) => d.Route))
 const AdminDsrRoute = AdminDsrRouteImport.update({
   id: '/dsr',
   path: '/dsr',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() => import('./routes/admin/dsr.lazy').then((d) => d.Route))
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/categories.lazy').then((d) => d.Route),
+)
 const AdminAuditRoute = AdminAuditRouteImport.update({
   id: '/audit',
   path: '/audit',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() => import('./routes/admin/audit.lazy').then((d) => d.Route))
 const AdminAnswerSetsRoute = AdminAnswerSetsRouteImport.update({
   id: '/answer-sets',
   path: '/answer-sets',
   getParentRoute: () => AdminRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/answer-sets.lazy').then((d) => d.Route),
+)
 const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
   id: '/tests/',
   path: '/tests/',
@@ -420,17 +440,23 @@ const AdminTestsTestIdRoute = AdminTestsTestIdRouteImport.update({
   id: '/$testId',
   path: '/$testId',
   getParentRoute: () => AdminTestsRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/tests.$testId.lazy').then((d) => d.Route),
+)
 const AdminPagesPageIdRoute = AdminPagesPageIdRouteImport.update({
   id: '/$pageId',
   path: '/$pageId',
   getParentRoute: () => AdminPagesRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/pages.$pageId.lazy').then((d) => d.Route),
+)
 const AdminAnswerSetsSetIdRoute = AdminAnswerSetsSetIdRouteImport.update({
   id: '/$setId',
   path: '/$setId',
   getParentRoute: () => AdminAnswerSetsRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/answer-sets.$setId.lazy').then((d) => d.Route),
+)
 const TestZostavaIdVysledkyRoute = TestZostavaIdVysledkyRouteImport.update({
   id: '/vysledky',
   path: '/vysledky',

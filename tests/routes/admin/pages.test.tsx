@@ -25,6 +25,7 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    createLazyFileRoute: () => (config: unknown) => config,
     useNavigate: () => navigateSpy,
     Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => (
       <a {...(rest as Record<string, unknown>)}>{children}</a>
@@ -32,7 +33,7 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
-import { Route } from "@/routes/admin/pages";
+import { Route } from "@/routes/admin/pages.lazy";
 import {
   adminMockRecorded,
   resetAdminMockRecorded,

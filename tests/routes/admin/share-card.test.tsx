@@ -23,10 +23,11 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    createLazyFileRoute: () => (config: unknown) => config,
   };
 });
 
-import { Route } from "@/routes/admin/share-card";
+import { Route } from "@/routes/admin/share-card.lazy";
 import {
   adminMockRecorded,
   resetAdminMockRecorded,

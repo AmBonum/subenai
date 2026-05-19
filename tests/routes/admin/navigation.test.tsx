@@ -23,10 +23,11 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    createLazyFileRoute: () => (config: unknown) => config,
   };
 });
 
-import { Route } from "@/routes/admin/navigation";
+import { Route } from "@/routes/admin/navigation.lazy";
 import type { CmsNavItem } from "@/lib/admin/cms-types";
 import {
   adminMockTables,

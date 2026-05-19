@@ -7,13 +7,14 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    createLazyFileRoute: () => (config: unknown) => config,
     Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
       <a href={to}>{children}</a>
     ),
   };
 });
 
-import { Route } from "@/routes/admin/dsr";
+import { Route } from "@/routes/admin/dsr.lazy";
 import { adminMockRecorded, resetAdminMockRecorded } from "../../utils/admin-supabase-mock";
 
 type RouteConfig = { component: () => JSX.Element };
