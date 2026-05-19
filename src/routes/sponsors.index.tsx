@@ -69,15 +69,28 @@ export function SponzoriView({ fetchSponsors }: SponzoriViewProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+      <main
+        data-testid="sponzori-index-root"
+        className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16"
+      >
         <header className="mb-10">
-          <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to={ROUTES.home}
+            data-testid="sponzori-index-back-link"
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
             {t("back_home")}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1
+            data-testid="sponzori-index-heading"
+            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+          >
             {t("title")}
           </h1>
-          <p className="mt-3 text-base text-muted-foreground sm:text-lg">
+          <p
+            data-testid="sponzori-index-hero"
+            className="mt-3 text-base text-muted-foreground sm:text-lg"
+          >
             {t("hero_prefix")}
             <Link
               to={ROUTES.oProjecte}
@@ -99,9 +112,16 @@ export function SponzoriView({ fetchSponsors }: SponzoriViewProps) {
           <LatestList sponsors={state.sponsors} />
         )}
 
-        <p className="mt-12 text-center text-xs text-muted-foreground">
+        <p
+          data-testid="sponzori-index-footer-note"
+          className="mt-12 text-center text-xs text-muted-foreground"
+        >
           {t("footer_note")}
-          <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            data-testid="sponzori-index-footer-mailto"
+            className="underline underline-offset-2"
+          >
             {CONTACT_EMAIL}
           </a>
           .
@@ -114,7 +134,11 @@ export function SponzoriView({ fetchSponsors }: SponzoriViewProps) {
 function LatestList({ sponsors }: { sponsors: PublicSponsor[] }) {
   const t = tFor("sponzori");
   return (
-    <section aria-labelledby="latest-h" className="space-y-6">
+    <section
+      data-testid="sponzori-index-latest-section"
+      aria-labelledby="latest-h"
+      className="space-y-6"
+    >
       <div className="flex items-baseline justify-between gap-4">
         <h2 id="latest-h" className="text-base font-semibold text-foreground">
           {sponsors.length === 1
@@ -123,6 +147,7 @@ function LatestList({ sponsors }: { sponsors: PublicSponsor[] }) {
         </h2>
         <Link
           to={ROUTES.sponzoriVsetci}
+          data-testid="sponzori-index-all-link"
           className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline underline-offset-2"
         >
           {t("all_link")} <span aria-hidden="true">→</span>
@@ -216,6 +241,7 @@ function SponsorsError() {
   return (
     <div
       role="alert"
+      data-testid="sponzori-index-error"
       className="rounded-2xl border border-border/60 bg-card p-6 text-sm text-muted-foreground"
     >
       {t("fetch_error")}
@@ -226,12 +252,26 @@ function SponsorsError() {
 function SponsorsEmpty() {
   const t = tFor("sponzori");
   return (
-    <div className="rounded-2xl border border-border/60 bg-card p-8 text-center">
-      <h2 className="text-xl font-semibold text-foreground">{t("empty_title")}</h2>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t("empty_body")}</p>
+    <div
+      data-testid="sponzori-index-empty"
+      className="rounded-2xl border border-border/60 bg-card p-8 text-center"
+    >
+      <h2
+        data-testid="sponzori-index-empty-heading"
+        className="text-xl font-semibold text-foreground"
+      >
+        {t("empty_title")}
+      </h2>
+      <p
+        data-testid="sponzori-index-empty-body"
+        className="mt-2 text-sm leading-relaxed text-muted-foreground"
+      >
+        {t("empty_body")}
+      </p>
       <div className="mt-4">
         <Link
           to={ROUTES.podpora}
+          data-testid="sponzori-index-empty-cta"
           className="inline-flex items-center gap-2 rounded-2xl bg-accent-gradient px-6 py-3 text-sm font-bold text-primary-foreground shadow-glow"
         >
           {t("empty_cta")}

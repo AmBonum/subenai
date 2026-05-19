@@ -158,10 +158,14 @@ export function SiteHeader() {
           <img src="/logo.svg" alt="subenai" className="hidden lg:block h-10 w-auto" />
         </Link>
 
-        {/* Desktop mega-menu (md+) */}
+        {/* Desktop mega-menu — shown at ≥820px. The default `md:` (768px)
+            breakpoint caused horizontal overflow on tablets in portrait
+            (nav + CTA ≈ 848px > 768px viewport, 2026-05-19 finding from
+            Phase 5 e2e support TC-16). 820px is where the contents
+            actually fit without wrap. */}
         <div
           data-testid="header-desktop-nav"
-          className="hidden items-center gap-1 md:flex md:gap-2"
+          className="hidden items-center gap-1 min-[820px]:flex min-[820px]:gap-2"
         >
           <MegaMenu items={MEGA_ITEMS} activeSlug={activeSlug} />
           {isAuthenticated && (
@@ -180,11 +184,12 @@ export function SiteHeader() {
           <CtaPill ariaLabel={ctaLong} />
         </div>
 
-        {/* Mobile hamburger (< md) */}
+        {/* Mobile hamburger — shown below 820px (paired with the desktop
+            nav's `min-[820px]:flex`; see comment above). */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger
             data-testid="header-mobile-trigger"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground transition-colors hover:bg-card md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground transition-colors hover:bg-card min-[820px]:hidden"
             aria-label={t("open_menu_aria")}
           >
             <Menu className="h-5 w-5" aria-hidden="true" />

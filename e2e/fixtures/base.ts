@@ -7,7 +7,15 @@ import { SiteHeader } from "../poms/shared/SiteHeader";
 import { SiteFooter } from "../poms/shared/SiteFooter";
 import { NotFoundPage } from "../poms/shared/NotFoundPage";
 import { HomePage } from "../poms/quiz/HomePage";
+import { MarketingHomePage } from "../poms/marketing/HomePage";
+import { AboutPage } from "../poms/marketing/AboutPage";
+import { ContactPage } from "../poms/marketing/ContactPage";
+import { SchoolsPage } from "../poms/marketing/SchoolsPage";
+import { SupportPage } from "../poms/marketing/SupportPage";
+import { SponsorsPage } from "../poms/marketing/SponsorsPage";
+import { ManageSupportPage } from "../poms/marketing/ManageSupportPage";
 import { PodporaPage } from "../poms/sponsorship/PodporaPage";
+import { PrivacyPage, CookiesPage, ChangelogPage } from "../poms/marketing/LegalPages";
 
 // Minimal .env loader so specs don't need playwright.config.ts to import
 // dotenv (kept dependency-free). `VITE_SUPABASE_PROJECT_ID` is read by
@@ -57,17 +65,48 @@ import { PodporaPage } from "../poms/sponsorship/PodporaPage";
  */
 type Fixtures = {
   home: HomePage;
+  marketingHome: MarketingHomePage;
+  about: AboutPage;
+  contact: ContactPage;
+  schools: SchoolsPage;
+  support: SupportPage;
+  sponsors: SponsorsPage;
+  manageSupport: ManageSupportPage;
   consent: ConsentBanner;
   consentDialog: ConsentPreferencesDialog;
   header: SiteHeader;
   footer: SiteFooter;
   notFound: NotFoundPage;
   podpora: PodporaPage;
+  privacy: PrivacyPage;
+  cookies: CookiesPage;
+  changelog: ChangelogPage;
 };
 
 export const test = base.extend<Fixtures>({
   home: async ({ page }, use) => {
     await use(new HomePage(page));
+  },
+  marketingHome: async ({ page }, use) => {
+    await use(new MarketingHomePage(page));
+  },
+  about: async ({ page }, use) => {
+    await use(new AboutPage(page));
+  },
+  contact: async ({ page }, use) => {
+    await use(new ContactPage(page));
+  },
+  schools: async ({ page }, use) => {
+    await use(new SchoolsPage(page));
+  },
+  support: async ({ page }, use) => {
+    await use(new SupportPage(page));
+  },
+  sponsors: async ({ page }, use) => {
+    await use(new SponsorsPage(page));
+  },
+  manageSupport: async ({ page }, use) => {
+    await use(new ManageSupportPage(page));
   },
   consent: async ({ page }, use) => {
     await use(new ConsentBanner(page));
@@ -86,6 +125,15 @@ export const test = base.extend<Fixtures>({
   },
   podpora: async ({ page }, use) => {
     await use(new PodporaPage(page));
+  },
+  privacy: async ({ page }, use) => {
+    await use(new PrivacyPage(page));
+  },
+  cookies: async ({ page }, use) => {
+    await use(new CookiesPage(page));
+  },
+  changelog: async ({ page }, use) => {
+    await use(new ChangelogPage(page));
   },
 });
 

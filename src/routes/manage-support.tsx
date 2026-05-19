@@ -153,10 +153,17 @@ export function ManageSupportForm() {
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-8">
-          <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to={ROUTES.home}
+            data-testid="manage-support-back-link"
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
             {t("back_home")}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1
+            data-testid="manage-support-heading"
+            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+          >
             {t("title")}
           </h1>
           <p className="mt-3 text-base text-muted-foreground sm:text-lg">
@@ -190,6 +197,7 @@ export function ManageSupportForm() {
               </label>
               <input
                 id="email"
+                data-testid="manage-support-email-input"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -197,7 +205,12 @@ export function ManageSupportForm() {
                 required
                 className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
               />
-              <p className="mt-1 text-xs text-muted-foreground">{t("email_hint")}</p>
+              <p
+                data-testid="manage-support-anti-enum-hint"
+                className="mt-1 text-xs text-muted-foreground"
+              >
+                {t("email_hint")}
+              </p>
             </div>
 
             <div
@@ -209,6 +222,7 @@ export function ManageSupportForm() {
             {error ? (
               <div
                 role="alert"
+                data-testid="manage-support-error-alert"
                 className="rounded-xl border border-destructive/60 bg-destructive/10 p-3 text-sm text-foreground"
               >
                 {t("error_prefix")}
@@ -223,6 +237,7 @@ export function ManageSupportForm() {
 
             <button
               type="submit"
+              data-testid="manage-support-submit-button"
               disabled={
                 !emailValid || submitting || (Boolean(TURNSTILE_SITE_KEY) && !turnstileToken)
               }
@@ -243,6 +258,7 @@ function SubmittedState({ email }: { email: string }) {
   return (
     <section
       role="status"
+      data-testid="manage-support-submitted-section"
       aria-live="polite"
       className="space-y-4 rounded-2xl border border-primary/40 bg-card p-8 text-center"
     >
