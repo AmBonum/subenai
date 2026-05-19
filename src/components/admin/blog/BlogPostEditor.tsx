@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { SourcesEditor } from "@/components/admin/blog/SourcesEditor";
+import { RelatedCoursePicker } from "@/components/admin/blog/RelatedCoursePicker";
 import type { BlogPostSource } from "@/lib/blog/queries";
 import {
   useCreateBlogPost,
@@ -47,6 +48,7 @@ type FormState = {
   search_intent: string;
   reading_minutes: string;
   sources: BlogPostSource[];
+  related_course_slug: string;
   status: BlogPostStatus;
 };
 
@@ -68,6 +70,7 @@ function detailToForm(post: AdminBlogPostDetail): FormState {
     search_intent: post.search_intent ?? "",
     reading_minutes: post.reading_minutes != null ? String(post.reading_minutes) : "",
     sources: post.sources_jsonb,
+    related_course_slug: post.related_course_slug ?? "",
     status: post.status,
   };
 }
@@ -90,6 +93,7 @@ function emptyForm(categoryId: string, authorId: string): FormState {
     search_intent: "",
     reading_minutes: "",
     sources: [],
+    related_course_slug: "",
     status: "draft",
   };
 }
@@ -114,6 +118,7 @@ function formToInput(state: FormState): AdminBlogPostInput {
     reading_minutes:
       state.reading_minutes.trim().length > 0 ? Number.parseInt(state.reading_minutes, 10) : null,
     sources_jsonb: state.sources,
+    related_course_slug: state.related_course_slug.trim() || null,
     status: state.status,
     published_at: state.status === "published" ? new Date().toISOString() : null,
   };
@@ -289,6 +294,14 @@ export function BlogPostEditor({
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Zdroje</h2>
         <SourcesEditor value={form.sources} onChange={set("sources")} />
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold">Cross-linky</h2>
+        <RelatedCoursePicker
+          value={form.related_course_slug}
+          onChange={set("related_course_slug")}
+        />
       </section>
 
       <section className="space-y-4">

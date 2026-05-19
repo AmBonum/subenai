@@ -202,4 +202,4 @@ Spreadsheet exercise (not code): for every of 15 blog categories, identify: pill
 - [ ] E17.2 Article → course UI
 - [ ] E17.3 Course → article UI
 - [x] E17.4 Test result recommendations ✅
-- [ ] E17.5 Topic content map audit doc
+- [x] E17.5 Topic content map audit doc + admin UI picker ✅
