@@ -1,14 +1,18 @@
 import { BasePage } from "../BasePage";
 
 export class SharedSetPage extends BasePage {
-  static readonly BASE_PATH = "/test/zostava" as const;
+  static readonly BASE_PATH = "/test/builder" as const;
 
   static pathFor(id: string) {
     return `${SharedSetPage.BASE_PATH}/${id}` as const;
   }
 
+  // E33 — public path is now /results (was /vysledky). Method name
+  // kept as `vysledkyPathFor` (and the corresponding testids below)
+  // because the underlying UI testid contract is unchanged; renaming
+  // those would be a separate cleanup PR (E33 follow-up).
   static vysledkyPathFor(id: string) {
-    return `${SharedSetPage.BASE_PATH}/${id}/vysledky` as const;
+    return `${SharedSetPage.BASE_PATH}/${id}/results` as const;
   }
 
   // --- landing page (non-edu, collects_responses = false) ---

@@ -24,20 +24,20 @@ interface TestSetDto {
   created_at: string;
 }
 
-export const Route = createLazyFileRoute("/test/zostava/$id/")({
-  component: ZostavaIndexPage,
+export const Route = createLazyFileRoute("/test/builder/$id/")({
+  component: BuilderSetIndexPage,
 });
 
-function ZostavaIndexPage() {
-  const { id } = useParams({ from: "/test/zostava/$id/" });
-  return <ZostavaView id={id} />;
+function BuilderSetIndexPage() {
+  const { id } = useParams({ from: "/test/builder/$id/" });
+  return <BuilderSetView id={id} />;
 }
 
 interface Props {
   id: string;
 }
 
-export function ZostavaView({ id }: Props) {
+export function BuilderSetView({ id }: Props) {
   const t = tFor("composition");
   const tCommon = tFor("common");
   const [status, setStatus] = useState<Status>("loading");
@@ -96,7 +96,7 @@ export function ZostavaView({ id }: Props) {
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Button asChild>
-            <Link to={ROUTES.zostav}>{t("build_own")}</Link>
+            <Link to={ROUTES.builder}>{t("build_own")}</Link>
           </Button>
           <Button asChild variant="outline">
             <Link to={ROUTES.testy}>{t("browse_packs")}</Link>
@@ -225,7 +225,7 @@ export function ZostavaView({ id }: Props) {
             {t("start_test")}
           </Button>
           <Button asChild variant="outline">
-            <Link to={ROUTES.zostav}>{t("build_own_short")}</Link>
+            <Link to={ROUTES.builder}>{t("build_own_short")}</Link>
           </Button>
         </div>
 

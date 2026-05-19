@@ -15,3 +15,10 @@
 /o-projekte /about 301
 /skolenia /courses 301
 /skolenia/* /courses/:splat 301
+
+# E33 — composer rebrand: /test/zostav → /test/builder (English URL).
+# More-specific results route MUST come BEFORE the wildcard so it
+# isn't shadowed by `/test/zostava/:id/*`.
+/test/zostava/:id/vysledky /test/builder/:id/results 301
+/test/zostava/:id /test/builder/:id 301
+/test/zostav /test/builder 301

@@ -83,7 +83,7 @@ vi.mock("@/lib/browser/clipboard", () => ({
   copyToClipboard: (text: string) => clipboardMock.write(text),
 }));
 
-import { ComposerPage } from "@/routes/test.zostav.lazy";
+import { ComposerPage } from "@/routes/test.builder.lazy";
 import { QUESTIONS } from "@/lib/quiz/bank/questions";
 import { encodeConfig } from "@/lib/quiz/composer";
 
@@ -235,7 +235,7 @@ describe("ComposerPage — URL share-out (AC-12)", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("writes a /test/zostav?config=… URL via the clipboard helper on click", async () => {
+  it("writes a /test/builder?config=… URL via the clipboard helper on click", async () => {
     const user = userEvent.setup();
     mocks.publishedPacks = [
       {
@@ -256,7 +256,7 @@ describe("ComposerPage — URL share-out (AC-12)", () => {
     await user.click(await screen.findByRole("button", { name: /Skopírovať draft cez URL/i }));
     expect(clipboardMock.write).toHaveBeenCalledTimes(1);
     const written = clipboardMock.write.mock.calls[0][0] as string;
-    expect(written).toContain("/test/zostav?config=");
+    expect(written).toContain("/test/builder?config=");
     expect(written.length).toBeGreaterThan(40);
     expect(await screen.findByText(/Odkaz s draftom skopírovaný/i)).toBeInTheDocument();
   });
@@ -286,7 +286,7 @@ describe("ComposerPage — URL share-out (AC-12)", () => {
 });
 
 describe("ComposerPage — DB share submit", () => {
-  it("POSTs to /api/test-sets and navigates to /test/zostava/{id} on success", async () => {
+  it("POSTs to /api/test-sets and navigates to /test/builder/{id} on success", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ id: "set_xyz" }), {
         status: 200,
@@ -319,7 +319,7 @@ describe("ComposerPage — DB share submit", () => {
     });
     await waitFor(() => {
       expect(mocks.navigate).toHaveBeenCalledWith({
-        to: "/test/zostava/$id",
+        to: "/test/builder/$id",
         params: { id: "set_xyz" },
       });
     });

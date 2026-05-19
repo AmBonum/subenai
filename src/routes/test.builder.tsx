@@ -2,12 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { tFor } from "@/i18n/quiz";
 
-interface ZostavSearch {
+interface BuilderSearch {
   config?: string;
 }
 
-export const Route = createFileRoute("/test/zostav")({
-  validateSearch: (search: Record<string, unknown>): ZostavSearch => ({
+export const Route = createFileRoute("/test/builder")({
+  validateSearch: (search: Record<string, unknown>): BuilderSearch => ({
     config: typeof search.config === "string" ? search.config : undefined,
   }),
   head: () => {

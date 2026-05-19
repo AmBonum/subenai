@@ -46,7 +46,7 @@ function jsonResponse(status: number, body: VerifyResponse, cookie?: string): Re
 function buildCookie(setId: string, token: string, ttl: number): string {
   // Path MUST be "/" because the dashboard fetches `/api/results-data`,
   // `/api/delete-edu-respondent`, and `/api/verify-author-password` (logout)
-  // from outside `/test/zostava/${setId}`. A narrow path causes the browser
+  // from outside `/test/builder/${setId}`. A narrow path causes the browser
   // to never send the cookie on those API requests → 401 loop on the
   // password gate.
   //

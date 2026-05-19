@@ -33,11 +33,11 @@ describe("linkifyPaths — E27 inline path → clickable link converter", () => 
   });
 
   it("converts MULTIPLE paths in the same string", () => {
-    renderResult("Spusti /test alebo zostav vlastný na /test/zostav.");
+    renderResult("Spusti /test alebo zostav vlastný na /test/builder.");
     const links = screen.getAllByRole("link");
     expect(links).toHaveLength(2);
     expect(links[0]).toHaveAttribute("href", "/test");
-    expect(links[1]).toHaveAttribute("href", "/test/zostav");
+    expect(links[1]).toHaveAttribute("href", "/test/builder");
   });
 
   it("handles a path inside parentheses without grabbing the closing paren", () => {

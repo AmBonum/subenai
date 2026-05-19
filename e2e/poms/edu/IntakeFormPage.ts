@@ -1,9 +1,9 @@
 import { BasePage } from "../BasePage";
 
-/** POM for the respondent intake form on /test/zostava/$id */
+/** POM for the respondent intake form on /test/builder/$id */
 export class IntakeFormPage extends BasePage {
   async open(setId: string) {
-    return this.goto(`/test/zostava/${setId}`);
+    return this.goto(`/test/builder/${setId}`);
   }
 
   // ── Form elements ────────────────────────────────────────────────────────────

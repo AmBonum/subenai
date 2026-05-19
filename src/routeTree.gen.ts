@@ -33,7 +33,7 @@ import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ThankYouSessionIdRouteImport } from './routes/thank-you.$sessionId'
 import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
-import { Route as TestZostavRouteImport } from './routes/test.zostav'
+import { Route as TestBuilderRouteImport } from './routes/test.builder'
 import { Route as TShareIdRouteImport } from './routes/t.$shareId'
 import { Route as SponsorsAllRouteImport } from './routes/sponsors.all'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
@@ -80,7 +80,7 @@ import { Route as AdminTestsIndexRouteImport } from './routes/admin/tests.index'
 import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as AdminAnswerSetsIndexRouteImport } from './routes/admin/answer-sets.index'
-import { Route as TestZostavaIdRouteImport } from './routes/test.zostava.$id'
+import { Route as TestBuilderIdRouteImport } from './routes/test.builder.$id'
 import { Route as BlogKategoriaSlugRouteImport } from './routes/blog/kategoria/$slug'
 import { Route as BlogAutorSlugRouteImport } from './routes/blog/autor/$slug'
 import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
@@ -94,8 +94,8 @@ import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$page
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
 import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
 import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
-import { Route as TestZostavaIdIndexRouteImport } from './routes/test.zostava.$id.index'
-import { Route as TestZostavaIdVysledkyRouteImport } from './routes/test.zostava.$id.vysledky'
+import { Route as TestBuilderIdIndexRouteImport } from './routes/test.builder.$id.index'
+import { Route as TestBuilderIdResultsRouteImport } from './routes/test.builder.$id.results'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -217,11 +217,11 @@ const TestsSlugRoute = TestsSlugRouteImport.update({
   path: '/tests/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TestZostavRoute = TestZostavRouteImport.update({
-  id: '/test/zostav',
-  path: '/test/zostav',
+const TestBuilderRoute = TestBuilderRouteImport.update({
+  id: '/test/builder',
+  path: '/test/builder',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/test.zostav.lazy').then((d) => d.Route))
+} as any).lazy(() => import('./routes/test.builder.lazy').then((d) => d.Route))
 const TShareIdRoute = TShareIdRouteImport.update({
   id: '/t/$shareId',
   path: '/t/$shareId',
@@ -482,12 +482,12 @@ const AdminAnswerSetsIndexRoute = AdminAnswerSetsIndexRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/answer-sets.index.lazy').then((d) => d.Route),
 )
-const TestZostavaIdRoute = TestZostavaIdRouteImport.update({
-  id: '/test/zostava/$id',
-  path: '/test/zostava/$id',
-  getParentRoute: () => rootRouteImport,
+const TestBuilderIdRoute = TestBuilderIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => TestBuilderRoute,
 } as any).lazy(() =>
-  import('./routes/test.zostava.$id.lazy').then((d) => d.Route),
+  import('./routes/test.builder.$id.lazy').then((d) => d.Route),
 )
 const BlogKategoriaSlugRoute = BlogKategoriaSlugRouteImport.update({
   id: '/blog/kategoria/$slug',
@@ -568,19 +568,19 @@ const AdminAnswerSetsSetIdRoute = AdminAnswerSetsSetIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/answer-sets.$setId.lazy').then((d) => d.Route),
 )
-const TestZostavaIdIndexRoute = TestZostavaIdIndexRouteImport.update({
+const TestBuilderIdIndexRoute = TestBuilderIdIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => TestZostavaIdRoute,
+  getParentRoute: () => TestBuilderIdRoute,
 } as any).lazy(() =>
-  import('./routes/test.zostava.$id.index.lazy').then((d) => d.Route),
+  import('./routes/test.builder.$id.index.lazy').then((d) => d.Route),
 )
-const TestZostavaIdVysledkyRoute = TestZostavaIdVysledkyRouteImport.update({
-  id: '/vysledky',
-  path: '/vysledky',
-  getParentRoute: () => TestZostavaIdRoute,
+const TestBuilderIdResultsRoute = TestBuilderIdResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => TestBuilderIdRoute,
 } as any).lazy(() =>
-  import('./routes/test.zostava.$id.vysledky.lazy').then((d) => d.Route),
+  import('./routes/test.builder.$id.results.lazy').then((d) => d.Route),
 )
 
 export interface FileRoutesByFullPath {
@@ -640,7 +640,7 @@ export interface FileRoutesByFullPath {
   '/s/$slug': typeof SSlugRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
-  '/test/zostav': typeof TestZostavRoute
+  '/test/builder': typeof TestBuilderRouteWithChildren
   '/tests/$slug': typeof TestsSlugRoute
   '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -663,14 +663,14 @@ export interface FileRoutesByFullPath {
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
-  '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/test/builder/$id': typeof TestBuilderIdRouteWithChildren
   '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/pages/': typeof AdminPagesIndexRoute
   '/admin/tests/': typeof AdminTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
-  '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
-  '/test/zostava/$id/': typeof TestZostavaIdIndexRoute
+  '/test/builder/$id/results': typeof TestBuilderIdResultsRoute
+  '/test/builder/$id/': typeof TestBuilderIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -723,7 +723,7 @@ export interface FileRoutesByTo {
   '/s/$slug': typeof SSlugRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
-  '/test/zostav': typeof TestZostavRoute
+  '/test/builder': typeof TestBuilderRouteWithChildren
   '/tests/$slug': typeof TestsSlugRoute
   '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
   '/admin': typeof AdminIndexRoute
@@ -751,8 +751,8 @@ export interface FileRoutesByTo {
   '/admin/pages': typeof AdminPagesIndexRoute
   '/admin/tests': typeof AdminTestsIndexRoute
   '/app/tests': typeof AppTestsIndexRoute
-  '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
-  '/test/zostava/$id': typeof TestZostavaIdIndexRoute
+  '/test/builder/$id/results': typeof TestBuilderIdResultsRoute
+  '/test/builder/$id': typeof TestBuilderIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -812,7 +812,7 @@ export interface FileRoutesById {
   '/s/$slug': typeof SSlugRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
-  '/test/zostav': typeof TestZostavRoute
+  '/test/builder': typeof TestBuilderRouteWithChildren
   '/tests/$slug': typeof TestsSlugRoute
   '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
   '/admin/': typeof AdminIndexRoute
@@ -835,14 +835,14 @@ export interface FileRoutesById {
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
-  '/test/zostava/$id': typeof TestZostavaIdRouteWithChildren
+  '/test/builder/$id': typeof TestBuilderIdRouteWithChildren
   '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/pages/': typeof AdminPagesIndexRoute
   '/admin/tests/': typeof AdminTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
-  '/test/zostava/$id/vysledky': typeof TestZostavaIdVysledkyRoute
-  '/test/zostava/$id/': typeof TestZostavaIdIndexRoute
+  '/test/builder/$id/results': typeof TestBuilderIdResultsRoute
+  '/test/builder/$id/': typeof TestBuilderIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -903,7 +903,7 @@ export interface FileRouteTypes {
     | '/s/$slug'
     | '/sponsors/all'
     | '/t/$shareId'
-    | '/test/zostav'
+    | '/test/builder'
     | '/tests/$slug'
     | '/thank-you/$sessionId'
     | '/admin/'
@@ -926,14 +926,14 @@ export interface FileRouteTypes {
     | '/app/tests/new'
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
-    | '/test/zostava/$id'
+    | '/test/builder/$id'
     | '/admin/answer-sets/'
     | '/admin/blog/'
     | '/admin/pages/'
     | '/admin/tests/'
     | '/app/tests/'
-    | '/test/zostava/$id/vysledky'
-    | '/test/zostava/$id/'
+    | '/test/builder/$id/results'
+    | '/test/builder/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -986,7 +986,7 @@ export interface FileRouteTypes {
     | '/s/$slug'
     | '/sponsors/all'
     | '/t/$shareId'
-    | '/test/zostav'
+    | '/test/builder'
     | '/tests/$slug'
     | '/thank-you/$sessionId'
     | '/admin'
@@ -1014,8 +1014,8 @@ export interface FileRouteTypes {
     | '/admin/pages'
     | '/admin/tests'
     | '/app/tests'
-    | '/test/zostava/$id/vysledky'
-    | '/test/zostava/$id'
+    | '/test/builder/$id/results'
+    | '/test/builder/$id'
   id:
     | '__root__'
     | '/'
@@ -1074,7 +1074,7 @@ export interface FileRouteTypes {
     | '/s/$slug'
     | '/sponsors/all'
     | '/t/$shareId'
-    | '/test/zostav'
+    | '/test/builder'
     | '/tests/$slug'
     | '/thank-you/$sessionId'
     | '/admin/'
@@ -1097,14 +1097,14 @@ export interface FileRouteTypes {
     | '/app/tests/new'
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
-    | '/test/zostava/$id'
+    | '/test/builder/$id'
     | '/admin/answer-sets/'
     | '/admin/blog/'
     | '/admin/pages/'
     | '/admin/tests/'
     | '/app/tests/'
-    | '/test/zostava/$id/vysledky'
-    | '/test/zostava/$id/'
+    | '/test/builder/$id/results'
+    | '/test/builder/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1132,7 +1132,7 @@ export interface RootRouteChildren {
   RShareIdRoute: typeof RShareIdRoute
   SSlugRoute: typeof SSlugRoute
   TShareIdRoute: typeof TShareIdRoute
-  TestZostavRoute: typeof TestZostavRoute
+  TestBuilderRoute: typeof TestBuilderRouteWithChildren
   TestsSlugRoute: typeof TestsSlugRoute
   ThankYouSessionIdRoute: typeof ThankYouSessionIdRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -1141,7 +1141,6 @@ export interface RootRouteChildren {
   TestsIndexRoute: typeof TestsIndexRoute
   BlogAutorSlugRoute: typeof BlogAutorSlugRoute
   BlogKategoriaSlugRoute: typeof BlogKategoriaSlugRoute
-  TestZostavaIdRoute: typeof TestZostavaIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -1314,11 +1313,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/test/zostav': {
-      id: '/test/zostav'
-      path: '/test/zostav'
-      fullPath: '/test/zostav'
-      preLoaderRoute: typeof TestZostavRouteImport
+    '/test/builder': {
+      id: '/test/builder'
+      path: '/test/builder'
+      fullPath: '/test/builder'
+      preLoaderRoute: typeof TestBuilderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/t/$shareId': {
@@ -1643,12 +1642,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnswerSetsIndexRouteImport
       parentRoute: typeof AdminAnswerSetsRoute
     }
-    '/test/zostava/$id': {
-      id: '/test/zostava/$id'
-      path: '/test/zostava/$id'
-      fullPath: '/test/zostava/$id'
-      preLoaderRoute: typeof TestZostavaIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/test/builder/$id': {
+      id: '/test/builder/$id'
+      path: '/$id'
+      fullPath: '/test/builder/$id'
+      preLoaderRoute: typeof TestBuilderIdRouteImport
+      parentRoute: typeof TestBuilderRoute
     }
     '/blog/kategoria/$slug': {
       id: '/blog/kategoria/$slug'
@@ -1741,19 +1740,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnswerSetsSetIdRouteImport
       parentRoute: typeof AdminAnswerSetsRoute
     }
-    '/test/zostava/$id/': {
-      id: '/test/zostava/$id/'
+    '/test/builder/$id/': {
+      id: '/test/builder/$id/'
       path: '/'
-      fullPath: '/test/zostava/$id/'
-      preLoaderRoute: typeof TestZostavaIdIndexRouteImport
-      parentRoute: typeof TestZostavaIdRoute
+      fullPath: '/test/builder/$id/'
+      preLoaderRoute: typeof TestBuilderIdIndexRouteImport
+      parentRoute: typeof TestBuilderIdRoute
     }
-    '/test/zostava/$id/vysledky': {
-      id: '/test/zostava/$id/vysledky'
-      path: '/vysledky'
-      fullPath: '/test/zostava/$id/vysledky'
-      preLoaderRoute: typeof TestZostavaIdVysledkyRouteImport
-      parentRoute: typeof TestZostavaIdRoute
+    '/test/builder/$id/results': {
+      id: '/test/builder/$id/results'
+      path: '/results'
+      fullPath: '/test/builder/$id/results'
+      preLoaderRoute: typeof TestBuilderIdResultsRouteImport
+      parentRoute: typeof TestBuilderIdRoute
     }
   }
 }
@@ -1916,18 +1915,30 @@ const SponsorsRouteWithChildren = SponsorsRoute._addFileChildren(
   SponsorsRouteChildren,
 )
 
-interface TestZostavaIdRouteChildren {
-  TestZostavaIdVysledkyRoute: typeof TestZostavaIdVysledkyRoute
-  TestZostavaIdIndexRoute: typeof TestZostavaIdIndexRoute
+interface TestBuilderIdRouteChildren {
+  TestBuilderIdResultsRoute: typeof TestBuilderIdResultsRoute
+  TestBuilderIdIndexRoute: typeof TestBuilderIdIndexRoute
 }
 
-const TestZostavaIdRouteChildren: TestZostavaIdRouteChildren = {
-  TestZostavaIdVysledkyRoute: TestZostavaIdVysledkyRoute,
-  TestZostavaIdIndexRoute: TestZostavaIdIndexRoute,
+const TestBuilderIdRouteChildren: TestBuilderIdRouteChildren = {
+  TestBuilderIdResultsRoute: TestBuilderIdResultsRoute,
+  TestBuilderIdIndexRoute: TestBuilderIdIndexRoute,
 }
 
-const TestZostavaIdRouteWithChildren = TestZostavaIdRoute._addFileChildren(
-  TestZostavaIdRouteChildren,
+const TestBuilderIdRouteWithChildren = TestBuilderIdRoute._addFileChildren(
+  TestBuilderIdRouteChildren,
+)
+
+interface TestBuilderRouteChildren {
+  TestBuilderIdRoute: typeof TestBuilderIdRouteWithChildren
+}
+
+const TestBuilderRouteChildren: TestBuilderRouteChildren = {
+  TestBuilderIdRoute: TestBuilderIdRouteWithChildren,
+}
+
+const TestBuilderRouteWithChildren = TestBuilderRoute._addFileChildren(
+  TestBuilderRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
@@ -1955,7 +1966,7 @@ const rootRouteChildren: RootRouteChildren = {
   RShareIdRoute: RShareIdRoute,
   SSlugRoute: SSlugRoute,
   TShareIdRoute: TShareIdRoute,
-  TestZostavRoute: TestZostavRoute,
+  TestBuilderRoute: TestBuilderRouteWithChildren,
   TestsSlugRoute: TestsSlugRoute,
   ThankYouSessionIdRoute: ThankYouSessionIdRoute,
   BlogIndexRoute: BlogIndexRoute,
@@ -1964,7 +1975,6 @@ const rootRouteChildren: RootRouteChildren = {
   TestsIndexRoute: TestsIndexRoute,
   BlogAutorSlugRoute: BlogAutorSlugRoute,
   BlogKategoriaSlugRoute: BlogKategoriaSlugRoute,
-  TestZostavaIdRoute: TestZostavaIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

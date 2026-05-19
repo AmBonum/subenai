@@ -2,9 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { tFor } from "@/i18n/quiz";
 
-export const Route = createFileRoute("/test/zostava/$id/vysledky")({
+export const Route = createFileRoute("/test/builder/$id")({
   head: () => {
-    const t = tFor("results_page");
+    const t = tFor("composition");
     return {
       meta: [{ title: t("meta_title") }, { name: "robots", content: "noindex, nofollow" }],
     };

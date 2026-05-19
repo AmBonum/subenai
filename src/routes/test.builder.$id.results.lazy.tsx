@@ -10,20 +10,20 @@ import { tFor } from "@/i18n/quiz";
 
 type Phase = "loading" | "needs_auth" | "ready" | "error" | "not_found";
 
-export const Route = createLazyFileRoute("/test/zostava/$id/vysledky")({
-  component: VysledkyPage,
+export const Route = createLazyFileRoute("/test/builder/$id/results")({
+  component: ResultsPage,
 });
 
-function VysledkyPage() {
-  const { id } = useParams({ from: "/test/zostava/$id/vysledky" });
-  return <VysledkyView id={id} />;
+function ResultsPage() {
+  const { id } = useParams({ from: "/test/builder/$id/results" });
+  return <ResultsView id={id} />;
 }
 
 interface Props {
   id: string;
 }
 
-export function VysledkyView({ id }: Props) {
+export function ResultsView({ id }: Props) {
   const t = tFor("results_page");
   const tCommon = tFor("common");
   const [phase, setPhase] = useState<Phase>("loading");

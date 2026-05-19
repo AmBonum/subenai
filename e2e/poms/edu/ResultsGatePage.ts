@@ -1,9 +1,9 @@
 import { BasePage } from "../BasePage";
 
-/** POM for the /test/zostava/$id/vysledky password gate and dashboard. */
+/** POM for the /test/builder/$id/results password gate and dashboard. */
 export class ResultsGatePage extends BasePage {
   async open(setId: string) {
-    return this.goto(`/test/zostava/${setId}/vysledky`);
+    return this.goto(`/test/builder/${setId}/results`);
   }
 
   // ── Gate elements ─────────────────────────────────────────────────────────────

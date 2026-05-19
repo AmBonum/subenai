@@ -9,7 +9,7 @@ import { test, expect } from "../../fixtures/base";
 //
 // These specs verify:
 //   - the new structural test-ids render
-//   - the conversion paths land on the right routes (/test/zostav, /test, /blog)
+//   - the conversion paths land on the right routes (/test/builder, /test, /blog)
 //   - the DPA CTA produces a mailto: URL (no longer buried mid-page)
 //   - SEO JSON-LD blocks (FAQPage + HowTo + EducationalOrganization + BreadcrumbList) are emitted
 //   - meta + robots are correct
@@ -36,7 +36,7 @@ test.describe("/schools — senior marketing landing (E19)", () => {
     await expect(schools.personaChip("ucitel")).toBeVisible();
 
     await expect(schools.heroCta).toBeVisible();
-    await expect(schools.heroCta).toHaveAttribute("href", "/test/zostav");
+    await expect(schools.heroCta).toHaveAttribute("href", "/test/builder");
     await expect(schools.heroCtaSecondary).toHaveAttribute("href", "/test");
   });
 
@@ -90,12 +90,12 @@ test.describe("/schools — senior marketing landing (E19)", () => {
   }) => {
     await schools.open();
     await expect(schools.footerCta).toBeVisible();
-    await expect(schools.footerCard("composer")).toHaveAttribute("href", "/test/zostav");
+    await expect(schools.footerCard("composer")).toHaveAttribute("href", "/test/builder");
     await expect(schools.footerCard("test")).toHaveAttribute("href", "/test");
     await expect(schools.footerCard("blog")).toHaveAttribute("href", "/blog");
   });
 
-  test("hero CTA navigates to /test/zostav (Composer)", async ({ page, schools }) => {
+  test("hero CTA navigates to /test/builder (Composer)", async ({ page, schools }) => {
     await schools.open();
     await schools.heroCta.click();
     await expect(page).toHaveURL(/\/test\/zostav/);

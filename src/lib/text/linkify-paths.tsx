@@ -23,7 +23,7 @@ import { Fragment, type ReactNode } from "react";
 // future answer that mentions a path gets linkified for free.
 //
 // What matches:
-//   /support, /test, /tests/eshop, /test/zostav, /courses/email-phishing
+//   /support, /test, /tests/eshop, /test/builder, /courses/email-phishing
 // What does NOT match:
 //   //double, /5 (no leading letter), /Test (uppercase), /test.html
 //   (trailing punctuation), regex `/foo/` markers in code

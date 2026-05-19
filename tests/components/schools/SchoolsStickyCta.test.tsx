@@ -26,7 +26,7 @@ describe("SchoolsStickyCta", () => {
   it("CTA link targets the Composer route", () => {
     render(<SchoolsStickyCta />);
     const link = screen.getByTestId("schools-sticky-cta");
-    expect(link).toHaveAttribute("data-to", "/test/zostav");
+    expect(link).toHaveAttribute("data-to", "/test/builder");
   });
 
   it("renders region role with an aria-label (for screen-reader navigation)", () => {

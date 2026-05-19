@@ -38,9 +38,9 @@ export interface SeedEduTestOptions {
 export interface SeedEduTestResult {
   /** UUID of the created test_set row. */
   id: string;
-  /** Full URL path usable in page.goto(): /test/zostava/${id} */
+  /** Full URL path usable in page.goto(): /test/builder/${id} */
   respondent_url: string;
-  /** Full URL path usable in page.goto(): /test/zostava/${id}/vysledky */
+  /** Full URL path usable in page.goto(): /test/builder/${id}/results */
   results_url: string;
   /** The plaintext password supplied by caller. */
   password: string;
@@ -161,8 +161,8 @@ export async function seedEduTest(opts: SeedEduTestOptions): Promise<SeedEduTest
 
   return {
     id: setId,
-    respondent_url: `/test/zostava/${setId}`,
-    results_url: `/test/zostava/${setId}/vysledky`,
+    respondent_url: `/test/builder/${setId}`,
+    results_url: `/test/builder/${setId}/results`,
     password: opts.password,
     attempt_ids: attemptIds,
   };

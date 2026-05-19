@@ -291,7 +291,7 @@ export function EduWorkflowSteps() {
             <ol className="list-decimal space-y-1 pl-5">
               <li>
                 {t("skoly.step1_li1_prefix")}
-                <Link to={ROUTES.zostav} className="underline underline-offset-2">
+                <Link to={ROUTES.builder} className="underline underline-offset-2">
                   {t("skoly.step1_li1_link")}
                 </Link>
                 {t("skoly.step1_li1_suffix")}

@@ -25,7 +25,7 @@ async function seedEmpty(page: import("@playwright/test").Page) {
   await mockSupabase(page, { tables: { test_sets: [] } });
 }
 
-test.describe("Shared-set routes — /test/zostava/$id", () => {
+test.describe("Shared-set routes — /test/builder/$id", () => {
   test.beforeEach(async ({ context }) => {
     await primeConsent(context, "all");
   });
@@ -146,12 +146,12 @@ test.describe("Shared-set routes — /test/zostava/$id", () => {
     });
 
     await test.step("Verify the URL has not changed away from the shared-set route", async () => {
-      await expect(page).toHaveURL(new RegExp(`/test/zostava/${SET_ID}`));
+      await expect(page).toHaveURL(new RegExp(`/test/builder/${SET_ID}`));
     });
   });
 });
 
-test.describe("Shared-set routes — /test/zostava/$id/vysledky", () => {
+test.describe("Shared-set routes — /test/builder/$id/results", () => {
   test.beforeEach(async ({ context }) => {
     await primeConsent(context, "all");
   });

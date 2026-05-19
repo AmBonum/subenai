@@ -141,7 +141,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     }
   } else if (authorPassword) {
     // Defensive: don't accept a password without the toggle (would store an
-    // unused hash and surprise the author when /vysledky doesn't open).
+    // unused hash and surprise the author when /results doesn't open).
     return jsonResponse(400, { error: "password_without_collects" });
   }
 
@@ -191,10 +191,10 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     return jsonResponse(500, { error: "insert_failed" });
   }
 
-  const url = `/test/zostava/${data.id}`;
+  const url = `/test/builder/${data.id}`;
   const response: CreateResponse = { id: data.id as string, url };
   if (collectsResponses) {
-    response.results_url = `${url}/vysledky`;
+    response.results_url = `${url}/results`;
   }
   return jsonResponse(200, response);
 }

@@ -87,7 +87,7 @@ describe("POST /api/test-sets — happy path", () => {
     });
     expect(response.status).toBe(200);
     const body = await response.json();
-    expect(body).toEqual({ id: "set_xyz789", url: "/test/zostava/set_xyz789" });
+    expect(body).toEqual({ id: "set_xyz789", url: "/test/builder/set_xyz789" });
   });
 
   it("accepts source_pack_slugs without validating them against pack registry", async () => {
@@ -279,8 +279,8 @@ describe("POST /api/test-sets — E12.2 education mode", () => {
     expect(response.status).toBe(200);
     const body = await response.json();
     expect(body.id).toBe("set_edu_1");
-    expect(body.url).toBe("/test/zostava/set_edu_1");
-    expect(body.results_url).toBe("/test/zostava/set_edu_1/vysledky");
+    expect(body.url).toBe("/test/builder/set_edu_1");
+    expect(body.results_url).toBe("/test/builder/set_edu_1/results");
 
     const insertBody = captured.body as Record<string, unknown> | Array<Record<string, unknown>>;
     const row = Array.isArray(insertBody) ? insertBody[0] : insertBody;
