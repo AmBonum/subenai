@@ -271,6 +271,71 @@ export function useBlogPostsByRelatedCourses(courseSlugs: string[]) {
   });
 }
 
+// E25 Phase 3 — reverse lookup: which blog post links TO this test pack?
+//
+// Mirror of useBlogPostByRelatedCourse — returns the most-recent
+// published article whose related_test_slug = packSlug, or null when
+// no article is tagged. Used on /tests/<slug> to render a "Read this
+// before / after the test" card pointing back at the related article.
+//
+// Single-slug variant for per-detail-page consumption. For the catalog
+// strip on /tests index, see useFeaturedBlogPostsForTests below.
+export function useBlogPostByRelatedTest(packSlug: string | undefined) {
+  return useQuery({
+    queryKey: ["blog", "post", "by-test", packSlug ?? ""],
+    enabled: typeof packSlug === "string" && packSlug.length > 0,
+    queryFn: async (): Promise<BlogPostListItem | null> => {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select(
+          `id, slug, title, excerpt, hero_image_url, reading_minutes, published_at,
+           category:blog_categories!inner(slug, name),
+           author:blog_authors!inner(slug, display_name)`,
+        )
+        .eq("related_test_slug", packSlug as string)
+        .eq("status", "published")
+        .lte("published_at", new Date().toISOString())
+        .order("published_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return (data as unknown as BlogPostListItem | null) ?? null;
+    },
+  });
+}
+
+// E25 Phase 3 — featured-for-tests strip on /tests index.
+//
+// Returns the N most-recent published articles whose
+// related_test_slug IS NOT NULL — i.e. articles that have been
+// editorially tagged as "study material before/after a test". Order
+// by published_at DESC so the most fresh content anchors the strip.
+//
+// Returns an empty array before any article is backfilled. The
+// catalog renders the strip section conditionally on `data.length > 0`
+// so the UI degrades gracefully until editorial fills the column.
+export function useFeaturedBlogPostsForTests(limit = 4) {
+  return useQuery({
+    queryKey: ["blog", "posts", "featured-for-tests", limit],
+    queryFn: async (): Promise<BlogPostListItem[]> => {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select(
+          `id, slug, title, excerpt, hero_image_url, reading_minutes, published_at,
+           category:blog_categories!inner(slug, name),
+           author:blog_authors!inner(slug, display_name)`,
+        )
+        .not("related_test_slug", "is", null)
+        .eq("status", "published")
+        .lte("published_at", new Date().toISOString())
+        .order("published_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return (data ?? []) as unknown as BlogPostListItem[];
+    },
+  });
+}
+
 export function useBlogPostsByAuthorId(authorId: string | undefined) {
   return useQuery({
     queryKey: ["blog", "posts", "by-author", authorId ?? ""],

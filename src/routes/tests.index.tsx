@@ -5,6 +5,7 @@ import { INDUSTRY_LABEL } from "@/lib/seo/quiz-jsonld";
 import { TestPackCard } from "@/components/test-packs/TestPackCard";
 import { TestsValueStrip } from "@/components/tests/TestsValueStrip";
 import { TestsFaqSection } from "@/components/tests/TestsFaqSection";
+import { TestsLearningStrip } from "@/components/tests/TestsLearningStrip";
 import { buildTestsFaqJsonLd } from "@/lib/seo/tests-faq-schema";
 import { Button } from "@/components/ui/button";
 import { SITE_ORIGIN } from "@/config/site";
@@ -225,6 +226,8 @@ function TestsCatalogPage() {
             ))}
           </div>
         )}
+
+        <TestsLearningStrip />
 
         <TestsFaqSection />
 

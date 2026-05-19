@@ -3663,6 +3663,30 @@ END;
 $$;
 
 -- ============================================================================
+-- E25 Phase 3 — related_test_slug column on blog_posts (mirror of 20260521000000)
+-- ============================================================================
+
+ALTER TABLE public.blog_posts
+  ADD COLUMN IF NOT EXISTS related_test_slug TEXT NULL;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'blog_posts_related_test_slug_format'
+  ) THEN
+    ALTER TABLE public.blog_posts
+      ADD CONSTRAINT blog_posts_related_test_slug_format
+      CHECK (related_test_slug IS NULL OR related_test_slug ~ '^[a-z0-9-]+$');
+  END IF;
+END;
+$$;
+
+CREATE INDEX IF NOT EXISTS idx_blog_posts_related_test_slug
+  ON public.blog_posts (related_test_slug, published_at DESC)
+  WHERE related_test_slug IS NOT NULL;
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT
