@@ -55,6 +55,7 @@ const PILLAR_SLUGS = new Set([
   "bezpecnost-pre-rodicov-deti-seniorov",
   "bezpecne-nakupovanie-online-slovensko",
   "internet-safety-pre-studentov",
+  "kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov",
 ]);
 
 const BLOG_CATEGORY_SLUGS = [
