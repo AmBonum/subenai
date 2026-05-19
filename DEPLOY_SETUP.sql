@@ -3687,6 +3687,43 @@ CREATE INDEX IF NOT EXISTS idx_blog_posts_related_test_slug
   WHERE related_test_slug IS NOT NULL;
 
 -- ============================================================================
+-- HOTFIX 2026-05-20 — hash_test_set_password reapplied (P0 from /schools
+-- contract test: prod /api/test-sets returned hash_failed because the
+-- original 20260501000000_edu_mode.sql migration was missing or service_role
+-- lost EXECUTE permission on the RPC). Idempotent. See
+-- supabase/migrations/20260521100000_hash_test_set_password_prod_hotfix.sql.
+-- ============================================================================
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+CREATE OR REPLACE FUNCTION public.hash_test_set_password(password TEXT)
+RETURNS TEXT
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+BEGIN
+  IF password IS NULL OR length(password) < 8 THEN
+    RAISE EXCEPTION 'Password must be at least 8 characters';
+  END IF;
+  RETURN crypt(password, gen_salt('bf', 10));
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.hash_test_set_password(TEXT)
+  FROM PUBLIC, anon, authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.hash_test_set_password(TEXT) TO service_role;
+
+DO $$
+DECLARE
+  v_hash TEXT;
+BEGIN
+  v_hash := public.hash_test_set_password('hotfix-probe');
+  IF v_hash IS NULL OR length(v_hash) < 50 OR v_hash NOT LIKE '$2%' THEN
+    RAISE EXCEPTION 'hash_test_set_password smoke test failed: got %', v_hash;
+  END IF;
+END$$;
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT
