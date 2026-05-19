@@ -1,10 +1,21 @@
 import { Link } from "@tanstack/react-router";
 
-// Inline conversion CTA pointing readers at the /test entry point.
+import { trackBlogCtaClick } from "@/lib/analytics/blog-events";
+
+interface ArticleCTABannerProps {
+  // Optional context for the GA4 cta-click event. Caller (article
+  // page) passes the slug + category so the funnel report can attribute
+  // conversions to the originating piece. Falls back to "" if absent
+  // (unit tests / preview screens).
+  postSlug?: string;
+  categorySlug?: string;
+}
+
+// Inline conversion CTA pointing readers at the /tests entry point.
 // Renders mid-article (after BlogPostBody) so it isn't intrusive but
 // catches engaged readers. Stays a single component so the copy /
 // styling lives in one place across all 80+ articles.
-export function ArticleCTABanner() {
+export function ArticleCTABanner({ postSlug, categorySlug }: ArticleCTABannerProps = {}) {
   return (
     <aside
       className="mt-12 overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/15 via-accent/10 to-transparent p-6 md:p-8"
@@ -34,6 +45,14 @@ export function ArticleCTABanner() {
           to="/tests"
           className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-105"
           data-testid="blog-article-cta-button"
+          onClick={() =>
+            trackBlogCtaClick({
+              post_slug: postSlug ?? "",
+              category_slug: categorySlug ?? "",
+              destination: "/tests",
+              position: "inline_banner",
+            })
+          }
         >
           spravím si test →
         </Link>

@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { tFor } from "@/i18n/blog";
 import { VisualBlock } from "@/components/quiz/flow/VisualBlock";
+import { trackBlogCtaClick, trackBlogScenarioAnswer } from "@/lib/analytics/blog-events";
 import { QUESTIONS } from "@/lib/quiz/bank/questions";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +16,16 @@ import { cn } from "@/lib/utils";
 // Per locked decision #6 in tasks/PLAN-2026-05-19-blog-content-engine.md:
 // lightweight, not stateful beyond reveal, no shared state with the
 // main quiz, never blocks the article reader.
-export function BlogScenarioCard({ questionId }: { questionId: string }) {
+export function BlogScenarioCard({
+  questionId,
+  postSlug,
+}: {
+  questionId: string;
+  // Optional post-slug so the answer event can attribute to the host
+  // article. Without it the event still fires but post_slug is blank
+  // (unit tests / preview screens skip this).
+  postSlug?: string;
+}) {
   const t = tFor("scenario_card");
   const [picked, setPicked] = useState<string | null>(null);
   const question = QUESTIONS.find((q) => q.id === questionId);
@@ -60,7 +70,15 @@ export function BlogScenarioCard({ questionId }: { questionId: string }) {
             <li key={option.id}>
               <button
                 type="button"
-                onClick={() => !isRevealed && setPicked(option.id)}
+                onClick={() => {
+                  if (isRevealed) return;
+                  setPicked(option.id);
+                  trackBlogScenarioAnswer({
+                    post_slug: postSlug ?? "",
+                    question_id: question.id,
+                    correct: option.correct,
+                  });
+                }}
                 disabled={isRevealed}
                 className={cn(
                   "block w-full rounded-md border px-4 py-3 text-left text-sm transition",
@@ -91,6 +109,14 @@ export function BlogScenarioCard({ questionId }: { questionId: string }) {
             to="/tests"
             className="mt-4 inline-block text-sm font-medium underline underline-offset-2"
             data-testid={`blog-scenario-card-cta-${question.id}`}
+            onClick={() =>
+              trackBlogCtaClick({
+                post_slug: postSlug ?? "",
+                category_slug: "",
+                destination: "/tests",
+                position: "scenario_card",
+              })
+            }
           >
             {t("show_more")}
           </Link>

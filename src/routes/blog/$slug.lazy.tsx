@@ -1,8 +1,13 @@
 import { createLazyFileRoute, Link, useParams } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { SITE_ORIGIN } from "@/config/site";
 import { ArticleCTABanner } from "@/components/blog/ArticleCTABanner";
+import {
+  trackBlogPostView,
+  trackBlogRelatedClick,
+  trackBlogTocClick,
+} from "@/lib/analytics/blog-events";
 import { BlogHeroFallback } from "@/components/blog/BlogHeroFallback";
 import { BlogPostBody } from "@/components/blog/BlogPostBody";
 import { BlogPostSources } from "@/components/blog/BlogPostSources";
@@ -51,6 +56,20 @@ function BlogPostPage() {
     );
     return [...sameCategory, ...otherTopics].slice(0, RELATED_LIMIT);
   }, [query.data, listQuery.data]);
+
+  // GA4 page-view + dedicated blog_post_view event. Fires once per
+  // distinct article slug — the dep array tracks `query.data?.id` so
+  // navigating between articles (e.g. via related-card click) re-fires
+  // for each new post without double-firing on React re-renders.
+  useEffect(() => {
+    if (!query.data) return;
+    trackBlogPostView({
+      post_slug: query.data.slug,
+      category_slug: query.data.category.slug,
+      is_pillar: isPillarSlug(query.data.slug),
+      reading_minutes: query.data.reading_minutes,
+    });
+  }, [query.data?.id, query.data]);
 
   if (query.isLoading) {
     return (
@@ -226,18 +245,37 @@ function BlogPostPage() {
             <BlogPostBody mdx={post.body_mdx} />
             <div className="mx-auto max-w-3xl">
               <BlogPostSources sources={post.sources} />
-              <BlogShareRow url={`${SITE_ORIGIN}/blog/${post.slug}`} title={post.title} />
-              <ArticleCTABanner />
-              <BlogScenarioCard questionId={FALLBACK_SCENARIO_QUESTION_ID} />
+              <BlogShareRow
+                url={`${SITE_ORIGIN}/blog/${post.slug}`}
+                title={post.title}
+                postSlug={post.slug}
+              />
+              <ArticleCTABanner postSlug={post.slug} categorySlug={post.category.slug} />
+              <BlogScenarioCard questionId={FALLBACK_SCENARIO_QUESTION_ID} postSlug={post.slug} />
             </div>
           </div>
           <aside className="hidden xl:block">
-            <BlogTableOfContents mdx={post.body_mdx} label="obsah" />
+            <BlogTableOfContents
+              mdx={post.body_mdx}
+              label="obsah"
+              onAnchorClick={(headingId) =>
+                trackBlogTocClick({ post_slug: post.slug, heading_id: headingId })
+              }
+            />
           </aside>
         </div>
 
         <div className="mx-auto max-w-6xl">
-          <RelatedArticles posts={related} heading={t("related_heading")} />
+          <RelatedArticles
+            posts={related}
+            heading={t("related_heading")}
+            onItemClick={(targetSlug) =>
+              trackBlogRelatedClick({
+                source_post_slug: post.slug,
+                target_post_slug: targetSlug,
+              })
+            }
+          />
         </div>
 
         {/* JSON-LD (Article + BreadcrumbList) is emitted server-side via

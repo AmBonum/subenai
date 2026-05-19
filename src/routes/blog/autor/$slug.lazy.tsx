@@ -1,7 +1,9 @@
 import { createLazyFileRoute, Link, useParams } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
 import { tFor } from "@/i18n/blog";
+import { trackBlogAuthorView } from "@/lib/analytics/blog-events";
 import { useBlogAuthorBySlug, useBlogPostsByAuthorId } from "@/lib/blog/queries";
 import { formatPublishedArticleCount } from "@/lib/blog/slovak-plurals";
 
@@ -14,6 +16,14 @@ function BlogAuthorPage() {
   const t = tFor("author");
   const authorQuery = useBlogAuthorBySlug(slug);
   const postsQuery = useBlogPostsByAuthorId(authorQuery.data?.id);
+
+  useEffect(() => {
+    if (!authorQuery.data || !postsQuery.data) return;
+    trackBlogAuthorView({
+      author_slug: authorQuery.data.slug,
+      post_count: postsQuery.data.length,
+    });
+  }, [authorQuery.data?.id, postsQuery.data?.length, authorQuery.data, postsQuery.data]);
 
   if (authorQuery.isLoading) {
     return (

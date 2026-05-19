@@ -3,16 +3,8 @@ import { Plus } from "lucide-react";
 
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
-import { StatusBadge } from "@/components/admin/StatusBadge";
+import { BlogListTable } from "@/components/admin/blog/BlogListTable";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useAdminBlogPostList } from "@/lib/blog/admin-queries";
 
 export const Route = createLazyFileRoute("/admin/blog/")({
@@ -51,50 +43,7 @@ function AdminBlogListPage() {
         </p>
       )}
 
-      {posts.length > 0 && (
-        <div className="rounded-lg border border-border" data-testid="admin-blog-list-table">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Titulok</TableHead>
-                <TableHead>Kategória</TableHead>
-                <TableHead>Stav</TableHead>
-                <TableHead>Publikované</TableHead>
-                <TableHead>Aktualizované</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {posts.map((post) => (
-                <TableRow key={post.id} data-testid={`admin-blog-list-row-${post.slug}`}>
-                  <TableCell>
-                    <Link
-                      to="/admin/blog/$id"
-                      params={{ id: post.id }}
-                      className="font-medium underline-offset-2 hover:underline"
-                      data-testid={`admin-blog-list-row-link-${post.slug}`}
-                    >
-                      {post.title}
-                    </Link>
-                    <p className="mt-1 text-xs text-muted-foreground">{post.slug}</p>
-                  </TableCell>
-                  <TableCell>{post.category.name}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={post.status} />
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {post.published_at
-                      ? new Date(post.published_at).toLocaleDateString("sk-SK")
-                      : "—"}
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {new Date(post.updated_at).toLocaleDateString("sk-SK")}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+      {posts.length > 0 && <BlogListTable posts={posts} />}
     </div>
   );
 }

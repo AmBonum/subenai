@@ -23,9 +23,13 @@ interface BlogTableOfContentsProps {
   mdx: string;
   // Label rendered above the list ("obsah", "v tomto článku", etc).
   label: string;
+  // Optional callback fired with the clicked anchor id. Used for GA4
+  // engagement metrics — how many readers actually use the TOC vs.
+  // scroll linearly.
+  onAnchorClick?: (id: string) => void;
 }
 
-export function BlogTableOfContents({ mdx, label }: BlogTableOfContentsProps) {
+export function BlogTableOfContents({ mdx, label, onAnchorClick }: BlogTableOfContentsProps) {
   // Parse headings out of the raw markdown — cheaper and more reliable
   // than reading them from the DOM (no scroll-position dependency).
   const items = useMemo<TocItem[]>(() => {
@@ -106,6 +110,7 @@ export function BlogTableOfContents({ mdx, label }: BlogTableOfContentsProps) {
                   : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
               data-testid={`blog-toc-link-${item.id}`}
+              onClick={onAnchorClick ? () => onAnchorClick(item.id) : undefined}
             >
               {item.text}
             </a>

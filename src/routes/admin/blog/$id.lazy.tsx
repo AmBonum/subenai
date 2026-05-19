@@ -2,6 +2,7 @@ import { createLazyFileRoute, Link, useParams } from "@tanstack/react-router";
 
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
+import { BlogExportMenu } from "@/components/admin/blog/BlogExportMenu";
 import { BlogPostEditor } from "@/components/admin/blog/BlogPostEditor";
 import { useAdminBlogPost } from "@/lib/blog/admin-queries";
 
@@ -38,6 +39,7 @@ function AdminBlogEditPage() {
       <PageHeader
         title={post.title || "Bez názvu"}
         description={`Slug: ${post.slug} · Kategória: ${post.category.name}`}
+        actions={<BlogExportMenu post={post} />}
       />
       <BlogPostEditor mode="edit" existing={post} />
     </div>

@@ -1,9 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import {
-  formatArticleCount,
-  formatPublishedArticleCount,
-} from "@/lib/blog/slovak-plurals";
+import { formatArticleCount, formatPublishedArticleCount } from "@/lib/blog/slovak-plurals";
 
 // Slovak grammatical number has three forms, not two:
 //   1 → singular nominative

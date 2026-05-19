@@ -1,10 +1,15 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
 import { BlogSearchInput } from "@/components/blog/BlogSearchInput";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { tFor } from "@/i18n/blog";
+import {
+  trackBlogFilterChange,
+  trackBlogIndexView,
+  trackBlogSearch,
+} from "@/lib/analytics/blog-events";
 import { isPillarSlug } from "@/lib/blog/pillar-slugs";
 import { useBlogPostList } from "@/lib/blog/queries";
 import { buildBlogIndexJsonLd } from "@/lib/seo/blog-jsonld";
@@ -58,6 +63,41 @@ function BlogIndexPage() {
     }
     return out;
   }, [clusters, activeCategory, normalizedSearch]);
+
+  // GA4 page_view fires once on mount; gtag's `config` triggered on
+  // initial HTML load already counted the first hit, but TanStack
+  // Router transitions in/out of /blog don't. The hook also fires the
+  // dedicated 'blog_index_view' for funnel pivots in GA4 Explorer.
+  useEffect(() => {
+    trackBlogIndexView();
+  }, []);
+
+  // Debounced search event so we don't fire one per keystroke. 600 ms
+  // is the conventional GA4 search debounce (long enough that mid-word
+  // typing collapses to a single event, short enough to feel real-time
+  // when reading reports).
+  useEffect(() => {
+    if (normalizedSearch.length < 2) return;
+    const handle = window.setTimeout(() => {
+      trackBlogSearch({
+        query: normalizedSearch,
+        result_count: filteredClusters.length,
+      });
+    }, 600);
+    return () => window.clearTimeout(handle);
+  }, [normalizedSearch, filteredClusters.length]);
+
+  // Wraps setActiveCategory so the chip click both updates UI state
+  // AND fires the filter analytics. Using a callback ref preserves
+  // referential stability for the CategoryFilter prop.
+  const lastFilterRef = useRef<string | null>(null);
+  const handleCategoryChange = (next: string | null): void => {
+    setActiveCategory(next);
+    if (lastFilterRef.current !== next) {
+      lastFilterRef.current = next;
+      trackBlogFilterChange({ category_slug: next });
+    }
+  };
 
   return (
     <main className="container mx-auto px-4 py-12" data-testid="blog-index-root">
@@ -173,7 +213,7 @@ function BlogIndexPage() {
             <CategoryFilter
               options={categoryOptions}
               activeSlug={activeCategory}
-              onChange={setActiveCategory}
+              onChange={handleCategoryChange}
               totalCount={clusters.length}
             />
           </div>

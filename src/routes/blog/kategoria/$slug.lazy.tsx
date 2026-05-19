@@ -1,9 +1,11 @@
 import { createLazyFileRoute, Link, useParams } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { BlogHeroFallback } from "@/components/blog/BlogHeroFallback";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
 import { CategoryBadge } from "@/components/blog/CategoryBadge";
 import { tFor } from "@/i18n/blog";
+import { trackBlogCategoryView } from "@/lib/analytics/blog-events";
 import { useBlogCategoryBySlug, useBlogPostsByCategoryId } from "@/lib/blog/queries";
 import { formatArticleCount } from "@/lib/blog/slovak-plurals";
 
@@ -16,6 +18,17 @@ function BlogCategoryPage() {
   const t = tFor("category");
   const categoryQuery = useBlogCategoryBySlug(slug);
   const postsQuery = useBlogPostsByCategoryId(categoryQuery.data?.id);
+
+  // Fire once when both the category and its posts have resolved — we
+  // want the post_count in GA4 for funnel pivots, so waiting for both
+  // is correct (firing twice on category-only would skew the metric).
+  useEffect(() => {
+    if (!categoryQuery.data || !postsQuery.data) return;
+    trackBlogCategoryView({
+      category_slug: categoryQuery.data.slug,
+      post_count: postsQuery.data.length,
+    });
+  }, [categoryQuery.data?.id, postsQuery.data?.length, categoryQuery.data, postsQuery.data]);
 
   if (categoryQuery.isLoading) {
     return (

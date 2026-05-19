@@ -1,8 +1,14 @@
 import { useState } from "react";
 
+import { trackBlogShareClick } from "@/lib/analytics/blog-events";
+
 interface BlogShareRowProps {
   url: string;
   title: string;
+  // Caller passes the post slug so the analytics event can include it
+  // (the share URL alone would require re-parsing). Optional so unit
+  // tests can render without the analytics dimension.
+  postSlug?: string;
 }
 
 // Inline share row for blog articles. Renders Twitter/X, Facebook,
@@ -10,28 +16,38 @@ interface BlogShareRowProps {
 // JS SDK is loaded (faster Web Vitals; respects user privacy — no
 // FB/Twitter pixel fires until the user clicks). Copy uses the
 // navigator.clipboard API with a "skopírované" inline confirmation.
-export function BlogShareRow({ url, title }: BlogShareRowProps) {
+export function BlogShareRow({ url, title, postSlug }: BlogShareRowProps) {
   const [copied, setCopied] = useState(false);
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
-  const links = [
+  type SharePlatform = "twitter" | "facebook" | "linkedin";
+  const links: ReadonlyArray<{
+    name: string;
+    href: string;
+    glyph: string;
+    testid: string;
+    platform: SharePlatform;
+  }> = [
     {
       name: "Twitter / X",
       href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
       glyph: "𝕏",
       testid: "blog-share-twitter",
+      platform: "twitter",
     },
     {
       name: "Facebook",
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
       glyph: "f",
       testid: "blog-share-facebook",
+      platform: "facebook",
     },
     {
       name: "LinkedIn",
       href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
       glyph: "in",
       testid: "blog-share-linkedin",
+      platform: "linkedin",
     },
   ];
   const handleCopy = async () => {
@@ -43,6 +59,9 @@ export function BlogShareRow({ url, title }: BlogShareRowProps) {
       // Some browsers (older Safari, embedded webviews) block this —
       // fall back to a synthetic prompt so users can at least see it.
       window.prompt("skopíruj si odkaz:", url);
+    }
+    if (postSlug) {
+      trackBlogShareClick({ post_slug: postSlug, platform: "copy_link" });
     }
   };
   return (
@@ -63,6 +82,11 @@ export function BlogShareRow({ url, title }: BlogShareRowProps) {
             aria-label={`zdieľať na ${l.name}`}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card font-bold text-foreground transition-colors hover:border-primary hover:text-primary"
             data-testid={l.testid}
+            onClick={
+              postSlug
+                ? () => trackBlogShareClick({ post_slug: postSlug, platform: l.platform })
+                : undefined
+            }
           >
             <span aria-hidden="true">{l.glyph}</span>
           </a>
