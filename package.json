@@ -12,7 +12,7 @@
     "sitemap": "node scripts/generate-sitemap.mjs",
     "changelog": "node scripts/parse-changelog.mjs",
     "build:dev": "vite build --mode development",
-    "preview": "vite preview",
+    "preview": "vite preview --port 8080",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
