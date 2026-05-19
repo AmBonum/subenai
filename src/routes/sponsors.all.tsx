@@ -82,15 +82,22 @@ export function AllSponsorsView({ fetchSponsors }: AllSponsorsViewProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:py-16">
+      <main
+        data-testid="sponzori-vsetci-root"
+        className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:py-16"
+      >
         <header className="mb-8">
           <Link
             to={ROUTES.sponzori}
+            data-testid="sponzori-vsetci-back-link"
             className="text-sm text-muted-foreground hover:text-foreground"
           >
             {t("vsetci_back")}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1
+            data-testid="sponzori-vsetci-heading"
+            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+          >
             {t("vsetci_title")}
           </h1>
           <p className="mt-3 text-base text-muted-foreground sm:text-lg">{t("vsetci_hero")}</p>
@@ -170,7 +177,10 @@ export function AllSponsorsView({ fetchSponsors }: AllSponsorsViewProps) {
           <SponsorsTable sponsors={filtered} totalCount={all.length} />
         )}
 
-        <p className="mt-12 text-center text-xs text-muted-foreground">
+        <p
+          data-testid="sponzori-vsetci-footer-note"
+          className="mt-12 text-center text-xs text-muted-foreground"
+        >
           {t("vsetci_footer_note")}
           <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
             {CONTACT_EMAIL}
@@ -191,13 +201,18 @@ function SponsorsTable({
 }) {
   const t = tFor("sponzori");
   return (
-    <section className="space-y-4">
-      <p className="text-xs text-muted-foreground" role="status" aria-live="polite">
+    <section data-testid="sponzori-vsetci-results" className="space-y-4">
+      <p
+        data-testid="sponzori-vsetci-count-status"
+        className="text-xs text-muted-foreground"
+        role="status"
+        aria-live="polite"
+      >
         {sponsors.length === totalCount
           ? t("vsetci_count_all", { shown: sponsors.length, total: totalCount })
           : t("vsetci_count_partial", { shown: sponsors.length, total: totalCount })}
       </p>
-      <ul className="grid gap-3 sm:grid-cols-2">
+      <ul data-testid="sponzori-vsetci-card-list" className="grid gap-3 sm:grid-cols-2">
         {sponsors.map((s) => (
           <li key={s.id} className="space-y-2 rounded-2xl border border-border/60 bg-card p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -269,6 +284,7 @@ function ErrorState() {
   return (
     <div
       role="alert"
+      data-testid="sponzori-vsetci-error"
       className="rounded-2xl border border-border/60 bg-card p-6 text-sm text-muted-foreground"
     >
       {t("fetch_error")}
@@ -279,8 +295,14 @@ function ErrorState() {
 function EmptyFilterState({ hasAnyData }: { hasAnyData: boolean }) {
   const t = tFor("sponzori");
   return (
-    <div className="rounded-2xl border border-border/60 bg-card p-8 text-center">
-      <p className="text-sm leading-relaxed text-muted-foreground">
+    <div
+      data-testid="sponzori-vsetci-empty"
+      className="rounded-2xl border border-border/60 bg-card p-8 text-center"
+    >
+      <p
+        data-testid="sponzori-vsetci-empty-message"
+        className="text-sm leading-relaxed text-muted-foreground"
+      >
         {hasAnyData ? t("vsetci_empty_filtered") : t("vsetci_empty_none")}
       </p>
     </div>

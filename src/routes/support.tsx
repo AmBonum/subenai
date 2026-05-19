@@ -173,16 +173,24 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-8">
-          <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to={ROUTES.home}
+            data-testid="podpora-back-link"
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
             {t("back_home")}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1
+            data-testid="podpora-heading"
+            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+          >
             {t("title")}
           </h1>
-          <p className="mt-3 text-base text-muted-foreground sm:text-lg">
+          <p data-testid="podpora-hero" className="mt-3 text-base text-muted-foreground sm:text-lg">
             {t("hero")}{" "}
             <Link
               to={ROUTES.oProjecte}
+              data-testid="podpora-hero-about-link"
               className="text-primary underline underline-offset-2 hover:opacity-80"
             >
               {t("hero_link_about")}
@@ -240,7 +248,7 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
             </div>
           </fieldset>
 
-          <fieldset className="space-y-3">
+          <fieldset data-testid="podpora-amount-fieldset" className="space-y-3">
             <legend className="text-sm font-semibold text-foreground">
               {mode === "monthly" ? t("section_amount_monthly") : t("section_amount_oneoff")}
             </legend>
@@ -384,7 +392,10 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
                     rows={2}
                     className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
                   />
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p
+                    data-testid="podpora-display-message-counter"
+                    className="mt-1 text-xs text-muted-foreground"
+                  >
                     {t("display_message_counter", {
                       remaining: DISPLAY_MESSAGE_MAX - displayMessage.length,
                     })}

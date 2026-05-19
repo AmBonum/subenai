@@ -34,10 +34,17 @@ function PrivacyPage() {
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-10">
-          <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to={ROUTES.home}
+            data-testid="privacy-back-home"
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
             {t("back_home")}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1
+            data-testid="privacy-heading"
+            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+          >
             {t("title")}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">{t("last_updated")}</p>
@@ -57,7 +64,11 @@ function PrivacyPage() {
               <li>{t("s1.executive")}</li>
               <li>
                 {t("s1.contact_label")}
-                <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  data-testid="privacy-contact-email"
+                  className="underline underline-offset-2"
+                >
                   {CONTACT_EMAIL}
                 </a>
               </li>
@@ -116,7 +127,10 @@ function PrivacyPage() {
           <section className="space-y-2">
             <h2 className="text-xl font-semibold">{t("s3.heading")}</h2>
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-sm">
+              <table
+                data-testid="privacy-processing-table"
+                className="w-full border-collapse text-sm"
+              >
                 <thead>
                   <tr className="border-b border-border">
                     <th className="py-2 pr-4 text-left font-semibold">{t("s3.col_purpose")}</th>
@@ -184,7 +198,9 @@ function PrivacyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-xl font-semibold">{t("s5.heading")}</h2>
+            <h2 data-testid="privacy-rights-heading" className="text-xl font-semibold">
+              {t("s5.heading")}
+            </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">{t("s5.intro")}</p>
             <ul className="list-disc space-y-1 pl-5 text-sm leading-relaxed text-muted-foreground">
               <li>
@@ -336,7 +352,9 @@ function PrivacyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-xl font-semibold">{t("s8.heading")}</h2>
+            <h2 data-testid="privacy-s8-heading" className="text-xl font-semibold">
+              {t("s8.heading")}
+            </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t("s8.intro_prefix")}
               <strong>{t("s8.intro_emph")}</strong>
@@ -378,7 +396,10 @@ function PrivacyPage() {
                 {t("s8.retention_text")}
               </li>
             </ul>
-            <div className="mt-3 rounded-md border border-border bg-muted/30 p-3 text-sm leading-relaxed text-muted-foreground">
+            <div
+              data-testid="privacy-s8-callout"
+              className="mt-3 rounded-md border border-border bg-muted/30 p-3 text-sm leading-relaxed text-muted-foreground"
+            >
               <strong className="text-foreground">{t("s8.callout_label")}</strong>
               {t("s8.callout_prefix")}
               <strong>{t("s8.callout_emph")}</strong>

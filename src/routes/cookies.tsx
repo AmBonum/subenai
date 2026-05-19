@@ -29,13 +29,20 @@ function CookiesPage() {
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-10">
-          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to="/"
+            data-testid="cookies-back-home"
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
             {t("back_home")}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1
+            data-testid="cookies-heading"
+            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+          >
             {t("title")}
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p data-testid="cookies-version-line" className="mt-2 text-sm text-muted-foreground">
             {t("version_line", { version: CONSENT_VERSION })}
           </p>
         </header>
@@ -56,8 +63,11 @@ function CookiesPage() {
             <h2 className="text-xl font-semibold">{t("s2.heading")}</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">{t("s2.intro")}</p>
 
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-sm">
+            <div data-testid="cookies-category-table-wrapper" className="overflow-x-auto">
+              <table
+                data-testid="cookies-category-table"
+                className="w-full border-collapse text-sm"
+              >
                 <thead>
                   <tr className="border-b border-border">
                     <th className="py-2 pr-4 text-left font-semibold">{t("s2.col_category")}</th>
@@ -141,10 +151,12 @@ function CookiesPage() {
             <h2 className="text-xl font-semibold">{t("s4.heading")}</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">{t("s4.intro")}</p>
             <div className="pt-2">
-              <Button onClick={openPreferences}>{t("s4.button")}</Button>
+              <Button data-testid="cookies-manage-button" onClick={openPreferences}>
+                {t("s4.button")}
+              </Button>
             </div>
             {record ? (
-              <p className="pt-2 text-xs text-muted-foreground">
+              <p data-testid="cookies-last-consent" className="pt-2 text-xs text-muted-foreground">
                 {t("s4.last_consent", {
                   timestamp: new Date(record.timestamp).toLocaleString("sk-SK"),
                   version: record.version,
@@ -175,7 +187,11 @@ function CookiesPage() {
             <h2 className="text-xl font-semibold">{t("s7.heading")}</h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t("s7.prefix")}
-              <Link to="/privacy" className="underline underline-offset-2">
+              <Link
+                to="/privacy"
+                data-testid="cookies-privacy-link"
+                className="underline underline-offset-2"
+              >
                 {t("s7.link")}
               </Link>
               {t("s7.suffix")}

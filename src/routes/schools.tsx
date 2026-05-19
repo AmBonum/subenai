@@ -20,25 +20,44 @@ function SkolyPage() {
   const t = tFor("marketing");
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+      <main
+        data-testid="schools-page-root"
+        className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16"
+      >
         <header>
-          <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to={ROUTES.home}
+            data-testid="schools-back-link"
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
             {t("skoly.back_home")}
           </Link>
-          <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+          <h1
+            data-testid="schools-heading"
+            className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl"
+          >
             {t("skoly.title")}
           </h1>
-          <p className="mt-3 text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p
+            data-testid="schools-hero-paragraph"
+            className="mt-3 text-base leading-relaxed text-muted-foreground sm:text-lg"
+          >
             {t("skoly.hero")}
           </p>
         </header>
 
         <article className="prose prose-sm mt-10 max-w-none space-y-8 text-foreground">
           <section className="space-y-2">
-            <h2 className="text-xl font-semibold">{t("skoly.what_heading")}</h2>
+            <h2 data-testid="schools-what-heading" className="text-xl font-semibold">
+              {t("skoly.what_heading")}
+            </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t("skoly.what_body_prefix")}
-              <Link to={ROUTES.zostav} className="underline underline-offset-2">
+              <Link
+                to={ROUTES.zostav}
+                data-testid="schools-composer-link-what"
+                className="underline underline-offset-2"
+              >
                 {t("skoly.what_body_link")}
               </Link>
               {t("skoly.what_body_suffix")}
@@ -46,11 +65,17 @@ function SkolyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-xl font-semibold">{t("skoly.step1_heading")}</h2>
+            <h2 data-testid="schools-step1-heading" className="text-xl font-semibold">
+              {t("skoly.step1_heading")}
+            </h2>
             <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
               <li>
                 {t("skoly.step1_li1_prefix")}
-                <Link to={ROUTES.zostav} className="underline underline-offset-2">
+                <Link
+                  to={ROUTES.zostav}
+                  data-testid="schools-composer-link-step1"
+                  className="underline underline-offset-2"
+                >
                   {t("skoly.step1_li1_link")}
                 </Link>
                 {t("skoly.step1_li1_suffix")}
@@ -61,7 +86,9 @@ function SkolyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-xl font-semibold">{t("skoly.step2_heading")}</h2>
+            <h2 data-testid="schools-step2-heading" className="text-xl font-semibold">
+              {t("skoly.step2_heading")}
+            </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t("skoly.step2_p1_prefix")}
               <strong>{t("skoly.step2_p1_settings")}</strong>
@@ -78,24 +105,37 @@ function SkolyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-xl font-semibold">{t("skoly.step3_heading")}</h2>
+            <h2 data-testid="schools-step3-heading" className="text-xl font-semibold">
+              {t("skoly.step3_heading")}
+            </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t("skoly.step3_p_prefix")}
               <strong>{t("skoly.step3_p_emph")}</strong>
               {t("skoly.step3_p_suffix")}
             </p>
-            <details className="rounded-lg border border-border/60 bg-card/40 p-3 text-sm">
-              <summary className="cursor-pointer font-semibold text-foreground">
+            <details
+              data-testid="schools-email-template-details"
+              className="rounded-lg border border-border/60 bg-card/40 p-3 text-sm"
+            >
+              <summary
+                data-testid="schools-email-template-summary"
+                className="cursor-pointer font-semibold text-foreground"
+              >
                 {t("skoly.step3_email_summary")}
               </summary>
-              <pre className="mt-3 overflow-x-auto whitespace-pre-wrap rounded bg-muted/40 p-3 text-xs text-foreground">
+              <pre
+                data-testid="schools-email-template-pre"
+                className="mt-3 overflow-x-auto whitespace-pre-wrap rounded bg-muted/40 p-3 text-xs text-foreground"
+              >
                 {t("skoly.step3_email_template")}
               </pre>
             </details>
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-xl font-semibold">{t("skoly.step4_heading")}</h2>
+            <h2 data-testid="schools-step4-heading" className="text-xl font-semibold">
+              {t("skoly.step4_heading")}
+            </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t("skoly.step4_p_prefix")}
               <strong>{t("skoly.step4_p_emph")}</strong>
@@ -117,7 +157,9 @@ function SkolyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-xl font-semibold">{t("skoly.gdpr_heading")}</h2>
+            <h2 data-testid="schools-gdpr-heading" className="text-xl font-semibold">
+              {t("skoly.gdpr_heading")}
+            </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {t("skoly.gdpr_p_prefix")}
               <strong className="text-foreground">{t("skoly.gdpr_p_controller")}</strong>
@@ -139,7 +181,11 @@ function SkolyPage() {
               <li>
                 <strong>{t("skoly.gdpr_li3_emph")}</strong>
                 {t("skoly.gdpr_li3_suffix")}
-                <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  data-testid="schools-gdpr-dpa-email-link"
+                  className="underline underline-offset-2"
+                >
                   {CONTACT_EMAIL}
                 </a>
                 {t("skoly.gdpr_li3_end")}
@@ -147,7 +193,11 @@ function SkolyPage() {
               <li>
                 <strong>{t("skoly.gdpr_li4_emph")}</strong>
                 {t("skoly.gdpr_li4_prefix")}
-                <Link to={ROUTES.privacy} className="underline underline-offset-2">
+                <Link
+                  to={ROUTES.privacy}
+                  data-testid="schools-gdpr-privacy-link"
+                  className="underline underline-offset-2"
+                >
                   {t("skoly.gdpr_li4_link")}
                 </Link>
                 {t("skoly.gdpr_li4_suffix")}
@@ -156,7 +206,9 @@ function SkolyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-xl font-semibold">{t("skoly.faq_heading")}</h2>
+            <h2 data-testid="schools-faq-heading" className="text-xl font-semibold">
+              {t("skoly.faq_heading")}
+            </h2>
             <dl className="space-y-3 text-sm leading-relaxed text-muted-foreground">
               <div>
                 <dt className="font-semibold text-foreground">{t("skoly.faq_pwd_q")}</dt>
@@ -186,17 +238,25 @@ function SkolyPage() {
           </section>
         </article>
 
-        <div className="mt-10 rounded-2xl border border-border/60 bg-card/40 p-6 text-sm leading-relaxed text-muted-foreground">
+        <div
+          data-testid="schools-outro-card"
+          className="mt-10 rounded-2xl border border-border/60 bg-card/40 p-6 text-sm leading-relaxed text-muted-foreground"
+        >
           <p>
             {t("skoly.outro_prefix")}
             <Link
               to={ROUTES.zostav}
+              data-testid="schools-outro-composer-link"
               className="font-semibold text-foreground underline underline-offset-2"
             >
               {t("skoly.outro_link")}
             </Link>
             {t("skoly.outro_middle")}
-            <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              data-testid="schools-outro-email-link"
+              className="underline underline-offset-2"
+            >
               {CONTACT_EMAIL}
             </a>
             {t("skoly.outro_suffix")}

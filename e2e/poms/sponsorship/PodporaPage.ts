@@ -34,6 +34,22 @@ export class PodporaPage extends BasePage {
   // Structural
   // ---------------------------------------------------------------------------
 
+  get heading(): Locator {
+    return this.page.getByTestId("podpora-heading");
+  }
+
+  get backHomeLink(): Locator {
+    return this.page.getByTestId("podpora-back-link");
+  }
+
+  get heroParagraph(): Locator {
+    return this.page.getByTestId("podpora-hero");
+  }
+
+  get heroAboutLink(): Locator {
+    return this.page.getByTestId("podpora-hero-about-link");
+  }
+
   get form(): Locator {
     return this.page.getByTestId("podpora-form");
   }
@@ -46,12 +62,20 @@ export class PodporaPage extends BasePage {
     return this.page.getByTestId("podpora-error-banner");
   }
 
+  get displayMessageCounter(): Locator {
+    return this.page.getByTestId("podpora-display-message-counter");
+  }
+
   // ---------------------------------------------------------------------------
   // Mode + amount
   // ---------------------------------------------------------------------------
 
   modeRadio(mode: DonateMode): Locator {
     return this.page.getByTestId(`podpora-mode-${mode}`);
+  }
+
+  get amountFieldsetLegend(): Locator {
+    return this.page.getByTestId("podpora-amount-fieldset").locator("legend");
   }
 
   amountPreset(value: number): Locator {
@@ -170,5 +194,40 @@ export class PodporaPage extends BasePage {
     }
     await this.amountCustomButton.click();
     await this.amountCustomInput.fill(String(amountEur));
+  }
+
+  // ---------------------------------------------------------------------------
+  // Computed-state helpers (return values, never assertions)
+  // ---------------------------------------------------------------------------
+
+  async hasHorizontalOverflow(): Promise<boolean> {
+    return this.page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    );
+  }
+
+  async canonicalHref(): Promise<string | null> {
+    return this.page.evaluate(
+      () => document.querySelector('link[rel="canonical"]')?.getAttribute("href") ?? null,
+    );
+  }
+
+  async robotsContent(): Promise<string | null> {
+    return this.page.evaluate(
+      () => document.querySelector('meta[name="robots"]')?.getAttribute("content") ?? null,
+    );
+  }
+
+  async ogTitleContent(): Promise<string | null> {
+    return this.page.evaluate(
+      () => document.querySelector('meta[property="og:title"]')?.getAttribute("content") ?? null,
+    );
+  }
+
+  async metaDescriptionContent(): Promise<string | null> {
+    return this.page.evaluate(() => {
+      const all = Array.from(document.querySelectorAll('meta[name="description"]'));
+      return all.at(-1)?.getAttribute("content") ?? null;
+    });
   }
 }

@@ -104,7 +104,10 @@ function ZmenyPage() {
           <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
             {t("zmeny.back_home")}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1
+            data-testid="changelog-heading"
+            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+          >
             {t("zmeny.title")}
           </h1>
           <p className="mt-3 text-base text-muted-foreground sm:text-lg">
@@ -120,11 +123,14 @@ function ZmenyPage() {
         </header>
 
         {entries.length === 0 ? (
-          <p className="rounded-2xl border border-border/60 bg-card p-6 text-sm text-muted-foreground">
+          <p
+            data-testid="changelog-empty"
+            className="rounded-2xl border border-border/60 bg-card p-6 text-sm text-muted-foreground"
+          >
             {t("zmeny.empty")}
           </p>
         ) : (
-          <ol className="space-y-8" aria-label={t("zmeny.list_aria")}>
+          <ol data-testid="changelog-list" className="space-y-8" aria-label={t("zmeny.list_aria")}>
             {entries.map((entry) => (
               <VersionBlock key={entry.version} entry={entry} />
             ))}
@@ -143,6 +149,7 @@ function VersionBlock({ entry }: { entry: ChangelogEntry }) {
   return (
     <li
       id={anchor}
+      data-testid={`changelog-entry-${anchor}`}
       className="space-y-4 rounded-2xl border border-border/60 bg-card p-6 sm:p-8 scroll-mt-24"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-3">
