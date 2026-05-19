@@ -102,13 +102,33 @@ export async function challengeAndVerify(factorId: string, code: string): Promis
 
 export async function getAALStatus(): Promise<AalStatus> {
   const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-  if (error || !data) {
-    return { currentLevel: null, nextLevel: null };
+  const native: AalStatus["currentLevel"] = error || !data ? null : (data.currentLevel ?? null);
+  const next: AalStatus["nextLevel"] = error || !data ? null : (data.nextLevel ?? null);
+
+  // Native Supabase AAL2 wins — fastest path, no extra fetch.
+  if (native === "aal2") {
+    return { currentLevel: "aal2", nextLevel: next };
   }
-  return {
-    currentLevel: (data.currentLevel as AalStatus["currentLevel"]) ?? null,
-    nextLevel: (data.nextLevel as AalStatus["nextLevel"]) ?? null,
-  };
+
+  // Backup-code AAL2 fallback (AH-12.8): when an admin redeems a backup
+  // code, the DB function stamps `app_metadata.aal2_via_backup_until`
+  // with a 30-minute expiry. Treat that as AAL2 for `requireRole` /
+  // route guard purposes. The client-side check is here because the
+  // session JWT carries `app_metadata`, so a refreshSession() after
+  // consume_mfa_backup_code() propagates the new timestamp.
+  const { data: sessionData } = await supabase.auth.getSession();
+  const meta = sessionData.session?.user.app_metadata as
+    | { aal2_via_backup_until?: unknown }
+    | undefined;
+  const expiry = meta?.aal2_via_backup_until;
+  if (typeof expiry === "string") {
+    const expiryDate = new Date(expiry);
+    if (!Number.isNaN(expiryDate.getTime()) && expiryDate > new Date()) {
+      return { currentLevel: "aal2", nextLevel: "aal2" };
+    }
+  }
+
+  return { currentLevel: native, nextLevel: next };
 }
 
 export async function listFactors(): Promise<FactorList> {
@@ -140,16 +160,24 @@ export async function generateBackupCodes(): Promise<string[]> {
 
 /**
  * Consume a backup code. Returns true if the code was valid and unused,
- * false otherwise. The DB function atomically flips used_at = now().
+ * false otherwise. The DB function atomically flips used_at = now() AND
+ * stamps app_metadata.aal2_via_backup_until = now() + 30min (AH-12.8).
+ * On success we refresh the session so the new app_metadata reaches the
+ * JWT and getAALStatus() will return "aal2" on the next call.
  */
 export async function consumeBackupCode(code: string): Promise<boolean> {
   const { data, error } = await supabase.rpc("consume_mfa_backup_code", {
     p_code: code.trim(),
   });
-  if (error) {
+  if (error || data !== true) {
     return false;
   }
-  return data === true;
+  // Pull the updated user.app_metadata into the local session so the
+  // downstream /admin guard's getAALStatus() sees the new timestamp.
+  // refreshSession is idempotent and won't fail destructively if the
+  // server rejects — we still return true so the UI continues.
+  await supabase.auth.refreshSession().catch(() => undefined);
+  return true;
 }
 
 /**

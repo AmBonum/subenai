@@ -6,6 +6,8 @@ const verify = vi.fn();
 const unenroll = vi.fn();
 const listFactorsMock = vi.fn();
 const getAAL = vi.fn();
+const getSession = vi.fn();
+const refreshSession = vi.fn();
 const rpc = vi.fn();
 const from = vi.fn();
 
@@ -20,6 +22,8 @@ vi.mock("@/integrations/supabase/client", () => ({
         listFactors: () => listFactorsMock(),
         getAuthenticatorAssuranceLevel: () => getAAL(),
       },
+      getSession: () => getSession(),
+      refreshSession: () => refreshSession(),
     },
     rpc: (fn: string, args?: unknown) => rpc(fn, args),
     from: (table: string) => from(table),
@@ -45,8 +49,14 @@ describe("mfa helpers", () => {
     unenroll.mockReset();
     listFactorsMock.mockReset();
     getAAL.mockReset();
+    getSession.mockReset();
+    refreshSession.mockReset();
     rpc.mockReset();
     from.mockReset();
+    // Default: no active session — disables the AAL2-via-backup fallback
+    // in getAALStatus unless a test overrides it.
+    getSession.mockResolvedValue({ data: { session: null }, error: null });
+    refreshSession.mockResolvedValue({ data: { session: null }, error: null });
   });
 
   it("enrollTotp returns id/qr/secret/uri", async () => {
@@ -90,6 +100,37 @@ describe("mfa helpers", () => {
   it("getAALStatus returns nulls on error", async () => {
     getAAL.mockResolvedValue({ data: null, error: { message: "x" } });
     expect(await getAALStatus()).toEqual({ currentLevel: null, nextLevel: null });
+  });
+
+  // AH-12.8 backup-code AAL2 fallback
+  it("getAALStatus upgrades AAL1 → AAL2 when app_metadata.aal2_via_backup_until is fresh", async () => {
+    getAAL.mockResolvedValue({ data: { currentLevel: "aal1", nextLevel: "aal2" }, error: null });
+    const futureExpiry = new Date(Date.now() + 25 * 60 * 1000).toISOString();
+    getSession.mockResolvedValue({
+      data: {
+        session: { user: { app_metadata: { aal2_via_backup_until: futureExpiry } } },
+      },
+      error: null,
+    });
+    expect(await getAALStatus()).toEqual({ currentLevel: "aal2", nextLevel: "aal2" });
+  });
+
+  it("getAALStatus stays AAL1 when app_metadata.aal2_via_backup_until is expired", async () => {
+    getAAL.mockResolvedValue({ data: { currentLevel: "aal1", nextLevel: "aal2" }, error: null });
+    const pastExpiry = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    getSession.mockResolvedValue({
+      data: {
+        session: { user: { app_metadata: { aal2_via_backup_until: pastExpiry } } },
+      },
+      error: null,
+    });
+    expect(await getAALStatus()).toEqual({ currentLevel: "aal1", nextLevel: "aal2" });
+  });
+
+  it("consumeBackupCode refreshes the session after a successful RPC", async () => {
+    rpc.mockResolvedValue({ data: true, error: null });
+    expect(await consumeBackupCode("AAAA-BBBB")).toBe(true);
+    expect(refreshSession).toHaveBeenCalled();
   });
 
   it("listFactors returns the totp list", async () => {

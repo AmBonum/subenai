@@ -1616,7 +1616,19 @@ BEGIN
      AND used_at IS NULL;
 
   GET DIAGNOSTICS v_rows = ROW_COUNT;
-  RETURN v_rows = 1;
+  IF v_rows = 1 THEN
+    -- AH-12.8: stamp 30-minute AAL2 substitute on the user record so
+    -- `getAALStatus()` honors the backup-code recovery flow.
+    UPDATE auth.users
+       SET raw_app_meta_data = COALESCE(raw_app_meta_data, '{}'::jsonb)
+         || jsonb_build_object(
+              'aal2_via_backup_until',
+              to_char(now() + interval '30 minutes', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')
+            )
+     WHERE id = v_uid;
+    RETURN true;
+  END IF;
+  RETURN false;
 END;
 $$;
 

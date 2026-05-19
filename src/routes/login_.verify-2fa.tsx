@@ -23,6 +23,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { challengeAndVerify, consumeBackupCode, getAALStatus, listFactors } from "@/lib/auth/mfa";
@@ -169,6 +170,7 @@ function VerifyTwoFactorPage() {
                   <InputOTP
                     id="verify-2fa-code"
                     maxLength={6}
+                    pattern={REGEXP_ONLY_DIGITS}
                     autoFocus
                     autoComplete="one-time-code"
                     value={code}
