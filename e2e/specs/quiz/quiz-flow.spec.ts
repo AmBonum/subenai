@@ -120,18 +120,10 @@ test.describe("Quiz flow /test", () => {
   test(
     "TC-05: Restart button returns to question 1",
     async ({ page, quizFlow }) => {
-      // App bug: restart() calls setQuestions([]) then refetch(), but React Query
-      // returns the same cached data so dbQuestions reference does not change, the
-      // useEffect dependency [dbQuestions] does not re-fire, and questions is never
-      // restored. Phase advances to "playing" after 700ms but questions.length===0
-      // keeps the component on the intro card indefinitely.
-      // Required fix: TestFlow.restart() must call setQuestions(dbQuestions)
-      // directly when kind==="default" instead of relying on the effect to
-      // re-trigger from an unchanged dependency.
-      test.skip(
-        true,
-        "App bug in TestFlow.restart(): questions state not restored when React Query returns same cached data",
-      );
+      // Re-enabled 2026-05-19: TestFlow.restart() now re-seeds questions
+      // from `dbQuestions` directly instead of clearing + refetching.
+      // This TC is the regression sentinel for the React Query stale-ref
+      // trap (see TestFlow.tsx restart() for the inline note).
       await test.step("Navigate to /test, wait for playing phase, and answer all 10 questions", async () => {
         await quizFlow.open();
         await quizFlow.waitForPlayingPhase();
