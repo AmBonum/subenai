@@ -2,6 +2,13 @@ import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import { slugifyHeading } from "@/lib/blog/slugify-heading";
+
+// Track heading id collisions across the article render so the TOC and
+// the in-body H2/H3 ids stay in lock-step (same dedupe rule on both
+// sides). Resets on every BlogPostBody render via useMemo-style local
+// state — not module-level — to avoid leakage between articles.
+
 // E16.4 — richer typography + auto-derived callouts.
 //
 // Body is plain Markdown today (with GFM); the column keeps the `mdx`
@@ -140,6 +147,15 @@ function detectCallout(children: ReactNode): CalloutMatch | null {
 }
 
 export function BlogPostBody({ mdx }: { mdx: string }) {
+  // Per-render id counter so duplicate headings get -2, -3 suffixes
+  // matching the TOC's dedupe (both use the same slugifier).
+  const seen = new Map<string, number>();
+  const assignId = (text: string): string => {
+    const base = slugifyHeading(text);
+    const count = seen.get(base) ?? 0;
+    seen.set(base, count + 1);
+    return count === 0 ? base : `${base}-${count}`;
+  };
   return (
     <article
       className="mx-auto mt-8 max-w-3xl text-base leading-[1.75] text-foreground/90"
@@ -148,16 +164,42 @@ export function BlogPostBody({ mdx }: { mdx: string }) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
-          h2: ({ children }) => (
-            <h2 className="mt-14 scroll-mt-24 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-              {children}
-            </h2>
-          ),
-          h3: ({ children }) => (
-            <h3 className="mt-10 scroll-mt-24 text-xl font-semibold tracking-tight text-foreground md:text-2xl">
-              {children}
-            </h3>
-          ),
+          h2: ({ children }) => {
+            const id = assignId(reactNodeToText(children));
+            return (
+              <h2
+                id={id}
+                className="group mt-14 scroll-mt-24 text-2xl font-bold tracking-tight text-foreground md:text-3xl"
+              >
+                <a
+                  href={`#${id}`}
+                  className="opacity-0 transition-opacity group-hover:opacity-100"
+                  aria-label="Odkaz na túto sekciu"
+                >
+                  <span className="text-primary">#</span>{" "}
+                </a>
+                {children}
+              </h2>
+            );
+          },
+          h3: ({ children }) => {
+            const id = assignId(reactNodeToText(children));
+            return (
+              <h3
+                id={id}
+                className="group mt-10 scroll-mt-24 text-xl font-semibold tracking-tight text-foreground md:text-2xl"
+              >
+                <a
+                  href={`#${id}`}
+                  className="opacity-0 transition-opacity group-hover:opacity-100"
+                  aria-label="Odkaz na túto sekciu"
+                >
+                  <span className="text-primary">#</span>{" "}
+                </a>
+                {children}
+              </h3>
+            );
+          },
           h4: ({ children }) => (
             <h4 className="mt-8 text-lg font-semibold text-foreground md:text-xl">{children}</h4>
           ),

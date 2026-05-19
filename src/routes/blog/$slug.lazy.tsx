@@ -6,6 +6,7 @@ import { BlogHeroFallback } from "@/components/blog/BlogHeroFallback";
 import { BlogPostBody } from "@/components/blog/BlogPostBody";
 import { BlogPostSources } from "@/components/blog/BlogPostSources";
 import { BlogScenarioCard } from "@/components/blog/BlogScenarioCard";
+import { BlogTableOfContents } from "@/components/blog/BlogTableOfContents";
 import { CategoryBadge } from "@/components/blog/CategoryBadge";
 import { ReadingProgress } from "@/components/blog/ReadingProgress";
 import { RelatedArticles } from "@/components/blog/RelatedArticles";
@@ -204,12 +205,22 @@ function BlogPostPage() {
           )}
         </div>
 
-        <BlogPostBody mdx={post.body_mdx} />
-
-        <div className="mx-auto max-w-3xl">
-          <BlogPostSources sources={post.sources} />
-          <ArticleCTABanner />
-          <BlogScenarioCard questionId={FALLBACK_SCENARIO_QUESTION_ID} />
+        {/* Article body + sticky TOC sidebar (xl+ only). On smaller
+            screens TOC is hidden — readers scroll the article
+            sequentially and the BlogTableOfContents component returns
+            null when fewer than 3 headings exist. */}
+        <div className="mx-auto mt-12 grid max-w-6xl gap-12 xl:grid-cols-[1fr_220px]">
+          <div className="min-w-0">
+            <BlogPostBody mdx={post.body_mdx} />
+            <div className="mx-auto max-w-3xl">
+              <BlogPostSources sources={post.sources} />
+              <ArticleCTABanner />
+              <BlogScenarioCard questionId={FALLBACK_SCENARIO_QUESTION_ID} />
+            </div>
+          </div>
+          <aside className="hidden xl:block">
+            <BlogTableOfContents mdx={post.body_mdx} label="obsah" />
+          </aside>
         </div>
 
         <div className="mx-auto max-w-6xl">
