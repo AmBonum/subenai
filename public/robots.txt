@@ -1,7 +1,22 @@
 User-agent: *
 Allow: /
+
+# In-app surfaces — auth-gated, no public value.
 Disallow: /app/
 Disallow: /admin/
+
+# Auth UI + callbacks — never indexable; reached via direct nav or
+# OAuth redirects, not via search.
+Disallow: /login
+Disallow: /auth/
+
+# E32 — unique-per-user URLs. Each share_id / pack_id / set_id is
+# generated per user; thousands of these would waste Google's crawl
+# budget without adding anything to the index. Routes also emit
+# `meta robots=noindex` as belt-and-suspenders, but Disallow stops
+# the crawl itself.
 Disallow: /t/
+Disallow: /r/
+Disallow: /test/zostav/
 
 Sitemap: https://subenai.sk/sitemap.xml
