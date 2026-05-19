@@ -1,0 +1,175 @@
+---
+slug: silne-heslo-2026-vs-passkey
+title: "silné heslo v roku 2026 — alebo prečo už dávno máme passkeys"
+subtitle: "prečo „K0mpl1k0van3!" nie je bezpečné, ako vyzerá poriadna heslová fráza a kde už dnes vieš heslo úplne vyhodiť"
+excerpt: "klasická rada „dvanásť znakov, veľké, malé, číslo, špeciálny znak" je z roku 2003 a útočníkom dnes nerobí ani malú vrásku. v tomto texte ti ukážem, prečo, čo ju nahrádza, a kde v 2026 vieš heslo úplne vymeniť za passkey."
+category_slug: digitalna-bezpecnost
+author_slug: subenai-editorial
+primary_keyword: silne heslo
+search_intent: informational
+reading_minutes: 11
+hero_image_url: null
+og_image_url: null
+seo_title: "silné heslo v roku 2026 vs. passkey — čo je naozaj bezpečné | subenai"
+seo_description: "heslová fráza, password manager a passkey — tri vrstvy, ktoré nahrádzajú starú radu „dvanásť znakov a špeciálny znak". návod, kde už dnes vieš heslo vyhodiť."
+canonical_url: null
+pillar: false
+sources:
+  - label: "sk-cert: varovanie pred zvýšeným rizikom kybernetických bezpečnostných útokov"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "nbú sr: odporúčania k bezpečnosti hesiel a viacfaktorovej autentifikácii"
+    url: "https://www.nbu.gov.sk/kyberneticka-bezpecnost/varovania/index.html"
+    publisher: "NBÚ SR"
+    accessed_at: "2026-05-19"
+  - label: "nist sp 800-63b: digital identity guidelines — memorized secrets"
+    url: "https://pages.nist.gov/800-63-3/sp800-63b.html"
+    publisher: "NIST"
+    accessed_at: "2026-05-19"
+  - label: "fido alliance: passkeys — passwordless authentication"
+    url: "https://fidoalliance.org/passkeys/"
+    publisher: "FIDO Alliance"
+    accessed_at: "2026-05-19"
+  - label: "xkcd 936: password strength (entropia heslových fráz)"
+    url: "https://xkcd.com/936/"
+    publisher: "xkcd"
+    accessed_at: "2026-05-19"
+  - label: "have i been pwned: kontrola, či ti uniklo heslo alebo e-mail"
+    url: "https://haveibeenpwned.com/"
+    publisher: "Have I Been Pwned"
+    accessed_at: "2026-05-19"
+---
+
+ak ti niekto v roku 2026 ešte stále radí *„heslo aspoň dvanásť znakov, veľké a malé písmeno, číslo a špeciálny znak"*, hovorí ti pravidlo z čias, keď internet behal cez ISDN a najväčšia hrozba bol vírus na diskete. moderná kryptografia, [aktualizované odporúčania nist-u](https://pages.nist.gov/800-63-3/sp800-63b.html) [3] aj zdravý sedliacky rozum hovoria niečo iné: **dĺžka poráža zložitosť, pamätateľnosť poráža papierik pod klávesnicou, a v roku 2026 už pri väčšine veľkých účtov nepotrebuješ heslo vôbec.**
+
+tento text rozoberie tri vrstvy modernej hesielovej hygieny — heslová fráza, password manager, passkey — a povie ti presne, kde je každá z nich na mieste. pre širší kontext začni v [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod), tu ideme do detailu jedného konkrétneho mechanizmu.
+
+## prečo „K0mpl1k0van3!" nie je silné heslo
+
+mýtus znie takto: čím viac špeciálnych znakov, tým bezpečnejšie. realita: útočník nezadáva tvoje heslo ručne. púšťa proti ukradnutej databáze hesiel **slovník naučený z predošlých únikov** — a v ňom je `K0mpl1k0van3!`, `Heslo123!`, `Password1!`, `Letmein2024!` aj 14 ďalších variácií, ktoré ľudský mozog vymyslí pod tlakom firemnej password policy.
+
+dva problémy v jednom:
+
+1. **substitúcie sú predvídateľné.** zamena `o → 0`, `i → 1`, `a → @`, `e → 3` je v slovníku každého poriadneho cracking toolu od roku 2008. heslo `K0mpl1k0van3!` má prakticky rovnakú entropiu ako `Komplikovane!`.
+2. **dĺžka je len 13 znakov.** moderný GPU rig pri offline útoku skúša miliardy hashov za sekundu. trinásťznakový heslo so známym vzorom padne za hodiny.
+
+[nist v aktuálnej verzii SP 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html) [3] preto **explicitne odporúča prestať vynucovať pravidlo „veľké + malé + číslo + špeciálny znak"** — robí heslá horšie, nie lepšie, lebo nutí ľudí používať predvídateľné vzory. nahrádza ho jedno pravidlo: **minimum 8 znakov, kontrola proti zoznamu uniknutých hesiel, žiadne ďalšie composition requirements.**
+
+## heslová fráza: 4 náhodné slová poráža 12-znakové „silné" heslo
+
+riešenie je banálne. namiesto:
+
+```
+K0mpl1k0van3!
+```
+
+použi:
+
+```
+modry slon kosak vianoce
+```
+
+dvadsaťtri znakov. zapamätateľné na prvý pokus. **vyše bilióna kombinácií**, ak vyberáš zo zoznamu cca 7 000 slovenských slov. [xkcd to v roku 2011 ilustroval na obrázku „correct horse battery staple"](https://xkcd.com/936/) [5] — fráza zo štyroch náhodných anglických slov má entropiu okolo 44 bitov, čo je viac než typické zmesné heslo s rovnakým počtom znakov. v slovenčine s diakritickými variantami sa dostávaš nad 50 bitov bez akéhokoľvek úsilia.
+
+kľúčové slovo je **náhodné**. nie:
+
+- *bratislava futbal pivo dovolenka* (slová z tvojho života)
+- *jeden dva tri styri* (sekvenčné)
+- *citanka 5 trieda zima* (z prvej strany knihy, ktorá ti leží na stole)
+
+ak siahneš po slovách, ktoré sú ti blízke, útočník s OSINT-om (informáciami o tebe z facebooku, instagramu, linkedin-u) tvoj výber zúži z 7 000 slov na 50. fráza padne v sekundách.
+
+dobrý generátor je **password manager** (viď ďalšia sekcia) — vyhodí ti štyri náhodné slová zo svojho zoznamu, ktorý nemá nič spoločné s tebou. alternatíva pre offline výber: kniha, náhodná strana, štvrté slovo na strane, opakuj štyrikrát.
+
+## password manager: jeden master, zvyšok generuje stroj
+
+predstav si, že máš 150 účtov a každý má vlastné 16-znakové náhodné heslo. nemôžeš si ich pamätať. nemáš ich kde napísať. preto existuje **password manager** — aplikácia, ktorá za teba generuje, ukladá a automaticky vypĺňa heslá. pamätáš si jedinú heslovú frázu (tú zo sekcie vyššie), zvyšok robí stroj.
+
+pre bežného slováka v 2026 prichádzajú do úvahy tri možnosti:
+
+- **bitwarden** — zadarmo, open source, sync naprieč zariadeniami, audit cez tretiu stranu. pre 90 % ľudí najlepšia voľba. neexistuje rozumný dôvod nemať aspoň túto bezplatnú verziu.
+- **1password** — platený (~3 €/mesiac), najpolírovanejšie UX, rodinný plán pre 5 ľudí so zdieľanými trezormi (netflix, spotify, wifi heslo). odporúčam, ak chceš zdieľanie a nechceš sa s tým hrať.
+- **apple keychain / iCloud passwords** — vstavané v iphone a macu, zadarmo, sync cez icloud. limit: ak má niekto v rodine android alebo windows bez chromu, zdieľanie sa rozpadne.
+
+detailné porovnanie funkcií, cien a recovery procesov nájdeš v [správca hesiel — porovnanie](/blog/spravca-hesiel-porovnanie) a v komerčnom buyer's guide [najlepší správca hesiel 2026](/blog/najlepsi-spravca-hesiel-porovnanie-2026).
+
+### „a čo keď zabudnem master heslo?"
+
+najčastejšia obava pred password managerom — a oprávnená. master heslo je jediný kľúč ku všetkému, takže ho nikto neukladá v plain texte (ani služba sama, ak je seriózna). bitwarden ani 1password ti ho nedokážu obnoviť.
+
+riešenie: pri prvom nastavení **každý poriadny manager vygeneruje recovery code** (1password ho volá *secret key*, bitwarden *emergency contact*). je to dlhý reťazec, ktorý raz vytlačíš na papier, založíš do šuflíka alebo dáš rodičom do trezoru. master heslo si zapamätáš, recovery code je tvoja poistka pre prípad, že na master heslo zabudneš.
+
+bonus, ktorý zachraňuje účty: password manager **odmietne automaticky vyplniť heslo na falošnej doméne.** ak ti 1password na stránke vyzerajúcej ako slovenská sporiteľňa nechce vyplniť prihlasovacie údaje, **stránka je phishingová napodobenina**. žiadny iný anti-phishing signál nie je takto spoľahlivý.
+
+## passkey: keď heslo úplne vyhodíš
+
+a teraz to najlepšie. v roku 2026 si pri **väčšine veľkých účtov heslo nemusíš pamätať vôbec**, lebo môžeš použiť **passkey**.
+
+passkey je kryptografický pár kľúčov založený na štandarde **FIDO2 / WebAuthn**. funguje takto:
+
+1. pri založení účtu telefón / laptop vygeneruje pár kľúčov. **súkromný kľúč** zostane navždy v zabezpečenom čipe tvojho zariadenia (alebo synced cez icloud / google password manager). **verejný kľúč** dostane stránka.
+2. pri prihlásení stránka pošle náhodnú výzvu. tvoje zariadenie ju podpíše súkromným kľúčom — odomkneš to face id-om, dotykom prsta alebo PIN-om — a pošle podpis späť.
+3. stránka overí podpis verejným kľúčom. prihlásil si sa.
+
+dva rozdiely oproti heslu, ktoré menia hru:
+
+- **nič tajné necestuje sieťou.** heslo môže útočník zachytiť, ukradnúť z databázy úniku, vypýtať si phishingom. súkromný kľúč nikdy neopustí tvoj telefón.
+- **passkey je viazaný na doménu.** browser podpíše výzvu **len pre originálnu doménu** (slsp.sk, nie slsp-overenie.com). aj keby ti niekto poslal dokonalý phishing s perfektne zhodnou stránkou, passkey odmietne podpísať. [fido alliance to popisuje ako „phishing-resistant by design"](https://fidoalliance.org/passkeys/) [4] — nejde o reklamný slogan, je to matematicky vlastnosť protokolu.
+
+### kde passkey funguje v 2026
+
+zoznam sa rozšíril podstatne od roku 2024. v máji 2026 majú podporu okrem iného:
+
+- **veľká päťka:** apple id, google účet, microsoft účet, amazon, meta (facebook + instagram).
+- **vývojárske platformy:** github, gitlab, npm, cloudflare, vercel, aws.
+- **konzumér služby:** ebay, paypal, shopify, kayak, best buy, ubisoft.
+- **slovenské banky:** tatra banka a slovenská sporiteľňa zaviedli passkey-kompatibilný flow pre web banking; vúb a čsob ho v 2026 pilotujú. detail si over priamo v aplikácii svojej banky — funkcia sa volá *kľúč prístupu*, *passkey* alebo *bezheslové prihlásenie*.
+- **vládne identity:** slovensko-id v skrátenej podobe podporuje webauthn cez eID čítačku; lepší user flow stále nie je hotový.
+
+### prechodné obdobie: hybrid stratégia
+
+passkey ešte nie je všade. v 2026 stále existujú stovky stránok — najmä menšie e-shopy, slovenské fóra, lokálne weby — kde si vystačíš s heslom a TOTP. preto **hybrid stratégia**:
+
+- **veľké účty (gmail, apple id, microsoft, facebook, github, banka)** → **passkey ak je dostupný**, plus záložné heslo z password manageru pre prípad straty zariadenia.
+- **stredné účty (e-shopy, netflix, spotify, fóra)** → silné unikátne heslo z password manageru + 2FA cez authenticator app.
+- **jednorazové účty (online registrácia na seminár, návštevnícky účet na portále)** → unikátne heslo z password manageru, nemusíš riešiť 2FA.
+
+pre prehĺbenie 2FA stratégie pozri [ochrana pred phishingom — 2fa a passkeys](/blog/ochrana-pred-phishingom-2fa-passkey); ak ťa zaujímajú hardvérové kľúče ako záloha passkey-u, pozri [yubikey vs google titan vs passkey](/blog/yubikey-vs-google-titan-vs-passkey).
+
+## najslabší článok: e-mail
+
+ak si z celého textu zoberieš jednu vec, nech je to toto. **tvoj e-mailový účet je jediná páka, cez ktorú útočník reštartuje heslá na všetkých ostatných službách.** banka, sociálne siete, e-shopy — všetko má v UX flow tlačidlo *„zabudol som heslo"* a všetko posiela reset link tam, kde čaká útočník, ak má prístup do tvojej inboxu.
+
+dôsledok: **e-mailové heslo musí byť úplne najsilnejšie zo všetkých**, a e-mail musí mať **najtvrdšie zapnuté 2FA / passkey, aké máš k dispozícii**.
+
+minimum pre gmail / outlook / icloud / proton:
+
+1. **heslo:** dlhá náhodná heslová fráza (4–5 slov), uložená v password manageri.
+2. **passkey:** ak ho služba ponúka, zapni ho dnes večer. gmail aj outlook ho podporujú už od 2024.
+3. **TOTP backup:** authenticator app pre prípad, že stratíš zariadenie s passkey.
+4. **backup kódy:** vytlač desať jednorazových kódov, daj do zásuvky alebo trezoru.
+5. **recovery e-mail:** nastav druhú adresu (ideálne na inej doméne), ktorú nikomu nehovoríš a ktorá je tvoj posledný záchranný kruh.
+
+raz za pol roka skontroluj na [haveibeenpwned.com](https://haveibeenpwned.com/) [6], či tvoj e-mail nefiguruje v novom úniku. ak áno, zmeň heslo a pre detailný postup pozri [uniknuté heslo — overenie cez haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned).
+
+## zhrnutie
+
+- **„K0mpl1k0van3!" nie je silné heslo** — substitúcie sú v slovníku každého cracking toolu z roku 2008. dĺžka poráža zložitosť.
+- **heslová fráza** = 4 náhodné slovenské slová oddelené medzerou. zapamätateľné, vyše bilióna kombinácií. **slová musia byť náhodné**, nie z tvojho života.
+- **password manager** generuje a ukladá unikátne heslá pre 150 účtov. bitwarden zadarmo, 1password platený, apple keychain pre čistú apple domácnosť.
+- **passkey** je kryptografický kľúč viazaný na doménu — phishing-resistant by design. v 2026 ho podporujú google, apple, microsoft, meta, github, paypal, slovenské banky.
+- **hybrid stratégia:** passkey na veľkých účtoch, silné unikátne heslá z managera + 2FA všade inde.
+- **e-mail je páka.** najsilnejšie heslo, passkey, TOTP backup, vytlačené recovery kódy. ak padne e-mail, padne všetko ostatné.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod)
+- [správca hesiel — porovnanie](/blog/spravca-hesiel-porovnanie)
+- [najlepší správca hesiel 2026](/blog/najlepsi-spravca-hesiel-porovnanie-2026)
+- [yubikey vs google titan vs passkey](/blog/yubikey-vs-google-titan-vs-passkey)
+- [uniknuté heslo — overenie cez haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned)
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
