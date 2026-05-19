@@ -1,9 +1,108 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 
+import { SITE_ORIGIN } from "@/config/site";
+import { supabase } from "@/integrations/supabase/client";
 import { usePublishedCmsPage } from "@/lib/admin/queries";
 import type { CmsBlock, CmsPage } from "@/lib/admin/cms-types";
 
+// E24 — admin-authored CMS pages (/s/$slug) are listed in sitemap.xml
+// and meant to rank in Google, but the route previously shipped zero
+// head() metadata: no <title>, no description, no canonical, no OG.
+// Google would crawl the sitemap, follow the URL, and find only what
+// the static HTML shell provided — effectively un-indexable despite
+// being in the sitemap.
+//
+// Pattern reused from blog/$slug.tsx: a server-side loader runs during
+// SSR so the page row is available to head() before client hydration.
+// The component still uses usePublishedCmsPage() for React Query cache
+// + revalidation on subsequent navigations — the SSR load is a
+// one-shot for first paint + meta tags, not a replacement for the
+// query layer.
 export const Route = createFileRoute("/s/$slug")({
+  loader: async ({ params }): Promise<CmsPage | null> => {
+    const { data, error } = await supabase
+      .from("cms_pages")
+      .select("id, slug, title, seo_description, blocks, status, published_at, updated_at")
+      .eq("slug", params.slug)
+      .eq("status", "published")
+      .not("published_at", "is", null)
+      .maybeSingle();
+    if (error) throw error;
+    if (!data) return null;
+    const row = data as {
+      id: string;
+      slug: string;
+      title: string;
+      seo_description: string;
+      blocks: CmsBlock[];
+      status: "draft" | "published";
+      published_at: string | null;
+      updated_at: string;
+    };
+    return {
+      id: row.id,
+      slug: row.slug,
+      title: row.title,
+      seo_description: row.seo_description,
+      content_blocks: row.blocks,
+      status: row.status,
+      published_at: row.published_at,
+      updated_at: row.updated_at,
+    };
+  },
+  head: ({ loaderData }) => {
+    const page = loaderData;
+    if (!page) {
+      return {
+        meta: [
+          { title: "Stránka nenájdená | subenai" },
+          { name: "robots", content: "noindex, nofollow" },
+        ],
+      };
+    }
+    const url = `${SITE_ORIGIN}/s/${page.slug}`;
+    const ogImage = `${SITE_ORIGIN}/og-default.png`;
+    return {
+      meta: [
+        { title: `${page.title} | subenai` },
+        { name: "description", content: page.seo_description },
+        { name: "robots", content: "index, follow, max-image-preview:large" },
+        { name: "language", content: "sk-SK" },
+        { property: "og:title", content: page.title },
+        { property: "og:description", content: page.seo_description },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: url },
+        { property: "og:image", content: ogImage },
+        { property: "og:locale", content: "sk_SK" },
+        { property: "og:site_name", content: "subenai" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: page.title },
+        { name: "twitter:description", content: page.seo_description },
+        { name: "twitter:image", content: ogImage },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            name: page.title,
+            description: page.seo_description,
+            url,
+            inLanguage: "sk-SK",
+            isPartOf: {
+              "@type": "WebSite",
+              name: "subenai",
+              url: SITE_ORIGIN,
+            },
+            ...(page.published_at && { datePublished: page.published_at }),
+            ...(page.updated_at && { dateModified: page.updated_at }),
+          }),
+        },
+      ],
+    };
+  },
   component: PublicCmsPageRoute,
 });
 
