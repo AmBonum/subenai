@@ -46,6 +46,30 @@ export class TestEditorPage extends BasePage {
     return this.page.getByTestId("test-editor-publish-button");
   }
 
+  get pageHeaderTitle() {
+    return this.page.getByTestId("app-shell-page-header-title");
+  }
+
+  get statusBadge() {
+    return this.page.getByTestId("admin-status-badge");
+  }
+
+  get resultsPanel() {
+    return this.page.getByTestId("test-editor-results-panel");
+  }
+
+  get analyticsPanel() {
+    return this.page.getByTestId("test-editor-analytics-panel");
+  }
+
+  get settingsPanel() {
+    return this.page.getByTestId("test-editor-settings-panel");
+  }
+
+  get descriptionInput() {
+    return this.page.getByTestId("test-editor-description-input");
+  }
+
   shareDialog(): ShareDialogPom {
     return new ShareDialogPom(this.page);
   }

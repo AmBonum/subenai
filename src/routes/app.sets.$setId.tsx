@@ -43,8 +43,16 @@ function UserSetDetailPage() {
         </Button>
         <Card data-testid="set-detail-not-found">
           <CardContent className="p-8 text-center">
-            <p className="text-base font-semibold text-foreground">{t("not_found_title")}</p>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p
+              className="text-base font-semibold text-foreground"
+              data-testid="set-detail-not-found-title"
+            >
+              {t("not_found_title")}
+            </p>
+            <p
+              className="mt-2 text-sm text-muted-foreground"
+              data-testid="set-detail-not-found-description"
+            >
               {t("not_found_description", { setId })}
             </p>
           </CardContent>

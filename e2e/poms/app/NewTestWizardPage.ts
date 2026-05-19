@@ -58,4 +58,24 @@ export class NewTestWizardPage extends BasePage {
   get shareCopyButton() {
     return this.page.getByTestId("new-test-wizard-share-copy-button");
   }
+
+  get step1CardTitle() {
+    return this.page.getByTestId("new-test-wizard-step-1-title");
+  }
+
+  progressBar(n: 1 | 2 | 3 | 4) {
+    return this.page.getByTestId(`new-test-wizard-progress-bar-${n}`);
+  }
+
+  get progressLabel() {
+    return this.page.getByTestId("new-test-wizard-progress");
+  }
+
+  get validationTitle() {
+    return this.page.getByTestId("new-test-wizard-validation-title");
+  }
+
+  get validationQuestions() {
+    return this.page.getByTestId("new-test-wizard-validation-questions");
+  }
 }

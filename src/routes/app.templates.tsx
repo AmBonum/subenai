@@ -62,6 +62,7 @@ function TemplatesPage() {
         accentWords={1}
         icon={Layers}
         subtitle={t("page_subtitle")}
+        testId="templates-page-header"
       />
 
       <Card>

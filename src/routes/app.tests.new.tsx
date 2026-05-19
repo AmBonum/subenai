@@ -150,7 +150,7 @@ function WizardPage() {
       {step === 1 && (
         <Card data-testid="new-test-wizard-step-1-root">
           <CardHeader>
-            <CardTitle>{t("step_1_title")}</CardTitle>
+            <CardTitle data-testid="new-test-wizard-step-1-title">{t("step_1_title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -163,7 +163,12 @@ function WizardPage() {
                 data-testid="new-test-wizard-title-input"
               />
               {!step1Valid && title.length > 0 && (
-                <p className="text-xs text-destructive">{t("validation_title_required")}</p>
+                <p
+                  className="text-xs text-destructive"
+                  data-testid="new-test-wizard-validation-title"
+                >
+                  {t("validation_title_required")}
+                </p>
               )}
             </div>
             <div className="space-y-2">
@@ -265,7 +270,12 @@ function WizardPage() {
               );
             })}
             {questionIds.length === 0 && (
-              <p className="text-xs text-destructive">{t("validation_questions_required")}</p>
+              <p
+                className="text-xs text-destructive"
+                data-testid="new-test-wizard-validation-questions"
+              >
+                {t("validation_questions_required")}
+              </p>
             )}
             <div>
               <Button

@@ -35,7 +35,9 @@ function DsrPage() {
           <h1 className="text-2xl font-semibold" data-testid="app-legal-dsr-title">
             {t("title")}
           </h1>
-          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
+          <p className="text-sm text-muted-foreground" data-testid="app-legal-dsr-subtitle">
+            {t("subtitle")}
+          </p>
         </div>
       </header>
 
