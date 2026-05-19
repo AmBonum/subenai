@@ -1,8 +1,26 @@
 name: E2E
 
-# Heavier than ci.yml — only runs on main pushes, PRs targeting main, and
-# manual dispatch. Skips every PR push that doesn't target main to conserve
-# free-tier minutes.
+# E20 — selective e2e execution at PR level.
+#
+# Triggers:
+#   - push to main:        always runs the FULL browser suite
+#   - PR targeting main:   runs only the domains whose source files changed,
+#                          plus cross-cutting (smoke, header, footer, locale)
+#   - workflow_dispatch:   always runs the FULL suite
+#
+# Integration tests (request-fixture API specs at e2e/integration/**) are
+# light (~30 s), need no build, and run in a separate job that is effectively
+# unconditional. They are gated only by the e2e:skip label combined with a
+# push event override.
+#
+# Override labels on the PR:
+#   - e2e:full   → force the full browser suite even on a single-domain change
+#   - e2e:skip   → skip the browser job entirely (integration still runs)
+#
+# Path → domain mapping is documented in
+# tasks/PLAN-2026-05-19-E20-selective-e2e-ci.md and reproduced in the
+# `filter` step below. Keep the two in sync when adjusting.
+
 on:
   push:
     branches: [main]
@@ -15,16 +33,169 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ── Step 1: detect which file domains changed ─────────────────────────────
+  # Cheap (~15 s) — does a git diff via paths-filter and emits per-domain
+  # boolean outputs that the playwright job consumes in its `if:` and
+  # spec-path-derivation steps.
+  changes:
+    name: Detect changed paths
+    runs-on: ubuntu-latest
+    # Always run; pre-merge skip logic is in the playwright job's `if`.
+    outputs:
+      full: ${{ steps.filter.outputs.full }}
+      marketing: ${{ steps.filter.outputs.marketing }}
+      admin: ${{ steps.filter.outputs.admin }}
+      app: ${{ steps.filter.outputs.app }}
+      auth: ${{ steps.filter.outputs.auth }}
+      consent: ${{ steps.filter.outputs.consent }}
+      sponsorship: ${{ steps.filter.outputs.sponsorship }}
+      composer: ${{ steps.filter.outputs.composer }}
+      quiz: ${{ steps.filter.outputs.quiz }}
+      courses: ${{ steps.filter.outputs.courses }}
+      blog: ${{ steps.filter.outputs.blog }}
+      test-packs: ${{ steps.filter.outputs.test-packs }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect changed paths
+        id: filter
+        # Pinned to a specific commit SHA for supply-chain safety. Bump via
+        # Dependabot or monthly manual review.
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        with:
+          filters: |
+            full:
+              # Any change here forces the full browser suite. These files
+              # cascade into every domain (design tokens, build config,
+              # the e2e layer itself, the supabase singleton).
+              - 'src/components/ui/**'
+              - 'src/styles.css'
+              - 'tailwind.config*'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'tsconfig*.json'
+              - 'vite.config.ts'
+              - 'vitest.config.ts'
+              - 'playwright.config.ts'
+              - 'e2e/**'
+              - '.github/workflows/**'
+              - 'src/integrations/supabase/client.ts'
+              - 'src/integrations/supabase/types.ts'
+            marketing:
+              - 'src/routes/about.tsx'
+              - 'src/routes/contact.tsx'
+              - 'src/routes/index.tsx'
+              - 'src/routes/changelog.tsx'
+              - 'src/routes/cookies.tsx'
+              - 'src/routes/privacy.tsx'
+              - 'src/routes/schools.tsx'
+              - 'src/routes/support.tsx'
+              - 'src/routes/sponsors*.tsx'
+              - 'src/routes/manage-support.tsx'
+              - 'src/components/home/**'
+              - 'src/components/layout/**'
+              - 'src/components/schools/**'
+              - 'src/i18n/locales/sk/marketing.json'
+              - 'src/i18n/marketing*'
+              - 'src/lib/seo/faq-jsonld*'
+              - 'src/lib/seo/schools-jsonld*'
+            admin:
+              - 'src/routes/admin/**'
+              - 'src/components/admin/**'
+              - 'src/lib/admin/**'
+              - 'src/lib/blog/admin-queries*'
+            app:
+              - 'src/routes/app*'
+              - 'src/lib/platform/**'
+              - 'src/lib/edu/**'
+              - 'src/components/app/**'
+              - 'src/components/composer/edu/**'
+            auth:
+              - 'src/routes/auth*'
+              - 'src/routes/forgot-password*'
+              - 'src/integrations/supabase/auth*'
+              - 'src/components/auth/**'
+            consent:
+              - 'src/hooks/useConsent*'
+              - 'src/lib/consent*'
+              - 'src/components/layout/Consent*'
+              - 'src/routes/cookies*'
+            sponsorship:
+              - 'src/routes/support.tsx'
+              - 'src/routes/sponsors*.tsx'
+              - 'src/routes/manage-support.tsx'
+              - 'src/routes/r.$shareId.tsx'
+              - 'src/components/sponsorship/**'
+              - 'src/lib/sponsors/**'
+            composer:
+              - 'src/routes/test.zostav*'
+              - 'src/components/composer/**'
+              - 'src/lib/quiz/composer*'
+            quiz:
+              - 'src/routes/test.*'
+              - 'src/components/quiz/**'
+              - 'src/lib/quiz/**'
+              - 'src/lib/share/**'
+              - 'src/lib/data-trap/**'
+              - 'src/i18n/quiz*'
+              - 'src/i18n/locales/sk/quiz.json'
+            courses:
+              - 'src/routes/courses*'
+              - 'src/components/courses/**'
+              - 'src/content/courses/**'
+            blog:
+              - 'src/routes/blog/**'
+              - 'src/components/blog/**'
+              - 'src/lib/blog/**'
+              - 'src/content/blog/**'
+              - 'src/i18n/locales/sk/blog.json'
+            test-packs:
+              - 'src/routes/tests*'
+
+  # ── Step 2: build once + run filtered specs ──────────────────────────────
   playwright:
     name: Playwright (chromium)
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    needs: changes
+    # Run on:
+    #   - any push event (post-merge main verification, always full)
+    #   - workflow_dispatch (manual trigger, always full)
+    #   - PR with at least one domain flag set AND not labelled e2e:skip
+    if: |
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'pull_request' &&
+        !contains(github.event.pull_request.labels.*.name, 'e2e:skip') &&
+        (
+          needs.changes.outputs.full == 'true' ||
+          needs.changes.outputs.marketing == 'true' ||
+          needs.changes.outputs.admin == 'true' ||
+          needs.changes.outputs.app == 'true' ||
+          needs.changes.outputs.auth == 'true' ||
+          needs.changes.outputs.consent == 'true' ||
+          needs.changes.outputs.sponsorship == 'true' ||
+          needs.changes.outputs.composer == 'true' ||
+          needs.changes.outputs.quiz == 'true' ||
+          needs.changes.outputs.courses == 'true' ||
+          needs.changes.outputs.blog == 'true' ||
+          needs.changes.outputs.test-packs == 'true'
+        )
+      )
+    env:
+      # Derived once, consumed by the spec-paths + run steps below.
+      IS_FULL: >-
+        ${{
+          github.event_name == 'push' ||
+          github.event_name == 'workflow_dispatch' ||
+          needs.changes.outputs.full == 'true' ||
+          contains(github.event.pull_request.labels.*.name, 'e2e:full')
+        }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
@@ -32,9 +203,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Cache the Playwright browser binaries — Chromium alone is 100MB+
-      # download. Key on the lockfile so a Playwright version bump
-      # invalidates the cache automatically.
+      # Chromium alone is 100MB+ download; cache keyed on the lockfile so a
+      # Playwright version bump invalidates automatically.
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         with:
@@ -47,8 +217,41 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run Playwright tests
-        run: npx playwright test
+      # ── Selective: derive the positional spec-path list for `playwright test` ─
+      # Cross-cutting is hardcoded first and unconditional. Domain dirs are
+      # appended based on the paths-filter flags. Playwright accepts
+      # positional path prefixes as test-file filters.
+      - name: Compute spec paths to run
+        id: spec-paths
+        if: env.IS_FULL != 'true'
+        shell: bash
+        run: |
+          paths="e2e/specs/cross-cutting"
+
+          add() { paths="$paths $1"; }
+
+          [[ "${{ needs.changes.outputs.marketing }}" == "true" ]] && add "e2e/specs/marketing"
+          [[ "${{ needs.changes.outputs.admin }}" == "true" ]] && add "e2e/specs/admin"
+          [[ "${{ needs.changes.outputs.app }}" == "true" ]] && add "e2e/specs/app"
+          [[ "${{ needs.changes.outputs.auth }}" == "true" ]] && add "e2e/specs/auth"
+          [[ "${{ needs.changes.outputs.consent }}" == "true" ]] && add "e2e/specs/consent"
+          [[ "${{ needs.changes.outputs.sponsorship }}" == "true" ]] && add "e2e/specs/sponsorship"
+          [[ "${{ needs.changes.outputs.composer }}" == "true" ]] && add "e2e/specs/composer"
+          [[ "${{ needs.changes.outputs.quiz }}" == "true" ]] && add "e2e/specs/quiz"
+          [[ "${{ needs.changes.outputs.courses }}" == "true" ]] && add "e2e/specs/courses"
+          [[ "${{ needs.changes.outputs.blog }}" == "true" ]] && add "e2e/specs/blog"
+          [[ "${{ needs.changes.outputs.test-packs }}" == "true" ]] && add "e2e/specs/test-packs"
+
+          echo "paths=$paths" >> "$GITHUB_OUTPUT"
+          echo "Selective spec paths: $paths"
+
+      - name: Run Playwright (full suite)
+        if: env.IS_FULL == 'true'
+        run: npx playwright test --project=e2e-chromium
+
+      - name: Run Playwright (selective)
+        if: env.IS_FULL != 'true'
+        run: npx playwright test --project=e2e-chromium ${{ steps.spec-paths.outputs.paths }}
 
       - name: Upload Playwright HTML report
         if: failure()
@@ -65,3 +268,43 @@ jobs:
           name: playwright-test-results-${{ github.run_id }}
           path: test-results/
           retention-days: 14
+
+  # ── Integration tests: API-only, runs unconditionally ────────────────────
+  # No browser, no build. Cost is ~30 s total. Skipped only when the PR
+  # explicitly labels e2e:skip (and even then runs on push/dispatch).
+  integration:
+    name: Playwright (integration)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: |
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      !contains(github.event.pull_request.labels.*.name, 'e2e:skip')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Integration specs hit BASE_URL via Playwright's `request` fixture.
+      # Set vars.E2E_BASE_URL in repo Settings → Secrets and variables →
+      # Actions → Variables. Falls back to localhost:8080 (no live server
+      # in CI; the suite will refuse to connect — expected if the variable
+      # is unset, surfacing the misconfiguration loudly).
+      - name: Run integration tests
+        run: npx playwright test --project=integration
+        env:
+          BASE_URL: ${{ vars.E2E_BASE_URL || 'http://localhost:8080' }}
+
+      - name: Upload integration report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-report-${{ github.run_id }}
+          path: playwright-report/
+          retention-days: 7
