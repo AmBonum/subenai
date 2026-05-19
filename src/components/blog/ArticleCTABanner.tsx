@@ -26,8 +26,8 @@ export function ArticleCTABanner() {
             className="mt-2 max-w-xl text-sm text-muted-foreground md:text-base"
             data-testid="blog-article-cta-description"
           >
-            spravíš si krátky test — 10 reálnych scenárov, 3 minúty. dozvieš sa kde máš slabé miesto
-            a čo si v praxi precvičiť.
+            spravíš si krátky test — 10 reálnych scenárov, 3 minúty. dozvieš sa, kde máš slabé
+            miesto a čo si v praxi precvičiť.
           </p>
         </div>
         <Link
