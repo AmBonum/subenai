@@ -168,10 +168,16 @@ function AudiencesPage() {
               <CardContent className="space-y-3 p-4">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <div className="font-medium">{g.name}</div>
+                    <div className="font-medium" data-testid={`audiences-row-name-${g.id}`}>
+                      {g.name}
+                    </div>
                     <p className="line-clamp-2 text-xs text-muted-foreground">{g.description}</p>
                   </div>
-                  <Badge variant="secondary" className="shrink-0">
+                  <Badge
+                    variant="secondary"
+                    className="shrink-0"
+                    data-testid={`audiences-row-members-${g.id}`}
+                  >
                     {t("members_count", { count: g.member_emails.length })}
                   </Badge>
                 </div>

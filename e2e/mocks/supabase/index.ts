@@ -223,8 +223,27 @@ export async function mockSupabase(page: Page, config: MockSupabaseConfig): Prom
       const body = parseJsonBody(request);
       const inserted = Array.isArray(body) ? body : [body];
       const newRows = inserted.filter((r): r is Row => typeof r === "object" && r !== null);
-      tables[table] = [...rows, ...newRows];
       const preferHeader = request.headers()["prefer"] ?? "";
+      // Supabase JS `.upsert({...}, { onConflict: "col" })` sends
+      // `Prefer: resolution=merge-duplicates` + `?on_conflict=col`.
+      // Real PostgREST replaces the row matched by that column; without
+      // emulating it here, POST always appended → subsequent
+      // `.maybeSingle()` reads saw 2+ rows and returned null, breaking
+      // any auth gate that reads back the same row (2026-05-19 finding).
+      const isMergeUpsert = /resolution=merge-duplicates/.test(preferHeader);
+      const onConflictCols = (url.searchParams.get("on_conflict") ?? "")
+        .split(",")
+        .map((c) => c.trim())
+        .filter(Boolean);
+      if (isMergeUpsert && onConflictCols.length > 0) {
+        const kept = rows.filter(
+          (existing) =>
+            !newRows.some((next) => onConflictCols.every((col) => existing[col] === next[col])),
+        );
+        tables[table] = [...kept, ...newRows];
+      } else {
+        tables[table] = [...rows, ...newRows];
+      }
       const wantsRepresentation = preferHeader.includes("return=representation");
       if (!wantsRepresentation) {
         await route.fulfill({
