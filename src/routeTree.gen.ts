@@ -28,6 +28,7 @@ import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
 import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ThankYouSessionIdRouteImport } from './routes/thank-you.$sessionId'
@@ -40,6 +41,7 @@ import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
 import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
 import { Route as CoursesSlugRouteImport } from './routes/courses.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AppTemplatesRouteImport } from './routes/app.templates'
@@ -181,6 +183,11 @@ const CoursesIndexRoute = CoursesIndexRouteImport.update({
   path: '/courses/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/blog/index.lazy').then((d) => d.Route))
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -241,6 +248,11 @@ const CoursesSlugRoute = CoursesSlugRouteImport.update({
   path: '/courses/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/blog/$slug.lazy').then((d) => d.Route))
 const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
   id: '/auth/reset-password',
   path: '/auth/reset-password',
@@ -550,6 +562,7 @@ export interface FileRoutesByFullPath {
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/courses/$slug': typeof CoursesSlugRoute
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
@@ -562,6 +575,7 @@ export interface FileRoutesByFullPath {
   '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
@@ -625,6 +639,7 @@ export interface FileRoutesByTo {
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/courses/$slug': typeof CoursesSlugRoute
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
@@ -637,6 +652,7 @@ export interface FileRoutesByTo {
   '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/courses': typeof CoursesIndexRoute
   '/sponsors': typeof SponsorsIndexRoute
   '/test': typeof TestIndexRoute
@@ -704,6 +720,7 @@ export interface FileRoutesById {
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/courses/$slug': typeof CoursesSlugRoute
   '/login_/enroll-2fa': typeof LoginEnroll2faRoute
   '/login_/verify-2fa': typeof LoginVerify2faRoute
@@ -716,6 +733,7 @@ export interface FileRoutesById {
   '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
@@ -784,6 +802,7 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/auth/callback'
     | '/auth/reset-password'
+    | '/blog/$slug'
     | '/courses/$slug'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
@@ -796,6 +815,7 @@ export interface FileRouteTypes {
     | '/thank-you/$sessionId'
     | '/admin/'
     | '/app/'
+    | '/blog/'
     | '/courses/'
     | '/sponsors/'
     | '/test/'
@@ -859,6 +879,7 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/auth/callback'
     | '/auth/reset-password'
+    | '/blog/$slug'
     | '/courses/$slug'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
@@ -871,6 +892,7 @@ export interface FileRouteTypes {
     | '/thank-you/$sessionId'
     | '/admin'
     | '/app'
+    | '/blog'
     | '/courses'
     | '/sponsors'
     | '/test'
@@ -937,6 +959,7 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/auth/callback'
     | '/auth/reset-password'
+    | '/blog/$slug'
     | '/courses/$slug'
     | '/login_/enroll-2fa'
     | '/login_/verify-2fa'
@@ -949,6 +972,7 @@ export interface FileRouteTypes {
     | '/thank-you/$sessionId'
     | '/admin/'
     | '/app/'
+    | '/blog/'
     | '/courses/'
     | '/sponsors/'
     | '/test/'
@@ -985,6 +1009,7 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CoursesSlugRoute: typeof CoursesSlugRoute
   LoginEnroll2faRoute: typeof LoginEnroll2faRoute
   LoginVerify2faRoute: typeof LoginVerify2faRoute
@@ -994,6 +1019,7 @@ export interface RootRouteChildren {
   TestZostavRoute: typeof TestZostavRoute
   TestsSlugRoute: typeof TestsSlugRoute
   ThankYouSessionIdRoute: typeof ThankYouSessionIdRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   TestIndexRoute: typeof TestIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
@@ -1135,6 +1161,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoursesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/': {
       id: '/app/'
       path: '/'
@@ -1217,6 +1250,13 @@ declare module '@tanstack/react-router' {
       path: '/courses/$slug'
       fullPath: '/courses/$slug'
       preLoaderRoute: typeof CoursesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/reset-password': {
@@ -1713,6 +1753,7 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CoursesSlugRoute: CoursesSlugRoute,
   LoginEnroll2faRoute: LoginEnroll2faRoute,
   LoginVerify2faRoute: LoginVerify2faRoute,
@@ -1722,6 +1763,7 @@ const rootRouteChildren: RootRouteChildren = {
   TestZostavRoute: TestZostavRoute,
   TestsSlugRoute: TestsSlugRoute,
   ThankYouSessionIdRoute: ThankYouSessionIdRoute,
+  BlogIndexRoute: BlogIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   TestIndexRoute: TestIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
