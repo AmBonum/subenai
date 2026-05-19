@@ -1,20 +1,24 @@
 import { visualForCategory } from "@/lib/blog/category-visuals";
 
+import { CategoryIllustration } from "./CategoryIllustration";
+
 interface BlogHeroFallbackProps {
   categorySlug: string;
   title: string;
-  // 'card' — used inside list cards (aspect-video, smaller glyph)
-  // 'banner' — used at the top of an article page (taller, big glyph)
+  // 'card' — used inside list cards (aspect-video, smaller motif)
+  // 'banner' — used at the top of an article page (taller, big motif)
   variant?: "card" | "banner";
   testid?: string;
 }
 
-// Programmatic hero placeholder for articles without a hero_image_url.
-// Renders a category-themed gradient with the category glyph as a
-// large decorative motif + the article title overlaid (banner variant
-// only). Keeps the visual grammar consistent across 80+ articles
-// without shipping per-article image assets — when a real image lands
-// in the DB, the route swaps this out automatically.
+// E16.4 — programmatic hero placeholder for articles without a
+// hero_image_url. Each category has a custom SVG illustration
+// (src/components/blog/CategoryIllustration.tsx) rendered centered on
+// the category-themed gradient. Replaces the prior emoji-in-corner
+// placeholder — the SVGs follow a single design system (200×200
+// viewBox, 2.5-unit stroke, currentColor white on the gradient) so
+// the 15 categories share a coherent visual language.
+
 export function BlogHeroFallback({
   categorySlug,
   title,
@@ -23,7 +27,10 @@ export function BlogHeroFallback({
 }: BlogHeroFallbackProps) {
   const visual = visualForCategory(categorySlug);
   const aspect = variant === "card" ? "aspect-video" : "aspect-[21/9] md:aspect-[3/1]";
-  const glyphSize = variant === "card" ? "text-7xl md:text-8xl" : "text-[140px] md:text-[200px]";
+  // Centered illustration sized to fill ~55% of the shorter axis;
+  // viewport units would over-grow on banner — fixed % of the bg via
+  // absolute inset keeps the look identical at every breakpoint.
+  const illustrationSize = variant === "card" ? "h-2/3 w-2/3" : "h-3/4 w-1/2";
   return (
     <div
       className={`relative w-full overflow-hidden rounded-xl bg-gradient-to-br ${visual.gradientFrom} ${visual.gradientTo} ${aspect}`}
@@ -31,24 +38,38 @@ export function BlogHeroFallback({
       role="img"
       aria-label={title}
     >
-      {/* Decorative diagonal noise/grain via repeating linear gradient */}
+      {/* Diagonal hairline texture for depth — same noise pattern
+          everywhere so the gradient doesn't feel flat. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-15"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(135deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, transparent 1px, transparent 12px)",
+            "repeating-linear-gradient(135deg, rgba(255,255,255,0.12) 0px, rgba(255,255,255,0.12) 1px, transparent 1px, transparent 14px)",
         }}
       />
-      <span
+      {/* Radial spotlight from the center for visual depth */}
+      <div
         aria-hidden="true"
-        className={`absolute -right-4 -top-4 select-none opacity-30 ${glyphSize}`}
-      >
-        {visual.glyph}
-      </span>
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 45%, rgba(255,255,255,0.18) 0%, transparent 60%)",
+        }}
+      />
+      {/* Centered category illustration */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <CategoryIllustration
+          slug={categorySlug}
+          className={`flex items-center justify-center text-white/90 ${illustrationSize} [&_svg]:h-full [&_svg]:w-full`}
+          testid={`category-illustration-${categorySlug}`}
+        />
+      </div>
       {variant === "banner" && (
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-6 md:p-10">
-          <h1 className="text-2xl font-bold text-white md:text-4xl lg:text-5xl">{title}</h1>
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-6 md:p-10">
+          <h1 className="text-2xl font-bold text-white drop-shadow-md md:text-4xl lg:text-5xl">
+            {title}
+          </h1>
         </div>
       )}
     </div>
