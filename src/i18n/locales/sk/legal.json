@@ -80,9 +80,9 @@
           "retention": "12 mesiacov, potom auto-anonymizácia"
         },
         "analytics": {
-          "purpose": "Analytika a vylepšovanie produktu",
+          "purpose": "Analytika návštevnosti cez Google Analytics 4 (anonymizovaná IP, agregované metriky, žiadne osobné identifikátory)",
           "basis": "Súhlas / čl. 6 ods. 1 písm. a GDPR",
-          "retention": "do 13 mesiacov / odvolanie súhlasu"
+          "retention": "do 14 mesiacov (GA4 default) / odvolanie súhlasu"
         },
         "consent_record": {
           "purpose": "Záznam súhlasu samotného",
@@ -259,7 +259,7 @@
     "meta_description": "Aké úložisko a cookies používa subenai, na čo slúžia, ako dlho zostávajú a ako ich môžeš spravovať.",
     "back_home": "← Späť na domov",
     "title": "Zásady používania cookies",
-    "version_line": "Verzia {version} · Posledná aktualizácia: 18. mája 2026",
+    "version_line": "Verzia {version} · Posledná aktualizácia: 19. mája 2026",
     "s1": {
       "heading": "1. Čo sú cookies a podobné technológie",
       "prefix": "Pod pojmom „cookies\" v týchto zásadách rozumieme akékoľvek uloženie informácií na tvojom zariadení alebo prístup k nim — vrátane HTTP cookies, ",
@@ -299,9 +299,9 @@
         },
         "analytics": {
           "category": "Analytika",
-          "key": "budúce (PostHog)",
-          "purpose": "Anonymizované meranie miery dokončenia, A/B testy",
-          "duration": "do 13 mesiacov"
+          "key": "_ga, _ga_*",
+          "purpose": "Google Analytics 4 — anonymizované meranie návštevnosti a interakcií, žiadne osobné identifikátory",
+          "duration": "do 14 mesiacov (GA4 default)"
         },
         "marketing": {
           "category": "Marketing",
@@ -349,10 +349,10 @@
       "stripe_suffix": " alebo Stripe Checkout. Sú nutné pre fungovanie platby a fraud prevention. SCC pripojenie pre transfer do USA.",
       "cloudflare_label": "Cloudflare (Cloudflare Inc., USA):",
       "cloudflare_text": " hosting statickej časti aplikácie a CDN. EU dátové centrá, GDPR Data Processing Addendum.",
-      "future_emph": "Aktuálne neintegrujeme žiadne reklamné siete, sociálne pluginy ani externú analytiku (napr. Google Analytics).",
-      "future_prefix": " Ak by sme niekedy pridali analytický alebo marketingový nástroj (napr. pre meranie návštevnosti, A/B testy alebo reklamné kampane), aktivuje sa ",
+      "future_emph": "Pre meranie návštevnosti používame Google Analytics 4 (Google LLC, USA).",
+      "future_prefix": " Skript Google Analytics sa načítava ",
       "future_emph2": "iba",
-      "future_suffix": " s tvojím opt-in súhlasom v kategórii „analytika\" alebo „marketing\". Pri pridaní nového sprostredkovateľa zvýšime verziu týchto zásad — banner sa znova zobrazí a vyžiadame od teba nový súhlas."
+      "future_suffix": " keď máš zapnutý súhlas pre kategóriu „analytika\". Prenos do USA je zabezpečený Štandardnými zmluvnými doložkami (SCC) a EU-US Data Privacy Framework. Anonymizovaná IP, obmedzené reklamné funkcie cez Google Consent Mode v2. Žiadne reklamné siete ani sociálne pluginy."
     },
     "s4": {
       "heading": "4. Ako spravovať súhlas",

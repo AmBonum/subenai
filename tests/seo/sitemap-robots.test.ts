@@ -32,6 +32,16 @@ describe("AH-9.9 sitemap.xml", () => {
     expect(xml).toContain("https://subenai.sk/tests");
     expect(xml).toContain("https://subenai.sk/about");
   });
+
+  it("includes the blog index", () => {
+    expect(xml).toContain("https://subenai.sk/blog");
+  });
+
+  it("includes blog category archive pages", () => {
+    expect(xml).toContain("https://subenai.sk/blog/kategoria/phishing-a-emaily");
+    expect(xml).toContain("https://subenai.sk/blog/kategoria/ai-scamy");
+    expect(xml).toContain("https://subenai.sk/blog/kategoria/studenti");
+  });
 });
 
 describe("AH-9.9 robots.txt", () => {

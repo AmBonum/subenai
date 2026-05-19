@@ -80,9 +80,9 @@
           "retention": "12 months, then auto-anonymisation"
         },
         "analytics": {
-          "purpose": "Analytics and product improvement",
+          "purpose": "Traffic analytics via Google Analytics 4 (anonymised IP, aggregated metrics, no personal identifiers)",
           "basis": "Consent / Art. 6(1)(a) GDPR",
-          "retention": "up to 13 months / consent withdrawal"
+          "retention": "up to 14 months (GA4 default) / consent withdrawal"
         },
         "consent_record": {
           "purpose": "Record of consent itself",
@@ -259,7 +259,7 @@
     "meta_description": "What storage and cookies subenai uses, what they are for, how long they remain and how you can manage them.",
     "back_home": "← Back to home",
     "title": "Cookies policy",
-    "version_line": "Version {version} · Last updated: 18 May 2026",
+    "version_line": "Version {version} · Last updated: 19 May 2026",
     "s1": {
       "heading": "1. What cookies and similar technologies are",
       "prefix": "By \"cookies\" in this policy we mean any storing of information on your device or access to it — including HTTP cookies, ",
@@ -299,9 +299,9 @@
         },
         "analytics": {
           "category": "Analytics",
-          "key": "future (PostHog)",
-          "purpose": "Anonymised completion-rate measurement, A/B tests",
-          "duration": "up to 13 months"
+          "key": "_ga, _ga_*",
+          "purpose": "Google Analytics 4 — anonymised traffic and interaction measurement, no personal identifiers",
+          "duration": "up to 14 months (GA4 default)"
         },
         "marketing": {
           "category": "Marketing",

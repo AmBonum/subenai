@@ -5,6 +5,7 @@ import { BlogPostSources } from "@/components/blog/BlogPostSources";
 import { BlogScenarioCard } from "@/components/blog/BlogScenarioCard";
 import { tFor } from "@/i18n/blog";
 import { useBlogPost } from "@/lib/blog/queries";
+import { buildArticleJsonLd, buildBreadcrumbJsonLd } from "@/lib/seo/blog-jsonld";
 
 // Inline scenario embed for v1. Per locked decision #6 the article body
 // includes a single BlogScenarioCard; selecting it per-article from the
@@ -125,6 +126,22 @@ function BlogPostPage() {
       <BlogPostSources sources={post.sources} />
 
       <BlogScenarioCard questionId={FALLBACK_SCENARIO_QUESTION_ID} />
+
+      {/* Client-side JSON-LD. Google's bot executes JS for indexing, so
+          this is functional for Article + BreadcrumbList rich results.
+          Server-side rendering via TanStack `head()` requires moving the
+          post fetch into a route loader — planned refactor when Search
+          Console flags rich-result coverage gaps. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildArticleJsonLd(post)) }}
+        data-testid="blog-post-jsonld-article"
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(post)) }}
+        data-testid="blog-post-jsonld-breadcrumb"
+      />
     </main>
   );
 }

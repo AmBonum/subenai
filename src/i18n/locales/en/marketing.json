@@ -107,7 +107,7 @@
     "banner": {
       "title": "🍪 Cookies and privacy",
       "badge_updated": "updated",
-      "description": "We've added an option for authors to collect responses for educational purposes (opt-in, with an author password). We've updated our privacy policy. We use necessary storage for the test to function; optional categories (analytics, marketing) are only enabled with your consent.",
+      "description": "We've added a blog with security articles and updated our privacy policy to clarify that we use Google Analytics 4 (Google LLC) to measure traffic. Consent for the \"analytics\" category remains optional and revocable at any time.",
       "link_cookies": "Cookies",
       "link_privacy": "Privacy",
       "settings": "Settings",

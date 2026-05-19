@@ -11,7 +11,7 @@
  * way that affects the user's previous decision. The banner re-appears.
  */
 
-export const CONSENT_VERSION = "1.4.0";
+export const CONSENT_VERSION = "1.5.0";
 export const CONSENT_STORAGE_KEY = "iiq_consent";
 
 export type ConsentCategory = "necessary" | "preferences" | "analytics" | "marketing";

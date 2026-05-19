@@ -107,7 +107,7 @@
     "banner": {
       "title": "🍪 Cookies a súkromie",
       "badge_updated": "aktualizované",
-      "description": "Pridali sme možnosť autorom zbierať odpovede pre edukačné účely (opt-in, s heslom autora). Privacy sme aktualizovali. Používame nevyhnutné úložisko pre fungovanie testu; voliteľné kategórie (analytika, marketing) zapneme len s tvojím súhlasom.",
+      "description": "Pridali sme blog s bezpečnostnými článkami a v zásadách spresnili, že na meranie návštevnosti používame Google Analytics 4 (Google LLC). Súhlas pre kategóriu „analytika\" zostáva voliteľný a kedykoľvek odvolateľný.",
       "link_cookies": "Cookies",
       "link_privacy": "Súkromie",
       "settings": "Nastavenia",

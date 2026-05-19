@@ -80,9 +80,9 @@
           "retention": "12 měsíců, poté auto-anonymizace"
         },
         "analytics": {
-          "purpose": "Analytika a vylepšování produktu",
+          "purpose": "Analytika návštěvnosti přes Google Analytics 4 (anonymizovaná IP, agregované metriky, žádné osobní identifikátory)",
           "basis": "Souhlas / čl. 6 odst. 1 písm. a) GDPR",
-          "retention": "do 13 měsíců / odvolání souhlasu"
+          "retention": "do 14 měsíců (GA4 default) / odvolání souhlasu"
         },
         "consent_record": {
           "purpose": "Záznam souhlasu samotného",
@@ -259,7 +259,7 @@
     "meta_description": "Jaké úložiště a cookies používá subenai, k čemu slouží, jak dlouho zůstávají a jak je můžete spravovat.",
     "back_home": "← Zpět na domovskou stránku",
     "title": "Zásady používání cookies",
-    "version_line": "Verze {version} · Poslední aktualizace: 18. května 2026",
+    "version_line": "Verze {version} · Poslední aktualizace: 19. května 2026",
     "s1": {
       "heading": "1. Co jsou cookies a podobné technologie",
       "prefix": "Pod pojmem „cookies\" v těchto zásadách rozumíme jakékoli uložení informací na vašem zařízení nebo přístup k nim — včetně HTTP cookies, ",
@@ -299,9 +299,9 @@
         },
         "analytics": {
           "category": "Analytika",
-          "key": "budoucí (PostHog)",
-          "purpose": "Anonymizované měření míry dokončení, A/B testy",
-          "duration": "do 13 měsíců"
+          "key": "_ga, _ga_*",
+          "purpose": "Google Analytics 4 — anonymizované měření návštěvnosti a interakcí, žádné osobní identifikátory",
+          "duration": "do 14 měsíců (GA4 default)"
         },
         "marketing": {
           "category": "Marketing",

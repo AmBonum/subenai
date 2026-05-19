@@ -2,6 +2,7 @@ import { createLazyFileRoute, Link } from "@tanstack/react-router";
 
 import { tFor } from "@/i18n/blog";
 import { useBlogPostList } from "@/lib/blog/queries";
+import { buildBlogIndexJsonLd } from "@/lib/seo/blog-jsonld";
 
 export const Route = createLazyFileRoute("/blog/")({
   component: BlogIndexPage,
@@ -32,6 +33,16 @@ function BlogIndexPage() {
 
       {query.data && query.data.length === 0 && (
         <p data-testid="blog-index-empty">{t("empty_state")}</p>
+      )}
+
+      {query.data && query.data.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(buildBlogIndexJsonLd(query.data)),
+          }}
+          data-testid="blog-index-jsonld"
+        />
       )}
 
       {query.data && query.data.length > 0 && (
