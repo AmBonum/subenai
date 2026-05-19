@@ -72,6 +72,23 @@ describe("AH-9.9 robots.txt", () => {
     expect(txt).toMatch(/^Disallow:\s*\/t\/\s*$/m);
   });
 
+  // E32 — additional crawl-budget guards
+  it("E32 — disallows /r/ (unique-per-user share URLs)", () => {
+    expect(txt).toMatch(/^Disallow:\s*\/r\/\s*$/m);
+  });
+
+  it("E32 — disallows /login (auth UI, not indexable)", () => {
+    expect(txt).toMatch(/^Disallow:\s*\/login\s*$/m);
+  });
+
+  it("E32 — disallows /auth/ (auth callbacks)", () => {
+    expect(txt).toMatch(/^Disallow:\s*\/auth\/\s*$/m);
+  });
+
+  it("E32 — disallows /test/zostav/ (per-set composer URLs)", () => {
+    expect(txt).toMatch(/^Disallow:\s*\/test\/zostav\/\s*$/m);
+  });
+
   it("retains the sitemap pointer", () => {
     expect(txt).toMatch(/^Sitemap:\s*https:\/\/subenai\.sk\/sitemap\.xml\s*$/m);
   });
