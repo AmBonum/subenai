@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
+import { BlogSearchEmptyState } from "@/components/blog/BlogSearchEmptyState";
 import { BlogSearchInput } from "@/components/blog/BlogSearchInput";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { tFor } from "@/i18n/blog";
@@ -98,6 +99,34 @@ function BlogIndexPage() {
       trackBlogFilterChange({ category_slug: next });
     }
   };
+
+  // Empty-state helpers — when no clusters match the current filters,
+  // we surface a suggested-categories chip row + a fallback pillars
+  // grid so the reader has a clear next step.
+  const handleClearFilters = (): void => {
+    setActiveCategory(null);
+    setSearchQuery("");
+    if (lastFilterRef.current !== null) {
+      lastFilterRef.current = null;
+      trackBlogFilterChange({ category_slug: null });
+    }
+  };
+  const suggestedCategories = useMemo(() => {
+    // Top 5 by post-count, excluding the currently-selected category.
+    return categoryOptions.filter((opt) => opt.slug !== activeCategory).slice(0, 5);
+  }, [categoryOptions, activeCategory]);
+  const fallbackPillars = useMemo(() => pillars.slice(0, 3), [pillars]);
+  // What kind of empty did we hit? Drives the message copy.
+  const emptyKind: "search" | "category" | "search_in_category" | null = (() => {
+    if (filteredClusters.length > 0) return null;
+    if (normalizedSearch.length > 1 && activeCategory) return "search_in_category";
+    if (normalizedSearch.length > 1) return "search";
+    if (activeCategory) return "category";
+    return null;
+  })();
+  const activeCategoryName = activeCategory
+    ? (categoryOptions.find((c) => c.slug === activeCategory)?.name ?? activeCategory)
+    : undefined;
 
   return (
     <main className="container mx-auto px-4 py-12" data-testid="blog-index-root">
@@ -217,13 +246,18 @@ function BlogIndexPage() {
               totalCount={clusters.length}
             />
           </div>
-          {filteredClusters.length === 0 ? (
-            <p
-              className="mt-12 text-center text-muted-foreground"
-              data-testid="blog-index-clusters-empty"
-            >
-              v tejto kategórii zatiaľ nie sú články.
-            </p>
+          {emptyKind !== null ? (
+            <BlogSearchEmptyState
+              query={
+                emptyKind === "search" || emptyKind === "search_in_category"
+                  ? searchQuery.trim()
+                  : undefined
+              }
+              categoryName={emptyKind === "category" ? activeCategoryName : undefined}
+              suggestedCategories={suggestedCategories}
+              fallbackPillars={fallbackPillars}
+              onClear={handleClearFilters}
+            />
           ) : (
             <ul
               className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3"

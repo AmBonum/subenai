@@ -200,14 +200,14 @@ describe("/blog index — negative paths", () => {
     // phishing-a-emaily), then clearing via search of an impossible
     // string instead — that triggers the same empty path.
     fireEvent.change(screen.getByTestId("blog-search-input"), { target: { value: "qzqzqz" } });
-    expect(screen.getByTestId("blog-index-clusters-empty")).toBeInTheDocument();
+    expect(screen.getByTestId("blog-search-empty")).toBeInTheDocument();
   });
 
   it("TC-14: search yielding no matches shows the cluster-empty message", () => {
     mockList([CLUSTER_PHISHING_1, CLUSTER_SMS_1]);
     render(<BlogIndexPage />);
     fireEvent.change(screen.getByTestId("blog-search-input"), { target: { value: "qzqzqz" } });
-    expect(screen.getByTestId("blog-index-clusters-empty")).toBeInTheDocument();
+    expect(screen.getByTestId("blog-search-empty")).toBeInTheDocument();
   });
 
   it("TC-15: 1-char search is a no-op (matches everything)", () => {
@@ -215,5 +215,43 @@ describe("/blog index — negative paths", () => {
     render(<BlogIndexPage />);
     fireEvent.change(screen.getByTestId("blog-search-input"), { target: { value: "p" } });
     expect(screen.getByTestId("blog-index-list").querySelectorAll("li").length).toBe(2);
+  });
+
+  it("TC-16: empty-state echoes the query verbatim", () => {
+    mockList([CLUSTER_PHISHING_1, CLUSTER_SMS_1]);
+    render(<BlogIndexPage />);
+    fireEvent.change(screen.getByTestId("blog-search-input"), { target: { value: "qzqzqz" } });
+    expect(screen.getByTestId("blog-search-empty-query")).toHaveTextContent("„qzqzqz");
+  });
+
+  it("TC-17: empty-state surfaces suggested categories with post counts", () => {
+    mockList([CLUSTER_PHISHING_1, CLUSTER_PHISHING_2, CLUSTER_SMS_1]);
+    render(<BlogIndexPage />);
+    fireEvent.change(screen.getByTestId("blog-search-input"), { target: { value: "qzqzqz" } });
+    expect(
+      screen.getByTestId("blog-search-empty-suggestion-phishing-a-emaily"),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("blog-search-empty-suggestion-sms-a-telefon")).toBeInTheDocument();
+  });
+
+  it("TC-18: empty-state shows fallback pillar cards when pillars exist", () => {
+    mockList([PILLAR_PHISHING, CLUSTER_SMS_1]);
+    render(<BlogIndexPage />);
+    fireEvent.change(screen.getByTestId("blog-search-input"), { target: { value: "qzqzqz" } });
+    expect(
+      screen.getByTestId(`blog-search-empty-pillar-${PILLAR_PHISHING.slug}`),
+    ).toBeInTheDocument();
+  });
+
+  it("TC-19: 'vymazať hľadanie' clears both the search input AND the category chip", () => {
+    mockList([CLUSTER_PHISHING_1, CLUSTER_SMS_1]);
+    render(<BlogIndexPage />);
+    fireEvent.click(screen.getByTestId("blog-category-filter-phishing-a-emaily"));
+    fireEvent.change(screen.getByTestId("blog-search-input"), { target: { value: "qzqzqz" } });
+    expect(screen.getByTestId("blog-search-empty")).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("blog-search-empty-clear"));
+    expect(screen.getByTestId("blog-index-list").querySelectorAll("li").length).toBe(2);
+    expect((screen.getByTestId("blog-search-input") as HTMLInputElement).value).toBe("");
+    expect(screen.getByTestId("blog-category-filter-all")).toHaveAttribute("aria-pressed", "true");
   });
 });
