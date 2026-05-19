@@ -1,0 +1,212 @@
+---
+slug: internet-safety-pre-studentov
+title: "internet safety pre študentov — od školského konta po discord, steam a fake brigády"
+subtitle: "čo ti chcú vziať na strednej, na vysokej a v internáte — a ako sa nedať"
+excerpt: "študenti sú top cieľ. školské konto na microsoft 365 alebo google workspace, herné konto, discord token, fake brigáda, sextortion. tu je čo ti reálne hrozí v 2026 a ako sa proti tomu obrniť za jeden večer."
+category_slug: studenti
+author_slug: subenai-editorial
+primary_keyword: internet bezpecnost studenti
+search_intent: informational
+reading_minutes: 13
+hero_image_url: null
+og_image_url: null
+seo_title: "internet safety pre študentov — školské konto, discord, steam, brigády | subenai"
+seo_description: "kompletný sprievodca po scamoch, ktoré útočia na slovenských stredoškolákov a vysokoškolákov v 2026 — školské konto, discord, steam, sextortion, fake brigády."
+canonical_url: null
+pillar: true
+sources:
+  - label: "sk-cert: aktuálne varovania pred phishingovými kampaňami"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "polícia sr: sextortion a podvody na internete — ako reagovať"
+    url: "https://www.minv.sk/?podvodne_emaily="
+    publisher: "Polícia SR"
+    accessed_at: "2026-05-19"
+  - label: "ncmec takeitdown — služba na zmazanie nudie zo siete"
+    url: "https://takeitdown.ncmec.org/"
+    publisher: "NCMEC"
+    accessed_at: "2026-05-19"
+  - label: "nbs: upozornenie pred investičnými podvodmi a falošnými poradcami"
+    url: "https://nbs.sk/aktuality/upozornenie-na-novy-typ-podvodu-zneuzivajuci-znacku-nbs/"
+    publisher: "NBS"
+    accessed_at: "2026-05-19"
+  - label: "steam support: ochrana konta pred podvodmi pri obchodovaní"
+    url: "https://help.steampowered.com/en/faqs/view/2B0C-1FA5-1FFA-B413"
+    publisher: "Valve / Steam"
+    accessed_at: "2026-05-19"
+  - label: "discord safety: ako rozpoznať a hlásiť podvody"
+    url: "https://discord.com/safety/scams-and-fraud"
+    publisher: "Discord"
+    accessed_at: "2026-05-19"
+---
+
+ak si stredoškolák, maturant alebo vysokoškolák, gratulujem — si v jednej z najlukratívnejších cieľových skupín pre online podvodníkov. máš digitálny identitu pripojenú na tridsať služieb, máš platobnú kartu, máš tlak na čas (skúšky, brigáda, internát) a máš čerstvý prístup do dospelosti, v ktorej ti zatiaľ nikto nepovedal, ako sa kryť. toto je tvoj rýchlokurz. žiadne moralizovanie typu *„buď opatrný na internete"*. konkrétne vektory útokov, ktoré ti chodia denne — školské konto, herné účty, discord, fake brigády, sextortion — a presne to, čo s nimi robiť.
+
+začneme tým, čo má pre podvodníka najvyššiu cenu: tvoje **školské konto**.
+
+## tvoje školské konto je zlatá baňa (pre niekoho iného)
+
+univerzitné a stredoškolské konto na microsoft 365 alebo google workspace má pre útočníka neuveriteľnú hodnotu. nie preto, že by ťa chcel špehovať. preto, že:
+
+- má `.sk` alebo `.edu` doménu — školské emaily prechádzajú spamovými filtrami a antivírusovými detektormi inde, lebo systém ich považuje za dôveryhodné. útočník z tvojho konta rozosiela ďalší phishing tisícom ľudí.
+- často je naviazané na onedrive / google drive — útočník stiahne všetky tvoje práce, fotky a osobné dokumenty.
+- v mnohých prípadoch má **bezplatný balík office, github student pack, jetbrains licencie**. všetko sa dá ďalej predať.
+- prístup do **AIS / MAIS / EduPage** alebo univerzitnej knižnice — útočník zmení tvoje známky, ukradne ti záverečnú prácu, alebo cez teba útočí na učiteľov.
+
+konkrétne ako to vyzerá:
+
+**vzor 1 — fake login portál.** dostaneš email *„tvoje konto bude deaktivované, ak sa neprihlásiš do 24 hodín"*. odkaz vedie na stránku, ktorá vyzerá presne ako microsoft 365 login alebo univerzitné prihlásenie. zadáš email, heslo, dokonca aj 2fa kód — útočník to v reálnom čase prepošle na pravú stránku a získa session. ty si myslíš, že si sa prihlásil, on už spravuje tvoje konto.
+
+**vzor 2 — falošný zdieľaný dokument.** kolega z krúžku ti zdieľa onedrive súbor menom *„zápisky z prednášky.pdf"*. klikneš, otvorí sa fake microsoft login. zadáš heslo. kolega bol kompromitovaný pred týždňom, teraz si na rade ty a rovnaký dokument pôjde z tvojho konta ďalej.
+
+**vzor 3 — „tvoja známka z písomky"**. cielený email *„otvor si výsledok testu z [predmet]"*. funguje na akademický stres — klikneš skôr, ako rozmyslíš. [sk-cert opakovane upozorňuje, že phishingové kampane proti vzdelávacím inštitúciám u nás patria medzi najaktívnejšie](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [1].
+
+**čo s tým prakticky:**
+
+1. **zapni si 2fa cez authenticator aplikáciu**, nie cez sms. microsoft authenticator, google authenticator alebo authy. sms 2fa má známu zraniteľnosť (sim swap) a útočník vie kód odchytiť real-time cez fake portál.
+2. **passkey, ak ho škola podporuje.** google workspace aj microsoft 365 už passkeys vedia. nahradí heslo úplne a kryptograficky sa nedá phishovať. detail v širšom kontexte [digitálna hygiena pre študentov](/blog/digitalna-bezpecnost-kompletny-navod).
+3. **správca hesiel.** 1password, bitwarden, proton pass. odmietne ti vyplniť heslo na falošnej doméne — to je tvoj prvý signál, že stránka je fake. študentom väčšina poskytovateľov dáva zľavu alebo plný plán zadarmo.
+4. **separuj školský a osobný email.** nikdy nepoužívaj školské konto na registráciu na facebook, instagram alebo discord. keď ti raz škola zatvorí konto, prídeš o všetko. a ak ho niekto kompromituje, neútočí ti na osobný život.
+
+## discord — tu sa odohráva veľká časť tvojho dňa, tu ťa aj okradnú
+
+discord je pre väčšinu študentov primárny chat. krúžky, hráčske komunity, study groups. presne preto je to top scam playground.
+
+**token theft.** najsmrteľnejší trik na discorde. tvoj **discord token** je v podstate session kľúč — kto ho má, je prihlásený za teba bez ohľadu na heslo a 2fa. útočník ti pošle správu *„vyskúšaj túto novú appku pre nitro grátis"* alebo *„hraj túto webovú hru"*. appka alebo škript zoberie tvoj token a od tej chvíle útočník píše z tvojho účtu kamarátom, „požičiavaj si peniaze", rozosiela phishing odkazy. **nikdy nepoúšťaj nedôveryhodný kód, ktorý si ti niekto pošle „cez devtools v prehliadači"** — toto je klasické zacielenie na študentov.
+
+**impostor friend / fake support.** scammer si urobí účet identický s tvojím kamarátom (rovnaký nickname, rovnaký avatar, len trochu iný discriminator) a napíše ti *„zlatá, hacknuli mi konto, pošli mi 20 € cez revolut, vrátim hneď"*. **vždy si volaj druhým kanálom** — instagram, sms, voľne — predtým než pošleš čokoľvek. variantom je *„discord support"* účet, ktorý ti píše, že tvoje konto bude zmazané. discord support **nikdy nepíše prvý cez DM**. [discord má vlastnú stránku o tom, ako rozpoznať podvody a hlásiť ich](https://discord.com/safety/scams-and-fraud) [6].
+
+**nitro phishing.** *„dostal si darček — discord nitro na 3 mesiace"* odkaz, ktorý vedie na fake discord login. zadáš heslo + 2fa, scammer to prepošle v reálnom čase. tvoje konto sa stáva spamovým botom.
+
+**investičné DM-ká do tvojich serverov.** *„hej, mám systém ktorý zarobí 200 € denne na krypte, napíš mi"*. toto sa preliala vlna nielen na discord, ale aj na telegram a whatsapp — vidíš ju aj v širšej téme [sociálne siete a podvody](/blog/podvody-na-socialnych-sietach). [NBS opakovane varuje pred takýmito investičnými „poradcami", ktorí v skutočnosti pumpujú scam-coiny alebo rovno tečú do pyramídy](https://nbs.sk/aktuality/upozornenie-na-novy-typ-podvodu-zneuzivajuci-znacku-nbs/) [4].
+
+**discord checklist — 5 minút:**
+
+- v settings → privacy zapni *„keep me safe"* (filter explicit DMs).
+- vypni *„allow direct messages from server members"* pre verejné servery.
+- 2fa cez authenticator.
+- nikdy neklikneš odkaz od neznámeho, nikdy nestiahneš script ktorý si nečítal.
+- ak ti písal „kamarát" zvláštne — over druhým kanálom predtým než reaguješ.
+
+## herné účty — steam, riot, epic, battle.net
+
+herný účet má často reálnu hodnotu v stovkách až tisíckach eur — cs2 skiny, dota 2 inventár, fortnite skiny, valorant, league of legends. preto sa oplatí kradnúť ho.
+
+**steam — najčastejší vzor v 2026.** scammer ti napíše *„hej, môžeš mi pomôcť, hlasujem v turnaji a treba podporiť tím"* alebo *„kúpim ti tento skin za 100 €"*. odkaz vedie na **fake steam login** — pixel-perfect kópia steamcommunity.com, ale doména je `steamcornmunity.com` alebo `steamcommunlty.com`. zadáš heslo + steam guard kód, scammer si nahodí tvoj účet do svojej desktop appky a od tej chvíle ti vie odsávať skiny.
+
+variant: **fake middleman v trade.** *„nedôverujem ti, použijeme overeného middleman-a"* a pošle ti profil podvodníka, ktorý sa tvári ako moderátor. middleman si zoberie veci od oboch a zmizne. **steam nemá oficiálnych middleman-ov pre item trade.** [steam support má vlastný popis najčastejších scamov a jasne potvrdzuje, že nikdy nepýta heslo, kód z autentifikátora alebo neoperuje cez tretiu osobu](https://help.steampowered.com/en/faqs/view/2B0C-1FA5-1FFA-B413) [5].
+
+**riot / league / valorant.** klasický vzor *„dostal si rare skin grátis"* alebo *„nahláska riot supportu, prihlás sa pre overenie"*. fake login berie účet aj prepojený email. ak si tam mal uloženú kartu na rp/vp, scammer ich vyčerpá.
+
+**epic / fortnite.** *„free v-bucks generator"* — stránka, ktorá ti pred prístupom k „generátoru" pýta prihlásenie do epic. epic účet kradnú aj kvôli prepojeniu na xbox / playstation, kde majú prístup k uloženej karte a digital wallet.
+
+**ochrana herných účtov za 10 minút:**
+
+1. **steam guard / mobile authenticator** všade. nie len cez email — cez aplikáciu. steam mobile autentifikátor je v steam mobile appke.
+2. **unikátne heslo** pre každú hernú platformu. nikdy nie rovnaké ako tvoj email alebo discord.
+3. **prepojené emaily majú vlastné 2fa.** ak ti scammer dostane email, dostane všetky herné účty cez heslo-reset.
+4. **never give your steam guard code to anyone**, ani kamarátovi, ani „adminovi". steam guard kód nie je nikdy potrebný na to, aby ti niekto niečo poslal — len na to, aby si sa **ty** prihlásil.
+5. ak obchoduješ skiny, používaj len **steam community market** alebo **bot-overené stránky s public escrow**. žiadni „kamaráti z discordu" za polovicu market ceny.
+
+## crypto pump, nft, „influencer signal" — krátka cesta k strate brigádových peňazí
+
+pretože si mladý, máš odvahu na riziko a sleduješ tiktok / instagram, dostal si pravdepodobne aj jednu z týchto vĺn:
+
+- **„tento token explodne, kúp teraz"** — pump-and-dump. influencer (alebo coordinated group cez telegram) si nakúpi nový token za centy, urobí pump-a-dump zo svojho publika, predá keď cena vyletí, a tebe ostane bag, ktorý sa neda predať za žiadnu cenu.
+- **fake celebrity giveaway** — *„elon musk daruje 1000 ETH, pošli 0.1 ETH a dostaneš 1 ETH späť"*. neprestáva to fungovať, lebo neustále vznikajú nové publiká, ktoré to nikdy nevideli.
+- **„AI bot na obchodovanie" investičné skupiny** — sme pri opakujúcej sa schéme: dostaneš výnosy prvé dva týždne (papierové), potom príde *„posledný veľký vklad pred IPO"* a peniaze sú preč.
+
+**ako filtrovať:** ak niekto na sociálnych sieťach garantuje výnos, klame. **regulovaný finančný poradca neexistuje v dm-kách na instagrame.** NBS má register subjektov, ktoré u nás oprávnene poskytujú investičné služby — ak ten človek tam nie je, je to scam alebo polo-legálne šedo. detailne preberáme krypto vektor v širšom obraze v [krypto podvody 2026 — pump-and-dump, rug pull, fake ICO](/blog/krypto-podvody-2026-pump-and-dump). psychológia, prečo na tieto schémy naletia aj inteligentní ľudia, je dobre rozobratá v [psychológia internetových podvodov](/blog/psychologia-internetovych-podvodov).
+
+## NIL, sponzorstvá, „influencer brief" — keď ťa lovia ako talent
+
+ak máš na instagrame, tiktoku alebo youtube čokoľvek nad 1 000 sledovateľov, dostal si pravdepodobne správu typu:
+
+> *„ahoj, sme značka [random názov], pozrela som si tvoj content, je super. ponúkame ti $500 za 1 instagram post + 3 stories. pošli mi tvoj paypal a poštovú adresu, posielame ti produkt."*
+
+variácie:
+
+- **paypal scam** — pošlú „omylom" viac peňazí, požiadajú o vrátenie rozdielu. ich pôvodná platba bude reversed cez chargeback, tvoja vrátka už ide preč.
+- **fake brand outreach so škodlivým PDF.** otvoríš „brief" v pdf alebo v zip-e, infikuješ si mac/pc keyloggerom alebo info-stealerom (predmin atomic stealer, lumma). potom prichádzaš o heslá, kryptopeňaženky, discord token, čokoľvek.
+- **„NIL deal" pre športovcov** — ak hráš za reprezentáciu alebo univerzitu, dostávaš ponuky typu *„dostávame ti $1000 mesačne za nosenie nášho dresu v storkách"*. žiadajú prístup k tvojmu instagramu cez „business manager", odkiaľ stiahnu konto a začnú odtiaľ tlačiť scam reklamy.
+
+**filtre, ktoré ťa kryjú:**
+
+- legitímna značka má vlastnú firemnú doménu. *„brandcollab.outreach@gmail.com"* je scam.
+- nikdy neotváraj brief v zipe alebo v exe. ak je to pdf, otvor ho **v google drive preview**, nie v lokálnom acrobat-e. preview ho renderuje bezpečne.
+- žiadny brief od seriózneho brand-u nepýta tvoje heslo, nepýta prístup k tvojmu instagram business manageru a nepýta peniaze vopred.
+- platba ide cez **revolut, wise, bank transfer alebo platforma typu grin / aspire / passionfroot**. nikdy nie cez gift cards, kryptomeny ani „western union".
+
+## sextortion — najnepríjemnejšia kategória a najjasnejšia odpoveď
+
+toto je tvoj najtvrdší scam scenár a zároveň ten, pri ktorom najmenej váhaj. sextortion = **niekto má (alebo predstiera, že má) tvoje intímne fotky alebo video a pýta peniaze**, aby to nezverejnil. v 2026 sa to deje v troch hlavných variantoch:
+
+1. **reálne fotky, ktoré si poslal/a do dm-ky.** scammer si urobil fake profil baby/chalana, ktorý ti písal, presvedčil ťa poslať nudie, a po doručení ti pošle screenshot tvojho instagram profilu a všetkých tvojich kamarátov *„zaplať 300 € do 24 hodín, alebo to pošlem všetkým"*.
+2. **deepfake nudie.** scammer zoberie tvoju normálnu fotku z instagramu a cez AI nástroj vyrobí fake nudie. nemusíš nič posielať — útočí len obrázkom, ktorý vyzerá ako ty.
+3. **„hackol som tvoju webkameru"** — masový spam email v štýle *„nahral som ťa pri tom, ako pozeráš porno, zaplať 500 USD v bitcoine"*. v drvivej väčšine prípadov nemá nič a len strieľa do tmy.
+
+**hlavné pravidlá. zapamätaj si presne tieto, lebo v panike na nič iné nemyslíš:**
+
+1. **neplať. nikdy.** ani 50 €, ani 5 €. ak zaplatíš, scammer vie, že obeť je platobne reagujúca, a zvýši požiadavku. nemá to záchranu — drvivá väčšina obetí, ktorá zaplatí, dostane druhú výzvu o dva dni.
+2. **neodpovedaj.** každá odpoveď, aj „nepošli to prosím", je signál, že si naľakaná/ý a zaplatíš. ticho je najlepšia obrana.
+3. **screenshot všetkého.** profil scammera, jeho správy, banking účet / krypto adresu, dátumy.
+4. **zablokuj scammera na všetkých platformách.**
+5. **ak si stredoškolák alebo mladší a fotky existujú reálne**, použi službu [**NCMEC TakeItDown**](https://takeitdown.ncmec.org/) [3] — bezplatná medzinárodná služba, ktorá tvojej fotke vytvorí kryptografický hash a všetky veľké platformy (instagram, facebook, tiktok, snapchat, onlyfans, pornhub, x) ju automaticky zablokujú a zmažú, ak sa kdekoľvek objaví. funguje aj s deepfake materiálom.
+6. **hláska polícii.** áno, viem, je to nepríjemné. ale **polícia sa zaoberá týmto denne** a postup je rutinný — neodsudzuje ťa, nesvieti ti fotky pred rodičmi, otvorí prípad, dokumentuje, dáva príkazy platformám na zmazanie. [polícia sr má samostatnú stránku pre podvody na internete a sextortion s konkrétnymi krokmi a kontaktmi](https://www.minv.sk/?podvodne_emaily=) [2].
+7. **povedz dospelému, ktorému dôveruješ** — rodič, učiteľ, výchovný poradca, linka detskej istoty 116 111 (zadarmo, anonymné), ipčko.sk. **nie si v tom sám/sama** a **hanba je na scammerovi, nie na tebe.**
+
+ak je obeť tvoj kamarát, ten istý postup — bez moralizovania, len mu pomôž urobiť kroky 3, 4, 5, 6. emocionálne stojí pri sebe.
+
+## fake brigády — od „balenia obálok doma" po money mule
+
+brigáda popri škole je tlak, ktorý phisheri milujú. typické vzory:
+
+**„balíme obálky / triedime maily / data entry — 800 € týždenne".** sponzorovaná reklama na facebooku alebo instagrame, alebo email z bazoš-u. po prihlásení ťa žiadajú o platbu „administračného poplatku" 25 € alebo o tvoje bankové údaje „na pripravenie výplaty". nikdy neexistuje žiadna práca.
+
+**re-shipping scam.** dostaneš „prácu" — „posielame ti balíky, ty ich prepošleš ďalej na adresu v zahraničí, za každý dostaneš 30 €". balíky obsahujú tovar kúpený s ukradnutou kartou alebo prepratím peniaze za tovar. **ty si v reťazci ten, ktorý zostane v polícajnej databáze ako prepravca kradnutého tovaru.**
+
+**money mule.** *„prepošli nám 2000 € cez svoj účet, nechaj si 200 €, je to legálne, len účtovne to potrebujeme cez slovenský účet"*. **toto je pranie špinavých peňazí.** keď to banka alebo polícia odhalí, **trestnoprávne zodpovedáš ty**, lebo si ten, ktorého meno je na účte. trest až 5 rokov nepodmienečne.
+
+**fake interný stage / internship.** ozve sa „HR manažér" z renomovanej firmy (apple, google, microsoft), pozve ťa na video pohovor cez teams alebo zoom (ktorý je v skutočnosti len obrazovka so zip-súborom na stiahnutie). „onboarding software" ti nainfikuje keylogger.
+
+**checklist pred prijatím brigády:**
+
+- googluj firmu — má webstránku **staršiu ako rok**? má adresu v sr? má registrované IČO v ORSR? ak nie, scam.
+- nikdy neposlielaj **peniaze vopred**. ani 1 €. žiadna legálna brigáda nepýta admin fee.
+- nikdy nedávaj **prístup k tvojmu bankovému účtu** — len IBAN na výplatu, nič iné. žiadne heslá, žiadny mobile banking.
+- **odmietni „prepošli si na náš účet"** v akejkoľvek forme. to je money mule a smrdí to z míle.
+
+## tri pravidlá, ktoré drž za každú cenu
+
+vo všetkom, čo si práve čítal, sa opakujú tri univerzálie. ak si zapamätáš len ich, kryjú ti viac ako 80 % útokov:
+
+1. **over druhým kanálom.** kamarát ti pýta peniaze cez discord? volaj mu telefonicky. „banka" ti písala SMS? otvor si vlastnú banku z bookmarku. „HR" ti písal z gmailu? volaj na firemnú centrálu cez číslo z ich oficiálnej stránky.
+2. **podozrivé správy nečítaj v emóciach.** scam je vyrobený, aby v tebe vyvolal paniku, hanbu, lakomstvo alebo pocit straty. **počkaj 10 minút.** vlož telefón do druhej izby. potom sa rozhodni. drvivá väčšina scamov stratí účinnosť, len čo ich uvidíš po 10 minútach.
+3. **má to vrstvy, ktoré chránia aj keď klikneš.** 2fa cez authenticator, správca hesiel, passkey, separátne emaily, monitoring účtov. opatrnosť nestačí — nikto nie je opatrný 16 hodín denne. detail v širšom kontexte [digitálna hygiena pre laikov](/blog/digitalna-bezpecnost-kompletny-navod), s konkrétnymi nastaveniami sociálnych sietí v [podvody na sociálnych sieťach](/blog/podvody-na-socialnych-sietach).
+
+## zhrnutie
+
+- školské konto má pre útočníka enormnú cenu — 2fa cez authenticator, passkey ak ide, oddel od osobného emailu.
+- discord token = session kľúč; nikdy nepoúšťaj cudzí kód, nereaguj na *„kamarát v núdzi"* bez overenia druhým kanálom.
+- herné účty (steam, riot, epic) chráň autentifikátorom v aplikácii a unikátnymi heslami; steam guard kód nikdy nehovor inému človeku.
+- crypto a NFT pump-y na tiktoku a v dm-kách = scam. seriózny poradca nemá kanál v telegrame.
+- NIL / sponsorstvá: legit značka má vlastnú doménu, nikdy nepýta heslo, nikdy nepýta peniaze vopred.
+- sextortion: **neplať, neodpovedaj, screenshot, blokuj, takeitdown, polícia, dospelý, ktorému dôveruješ.** v tomto poradí.
+- brigády: nikdy admin fee, nikdy prístup k účtu, nikdy „prepošli na náš účet" — to je money mule.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [sociálne siete a podvody — komplet](/blog/podvody-na-socialnych-sietach)
+- [digitálna hygiena pre študentov](/blog/digitalna-bezpecnost-kompletny-navod)
+- [psychológia podvodov — prečo naletíme aj múdri](/blog/psychologia-internetovych-podvodov)
+- [internetová bezpečnosť pre rodičov, deti a seniorov](/blog/bezpecnost-pre-rodicov-deti-seniorov)
+- [krypto podvody 2026 — pump-and-dump, rug pull, fake ICO](/blog/krypto-podvody-2026-pump-and-dump)
+- [kyberšikana — ako reagovať a kam volať](/blog/kyberšikana-co-robit)
+- [internet IQ test — aký je tvoj skutočný digitálny rozum](/blog/kviz-iq-internet-bezpecnost)
+- [otestuj sa na phishingu za 3 minúty](/blog/kviz-rozpoznas-phishingovy-email)
+- [internet IQ test pre firmy a zamestnancov](/blog/internet-iq-test-pre-firmy-zamestnancov)
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
