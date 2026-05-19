@@ -43,7 +43,7 @@ export interface BlogPostDetail extends BlogPostListItem {
   sources: BlogPostSource[];
 }
 
-function parseSources(raw: unknown): BlogPostSource[] {
+export function parseSources(raw: unknown): BlogPostSource[] {
   if (!Array.isArray(raw)) return [];
   return raw
     .filter(
