@@ -12,9 +12,21 @@
 // AH-15.6 introduced). Instant re-render on locale switch is handled by
 // remounting the tree under LocaleProvider via `key={locale}` — see
 // `locale-context.tsx`.
+//
+// Lazy locales: sk is eager (always bundled — default + fallback). en + cs
+// are dynamic-imported on first switch. While a non-sk locale's bundle is
+// loading, the resolver returns the sk value (the existing fallback path),
+// which is the same UX as a missing key — acceptable for the brief flash.
 import { getCurrentLocale, type Locale } from "./locale-context";
 
 type Json = string | { [k: string]: Json };
+
+type LazyLoaders = Partial<Record<Exclude<Locale, "sk">, () => Promise<Json>>>;
+
+// Registry of every namespace's preload functions. The locale-context calls
+// `preloadLocale(next)` before flipping state, which fans out across every
+// registered namespace in parallel and resolves once they're all warm.
+const registry = new Set<(locale: Exclude<Locale, "sk">) => Promise<void>>();
 
 function resolve(node: Json | undefined, path: string): string | null {
   if (node === undefined) return null;
@@ -43,14 +55,57 @@ function pickSection(root: Json, section: string): Json {
   return root;
 }
 
-export function createResolver(bundles: Record<Locale, Json>) {
-  return function tFor(section: string) {
+export function createResolver(opts: { sk: Json; loaders: LazyLoaders }) {
+  const { sk, loaders } = opts;
+  // Per-namespace cache of loaded non-sk bundles. Sticky for the page lifetime.
+  const loaded: Partial<Record<Exclude<Locale, "sk">, Json>> = {};
+  // Per-namespace in-flight promises so concurrent preload calls dedupe.
+  const inflight: Partial<Record<Exclude<Locale, "sk">, Promise<void>>> = {};
+
+  function preload(locale: Exclude<Locale, "sk">): Promise<void> {
+    if (loaded[locale]) return Promise.resolve();
+    const existing = inflight[locale];
+    if (existing) return existing;
+    const loader = loaders[locale];
+    if (!loader) return Promise.resolve();
+    const p = loader().then((json) => {
+      loaded[locale] = json;
+      delete inflight[locale];
+    });
+    inflight[locale] = p;
+    return p;
+  }
+
+  registry.add(preload);
+
+  function tFor(section: string) {
     return (key: string, vars?: Record<string, string | number>) => {
       const locale = getCurrentLocale();
-      const localeSection = pickSection(bundles[locale], section);
-      const skSection = pickSection(bundles.sk, section);
-      const value = resolve(localeSection, key) ?? resolve(skSection, key) ?? key;
+      const skSection = pickSection(sk, section);
+      if (locale !== "sk") {
+        // Kick off the load for next render. Returns sk fallback this tick.
+        const bundle = loaded[locale];
+        if (!bundle) {
+          void preload(locale);
+        } else {
+          const localeSection = pickSection(bundle, section);
+          const value = resolve(localeSection, key) ?? resolve(skSection, key) ?? key;
+          return interpolate(value, vars);
+        }
+      }
+      const value = resolve(skSection, key) ?? key;
       return interpolate(value, vars);
     };
-  };
+  }
+
+  return tFor;
+}
+
+// Fan-out preload across every namespace. Called by LocaleProvider before
+// flipping state on switch. Resolves once every registered namespace has
+// loaded the requested locale (or has no loader for it, in which case the
+// resolver gracefully falls back to sk for that namespace).
+export async function preloadLocale(locale: Locale): Promise<void> {
+  if (locale === "sk") return;
+  await Promise.all(Array.from(registry, (fn) => fn(locale)));
 }

@@ -6,6 +6,14 @@
 // mirrors the context state for non-React callers (the `tFor()` resolver
 // imports `getCurrentLocale()` directly because it isn't a React hook).
 //
+// AH-perf — sk is eager; en + cs bundles are dynamic-imported on first
+// switch. `setLocale` awaits the preload across every namespace before
+// flipping state so the remount paints with translated copy. On mount
+// hydration, if the persisted locale is non-sk, we kick the preload off
+// in parallel with setting state; the first paint may briefly show the
+// sk fallback (acceptable — same behaviour as a missing key) and the
+// next render swaps in the translated copy once the bundles resolve.
+//
 // Co-located component + hook + constants in one file is intentional —
 // splitting just to please Fast Refresh would obscure the unit of meaning.
 /* eslint-disable react-refresh/only-export-components */
@@ -53,26 +61,66 @@ function readInitialLocale(): Locale {
   return DEFAULT_LOCALE;
 }
 
+// Imported lazily inside callbacks to avoid a circular module init order
+// (resolver → locale-context → resolver). The import is cheap once the
+// module graph is warm.
+async function preload(next: Locale): Promise<void> {
+  if (next === "sk") return;
+  const mod = await import("./_create-resolver");
+  await mod.preloadLocale(next);
+}
+
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
 
   useEffect(() => {
     const next = readInitialLocale();
-    setLocaleState(next);
     currentLocale = next;
+    if (next === "sk") {
+      setLocaleState(next);
+      return;
+    }
+    // Persisted non-sk locale: kick off preload, then commit state. The
+    // first paint already happened with DEFAULT_LOCALE in scope; once the
+    // promise resolves the state flip + Fragment-key remount paints the
+    // translated tree. This is one extra frame at worst.
+    let cancelled = false;
+    void preload(next).then(() => {
+      if (!cancelled) setLocaleState(next);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
-    currentLocale = next;
-    if (typeof window !== "undefined") {
-      try {
-        window.localStorage.setItem(STORAGE_KEY, next);
-      } catch {
-        // Ignore quota / disabled-storage errors.
+    if (next === "sk") {
+      setLocaleState(next);
+      currentLocale = next;
+      if (typeof window !== "undefined") {
+        try {
+          window.localStorage.setItem(STORAGE_KEY, next);
+        } catch {
+          // Ignore quota / disabled-storage errors.
+        }
+        window.dispatchEvent(new CustomEvent<Locale>(EVENT_NAME, { detail: next }));
       }
-      window.dispatchEvent(new CustomEvent<Locale>(EVENT_NAME, { detail: next }));
+      return;
     }
+    // Non-sk: await the preload before flipping state so the Fragment-key
+    // remount paints with translated copy on the first render after switch.
+    void preload(next).then(() => {
+      setLocaleState(next);
+      currentLocale = next;
+      if (typeof window !== "undefined") {
+        try {
+          window.localStorage.setItem(STORAGE_KEY, next);
+        } catch {
+          // Ignore quota / disabled-storage errors.
+        }
+        window.dispatchEvent(new CustomEvent<Locale>(EVENT_NAME, { detail: next }));
+      }
+    });
   }, []);
 
   // Force-remount the tree under the provider on locale change. The resolver

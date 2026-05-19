@@ -1,7 +1,7 @@
 // AH-15.1 — covers LocaleProvider hydration, persistence, and the
 // module-level mirror that non-React `tFor` callers depend on.
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import {
   useLocale,
   LocaleProvider,
@@ -50,18 +50,22 @@ describe("LocaleContext", () => {
     expect(getCurrentLocale()).toBe("sk");
   });
 
-  it("rehydrates the persisted locale from localStorage on mount", () => {
+  it("rehydrates the persisted locale from localStorage on mount", async () => {
     window.localStorage.setItem(STORAGE_KEY, "en");
     render(
       <LocaleProvider>
         <Probe />
       </LocaleProvider>,
     );
-    expect(screen.getByTestId("probe-locale").textContent).toBe("en");
+    // Non-sk hydration awaits the lazy bundle preload before committing
+    // state; expect-poll until the dynamic import resolves.
+    await waitFor(() => {
+      expect(screen.getByTestId("probe-locale").textContent).toBe("en");
+    });
     expect(getCurrentLocale()).toBe("en");
   });
 
-  it("setLocale persists to localStorage and dispatches a CustomEvent", () => {
+  it("setLocale persists to localStorage and dispatches a CustomEvent", async () => {
     const listener = vi.fn();
     window.addEventListener("subenai:locale-change", listener);
     render(
@@ -69,26 +73,31 @@ describe("LocaleContext", () => {
         <Probe />
       </LocaleProvider>,
     );
-    act(() => {
+    await act(async () => {
       screen.getByTestId("probe-set-cs").click();
     });
-    expect(screen.getByTestId("probe-locale").textContent).toBe("cs");
+    // Non-sk switch awaits the lazy bundle preload before flipping state.
+    await waitFor(() => {
+      expect(screen.getByTestId("probe-locale").textContent).toBe("cs");
+    });
     expect(window.localStorage.getItem(STORAGE_KEY)).toBe("cs");
     expect(listener).toHaveBeenCalledTimes(1);
     expect((listener.mock.calls[0][0] as CustomEvent).detail).toBe("cs");
     window.removeEventListener("subenai:locale-change", listener);
   });
 
-  it("getCurrentLocale tracks setLocale for non-hook callers", () => {
+  it("getCurrentLocale tracks setLocale for non-hook callers", async () => {
     render(
       <LocaleProvider>
         <Probe />
       </LocaleProvider>,
     );
-    act(() => {
+    await act(async () => {
       screen.getByTestId("probe-set-en").click();
     });
-    expect(getCurrentLocale()).toBe("en");
+    await waitFor(() => {
+      expect(getCurrentLocale()).toBe("en");
+    });
   });
 
   it("ignores invalid values in localStorage and falls back to sk", () => {

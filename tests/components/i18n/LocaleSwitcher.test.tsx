@@ -1,7 +1,7 @@
 // AH-15.1 — LocaleSwitcher UX: shows the current language label and routes
 // a click on an option through the LocaleContext setter.
 import { describe, it, expect, beforeEach } from "vitest";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
 import {
@@ -45,7 +45,10 @@ describe("LocaleSwitcher", () => {
     await act(async () => {
       await user.click(enOption);
     });
-    expect(screen.getByTestId("locale-switcher-current").textContent).toContain("English");
+    // Non-sk switch awaits lazy bundle preload before flipping state.
+    await waitFor(() => {
+      expect(screen.getByTestId("locale-switcher-current").textContent).toContain("English");
+    });
     expect(getCurrentLocale()).toBe("en");
   });
 });

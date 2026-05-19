@@ -3,8 +3,12 @@
 // dense, edited independently from product chrome, and keeping its JSON
 // files small makes review tractable.
 import sk from "./locales/sk/legal.json";
-import en from "./locales/en/legal.json";
-import cs from "./locales/cs/legal.json";
 import { createResolver } from "./_create-resolver";
 
-export const tFor = createResolver({ sk, en, cs });
+export const tFor = createResolver({
+  sk,
+  loaders: {
+    en: () => import("./locales/en/legal.json").then((m) => m.default),
+    cs: () => import("./locales/cs/legal.json").then((m) => m.default),
+  },
+});
