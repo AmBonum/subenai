@@ -131,8 +131,46 @@ beforeEach(() => {
   }
 });
 
+// Track every native timer scheduled during a test so afterEach can drain
+// them. Root cause: `input-otp`'s `ht(r)` helper schedules 3 setTimeouts
+// (0/10/50ms) on every slot render. The test completes faster than 50ms,
+// `cleanup()` unmounts the component, vitest's threads pool reuses the
+// worker for the next test file; mid-way through that file's render the
+// stale timer fires, dispatchSetState walks the unmounted fiber, hits
+// `resolveUpdatePriority` which references `window` — but the originating
+// file's jsdom is gone → `ReferenceError: window is not defined` thrown
+// from a setTimeout callback → uncaught, surfaces as random failures in
+// whichever file happens to be running (2026-05-19 flake; reproduced in
+// test-zostav timeouts + admin/security wrong-state + r-shareId fails).
+const _nativeSetTimeout = globalThis.setTimeout;
+const _nativeSetInterval = globalThis.setInterval;
+const trackedTimeouts = new Set<ReturnType<typeof setTimeout>>();
+const trackedIntervals = new Set<ReturnType<typeof setInterval>>();
+globalThis.setTimeout = ((handler: TimerHandler, timeout?: number, ...args: unknown[]) => {
+  const id = (_nativeSetTimeout as (...a: unknown[]) => ReturnType<typeof setTimeout>)(
+    handler as unknown,
+    timeout,
+    ...args,
+  );
+  trackedTimeouts.add(id);
+  return id;
+}) as typeof setTimeout;
+globalThis.setInterval = ((handler: TimerHandler, timeout?: number, ...args: unknown[]) => {
+  const id = (_nativeSetInterval as (...a: unknown[]) => ReturnType<typeof setInterval>)(
+    handler as unknown,
+    timeout,
+    ...args,
+  );
+  trackedIntervals.add(id);
+  return id;
+}) as typeof setInterval;
+
 afterEach(async () => {
   cleanup();
+  for (const id of trackedTimeouts) clearTimeout(id);
+  trackedTimeouts.clear();
+  for (const id of trackedIntervals) clearInterval(id);
+  trackedIntervals.clear();
   const { clearActiveSession } = await import("./utils/auth-session-mock");
   const { resetRpcStubs } = await import("./utils/rpc-mock");
   clearActiveSession();
