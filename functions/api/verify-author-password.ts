@@ -44,12 +44,23 @@ function jsonResponse(status: number, body: VerifyResponse, cookie?: string): Re
 }
 
 function buildCookie(setId: string, token: string, ttl: number): string {
-  // Path scopes the cookie to the dashboard route — it never goes back
-  // to the public test pages or any other endpoint by accident.
-  const path = `/test/zostava/${setId}`;
+  // Path MUST be "/" because the dashboard fetches `/api/results-data`,
+  // `/api/delete-edu-respondent`, and `/api/verify-author-password` (logout)
+  // from outside `/test/zostava/${setId}`. A narrow path causes the browser
+  // to never send the cookie on those API requests → 401 loop on the
+  // password gate.
+  //
+  // The cookie is set-scoped at the application layer via the JWT claims
+  // (`set_id` + `role: "author"`), checked on every API call. So the
+  // server-side set_id verification (already implemented) is the real
+  // tenant isolation, not the cookie path.
+  //
+  // setId is intentionally unused here — kept in the signature for symmetry
+  // with the JWT's set_id claim and to make logging at call sites easier.
+  void setId;
   return [
     `${EDU_AUTHOR_COOKIE_NAME}=${token}`,
-    `Path=${path}`,
+    `Path=/`,
     "HttpOnly",
     "Secure",
     "SameSite=Lax",
@@ -124,8 +135,13 @@ export async function onRequestDelete(ctx: RequestContext): Promise<Response> {
   if (typeof body.set_id !== "string") {
     return jsonResponse(400, { error: "invalid_shape" });
   }
-  const setId = body.set_id.trim();
-  const cookie = `${EDU_AUTHOR_COOKIE_NAME}=; Path=/test/zostava/${setId}; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+  // Logout clears the cookie. Path MUST match the path used at set time
+  // (Path=/, see buildCookie). A cookie can only be cleared by the same
+  // Path used to set it — narrow-path Clear-Cookie would NOT remove a
+  // root-scope cookie. The setId is kept in the request body for audit
+  // logging clarity, not for cookie scoping.
+  void body.set_id;
+  const cookie = `${EDU_AUTHOR_COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
   return jsonResponse(200, { ok: true }, cookie);
 }
 

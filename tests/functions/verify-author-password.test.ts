@@ -56,7 +56,12 @@ describe("POST /api/verify-author-password", () => {
     expect(setCookie).toContain("HttpOnly");
     expect(setCookie).toContain("Secure");
     expect(setCookie).toContain("SameSite=Lax");
-    expect(setCookie).toContain("Path=/test/zostava/set-1");
+    // Cookie path MUST be "/" so the dashboard's fetch("/api/results-data")
+    // (and other /api/* calls) carries the cookie. A narrow per-set path
+    // would silently break the auth loop — the dashboard never loads. The
+    // set_id is enforced server-side via JWT claims, not cookie scope.
+    expect(setCookie).toContain("Path=/");
+    expect(setCookie).not.toContain("Path=/test/zostava/");
     const token = setCookie.split(";")[0].split("=")[1];
     const verify = await verifyEduAuthorToken(token, env.JWT_SECRET);
     expect(verify.ok).toBe(true);
@@ -112,7 +117,7 @@ describe("POST /api/verify-author-password", () => {
 });
 
 describe("DELETE /api/verify-author-password (logout)", () => {
-  it("returns Set-Cookie with Max-Age=0 to clear the session", async () => {
+  it("returns Set-Cookie with Max-Age=0 + Path=/ to clear the session", async () => {
     const r = await onRequestDelete({
       request: buildRequest({ set_id: "set-1" }, undefined, "DELETE"),
       env,
@@ -121,13 +126,22 @@ describe("DELETE /api/verify-author-password (logout)", () => {
     const setCookie = r.headers.get("set-cookie") || "";
     expect(setCookie).toContain("subenai_edu_author=");
     expect(setCookie).toContain("Max-Age=0");
-    expect(setCookie).toContain("Path=/test/zostava/set-1");
+    // Clear-Cookie Path MUST match the set-time Path (also "/"). A mismatched
+    // Path would create a new path-scoped cookie instead of clearing the
+    // root-scope one — logout would silently leave the auth cookie live.
+    expect(setCookie).toContain("Path=/");
+    expect(setCookie).not.toContain("Path=/test/zostava/");
   });
 });
 
 describe("buildCookie helper", () => {
-  it("scopes Path to the set's URL prefix", () => {
+  it("uses Path=/ so cookie reaches /api/* endpoints called from the dashboard", () => {
+    // Regression sentinel: prior implementation used Path=/test/zostava/${setId}
+    // which caused the browser to refuse sending the cookie on the
+    // /api/results-data fetch, breaking the dashboard for every real user.
+    // Pinned 2026-05-20 from /schools how-it-works contract test (P0).
     const c = __test__.buildCookie("abc-123", "tok", 60);
-    expect(c).toContain("Path=/test/zostava/abc-123");
+    expect(c).toContain("Path=/");
+    expect(c).not.toContain("Path=/test/zostava/abc-123");
   });
 });

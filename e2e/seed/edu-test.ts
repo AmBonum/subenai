@@ -123,7 +123,20 @@ export async function seedEduTest(opts: SeedEduTestOptions): Promise<SeedEduTest
         base_score: r.score,
         total_penalty: 0,
         percentile: 50,
-        personality: "vigilant",
+        // Personality enum is constrained by DB (attempts_personality_known,
+        // migration 20260425173314). Pick by score band: high → ninja,
+        // low → clickbait_zombie, mid → cautious_but_vulnerable. The seed
+        // factory doesn't simulate true personality scoring — these are
+        // deterministic placeholders whose only purpose is to satisfy the
+        // CHECK constraint.
+        personality:
+          r.score >= 75
+            ? "internet_ninja"
+            : r.score >= 50
+              ? "cautious_but_vulnerable"
+              : r.score >= 25
+                ? "overconfident_victim"
+                : "clickbait_zombie",
         total_time_ms: 60000,
         breakdown: {},
         insights: [],
