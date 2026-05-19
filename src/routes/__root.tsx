@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Outlet, Link, createRootRoute, useMatches } from "@tanstack/react-router";
+import { HeadContent, Outlet, Link, createRootRoute, useMatches } from "@tanstack/react-router";
 
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ConsentPreferencesDialog } from "@/components/consent/ConsentPreferencesDialog";
@@ -47,6 +47,12 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <LocaleProvider>
+        {/* Renders the <title> + <meta> from every matched route's `head()`
+            into the document head. Without this, route-level head config
+            (noindex on /app + /admin + /auth/*, page titles on every nav)
+            is silently dropped — production gap discovered 2026-05-19
+            during Phase 4 auth E2E (TC-17 forgot-password). */}
+        <HeadContent />
         <GoogleAnalyticsManager />
         {!hideSiteHeader && <SiteHeader />}
         <Outlet />

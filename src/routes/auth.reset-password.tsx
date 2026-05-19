@@ -115,7 +115,7 @@ function ResetPasswordPage() {
               </p>
               <p className="pt-2 text-center text-xs text-muted-foreground">
                 <Link to="/forgot-password" data-testid="reset-to-forgot">
-                  {t("submit")}
+                  {t("link_request_new")}
                 </Link>
               </p>
             </div>

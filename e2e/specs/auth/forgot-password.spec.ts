@@ -618,20 +618,12 @@ test.describe("Forgot-password page — edge cases", () => {
     });
   });
 
-  // TC-17: Page is indexed with noindex,nofollow
+  // TC-17: Page is indexed with noindex,nofollow + correct title
   //
-  // SKIPPED 2026-05-19 — exposes a real production gap, not a test bug.
-  // `src/routes/forgot-password.tsx` configures `head: () => ({ meta: [...] })`
-  // correctly, but `src/routes/__root.tsx` doesn't render `<HeadContent />`,
-  // so the route's `head()` output is never applied to the DOM after
-  // hydration (and on Vite dev mode, not even on initial load — the dev
-  // server doesn't SSR the route head into the HTML shell). Same gap
-  // affects /login, /signup, /reset-password, /auth/callback, and every
-  // /app/* + /admin/* route. Re-enable this test (and add equivalents for
-  // the other auth pages) once `<HeadContent />` lands in `__root.tsx`.
-  test.skip("TC-17: Page has noindex,nofollow meta robots and the correct title", async ({
-    page,
-  }) => {
+  // Re-enabled 2026-05-19 once `<HeadContent />` landed in __root.tsx —
+  // the route's `head()` output is now applied to the DOM, so meta robots
+  // and document title assertions pass.
+  test("TC-17: Page has noindex,nofollow meta robots and the correct title", async ({ page }) => {
     const forgot = new ForgotPasswordPage(page);
     await forgot.open();
     const robotsContent = await forgot.robotsMetaContent();

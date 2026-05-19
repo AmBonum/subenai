@@ -416,10 +416,9 @@ test.describe("Reset-password page — no-session scenarios", () => {
       );
     });
 
-    await test.step("Verify a link labelled 'Zmeniť heslo' pointing to /forgot-password is visible", async () => {
-      // Bug: the link uses t("submit") which resolves to "Zmeniť heslo" — asserted verbatim per plan.
+    await test.step("Verify a link labelled 'Vyžiadať nový odkaz' pointing to /forgot-password is visible", async () => {
       await expect(reset.toForgotLink).toBeVisible();
-      await expect(reset.toForgotLink).toHaveText("Zmeniť heslo");
+      await expect(reset.toForgotLink).toHaveText("Vyžiadať nový odkaz");
     });
 
     await test.step("Verify the password form is absent from the DOM", async () => {
@@ -443,8 +442,7 @@ test.describe("Reset-password page — no-session scenarios", () => {
       await expect(reset.noSessionBlock).toBeVisible({ timeout: 8000 });
     });
 
-    await test.step("Click the link labelled 'Zmeniť heslo' (data-testid='reset-to-forgot')", async () => {
-      // Bug: link uses t("submit") which resolves to "Zmeniť heslo" — asserted verbatim per plan.
+    await test.step("Click the link labelled 'Vyžiadať nový odkaz' (data-testid='reset-to-forgot')", async () => {
       await reset.toForgotLink.click();
     });
 
@@ -824,20 +822,9 @@ test.describe("Reset-password page — edge cases", () => {
     });
   });
 
-  // TC-21: Page carries noindex,nofollow robots directive
-  //
-  // SKIPPED 2026-05-19 — exposes a real production gap, not a test bug.
-  // `src/routes/auth.reset-password.tsx` configures `head: () => ({ meta: [...] })`
-  // correctly, but `src/routes/__root.tsx` doesn't render `<HeadContent />`,
-  // so the route's `head()` output is never applied to the DOM after
-  // hydration (and on Vite dev mode, not even on initial load — the dev
-  // server doesn't SSR the route head into the HTML shell). Same gap
-  // affects /login, /signup, /forgot-password, /auth/callback, and every
-  // /app/* + /admin/* route. Re-enable this test (and add equivalents for
-  // the other auth pages) once `<HeadContent />` lands in `__root.tsx`.
-  test.skip("TC-21: Page has noindex,nofollow meta robots and the correct title", async ({
-    page,
-  }) => {
+  // TC-21: Page carries noindex,nofollow robots directive + correct title.
+  // Re-enabled 2026-05-19 once `<HeadContent />` landed in __root.tsx.
+  test("TC-21: Page has noindex,nofollow meta robots and the correct title", async ({ page }) => {
     const reset = new ResetPasswordPage(page);
     await reset.open();
     const robotsContent = await reset.robotsMetaContent();
