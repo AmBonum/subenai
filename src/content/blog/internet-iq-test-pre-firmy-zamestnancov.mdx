@@ -1,0 +1,159 @@
+---
+slug: internet-iq-test-pre-firmy-zamestnancov
+title: "internet iq test pre firmy — vyškoľ zamestnancov za 15 minút"
+subtitle: "jedna phishingová správa stojí firmy v priemere desiatky tisíc eur. tréning, ktorý tomu predchádza, stojí jedno pracovné dopoludnie."
+excerpt: "BEC, deepfake CEO hovory, falošné faktúry. najdrahšie incidenty v slovenských firmách začínajú jedným klikom jedného zamestnanca. tu je ako za 15 minút na osobu zistíš, kto v tíme by klikol — a čo s tým urobíš ďalej."
+category_slug: digitalna-bezpecnost
+author_slug: subenai-editorial
+primary_keyword: internet iq test firma
+search_intent: commercial
+reading_minutes: 11
+hero_image_url: null
+og_image_url: null
+seo_title: "internet iq test pre firmy — vyškoľ zamestnancov za 15 minút | subenai"
+seo_description: "scenárový test bezpečnostných reflexov pre slovenské firmy. 15 minút na zamestnanca, agregovaný dashboard pre HR a security officera, NIS2-friendly. ako to spustíš v tíme do konca týždňa."
+canonical_url: null
+pillar: false
+sources:
+  - label: "sk-cert: varovanie pred zvýšeným rizikom kybernetických bezpečnostných útokov na firmy"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "nbú: smernica NIS2 a povinnosti slovenských prevádzkovateľov základných služieb"
+    url: "https://www.nbu.gov.sk/kyberneticka-bezpecnost/nis2/index.html"
+    publisher: "Národný bezpečnostný úrad SR"
+    accessed_at: "2026-05-19"
+  - label: "smernica EU 2022/2555 (NIS2) — opatrenia na riadenie kybernetických rizík vrátane awareness tréningu"
+    url: "https://eur-lex.europa.eu/eli/dir/2022/2555/oj"
+    publisher: "EUR-Lex / Európsky parlament"
+    accessed_at: "2026-05-19"
+  - label: "fbi ic3 internet crime report — business email compromise spôsobil v 2024 viac strát ako ransomware a romance scam dohromady"
+    url: "https://www.ic3.gov/AnnualReport/Reports/2024_IC3Report.pdf"
+    publisher: "FBI Internet Crime Complaint Center"
+    accessed_at: "2026-05-19"
+  - label: "enisa threat landscape — sociálne inžinierstvo a phishing ako najčastejší prvotný vektor útoku na firmy"
+    url: "https://www.enisa.europa.eu/topics/cyber-threats/threats-and-trends"
+    publisher: "ENISA"
+    accessed_at: "2026-05-19"
+---
+
+ak vediete firmu, IT alebo HR, máte v hlave jeden tichý strach. nie že vám hackne server. že váš účtovník klikne na faktúru, ktorá vyzerá ako od dodávateľa. že vaša asistentka schváli prevod na základe hlasovej správy, ktorá znie ako CEO. že obchodník odošle podpísanú zmluvu na adresu, ktorá pred dvomi týždňami patrila niekomu inému. tieto tri momenty sú v 2026 najdrahšie incidenty v slovenských firmách — a všetky tri začínajú jedným zamestnancom, ktorý raz za rok urobil jedno zlé rozhodnutie za tri sekundy.
+
+zlá správa: nedá sa tomu zabrániť firewallom. dobrá správa: jedno pracovné dopoludnie v kalendári celého tímu znižuje pravdepodobnosť, že sa to stane, o rády viac, ako čokoľvek iné, čo do bezpečnosti naliješ.
+
+tento článok je o tom druhom dopoludní.
+
+## prečo neškolení zamestnanci stoja firmu viac, ako si pripúšťa
+
+[FBI Internet Crime Complaint Center](https://www.ic3.gov/AnnualReport/Reports/2024_IC3Report.pdf) [4] v ostatnom výročnom reporte uvádza, že **BEC** — BEC, Business Email Compromise, podvod cez napadnutý alebo predstieraný firemný e-mail — spôsobil v jednom kalendárnom roku **viac priamych strát ako romance scam a ransomware spolu**. mediálne zaujímavá je vždy ransomware-ová správa o nemocnici v paralýze; finančne to ale je tichý e-mail účtovníčke s „aktualizovanými bankovými údajmi dodávateľa".
+
+obraz pre Slovensko nie je iný. [SK-CERT pravidelne publikuje varovania o cielených phishingových kampaniach proti slovenským firmám](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [1] — typicky vlna 200 až 500 šitých e-mailov za týždeň, mierená na účtovné oddelenia, asistencie a finančných riaditeľov SMB segmentu. [ENISA v svojom threat landscape](https://www.enisa.europa.eu/topics/cyber-threats/threats-and-trends) [5] potvrdzuje to isté na európskej úrovni: sociálne inžinierstvo a phishing sú **najčastejší prvotný vektor útoku** na firmy v EÚ. nie nula-day exploity. nie nepriebojné šifry. ľudia.
+
+priemerná strata na jeden úspešný BEC incident v sektore SMB v EÚ sa pohybuje v desiatkach tisíc eur na jeden prípad — pre malú firmu to je likvidačná suma. veľká firma to ustojí, ale ustojí aj pokutu od regulátora, brand damage a interný audit, ktorý ju bude stáť tri kvartály. detailný anatomický rozbor takého incidentu rozoberáme v príbehu [deepfake CEO — ako firma stratila 50 000 € v jednom hovore](/blog/pribeh-deepfake-ceo-firma) a typický mechanizmus v [spear phishing vs. bežný phishing](/blog/spear-phishing-vs-bezny-phishing).
+
+a teraz to dôležité: **vo všetkých týchto prípadoch existoval interný čitateľ, ktorý mal v hlave zazvonenú zvonček a nezazvonil**. nie preto, že by bol nepozorný. preto, že nikdy nedostal jednu hodinu cieleného tréningu, ktorá mu povie, aký zvuk ten zvonček má robiť.
+
+## NIS2 — od októbra 2024 to nie je „nice to have"
+
+[smernica EÚ 2022/2555 — známa ako NIS2](https://eur-lex.europa.eu/eli/dir/2022/2555/oj) [3] platí pre prevádzkovateľov **základných** a **dôležitých** služieb na celom území EÚ. pre Slovensko transponuje [Národný bezpečnostný úrad cez novelu zákona o kybernetickej bezpečnosti](https://www.nbu.gov.sk/kyberneticka-bezpecnost/nis2/index.html) [2]. okruh povinných subjektov sa oproti pôvodnej NIS výrazne rozšíril — dnes zahŕňa stredne veľké až veľké firmy v energetike, doprave, zdravotníctve, ICT, výrobe potravín, chemickom priemysle, odpadovom hospodárstve, výskume, digitálnych službách, verejnej správe a v ďalších sektoroch.
+
+konkrétne to znamená: ak váš podnik spadá pod NIS2, **awareness tréning zamestnancov je explicitná regulačná povinnosť**, nie odporúčanie. nesplnenie znamená pokuty do 10 mil. € alebo 2 % celosvetového obratu (pre tzv. „essential entities"), prípadne 7 mil. € alebo 1,4 % obratu (pre „important entities"), a osobnú zodpovednosť štatutára.
+
+ak vás teraz svrbí v krížoch, je to namieste. pre väčšinu slovenských stredných firiem (50–250 zamestnancov, ktoré dosial mali bezpečnosť riešenú „antivírusom a firewallom") je 2026 prvý rok, v ktorom musia awareness program **zdokumentovať**. samotné dokumentovanie sa pritom z hľadiska auditu deje cez **zoznam školených zamestnancov + dátum + dôkaz o absolvovaní + výsledok**.
+
+inými slovami: regulátor nepýta, či si svedomitý. pýta, či máš dáta, že tvoj tím vie rozpoznať phishing. a tie dáta odniekiaľ musíš mať.
+
+## prečo „PDF prezentácia raz ročne" zlyháva
+
+väčšina slovenských firiem, ktoré tréning vôbec rieši, ho rieši takto: HR pošle PDF zo SK-CERT-u alebo súbor slidov od dodávateľa antivíru. zamestnanci kliknú v intranete „prečítal som". koniec. spravidla sa to opakuje raz ročne, lebo ISO 27001 to tak chce.
+
+z hľadiska skutočného rizika je to bezcenné. dôvod je psychologický, nie technický — a podrobne ho rozoberáme v [psychológii internetových podvodov](/blog/psychologia-internetovych-podvodov). ľudský mozog si pasívne čítané pravidlá zapamätá maximálne 24 hodín. v momente, keď príde reálny stresor (e-mail od „CEO", ktorý naliehavo pýta prevod do konca dňa), mozog **nesiaha po zapamätanom pravidle** — siaha po **zapamätanej skúsenosti**. a tá tam nie je.
+
+skúsenosť sa získava cvičením. cvičenie znamená: konfrontovať zamestnanca so simulovaným scenárom, donútiť ho urobiť rozhodnutie, ukázať mu výsledok, vysvetliť mu, čo prezradilo, že to bol podvod. tých scenárov nemusí byť 100. **stačí 15, ak sú správne vybrané** — pokrývajú phishing, smishing, vishing, BEC, deepfake a klasické sociálne inžinierstvo cez autoritu a naliehavosť.
+
+## ako vyzerá test, ktorý reálne učí
+
+dobrý awareness test má tri vlastnosti, ktoré PDF a univerzálne e-learningy nikdy nesplnia naraz:
+
+1. **scenárový, nie pojmový.** nepýta sa „čo je phishing". ukáže e-mail a pýta sa „kliknel by si?". rozdiel medzi týmito dvoma formátmi je rozdiel medzi vedieť teóriu a vedieť reagovať.
+2. **lokalizovaný do slovenského kontextu.** scammeri na Slovensku zneužívajú konkrétne značky — Slovenská pošta, DPD, Slovak Telekom, ČSOB, VÚB, Slovenská sporiteľňa, Finančná správa. univerzálne medzinárodné scenáre („e-mail od Amazonu") prejdú zamestnancovi pomedzi prsty, pretože ich pre seba nevidí.
+3. **agregovaný výstup pre manažéra.** jednotlivca nezaujímajú metriky, ale HR/security officera áno. potrebuje vidieť: **kde v tíme je slabé miesto** (phishing? voice cloning? autorita?), **kto z tímu by reálne klikol**, **kde nasadiť opakovaný drill**. bez agregátu je test zábava, nie tréning.
+
+ak vás zaujíma, ako ten test vyzerá z pohľadu jednotlivca, je verejne dostupný v podobe [individuálneho internet IQ testu](/blog/kviz-iq-internet-bezpecnost) — 15 scenárov, 90 sekúnd, zadarmo, bez registrácie. firemná verzia má rovnakú anatomy, len pridáva tímové branding, share-link distribúciu a manažérsky dashboard.
+
+## 15 minút na zamestnanca — ako to vyzerá v kalendári
+
+konkrétne číslo, lebo to je obvykle prvá otázka:
+
+- **1 minúta** — HR/security officer pošle e-mail s linkou. žiadna inštalácia, žiadny účet pre zamestnanca, žiadny login.
+- **12 minút** — zamestnanec si v ľubovoľnom čase počas pracovného dňa otvorí link. 15 scenárov. v každom vidí reálnu situáciu (e-mail, SMS, hovor, fragment chatu, faktúru) a rozhodne sa: legit / podvod / neviem. po každom scenári dostane vysvetlenie, ktorý detail prezrádzal podvod.
+- **2 minúty** — záverečná obrazovka mu povie individuálne skóre, **silné a slabé oblasti** (napríklad „phishing zachytávaš spoľahlivo, voice cloning prešlo cez teba 3× z 4") a krátky personalizovaný checklist „čo s tým".
+
+manažér po týždni vidí v dashboarde aggregát: priemerné skóre tímu, distribúciu, najslabšiu kategóriu, top 3 scenáre s najvyššou mierou zlyhania. dáta sa dajú exportovať pre NIS2 audit alebo pre interný compliance report.
+
+žiadne nadbytočné funkcie. žiadne licenčné poplatky podľa headcountu, ktoré rastú s firmou. žiadne SCORM balíky pre LMS, ktoré si musí IT integrovať.
+
+## ROI ktoré dáva zmysel napísať do prezentácie pre majiteľa
+
+matematicky vychádza takto. priemerná slovenská BEC strata v segmente SMB sa hlási v rozsahu 20–80 tisíc eur na jeden úspešný incident. industry baseline úspešnosti cieleného phishingu **na neškolených zamestnancov** sa pohybuje okolo 25–35 % klikov; po jednom systematickom drille klesá pod 8 %.
+
+ak má firma 100 zamestnancov a počíta sa s jedným cieleným útokom za 18 mesiacov, redukcia z 30 % na 8 % znamená:
+
+- pravdepodobnosť úspešného zásahu vo firme: **~96 % → ~56 %** na cykle 18 mesiacov.
+- očakávaná strata pri stredne veľkom BEC: **~38 000 €** redukovaná **~16 000 €**.
+- ušetrené priemerne **~22 000 € na firmu na cyklus**.
+
+dvadsať minút na zamestnanca, vrátane HR výkazníctva. **v hodinách to je menej ako jeden pracovný deň celej firmy. v eurách to je niekoľko percent z toho, čo ti šetrí**.
+
+a to ešte nepočítame brand damage, vyšetrovanie GDPR incidentu pri úniku osobných údajov, NIS2 sankciu, prípadné stratené tendre kvôli audit findings.
+
+## tri vzory, ktoré tvoj tím **dnes** rozpozná najhoršie
+
+ak v 2026 musíš vybrať tri scenáre, ktoré zamestnanca cvičia s najvyšším pomerom úžitok/čas, sú to tieto. všetky tri sú v slovenských firmách overené, všetky tri si zaslúžia samostatný drill pre účtovníctvo a asistenciu.
+
+**falošná faktúra so „zmenenými bankovými údajmi" od existujúceho dodávateľa.** najtichší a najfinančne najdrahší vzor. pre detail postupu, ako reagovať, keď taký e-mail uvidíš, sme spísali samostatný návod [falošná faktúra v e-maile — čo robiť](/blog/falosna-faktura-email-co-robit). pravidlo, ktoré v ňom tlčieme: **zmena bankových údajov dodávateľa sa nikdy nepotvrdzuje ako odpoveď na e-mail. volaj na číslo, ktoré máš z pôvodnej zmluvy, nie z aktuálneho e-mailu.**
+
+**deepfake hlas CEO/CFO.** AI dnes vie vyrobiť presvedčivý hlasový klon z 3 sekúnd verejnej nahrávky (LinkedIn video, konferencia, podcast, dokonca hlasová správa cez WhatsApp). [reálny prípad, ako to vyzerá v praxi, sme zrekonštruovali v príbehu](/blog/pribeh-deepfake-ceo-firma). širší kontext o AI-generovaných podvodoch je v pillar článku [AI a moderné podvody — deepfake, voice cloning a klonovanie hlasu](/blog/ai-a-moderne-podvody-deepfake-voice-cloning). pravidlo: **žiadny prevod nad X € (kde X je tvoj interný limit, typicky 500–5000) sa nikdy nedeje na základe samotného hlasového/video pokynu. vždy kontrola druhým kanálom — Teams, SMS, osobné stretnutie.**
+
+**spear phishing s aktuálnym kontextom — meno klienta, číslo objednávky, podpis kolegu.** najťažší na rozpoznanie, lebo neobsahuje žiadny z klasických znakov „gramatika je čudná, doména nesedí". detail v [spear phishing vs. bežný phishing](/blog/spear-phishing-vs-bezny-phishing). pravidlo: **ak ťa e-mail vedie kliknúť na link alebo otvoriť prílohu pod časovým tlakom, hoci poznáš odosielateľa, over druhým kanálom skôr, než klikneš.** technické základy pre toto pravidlo sú rozpísané v pillar článku [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca) a vo všeobecnej [digitálnej hygiene pre laikov](/blog/digitalna-bezpecnost-kompletny-navod).
+
+## kde subenai zapadá
+
+subenai je pôvodne konzument-orientovaný projekt — verejný internet IQ test na `subenai.sk/test` rieši individuálnu osvetu. v 2026 sme ho rozšírili o firemnú verziu, lebo dopyt prišiel od HR oddelení slovenských stredných firiem, ktoré dosial mali na výber buď drahé medzinárodné platformy (Knowbe4, Proofpoint, typicky 8–25 €/zamestnanec/mesiac), alebo nič.
+
+ako to funguje konkrétne:
+
+1. v `/admin/tests` si vytvoríš **custom test pack** pre svoj tím — môžeš ho ponechať na štandardných 15 SK scenároch alebo si vyžiadať vlastné scenáre zacielené na tvoj sektor (energetika, finančníctvo, výroba, verejná správa).
+2. test má vlastný **share-link** v tvare `subenai.sk/t/$shareId`. pošleš ho zamestnancom e-mailom alebo cez Slack/Teams. žiadne kontá, žiadne hesla, žiadne SSO.
+3. zamestnanci absolvujú test, ich anonymizované výsledky sa agregujú v tvojom **manažérskom dashboarde**. máš jasný prehľad o tom, kto otestoval, aké je priemerné skóre, kde sú slabé miesta.
+4. dáta exportneš pre NIS2 audit alebo interný compliance. retake po 6 mesiacoch ti ukáže krivku zlepšenia.
+
+v 2026 je celý firemný flow **bezplatný** pre slovenské firmy do 150 zamestnancov. cieľom nie je predaj — cieľom je, aby v roku 2027 SK-CERT hlásil menej incidentov, ktoré začali jedným klikom jedného zamestnanca. neskôr sa to dá monetizovať. zatiaľ chceme dáta a feedback.
+
+ak to chceš pre svoj tím nasadiť do konca týždňa, ozvi sa cez [kontaktný formulár](/kontakt) — odpíšeme do 24 h s linkou a krátkym onboarding briefom (15 minút, video call alebo e-mail, podľa toho ako chceš). pre referenciu, [individuálny test si môžeš vyskúšať priamo](/blog/kviz-iq-internet-bezpecnost) na vlastnej koži — firemná verzia je rovnaký engine, len s tímovým reportingom navrch.
+
+## zhrnutie pre majiteľa, ktorý sa rozhoduje teraz
+
+- najdrahšie incidenty v slovenských firmách v 2026 začínajú jedným klikom jedného zamestnanca. nie firewall, nie antivírus — človek.
+- BEC, deepfake CEO hovor a falošná faktúra od existujúceho dodávateľa sú tri vzory, ktoré dnes prejdú cez 30 % neškolených zamestnancov.
+- NIS2 robí z awareness tréningu regulačnú povinnosť, nie odporúčanie. dokumentácia výsledkov je súčasťou kontroly.
+- pasívne PDF zlyháva. scenárový test za 15 minút na zamestnanca s agregovaným dashboardom je minimum, ktoré reálne učí.
+- subenai poskytuje custom firemný test bezplatne pre slovenské SMB v 2026. share-link, žiadne licencie, dashboard pre NIS2 výkazníctvo.
+
+ak chceš urobiť jednu vec do piatka, ktorá zníži riziko najdrahšieho incidentu vo firme na zlomok, je toto ona.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca)
+- [AI a moderné podvody — deepfake, voice cloning](/blog/ai-a-moderne-podvody-deepfake-voice-cloning)
+- [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod)
+- [psychológia internetových podvodov](/blog/psychologia-internetovych-podvodov)
+- [internet safety pre študentov a začínajúcich zamestnancov](/blog/internet-safety-pre-studentov)
+- [spear phishing vs. bežný phishing — rozdiel, ktorý ťa môže stáť všetko](/blog/spear-phishing-vs-bezny-phishing)
+- [deepfake CEO — ako firma stratila 50 000 € v jednom hovore](/blog/pribeh-deepfake-ceo-firma)
+- [falošná faktúra v e-maile — čo robiť](/blog/falosna-faktura-email-co-robit)
+- [individuálny internet IQ test — aký je tvoj skutočný digitálny rozum](/blog/kviz-iq-internet-bezpecnost)
+
+otestuj tím za 15 minút na zamestnanca. share-link, agregovaný dashboard, NIS2-friendly výkazníctvo.
+
+**ozvi sa pre custom test pre firmu →** [/kontakt](/kontakt)
