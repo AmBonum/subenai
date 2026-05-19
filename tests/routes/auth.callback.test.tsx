@@ -4,6 +4,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 const navigate = vi.fn();
 const exchangeCodeForSession = vi.fn();
 const getSession = vi.fn();
+const rpc = vi.fn();
 let currentSearch: Record<string, unknown> = {};
 
 vi.mock("@tanstack/react-router", async () => {
@@ -22,7 +23,12 @@ vi.mock("@/integrations/supabase/client", () => ({
     auth: {
       exchangeCodeForSession: (...args: unknown[]) => exchangeCodeForSession(...args),
       getSession: () => getSession(),
+      mfa: {
+        getAuthenticatorAssuranceLevel: vi.fn(),
+        listFactors: vi.fn(),
+      },
     },
+    rpc: (...args: unknown[]) => rpc(...args),
   },
 }));
 
@@ -35,6 +41,9 @@ describe("/auth/callback", () => {
     navigate.mockReset();
     exchangeCodeForSession.mockReset();
     getSession.mockReset();
+    rpc.mockReset();
+    // Default: non-admin (decidePostLoginTarget → /app).
+    rpc.mockResolvedValue({ data: false, error: null });
     currentSearch = {};
   });
 

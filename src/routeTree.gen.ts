@@ -44,6 +44,7 @@ import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-passw
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AppTemplatesRouteImport } from './routes/app.templates'
 import { Route as AppTeamsRouteImport } from './routes/app.teams'
+import { Route as AppOnboardingRouteImport } from './routes/app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
 import { Route as AppLibraryRouteImport } from './routes/app.library'
 import { Route as AppHistoryRouteImport } from './routes/app.history'
@@ -256,6 +257,13 @@ const AppTeamsRoute = AppTeamsRouteImport.update({
   path: '/teams',
   getParentRoute: () => AppRoute,
 } as any)
+const AppOnboardingRoute = AppOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() =>
+  import('./routes/app.onboarding.lazy').then((d) => d.Route),
+)
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
@@ -507,6 +515,7 @@ export interface FileRoutesByFullPath {
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
+  '/app/onboarding': typeof AppOnboardingRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -577,6 +586,7 @@ export interface FileRoutesByTo {
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
+  '/app/onboarding': typeof AppOnboardingRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -651,6 +661,7 @@ export interface FileRoutesById {
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
+  '/app/onboarding': typeof AppOnboardingRoute
   '/app/teams': typeof AppTeamsRoute
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
@@ -726,6 +737,7 @@ export interface FileRouteTypes {
     | '/app/history'
     | '/app/library'
     | '/app/notifications'
+    | '/app/onboarding'
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
@@ -796,6 +808,7 @@ export interface FileRouteTypes {
     | '/app/history'
     | '/app/library'
     | '/app/notifications'
+    | '/app/onboarding'
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
@@ -869,6 +882,7 @@ export interface FileRouteTypes {
     | '/app/history'
     | '/app/library'
     | '/app/notifications'
+    | '/app/onboarding'
     | '/app/teams'
     | '/app/templates'
     | '/auth/callback'
@@ -1181,6 +1195,13 @@ declare module '@tanstack/react-router' {
       path: '/teams'
       fullPath: '/app/teams'
       preLoaderRoute: typeof AppTeamsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/onboarding': {
+      id: '/app/onboarding'
+      path: '/onboarding'
+      fullPath: '/app/onboarding'
+      preLoaderRoute: typeof AppOnboardingRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/notifications': {
@@ -1528,6 +1549,7 @@ interface AppRouteChildren {
   AppHistoryRoute: typeof AppHistoryRoute
   AppLibraryRoute: typeof AppLibraryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
+  AppOnboardingRoute: typeof AppOnboardingRoute
   AppTeamsRoute: typeof AppTeamsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -1546,6 +1568,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppHistoryRoute: AppHistoryRoute,
   AppLibraryRoute: AppLibraryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
+  AppOnboardingRoute: AppOnboardingRoute,
   AppTeamsRoute: AppTeamsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
   AppIndexRoute: AppIndexRoute,

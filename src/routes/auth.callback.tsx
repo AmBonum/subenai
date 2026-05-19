@@ -12,6 +12,7 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { decidePostLoginTarget } from "@/lib/auth/post-login-redirect";
 import { tFor } from "@/i18n/auth";
 
 type CallbackSearch = {
@@ -63,9 +64,17 @@ function AuthCallbackPage() {
         const { data } = await supabase.auth.getSession();
         if (cancelled) return;
         if (data.session) {
-          const target =
-            search.redirect && search.redirect.startsWith("/") ? search.redirect : "/app";
-          void navigate({ to: target });
+          // Explicit ?redirect=/path wins over role-based default — it's
+          // how the 2FA verify flow returns the admin to their target.
+          if (search.redirect && search.redirect.startsWith("/")) {
+            void navigate({ to: search.redirect });
+            return;
+          }
+          const target = await decidePostLoginTarget(data.session);
+          if (cancelled) return;
+          void navigate(
+            target.search ? { to: target.to, search: target.search } : { to: target.to },
+          );
           return;
         }
         setError(t("error_generic"));

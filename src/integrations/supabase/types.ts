@@ -569,6 +569,39 @@ export type Database = {
         };
         Relationships: [];
       };
+      profile_preferences: {
+        Row: {
+          user_id: string;
+          audience_kind: string | null;
+          scam_interests: string[];
+          digest_cadence: string;
+          digest_quiet_weeks: boolean;
+          onboarded_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          audience_kind?: string | null;
+          scam_interests?: string[];
+          digest_cadence?: string;
+          digest_quiet_weeks?: boolean;
+          onboarded_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          audience_kind?: string | null;
+          scam_interests?: string[];
+          digest_cadence?: string;
+          digest_quiet_weeks?: boolean;
+          onboarded_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       questions: {
         Row: {
           id: string;

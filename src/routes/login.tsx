@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { getAALStatus, listFactors } from "@/lib/auth/mfa";
+import { decidePostLoginTarget } from "@/lib/auth/post-login-redirect";
 import { tFor } from "@/i18n/app-shell";
 import { tFor as tAuth } from "@/i18n/auth";
 
@@ -20,6 +20,7 @@ function LoginPage() {
   const t = tFor("login");
   const tc = tAuth("common");
   const tx = tAuth("login_extras");
+  const tColl = tAuth("oauth_only_collision");
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,6 +28,11 @@ function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [resetBanner, setResetBanner] = useState(false);
+  // Phase 3: after a credentials failure we surface a "this email may be
+  // registered via Google" hint. Supabase returns the same opaque error
+  // for wrong-password vs OAuth-only, so we offer the Google path as a
+  // fallback action alongside the generic message — no probing required.
+  const [showOAuthCollision, setShowOAuthCollision] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -54,6 +60,7 @@ function LoginPage() {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    setShowOAuthCollision(false);
     setSubmitting(true);
     try {
       const { data, error: authError } = await supabase.auth.signInWithPassword({
@@ -64,44 +71,17 @@ function LoginPage() {
         const isInvalid =
           authError.message.toLowerCase().includes("invalid") || authError.status === 400;
         setError(isInvalid ? t("error_invalid") : t("error_generic"));
+        if (isInvalid) setShowOAuthCollision(true);
         return;
       }
 
-      // AH-12.5: route by 2FA state. Admin must hold a verified TOTP
-      // factor AND have AAL2 before reaching /admin. The AAL2 gate in
-      // role-middleware (commit AH-12.7) enforces this on every admin
-      // page load; here we just deliver the user to the right next step
-      // so they don't bounce through a redirect chain.
-      const uid = data.session?.user.id;
-      let isAdmin = false;
-      if (uid) {
-        const { data: roleOk } = await supabase.rpc("has_role", {
-          _user_id: uid,
-          _role: "admin",
-        });
-        isAdmin = roleOk === true;
-      }
-
-      if (isAdmin) {
-        const factors = await listFactors();
-        const hasFactor = factors.totp.some((f) => f.status === "verified");
-        if (!hasFactor) {
-          navigate({ to: "/login/enroll-2fa" });
-          return;
-        }
-        const aal = await getAALStatus();
-        if (aal.currentLevel !== "aal2") {
-          navigate({
-            to: "/login/verify-2fa",
-            search: { redirect: "/admin" },
-          });
-          return;
-        }
-        navigate({ to: "/admin" });
+      if (!data.session) {
+        setError(t("error_generic"));
         return;
       }
 
-      navigate({ to: "/app" });
+      const target = await decidePostLoginTarget(data.session);
+      navigate(target.search ? { to: target.to, search: target.search } : { to: target.to });
     } catch {
       setError(t("error_generic"));
     } finally {
@@ -192,6 +172,34 @@ function LoginPage() {
               >
                 {error}
               </p>
+            )}
+            {showOAuthCollision && (
+              <div
+                className="space-y-2 rounded-md border border-border bg-muted/40 p-3 text-sm"
+                role="status"
+                data-testid="login-oauth-collision"
+              >
+                <p className="font-medium" data-testid="login-oauth-collision-title">
+                  {tColl("title")}
+                </p>
+                <p
+                  className="text-xs text-muted-foreground"
+                  data-testid="login-oauth-collision-body"
+                >
+                  {tColl("body")}
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={onGoogle}
+                  disabled={googleLoading || submitting}
+                  data-testid="login-oauth-collision-google"
+                >
+                  {tColl("cta_primary")}
+                </Button>
+              </div>
             )}
             <Button
               type="submit"
