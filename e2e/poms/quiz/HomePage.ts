@@ -16,6 +16,10 @@ export class HomePage extends BasePage {
     return this.page.getByRole("heading", { level: 1 }).first();
   }
 
+  get heroHeading() {
+    return this.page.getByTestId("home-hero-heading");
+  }
+
   get startCta() {
     return this.page.getByRole("link", { name: /Spustiť test/i }).first();
   }

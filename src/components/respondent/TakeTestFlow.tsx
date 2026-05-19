@@ -37,6 +37,7 @@ export function TakeTestFlow({ test, questionIds, shareId, onClose }: TakeTestFl
   const [stage, setStage] = useState<Stage>("intake");
   const [intake, setIntake] = useState<Record<string, string>>({});
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [qIdx, setQIdx] = useState(0);
   const [answers, setAnswers] = useState<
     { question_id: string; value: string; is_correct: boolean | null; time_ms: number }[]
@@ -52,9 +53,14 @@ export function TakeTestFlow({ test, questionIds, shareId, onClose }: TakeTestFl
     setSubmitError(null);
     setSubmitting(true);
     try {
-      const id = await startRespondentSession({ shareId, intake: vals, consent: c });
+      const { sessionId: id, sessionToken: token } = await startRespondentSession({
+        shareId,
+        intake: vals,
+        consent: c,
+      });
       setIntake(vals);
       setSessionId(id);
+      setSessionToken(token);
       setQuestionStart(Date.now());
       setStage("questions");
     } catch {
@@ -80,6 +86,7 @@ export function TakeTestFlow({ test, questionIds, shareId, onClose }: TakeTestFl
     try {
       await submitRespondentAnswer({
         sessionId,
+        sessionToken,
         questionId: q.id,
         value,
         isCorrect,
@@ -92,7 +99,7 @@ export function TakeTestFlow({ test, questionIds, shareId, onClose }: TakeTestFl
       } else {
         const correct = next.filter((a) => a.is_correct).length;
         const score = next.length ? Math.round((correct / next.length) * 100) : 0;
-        await finalizeRespondentSession({ sessionId, score });
+        await finalizeRespondentSession({ sessionId, sessionToken, score });
         setStage("done");
       }
     } catch {

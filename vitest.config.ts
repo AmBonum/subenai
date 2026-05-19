@@ -11,5 +11,22 @@ export default defineConfig({
     setupFiles: ["./tests/setup.ts"],
     include: ["tests/**/*.test.{ts,tsx}"],
     css: false,
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: [
+        "src/integrations/supabase/types.ts",
+        "src/routes/**/__root.tsx",
+        "src/routeTree.gen.ts",
+      ],
+      reporter: ["text", "lcov", "html"],
+      // Phase 0 baseline (2026-05-19): lines 58.08%, functions 49.15%.
+      // The 70% target lives in PLAN-2026-05-19-testing-coverage.md and
+      // is the exit criterion for the epic; Phase 1+ writes the tests
+      // that lift the floor. Thresholds are pinned slightly below the
+      // current baseline so a regression fails CI but new code does not
+      // have to clear the final bar on day one.
+      thresholds: { lines: 58, functions: 49 },
+    },
   },
 });

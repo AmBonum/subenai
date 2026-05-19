@@ -1,5 +1,7 @@
 import type { BrowserContext } from "@playwright/test";
 
+import { CONSENT_VERSION } from "../../src/lib/consent";
+
 /**
  * Pre-seed the cookie consent decision so a test that doesn't care
  * about the banner can skip past it without a click.
@@ -13,14 +15,13 @@ import type { BrowserContext } from "@playwright/test";
  *   });
  *
  * The shape mirrors what the app writes to localStorage (see
- * `src/lib/consent.ts`). Keep the version + categories in lock-step
- * with that file or the banner will re-show on the next CONSENT_VERSION
- * bump.
+ * `src/lib/consent.ts`). The version constant is imported directly from
+ * that module so the two cannot drift; bumping CONSENT_VERSION at the
+ * source automatically refreshes every primed fixture.
  */
 export type ConsentPreset = "all" | "necessary-only";
 
 const CONSENT_STORAGE_KEY = "iiq_consent";
-const CONSENT_VERSION = "1.3.0"; // KEEP IN SYNC with src/lib/consent.ts
 
 export async function primeConsent(context: BrowserContext, preset: ConsentPreset): Promise<void> {
   const granted = preset === "all";

@@ -4,6 +4,13 @@
 // no React Query / QueryClient context. These wrappers call the
 // SECURITY DEFINER RPCs directly. Errors surface as thrown values the
 // component handler catches.
+//
+// Phase 0 hardening (testing-coverage epic): start_respondent_session
+// now returns both `session_id` and `session_token`. The caller stashes
+// the token in component state and passes it back on submit/finalize as
+// defense-in-depth against session-id-only forgery. A 7-day server-side
+// grace window accepts a missing token (per D7); after cutoff the RPCs
+// raise `session_token_required`.
 import { supabase } from "@/integrations/supabase/client";
 
 export interface StartSessionInput {
@@ -13,7 +20,14 @@ export interface StartSessionInput {
   segment?: string | null;
 }
 
-export async function startRespondentSession(input: StartSessionInput): Promise<string> {
+export interface StartSessionResult {
+  sessionId: string;
+  sessionToken: string | null;
+}
+
+export async function startRespondentSession(
+  input: StartSessionInput,
+): Promise<StartSessionResult> {
   const { data, error } = await supabase.rpc("start_respondent_session", {
     p_share_id: input.shareId,
     p_intake: input.intake,
@@ -21,11 +35,26 @@ export async function startRespondentSession(input: StartSessionInput): Promise<
     p_segment: input.segment ?? null,
   });
   if (error) throw error;
-  return data as string;
+
+  // Pre-Phase-0 deployments returned a bare uuid string; new deployments
+  // return { session_id, session_token }. Accept both so the client keeps
+  // working across the 7-day rollout window without a hard cut-over.
+  if (typeof data === "string") {
+    return { sessionId: data, sessionToken: null };
+  }
+  const payload = (data ?? {}) as { session_id?: string; session_token?: string | null };
+  if (!payload.session_id) {
+    throw new Error("start_respondent_session returned no session_id");
+  }
+  return {
+    sessionId: payload.session_id,
+    sessionToken: payload.session_token ?? null,
+  };
 }
 
 export interface SubmitAnswerInput {
   sessionId: string;
+  sessionToken?: string | null;
   questionId: string;
   value: string;
   isCorrect: boolean | null;
@@ -39,12 +68,14 @@ export async function submitRespondentAnswer(input: SubmitAnswerInput): Promise<
     p_value: input.value,
     p_is_correct: input.isCorrect,
     p_time_ms: input.timeMs,
+    p_session_token: input.sessionToken ?? null,
   });
   if (error) throw error;
 }
 
 export interface FinalizeSessionInput {
   sessionId: string;
+  sessionToken?: string | null;
   score: number | null;
 }
 
@@ -52,6 +83,7 @@ export async function finalizeRespondentSession(input: FinalizeSessionInput): Pr
   const { error } = await supabase.rpc("finalize_respondent_session", {
     p_session_id: input.sessionId,
     p_score: input.score,
+    p_session_token: input.sessionToken ?? null,
   });
   if (error) throw error;
 }

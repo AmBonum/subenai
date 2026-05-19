@@ -11,9 +11,6 @@ import { defineConfig, devices } from "@playwright/test";
  *                   Use the composed `test` fixture from
  *                   `e2e/fixtures/base.ts`.
  *
- * The `seed.spec.ts` in the e2e/ root is part of the e2e-chromium
- * project (Playwright agent uses it).
- *
  * Run a subset:
  *   npx playwright test --project=integration
  *   npx playwright test --project=e2e-chromium
@@ -47,7 +44,7 @@ export default defineConfig({
     },
     {
       name: "e2e-chromium",
-      testMatch: ["e2e/specs/**/*.spec.ts", "e2e/seed.spec.ts"],
+      testMatch: ["e2e/specs/**/*.spec.ts"],
       use: { ...devices["Desktop Chrome"] },
     },
   ],

@@ -767,6 +767,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      respondent_session_tokens: {
+        Row: {
+          session_id: string;
+          token_hash: string;
+          cutoff_at: string;
+          created_at: string;
+        };
+        Insert: {
+          session_id: string;
+          token_hash: string;
+          cutoff_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          session_id?: string;
+          token_hash?: string;
+          cutoff_at?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       respondents: {
         Row: {
           id: string;
@@ -1381,7 +1402,7 @@ export type Database = {
           p_consent_given?: boolean;
           p_segment?: string | null;
         };
-        Returns: string;
+        Returns: Json;
       };
       submit_respondent_answer: {
         Args: {
@@ -1390,11 +1411,16 @@ export type Database = {
           p_value: string;
           p_is_correct?: boolean | null;
           p_time_ms?: number | null;
+          p_session_token?: string | null;
         };
         Returns: void;
       };
       finalize_respondent_session: {
-        Args: { p_session_id: string; p_score?: number | null };
+        Args: {
+          p_session_id: string;
+          p_score?: number | null;
+          p_session_token?: string | null;
+        };
         Returns: void;
       };
       get_quick_test_questions: {

@@ -20,14 +20,17 @@ describe("respondent queries — Supabase RPC bindings", () => {
   });
 
   it("startRespondentSession passes intake + share id + consent + segment to RPC", async () => {
-    rpcMock.mockResolvedValueOnce({ data: "ses_uuid_1", error: null });
-    const id = await startRespondentSession({
+    rpcMock.mockResolvedValueOnce({
+      data: { session_id: "ses_uuid_1", session_token: "tok_1" },
+      error: null,
+    });
+    const result = await startRespondentSession({
       shareId: "shareid123",
       intake: { if_name: "Anna", if_email: "a@b.sk" },
       consent: true,
       segment: "seg-a",
     });
-    expect(id).toBe("ses_uuid_1");
+    expect(result).toEqual({ sessionId: "ses_uuid_1", sessionToken: "tok_1" });
     expect(rpcMock).toHaveBeenCalledWith("start_respondent_session", {
       p_share_id: "shareid123",
       p_intake: { if_name: "Anna", if_email: "a@b.sk" },
@@ -37,7 +40,10 @@ describe("respondent queries — Supabase RPC bindings", () => {
   });
 
   it("startRespondentSession defaults segment to null when omitted", async () => {
-    rpcMock.mockResolvedValueOnce({ data: "ses_uuid_2", error: null });
+    rpcMock.mockResolvedValueOnce({
+      data: { session_id: "ses_uuid_2", session_token: "tok_2" },
+      error: null,
+    });
     await startRespondentSession({
       shareId: "shareid123",
       intake: {},
@@ -47,6 +53,16 @@ describe("respondent queries — Supabase RPC bindings", () => {
     expect(call.p_segment).toBeNull();
   });
 
+  it("startRespondentSession accepts legacy bare-string return during rollout", async () => {
+    rpcMock.mockResolvedValueOnce({ data: "ses_legacy_uuid", error: null });
+    const result = await startRespondentSession({
+      shareId: "shareid123",
+      intake: {},
+      consent: false,
+    });
+    expect(result).toEqual({ sessionId: "ses_legacy_uuid", sessionToken: null });
+  });
+
   it("startRespondentSession throws when RPC returns an error", async () => {
     rpcMock.mockResolvedValueOnce({ data: null, error: { message: "test_not_found" } });
     await expect(
@@ -54,10 +70,11 @@ describe("respondent queries — Supabase RPC bindings", () => {
     ).rejects.toMatchObject({ message: "test_not_found" });
   });
 
-  it("submitRespondentAnswer passes mapped args to RPC", async () => {
+  it("submitRespondentAnswer passes mapped args (including session token) to RPC", async () => {
     rpcMock.mockResolvedValueOnce({ data: null, error: null });
     await submitRespondentAnswer({
       sessionId: "ses_1",
+      sessionToken: "tok_1",
       questionId: "q_1",
       value: "Yes",
       isCorrect: true,
@@ -69,7 +86,21 @@ describe("respondent queries — Supabase RPC bindings", () => {
       p_value: "Yes",
       p_is_correct: true,
       p_time_ms: 1234,
+      p_session_token: "tok_1",
     });
+  });
+
+  it("submitRespondentAnswer sends null token when caller has none", async () => {
+    rpcMock.mockResolvedValueOnce({ data: null, error: null });
+    await submitRespondentAnswer({
+      sessionId: "ses_1",
+      questionId: "q_1",
+      value: "Yes",
+      isCorrect: null,
+      timeMs: 0,
+    });
+    const call = rpcMock.mock.calls[0]?.[1] as { p_session_token: unknown };
+    expect(call.p_session_token).toBeNull();
   });
 
   it("submitRespondentAnswer throws when RPC errors", async () => {
@@ -85,12 +116,13 @@ describe("respondent queries — Supabase RPC bindings", () => {
     ).rejects.toMatchObject({ message: "session_closed" });
   });
 
-  it("finalizeRespondentSession passes session id and score to RPC", async () => {
+  it("finalizeRespondentSession passes session id, token, and score to RPC", async () => {
     rpcMock.mockResolvedValueOnce({ data: null, error: null });
-    await finalizeRespondentSession({ sessionId: "ses_1", score: 85 });
+    await finalizeRespondentSession({ sessionId: "ses_1", sessionToken: "tok_1", score: 85 });
     expect(rpcMock).toHaveBeenCalledWith("finalize_respondent_session", {
       p_session_id: "ses_1",
       p_score: 85,
+      p_session_token: "tok_1",
     });
   });
 

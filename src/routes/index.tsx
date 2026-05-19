@@ -252,7 +252,10 @@ function Index() {
               : t("home.stats_count", { count: displayCount.toLocaleString("sk-SK") })}
           </div>
 
-          <h1 className="text-balance text-4xl font-black leading-[1.05] tracking-tight sm:text-6xl md:text-7xl">
+          <h1
+            className="text-balance text-4xl font-black leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
+            data-testid="home-hero-heading"
+          >
             {t("home.hero_title_prefix")}
             <span className="text-primary">{t("home.hero_title_suffix")}</span>
           </h1>

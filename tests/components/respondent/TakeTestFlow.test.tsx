@@ -49,7 +49,10 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
   });
 
   it("calls start_respondent_session on intake submit and advances to questions", async () => {
-    rpcMock.mockResolvedValueOnce({ data: "ses_uuid_1", error: null });
+    rpcMock.mockResolvedValueOnce({
+      data: { session_id: "ses_uuid_1", session_token: "tok_1" },
+      error: null,
+    });
     renderFlow({ questionIds: [] });
     await completeIntake();
     await waitFor(() => {
@@ -74,7 +77,10 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
   });
 
   it("does NOT call finalize when there are no questions to answer", async () => {
-    rpcMock.mockResolvedValueOnce({ data: "ses_uuid_1", error: null });
+    rpcMock.mockResolvedValueOnce({
+      data: { session_id: "ses_uuid_1", session_token: "tok_1" },
+      error: null,
+    });
     renderFlow({ questionIds: [] });
     await completeIntake();
     await waitFor(() => {
