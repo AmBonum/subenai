@@ -1,0 +1,238 @@
+---
+slug: digitalna-bezpecnost-kompletny-navod
+title: "digitálna bezpečnosť pre bežných ľudí — kompletný návod"
+subtitle: "10 pravidiel, ktoré ti za jeden víkend nastavia obranu na ďalších päť rokov"
+excerpt: "digitálna bezpečnosť nie je o tom, byť paranoidný — je o tom, aby si raz nastavil pár vrstiev a potom mohol používať internet bez strachu. tento návod ti ukáže 10 pravidiel, ktoré reálne fungujú, bez vendor-hype a bez bullshitu."
+category_slug: digitalna-hygiena
+author_slug: subenai-editorial
+primary_keyword: digitalna bezpecnost
+search_intent: informational
+reading_minutes: 14
+hero_image_url: null
+og_image_url: null
+seo_title: "digitálna bezpečnosť — 10 pravidiel pre bežných ľudí | subenai"
+seo_description: "kompletný návod na digitálnu bezpečnosť — heslá, 2fa, password manager, vpn, verejná wifi, aktualizácie a kontrola únikov. 10 pravidiel, ktoré nastavíš za víkend."
+canonical_url: null
+pillar: true
+sources:
+  - label: "sk-cert: varovanie pred zvýšeným rizikom kybernetických bezpečnostných útokov"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "národná banka slovenska: internetové podvody a ako sa im brániť"
+    url: "https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/"
+    publisher: "NBS"
+    accessed_at: "2026-05-19"
+  - label: "polícia sr: podvodné e-maily a falošné predvolania"
+    url: "https://www.minv.sk/?podvodne_emaily="
+    publisher: "Polícia SR"
+    accessed_at: "2026-05-19"
+  - label: "have i been pwned: kontrola, či ti uniklo heslo alebo e-mail"
+    url: "https://haveibeenpwned.com/"
+    publisher: "Have I Been Pwned"
+    accessed_at: "2026-05-19"
+  - label: "eset bezpečne na nete: ako odhaliť, či vaše heslá unikli na internet"
+    url: "https://bezpecnenanete.eset.com/sk/cybernews/ako-odhalit-ci-vase-hesla-unikli-na-internet/"
+    publisher: "ESET"
+    accessed_at: "2026-05-19"
+  - label: "fonet.sk: ako u2f posilňuje online bezpečnosť — prečo nestačí len heslo"
+    url: "https://www.fonet.sk/2025/05/ako-u2f-posilnuje-online-bezpecnost-preco-nestaci-len-heslo/"
+    publisher: "FONET"
+    accessed_at: "2026-05-19"
+---
+
+digitálna bezpečnosť znie ako téma pre IT-čkárov v kapucniach. nie je. je to každodenný šum, ktorý sa týka teba, tvojej mamy aj tvojho dvanásťročného synovca. rozdiel medzi človekom, ktorého raz hekli, a človekom, ktorý spí v noci pokojne, nie je inteligencia ani vek — sú to tri-štyri vrstvy obrany, ktoré sa dajú nastaviť za víkend a potom fungujú samé. tento návod ti ukáže presne tých 10 pravidiel. žiadne abstraktné rady „buď opatrný". konkrétne nástroje, konkrétne kroky, konkrétny čas, ktorý to bude stáť.
+
+začnime tým, čo digitálna bezpečnosť **nie je**.
+
+## čo digitálna bezpečnosť nie je
+
+nie je to antivírus, ktorý kúpiš a dvere sú zamknuté. nie je to vpn, ktorá ťa „skryje na internete". nie je to ani byť technickým géniom. **digitálna bezpečnosť je sada vrstiev**, kde každá vrstva ošetruje jeden konkrétny scenár, a keď jedna padne, ďalšia ťa zachytí. tomu sa hovorí *defence in depth* — obrana do hĺbky — a je to ten istý princíp, ktorý používa armáda, banka aj tvoje auto so zónami deformácie.
+
+[národná banka slovenska vo svojich materiáloch o internetových podvodoch](https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/) [2] hovorí jasne: drvivá väčšina obetí finančných podvodov nie sú technologickí ignoranti. sú to ľudia s vyšším vzdelaním, ktorí zlyhali v jednej chvíli pozornosti. presne preto opatrnosť ako jediná stratégia nestačí. potrebuješ vrstvy, ktoré fungujú **aj keď klikneš**.
+
+a teraz tých 10 pravidiel.
+
+## 1. unikátne heslo pre každú službu (a prečo rovnaké heslo všade je sebevražda)
+
+najčastejšia chyba slovenského internetu znie takto: jedno heslo, ktoré používaš pre gmail, facebook, slsp aj objednávky v alze. „je dosť silné, mám tam veľké písmeno a číslo." problém nie je sila hesla. problém je, že **akonáhle unikne čo i len z jednej z týchto služieb, útočník ho vyskúša na všetkých ostatných**. tomu sa hovorí *credential stuffing* a je to najziskovejší útok v 2026 — automatizovaný, lacný, masívny.
+
+[v januári 2026 sa na povrch dostala databáza takmer 150 miliónov uniknutých hesiel](https://www.techbyte.sk/2026/01/mimoriadne-mate-facebook-alebo-gmail-unik-150-milionov-hesiel/) z kombinovaných únikov facebooku, gmailu a desiatok ďalších služieb. ak si svoje heslo niekde recykloval, je veľká šanca, že je v tej databáze. a útočníci ho práve teraz skúšajú na tvojom internet bankingu.
+
+riešenie: každý účet má **vlastné unikátne heslo**. nie variant („Heslo123" pre fb, „Heslo124" pre gmail — to je horšie než rovnaké heslo, lebo si myslíš, že máš obranu). úplne iné.
+
+## 2. zapomeň na „silné heslo" — používaj heslové frázy
+
+klasická rada *„aspoň 12 znakov, veľké a malé písmená, čísla a špeciálne znaky"* má jeden zásadný problém: takéto heslo si nikto nepamätá. takže si ho zapíšeš na lístoček pod klávesnicu, alebo použiješ ten istý vzor všade.
+
+moderný prístup, ktorý odporúčajú aj nist a sk-cert vo svojich materiáloch, je **heslová fráza** — štyri náhodné slovenské slová oddelené medzerou:
+
+```
+modry slon kosak vianoce
+```
+
+dvadsaťtri znakov. zapamätateľné na prvý pokus. matematicky **vyše bilióna kombinácií**, čo je viac než 12-znakové „P@ssw0rd!" s rovnakou entropiou ako lottery. útočníkovi to trvá storočia. tebe trvá tri sekundy zadať.
+
+dôležité: slová musia byť **náhodné**, nie z tvojho života. nie meno psa, nie obľúbený film, nie ulica detstva. otvoriť knihu na náhodnej strane a vziať štvrté slovo je dobrý generátor. ešte lepší je tvoj password manager (pravidlo 3).
+
+## 3. password manager — jediný nástroj, ktorý ti zmení život
+
+vlastné heslo pre každú zo 150 služieb, ktoré používaš? nemožné si pamätať. preto existuje **password manager** — aplikácia, ktorá za teba generuje, ukladá a vypĺňa heslá. pamätáš si jediné master heslo (tu použi heslovú frázu z pravidla 2), všetko ostatné robí manager.
+
+tri možnosti, ktoré stoja za zváženie pre bežného slováka:
+
+- **bitwarden** — zadarmo, open source, sync naprieč zariadeniami, audit cez tretiu stranu. pre väčšinu ľudí najlepší štart. neexistuje žiadny dôvod, prečo nemať aspoň túto verziu.
+- **1password** — platený (~3 €/mesiac), najpolírovanejšie UX, výborná podpora rodinných plánov (5 ľudí, zdieľané trezory pre netflix). odporúčame, ak máš rodinu a nechceš sa s tým dvakrát hrať.
+- **apple keychain / iCloud Passwords** — vstavané v každom iphone a macu. zadarmo. limit: nefunguje mimo applu, takže ak máš v rodine android, nezdieľaš.
+
+**bonus, ktorý mení hru:** password manager neuloží heslo do falošnej napodobeniny prihlasovacej stránky. ak ti 1password alebo bitwarden **nechce automaticky vyplniť** prihlasovacie údaje na stránke, ktorá vyzerá ako slovenská sporiteľňa — **stránka je falošná**. žiadny iný anti-phishing signál nie je takto spoľahlivý. detailné porovnanie aktuálnych manažérov nájdeš v [správca hesiel — porovnanie](/blog/spravca-hesiel-porovnanie) a [najlepší správca hesiel 2026](/blog/najlepsi-spravca-hesiel-porovnanie-2026); kontext heslo vs. passkey vysvetľuje [silné heslo 2026 vs. passkey](/blog/silne-heslo-2026-vs-passkey).
+
+## 4. dvojfaktorové overenie (2FA) — druhá obálka okolo tvojich hesiel
+
+aj keď máš silné unikátne heslo, môže ti uniknúť pri prielome do služby (nie tvojou vinou). preto potrebuješ **2FA — dvojfaktorové overenie**: druhý kód, ktorý sa pýta po hesle a útočník ho nemá. ak je heslo niečo, *čo vieš*, tak 2FA je niečo, *čo máš* — telefón, hardvérový kľúč, biometriku.
+
+ale nie všetky 2FA sú rovnaké. od najhoršej po najlepšiu:
+
+1. **SMS 2FA** — kód príde SMS-kou. lepšie než nič, ale má známu zraniteľnosť: **SIM swap**. útočník zavolá tvojmu operátorovi, vydáva sa za teba, požiada o novú SIM kartu a od tej chvíle dostáva tvoje sms-ky on. polícia sr aj sk-cert hlásia takéto prípady na slovensku pravidelne. SMS zapni len tam, kde služba nič iné neponúka.
+
+2. **TOTP cez authenticator app** — kód generuje aplikácia (google authenticator, microsoft authenticator, authy, raivo, 2fas). nový kód každých 30 sekúnd, pracuje aj offline. **toto je default, ktorý chceš všade.** žiadny operátor, žiadna SIM. útočník by potreboval fyzicky tvoj telefón.
+
+3. **backup kódy** — pri zapnutí 2FA každá poriadna služba ponúkne 8-10 jednorazových kódov pre prípad, že stratíš telefón. **vytlač si ich a daj do zásuvky alebo trezoru.** bez nich, ak zlomíš mobil, prídeš o účet.
+
+4. **FIDO2 hardvérový kľúč** (yubikey, google titan) — fyzický kľúč na USB alebo NFC. najsilnejšia úroveň. [u2f / fido2 kľúče sú kryptograficky imúnne voči phishingu](https://www.fonet.sk/2025/05/ako-u2f-posilnuje-online-bezpecnost-preco-nestaci-len-heslo/) [6] — kľúč overuje doménu a podpisuje výzvu len pre originálnu stránku, takže aj keď zadáš heslo na napodobenine, kľúč odmietne podpísať. pre power userov alebo všetkých, ktorí majú citlivé účty (e-mail s prístupom ku všetkému ostatnému je číslo jedna).
+
+minimum, ktoré chceš mať zapnuté: **TOTP na e-maile, internet bankingu a na sociálnych sieťach.** prečo e-mail najprv? lebo z neho útočník reštartuje heslá všade inde. ak padne e-mail, padne všetko. detailnejší rozbor 2fa pre phishingovú obranu nájdeš v [ochrana pred phishingom — 2fa a passkeys](/blog/ochrana-pred-phishingom-2fa-passkey) a porovnanie kľúčov v [yubikey vs google titan vs passkey](/blog/yubikey-vs-google-titan-vs-passkey).
+
+## 5. verejná wifi — kedy je v poriadku a kedy nie
+
+myslíš si, že vpn ťa „chráni" na verejnej wifi. čiastočne pravda, ale väčšina obáv okolo verejnej wifi sú **mýty z roku 2010**.
+
+aktuálna realita 2026:
+
+- **HTTPS dnes pokrýva 95+ % webu**, takže keď sa pripojíš na wifi v kaviarni a otvoríš stránku banky, **prevádzka medzi tebou a bankou je už šifrovaná**. operátor wifi nevidí tvoje heslo. nevidí čísla kariet. nevidí obsah komunikácie.
+- čo operátor wifi **vidí**, je to, **kam** sa pripájaš (DNS dotazy, mená domén). teda vidí, že si na slsp.sk, ale nie konkrétne čo tam robíš. od pohľadu súkromia stále relevantné.
+- **realný útok na verejnej wifi je dnes phishingová stránka, nie odpočúvanie.** otrávená captive portál stránka („pripojenie zaplaťte 2 €") ti pýta číslo karty alebo prihlasovacie údaje cez fake login.
+
+kedy potrebuješ VPN:
+
+1. **chceš skryť pred operátorom wifi, kam chodíš.** napríklad si v hotelovej sieti v krajine s cenzúrou.
+2. **pripájaš sa cez verejnú wifi na pracovné systémy.** firmy to často vyžadujú smernicou.
+3. **chceš obejsť geo-blokovanie** (netflix v zahraničí, BBC iPlayer mimo UK).
+
+kedy VPN **nepotrebuješ**:
+
+- bežné prezeranie webu na domácom wifi. máš HTTPS, máš router za NAT-om, útočník by musel byť priamo v tvojej sieti.
+- ochranu pred phishingom, malwarom a podvodmi. **VPN je TLS-on-top sieťová obrana, nie magická bezpečnostná deka.** ak ti ide o ochranu pred phishingom, žiadna VPN ti nepomôže — pomôže ti password manager, 2FA a 10-sekundový skríning e-mailov, ktorý popisujem v [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca).
+
+ak chceš detailný rozbor vrátane porovnania produktov, pozri [vpn — naozaj ju potrebuješ](/blog/vpn-ci-naozaj-potrebujem), [verejná wifi — riziká a obrana](/blog/verejna-wifi-rizika-a-obrana) a komerčný buyer's guide v [najlepšia vpn 2026 pre slovákov](/blog/najlepsia-vpn-2026-slovensko).
+
+## 6. aktualizácie systému — 60 % bezpečnostnej praxe v jednom kliku
+
+povinné čítanie: **väčšina útokov, ktoré dnes prebehnú, využíva chyby, ktoré sú už mesiace opravené v dostupných aktualizáciách**. obeť proste nezaktualizovala. [sk-cert vo svojich varovaniach pravidelne uvádza zoznam zraniteľností a kampaní, ktoré ich aktívne zneužívajú](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) [1] — drvivá väčšina sa dala odvrátiť jediným reštartom po stiahnutí patchu.
+
+minimum, ktoré urobíš dnes:
+
+- **zapni automatické aktualizácie na windowse, macos, ios, androide.** „automaticky" znamená, že nemusíš na to myslieť. v sekcii nastavení každého z týchto systémov je prepínač — daj áno, hotovo.
+- **aktualizuj prehliadač.** chrome, firefox, safari, edge — všetky majú silentné updaty zapnuté podľa defaultu, ale pravidelne reštartuj prehliadač, aby sa update dokončil.
+- **aktualizuj aj router.** áno, ten matný plast pod stolom má operačný systém. mnohé routery na slovensku bežia s firmvérom 2018 a otvorenou administratívnou stránkou. raz za pol roka skontroluj.
+- **odinštaluj aplikácie, ktoré nepoužívaš.** každá nainštalovaná aplikácia je potenciálny vektor útoku. menej je viac.
+
+konkrétne príklady, prečo to nie je teoretická panika, nájdeš v [aktualizácie systému — prečo sú dôležité](/blog/aktualizacie-systemu-preco-su-dolezite). je tam pár konkrétnych CVE → exploit timeline-ov, ktoré ti vysvetlia, prečo „neaktualizoval som lebo som lenivý" stojí v priemere 4-8 týždňov tvojho života na obnovu po incidente.
+
+## 7. zálohovanie — pravidlo 3-2-1 pre normálnych ľudí
+
+ransomware nie je téma len pre firmy. v 2025 a 2026 sa cieli aj na domácnosti — útočník zašifruje rodinné fotky, požiada 500 € v krypte. ak nemáš zálohu, máš dve možnosti: zaplatiť (a nemať záruku, že ti to odšifruje) alebo prísť o fotky.
+
+pravidlo 3-2-1 v ľudskej reči:
+
+- **3 kópie tvojich dát** (originál + 2 zálohy)
+- **na 2 rôznych typoch médií** (napr. interný disk + externý ssd)
+- **1 kópia mimo domova** (cloud, USB v práci u kolegu, USB u rodičov)
+
+pre väčšinu ľudí to vyzerá takto: počítač + externý SSD v zásuvke (pripoj raz za týždeň, synchronizuj fotky a dokumenty) + jeden cloud (google one, icloud, dropbox, proton drive). 50 € jednorazovo za disk, 2 € mesačne za cloud. cena, za ktorú spíš v noci.
+
+detailný setup pre rodinu nájdeš v [zálohovanie dát — pravidlo 3-2-1](/blog/zalohovanie-dat-3-2-1-pravidlo).
+
+## 8. kontrola únikov hesiel — havibeenpwned.com
+
+raz za pol roka spravíš jednu vec: otvoríš [haveibeenpwned.com](https://haveibeenpwned.com/) [4] a zadáš tam svoj e-mail. služba ti za pár sekúnd ukáže, v ktorých konkrétnych databázových únikoch sa tvoja adresa nachádza. databázu prevádzkuje austrálsky bezpečnostný výskumník troy hunt; je to celosvetový štandard a [partneria s ňou aj vládne kybernetické agentúry vrátane českého nukibu](https://www.irozhlas.cz/zpravy-domov/bezpecnost-hesla-hibp-nukib_2109061432_cib) — služba ako taká je dôveryhodná, nepýta heslá, len e-mail.
+
+výsledok červený? **zmeň heslo na každej spomenutej službe** (a uisti sa, že je unikátne — pravidlo 1). zapni 2FA všade tam, kde si to ešte neurobil. ak používaš password manager, väčšina kvalitných (1password, bitwarden) má vstavanú integráciu s HIBP a vie ti automaticky ukázať, ktoré z tvojich uložených hesiel sú v leak databáze — funkcia sa volá *password health* alebo *vault report* a robí to pekne za teba.
+
+špecificky pre slovenský kontext: SK-CERT nie je partnerom HIBP, ale [eset slovensko v aktuálnych materiáloch tiež odporúča používať haveibeenpwned ako prvý krok kontroly](https://bezpecnenanete.eset.com/sk/cybernews/ako-odhalit-ci-vase-hesla-unikli-na-internet/) [5]. neexistuje žiadna sk-špecifická alternatíva s takým záberom — HIBP indexuje aj slovenské lokálne úniky (e-shopy, fóra, telekom databázy), takže pre slováka funguje úplne rovnako. detailný návod krok za krokom v [uniknuté heslo — overenie cez haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned).
+
+## 9. čo robiť, keď ti niekto z účtu vyberie peniaze
+
+predpokladajme, že napriek všetkému zlyháš. niekto sa dostal ku karte alebo k internet bankingu. zachyť to do troch minút a stratu vieš často úplne zastaviť.
+
+1. **zavolaj banke z čísla, ktoré je vytlačené na karte** (nie z čísla, ktoré ti príde sms-kou). každá slovenská banka má 24/7 linku. blokácia karty trvá 30 sekúnd.
+2. **požiadaj o návrat platby (chargeback)** — pri neoprávnenej platbe kartou máš nárok podľa pravidiel kartových schém (visa, mastercard) na 30-60 dní lehotu. banka to vie spracovať, ale ty musíš nahlásiť čo najskôr.
+3. **zmeň heslo k internet bankingu** z iného zariadenia, ktoré nebolo kompromitované.
+4. **nahlás na polícii** trestné oznámenie. ak útočník vybral viac než pár desiatok eur, je to trestný čin a polícia má zákonnú povinnosť to vyšetrovať. polícia sr má pre to [oficiálnu stránku s návodom](https://www.minv.sk/?podvodne_emaily=) [3].
+5. **nahlás sk-certu** na incident@nbu.gov.sk. pomáha to ostatným — sk-cert na základe hlásení vydáva nové varovania.
+
+ak ide o pravidelný debet, ktorý si nepoznáš (sip podvody, mikroplatby cez aplikácie), pozri si presný protokol v [nechcené platby z účtu — čo robiť](/blog/nechcene-platby-z-uctu-co-robit). pre širší kontext aktuálnych útokov v 2026 prečítaj [top podvody slovensko 2026](/blog/top-podvody-slovensko-2026) a [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca) ako pillar pre najčastejší vektor.
+
+## 10. povedomie o tom, ako podvodník myslí
+
+posledné pravidlo nie je technické. je to mentálne. všetky vrstvy z bodov 1-9 ti zachránia kožu **po** kliknutí. ale stále si silnejší, ak vieš, kedy sa máš zastaviť **pred** kliknutím.
+
+podvodník stavia na troch univerzálnych pákach:
+
+- **naliehavosť** — *„zaplaťte do 24 hodín"*, *„účet bude zablokovaný"*. mozog pod tlakom vypína kontrolu.
+- **autorita** — *„volá polícia"*, *„píše banka"*, *„z finančnej správy"*. predpokladáme, že štát hovorí pravdu.
+- **strach alebo lakomstvo** — *„váš účet bol napadnutý"* (strach), *„vrátenie dane 348 €"* (lakomstvo). oboje zapína akciu skôr než logiku.
+
+ak ti niekto cez e-mail, sms alebo telefón zaktivuje **kombináciu** týchto troch — *„polícia ti volá, že máš 24 hodín zaplatiť pokutu inak vyhotoví zatykač"* — to nie je text pre analýzu, to je text pre adrenalín. **zlož telefón. zatvor e-mail. počkaj 60 sekúnd. over si to druhým kanálom** (otvor stránku z bookmarku, zavolaj na oficiálne číslo). žiadna naliehavá situácia neprežije tých 60 sekúnd.
+
+prečo to funguje aj na opatrných, inteligentných ľudí, vysvetľujeme v [psychológia internetových podvodov](/blog/psychologia-internetovych-podvodov) a [prečo aj inteligentní ľudia naletia na podvody](/blog/preco-aj-inteligentni-ludia-naletia).
+
+## 10-minútový víkend — checklist krok za krokom
+
+ak si dočítal až sem, deal je toto: **v jednu sobotu si sadneš a urobíš týchto 6 vecí**. dohromady to zaberie 90 minút. máš to potom hotové na 5 rokov.
+
+1. **(15 min)** založ si bitwarden (alebo 1password). nastav master heslo ako heslovú frázu (4 náhodné slovenské slová). vytlač si recovery kód.
+2. **(20 min)** zapni 2FA cez authenticator app na: gmail, facebook, internet banking. ulož si backup kódy do trezoru / zásuvky.
+3. **(10 min)** otvor haveibeenpwned.com, zadaj svoj e-mail. ak červená — pozri zoznam služieb a urči, ktoré z nich ešte používaš.
+4. **(20 min)** zmeň heslo na 5 najdôležitejších službách, kde si ho recykloval. nové heslá ti vygeneruje password manager — nemusíš si ich pamätať.
+5. **(10 min)** zapni automatické aktualizácie na všetkých zariadeniach. windows update, macos software update, ios automatic updates, google play store auto-update.
+6. **(15 min)** kúp externý SSD (50-80 €). pripoj, skopíruj zložku „dokumenty" a „fotky". odpoj, daj do zásuvky. raz mesačne pripoj a opakuj.
+
+hotovo. máš obranu, ktorá pokrýva 95 % útokov, na ktoré bežný slovák narazí.
+
+## zhrnutie
+
+- digitálna bezpečnosť nie je o paranoji ani o tom byť IT odborník. je to **sada vrstiev**, ktoré ti zachránia kožu, **aj keď klikneš**.
+- **rovnaké heslo všade je sebevražda** — credential stuffing je dnes najziskovejší útok.
+- **heslové frázy > zložité 12-znakové heslá**, lebo si ich pamätáš a generátor v password manageri spraví zvyšok.
+- **password manager** je nástroj číslo 1 — nielen pre pohodlie, ale lebo odmietne vyplniť heslo na falošnej doméne.
+- **2FA cez authenticator app**, nie cez SMS (SIM swap). FIDO2 kľúč pre kritické účty.
+- **verejná wifi** dnes nie je hlavná hrozba — phishing je. VPN je užitočná pre súkromie, nie ako anti-scam riešenie.
+- **aktualizácie pokrývajú 60 % útokov.** zapni automaticky a zabudni.
+- **zálohuj** podľa pravidla 3-2-1 (lokál + externý + cloud).
+- **haveibeenpwned.com** — raz za pol roka pozrieš, či neunikol tvoj e-mail.
+- **60-sekundové pravidlo** pred kliknutím porazí 90 % phishingových útokov.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [silné heslo 2026 vs. passkey](/blog/silne-heslo-2026-vs-passkey)
+- [správca hesiel — porovnanie](/blog/spravca-hesiel-porovnanie)
+- [vpn — naozaj ju potrebuješ](/blog/vpn-ci-naozaj-potrebujem)
+- [verejná wifi — riziká a obrana](/blog/verejna-wifi-rizika-a-obrana)
+- [aktualizácie systému — prečo sú dôležité](/blog/aktualizacie-systemu-preco-su-dolezite)
+- [zálohovanie dát — pravidlo 3-2-1](/blog/zalohovanie-dat-3-2-1-pravidlo)
+- [uniknuté heslo — overenie cez haveibeenpwned](/blog/uniknute-heslo-overit-haveibeenpwned)
+- [nechcené platby z účtu — čo robiť](/blog/nechcene-platby-z-uctu-co-robit)
+- [internet iq test — otestuj sa](/blog/kviz-iq-internet-bezpecnost)
+- [top podvody slovensko 2026](/blog/top-podvody-slovensko-2026)
+- [najlepší antivírus 2026 pre slovensko](/blog/najlepsi-antivirus-2026-slovensko)
+- [eset vs. bitdefender vs. kaspersky](/blog/eset-vs-bitdefender-vs-kaspersky)
+- [najlepší správca hesiel 2026](/blog/najlepsi-spravca-hesiel-porovnanie-2026)
+- [najlepšia vpn 2026 pre slovákov](/blog/najlepsia-vpn-2026-slovensko)
+- [poistenie proti kybernetickým podvodom](/blog/poistenie-proti-kybernetickym-podvodom)
+- [služby monitoringu úniku dát](/blog/sluzby-monitoring-uniku-dat)
+- [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca)
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
