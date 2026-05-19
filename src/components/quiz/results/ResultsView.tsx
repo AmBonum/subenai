@@ -6,6 +6,7 @@ import {
   type AnswerRecord,
   type ScoreResult,
 } from "@/lib/quiz/score/scoring";
+import type { Question } from "@/lib/quiz/bank/questions";
 import { supabase } from "@/integrations/supabase/client";
 import { buildShareCaption } from "@/lib/share/intents";
 import { TRAP_SEEN_STORAGE_KEY } from "@/lib/data-trap/copy";
@@ -37,6 +38,14 @@ interface Props {
    *  with the JWT instead of doing a direct anon Supabase INSERT
    *  (RLS blocks anon INSERT of respondent_* rows since E12.3). */
   edu?: EduContextProp;
+  /** Live questions from the just-finished attempt. Passed down to
+   *  AnswerReviewSection so each card can resolve its question by id
+   *  against this array — required because DB-served questions
+   *  (`get_quick_test_questions` RPC, AH-11.5b.1) have UUIDs that
+   *  don't exist in the local QUESTIONS bundle. Without this, every
+   *  review card rendered the "missing_question" placeholder
+   *  (2026-05-19 prod bug). */
+  questions?: Question[];
 }
 
 function genShareId(): string {
@@ -55,6 +64,7 @@ export function ResultsView({
   passingThreshold,
   passLabel,
   edu,
+  questions,
 }: Props) {
   const t = tFor("results");
   const tCommon = tFor("common");
@@ -528,7 +538,7 @@ export function ResultsView({
                       </div>
                     }
                   >
-                    <AnswerReviewSection answers={answers} />
+                    <AnswerReviewSection answers={answers} questions={questions} />
                   </Suspense>
                 )}
               </div>

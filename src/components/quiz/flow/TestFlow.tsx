@@ -57,6 +57,13 @@ const RESULT_STORAGE_KEY_PREFIX = "iiq_last_result_v1";
 interface PersistedResult {
   result: ScoreResult;
   answers: AnswerRecord[];
+  /** Questions are snapshotted so the post-test review can resolve each
+   *  answer's questionId on back/forward navigation — without this,
+   *  DB-served questions (UUIDs, AH-11.5b.1) wouldn't be found in the
+   *  local QUESTIONS bundle and every review card would render the
+   *  "missing_question" placeholder (2026-05-19 prod bug). Optional
+   *  for backwards compatibility with sessions written before this fix. */
+  questions?: Question[];
 }
 
 function storageKeyFor(config: TestFlowConfig): string {
@@ -123,9 +130,16 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
       : (clearPersistedResult(storageKey), null);
 
   const [phase, setPhase] = useState<Phase>(restored ? "done" : "intro");
-  const [questions, setQuestions] = useState<Question[]>(
-    config.kind === "default" ? [] : config.questions,
-  );
+  const [questions, setQuestions] = useState<Question[]>(() => {
+    // On back/forward restore, hydrate questions from the snapshot so the
+    // review screen can resolve each card's questionId. Falls back to
+    // empty (default kind) or the pre-built list (pack/composer) when
+    // not restoring. (questions snapshot was added 2026-05-19; older
+    // sessions written without it will still see "missing_question"
+    // placeholders for DB-served questions — one-tab-lifetime issue.)
+    if (restored?.questions && restored.questions.length > 0) return restored.questions;
+    return config.kind === "default" ? [] : config.questions;
+  });
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerRecord[]>(restored?.answers ?? []);
   const [result, setResult] = useState<ScoreResult | null>(restored?.result ?? null);
@@ -165,7 +179,7 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
       const finalResult = computeScore(next);
       setResult(finalResult);
       setPhase("done");
-      savePersistedResult(storageKey, { result: finalResult, answers: next });
+      savePersistedResult(storageKey, { result: finalResult, answers: next, questions });
     } else {
       setIndex(index + 1);
     }
@@ -203,6 +217,12 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
         passingThreshold={passingThreshold}
         passLabel={passLabel}
         edu={config.kind === "composer" ? config.edu : undefined}
+        // Pass the live questions array so the AnswerReviewSection can
+        // resolve each card by id — DB-served questions have UUIDs that
+        // don't exist in the static QUESTIONS bundle (AH-11.5b.1), so
+        // without this prop every review card rendered the
+        // "missing_question" placeholder (2026-05-19 prod bug).
+        questions={questions}
       />
     );
   }
