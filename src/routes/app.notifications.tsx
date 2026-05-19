@@ -103,9 +103,24 @@ function NotificationsPage() {
             <CardContent className="flex items-start justify-between gap-4 p-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <Badge className={TYPE_TONE[n.event_type]}>{n.event_type}</Badge>
-                  <span className="text-sm font-medium">{n.title}</span>
-                  {!n.read_at && <span className="h-2 w-2 rounded-full bg-primary" />}
+                  <Badge
+                    className={TYPE_TONE[n.event_type]}
+                    data-testid={`app-notifications-badge-${n.id}`}
+                  >
+                    {n.event_type}
+                  </Badge>
+                  <span
+                    className="text-sm font-medium"
+                    data-testid={`app-notifications-title-${n.id}`}
+                  >
+                    {n.title}
+                  </span>
+                  {!n.read_at && (
+                    <span
+                      className="h-2 w-2 rounded-full bg-primary"
+                      data-testid={`app-notifications-unread-dot-${n.id}`}
+                    />
+                  )}
                 </div>
                 <p className="text-sm text-muted-foreground">{n.body}</p>
                 <p className="text-xs text-muted-foreground">

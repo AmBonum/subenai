@@ -201,18 +201,34 @@ function HistoryPage() {
             <Card key={r.id} data-testid={`history-row-${r.id}`} className="border-border/60">
               <CardContent className="flex items-center justify-between gap-3 p-3">
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{r.test_title}</p>
-                  <p className="text-xs text-muted-foreground">{r.action}</p>
+                  <p
+                    className="truncate text-sm font-medium"
+                    data-testid={`history-row-${r.id}-title`}
+                  >
+                    {r.test_title}
+                  </p>
+                  <p
+                    className="text-xs text-muted-foreground"
+                    data-testid={`history-row-${r.id}-action`}
+                  >
+                    {r.action}
+                  </p>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Badge variant="outline" className="font-normal text-[10px]">
+                  <Badge
+                    variant="outline"
+                    className="font-normal text-[10px]"
+                    data-testid={`history-row-${r.id}-type-badge`}
+                  >
                     {r.type === "session"
                       ? t("event_type_session")
                       : r.type === "version"
                         ? t("event_type_version")
                         : t("event_type_status")}
                   </Badge>
-                  <span>{new Date(r.at).toLocaleString("sk-SK")}</span>
+                  <span data-testid={`history-row-${r.id}-date`}>
+                    {new Date(r.at).toLocaleString("sk-SK")}
+                  </span>
                 </div>
               </CardContent>
             </Card>

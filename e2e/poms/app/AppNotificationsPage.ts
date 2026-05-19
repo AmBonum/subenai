@@ -35,7 +35,31 @@ export class AppNotificationsPage extends BasePage {
     return this.page.getByTestId(`app-notifications-row-${id}`);
   }
 
+  rowBadge(id: string) {
+    return this.page.getByTestId(`app-notifications-badge-${id}`);
+  }
+
+  rowTitle(id: string) {
+    return this.page.getByTestId(`app-notifications-title-${id}`);
+  }
+
+  rowUnreadDot(id: string) {
+    return this.page.getByTestId(`app-notifications-unread-dot-${id}`);
+  }
+
   markRead(id: string) {
     return this.page.getByTestId(`app-notifications-mark-read-${id}`);
+  }
+
+  async clickMarkRead(id: string) {
+    await this.markRead(id).click();
+  }
+
+  async clickMarkAll() {
+    await this.markAll.click();
+  }
+
+  async clickFilterUnread() {
+    await this.filterUnread.click();
   }
 }

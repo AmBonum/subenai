@@ -153,7 +153,12 @@ function TestsList() {
               <CardContent className="space-y-3 p-4">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <div className="truncate font-medium">{x.title}</div>
+                    <div
+                      className="truncate font-medium"
+                      data-testid={`tests-list-row-title-${x.id}`}
+                    >
+                      {x.title}
+                    </div>
                     <p className="line-clamp-2 text-xs text-muted-foreground">{x.description}</p>
                   </div>
                   <StatusBadge status={x.status} />
