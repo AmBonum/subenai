@@ -189,6 +189,22 @@
     "retested_label": "Retest started",
     "view_all_cta": "View all"
   },
+  "peer": {
+    "page_title": "Peer comparison · SubenAI",
+    "page_header_eyebrow": "Comparison",
+    "heading": "Your respondents vs. the UK average",
+    "subheading": "How your audience compares to the anonymous UK baseline over the last 90 days.",
+    "empty_insufficient": "Not enough data yet for comparison. Check back in a few weeks.",
+    "empty_no_user": "Your respondents haven't taken a test yet. Send a test to your class to see the comparison.",
+    "percentile_headline": "{p}th percentile",
+    "percentile_body": "Your audience is above {p}% of UK respondents.",
+    "your_score": "Your audience",
+    "cohort_score": "UK average",
+    "attempts_suffix": "(from {n} attempts)",
+    "branch_ranks_heading": "Strongest areas",
+    "privacy_note": "Comparison is generated from all anonymous attempts over the last 90 days. No personal data is used.",
+    "dashboard_card_label": "View comparison"
+  },
   "help": {
     "page_header_eyebrow": "Help centre",
     "page_header_title": "Frequently asked questions",
@@ -234,7 +250,8 @@
     "tests_new": "New test · SubenAI",
     "dsr": "GDPR request · SubenAI",
     "help": "Help centre · SubenAI",
-    "retest": "Retest reminders · SubenAI"
+    "retest": "Retest reminders · SubenAI",
+    "peer": "Peer comparison · SubenAI"
   },
   "account": {
     "tabs": {

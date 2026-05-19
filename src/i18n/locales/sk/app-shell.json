@@ -189,6 +189,22 @@
     "retested_label": "Retest spustený",
     "view_all_cta": "Pozri všetky"
   },
+  "peer": {
+    "page_title": "Porovnanie s ostatnými · SubenAI",
+    "page_header_eyebrow": "Porovnanie",
+    "heading": "Tvoji respondenti vs. Slovensko",
+    "subheading": "Ako sa darí tvojej audience oproti anonymnému slovenskému priemeru za posledných 90 dní.",
+    "empty_insufficient": "Zatiaľ máme málo dát na porovnanie. Vráť sa o pár týždňov.",
+    "empty_no_user": "Tvoji respondenti zatiaľ neabsolvovali test. Pošli test triede a uvidíš porovnanie.",
+    "percentile_headline": "{p}. percentil",
+    "percentile_body": "Tvoja audience je nad {p}% slovenských respondentov.",
+    "your_score": "Tvoja audience",
+    "cohort_score": "Slovenský priemer",
+    "attempts_suffix": "(z {n} pokusov)",
+    "branch_ranks_heading": "Najsilnejšie oblasti",
+    "privacy_note": "Porovnanie sa generuje zo všetkých anonymných pokusov za posledných 90 dní. Žiadne osobné údaje sa nepoužívajú.",
+    "dashboard_card_label": "Detail porovnania"
+  },
   "help": {
     "page_header_eyebrow": "Help centrum",
     "page_header_title": "Najčastejšie otázky",
@@ -234,7 +250,8 @@
     "tests_new": "Nový test · SubenAI",
     "dsr": "GDPR žiadosť · SubenAI",
     "help": "Help centrum · SubenAI",
-    "retest": "Pripomienky retestov · SubenAI"
+    "retest": "Pripomienky retestov · SubenAI",
+    "peer": "Porovnanie s ostatnými · SubenAI"
   },
   "account": {
     "tabs": {

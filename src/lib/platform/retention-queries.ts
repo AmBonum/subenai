@@ -268,3 +268,35 @@ export function useSnoozeRetest() {
     },
   });
 }
+
+// ---------------------------------------------------------------------------
+// Phase 7a — peer comparison card (user audience vs. anonymous cohort).
+// ---------------------------------------------------------------------------
+export interface PeerCardBranchRank {
+  branch_slug: string;
+  user_score: number;
+  cohort_score: number | null;
+}
+
+export interface PeerCardData {
+  has_data: boolean;
+  reason?: "insufficient_cohort" | "no_user_data" | "no_user";
+  user_score?: number;
+  user_attempts?: number;
+  user_percentile?: number;
+  cohort_avg?: number;
+  cohort_size?: number;
+  branch_ranks?: PeerCardBranchRank[];
+}
+
+export function usePeerCard() {
+  return useQuery({
+    queryKey: ["user", "peer_card"],
+    queryFn: async (): Promise<PeerCardData> => {
+      const { data, error } = await supabase.rpc("get_peer_card", { p_user_id: undefined });
+      if (error) throw error;
+      return (data ?? { has_data: false }) as unknown as PeerCardData;
+    },
+    staleTime: 1000 * 60 * 60,
+  });
+}

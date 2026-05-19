@@ -46,6 +46,7 @@ import { Route as AppTemplatesRouteImport } from './routes/app.templates'
 import { Route as AppTeamsRouteImport } from './routes/app.teams'
 import { Route as AppRetestRouteImport } from './routes/app.retest'
 import { Route as AppRecommendationsRouteImport } from './routes/app.recommendations'
+import { Route as AppPeerRouteImport } from './routes/app.peer'
 import { Route as AppOnboardingRouteImport } from './routes/app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
 import { Route as AppLibraryRouteImport } from './routes/app.library'
@@ -272,6 +273,11 @@ const AppRecommendationsRoute = AppRecommendationsRouteImport.update({
 } as any).lazy(() =>
   import('./routes/app.recommendations.lazy').then((d) => d.Route),
 )
+const AppPeerRoute = AppPeerRouteImport.update({
+  id: '/peer',
+  path: '/peer',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() => import('./routes/app.peer.lazy').then((d) => d.Route))
 const AppOnboardingRoute = AppOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -537,6 +543,7 @@ export interface FileRoutesByFullPath {
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
+  '/app/peer': typeof AppPeerRoute
   '/app/recommendations': typeof AppRecommendationsRoute
   '/app/retest': typeof AppRetestRoute
   '/app/teams': typeof AppTeamsRoute
@@ -611,6 +618,7 @@ export interface FileRoutesByTo {
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
+  '/app/peer': typeof AppPeerRoute
   '/app/recommendations': typeof AppRecommendationsRoute
   '/app/retest': typeof AppRetestRoute
   '/app/teams': typeof AppTeamsRoute
@@ -689,6 +697,7 @@ export interface FileRoutesById {
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
+  '/app/peer': typeof AppPeerRoute
   '/app/recommendations': typeof AppRecommendationsRoute
   '/app/retest': typeof AppRetestRoute
   '/app/teams': typeof AppTeamsRoute
@@ -768,6 +777,7 @@ export interface FileRouteTypes {
     | '/app/library'
     | '/app/notifications'
     | '/app/onboarding'
+    | '/app/peer'
     | '/app/recommendations'
     | '/app/retest'
     | '/app/teams'
@@ -842,6 +852,7 @@ export interface FileRouteTypes {
     | '/app/library'
     | '/app/notifications'
     | '/app/onboarding'
+    | '/app/peer'
     | '/app/recommendations'
     | '/app/retest'
     | '/app/teams'
@@ -919,6 +930,7 @@ export interface FileRouteTypes {
     | '/app/library'
     | '/app/notifications'
     | '/app/onboarding'
+    | '/app/peer'
     | '/app/recommendations'
     | '/app/retest'
     | '/app/teams'
@@ -1247,6 +1259,13 @@ declare module '@tanstack/react-router' {
       path: '/recommendations'
       fullPath: '/app/recommendations'
       preLoaderRoute: typeof AppRecommendationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/peer': {
+      id: '/app/peer'
+      path: '/peer'
+      fullPath: '/app/peer'
+      preLoaderRoute: typeof AppPeerRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/onboarding': {
@@ -1610,6 +1629,7 @@ interface AppRouteChildren {
   AppLibraryRoute: typeof AppLibraryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
+  AppPeerRoute: typeof AppPeerRoute
   AppRecommendationsRoute: typeof AppRecommendationsRoute
   AppRetestRoute: typeof AppRetestRoute
   AppTeamsRoute: typeof AppTeamsRoute
@@ -1632,6 +1652,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLibraryRoute: AppLibraryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
+  AppPeerRoute: AppPeerRoute,
   AppRecommendationsRoute: AppRecommendationsRoute,
   AppRetestRoute: AppRetestRoute,
   AppTeamsRoute: AppTeamsRoute,

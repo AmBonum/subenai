@@ -18,6 +18,7 @@ import { ProfileCompletionBanner } from "@/components/auth/ProfileCompletionBann
 import { DigestDashboardCard } from "@/components/user/DigestDashboardCard";
 import { RecommendationsDashboardCard } from "@/components/user/RecommendationsDashboardCard";
 import { RetestDashboardCard } from "@/components/user/RetestDashboardCard";
+import { PeerDashboardCard } from "@/components/user/PeerDashboardCard";
 import { useTests, useUserRespondents, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/app-shell";
 
@@ -294,7 +295,8 @@ function AppDashboardPage() {
           {/* Phase 6: retest reminders */}
           <RetestDashboardCard />
 
-          {/* Phase 7: peer card lands here */}
+          {/* Phase 7a: peer comparison */}
+          <PeerDashboardCard />
 
           <div className="space-y-3 pt-2" data-testid="app-dashboard-stats-section">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">

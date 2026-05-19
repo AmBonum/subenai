@@ -1412,6 +1412,10 @@ export type Database = {
         Args: Record<string, never>;
         Returns: number;
       };
+      get_peer_card: {
+        Args: { p_user_id?: string | null };
+        Returns: Json;
+      };
     };
     Enums: {
       app_role: "admin" | "moderator" | "user";
