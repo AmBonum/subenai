@@ -1,0 +1,209 @@
+---
+slug: ai-generovane-fotky-fake-profily
+title: "ai generované fotky vo falošných profiloch — signály, ktoré ich prezradzia"
+subtitle: "image forensics pre rok 2026: čo na ai-tvári stále nesedí a ako overiť, či ten človek vôbec existuje"
+excerpt: "fake profily na instagrame, tinderi a linkedine sa po roku 2022 prepli na ai-generované tváre. thispersondoesnotexist a midjourney v8 dnes vyrobia portrét za sekundu. tu sú konkrétne vizuálne signály, ktoré ti prezradia, že profilovka nie je reálny človek — a presný 60-sekundový postup, ako to over."
+category_slug: ai-scamy
+author_slug: subenai-editorial
+primary_keyword: ai generovane fotky
+search_intent: informational
+reading_minutes: 9
+hero_image_url: null
+og_image_url: null
+seo_title: "ai generované fotky vo fake profiloch — ako ich spoznať | subenai"
+seo_description: "thispersondoesnotexist, midjourney, stable diffusion. ai dnes vyrobí profilovku za sekundu. tu sú konkrétne signály na ušiach, očiach, vlasoch a pozadí, ktoré prezradia, že profil nie je reálny človek."
+canonical_url: null
+pillar: false
+sources:
+  - label: "nbs: upozornenie — čoraz častejšie deepfake videá testujú našu obozretnosť"
+    url: "https://nbs.sk/aktuality/upozornenie-coraz-castejsie-deepfake-videa-testuju-nasu-obozretnost/"
+    publisher: "NBS"
+    accessed_at: "2026-05-19"
+  - label: "sk-cert: varovanie pred zvýšeným rizikom kybernetických bezpečnostných útokov"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "eset bezpečne na nete: ai podvody s identitou — keď technológie spôsobujú spúšť"
+    url: "https://bezpecnenanete.eset.com/sk/cybernews/ai-podvody-s-identitou-ked-technologie-sposobuju-spust/"
+    publisher: "ESET"
+    accessed_at: "2026-05-19"
+  - label: "this person does not exist — stylegan portrétový generátor (referenčný baseline)"
+    url: "https://thispersondoesnotexist.com/"
+    publisher: "Karras et al. / NVIDIA"
+    accessed_at: "2026-05-19"
+  - label: "sita: phishingové útoky sú na slovensku hlavnou hrozbou, vďaka ai sa stali presvedčivejšími"
+    url: "https://sita.sk/vtechnologiach/phishingove-utoky-su-na-slovensku-hlavnou-hrozbou-vdaka-ai-sa-stali-vyrazne-presvedcivejsimi/"
+    publisher: "SITA"
+    accessed_at: "2026-05-19"
+---
+
+zazvoní ti notifikácia z instagramu. nová žiadosť o sledovanie od „kataríny", 28 rokov, slnečná profilovka, úsmev do kamery, v bio citát a srdiečka. dve fotky z dovolenky, jedna s kávou. žiadne tagy, žiadne komentáre od reálnych ľudí. reverse image search nič nevráti — tá tvár nie je nikde inde na internete. lebo neexistuje.
+
+odkedy v roku 2019 spustila nvidia projekt **thispersondoesnotexist** — stránku, ktorá pri každom refreshi vygeneruje fotorealistickú tvár neexistujúceho človeka — sa výroba fake profilov zmenila natrvalo. ai-generovaná profilovka je dnes lacnejšia a **menej rizikový pre podvodníka** než ukradnutá fotka reálnej osoby. ukradnutá fotka sa dá reverse-searchnúť. ai-generovaná nie.
+
+tento sprievodca ti ukáže, ako tieto profily spoznať v 2026, keď sa modely zlepšili a klasické artefakty miznú. žiadna teória generatívnych sietí — len konkrétne vizuálne signály, ktoré ti prezradia profil za 30 sekúnd.
+
+## prečo ai-tvár, prečo práve teraz
+
+[sk-cert v aktuálnom varovaní zaraďuje ai-rozšírené sociálno-inžinierske kampane medzi najrýchlejšie rastúce hrozby na slovenskom internete](https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html) a fake profily sú ich nosič. v praxi sa ai-generovaná tvár objavuje v štyroch typoch scamov:
+
+- **romance scam** — profil mladej ženy alebo muža v zahraničí píše osamelému Slovákovi, vzťah trvá týždne, potom príde žiadosť o peniaze.
+- **investičný scam** — profil „úspešného brokera" s rolexkami láka do podvodnej platformy, často spárovaný s deepfake videom celebrity.
+- **fake influencer reklama** — ai osoba odporúča produkt alebo aplikáciu, ktorá ti vyčistí účet alebo nainštaluje malware.
+- **botová amplifikácia** — desiatky profilov s ai tvárami zdieľajú a komentujú dezinformačný príspevok, aby budil dojem masového súhlasu.
+
+ekonomika je nemilosrdná: 30 eur mesačne za generátor + skript na hromadnú výrobu = tisíc profilov denne. [eset vo svojej analýze upozorňuje, že ai dnes posúva personalizáciu podvodu na úroveň, kde každá obeť dostane vizuálne a textovo iný profil](https://bezpecnenanete.eset.com/sk/cybernews/ai-podvody-s-identitou-ked-technologie-sposobuju-spust/). klasická detekcia cez „túto fotku som už videl" prestala fungovať.
+
+## thispersondoesnotexist — referenčný baseline
+
+ak chceš pochopiť, proti čomu stojíš, otvor si v inom tabe [thispersondoesnotexist](https://thispersondoesnotexist.com/) a niekoľkokrát stlač f5. každý refresh ti dá novú tvár, ktorú stylegan vygeneroval z náhodného šumu. tieto fotky sú **kreatívna komúna verejne dostupných ai tvárí** — a presne tieto sa najčastejšie objavujú vo fake profiloch nízkonákladových podvodníkov.
+
+stylegan z roku 2019 mal niekoľko slabín, ktoré ostali viditeľné ešte aj v 2026:
+
+- pozadie sa rozteká do abstraktnej hmoty
+- náušnice asymetrické alebo rozmazané
+- vlasy zlievajú s pozadím v jednom okraji
+- občas fragment druhej tváre na ramene alebo za uchom
+
+novšie modely — midjourney v8, stable diffusion XL, flux — tieto artefakty čiastočne odstránili, ale **úplne ich nevyhladili**. a popri nich pribudli nové, vlastné chyby. to je dobrá správa: vždy existuje signál.
+
+## šesť vizuálnych signálov, ktoré ai stále neporazila
+
+zoznam je zoradený podľa toho, ako rýchlo ich postrehneš na bežnej mobilnej profilovke. čím vyššie, tým spoľahlivejší signál.
+
+### 1. uši a šperky
+
+stylegan aj diffusion modely majú dlhodobý problém s ušami — sú „nepoužiteľná" oblasť, ktorú trénovacie dáta často neukazujú v ostrosti. **pozri sa pozorne na obe uši:**
+
+- jedna náušnica iná než druhá (alebo úplne chýba na jednej strane)
+- ucho rozmazané, akoby fotené cez závoj, pričom zvyšok tváre je ostrý
+- nezmyselný tvar — chrupavka pôsobí ako kus voska
+
+pri rozhovore o image forensics je toto signál číslo jedna. v praxi na ňom „zlyhá" 60–70 % ai portrétov.
+
+### 2. oči a zrenice
+
+ľudské oči majú jemnú symetriu reflexov — keď je svetlo v miestnosti, oba zrenicové odlesky sedia v rovnakom mieste oboch očí. **ai tu padá pravidelne:**
+
+- odlesk svetla je iný v ľavom oku než v pravom
+- farba dúhovky sa medzi očami mierne líši (svetlejšia / tmavšia)
+- zrenica nie je okrúhla — má pretiahnutý tvar alebo „štvorcové" hrany
+- pohľad „pozerá inam" — oči nesmerujú do rovnakého bodu
+
+zoom na oči je 5-sekundový test, ktorý odhalí väčšinu starších ai modelov.
+
+### 3. zuby a línia pier
+
+usmiate fotky sú pasca pre generatívne siete. zuby vyžadujú jemnú anatomickú konzistenciu — počet, tvar, medzery. **typické chyby:**
+
+- nepárny počet zubov alebo nesúmerné rezáky
+- zuby „prelínané" do seba bez jasných hraníc
+- príliš dokonalé biele zuby u inak realisticky vekovej tváre
+- pera, ktorá v jednom rohu úst končia inak než v druhom
+
+v close-up portréte je toto najľahšia chyba na nájdenie.
+
+### 4. vlasy a okraje hlavy
+
+vlasy sú jemná textúra, ktorá sa modeluje obtiažne. ai si pomôže tým, že okraj „rozmaže" — a presne to je signál:
+
+- vlasy zlievajú s pozadím v jednom okraji, akoby tam končili spolu
+- jednotlivé pramene sa „vytrácajú" do hmly
+- na druhej strane hlavy je okraj ostrý — asymetria, ktorá v reálnej fotke nedáva zmysel
+- vlasy na ramene zlievajú s textúrou trička alebo svetra
+
+### 5. pozadie
+
+reálne fotky majú pozadie, ktoré dáva geografický a sociálny zmysel. ai pozadie býva:
+
+- generická hmla, plážová stena, neidentifikovateľná miestnosť
+- text na pozadí (cedule, knihy, plagáty, oznámenia) je rozmazaný alebo úplný nezmysel — písmená pripomínajú písmená, ale neskladajú slová
+- architektúra nedáva zmysel — schody vedú do steny, zábradlie nie je spojené, dvere sú asymetrické
+- ak je v pozadí ďalšia osoba, jej tvár je zdeformovaná alebo „rozmazaná" práve tak, aby si si ju nevšimol
+
+### 6. ruky a prsty
+
+ruky boli rok 2023 najslabšou stránkou diffusion modelov. v roku 2026 sa to zlepšilo, ale stále:
+
+- prsty môžu mať nesprávny počet (4 alebo 6)
+- klby pôsobia anatomicky nemožne — palec ohnutý do strany, ktorá nezodpovedá ničomu
+- nechty nie sú konzistentné medzi prstami
+- ruka držiaca pohár alebo telefón — predmet „prerezáva" prst
+
+ak fake profil ukazuje ruky držiace kávu, mobil alebo cigaretu, **vždy** sa zoom na ruku. je to najhustejší zdroj artefaktov.
+
+## detekčné nástroje (a prečo sa na ne spoľahnúť iba čiastočne)
+
+v roku 2026 existuje niekoľko verejných ai-image-detektorov. najznámejšie sú **ai or not**, **hive ai image detector** a **optic ai image detector**. princíp je rovnaký: model trénovaný na rozlišovanie reálnych vs. syntetických fotiek vráti pravdepodobnostné skóre.
+
+**realistická presnosť v 2026 sa pohybuje okolo 80 %**. čo znamená dve veci:
+
+1. detektor sa **mýli v 1 z 5 prípadov** — nemôžeš sa na neho spoľahnúť ako na finálne slovo.
+2. najnovšie modely (sora 2, flux pro, midjourney v8) cielene optimalizujú výstup proti detektorom — ich „skóre" pripomína reálnu fotku.
+
+záver: detektor použiť **ako jeden z viacerých signálov**, nikdy ako jediný dôkaz. ak detektor hlási 73 % pravdepodobnosť ai a paralelne profil má 6 mesačnú históriu s tromi fotkami, žiadnymi tagmi a žiadnymi reálnymi komentármi — vtedy detektor potvrdzuje to, čo už vidíš.
+
+## reverse image search — zlatý štandard, ktorý stále funguje
+
+ak ti zostane len jeden nástroj na overovanie fake profilov, nech je to **reverse image search**. konkrétne:
+
+- **google lens** (cez google.com → ikonka fotoaparátu vo vyhľadávacom poli, alebo aplikácia v mobile)
+- **tineye** (`tineye.com`) — alternatíva s lepšou históriou výskytu
+- **yandex** — paradoxne najsilnejší pre tvárové vyhľadávanie, dokáže nájsť aj rôzne uhly tej istej tváre
+
+praktický postup za 30 sekúnd:
+
+1. stiahnúť profilovku (na desktope pravým klikom „uložiť obrázok", v mobile dlhým podržaním).
+2. v google.com kliknúť na ikonku fotoaparátu a fotku nahrať.
+3. ak vidíš tú istú tvár na desiatkach iných profilov, na stocku fotiek alebo v iných jazykoch — je to **ukradnutá fotka** reálnej osoby.
+4. ak google nevráti **vôbec nič** (žiadny match, nikde na internete) — pri „normálnej" profilovke je to varovný signál pre **ai-generovanú fotku**.
+
+ten druhý prípad je dôležitý: reálna osoba s instagram profilom má zvyčajne aspoň jeden hit niekde — facebook, linkedin, zmienka v komentári, fotka z dovolenky, ktorú zdieľal kamarát. úplná absencia akéhokoľvek odkazu je rovnako podozrivá ako desať hitov na ukradnutú fotku.
+
+## 60-sekundový playbook na fake profil
+
+dohromady to dáva jednoduchý protokol, ktorý sa zmestí do minúty:
+
+1. **otvor profilovku v plnej veľkosti** (klik na ikonku v rohu, nie thumbnail).
+2. **zoom na uši, oči a ruky** — ak vidíš čo i len jeden zo signálov vyššie, červená vlajka číslo jedna.
+3. **reverse image search cez google lens alebo yandex** — buď ukradnutá fotka, alebo žiadne výsledky.
+4. **pozri si históriu profilu** — kedy bol vytvorený, koľko príspevkov, koľko reálnych komentárov od ľudí, ktorých vieš ty alebo niekto v tvojich kontaktoch overiť.
+5. **pozri si ďalšie fotky** — ak má profil 3–5 fotiek a všetky vyzerajú „štúdiovo dokonale" s rovnakým svetlom a pozadím, ale žiadne náhodné selfie z bežného života, je to scénická plocha, nie život.
+
+**ak profil zlyhá na 2 z 5 bodov, je to scam**. peniaze, súťaže, ponuky práce ani investičné príležitosti od neho neberieš. blokuj, nahlás platforme.
+
+paralelný signál mimo fotky: ak tomu profilu nemôžeš za hodinu telefonovať na video hovor a pozrieť mu naživo na tvár, ten človek pre teba neexistuje. romance scammeri majú stovku výhovoriek, prečo to nemôžu — vždy sú to výhovorky. detail rodinného protokolu pri voice cloning a deepfake útokoch nájdeš v pillar [ai a moderné podvody — deepfake, voice cloning a ai phishing](/blog/ai-a-moderne-podvody-deepfake-voice-cloning).
+
+## kde sa tieto profily najčastejšie objavujú
+
+[sita zhŕňa stav slovenských kybernetických hrozieb tak, že phishing zostáva číslom jedna, ale vďaka ai sa stal výrazne presvedčivejším](https://sita.sk/vtechnologiach/phishingove-utoky-su-na-slovensku-hlavnou-hrozbou-vdaka-ai-sa-stali-vyrazne-presvedcivejsimi/) — a fake profily sú jeden z hlavných distribučných kanálov. v slovenskom kontexte v 2026 vidíš ai-tváre najmä na:
+
+- **instagram a tiktok** — fake influencer reklamy, falošné súťaže, romance prvotné kontakty
+- **linkedin** — falošní headhunteri ponúkajúci „remote prácu" so záhadným preplatkom
+- **facebook** — fake účty v skupinách (predaj, bazár, susedské), botová amplifikácia
+- **tinder, bumble, badoo** — romance scam takmer výhradne s ai tvárou (ukradnutá fotka sa rýchlo nahlási)
+- **whatsapp / telegram skupinové** — profilovka ako jediná „identita" za novými číslami
+
+širší kontext fake účtov naprieč sociálnymi sieťami (vrátane neai detekcie cez kontext) je v [fake profily na instagrame a tiktoku](/blog/fake-profily-instagram-tiktok). nadradený pillar pre celú túto vrstvu je [podvody na sociálnych sieťach](/blog/podvody-na-socialnych-sietach).
+
+## zhrnutie
+
+- ai-generovaná tvár je v 2026 lacnejší a bezpečnejší trik pre podvodníka než ukradnutá fotka — nedá sa reverse-searchnúť.
+- artefakty miznú s každou novou verziou modelu, ale **uši, oči, vlasy, pozadie a ruky** stále prezrádzajú väčšinu profilov.
+- detektory typu ai or not majú v 2026 presnosť okolo 80 % — užitočné ako jeden zo signálov, nie ako finálny rozsudok.
+- reverse image search (google lens, tineye, yandex) zostáva zlatým štandardom: ukradnutá fotka má hity, ai fotka má nulu.
+- 60-sekundový playbook: zoom na detaily → reverse search → história profilu → ďalšie fotky → video hovor. ak profil zlyhá na 2 z 5, blokuj.
+- žiadna ai tvár nie je dôvod posielať peniaze, kúpiť „investíciu" alebo otvoriť odkaz.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [ai a moderné podvody — deepfake, voice cloning a ai phishing](/blog/ai-a-moderne-podvody-deepfake-voice-cloning)
+- [deepfake video — ako spoznať umelo vytvorenú tvár](/blog/deepfake-video-ako-spoznat)
+- [fake profily na instagrame a tiktoku](/blog/fake-profily-instagram-tiktok)
+- [podvody na sociálnych sieťach](/blog/podvody-na-socialnych-sietach)
+- [ai phishing — personalizovaný podvod](/blog/ai-phishing-personalizovany-podvod)
+- [romance scam — láska cez internet](/blog/romance-scam-laska-cez-internet)
+
+profilovka nie je dôkaz existencie. over to skôr, než klikneš na čokoľvek, čo ti pošle.
+
+**otestuj sa za 90 sekúnd →** `/test`
