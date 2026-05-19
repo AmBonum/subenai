@@ -156,10 +156,13 @@ export function VysledkyView({ id }: Props) {
             <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
               ← {tCommon("back_home")}
             </Link>
-            <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+            <h1
+              data-testid="vysledky-dashboard-heading"
+              className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl"
+            >
               {data.creator_label?.trim() || t("heading_default")}
             </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p data-testid="vysledky-meta-line" className="mt-2 text-sm text-muted-foreground">
               {t("meta_line", {
                 count: data.question_count,
                 threshold: data.passing_threshold,
@@ -168,10 +171,15 @@ export function VysledkyView({ id }: Props) {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={downloadCsv} disabled={data.rows.length === 0}>
+            <Button
+              data-testid="vysledky-download-csv-button"
+              variant="outline"
+              onClick={downloadCsv}
+              disabled={data.rows.length === 0}
+            >
               {t("download_csv")}
             </Button>
-            <Button variant="outline" onClick={handleLogout}>
+            <Button data-testid="vysledky-logout-button" variant="outline" onClick={handleLogout}>
               {t("logout")}
             </Button>
           </div>

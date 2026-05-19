@@ -84,7 +84,7 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
         : "caption_by_date";
 
   return (
-    <section aria-labelledby="resp-h" className="space-y-3">
+    <section data-testid="resp-table-root" aria-labelledby="resp-h" className="space-y-3">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 id="resp-h" className="text-lg font-semibold text-foreground">
@@ -94,6 +94,7 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
         </div>
         <input
           type="search"
+          data-testid="resp-table-search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t("search_placeholder")}
@@ -103,12 +104,15 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
       </div>
 
       {sorted.length === 0 ? (
-        <p className="rounded-xl border border-border/60 bg-card/40 p-6 text-center text-sm text-muted-foreground">
+        <p
+          data-testid="resp-table-empty"
+          className="rounded-xl border border-border/60 bg-card/40 p-6 text-center text-sm text-muted-foreground"
+        >
           {rows.length === 0 ? t("empty_no_rows") : t("empty_filter")}
         </p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-border/60">
-          <table className="w-full text-sm">
+          <table data-testid="resp-table-table" className="w-full text-sm">
             <caption className="sr-only">{t(captionKey)}</caption>
             <thead className="bg-muted/30 text-left">
               <tr>
@@ -139,7 +143,11 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
               {sorted.map((r) => {
                 const passed = r.final_score >= passingThreshold;
                 return (
-                  <tr key={r.id} className="border-t border-border/40">
+                  <tr
+                    key={r.id}
+                    data-testid={`resp-table-row-${r.id}`}
+                    className="border-t border-border/40"
+                  >
                     <td className="px-3 py-2 font-medium text-foreground">{r.respondent_name}</td>
                     <td className="px-3 py-2 text-muted-foreground">{r.respondent_email}</td>
                     <td className="px-3 py-2 font-bold tabular-nums text-foreground">
@@ -162,6 +170,7 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
                     <td className="px-3 py-2 text-right">
                       <button
                         type="button"
+                        data-testid={`resp-table-delete-btn-${r.id}`}
                         onClick={() => handleDelete(r)}
                         disabled={pendingDelete === r.id}
                         aria-label={t("delete_aria", { name: r.respondent_name })}

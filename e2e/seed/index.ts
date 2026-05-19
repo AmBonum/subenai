@@ -21,3 +21,4 @@ export {
   type BlogAuthorRow,
   type BlogPostRow,
 } from "./blog";
+export { seedEduTest, type SeedEduTestOptions, type SeedEduTestResult } from "./edu-test";

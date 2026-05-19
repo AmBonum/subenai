@@ -39,6 +39,7 @@ export function EduSettings({
           id={toggleId}
           type="button"
           role="switch"
+          data-testid="edu-settings-toggle"
           aria-checked={collectsResponses}
           onClick={() => onToggle(!collectsResponses)}
           className={`relative mt-1 inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
@@ -61,6 +62,7 @@ export function EduSettings({
           <div className="relative">
             <input
               id={passwordId}
+              data-testid="edu-settings-password-input"
               type={revealed ? "text" : "password"}
               value={authorPassword}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -88,7 +90,11 @@ export function EduSettings({
               {revealed ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
           </div>
-          <p id={helperId} className="text-xs leading-relaxed text-muted-foreground">
+          <p
+            id={helperId}
+            data-testid="edu-settings-password-hint"
+            className="text-xs leading-relaxed text-muted-foreground"
+          >
             {t("password_hint.prefix")}
             <strong>{t("password_hint.strong")}</strong>
             {t("password_hint.middle")}

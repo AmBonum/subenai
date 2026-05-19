@@ -99,6 +99,7 @@ export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
       {state === "error" && errorCode ? (
         <p
           id={errorId}
+          data-testid="vysledky-gate-error-message"
           role="alert"
           aria-live="polite"
           className="rounded-md border border-destructive/60 bg-destructive/10 p-3 text-sm text-foreground"
@@ -108,6 +109,7 @@ export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
       ) : null}
       <button
         type="submit"
+        data-testid="vysledky-gate-submit-button"
         disabled={state === "submitting" || password.length === 0}
         className="w-full rounded-xl bg-accent-gradient px-4 py-2 text-sm font-bold text-primary-foreground shadow-glow disabled:cursor-not-allowed disabled:opacity-50"
       >

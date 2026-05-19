@@ -82,6 +82,7 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
   return (
     <form
       id={formId}
+      data-testid="intake-form-root"
       onSubmit={handleSubmit}
       aria-labelledby={`${formId}-h`}
       className="space-y-5 rounded-2xl border border-border/60 bg-card/40 p-5 sm:p-6"
@@ -90,7 +91,10 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
         <h2 id={`${formId}-h`} className="text-lg font-semibold text-foreground">
           {t("heading")}
         </h2>
-        <div className="mt-2 space-y-1 text-sm leading-relaxed text-muted-foreground">
+        <div
+          data-testid="intake-form-disclosure"
+          className="mt-2 space-y-1 text-sm leading-relaxed text-muted-foreground"
+        >
           <p>
             {t("author_prefix")}{" "}
             <strong className="text-foreground">{authorLabel || t("author_fallback")}</strong>.
@@ -117,6 +121,7 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
         </label>
         <input
           id={nameId}
+          data-testid="intake-form-name-input"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value.slice(0, NAME_MAX_LEN))}
@@ -136,6 +141,7 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
         </label>
         <input
           id={emailId}
+          data-testid="intake-form-email-input"
           type="email"
           inputMode="email"
           value={email}
@@ -152,6 +158,7 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
       <label htmlFor={consentId} className="flex cursor-pointer items-start gap-2 text-sm">
         <input
           id={consentId}
+          data-testid="intake-form-consent-checkbox"
           type="checkbox"
           checked={consent}
           onChange={(e) => setConsent(e.target.checked)}
@@ -178,6 +185,7 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
       {state === "error" && errorCode ? (
         <p
           id={errorId}
+          data-testid="intake-form-error-message"
           role="alert"
           aria-live="polite"
           className="rounded-md border border-destructive/60 bg-destructive/10 p-3 text-sm text-foreground"
@@ -188,6 +196,7 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
 
       <Button
         type="submit"
+        data-testid="intake-form-submit-button"
         disabled={!canSubmit}
         size="lg"
         aria-describedby={state === "error" ? errorId : undefined}

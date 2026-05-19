@@ -411,12 +411,14 @@ export function ComposerPage() {
               creatorLabel={creatorLabel}
               onCreatorLabelChange={setCreatorLabel}
             />
-            <EduSettings
-              collectsResponses={collectsResponses}
-              onToggle={setCollectsResponses}
-              authorPassword={authorPassword}
-              onPasswordChange={setAuthorPassword}
-            />
+            <section data-testid="composer-edu-settings-section">
+              <EduSettings
+                collectsResponses={collectsResponses}
+                onToggle={setCollectsResponses}
+                authorPassword={authorPassword}
+                onPasswordChange={setAuthorPassword}
+              />
+            </section>
           </section>
 
           {error ? (

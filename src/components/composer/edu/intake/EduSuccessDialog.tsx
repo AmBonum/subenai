@@ -44,6 +44,7 @@ export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: P
       }}
     >
       <DialogContent
+        data-testid="composer-edu-success-dialog"
         className="max-w-lg"
         onEscapeKeyDown={(e) => {
           if (!acknowledged) e.preventDefault();
@@ -68,6 +69,7 @@ export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: P
             hint={t("public_hint")}
             copied={copied === "public"}
             onCopy={() => copy(publicUrl, "public")}
+            testId="edu-success-public-link"
           />
           <Field
             label={t("results_label")}
@@ -75,6 +77,7 @@ export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: P
             hint={t("results_hint")}
             copied={copied === "results"}
             onCopy={() => copy(resultsUrl, "results")}
+            testId="edu-success-results-link"
           />
           <Field
             label={t("password_label")}
@@ -83,6 +86,7 @@ export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: P
             mono
             copied={copied === "password"}
             onCopy={() => copy(password, "password")}
+            testId="edu-success-password-value"
           />
         </div>
 
@@ -91,6 +95,7 @@ export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: P
           <label className="flex cursor-pointer items-start gap-2">
             <input
               type="checkbox"
+              data-testid="edu-success-ack-checkbox"
               checked={acknowledged}
               onChange={(e) => setAcknowledged(e.target.checked)}
               className="mt-0.5 size-4 cursor-pointer accent-primary"
@@ -104,7 +109,7 @@ export function EduSuccessDialog({ publicUrl, resultsUrl, password, onClose }: P
         </div>
 
         <DialogFooter>
-          <Button onClick={onClose} disabled={!acknowledged}>
+          <Button data-testid="edu-success-close-button" onClick={onClose} disabled={!acknowledged}>
             {t("close")}
           </Button>
         </DialogFooter>
@@ -120,9 +125,10 @@ interface FieldProps {
   mono?: boolean;
   copied: boolean;
   onCopy: () => void;
+  testId?: string;
 }
 
-function Field({ label, value, hint, mono, copied, onCopy }: FieldProps) {
+function Field({ label, value, hint, mono, copied, onCopy, testId }: FieldProps) {
   const t = tFor("edu_success");
   const tCommon = tFor("common");
   return (
@@ -146,7 +152,10 @@ function Field({ label, value, hint, mono, copied, onCopy }: FieldProps) {
           )}
         </button>
       </div>
-      <p className={`mt-2 break-all ${mono ? "font-mono text-sm" : "text-sm"} text-foreground`}>
+      <p
+        data-testid={testId}
+        className={`mt-2 break-all ${mono ? "font-mono text-sm" : "text-sm"} text-foreground`}
+      >
         {value}
       </p>
       {hint ? <p className="mt-1 text-xs text-muted-foreground">{hint}</p> : null}
