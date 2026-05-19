@@ -2,8 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
+import { AudienceSection } from "@/components/home/AudienceSection";
 import { BlogHomeSection } from "@/components/home/BlogHomeSection";
+import { ChangelogTeaser } from "@/components/home/ChangelogTeaser";
 import { HomeFaqSection, type FaqSection } from "@/components/home/HomeFaqSection";
+import { LearningPathSection } from "@/components/home/LearningPathSection";
+import { SchoolsHomeCard } from "@/components/home/SchoolsHomeCard";
 import { ROUTES } from "@/config/routes";
 import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/marketing";
@@ -485,6 +489,12 @@ function Index() {
           </div>
         </section>
 
+        {/* E18.1 — Audience-segmented entry points */}
+        <AudienceSection />
+
+        {/* E18.2 — Test → Školenia → Akadémia funnel visualisation */}
+        <LearningPathSection />
+
         {/* Feature cards: Testy / Školenia / O projekte */}
         <section className="mt-20 grid gap-4 md:grid-cols-3" aria-labelledby="features-h">
           <h2 id="features-h" className="sr-only">
@@ -512,6 +522,9 @@ function Index() {
             cta={t("home.feature_about_cta")}
           />
         </section>
+
+        {/* E18.3 — B2B / schools surface (high-LTV, distinct color) */}
+        <SchoolsHomeCard />
 
         {/* Sponsorship — primary new ask, full-width gradient panel */}
         <section
@@ -598,6 +611,9 @@ function Index() {
 
         {/* FAQ — two-level collapsible (categories collapsed by default) */}
         <HomeFaqSection sections={faqSections} />
+
+        {/* E18.4 — Changelog teaser — last content above the Footer */}
+        <ChangelogTeaser />
       </main>
     </div>
   );

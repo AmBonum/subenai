@@ -353,6 +353,60 @@
     "faq_count_many": "{n} otázok",
     "faq_expand_all": "Rozbaliť všetky",
     "faq_collapse_all": "Zbaliť všetky",
+    "audience": {
+      "kicker": "Pre koho je subenai",
+      "heading": "Vyber si svoju cestu",
+      "subheading": "Štyri typy ľudí, štyri rôzne začiatky — všetky bezplatné, všetky v slovenčine.",
+      "bezni": {
+        "title": "Bežný človek",
+        "desc": "Pošlú mi SMS, neviem či kliknúť. Bojím sa, že nalákajú aj mňa. Začni 3-minútovým testom — uvidíš, kde si silný a kde slabý.",
+        "cta": "Spravím si test →"
+      },
+      "rodicia": {
+        "title": "Rodič a senior",
+        "desc": "Chcem ochrániť rodinu — deti pred herným scamom, rodičov pred falošnými hovormi z banky. V akadémii nájdeš sprievodcov pre rodiny.",
+        "cta": "Pre rodičov a seniorov →"
+      },
+      "firmy": {
+        "title": "Firma a HR",
+        "desc": "Náš tím nepozná phishing — recepčná, sklad, accounting. Pošli každému test podľa odvetvia (e-shop, gastro, IT) a uvidíš slabiny okamžite.",
+        "cta": "Testy pre firmy →"
+      },
+      "ucitelia": {
+        "title": "Lektor a škola",
+        "desc": "Učím triedu o internetovej bezpečnosti. Edu mód v subenai umožňuje poslať test žiakom a vidieť výsledky v dashboarde.",
+        "cta": "Pre školy a lektorov →"
+      }
+    },
+    "learning_path": {
+      "kicker": "Cesta učenia",
+      "heading": "Tri kroky k bezpečnosti — od diagnózy k praxi",
+      "subheading": "Začni testom, precvič si v školeniach, pochop hĺbku v akadémii.",
+      "step1_label": "1. Diagnostika",
+      "step1_title": "Spravíš si test",
+      "step1_desc": "3 minúty, 10 reálnych scenárov. Dozvieš sa, kde máš slabé miesto.",
+      "step1_cta": "Spustiť test",
+      "step2_label": "2. Tréning",
+      "step2_title": "Precvičíš si v školeniach",
+      "step2_desc": "5–15 minút na typ scamu. Checklisty, varovné znaky, scenáre.",
+      "step2_cta": "Otvoriť školenia",
+      "step3_label": "3. Hĺbka",
+      "step3_title": "Pochopíš v akadémii",
+      "step3_desc": "8–15 minútové sprievodcovia: psychológia, kontext, zdroje.",
+      "step3_cta": "Otvoriť akadémiu",
+      "footer_cta": "Začni tu →"
+    },
+    "schools_card": {
+      "kicker": "Pre školy a HR",
+      "heading": "Učíš o internetovej bezpečnosti? Použi subenai v triede.",
+      "body": "Edu mód umožňuje poslať test celej triede alebo tímu, vidieť výsledky v dashboarde a sledovať, kde má skupina slabiny. Bezplatné pre školy aj firmy do 200 ľudí.",
+      "cta": "Pozrieť edu mód →"
+    },
+    "changelog_teaser": {
+      "label": "Najnovšie zmeny",
+      "body": "pravidelne aktualizujeme testy podľa nových scam vĺn",
+      "cta": "pozri zoznam zmien →"
+    },
     "faq": {
       "rychly_test": {
         "title": "Rýchly test",

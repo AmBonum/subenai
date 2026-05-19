@@ -55,13 +55,9 @@ describe("HomeFaqSection — initial collapsed state", () => {
     render(<HomeFaqSection sections={SECTIONS} />);
     // 3 → genitive plural 'otázok' (5+/0 rule does NOT apply to 3, but
     // 'otázka' (1) vs 'otázky' (2-4) vs 'otázok' (5+/0) — 3 → otázky)
-    expect(screen.getByTestId("home-faq-category-count-rychly_test")).toHaveTextContent(
-      "3 otázky",
-    );
+    expect(screen.getByTestId("home-faq-category-count-rychly_test")).toHaveTextContent("3 otázky");
     expect(screen.getByTestId("home-faq-category-count-testy")).toHaveTextContent("1 otázka");
-    expect(screen.getByTestId("home-faq-category-count-vzdelavanie")).toHaveTextContent(
-      "2 otázky",
-    );
+    expect(screen.getByTestId("home-faq-category-count-vzdelavanie")).toHaveTextContent("2 otázky");
   });
 
   it("does NOT render any expanded answer text on initial render", () => {
