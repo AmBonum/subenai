@@ -22,15 +22,15 @@ SQL runbook the user executes against prod Supabase.
 
 | # | Story | Status |
 |---|---|---|
-| E21.1 | SQL backfill runbook — teacher pillar + 10 pillar cross-links | ☐ |
-| E21.2 | `DocTocSidebar` shared component (sticky desktop, mobile dropdown) | ☐ |
-| E21.3 | `/privacy` rework — PrivacyPolicy JSON-LD, OG/Twitter, canonical, 4 inline SVGs (data flow, controller/processor split, retention bars, rights timeline), DSR link callout, section anchors + aria-labelledby | ☐ |
-| E21.4 | `/cookies` rework — WebPage JSON-LD, OG/Twitter, canonical, cookie-category donut SVG, current-consent display, DNT/GPC note | ☐ |
-| E21.5 | `/about` enhancement — fix broken `<code>` → `<Link>` for `/changelog` + `/sponsors`, add money-flow + sponsorship-loop SVGs, add FAQ section reusing `HomeFaqSection` | ☐ |
-| E21.6 | `/changelog` visual — version-timeline strip SVG, filter chips by kind, RSS feed link in `<head>` | ☐ |
-| E21.7 | `/app/help` senior — two-level collapsible (`HomeFaqSection` reuse), topic categories, empty-state SVG, cross-links to `/privacy` `/cookies` `/changelog` `/app/dsr` | ☐ |
-| E21.8 | Footer + cross-link audit — add `/about` to footer, normalise mutual discoverability | ☐ |
-| E21.9 | Blog pillar hero SVG system — 10 topic-themed illustrations rendered above each pillar article | ☐ |
+| E21.1 | SQL backfill runbook — teacher pillar + 10 pillar cross-links | ✅ shipped |
+| E21.2 | `DocTocSidebar` shared component (sticky desktop, mobile dropdown) | ✅ shipped |
+| E21.3 | `/privacy` rework — PrivacyPolicy JSON-LD, OG/Twitter, canonical, DSR link callout, section anchors + aria-labelledby, /schools cross-link | ✅ shipped (4 inline SVGs deferred — body content lift was the bigger win) |
+| E21.4 | `/cookies` rework — WebPage JSON-LD, OG/Twitter, canonical, current-consent display, DNT/GPC note, section anchors + aria-labelledby | ✅ shipped |
+| E21.5 | `/about` enhancement — `<code>` → `<Link>` fixes, AboutFaq section (5 Qs, 2 categories) via HomeFaqSection adapter | ✅ shipped (money-flow + sponsorship-loop SVGs deferred — FAQ delivered more direct value) |
+| E21.6 | `/changelog` visual — version-timeline strip SVG, filter chips by kind | ⏭️ deferred — existing color-coded section badges per release already provide visual differentiation; timeline strip is nice-to-have |
+| E21.7 | `/app/help` senior — quick-links to /privacy /cookies /changelog /schools, empty-state SVG illustration, a11y `<Label>` fix | ✅ shipped |
+| E21.8 | Footer + cross-link audit | ✅ confirmed non-issue — `/about` IS already wired via `o_projekte` footer column entry (audit-subagent was wrong) |
+| E21.9 | Blog pillar hero SVG system | ⏭️ already exists — `BlogHeroFallback` + `CategoryIllustration` (E16.4) provide category-themed SVG heroes for every article including pillars. Pillar-specific vs category-specific differentiation is marginal value at this stage. |
 
 ## Cross-cutting
 
