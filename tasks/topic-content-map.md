@@ -1,8 +1,10 @@
 # Topic content map — pillars × courses × clusters
 
 > **Status**: living document, owned by editorial. Last refresh
-> 2026-05-19 as part of E17.5. Bump the timestamp when you edit and
-> re-confirm the cross-link wiring matches the table below.
+> 2026-05-19 — added teacher-targeted pillar
+> `kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov` as part of
+> E19. Bump the timestamp when you edit and re-confirm the
+> cross-link wiring matches the table below.
 
 ## Purpose
 
@@ -38,6 +40,7 @@ E17.1–E17.4:
 | Bezpečnosť pre rodičov, deti, seniorov | `bezpecnost-pre-rodicov-deti-seniorov` | `chran-svojich-blizkych` | — | Same course as above — duplicate is OK; the audience match is the lift. |
 | Bezpečné nakupovanie online (SK) | `bezpecne-nakupovanie-online-slovensko` | `marketplace-bazos-podvody` | scenario | Marketplace dominates "I'm buying X, is this legit?" intent. |
 | Internet safety pre študentov | `internet-safety-pre-studentov` | `kradez-kont-socialnych-sieti` | — | Account-takeover is the most common student threat vector. |
+| Kybernetika vo výučbe — pre učiteľov | `kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov` | `chran-svojich-blizkych` | — | E19-era pillar for the teacher persona that the /schools page targets. Provides the 45-min lesson plan + GDPR-in-brief that previously had no public surface. Course pairing is "chráň svojich blízkych" because teacher protective-adult work overlaps with parent/grandparent topics. |
 
 ## Courses that have no pillar yet (orphans, in priority order)
 

@@ -148,6 +148,10 @@ async function upsertOne(supabase, lookups, post) {
     search_intent: fm.search_intent,
     reading_minutes: fm.reading_minutes ?? null,
     sources_jsonb: fm.sources,
+    // E17.1 — frontmatter can declare an article → course cross-link.
+    // Without this passthrough, the seed script silently dropped the
+    // field and editors had to set it manually via /admin/blog/<id>.
+    related_course_slug: fm.related_course_slug ?? null,
     status: "draft",
     published_at: null,
   };
