@@ -25,6 +25,7 @@ const FORMS: Record<string, PluralForms> = {
     few: "publikované články",
     many: "publikovaných článkov",
   },
+  question: { one: "otázka", few: "otázky", many: "otázok" },
 };
 
 function pickForm(n: number, forms: PluralForms): string {
@@ -39,4 +40,8 @@ export function formatArticleCount(n: number): string {
 
 export function formatPublishedArticleCount(n: number): string {
   return `${n} ${pickForm(n, FORMS.published_article)}`;
+}
+
+export function formatQuestionCount(n: number): string {
+  return `${n} ${pickForm(n, FORMS.question)}`;
 }

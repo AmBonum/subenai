@@ -347,6 +347,12 @@
     "sponsors_cta": "Pozrieť zoznam",
     "slogan_alt": "su(rfuj) be(zpečne) na (i)nternete",
     "faq_heading": "Časté otázky",
+    "faq_subheading": "Kliknutím na kategóriu zobrazíš otázky.",
+    "faq_count_one": "1 otázka",
+    "faq_count_few": "{n} otázky",
+    "faq_count_many": "{n} otázok",
+    "faq_expand_all": "Rozbaliť všetky",
+    "faq_collapse_all": "Zbaliť všetky",
     "faq": {
       "rychly_test": {
         "title": "Rýchly test",
@@ -371,11 +377,28 @@
       "skolenia": {
         "title": "Školenia",
         "co_q": "Čo sú bezplatné školenia?",
-        "co_a_prefix": "Krátke texty so slovenskými scenármi pre každý typ podvodu — phishing, smishing, vishing, BEC, marketplace, investičné a romance scam-y, hygiena hesiel. Môžeš ich čítať v ľubovoľnom poradí v ",
+        "co_a_prefix": "Krátke interaktívne lekcie so slovenskými scenármi pre každý typ podvodu — phishing, smishing, vishing, BEC, marketplace, investičné a romance scam-y, hygiena hesiel. Štruktúrované 5–15-minútové „skús si to“ formáty — checklisty, varovné znaky, scenáre. Pozri si ich v ",
         "co_a_link": "bezplatných školeniach",
         "co_a_suffix": ", nie sú za paywall.",
         "odbornik_q": "Musím byť IT odborník?",
         "odbornik_a": "Nie. Školenia sú písané pre administrátorku, recepčnú, dôchodcu aj gymnazistu rovnako. Žiadny žargón bez výkladu."
+      },
+      "vzdelavanie": {
+        "title": "Vzdelávanie a Akadémia",
+        "rozdiel_q": "Aký je rozdiel medzi testom, školením a akadémiou?",
+        "rozdiel_a_prefix": "Test = rýchla diagnostika (3 min) — zistíš kde máš slabé miesto. Školenie = aktívne nacvičovanie (5–15 min) so štruktúrovaným flow: čo to je → ukážka → checklist → red flags. Akadémia = hĺbkové sprievodce a články (8–15 min) — kontext, psychológia, reálne príbehy, odkazy na zdroje (SK-CERT, NBS). Začni testom, potom si pozri ",
+        "rozdiel_a_link_skolenia": "školenia",
+        "rozdiel_a_middle": " na precvičenie alebo ",
+        "rozdiel_a_link_blog": "akadémiu",
+        "rozdiel_a_suffix": " pre hĺbku.",
+        "akademia_q": "Kde si môžem prečítať podrobnejšie články?",
+        "akademia_a_prefix": "V ",
+        "akademia_a_link": "akadémii subenai",
+        "akademia_a_suffix": " — 80+ článkov v slovenčine: 10 pillar sprievodcov (phishing, scam SMS, AI scamy, fake e-shopy, bezpečnosť pre seniorov, …) a 70 kratších návodov. Všetko zadarmo, bez paywallu, s citáciami slovenských autorít. Aktualizujeme týždenne podľa nových scam vĺn.",
+        "audience_q": "Pre koho je akadémia určená?",
+        "audience_a_prefix": "Pre kohokoľvek, kto chce do témy ísť hlbšie — rodičia, seniori, učitelia, IT administrátori, novinári. Obsah je členený podľa kategórií (phishing, SMS, AI, rodičia, študenti, …) a podľa toho, či si tam ide niekto úplne nový alebo už pokročilý. ",
+        "audience_a_link": "Otvor akadémiu",
+        "audience_a_suffix": "."
       },
       "podpora": {
         "title": "Podpora projektu",

@@ -1,18 +1,113 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { useEffect, useState } from "react";
+
 import { supabase } from "@/integrations/supabase/client";
 import { BlogHomeSection } from "@/components/home/BlogHomeSection";
+import { HomeFaqSection, type FaqSection } from "@/components/home/HomeFaqSection";
 import { ROUTES } from "@/config/routes";
 import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/marketing";
+import { buildFaqJsonLd } from "@/lib/seo/faq-jsonld";
 
 const tHome = tFor("marketing");
+
+// Plain-text FAQ used for FAQPage JSON-LD. Mirrors the visible Q&A
+// content but with the <Link>-augmented prose flattened back to strings
+// because schema.org/Answer.text rejects HTML markup (the rendered
+// HTML is fine for users; the JSON-LD must be plain text for Google).
+// Keep this list in lockstep with buildFaqSections() — same i18n keys,
+// no separate copy-edit surface.
+function buildFaqJsonLdEntries(t: ReturnType<typeof tFor>): { question: string; answer: string }[] {
+  return [
+    { question: t("home.faq.rychly_test.vazne_q"), answer: t("home.faq.rychly_test.vazne_a") },
+    {
+      question: t("home.faq.rychly_test.podvadzanie_q"),
+      answer: t("home.faq.rychly_test.podvadzanie_a"),
+    },
+    {
+      question: t("home.faq.rychly_test.vysledok_q"),
+      answer: t("home.faq.rychly_test.vysledok_a"),
+    },
+    {
+      question: t("home.faq.testy.testy_q"),
+      answer:
+        t("home.faq.testy.testy_a_prefix") +
+        t("home.faq.testy.testy_a_link") +
+        t("home.faq.testy.testy_a_suffix"),
+    },
+    {
+      question: t("home.faq.testy.demograficke_q"),
+      answer:
+        t("home.faq.testy.demograficke_a_prefix") +
+        t("home.faq.testy.demograficke_a_link") +
+        t("home.faq.testy.demograficke_a_suffix"),
+    },
+    {
+      question: t("home.faq.skolenia.co_q"),
+      answer:
+        t("home.faq.skolenia.co_a_prefix") +
+        t("home.faq.skolenia.co_a_link") +
+        t("home.faq.skolenia.co_a_suffix"),
+    },
+    { question: t("home.faq.skolenia.odbornik_q"), answer: t("home.faq.skolenia.odbornik_a") },
+    {
+      question: t("home.faq.vzdelavanie.rozdiel_q"),
+      answer:
+        t("home.faq.vzdelavanie.rozdiel_a_prefix") +
+        t("home.faq.vzdelavanie.rozdiel_a_link_skolenia") +
+        t("home.faq.vzdelavanie.rozdiel_a_middle") +
+        t("home.faq.vzdelavanie.rozdiel_a_link_blog") +
+        t("home.faq.vzdelavanie.rozdiel_a_suffix"),
+    },
+    {
+      question: t("home.faq.vzdelavanie.akademia_q"),
+      answer:
+        t("home.faq.vzdelavanie.akademia_a_prefix") +
+        t("home.faq.vzdelavanie.akademia_a_link") +
+        t("home.faq.vzdelavanie.akademia_a_suffix"),
+    },
+    {
+      question: t("home.faq.vzdelavanie.audience_q"),
+      answer:
+        t("home.faq.vzdelavanie.audience_a_prefix") +
+        t("home.faq.vzdelavanie.audience_a_link") +
+        t("home.faq.vzdelavanie.audience_a_suffix"),
+    },
+    {
+      question: t("home.faq.podpora.zadarmo_q"),
+      answer:
+        t("home.faq.podpora.zadarmo_a_prefix") +
+        t("home.faq.podpora.zadarmo_a_link_test") +
+        t("home.faq.podpora.zadarmo_a_comma1") +
+        t("home.faq.podpora.zadarmo_a_link_testy") +
+        t("home.faq.podpora.zadarmo_a_comma2") +
+        t("home.faq.podpora.zadarmo_a_link_skolenia") +
+        t("home.faq.podpora.zadarmo_a_suffix"),
+    },
+    {
+      question: t("home.faq.podpora.preco_q"),
+      answer:
+        t("home.faq.podpora.preco_a_prefix") +
+        t("home.faq.podpora.preco_a_link") +
+        t("home.faq.podpora.preco_a_suffix"),
+    },
+    {
+      question: t("home.faq.bezpecnost.data_q"),
+      answer:
+        t("home.faq.bezpecnost.data_a_prefix") +
+        t("home.faq.bezpecnost.data_a_link") +
+        t("home.faq.bezpecnost.data_a_suffix"),
+    },
+    {
+      question: t("home.faq.bezpecnost.cookies_q"),
+      answer:
+        t("home.faq.bezpecnost.cookies_a_prefix") +
+        t("home.faq.bezpecnost.cookies_a_link") +
+        t("home.faq.bezpecnost.cookies_a_suffix"),
+    },
+    { question: t("home.faq.bezpecnost.zmazanie_q"), answer: t("home.faq.bezpecnost.zmazanie_a") },
+  ];
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -31,16 +126,20 @@ export const Route = createFileRoute("/")({
       { name: "twitter:description", content: tHome("home.meta_description") },
     ],
     links: [{ rel: "canonical", href: SITE_ORIGIN }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(buildFaqJsonLd(buildFaqJsonLdEntries(tHome))),
+      },
+    ],
   }),
   component: Index,
 });
 
-function buildFaqSections(t: ReturnType<typeof tFor>): {
-  title: string;
-  items: { id: string; question: string; answer: ReactNode }[];
-}[] {
+function buildFaqSections(t: ReturnType<typeof tFor>): FaqSection[] {
   return [
     {
+      slug: "rychly_test",
       title: t("home.faq.rychly_test.title"),
       items: [
         {
@@ -61,6 +160,7 @@ function buildFaqSections(t: ReturnType<typeof tFor>): {
       ],
     },
     {
+      slug: "testy",
       title: t("home.faq.testy.title"),
       items: [
         {
@@ -98,6 +198,7 @@ function buildFaqSections(t: ReturnType<typeof tFor>): {
       ],
     },
     {
+      slug: "skolenia",
       title: t("home.faq.skolenia.title"),
       items: [
         {
@@ -124,6 +225,68 @@ function buildFaqSections(t: ReturnType<typeof tFor>): {
       ],
     },
     {
+      slug: "vzdelavanie",
+      title: t("home.faq.vzdelavanie.title"),
+      items: [
+        {
+          id: "rozdiel",
+          question: t("home.faq.vzdelavanie.rozdiel_q"),
+          answer: (
+            <>
+              {t("home.faq.vzdelavanie.rozdiel_a_prefix")}
+              <Link
+                to={ROUTES.skolenia}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.vzdelavanie.rozdiel_a_link_skolenia")}
+              </Link>
+              {t("home.faq.vzdelavanie.rozdiel_a_middle")}
+              <Link
+                to={ROUTES.blog}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.vzdelavanie.rozdiel_a_link_blog")}
+              </Link>
+              {t("home.faq.vzdelavanie.rozdiel_a_suffix")}
+            </>
+          ),
+        },
+        {
+          id: "akademia",
+          question: t("home.faq.vzdelavanie.akademia_q"),
+          answer: (
+            <>
+              {t("home.faq.vzdelavanie.akademia_a_prefix")}
+              <Link
+                to={ROUTES.blog}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.vzdelavanie.akademia_a_link")}
+              </Link>
+              {t("home.faq.vzdelavanie.akademia_a_suffix")}
+            </>
+          ),
+        },
+        {
+          id: "audience",
+          question: t("home.faq.vzdelavanie.audience_q"),
+          answer: (
+            <>
+              {t("home.faq.vzdelavanie.audience_a_prefix")}
+              <Link
+                to={ROUTES.blog}
+                className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
+              >
+                {t("home.faq.vzdelavanie.audience_a_link")}
+              </Link>
+              {t("home.faq.vzdelavanie.audience_a_suffix")}
+            </>
+          ),
+        },
+      ],
+    },
+    {
+      slug: "podpora",
       title: t("home.faq.podpora.title"),
       items: [
         {
@@ -175,6 +338,7 @@ function buildFaqSections(t: ReturnType<typeof tFor>): {
       ],
     },
     {
+      slug: "bezpecnost",
       title: t("home.faq.bezpecnost.title"),
       items: [
         {
@@ -432,39 +596,8 @@ function Index() {
         {/* Akadémia — featured blog content (3 pillar articles) */}
         <BlogHomeSection />
 
-        {/* FAQ */}
-        <section className="mt-20">
-          <h2 className="text-2xl font-bold">{t("home.faq_heading")}</h2>
-          <div className="mt-6 flex flex-col gap-6">
-            {faqSections.map((section) => (
-              <div key={section.title}>
-                <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  {section.title}
-                </h3>
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="rounded-2xl border border-border/60 bg-card/40 px-5"
-                >
-                  {section.items.map((item) => (
-                    <AccordionItem
-                      key={item.id}
-                      value={item.id}
-                      className="border-b border-border/40 last:border-b-0"
-                    >
-                      <AccordionTrigger className="text-left text-base font-semibold">
-                        {item.question}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-                        {item.answer}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-            ))}
-          </div>
-        </section>
+        {/* FAQ — two-level collapsible (categories collapsed by default) */}
+        <HomeFaqSection sections={faqSections} />
       </main>
     </div>
   );
