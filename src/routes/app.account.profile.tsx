@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useCurrentProfile, useUpdateProfile } from "@/lib/platform/queries";
 import { PageHeader } from "@/components/app/page-header";
+import { AccountTabs } from "@/components/user/AccountTabs";
 import { tFor } from "@/i18n/app-shell";
 
 const tRoutes = tFor("route_titles");
@@ -102,6 +103,7 @@ function ProfilePage() {
 
   return (
     <div className="space-y-6" data-testid="app-account-profile-root">
+      <AccountTabs />
       <PageHeader
         eyebrow={t("page_header_eyebrow")}
         title={t("page_header_title")}

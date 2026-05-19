@@ -33,7 +33,7 @@ vi.mock("@tanstack/react-router", async () => {
 });
 
 describe("AppShell", () => {
-  it("renders sidebar with all expected nav links", () => {
+  it("renders sidebar grouped into Tvorba / Výsledky / footer with expected links", () => {
     render(
       <AppShell>
         <div data-testid="child">child</div>
@@ -41,14 +41,43 @@ describe("AppShell", () => {
     );
     expect(screen.getByTestId("app-shell-root")).toBeInTheDocument();
     expect(screen.getByTestId("app-shell-sidebar")).toBeInTheDocument();
+    expect(screen.getByTestId("app-shell-sidebar-group-tvorba")).toBeInTheDocument();
+    expect(screen.getByTestId("app-shell-sidebar-group-vysledky")).toBeInTheDocument();
+    expect(screen.getByTestId("app-shell-sidebar-group-footer")).toBeInTheDocument();
     expect(screen.getByTestId("app-shell-sidebar-link-dashboard")).toBeInTheDocument();
     expect(screen.getByTestId("app-shell-sidebar-link-tests")).toBeInTheDocument();
-    expect(screen.getByTestId("app-shell-sidebar-link-teams")).toBeInTheDocument();
+    expect(screen.getByTestId("app-shell-sidebar-link-templates")).toBeInTheDocument();
+    expect(screen.getByTestId("app-shell-sidebar-link-library")).toBeInTheDocument();
+    expect(screen.getByTestId("app-shell-sidebar-link-audiences")).toBeInTheDocument();
+    expect(screen.getByTestId("app-shell-sidebar-link-history")).toBeInTheDocument();
     expect(screen.getByTestId("app-shell-sidebar-link-notifications")).toBeInTheDocument();
-    expect(screen.getByTestId("app-shell-sidebar-link-help")).toBeInTheDocument();
+    expect(screen.getByTestId("app-shell-sidebar-link-teams")).toBeInTheDocument();
     expect(screen.getByTestId("app-shell-sidebar-link-account-profile")).toBeInTheDocument();
-    expect(screen.getByTestId("app-shell-sidebar-link-account-security")).toBeInTheDocument();
+    expect(screen.getByTestId("app-shell-sidebar-link-help")).toBeInTheDocument();
+    expect(screen.getByTestId("app-shell-sidebar-logout")).toBeInTheDocument();
     expect(screen.getByTestId("app-shell-sidebar-link-admin")).toBeInTheDocument();
+  });
+
+  it("does not render the legacy flat sidebar links (security / dsr / tests_new)", () => {
+    render(
+      <AppShell>
+        <div />
+      </AppShell>,
+    );
+    expect(screen.queryByTestId("app-shell-sidebar-link-account-security")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("app-shell-sidebar-link-dsr")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("app-shell-sidebar-link-tests-new")).not.toBeInTheDocument();
+  });
+
+  it("renders the 'Pre lektorov' brand subtitle in the header", () => {
+    render(
+      <AppShell>
+        <div />
+      </AppShell>,
+    );
+    expect(screen.getByTestId("app-shell-header-brand-subtitle").textContent).toContain(
+      "Pre lektorov",
+    );
   });
 
   it("renders provided children inside main", () => {
@@ -77,7 +106,7 @@ describe("AppShell", () => {
       </AppShell>,
     );
     expect(screen.getByTestId("app-shell-sidebar-link-tests").textContent).toContain("Moje testy");
-    expect(screen.getByTestId("app-shell-sidebar-link-teams").textContent).toContain("Tímy");
+    expect(screen.getByTestId("app-shell-sidebar-link-teams").textContent).toContain("Tím");
   });
 
   it("hides admin sidebar link for non-admin users", () => {

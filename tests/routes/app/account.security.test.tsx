@@ -8,6 +8,10 @@ vi.mock("@tanstack/react-router", async () => {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
     useNavigate: () => vi.fn(),
+    useLocation: () => ({ pathname: "/app/account/security" }),
+    Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
+      <a href={to}>{children}</a>
+    ),
   };
 });
 

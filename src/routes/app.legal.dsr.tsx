@@ -4,6 +4,7 @@ import { FileText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DsrSubmitForm } from "@/components/user/DsrSubmitForm";
+import { AccountTabs } from "@/components/user/AccountTabs";
 import { useUserDSRList } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/governance";
 import { tFor as tAppShell } from "@/i18n/app-shell";
@@ -25,6 +26,7 @@ function DsrPage() {
 
   return (
     <div className="space-y-6" data-testid="app-legal-dsr-root">
+      <AccountTabs />
       <header className="flex items-start gap-3">
         <span className="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
           <FileText className="h-4 w-4" />

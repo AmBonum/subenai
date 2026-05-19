@@ -1,22 +1,57 @@
 {
   "sidebar": {
-    "brand": "SubenAI · Workspace",
+    "brand": "SubenAI",
+    "brand_subtitle": "Pro lektory",
     "logout_aria": "Odhlásit se",
     "admin": "Admin platformy",
+    "groups": {
+      "tvorba": "Tvorba",
+      "vysledky": "Výsledky"
+    },
     "nav": {
-      "dashboard": "Dashboard",
-      "tests": "Moje testy",
-      "tests_new": "Nový test",
-      "templates": "Šablony",
-      "library": "Knihovna otázek",
-      "audiences": "Skupiny respondentů",
-      "teams": "Týmy a role",
-      "notifications": "Notifikace",
-      "history": "Moje historie",
-      "help": "Centrum nápovědy",
-      "profile": "Můj profil",
-      "security": "Zabezpečení účtu",
-      "dsr": "Žádost GDPR"
+      "dashboard": {
+        "label": "Přehled",
+        "tip": "Co se stalo od vaší poslední návštěvy."
+      },
+      "tests": {
+        "label": "Moje testy",
+        "tip": "Vše, co jste vytvořili — koncepty, aktivní, archivované."
+      },
+      "templates": {
+        "label": "Šablony",
+        "tip": "Hotové sady podle odvětví. Zkopírujte a upravte."
+      },
+      "library": {
+        "label": "Knihovna otázek",
+        "tip": "Vaše opakovaně použitelné otázky napříč testy."
+      },
+      "audiences": {
+        "label": "Skupiny",
+        "tip": "Třídy, oddělení, kohorty — komu test posíláte."
+      },
+      "history": {
+        "label": "Moje historie",
+        "tip": "Vaše vlastní pokusy — pro kontrolu otázek."
+      },
+      "notifications": {
+        "label": "Notifikace",
+        "tip": "Nová sezení, dokončení, připomenutí přetestů."
+      },
+      "teams": {
+        "label": "Tým a role",
+        "tip": "Pozvěte kolegy jako Editor nebo Viewer."
+      },
+      "profile": {
+        "label": "Účet",
+        "tip": "Profil, zabezpečení, GDPR."
+      },
+      "help": {
+        "label": "Nápověda",
+        "tip": "Návody, FAQ, kontakt na podporu."
+      },
+      "logout": {
+        "label": "Odhlásit se"
+      }
     }
   },
   "confirm_dialog": {
@@ -37,6 +72,34 @@
     "page_header_eyebrow": "Přehled",
     "page_header_title": "Můj přehled",
     "page_header_subtitle": "Rychlý souhrn vašich testů, respondentů a aktivity.",
+    "intro": {
+      "title": "Vítejte. Toto je váš workspace.",
+      "body": "Tady připravíte testy pro třídu nebo tým a uvidíte, kdo na čem selhal. Jeden tip: začněte od šablony — ušetříte si 20 minut.",
+      "cta": "Zobrazit šablony",
+      "dismiss": "Rozumím"
+    },
+    "last_test": {
+      "title": "Váš poslední test",
+      "headline": "{title} — {count} nových odpovědí od {time}",
+      "cta": "Zobrazit výsledky"
+    },
+    "delta": {
+      "title": "Co se změnilo od pondělí",
+      "summary": "{n} dokončení, {m} nových slabin."
+    },
+    "drafts": {
+      "title": "Pokračovat v rozpracovaném",
+      "subtitle": "Koncepty čekající na publikaci.",
+      "continue": "Pokračovat",
+      "last_edited": "Naposledy upraveno {time}"
+    },
+    "empty": {
+      "title": "Tady se zobrazí výsledky vašich tříd.",
+      "body": "Vytvořte první test nebo začněte od šablony pro školy. Ihned uvidíte, jak třídě jde a kde má slabá místa.",
+      "cta_primary": "Vytvořit první test",
+      "cta_secondary": "Zobrazit školní šablony"
+    },
+    "stats_section_title": "Statistiky účtu",
     "stat": {
       "tests_label": "Aktivní testy",
       "sessions_label": "Sezení (30 dní)",
@@ -119,6 +182,11 @@
     "help": "Centrum nápovědy · SubenAI"
   },
   "account": {
+    "tabs": {
+      "profile": "Profil",
+      "security": "Zabezpečení",
+      "dsr": "GDPR"
+    },
     "profile": {
       "page_header_eyebrow": "Účet",
       "page_header_title": "Můj profil",

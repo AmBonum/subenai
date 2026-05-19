@@ -1,22 +1,57 @@
 {
   "sidebar": {
-    "brand": "SubenAI · Workspace",
+    "brand": "SubenAI",
+    "brand_subtitle": "For educators",
     "logout_aria": "Sign out",
     "admin": "Platform admin",
+    "groups": {
+      "tvorba": "Author",
+      "vysledky": "Results"
+    },
     "nav": {
-      "dashboard": "Dashboard",
-      "tests": "My tests",
-      "tests_new": "New test",
-      "templates": "Templates",
-      "library": "Question library",
-      "audiences": "Respondent groups",
-      "teams": "Teams and roles",
-      "notifications": "Notifications",
-      "history": "My history",
-      "help": "Help centre",
-      "profile": "My profile",
-      "security": "Account security",
-      "dsr": "GDPR request"
+      "dashboard": {
+        "label": "Overview",
+        "tip": "What happened since you were last here."
+      },
+      "tests": {
+        "label": "My tests",
+        "tip": "Everything you've built — drafts, live, archived."
+      },
+      "templates": {
+        "label": "Templates",
+        "tip": "Sector-specific starters. Copy and tailor."
+      },
+      "library": {
+        "label": "Question bank",
+        "tip": "Your reusable question pool — share across tests."
+      },
+      "audiences": {
+        "label": "Audiences",
+        "tip": "Classes, departments, cohorts — who you send tests to."
+      },
+      "history": {
+        "label": "My attempts",
+        "tip": "Your own runs — for sanity-checking questions."
+      },
+      "notifications": {
+        "label": "Notifications",
+        "tip": "New sessions, completions, retest reminders."
+      },
+      "teams": {
+        "label": "Team & roles",
+        "tip": "Invite colleagues as Editor or Viewer."
+      },
+      "profile": {
+        "label": "Account",
+        "tip": "Profile, security, GDPR."
+      },
+      "help": {
+        "label": "Help",
+        "tip": "Guides, FAQ, contact support."
+      },
+      "logout": {
+        "label": "Sign out"
+      }
     }
   },
   "confirm_dialog": {
@@ -37,6 +72,34 @@
     "page_header_eyebrow": "Overview",
     "page_header_title": "My overview",
     "page_header_subtitle": "A quick summary of your tests, respondents and activity.",
+    "intro": {
+      "title": "Welcome. This is your workspace.",
+      "body": "Here you'll build tests for your class or team and see who struggled with what. One tip: start from a template — you'll save 20 minutes.",
+      "cta": "See templates",
+      "dismiss": "Got it"
+    },
+    "last_test": {
+      "title": "Your latest test",
+      "headline": "{title} — {count} new responses since {time}",
+      "cta": "See results"
+    },
+    "delta": {
+      "title": "What changed since Monday",
+      "summary": "{n} completions, {m} new weak spots."
+    },
+    "drafts": {
+      "title": "Pick up where you left off",
+      "subtitle": "Drafts waiting to be published.",
+      "continue": "Continue",
+      "last_edited": "Last edited {time}"
+    },
+    "empty": {
+      "title": "This is where your class results will appear.",
+      "body": "Create your first test or start from a school template. You'll instantly see how the class is doing and where the weak spots are.",
+      "cta_primary": "Create your first test",
+      "cta_secondary": "Browse school templates"
+    },
+    "stats_section_title": "Account stats",
     "stat": {
       "tests_label": "Active tests",
       "sessions_label": "Sessions (30 days)",
@@ -119,6 +182,11 @@
     "help": "Help centre · SubenAI"
   },
   "account": {
+    "tabs": {
+      "profile": "Profile",
+      "security": "Security",
+      "dsr": "GDPR"
+    },
     "profile": {
       "page_header_eyebrow": "Account",
       "page_header_title": "My profile",

@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/app/page-header";
+import { AccountTabs } from "@/components/user/AccountTabs";
 import { BackupCodesManager } from "@/components/auth/BackupCodesManager";
 import { listFactors, unenrollFactor } from "@/lib/auth/mfa";
 import { tFor } from "@/i18n/app-shell";
@@ -112,6 +113,7 @@ function SecurityPage() {
 
   return (
     <div className="space-y-6" data-testid="app-account-security-root">
+      <AccountTabs />
       <PageHeader
         eyebrow={t("page_header_eyebrow")}
         title={t("page_header_title")}
