@@ -2,7 +2,7 @@ import type { Locator, Page, Response } from "@playwright/test";
 import { BasePage } from "../BasePage";
 
 /**
- * POM for the /podpora donation form (E10 sponsorship).
+ * POM for the /support donation form (E10 sponsorship; AH-16 renamed /podpora).
  *
  * Locator strategy is `data-testid` first — see `.claude/CLAUDE.md` § Test IDs.
  * Specs must NOT call `page.locator(...)` / `page.getByTestId(...)` directly;
@@ -27,7 +27,7 @@ export class PodporaPage extends BasePage {
   }
 
   async open(opts: { cancelled?: boolean } = {}): Promise<Response | null> {
-    return this.goto(opts.cancelled ? "/podpora?cancelled=1" : "/podpora");
+    return this.goto(opts.cancelled ? "/support?cancelled=1" : "/support");
   }
 
   // ---------------------------------------------------------------------------
