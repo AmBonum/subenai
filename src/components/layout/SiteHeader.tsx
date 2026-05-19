@@ -2,19 +2,121 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from "@/components/ui/sheet";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
+import { MegaMenu } from "@/components/layout/mega-menu";
+import type { MegaMenuItemDef } from "@/components/layout/mega-menu";
 import { ROUTES } from "@/config/routes";
 import { useAuth } from "@/hooks/useAuth";
 import { tFor } from "@/i18n/marketing";
 
-const NAV_ITEM_DEFS = [
-  { to: ROUTES.testy, key: "testy", slug: "testy" },
-  { to: ROUTES.skolenia, key: "skolenia", slug: "skolenia" },
-  { to: ROUTES.podpora, key: "podpora", slug: "podpora" },
-  { to: ROUTES.kontakt, key: "kontakt", slug: "kontakt" },
+// Phase 1 menu structure — locked per D1 (5 top-level items, no /contact).
+// Static for v1; future upgrade may drive from `cms_navigation`.
+const MEGA_ITEMS: readonly MegaMenuItemDef[] = [
+  {
+    slug: "rychly_test",
+    labelKey: "label",
+    descKey: "desc",
+    href: ROUTES.test,
+  },
+  {
+    slug: "testy",
+    labelKey: "label",
+    descKey: "desc",
+    panel: {
+      sections: [
+        {
+          headingKey: "panel_section_verejnost",
+          links: [
+            { key: "all", labelKey: "panel_link_all", href: ROUTES.testy },
+            { key: "eshop", labelKey: "panel_link_eshop", href: "/tests/eshop" },
+            { key: "gastro", labelKey: "panel_link_gastro", href: "/tests/gastro" },
+            { key: "it", labelKey: "panel_link_it", href: "/tests/it" },
+          ],
+        },
+        {
+          headingKey: "panel_section_lektorov",
+          links: [{ key: "composer", labelKey: "panel_link_composer", href: ROUTES.zostav }],
+        },
+      ],
+      featured: { labelKey: "panel_featured", href: ROUTES.testy },
+    },
+  },
+  {
+    slug: "skolenia",
+    labelKey: "label",
+    descKey: "desc",
+    panel: {
+      sections: [
+        {
+          headingKey: "panel_section_kurzy",
+          links: [
+            { key: "all", labelKey: "panel_link_all", href: ROUTES.skolenia },
+            {
+              key: "email_phishing",
+              labelKey: "panel_link_email_phishing",
+              href: "/courses/email-phishing",
+            },
+            {
+              key: "sms_smishing",
+              labelKey: "panel_link_sms_smishing",
+              href: "/courses/sms-smishing",
+            },
+            { key: "vishing", labelKey: "panel_link_vishing", href: "/courses/vishing" },
+          ],
+        },
+      ],
+      featured: { labelKey: "panel_featured", href: ROUTES.skoly },
+    },
+  },
+  {
+    slug: "pre_skoly",
+    labelKey: "label",
+    descKey: "desc",
+    href: ROUTES.skoly,
+  },
+  {
+    slug: "podpora",
+    labelKey: "label",
+    descKey: "desc",
+    href: ROUTES.podpora,
+  },
 ] as const;
 
 const CTA_TO = ROUTES.test;
+
+// Map item slug → all route prefixes that should highlight it. A nested
+// route under one of the panel sub-links keeps the parent item highlighted.
+function getItemPrefixes(item: MegaMenuItemDef): string[] {
+  const prefixes: string[] = [];
+  if (item.href) prefixes.push(item.href);
+  if (item.panel) {
+    for (const section of item.panel.sections) {
+      for (const link of section.links) prefixes.push(link.href);
+    }
+  }
+  return prefixes;
+}
+
+function computeActiveSlug(pathname: string): string | null {
+  let bestSlug: string | null = null;
+  let bestPrefixLength = 0;
+  for (const item of MEGA_ITEMS) {
+    for (const prefix of getItemPrefixes(item)) {
+      const matches = pathname === prefix || pathname.startsWith(prefix + "/");
+      if (matches && prefix.length > bestPrefixLength) {
+        bestSlug = item.slug;
+        bestPrefixLength = prefix.length;
+      }
+    }
+  }
+  return bestSlug;
+}
 
 export function SiteHeader() {
   const { pathname } = useLocation();
@@ -26,15 +128,7 @@ export function SiteHeader() {
     setOpen(false);
   }, [pathname]);
 
-  // Most-specific match wins so nested routes (e.g. /tests/eshop)
-  // highlight only the deepest registered nav entry instead of every prefix.
-  const activeTo = NAV_ITEM_DEFS.reduce<string | null>((acc, item) => {
-    const matches = pathname === item.to || pathname.startsWith(item.to + "/");
-    if (!matches) return acc;
-    if (!acc || item.to.length > acc.length) return item.to;
-    return acc;
-  }, null);
-
+  const activeSlug = computeActiveSlug(pathname);
   const ctaLong = t("cta.long");
 
   return (
@@ -45,7 +139,7 @@ export function SiteHeader() {
       <nav
         data-testid="header-nav"
         aria-label={t("main_nav_aria")}
-        className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:py-4"
+        className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:py-4"
       >
         <Link
           to={ROUTES.home}
@@ -57,20 +151,12 @@ export function SiteHeader() {
           <img src="/logo.svg" alt="subenai" className="hidden sm:block h-9 w-auto md:h-10" />
         </Link>
 
-        {/* Desktop nav (md+) */}
+        {/* Desktop mega-menu (md+) */}
         <div
           data-testid="header-desktop-nav"
           className="hidden items-center gap-1 md:flex md:gap-2"
         >
-          {NAV_ITEM_DEFS.map((item) => (
-            <DesktopNavLink
-              key={item.to}
-              to={item.to}
-              slug={item.slug}
-              label={t(`nav.${item.key}`)}
-              active={activeTo === item.to}
-            />
-          ))}
+          <MegaMenu items={MEGA_ITEMS} activeSlug={activeSlug} />
           {isAuthenticated && (
             <Link
               to="/app"
@@ -117,36 +203,18 @@ export function SiteHeader() {
               </SheetClose>
             </div>
 
-            <ul className="flex flex-1 flex-col gap-1 px-5 py-6">
-              {NAV_ITEM_DEFS.map((item) => (
-                <li key={item.to}>
-                  <Link
-                    to={item.to}
-                    data-testid={`header-mobile-nav-link-${item.slug}`}
-                    className={`block rounded-xl px-4 py-4 text-base font-semibold transition-colors ${
-                      activeTo === item.to
-                        ? "bg-primary/10 text-foreground"
-                        : "text-muted-foreground hover:bg-card hover:text-foreground"
-                    }`}
-                  >
-                    {t(`nav.${item.key}`)}
-                  </Link>
-                </li>
-              ))}
-              {isAuthenticated && (
-                <li>
-                  <Link
-                    to="/app"
-                    data-testid="site-header-mobile-nav-link-app"
-                    className="block rounded-xl px-4 py-4 text-base font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
-                  >
-                    {t("nav.app")}
-                  </Link>
-                </li>
-              )}
-            </ul>
+            <MobileMenu items={MEGA_ITEMS} activeSlug={activeSlug} />
 
             <div className="flex flex-col gap-3 border-t border-border/40 px-5 py-5">
+              {isAuthenticated && (
+                <Link
+                  to="/app"
+                  data-testid="site-header-mobile-nav-link-app"
+                  className="block rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+                >
+                  {t("nav.app")}
+                </Link>
+              )}
               <div className="flex justify-center" data-testid="header-mobile-locale">
                 <LocaleSwitcher variant="outline" />
               </div>
@@ -167,27 +235,92 @@ export function SiteHeader() {
   );
 }
 
-function DesktopNavLink({
-  to,
-  slug,
-  label,
-  active,
+function MobileMenu({
+  items,
+  activeSlug,
 }: {
-  to: string;
-  slug: string;
-  label: string;
-  active: boolean;
+  items: readonly MegaMenuItemDef[];
+  activeSlug: string | null;
 }) {
+  const t = tFor("header");
+
   return (
-    <Link
-      to={to}
-      data-testid={`header-nav-link-${slug}`}
-      className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:text-foreground ${
-        active ? "text-foreground" : "text-muted-foreground"
-      }`}
-    >
-      {label}
-    </Link>
+    <div className="flex flex-1 flex-col overflow-y-auto px-5 py-4">
+      <Accordion type="multiple" className="flex flex-col gap-1">
+        {items.map((item) => {
+          const isActive = activeSlug === item.slug;
+          const label = t(`menu.${item.slug}.label`);
+
+          if (!item.panel) {
+            return (
+              <Link
+                key={item.slug}
+                to={item.href!}
+                data-testid={`header-mobile-nav-link-${item.slug}`}
+                className={`block rounded-xl px-4 py-4 text-base font-semibold transition-colors ${
+                  isActive
+                    ? "bg-primary/10 text-foreground"
+                    : "text-muted-foreground hover:bg-card hover:text-foreground"
+                }`}
+              >
+                {label}
+              </Link>
+            );
+          }
+
+          return (
+            <AccordionItem
+              key={item.slug}
+              value={item.slug}
+              data-testid={`header-mobile-nav-accordion-${item.slug}`}
+              className="border-0"
+            >
+              <AccordionTrigger
+                data-testid={`header-mobile-nav-trigger-${item.slug}`}
+                className={`rounded-xl px-4 py-4 text-base font-semibold hover:no-underline ${
+                  isActive
+                    ? "bg-primary/10 text-foreground"
+                    : "text-muted-foreground hover:bg-card hover:text-foreground"
+                }`}
+              >
+                {label}
+              </AccordionTrigger>
+              <AccordionContent
+                data-testid={`header-mobile-nav-panel-${item.slug}`}
+                className="pb-2 pl-4"
+              >
+                <ul className="flex flex-col gap-1">
+                  {item.panel.sections.flatMap((section) =>
+                    section.links.map((link) => (
+                      <li key={link.key}>
+                        <Link
+                          to={link.href}
+                          data-testid={`header-mobile-nav-panel-link-${item.slug}-${link.key}`}
+                          className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+                        >
+                          {t(`menu.${item.slug}.${link.labelKey}`)}
+                        </Link>
+                      </li>
+                    )),
+                  )}
+                  {item.panel.featured && (
+                    <li>
+                      <Link
+                        to={item.panel.featured.href}
+                        data-testid={`header-mobile-nav-panel-featured-${item.slug}`}
+                        className="block rounded-md px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-card"
+                      >
+                        {t(`menu.${item.slug}.${item.panel.featured.labelKey}`)}
+                      </Link>
+                    </li>
+                  )}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
+      </Accordion>
+    </div>
   );
 }
 

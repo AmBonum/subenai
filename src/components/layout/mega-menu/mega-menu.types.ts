@@ -1,0 +1,42 @@
+// Phase 1 — type definitions for the desktop mega-menu header.
+//
+// MegaMenuItemDef drives both the desktop NavigationMenu and the mobile
+// Sheet/Accordion fallback. Items without `panel` render as flat links;
+// items with `panel` render as a Radix `NavigationMenuTrigger` paired with
+// a `NavigationMenuContent` panel on desktop and an Accordion section on
+// mobile.
+
+export interface MegaMenuPanelLink {
+  /** Stable key under `header.menu.<slug>.panel_link_<key>` plus used in test-ids. */
+  key: string;
+  labelKey: string;
+  href: string;
+  descKey?: string;
+}
+
+export interface MegaMenuPanelSection {
+  headingKey: string;
+  links: MegaMenuPanelLink[];
+}
+
+export interface MegaMenuFeatured {
+  labelKey: string;
+  href: string;
+}
+
+export interface MegaMenuPanel {
+  sections: MegaMenuPanelSection[];
+  featured?: MegaMenuFeatured;
+}
+
+export interface MegaMenuItemDef {
+  /** Stable React key + test-id slug. */
+  slug: string;
+  /** i18n key under `header.menu.<slug>.label`. */
+  labelKey: string;
+  /** i18n key under `header.menu.<slug>.desc` (currently unused on desktop trigger, surfaced in mobile accordion summary). */
+  descKey: string;
+  /** Direct route when there's no panel. */
+  href?: string;
+  panel?: MegaMenuPanel;
+}

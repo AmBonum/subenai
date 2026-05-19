@@ -12,6 +12,42 @@
       "kontakt": "Kontakt",
       "app": "Moje testy"
     },
+    "menu": {
+      "rychly_test": {
+        "label": "Rychlý test",
+        "desc": "Deset otázek za 90 vteřin — bez registrace. Pošlete rodině i kolegům."
+      },
+      "testy": {
+        "label": "Sady testů",
+        "desc": "Připravené testy podle odvětví a publika — e-shop, gastro, IT, školy, senioři.",
+        "panel_section_verejnost": "Pro veřejnost",
+        "panel_section_lektorov": "Pro lektory",
+        "panel_link_all": "Všechny sady",
+        "panel_link_eshop": "E-shop",
+        "panel_link_gastro": "Gastro",
+        "panel_link_it": "IT",
+        "panel_link_composer": "Vytvořit vlastní test",
+        "panel_featured": "Nové otázky tento měsíc →"
+      },
+      "skolenia": {
+        "label": "Školení",
+        "desc": "Bezplatné krátké kurzy — phishing, smishing, BEC. České i slovenské scénáře, bez žargonu.",
+        "panel_section_kurzy": "Kurzy",
+        "panel_link_all": "Všechny kurzy",
+        "panel_link_email_phishing": "E-mailový phishing",
+        "panel_link_sms_smishing": "SMS smishing",
+        "panel_link_vishing": "Vishing",
+        "panel_featured": "Pro školy a HR"
+      },
+      "pre_skoly": {
+        "label": "Pro školy a lektory",
+        "desc": "Edu režim: pošlete test třídě, uvidíte, kdo na čem selhal, a podle toho učíte."
+      },
+      "podpora": {
+        "label": "Podpora projektu",
+        "desc": "Hosting, obsah a údržba. Bez reklam, bez paywallu — funguje ze sponzorství."
+      }
+    },
     "cta": {
       "short": "Spustit test",
       "long": "Spustit rychlý test",

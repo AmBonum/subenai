@@ -12,6 +12,42 @@
       "kontakt": "Contact",
       "app": "My tests"
     },
+    "menu": {
+      "rychly_test": {
+        "label": "Quick test",
+        "desc": "Ten questions in 90 seconds — no sign-up. Share with family or colleagues."
+      },
+      "testy": {
+        "label": "Test packs",
+        "desc": "Ready-made tests by sector and audience — retail, hospitality, IT, schools, seniors.",
+        "panel_section_verejnost": "For the public",
+        "panel_section_lektorov": "For educators",
+        "panel_link_all": "All packs",
+        "panel_link_eshop": "E-shop",
+        "panel_link_gastro": "Hospitality",
+        "panel_link_it": "IT",
+        "panel_link_composer": "Build your own test",
+        "panel_featured": "New questions this month →"
+      },
+      "skolenia": {
+        "label": "Courses",
+        "desc": "Free short courses — phishing, smishing, BEC. Slovak scenarios, no jargon.",
+        "panel_section_kurzy": "Courses",
+        "panel_link_all": "All courses",
+        "panel_link_email_phishing": "Email phishing",
+        "panel_link_sms_smishing": "SMS smishing",
+        "panel_link_vishing": "Vishing",
+        "panel_featured": "For schools & HR"
+      },
+      "pre_skoly": {
+        "label": "For educators",
+        "desc": "Edu mode: send a test to your class, see who failed what, teach to the gap."
+      },
+      "podpora": {
+        "label": "Support the project",
+        "desc": "Hosting, content, maintenance. No ads, no paywall — runs on sponsorship."
+      }
+    },
     "cta": {
       "short": "Take the test",
       "long": "Take the quick test",

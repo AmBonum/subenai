@@ -12,6 +12,42 @@
       "kontakt": "Kontakt",
       "app": "Moje testy"
     },
+    "menu": {
+      "rychly_test": {
+        "label": "Rýchly test",
+        "desc": "10 otázok za 90 sekúnd — bez registrácie. Pošli rodičom aj kolegom."
+      },
+      "testy": {
+        "label": "Sady testov",
+        "desc": "Pripravené testy podľa odvetvia a publika — e-shop, gastro, IT, školy, seniori.",
+        "panel_section_verejnost": "Pre verejnosť",
+        "panel_section_lektorov": "Pre lektorov",
+        "panel_link_all": "Všetky sady",
+        "panel_link_eshop": "E-shop",
+        "panel_link_gastro": "Gastro",
+        "panel_link_it": "IT",
+        "panel_link_composer": "Vytvoriť vlastný test",
+        "panel_featured": "Nové otázky tento mesiac →"
+      },
+      "skolenia": {
+        "label": "Školenia",
+        "desc": "Bezplatné krátke kurzy — phishing, smishing, BEC. Slovenské scenáre, žiadny žargón.",
+        "panel_section_kurzy": "Kurzy",
+        "panel_link_all": "Všetky kurzy",
+        "panel_link_email_phishing": "Email phishing",
+        "panel_link_sms_smishing": "SMS smishing",
+        "panel_link_vishing": "Vishing",
+        "panel_featured": "Pre školy a HR"
+      },
+      "pre_skoly": {
+        "label": "Pre školy a lektorov",
+        "desc": "Edu mód: pošli test triede, pozri kto na čom zlyhal, uč podľa toho."
+      },
+      "podpora": {
+        "label": "Podpora projektu",
+        "desc": "Hosting, obsah a údržba. Bez reklám, bez paywallu — funguje zo sponzorstva."
+      }
+    },
     "cta": {
       "short": "Spustiť test",
       "long": "Spustiť rýchly test",

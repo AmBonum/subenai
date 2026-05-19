@@ -1,5 +1,17 @@
 import type { Locator, Page } from "@playwright/test";
 
+/**
+ * Mega-menu slugs (Phase 1, D1). Items either render as a flat link
+ * (`MegaLinkSlug`) or as a hover trigger that opens a panel (`MegaTriggerSlug`).
+ */
+export type MegaLinkSlug = "rychly_test" | "pre_skoly" | "podpora";
+export type MegaTriggerSlug = "testy" | "skolenia";
+export type MegaSlug = MegaLinkSlug | MegaTriggerSlug;
+
+/**
+ * Legacy slug — kept so existing specs keep type-checking against `navLink()`
+ * while we migrate them. New specs MUST use `megaLink` / `megaTrigger`.
+ */
 export type NavSlug = "testy" | "skolenia" | "podpora" | "kontakt";
 
 /**
@@ -8,6 +20,11 @@ export type NavSlug = "testy" | "skolenia" | "podpora" | "kontakt";
  * `page.getByTestId(...)` directly (per `.claude/CLAUDE.md` § Test IDs).
  *
  * Locator strategy is `data-testid` first, role/name second.
+ *
+ * Phase 1 (mega-menu): the desktop nav is now a Radix `NavigationMenu` with
+ * 5 top-level items, two of which (`testy`, `skolenia`) open hover panels.
+ * `navLink()` is preserved as a deprecated alias for the cross-cutting spec
+ * suite — see method docs below.
  */
 export class SiteHeader {
   constructor(private readonly page: Page) {}
@@ -45,7 +62,42 @@ export class SiteHeader {
     return this.page.getByTestId("header-desktop-nav");
   }
 
+  /** Plain link variant of a mega-menu item (no panel). */
+  megaLink(slug: MegaLinkSlug): Locator {
+    return this.page.getByTestId(`header-mega-link-${slug}`);
+  }
+
+  /** Trigger that opens a hover panel (the panel itself is `megaPanel`). */
+  megaTrigger(slug: MegaTriggerSlug): Locator {
+    return this.page.getByTestId(`header-mega-trigger-${slug}`);
+  }
+
+  /** Hover panel content root for a given top-level item. */
+  megaPanel(slug: MegaTriggerSlug): Locator {
+    return this.page.getByTestId(`header-mega-panel-${slug}`);
+  }
+
+  /** Individual sub-link inside a hover panel. */
+  megaPanelLink(slug: MegaTriggerSlug, linkKey: string): Locator {
+    return this.page.getByTestId(`header-mega-panel-link-${slug}-${linkKey}`);
+  }
+
+  /**
+   * @deprecated Phase 1 mega-menu replaces `header-nav-link-<slug>` with
+   * `header-mega-link-<slug>` (flat) or `header-mega-trigger-<slug>` (panel).
+   * This alias maps the legacy slug to whichever new locator applies so the
+   * cross-cutting spec suite stays type-clean during migration. `"kontakt"`
+   * has been removed from the top nav (per D1) and points at a locator that
+   * will never match — callers asserting on it must be updated.
+   */
   navLink(slug: NavSlug): Locator {
+    if (slug === "testy" || slug === "skolenia") {
+      return this.megaTrigger(slug);
+    }
+    if (slug === "podpora") {
+      return this.megaLink("podpora");
+    }
+    // "kontakt" — removed from top nav in Phase 1.
     return this.page.getByTestId(`header-nav-link-${slug}`);
   }
 
@@ -83,8 +135,23 @@ export class SiteHeader {
     return this.page.getByTestId("header-mobile-logo-link");
   }
 
-  sheetNavLink(slug: NavSlug): Locator {
+  /**
+   * Flat (no-panel) mobile nav link. For panel items (`testy`, `skolenia`)
+   * use `sheetNavTrigger` to expand the accordion section, then
+   * `sheetNavPanelLink` for sub-links.
+   */
+  sheetNavLink(slug: NavSlug | MegaLinkSlug): Locator {
     return this.page.getByTestId(`header-mobile-nav-link-${slug}`);
+  }
+
+  /** Accordion trigger for a panel item in the mobile sheet. */
+  sheetNavTrigger(slug: MegaTriggerSlug): Locator {
+    return this.page.getByTestId(`header-mobile-nav-trigger-${slug}`);
+  }
+
+  /** Sub-link inside an expanded mobile accordion panel. */
+  sheetNavPanelLink(slug: MegaTriggerSlug, linkKey: string): Locator {
+    return this.page.getByTestId(`header-mobile-nav-panel-link-${slug}-${linkKey}`);
   }
 
   get sheetCtaLink(): Locator {
