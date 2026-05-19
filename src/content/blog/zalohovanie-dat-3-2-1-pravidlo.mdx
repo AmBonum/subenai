@@ -1,0 +1,175 @@
+---
+slug: zalohovanie-dat-3-2-1-pravidlo
+title: "zálohovanie dát — pravidlo 3-2-1 pre normálnych ľudí"
+subtitle: "ako spraviť zálohu, ktorá prežije ransomware, rozbitý disk aj omylom vymazanú zložku — bez serverovej miestnosti"
+excerpt: "ransomware dnes cieli aj na rodinné fotky, nielen na firmy. pravidlo 3-2-1 — tri kópie, dva typy médií, jedna mimo domu — je najjednoduchší recept, ktorý ťa pred tým ochráni. tu je presný setup pre macOS, windows a telefón, vrátane testu, ktorý prezradí, či tvoja záloha naozaj funguje."
+category_slug: digitalna-bezpecnost
+author_slug: subenai-editorial
+primary_keyword: zalohovanie dat
+search_intent: informational
+reading_minutes: 11
+hero_image_url: null
+og_image_url: null
+seo_title: "zálohovanie dát — pravidlo 3-2-1 v praxi | subenai"
+seo_description: "pravidlo 3-2-1 v ľudskej reči — 3 kópie, 2 médiá, 1 mimo domu. konkrétne nástroje pre macOS, windows a telefón, ochrana pred ransomwarom a test restore, ktorý ti ukáže, či záloha naozaj funguje."
+canonical_url: null
+pillar: false
+sources:
+  - label: "sk-cert: varovanie pred ransomvérovými útokmi a odporúčania pre obete"
+    url: "https://www.sk-cert.sk/sk/varovanie-pred-ransomverovymi-utokmi/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "národný bezpečnostný úrad: zálohovanie údajov ako prvá obrana pred ransomvérom"
+    url: "https://www.nbu.gov.sk/kyberneticka-bezpecnost/odporucania/index.html"
+    publisher: "NBÚ"
+    accessed_at: "2026-05-19"
+  - label: "polícia sr: nahlasovanie ransomvérových útokov a obnova dát"
+    url: "https://www.minv.sk/?kyberkriminalita"
+    publisher: "Polícia SR"
+    accessed_at: "2026-05-19"
+  - label: "enisa threat landscape 2025 — ransomware a obnova zo zálohy"
+    url: "https://www.enisa.europa.eu/publications/enisa-threat-landscape-2025"
+    publisher: "ENISA"
+    accessed_at: "2026-05-19"
+  - label: "no more ransom — bezplatné dešifrovacie nástroje a prevencia"
+    url: "https://www.nomoreransom.org/sk/index.html"
+    publisher: "Europol / NCSC"
+    accessed_at: "2026-05-19"
+---
+
+ransomware znie ako problém veľkých firiem v amerických správach. nie je. v 2025 a 2026 sa cieli aj na slovenské domácnosti — útočník zašifruje rodinné fotky, diplomovku tvojej dcéry a faktúry zo živnosti, a potom žiada 300–800 € v krypte za odšifrovanie. zaplatíš? podľa [sk-cert vo varovaniach o ransomvérových kampaniach](https://www.sk-cert.sk/sk/varovanie-pred-ransomverovymi-utokmi/index.html) [1] **každá tretia obeť, ktorá zaplatí, dáta aj tak nedostane späť**. nezaplatíš a nemáš zálohu? máš kópie z whatsappu a frustráciu.
+
+je tu jeden recept, ktorý ten problém zruší v koreni. volá sa **pravidlo 3-2-1** a používa ho každý it administrátor od 90-tych rokov. pre bežnú slovenskú domácnosť znamená tri konkrétne kroky, ktoré nastavíš za večer a potom fungujú samé.
+
+## čo znamená 3-2-1 v ľudskej reči
+
+pravidlo má tri čísla a všetky tri musia platiť súčasne:
+
+- **3 kópie tvojich dát** — originál + dve zálohy. nie originál a jedna záloha. **dve.**
+- **2 rôzne typy médií** — napríklad interný SSD v notebooku + externý disk. nie dve zložky na tom istom disku.
+- **1 kópia mimo domova** — cloud, USB u rodičov, NAS u kamoša. niekde, kde nehorí, keď ti vyhorí byt.
+
+prečo tri kópie? lebo druhý disk niekedy zomrie v ten istý týždeň ako prvý, najmä keď ich kúpiš naraz z tej istej série. prečo dva typy médií? lebo SSD-čka tej istej série zlyhávajú na podobné chyby firmwaru. prečo mimo domu? lebo **ransomware zašifruje všetko, na čo dosiahne v lokálnej sieti** — vrátane NAS-u a externého disku, ktorý si zabudol odpojiť.
+
+## ako to vyzerá pre bežného slováka
+
+pre rodinu, freelancera alebo študenta to v praxi znamená trojvrstvový setup:
+
+1. **kópia 1 — pracovná**: notebook alebo počítač, kde dáta vznikajú a používaš ich denne.
+2. **kópia 2 — lokálna záloha**: externý SSD/HDD v zásuvke alebo malý NAS v skrini. pripájaš ho raz za týždeň, alebo synchronizuje automaticky.
+3. **kópia 3 — cloud (offsite)**: icloud, onedrive, google one, dropbox alebo proton drive. **toto je tá kópia, ktorá prežije ransomware aj požiar.**
+
+celý setup stojí jednorazovo 50–80 € za externý disk a 2–4 € mesačne za cloud. menej, než minieš za jeden brunch.
+
+## pozor — synchronizácia ≠ záloha
+
+toto je najdrahšia mylná predstava na slovenskom internete: *„však mám fotky v icloude, to je moja záloha."* nie je. **cloudová synchronizácia kopíruje aj chyby.**
+
+tri typické scenáre:
+- zašifruje ti notebook ransomware → onedrive verne zosynchronizuje zašifrované verzie do cloudu → tvoja „záloha" je nepoužiteľná spolu s originálom.
+- omylom vymažeš zložku s diplomovkou → cloud ju vymaže tiež → po pár mesiacoch už nie je v koši.
+- editor ti corruptne excel s účtovníctvom → cloud ti corruptnutý súbor zosynchronizuje preč.
+
+skutočná záloha musí mať **verzionovanie** alebo **snapshoty** — schopnosť vrátiť sa k stavu *z minulého týždňa*. väčšina cloudov to vie, len si to musíš zapnúť.
+
+| služba | verzionovanie | ako dlho |
+|---|---|---|
+| icloud drive | áno, automaticky | 30 dní pre väčšinu typov súborov |
+| onedrive (personal) | áno | 30 dní vo verzionovaní, 30 dní v koši |
+| google drive | áno | 30 dní vo verzionovaní + neobmedzene cez „verzie" v UI |
+| dropbox | áno (basic = 30 dní, plus = 180 dní) | závisí od plánu |
+| proton drive | áno, end-to-end šifrované | 10 verzií / súbor |
+
+[enisa vo svojom threat landscape 2025 reporte](https://www.enisa.europa.eu/publications/enisa-threat-landscape-2025) [4] odporúča pre domácich používateľov rovnaký princíp: cloud sa počíta ako záloha **iba ak má verzionovanie a je nezávislý od pracovného účtu**, ku ktorému má útočník po phishingu prístup. inak je to len jedna ďalšia kópia, ktorá padne s ostatnými.
+
+## konkrétny setup — macOS
+
+ak máš mac, máš o polovicu cesty menej:
+
+1. **time machine** (kópia 2). pripoj externý SSD (~70 € za 1 TB), otvor *Nastavenia → Time Machine*, daj „pridať disk". time machine drží hodinové snapshoty 24 hodín, denné posledný mesiac, týždenné navždy — **vstavané verzionovanie** cez „Enter Time Machine".
+2. **icloud drive** (kópia 3). *Nastavenia → Apple ID → iCloud → iCloud Drive*, zapni „Optimize Mac Storage" a presuň dokumenty + plochu do icloud drivu. 200 GB stoja 2,99 €/mesiac, 2 TB 9,99 €/mesiac.
+3. **bonus pre paranoidných**: druhý externý SSD, ktorý pripojíš raz za mesiac, inak je odpojený. ransomware na neho nedosiahne. volá sa to *cold backup*.
+
+## konkrétny setup — windows
+
+windows má dva natívne nástroje, ktoré stačia:
+
+1. **file history** (kópia 2). pripoj externý disk, *Nastavenia → Aktualizácia a zabezpečenie → Zálohovanie → Pridať jednotku*. zálohuje tvoje knižnice (dokumenty, obrázky, plocha) hodinovo a drží verzie do zaplnenia disku.
+2. **onedrive** (kópia 3). predinštalovaný vo windows 11. cez ikonu v paneli zapni „Zálohovanie zložky Plocha, Dokumenty a Obrázky". 100 GB za 2 €/mesiac, 1 TB s microsoft 365 za 7 €/mesiac. verzie nájdeš pravým klikom → *Verzie histórie*.
+3. **alternatíva**: macrium reflect free alebo veeam agent for windows (oba zadarmo) — robia plný image disku. odporúčané pre živnostníkov.
+
+## konkrétny setup — telefón
+
+telefón obsahuje viac fotiek, sms-iek a kontaktov, než si uvedomuješ. zálohuj ho rovnako:
+
+- **iphone**: *Nastavenia → Apple ID → iCloud → iCloud Backup* → „Backup This iPhone". záloha bežne každú noc na nabíjačke a wifi. 50 GB za 0,99 €/mesiac, 200 GB za 2,99 €/mesiac.
+- **android**: *Nastavenia → Google → Záloha* → „Záloha do Google One". obsahuje fotky cez google photos, kontakty, sms-ky a aplikačné dáta. 100 GB za 2 €/mesiac.
+
+ak máš deti, ich telefón patrí do toho istého plánu — fotky z prvého roka života nie sú téma, na ktorej šetríš na 1 € mesačne.
+
+## prečo offsite kópia rozhoduje pri ransomvéri
+
+ransomware sa dostane do tvojho zariadenia najčastejšie cez phishingový e-mail (viď [ako rozpoznať phishingový email za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund)) alebo cez neaktualizovaný systém (viď [aktualizácie systému — prečo sú dôležité](/blog/aktualizacie-systemu-preco-su-dolezite)). v tichosti pár hodín mapuje sieť a potom **naraz zašifruje všetko, na čo dosiahne** — lokálne disky, pripojené externé disky, mapované sieťové disky, NAS, **a niekedy aj prihlásené cloudové synchronizácie**.
+
+čo **nedostane**: kópiu v cloude s verzionovaním (vie sa vrátiť pred útok) alebo na externom disku, ktorý je fyzicky odpojený. **toto je dôvod, prečo offsite + verzionovanie je nezdolaný kombat** voči ransomvéru.
+
+[nbú vo svojich odporúčaniach pre verejnosť](https://www.nbu.gov.sk/kyberneticka-bezpecnost/odporucania/index.html) [2] explicitne hovorí: ak si zálohou pravidelne a má snapshot/verzionovanie schopnosti, **ransomware ti nemôže urobiť nič horšie, než stratu posledných pár hodín práce.** to je rozdiel medzi „nepríjemnosť" a „katastrofa".
+
+a posledný argument, prečo platiť výkupné nie je riešenie: portál [no more ransom](https://www.nomoreransom.org/sk/index.html) [5], ktorý spravuje europol spolu s národnými CERT-mi, drží voľne dostupné dešifrovacie nástroje pre vyše 160 ransomvérových rodín. ak ťa to chytí, **najprv skús no more ransom**, potom uvažuj o čomkoľvek inom. a hlavne nahláste prípad sk-certu a polícii — viď [polícia sr — kyberkriminalita](https://www.minv.sk/?kyberkriminalita) [3].
+
+## test restore — záloha nie je záloha, kým ju neskúsiš obnoviť
+
+toto je najčastejšie zlyhanie aj v profesionálnom IT: zálohuje sa, ale **nikdy sa neoveruje, či sa to dá obnoviť späť**. máš pocit, že je to v poriadku, kým príde havária a ukáže sa, že time machine pol roka bežal na nečitateľný disk, alebo onedrive sa zasekol na chybe.
+
+raz za pol roka spravíš jednoduchý test:
+
+1. vyber si **3 náhodné súbory** zo zálohy — jednu fotku z dovolenky, jeden dokument z pred troch mesiacov, jeden e-mailový export.
+2. **skús ich obnoviť** — z time machine, z file history, z cloudového koša alebo z verzií.
+3. **otvor obnovený súbor** a over, že je čitateľný, nie poškodený.
+4. ak čokoľvek z toho zlyhá, **niečo je rozbité** — disk nečitateľný, cloud nesynchronizoval, autobackup sa pred tromi mesiacmi zasekol. oprav, prepoj, prinúť nanovo zazálohovať.
+
+trvá to 5 minút. zachráni ti to nervy v deň, keď to budeš naozaj potrebovať.
+
+## ransomware a domácnosti — reálne čísla
+
+aby si nemyslel, že je to akademická téma:
+- [enisa threat landscape 2025](https://www.enisa.europa.eu/publications/enisa-threat-landscape-2025) [4] eviduje, že **ransomware sa v EÚ presúva z firemných cieľov aj na malé domácnosti**, lebo kampane sú automatizované a obete platia častejšie ako firmy.
+- [sk-cert pravidelne hlási kampane](https://www.sk-cert.sk/sk/varovanie-pred-ransomverovymi-utokmi/index.html) [1], ktoré sa šíria cez phishingové prílohy v slovenských e-mailoch — falošné faktúry, zásielkové oznámenia, výzvy z „daňového úradu".
+- priemerná výška výkupného pre domácnosť: 300–800 €. priemerná obnova zo zálohy: **2–4 hodiny** (oproti 2–4 týždňom bez zálohy).
+
+phishing je dnes najčastejší vstupný vektor ransomvéru — útočníkovi stačí, aby si raz klikol na falošnú prílohu, a do hodiny ti šifruje disk. pochopiť mechanizmus a včas spoznať podozrivý e-mail vysvetľuje [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca). a anti-ransomware funkcie v komerčných antivírusoch (behaviorálna detekcia šifrovacích vzorov) sú smysluplný doplnok zálohy, nie náhrada — porovnanie aktuálnych v [najlepší antivírus 2026 pre slovensko](/blog/najlepsi-antivirus-2026-slovensko).
+
+## 30-minútový víkendový setup — checklist
+
+ak si dočítal až sem, dohodneme sa: v sobotu večer si sadneš s kávou a do 30 minút máš hotovo.
+
+1. **(5 min)** kúp si externý SSD 1 TB (samsung T7, sandisk extreme, crucial X8 — všetky okolo 70 €).
+2. **(10 min)** zapni natívnu lokálnu zálohu — time machine na macu, file history na windowse. pripoj disk, daj „použiť ako záloha", a zatvor okno.
+3. **(10 min)** zapni cloud na zložku dokumenty a fotky — icloud drive, onedrive alebo google drive. v nastaveniach zapni „verzionovanie" / „verzie histórie".
+4. **(5 min)** na telefóne over, že icloud backup / google one backup je zapnutý a posledná záloha je z dnešnej noci.
+5. **(o 6 mesiacov)** test restore — 3 náhodné súbory, skús obnoviť, otvor, over.
+
+hotovo. máš 3 kópie na 2 typoch médií a 1 mimo domu, presne podľa pravidla 3-2-1.
+
+## zhrnutie
+
+- **3 kópie, 2 typy médií, 1 mimo domu** — to je 3-2-1 v jednej vete.
+- **synchronizácia ≠ záloha.** ak cloud verne kopíruje zašifrované alebo vymazané súbory, nie je to záloha. **verzionovanie** alebo **snapshoty** sú nutné.
+- **ransomware zašifruje všetko v lokálnej sieti** — len offsite kópia s verzionovaním prežije. preto cloud + cold backup.
+- **macOS**: time machine + icloud drive. **windows**: file history + onedrive. **telefón**: icloud backup alebo google one backup.
+- **otestuj restore raz za pol roka** — 3 náhodné súbory, skús obnoviť, otvor. ak zlyhá, oprav teraz, nie keď príde havária.
+- **nikdy neplať výkupné** ako prvý krok. skús [no more ransom](https://www.nomoreransom.org/sk/index.html), nahláste sk-certu, polícii.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [digitálna bezpečnosť — kompletný návod](/blog/digitalna-bezpecnost-kompletny-navod)
+- [aktualizácie systému — prečo sú dôležité](/blog/aktualizacie-systemu-preco-su-dolezite)
+- [ako rozpoznať phishingový email za 10 sekúnd](/blog/ako-rozpoznat-phishingovy-email-za-10-sekund)
+- [čo robiť, keď som klikol na phishing](/blog/co-robit-ked-som-klikol-na-phishing)
+- [najlepší antivírus 2026 pre slovensko](/blog/najlepsi-antivirus-2026-slovensko)
+- [phishing — kompletný sprievodca](/blog/phishing-kompletny-sprievodca)
+- [silné heslo 2026 vs. passkey](/blog/silne-heslo-2026-vs-passkey)
+
+ransomware ťa môže stáť rok rodinných fotiek za jedno popoludnie. 3-2-1 ti to za 30 minút na vždy zatvorí.
+
+**otestuj sa za 90 sekúnd →** `/test`
