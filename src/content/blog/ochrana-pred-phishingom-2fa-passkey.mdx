@@ -1,0 +1,174 @@
+---
+slug: ochrana-pred-phishingom-2fa-passkey
+title: "ochrana pred phishingom — 2fa, passkeys a hardvérové kľúče vysvetlené"
+subtitle: "rebrík obrany od sms kódu po yubikey, s presným návodom kam čo nasadiť"
+excerpt: "phishing porazíš vrstvami, nie opatrnosťou. tento sprievodca ti ukáže rebrík obrany od sms kódov po hardvérové kľúče, prečo passkey útok zastaví a kam presne nasadiť ktorý faktor."
+category_slug: phishing-a-emaily
+author_slug: subenai-editorial
+primary_keyword: ochrana pred phishingom
+search_intent: informational
+reading_minutes: 10
+hero_image_url: null
+og_image_url: null
+seo_title: "ochrana pred phishingom — 2fa, passkey a hardvérový kľúč | subenai"
+seo_description: "rebrík obrany pred phishingom — sms 2fa, totp, push, passkey, yubikey. ktorý faktor patrí na e-mail, banku, sociálne siete a krypto účty."
+canonical_url: null
+pillar: false
+sources:
+  - label: "sk-cert: varovanie pred phishingovou kampaňou zneužívajúcou identitu slovenskej pošty"
+    url: "https://www.sk-cert.sk/en/urgent-warning-against-a-phishing-campaign-that-abuses-the-identity-of-slovenska-posta/index.html"
+    publisher: "SK-CERT"
+    accessed_at: "2026-05-19"
+  - label: "národná banka slovenska: internetové podvody a ako sa im brániť"
+    url: "https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/"
+    publisher: "NBS"
+    accessed_at: "2026-05-19"
+  - label: "fido alliance: passkeys — phishing-resistant prihlasovanie založené na webauthn"
+    url: "https://fidoalliance.org/passkeys/"
+    publisher: "FIDO Alliance"
+    accessed_at: "2026-05-19"
+  - label: "nist sp 800-63b: digital identity guidelines — authenticator assurance levels"
+    url: "https://pages.nist.gov/800-63-3/sp800-63b.html"
+    publisher: "NIST"
+    accessed_at: "2026-05-19"
+---
+
+opatrnosť ako jediná obrana je hra, ktorú s phisherom prehráš. pretože ty potrebuješ byť ostražitý 16 hodín denne, on potrebuje, aby si raz klikol unavený o jedenástej večer. preto sa serióznou obranou pred phishingom nemyslia rady typu *„dávaj si pozor"*, ale **vrstvy, ktoré ťa zachytia aj vtedy, keď heslo už dáš preč**. tento článok ti zoradí všetky bežné možnosti od najslabšej po najsilnejšiu a povie ti, kam patrí ktorá. ak ešte nevieš, [čo je vlastne phishing](/blog/phishing-kompletny-sprievodca) ako koncept, začni tým.
+
+## prečo samotné heslo už dávno nestačí
+
+heslo je staré 60 rokov, navrhli ho na mainframe, kde mu fungovalo dobre. internet ho zlomil tým, že útočník už nemusí byť pri tvojom termináli — stačí mu, aby si ho zadal na falošnej stránke. moderný phishing-as-a-service kit dokáže [zachytiť heslo aj sms kód v reálnom čase a okamžite ho použiť na prihlásenie do skutočnej banky](https://www.sk-cert.sk/en/urgent-warning-against-a-phishing-campaign-that-abuses-the-identity-of-slovenska-posta/index.html) [1] — útočník je *adversary-in-the-middle (AiTM)*, čiže sedí medzi tebou a tvojou bankou a všetko, čo zadáš, recykluje.
+
+druhý faktor mal pôvodne tento problém vyriešiť. v praxi sa ukázalo, že **nie každý druhý faktor je rovnaký**. niektoré útočník obíde rovnako ľahko ako heslo. niektoré ho zastavia natvrdo. medzi týmito dvoma extrémami je rebrík, ktorý sa oplatí poznať.
+
+## rebrík obrany — od najslabšieho po najsilnejší
+
+### 1. sms-kód ako druhý faktor
+
+najznámejšia forma 2fa. banka ti pošle 6-ciferný kód, ty ho prepíšeš. lepšie ako nič. **ale dve veľké diery**:
+
+- **sim swap.** útočník presvedčí telekom operátora, že stratil sim kartu, a nechá si tvoje číslo aktivovať na svojej. tvoj telefón ostane nemý. všetky tvoje sms kódy odteraz chodia jemu. [nbs vo svojich materiáloch o internetových podvodoch opakovane uvádza sim swap ako reálnu hrozbu pre slovenských klientov](https://nbs.sk/dohlad-nad-financnym-trhom/ofs/zivotne-situacie/vase-financie-a-covid-19/internetove-podvody/) [2].
+- **aitm phishing.** útočník ti pošle falošnú prihlasovaciu stránku, ty zadáš meno, heslo aj sms kód — on ich v tej istej minute zadá na pravú stránku banky. kód má platnosť 60 sekúnd, to mu úplne stačí. [nist v sp 800-63b výslovne degraduje sms-based mfa ako „restricted" autentikátor](https://pages.nist.gov/800-63-3/sp800-63b.html) [4] — americká vládna autorita ho neodporúča pre nové systémy.
+
+verdikt: lepšie než žiadne 2fa. ak je to jediné, čo ti banka ponúka, zapni si ho. ale plánuj prechod na niečo silnejšie.
+
+### 2. totp v autentifikátorovej aplikácii
+
+*totp — time-based one-time password — 6-ciferný kód generovaný aplikáciou každých 30 sekúnd*. google authenticator, microsoft authenticator, authy, 1password — všetky robia to isté. kód sa nikam neposiela cez sieť, generuje sa lokálne zo zdieľaného tajomstva, ktoré si nastavil pri prvom zapnutí.
+
+**čo to oproti sms rieši**: sim swap úplne. útočník môže zobrať tvoje číslo, ale kód mu to nevygeneruje. tajomstvo je len v tvojej aplikácii.
+
+**čo to nerieši**: aitm phishing. útočník ti pošle falošnú stránku, ty zadáš totp kód, on ho v reálnom čase preposlá ďalej.
+
+verdikt: výrazné zlepšenie. minimum pre e-mail, sociálne siete a všetko, kde sa dá. ak ešte stále používaš len heslo + sms, totp je prvý krok hore.
+
+### 3. push notifikácia v aplikácii banky
+
+väčšina slovenských bánk (slsp, vúb, tatra banka, čsob, mbank, 365.bank) má vlastnú mobilnú app, ktorá ti pri prihlásení alebo platbe pošle push notifikáciu — *„chceš schváliť prihlásenie?"*. potvrdíš biometriou alebo pinom.
+
+**silné stránky**: app vidí kontext — vie, z akej ip sa pokus deje, či je to nezvyčajné zariadenie, a vie ti zobraziť detail (sumu, príjemcu, krajinu). útočník ti ten kontext nedokáže sfalšovať.
+
+**slabé miesto, ktoré sa volá mfa fatigue**: ak ťa útočník bombarduje push notifikáciami o tretej ráno, je šanca, že omylom potvrdíš len aby ti telefón prestal vibrovať. veľké úniky v zahraničí (uber 2022) prebehli presne takto. banky to riešia tým, že pri prihlásení musíš opísať číslo zo stránky do appky, čo už si nezmýliš v polospánku.
+
+verdikt: pre banking solídna obrana, ak používaš banku, ktorá implementuje push správne. doplnená biometriou ide o robustný setup.
+
+### 4. passkeys (fido2/webauthn) — moment, keď phisher začne plakať
+
+passkey je párový kryptografický kľúč, ktorý žije v tvojom telefóne, počítači alebo cloudovom keychaine (icloud keychain, google password manager, 1password). pri registrácii sa vygeneruje pár — privátna časť ostane u teba, verejnú dostane služba. pri prihlásení podpíšeš výzvu privátnym kľúčom, ten sa nikdy z tvojho zariadenia neodošle.
+
+**prečo to phisher nedokáže ukradnúť**: protokol je **viazaný na doménu**. tvoj passkey pre `slsp.sk` matematicky nepodpíše výzvu z falošnej `slsp-overenie.com` — prehliadač to odmietne ešte pred tým, než si stihol klepnúť na *„potvrdiť"*. [fido alliance to popisuje ako phishing-resistant by design](https://fidoalliance.org/passkeys/) [3] a od roku 2024 je passkey podporovaný natívne v apple, google aj microsoft ekosystéme.
+
+slovenské banky postupne nasadzujú passkey ako alternatívu k sms 2fa — sleduj sekciu *„bezpečnosť"* v tvojom internet bankingu. e-mail giganti (gmail, outlook, proton mail), všetky veľké sociálne siete a väčšina password managerov passkey podporujú už dnes.
+
+**kde passkey naráža**: zatiaľ nie všade. niektoré slovenské služby (daňový portál, eservices) stále trvajú na sms alebo eid. ale momentum je jednoznačný a passkey adopcia v 2026 zrýchľuje.
+
+verdikt: **toto je default pre rok 2026**. ak ti služba ponúkne passkey, prepni sa naň. okamžite. detail v sibling článku [silné heslo verzus passkey](/blog/silne-heslo-2026-vs-passkey).
+
+### 5. hardvérový kľúč — yubikey, google titan, onlykey
+
+hardvérový bezpečnostný kľúč je v podstate passkey v plastovej škrupinke, ktorú nosíš na kľúčenke. yubikey 5, google titan, nitrokey, onlykey — fyzické zariadenie cez usb-a, usb-c alebo nfc. pri prihlásení sa ho dotkneš prstom a podpíše výzvu kryptograficky, presne ako passkey, len je viazaný na fyzický objekt namiesto na tvoj keychain.
+
+**kedy hardvérový kľúč prebíja softvérový passkey**:
+
+- účet, ktorý chceš chrániť aj keby ti niekto kompromitoval celý telefón aj počítač
+- vysokohodnotné cieľe: krypto burzy, primárny e-mail, firemné admin účty, github / aws / cloudflare s prístupom k produkcii
+- novinári, aktivisti, ľudia v citlivých profesiách
+
+**praktická poznámka**: vždy si kúp dva kľúče naraz. jeden ti chodí na kľúčenke, druhý uložíš doma vo fyzickom trezore alebo u rodičov. ak prvý stratíš alebo ti ho ukradnú, druhý je tvoj záchranný breh — bez neho strácaš účet rovnako, ako keby ho ukradol phisher.
+
+verdikt: pre kritické účty mandatórne. porovnanie konkrétnych modelov, cien a kompatibility nájdeš v sibling článku [porovnanie hardvérových kľúčov](/blog/yubikey-vs-google-titan-vs-passkey).
+
+## praktický návod — kam čo nasadiť
+
+teoreticky by si mal mať najsilnejší faktor všade. realisticky: služby ti to neumožnia a tvoja energia má hranicu. takže priorita.
+
+### tvoj primárny e-mail
+
+**najkritickejší účet, aký máš.** z e-mailu sa dá resetovať heslo do banky, sociálnych sietí, daňového portálu, eshopov. ak phisher ovládne e-mail, ovládne všetko ostatné.
+
+- **passkey ako primárny prihlasovací mechanizmus** (gmail, outlook, proton — všetky podporujú).
+- **hardvérový kľúč ako záložný faktor** (nastav si dva — jeden pri sebe, jeden doma).
+- **sms 2fa vypni**, ak máš passkey a hardvérový kľúč — sms tu pôsobí len ako diera, cez ktorú sa útočník po sim swape dostane späť.
+
+### banking
+
+- **app push notifikácia + biometria** je default pre väčšinu slovenských bánk a funguje dobre.
+- ak banka už ponúka **passkey alebo fido2 pre web banking**, prepni sa naň. slsp a tatra banka tento smer testujú v 2026.
+- **nikdy** nepoužívaj sms 2fa ako jediný faktor pre prevody. ak to banka takto má, zapni si v app obmedzenia (denný limit, geofencing, dvojnásobné potvrdenie pre nové príjemcov).
+
+### sociálne siete
+
+facebook, instagram, tiktok, x, linkedin, reddit — všetky podporujú passkey aj totp.
+
+- **passkey > totp > sms.** v tomto poradí.
+- na instagrame a facebooku špeciálne pozor — phishing kampane na slovenských používateľov tu sú každodenné. ak si stratil prístup k fb účtu, máme [krízový návod pre hacknutý facebook](/blog/hacknuty-facebook-ucet-co-robit).
+
+### krypto burzy a peňaženky
+
+binance, coinbase, kraken, ledger, metamask — peniaze tu zmiznú za sekundy a sú nezvratné.
+
+- **hardvérový kľúč mandatórny.** žiadne *„zatiaľ stačí totp"*. ak nemáš yubikey alebo titan, nemaj na burze viac, než si môžeš dovoliť stratiť.
+- pre veľké zostatky: hardvérová peňaženka (ledger, trezor) + samostatný yubikey pre prístup k burze.
+
+### password manager
+
+paradox: tvoj password manager (1password, bitwarden, dashlane) drží všetky tvoje ostatné heslá a passkeys. ak ho phisher dostane, dostane všetko.
+
+- **master heslo dlhé a unikátne** — 6-slovná passphrase, nikde inde nepoužitá.
+- **passkey alebo hardvérový kľúč ako 2fa pre samotný manager.**
+- detail v [porovnaní správcov hesiel](/blog/spravca-hesiel-porovnanie).
+
+## záchranné kódy — to, na čo všetci zabúdajú
+
+každá služba, kde si zapneš 2fa, ti vygeneruje sadu jednorazových *recovery kódov*. zvyčajne 8–10 kódov, každý použiteľný raz. existujú presne pre prípad, keď stratíš telefón, kľúč alebo prístup k authenticatoru.
+
+**ako ich uložiť správne**:
+
+- **vytlač ich na papier.** áno, papier. založ do toho istého miesta, kde držíš dôležité dokumenty — pas, zmluvy. fyzický trezor je ideál, plechová skrinka tiež OK.
+- **alebo ich ulož u rodičov / dôveryhodnej osoby** v zalepenej obálke. ak ti telefón ukradnú aj s počítačom, druhá lokácia ti zachráni účet.
+- **nikdy nie v poznámkach v telefóne, v gmaile, v cloude bez šifrovania.** to je rovnaké, ako uložiť heslo do textového súboru pomenovaného `hesla.txt`.
+- **prečiarkni kód po použití** — vždy. inak nebudeš vedieť, ktoré sú ešte platné.
+
+## čo robiť teraz — 30-minútový plán
+
+ak si práve čítal a uvedomil si si, že máš sms 2fa na e-maile alebo nič na banke, je to dobrý moment to napraviť. urob to dnes večer, kým si pri pamäti.
+
+1. **e-mail** → zapni passkey, doplň totp ako záložný faktor. vypni sms 2fa, ak máš oba silnejšie.
+2. **banka** → over si v aplikácii, že máš zapnutú push autorizáciu + biometriu. pozri si denný limit a v prípade potreby zníž.
+3. **password manager** → master heslo si over (kedy si ho menil naposledy?), pridaj passkey alebo hardvérový kľúč ako 2fa.
+4. **facebook + instagram** → bezpečnosť → 2fa → prepni z sms na authenticator alebo passkey.
+5. **vytlač záchranné kódy** pre všetky vyššie. založ ich fyzicky.
+
+a ak si práve klikol na phishing skôr, než si stihol toto všetko nastaviť — neignoruj to. otvor si [čo robiť po kliknutí na phishing](/blog/co-robit-ked-som-klikol-na-phishing) a prebehni krízový protokol. potom sa vráť sem a urob 30-minútový plán, nech sa to už nezopakuje.
+
+## čítaj ďalej
+
+- [čo je vlastne phishing](/blog/phishing-kompletny-sprievodca)
+- [čo robiť po kliknutí na phishing](/blog/co-robit-ked-som-klikol-na-phishing)
+- [porovnanie hardvérových kľúčov](/blog/yubikey-vs-google-titan-vs-passkey)
+- [silné heslo verzus passkey](/blog/silne-heslo-2026-vs-passkey)
+- [porovnanie správcov hesiel](/blog/spravca-hesiel-porovnanie)
+
+otestuj sa na 15 reálnych slovenských scam scenároch za 90 sekúnd. žiadna registrácia, žiadne sledovanie.
+
+**otestuj sa za 90 sekúnd →** `/test`
