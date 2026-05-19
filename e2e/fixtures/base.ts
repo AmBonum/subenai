@@ -7,6 +7,9 @@ import { SiteHeader } from "../poms/shared/SiteHeader";
 import { SiteFooter } from "../poms/shared/SiteFooter";
 import { NotFoundPage } from "../poms/shared/NotFoundPage";
 import { HomePage } from "../poms/quiz/HomePage";
+import { MarketingHomePage } from "../poms/marketing/HomePage";
+import { AboutPage } from "../poms/marketing/AboutPage";
+import { ContactPage } from "../poms/marketing/ContactPage";
 import { PodporaPage } from "../poms/sponsorship/PodporaPage";
 
 // Minimal .env loader so specs don't need playwright.config.ts to import
@@ -57,6 +60,9 @@ import { PodporaPage } from "../poms/sponsorship/PodporaPage";
  */
 type Fixtures = {
   home: HomePage;
+  marketingHome: MarketingHomePage;
+  about: AboutPage;
+  contact: ContactPage;
   consent: ConsentBanner;
   consentDialog: ConsentPreferencesDialog;
   header: SiteHeader;
@@ -68,6 +74,15 @@ type Fixtures = {
 export const test = base.extend<Fixtures>({
   home: async ({ page }, use) => {
     await use(new HomePage(page));
+  },
+  marketingHome: async ({ page }, use) => {
+    await use(new MarketingHomePage(page));
+  },
+  about: async ({ page }, use) => {
+    await use(new AboutPage(page));
+  },
+  contact: async ({ page }, use) => {
+    await use(new ContactPage(page));
   },
   consent: async ({ page }, use) => {
     await use(new ConsentBanner(page));

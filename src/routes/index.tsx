@@ -413,7 +413,10 @@ function Index() {
       <main className="mx-auto max-w-3xl px-4 pt-16 pb-12 sm:pt-24">
         {/* Hero */}
         <div className="text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
+          <div
+            data-testid="home-stats-pill"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur"
+          >
             <span className="h-2 w-2 animate-pulse rounded-full bg-primary" />
             {displayCount === null
               ? t("home.stats_loading")
@@ -435,12 +438,16 @@ function Index() {
           <div className="mt-10 flex flex-col items-center gap-3">
             <Link
               to={ROUTES.test}
+              data-testid="home-hero-cta"
               className="group inline-flex items-center gap-2 rounded-2xl bg-accent-gradient px-8 py-5 text-lg font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.99]"
             >
               {t("home.hero_cta")}
               <span className="transition-transform group-hover:translate-x-1">→</span>
             </Link>
-            <p className="text-sm font-semibold text-foreground sm:text-base">
+            <p
+              data-testid="home-hero-tagline"
+              className="text-sm font-semibold text-foreground sm:text-base"
+            >
               <span className="text-muted-foreground font-normal">{t("home.hero_no_reg")}</span>{" "}
               <span className="text-muted-foreground" aria-hidden="true">
                 ·
@@ -506,6 +513,7 @@ function Index() {
             title={t("home.feature_testy_title")}
             description={t("home.feature_testy_desc")}
             cta={t("home.feature_testy_cta")}
+            testId="home-feature-card-testy"
           />
           <FeatureCard
             to={ROUTES.skolenia}
@@ -513,6 +521,7 @@ function Index() {
             title={t("home.feature_skolenia_title")}
             description={t("home.feature_skolenia_desc")}
             cta={t("home.feature_skolenia_cta")}
+            testId="home-feature-card-skolenia"
           />
           <FeatureCard
             to={ROUTES.oProjecte}
@@ -520,6 +529,7 @@ function Index() {
             title={t("home.feature_about_title")}
             description={t("home.feature_about_desc")}
             cta={t("home.feature_about_cta")}
+            testId="home-feature-card-about"
           />
         </section>
 
@@ -552,6 +562,7 @@ function Index() {
             <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
               <Link
                 to={ROUTES.podpora}
+                data-testid="home-mission-cta-support"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-6 py-3 text-base font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.99]"
               >
                 {t("home.mission_cta_support")}
@@ -559,6 +570,7 @@ function Index() {
               </Link>
               <Link
                 to={ROUTES.oProjecte}
+                data-testid="home-mission-cta-more"
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border/60 bg-background/60 px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-background"
               >
                 {t("home.mission_cta_more")}
@@ -583,6 +595,7 @@ function Index() {
           </div>
           <Link
             to={ROUTES.sponzori}
+            data-testid="home-sponsors-cta"
             className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-primary/40"
           >
             {t("home.sponsors_cta")}
@@ -625,12 +638,14 @@ interface FeatureCardProps {
   title: string;
   description: string;
   cta: string;
+  testId: string;
 }
 
-function FeatureCard({ to, emoji, title, description, cta }: FeatureCardProps) {
+function FeatureCard({ to, emoji, title, description, cta, testId }: FeatureCardProps) {
   return (
     <Link
       to={to}
+      data-testid={testId}
       className="group flex h-full flex-col items-center rounded-2xl border border-border/60 bg-card/70 p-6 text-center shadow-card backdrop-blur transition hover:border-primary/50 hover:bg-card md:items-start md:text-left"
     >
       <div className="text-3xl" aria-hidden="true">

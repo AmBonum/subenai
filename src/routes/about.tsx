@@ -54,13 +54,23 @@ export function AboutPage() {
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-10">
-          <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to={ROUTES.home}
+            className="text-sm text-muted-foreground hover:text-foreground"
+            data-testid="about-back-home"
+          >
             {t("about.back_home")}
           </Link>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1
+            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+            data-testid="about-heading"
+          >
             {t("about.title")}
           </h1>
-          <p className="mt-4 text-lg font-semibold text-foreground sm:text-xl">
+          <p
+            className="mt-4 text-lg font-semibold text-foreground sm:text-xl"
+            data-testid="about-tagline"
+          >
             {t("about.tagline")}
           </p>
         </header>
@@ -69,6 +79,7 @@ export function AboutPage() {
           <section
             aria-labelledby="ciel"
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
+            data-testid="about-section-ciel"
           >
             <h2 id="ciel" className="text-xl font-semibold">
               {t("about.ciel_heading")}
@@ -80,6 +91,7 @@ export function AboutPage() {
           <section
             aria-labelledby="bezplatne"
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
+            data-testid="about-section-bezplatne"
           >
             <h2 id="bezplatne" className="text-xl font-semibold">
               {t("about.bezplatne_heading")}
@@ -97,6 +109,7 @@ export function AboutPage() {
           <section
             aria-labelledby="preco-sponsorship"
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
+            data-testid="about-section-sponsorship"
           >
             <h2 id="preco-sponsorship" className="text-xl font-semibold">
               {t("about.sponsorship_heading")}
@@ -114,6 +127,7 @@ export function AboutPage() {
           <section
             aria-labelledby="kam-id-peniaze"
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
+            data-testid="about-section-money"
           >
             <h2 id="kam-id-peniaze" className="text-xl font-semibold">
               {t("about.money_heading")}
@@ -155,6 +169,7 @@ export function AboutPage() {
           <section
             aria-labelledby="co-sponzori"
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
+            data-testid="about-section-sponsors"
           >
             <h2 id="co-sponzori" className="text-xl font-semibold">
               {t("about.sponsors_heading")}
@@ -181,6 +196,7 @@ export function AboutPage() {
           <section
             aria-labelledby="co-nerobime"
             className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
+            data-testid="about-section-limits"
           >
             <h2 id="co-nerobime" className="text-xl font-semibold">
               {t("about.limits_heading")}
@@ -208,6 +224,7 @@ export function AboutPage() {
                 <Link
                   to={ROUTES.cookies}
                   className="underline underline-offset-2 hover:text-foreground"
+                  data-testid="about-cookies-link"
                 >
                   {t("about.limits_li5_link")}
                 </Link>
@@ -219,6 +236,7 @@ export function AboutPage() {
           <section
             aria-labelledby="podporit"
             className="space-y-4 rounded-2xl border border-primary/40 bg-card p-6 text-center sm:p-8"
+            data-testid="about-section-support"
           >
             <h2 id="podporit" className="text-xl font-semibold">
               {t("about.support_heading")}
@@ -230,6 +248,7 @@ export function AboutPage() {
               <Link
                 to={ROUTES.podpora}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-6 py-3 text-base font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.99]"
+                data-testid="about-support-cta-primary"
               >
                 {t("about.support_cta_primary")}
                 <span aria-hidden="true">→</span>
@@ -237,6 +256,7 @@ export function AboutPage() {
               <Link
                 to={ROUTES.sponzori}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border/60 bg-background/60 px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-background"
+                data-testid="about-support-cta-secondary"
               >
                 {t("about.support_cta_secondary")}
               </Link>
