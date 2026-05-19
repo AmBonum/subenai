@@ -223,7 +223,7 @@ export function useDuplicateBlogPost() {
           `slug, title, subtitle, excerpt, body_mdx, category_id, author_id,
            pillar_post_id, hero_image_url, og_image_url, seo_title, seo_description,
            canonical_url, primary_keyword, search_intent, reading_minutes,
-           sources_jsonb, faq_jsonb, language`,
+           sources_jsonb, faq_jsonb, related_course_slug, language`,
         )
         .eq("id", sourceId)
         .single();

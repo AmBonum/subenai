@@ -47,10 +47,25 @@ export interface FaqSection {
 
 interface HomeFaqSectionProps {
   sections: FaqSection[];
+  // E19.5 — optional overrides so /schools (or any other page) can
+  // reuse the two-level accordion without inheriting the home page's
+  // copy. When undefined the home defaults apply (backward compat).
+  heading?: string;
+  subheading?: string;
+  docsHint?: ReactNode;
+  testIdPrefix?: string;
 }
 
-export function HomeFaqSection({ sections }: HomeFaqSectionProps) {
+export function HomeFaqSection({
+  sections,
+  heading,
+  subheading,
+  docsHint,
+  testIdPrefix = "home-faq",
+}: HomeFaqSectionProps) {
   const t = tFor("marketing");
+  const resolvedHeading = heading ?? t("home.faq_heading");
+  const resolvedSubheading = subheading ?? t("home.faq_subheading");
   // `expanded` is a controlled array of slugs currently open. Empty
   // by default — Radix uses [] as "all closed".
   const [expanded, setExpanded] = useState<string[]>([]);
@@ -64,21 +79,32 @@ export function HomeFaqSection({ sections }: HomeFaqSectionProps) {
   };
 
   return (
-    <section className="mt-20" aria-labelledby="home-faq-heading" data-testid="home-faq-section">
+    <section
+      className="mt-20"
+      aria-labelledby={`${testIdPrefix}-heading`}
+      data-testid={`${testIdPrefix}-section`}
+    >
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 id="home-faq-heading" className="text-2xl font-bold" data-testid="home-faq-heading">
-            {t("home.faq_heading")}
+          <h2
+            id={`${testIdPrefix}-heading`}
+            className="text-2xl font-bold"
+            data-testid={`${testIdPrefix}-heading`}
+          >
+            {resolvedHeading}
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground" data-testid="home-faq-subheading">
-            {t("home.faq_subheading")}
+          <p
+            className="mt-2 text-sm text-muted-foreground"
+            data-testid={`${testIdPrefix}-subheading`}
+          >
+            {resolvedSubheading}
           </p>
         </div>
         <button
           type="button"
           onClick={toggleAll}
           className="text-xs font-semibold uppercase tracking-widest text-primary underline-offset-4 hover:underline"
-          data-testid="home-faq-toggle-all"
+          data-testid={`${testIdPrefix}-toggle-all`}
           aria-pressed={allOpen}
         >
           {allOpen ? t("home.faq_collapse_all") : t("home.faq_expand_all")}
@@ -90,24 +116,24 @@ export function HomeFaqSection({ sections }: HomeFaqSectionProps) {
         value={expanded}
         onValueChange={(next) => setExpanded(next)}
         className="mt-6 flex flex-col gap-3"
-        data-testid="home-faq-categories"
+        data-testid={`${testIdPrefix}-categories`}
       >
         {sections.map((section) => (
           <AccordionItem
             key={section.slug}
             value={section.slug}
             className="rounded-2xl border border-border/60 bg-card/40 px-5"
-            data-testid={`home-faq-category-${section.slug}`}
+            data-testid={`${testIdPrefix}-category-${section.slug}`}
           >
             <AccordionTrigger
               className="text-left text-base font-semibold hover:no-underline [&[data-state=open]>svg]:rotate-180"
-              data-testid={`home-faq-category-trigger-${section.slug}`}
+              data-testid={`${testIdPrefix}-category-trigger-${section.slug}`}
             >
               <span className="flex flex-1 items-center justify-between gap-3 pr-3">
                 <span>{section.title}</span>
                 <span
                   className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground"
-                  data-testid={`home-faq-category-count-${section.slug}`}
+                  data-testid={`${testIdPrefix}-category-count-${section.slug}`}
                 >
                   {formatQuestionCount(section.items.length)}
                 </span>
@@ -122,7 +148,7 @@ export function HomeFaqSection({ sections }: HomeFaqSectionProps) {
                 type="single"
                 collapsible
                 className="border-t border-border/40 pt-2"
-                data-testid={`home-faq-questions-${section.slug}`}
+                data-testid={`${testIdPrefix}-questions-${section.slug}`}
               >
                 {section.items.map((item) => (
                   <AccordionItem
@@ -130,7 +156,7 @@ export function HomeFaqSection({ sections }: HomeFaqSectionProps) {
                     value={item.id}
                     id={`faq-q-${section.slug}-${item.id}`}
                     className="scroll-mt-24 border-b border-border/40 last:border-b-0"
-                    data-testid={`home-faq-question-${section.slug}-${item.id}`}
+                    data-testid={`${testIdPrefix}-question-${section.slug}-${item.id}`}
                   >
                     <AccordionTrigger className="text-left text-sm font-semibold">
                       {item.question}
@@ -146,13 +172,22 @@ export function HomeFaqSection({ sections }: HomeFaqSectionProps) {
         ))}
       </Accordion>
 
-      <p className="mt-6 text-xs text-muted-foreground" data-testid="home-faq-docs-hint">
-        Nenašiel si odpoveď?{" "}
-        <Link to={ROUTES.blog} className="font-medium text-primary underline underline-offset-2">
-          Otvor akadémiu
-        </Link>
-        {" — 80+ podrobných sprievodcov a článkov, alebo nás kontaktuj cez stránku v päte."}
-      </p>
+      {docsHint !== undefined ? (
+        <div
+          className="mt-6 text-xs text-muted-foreground"
+          data-testid={`${testIdPrefix}-docs-hint`}
+        >
+          {docsHint}
+        </div>
+      ) : (
+        <p className="mt-6 text-xs text-muted-foreground" data-testid={`${testIdPrefix}-docs-hint`}>
+          Nenašiel si odpoveď?{" "}
+          <Link to={ROUTES.blog} className="font-medium text-primary underline underline-offset-2">
+            Otvor akadémiu
+          </Link>
+          {" — 80+ podrobných sprievodcov a článkov, alebo nás kontaktuj cez stránku v päte."}
+        </p>
+      )}
     </section>
   );
 }

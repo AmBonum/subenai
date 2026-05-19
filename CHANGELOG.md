@@ -13,6 +13,54 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > celý balík funkcionality (sponsorship, zber custom-test odpovedí, atď.)
 > kompletne otestovaný v reálnej prevádzke.
 
+## Akadémia, prepojenia a domovská stránka pre konverziu
+
+Nová sekcia *Akadémia* (predtým „Blog") a tri prepojovacie karty, ktoré
+zatvorili trojuholník test ↔ školenie ↔ sprievodca. Z ktoréhokoľvek
+povrchu sa dostaneš k zvyšným dvom jedným klikom — nemusíš poznať našu
+informačnú architektúru dopredu.
+
+### Pridané
+- **Akadémia** v hlavičke — nová sekcia *„Sprievodcovia a návody —
+  ako rozpoznať scam skôr, než ťa dostane."* (predtým „Blog"). Tag
+  „sprievodca" označuje pillar články, ktoré pokrývajú tému do hĺbky.
+- **Domovská FAQ je dvojúrovňová** — kategórie sa najprv ukážu
+  zbalené (s počtom otázok), klikom expandujú zoznam otázok. Tlačidlo
+  *„Rozbaliť všetky / Zbaliť všetky"* prepne celú sekciu. Stabilné
+  kotvy `#faq-q-<kategória>-<id>` pre hlboké linky.
+- **„Pre koho je subenai"** na home — štyri persony (bežní ľudia,
+  rodičia + seniori, firmy, učitelia), každá vedie na jej najsilnejšiu
+  podstránku. Identita → akcia.
+- **„Tvoja cesta učenia"** na home — tri kroky (otestuj sa →
+  prejdi školenie → prečítaj sprievodcu) s vizuálnou postupnosťou.
+- **Karta „Pre školy"** zvýraznená na home (limetková farba pre B2B
+  odlíšenie). Predtým schované v päte.
+- **Teaser zmien** nad pätou — odkaz na `/zmeny` s ikonou „nové".
+- **Po článku ti odporučíme školenie** — pod každým pillar článkom
+  („Chceš si to precvičiť? → otvor školenie"). Limetkový akcent.
+- **V školení ti odporučíme sprievodcu** — pod každým školením, ku
+  ktorému existuje pillar článok („Chceš tomu rozumieť do hĺbky? →
+  otvor sprievodcu"). Modrý akcent.
+- **Vo výsledkoch testu ti odporučíme aj školenie aj článok** — pre
+  každú kategóriu, kde si bol pod 50 %. Slabá kategória sa nesurfaceuje
+  cez odporúčania, len cez odporúčania, ktoré naozaj pomôžu.
+
+### Zmenené
+- **Vyhľadávanie v Akadémii** — pri písaní v search baru sa skryjú
+  pillar články z featured sekcie, aby sa výsledky vyhľadávania
+  nezamiešavali s „najčítanejšie".
+- **Päta stránky** je teraz na všetkých relevantných podstránkach
+  (vrátane `/blog/*` a `/courses/*`) — predtým chýbala v niektorých
+  oblastiach.
+
+### Pre adminov
+- **Picker súvisiaceho školenia** v editore článku (`/admin/blog/<id>`,
+  sekcia „Cross-linky"). Vyberáš zo zoznamu všetkých školení — vďaka
+  tomu sa pod článkom zobrazí karta „Chceš si to precvičiť?". Predtým
+  sa nastavovalo iba cez SQL.
+- **`tasks/topic-content-map.md`** — interný editorial dokument
+  mapujúci 10 pillar článkov × 18 školení × 4 kvíz kategórie.
+
 ## /app + hlavička — kompletný redesign pre lektorov
 
 Hlavná stránka subenai.sk i samotný workspace `/app` prešli redesignom
