@@ -46,7 +46,7 @@ This epic replaces the `mailto:` with a real intake flow: school contact fills a
 | D1 | **Separate route `/schools/dpa`** rather than an inline dialog on `/schools` | SEO-discoverable, shareable URL, simpler focus / a11y story, easier Playwright coverage. The cost is one extra click vs. modal. |
 | D2 | **PDF generation server-side** via `@react-pdf/renderer` `pdf().toBuffer()` | Same render path for instant download + e-mail attachment. No client-side legal-text divergence. Bundle stays clean (browser doesn't ship the template). |
 | D3 | **Both delivery channels** — instant download AND e-mail copy | The operator's product decision (2026-05-20). Two independent code paths; e-mail failure does not block download. |
-| D4 | **Resend** as the e-mail provider | Modern API, generous free tier (3k/mo), good DX. Alternative SES / Mailgun rejected: SES requires more infra, Mailgun's free tier is gone. |
+| D4 | **Resend** as the e-mail provider, account owned by `am.bonum s. r. o.` (DKIM on `subenai.sk`) | Modern API, generous free tier (3k/mo), good DX. Alternative SES / Mailgun rejected: SES requires more infra, Mailgun's free tier is gone. Operator-owned account (not personal) keeps the Art. 28 chain clean — `am.bonum` is the processor of record. **Resolved 2026-05-20.** |
 | D5 | **Generic Art. 28 GDPR template v0.1** authored in-repo | Operator does not have an existing approved template ([2026-05-20]). Code includes a prominent banner that legal review is REQUIRED before flipping the feature on for live `subenai.sk` traffic. Until that review lands the route stays behind a feature flag `VITE_DPA_FLOW_ENABLED=false` so the legacy `mailto:` keeps working. |
 | D6 | **12-month retention** of `dpa_requests` PII (name + e-mail) | Matches the existing 12-month respondent retention claim ([/privacy](../src/routes/privacy.tsx)). New RPC `anonymize_expired_dpa_requests()` plugs into the E38 GitHub Actions cron. School name + `dpa_version` stay (aggregate stats — non-PII). |
 | D7 | **No `CONSENT_VERSION` bump** | The data being collected (name + e-mail for the explicit purpose of executing a DPA) sits under a separate lawful basis (Art. 6(1)(b) — pre-contractual measures, not Art. 6(1)(a) consent). The consent banner governs cookies/analytics; this flow has its own explicit checkbox on the form ("súhlasím so spracovaním pre účely DPA"). |
@@ -95,12 +95,17 @@ This epic replaces the `mailto:` with a real intake flow: school contact fills a
 | PII in DB before user finishes reading the privacy disclosure | Low | Form requires explicit "súhlasím" checkbox BEFORE submit is enabled (mirrors intake pattern). |
 | Operator forgets to flip the feature flag after legal approval | Low | Default the flag to `true` in `.env.example` and document in the runbook (E40.6). The `false` in production env is the explicit override during phase A. |
 
-## Open questions (resolve before E40.3 kickoff)
+## Open questions
 
-- **Q1**: Resend account ownership — does operator want a personal Resend account or one tied to the `am.bonum s. r. o.` company e-mail? (Affects who controls the DKIM domain + bounce handling.)
-- **Q2**: Confirmation e-mail "from" address — `noreply@subenai.sk` (no replies) or `kontakt@subenai.sk` (replies route to the operator inbox)? The latter is friendlier but means operator must answer DPA follow-up questions in-thread.
-- **Q3**: Cloudflare Turnstile — already in repo? If not, add to E40.2 dependency list (15-minute one-time setup).
-- **Q4**: Should the form also collect a phone number (optional) for legal counsel to call back during contract negotiation? Operator decision pending.
+### Resolved 2026-05-20
+
+- **Q1 ✅**: Resend account ownership → `am.bonum s. r. o.`-owned, DKIM on `subenai.sk`. Operator provisions before E40.4 kickoff.
+- **Q2 ✅**: From-address → `noreply@subenai.sk`. School can reply to `kontakt@subenai.sk` per the e-mail body CTA.
+- **Q3 ✅**: Cloudflare Turnstile is NOT in the repo today — add as a hard dependency of E40.2 (15-minute setup, free tier, fits the existing Cloudflare Pages deployment). New env vars: `VITE_TURNSTILE_SITE_KEY` (client) + `TURNSTILE_SECRET_KEY` (server, verifies token).
+
+### Outstanding
+
+- **Q4**: Should the form also collect a phone number (optional) for legal counsel to call back during contract negotiation? Operator decision pending — not blocking, can be added in v1.1 if useful.
 
 ## Done Definition (epic-level)
 
