@@ -11,7 +11,12 @@
  * way that affects the user's previous decision. The banner re-appears.
  */
 
-export const CONSENT_VERSION = "1.5.0";
+// E40 — bumped 1.5.0 → 1.6.0 when the "preferences" category went from
+// declared-but-unused ("budúce") to gating real storage writes
+// (sidebar_state cookie + 3 localStorage keys for blog pillars, app
+// intro, and profile-banner dismiss). The banner re-shows so existing
+// users get to re-decide with full information.
+export const CONSENT_VERSION = "1.6.0";
 export const CONSENT_STORAGE_KEY = "iiq_consent";
 
 export type ConsentCategory = "necessary" | "preferences" | "analytics" | "marketing";
