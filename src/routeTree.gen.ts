@@ -77,6 +77,7 @@ import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as TestBuilderIndexRouteImport } from './routes/test.builder.index'
 import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
+import { Route as AppEduTestsIndexRouteImport } from './routes/app.edu-tests.index'
 import { Route as AdminTestsIndexRouteImport } from './routes/admin/tests.index'
 import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
@@ -465,6 +466,13 @@ const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
   path: '/tests/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppEduTestsIndexRoute = AppEduTestsIndexRouteImport.update({
+  id: '/edu-tests/',
+  path: '/edu-tests/',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() =>
+  import('./routes/app.edu-tests.index.lazy').then((d) => d.Route),
+)
 const AdminTestsIndexRoute = AdminTestsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -689,6 +697,7 @@ export interface FileRoutesByFullPath {
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/pages/': typeof AdminPagesIndexRoute
   '/admin/tests/': typeof AdminTestsIndexRoute
+  '/app/edu-tests/': typeof AppEduTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/builder/': typeof TestBuilderIndexRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
@@ -772,6 +781,7 @@ export interface FileRoutesByTo {
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/pages': typeof AdminPagesIndexRoute
   '/admin/tests': typeof AdminTestsIndexRoute
+  '/app/edu-tests': typeof AppEduTestsIndexRoute
   '/app/tests': typeof AppTestsIndexRoute
   '/test/builder': typeof TestBuilderIndexRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
@@ -864,6 +874,7 @@ export interface FileRoutesById {
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/pages/': typeof AdminPagesIndexRoute
   '/admin/tests/': typeof AdminTestsIndexRoute
+  '/app/edu-tests/': typeof AppEduTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/builder/': typeof TestBuilderIndexRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
@@ -957,6 +968,7 @@ export interface FileRouteTypes {
     | '/admin/blog/'
     | '/admin/pages/'
     | '/admin/tests/'
+    | '/app/edu-tests/'
     | '/app/tests/'
     | '/test/builder/'
     | '/test/builder/$id/results'
@@ -1040,6 +1052,7 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/pages'
     | '/admin/tests'
+    | '/app/edu-tests'
     | '/app/tests'
     | '/test/builder'
     | '/test/builder/$id/results'
@@ -1131,6 +1144,7 @@ export interface FileRouteTypes {
     | '/admin/blog/'
     | '/admin/pages/'
     | '/admin/tests/'
+    | '/app/edu-tests/'
     | '/app/tests/'
     | '/test/builder/'
     | '/test/builder/$id/results'
@@ -1652,6 +1666,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTestsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/edu-tests/': {
+      id: '/app/edu-tests/'
+      path: '/edu-tests'
+      fullPath: '/app/edu-tests/'
+      preLoaderRoute: typeof AppEduTestsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/admin/tests/': {
       id: '/admin/tests/'
       path: '/'
@@ -1918,6 +1939,7 @@ interface AppRouteChildren {
   AppSetsSetIdRoute: typeof AppSetsSetIdRoute
   AppTestsTestIdRoute: typeof AppTestsTestIdRoute
   AppTestsNewRoute: typeof AppTestsNewRoute
+  AppEduTestsIndexRoute: typeof AppEduTestsIndexRoute
   AppTestsIndexRoute: typeof AppTestsIndexRoute
 }
 
@@ -1941,6 +1963,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSetsSetIdRoute: AppSetsSetIdRoute,
   AppTestsTestIdRoute: AppTestsTestIdRoute,
   AppTestsNewRoute: AppTestsNewRoute,
+  AppEduTestsIndexRoute: AppEduTestsIndexRoute,
   AppTestsIndexRoute: AppTestsIndexRoute,
 }
 

@@ -563,6 +563,68 @@ END;
 $$;
 GRANT EXECUTE ON FUNCTION public.verify_test_set_password(UUID, TEXT) TO anon, authenticated;
 
+-- E38 Phase A — test_set ownership + claim flow.
+ALTER TABLE public.test_sets
+  ADD COLUMN IF NOT EXISTS owner_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+
+CREATE INDEX IF NOT EXISTS test_sets_owner_id_idx
+  ON public.test_sets (owner_id)
+  WHERE owner_id IS NOT NULL;
+
+DROP POLICY IF EXISTS "test_sets_owner_select" ON public.test_sets;
+CREATE POLICY "test_sets_owner_select" ON public.test_sets
+  FOR SELECT TO authenticated USING (owner_id = auth.uid());
+
+DROP POLICY IF EXISTS "attempts_owner_select" ON public.attempts;
+CREATE POLICY "attempts_owner_select" ON public.attempts
+  FOR SELECT TO authenticated
+  USING (test_set_id IN (SELECT id FROM public.test_sets WHERE owner_id = auth.uid()));
+
+DROP FUNCTION IF EXISTS public.claim_test_set(UUID, TEXT);
+CREATE FUNCTION public.claim_test_set(set_id UUID, password TEXT)
+RETURNS JSONB LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+DECLARE current_owner UUID; caller UUID; pw_ok BOOLEAN;
+BEGIN
+  caller := auth.uid();
+  IF caller IS NULL THEN RETURN jsonb_build_object('ok', false, 'reason', 'not_authenticated'); END IF;
+  IF set_id IS NULL OR password IS NULL THEN RETURN jsonb_build_object('ok', false, 'reason', 'invalid_args'); END IF;
+  SELECT owner_id INTO current_owner FROM public.test_sets WHERE id = set_id;
+  IF NOT FOUND THEN RETURN jsonb_build_object('ok', false, 'reason', 'not_found'); END IF;
+  IF current_owner IS NOT NULL AND current_owner <> caller THEN
+    RETURN jsonb_build_object('ok', false, 'reason', 'owned_by_other');
+  END IF;
+  IF current_owner = caller THEN RETURN jsonb_build_object('ok', true, 'already_owned', true); END IF;
+  pw_ok := public.verify_test_set_password(set_id, password);
+  IF NOT pw_ok THEN RETURN jsonb_build_object('ok', false, 'reason', 'wrong_password'); END IF;
+  UPDATE public.test_sets SET owner_id = caller WHERE id = set_id;
+  RETURN jsonb_build_object('ok', true, 'already_owned', false);
+END;
+$$;
+GRANT EXECUTE ON FUNCTION public.claim_test_set(UUID, TEXT) TO authenticated;
+
+DROP FUNCTION IF EXISTS public.list_my_test_sets();
+CREATE FUNCTION public.list_my_test_sets()
+RETURNS TABLE (id UUID, creator_label TEXT, passing_threshold INT2, question_count INT,
+               collects_responses BOOLEAN, created_at TIMESTAMPTZ,
+               attempts_count BIGINT, last_attempt_at TIMESTAMPTZ)
+LANGUAGE sql SECURITY DEFINER SET search_path = public, extensions
+AS $$
+  SELECT ts.id, ts.creator_label, ts.passing_threshold,
+    COALESCE(array_length(ts.question_ids, 1), 0)::INT AS question_count,
+    ts.collects_responses, ts.created_at,
+    COALESCE(a.attempts_count, 0)::BIGINT AS attempts_count, a.last_attempt_at
+  FROM public.test_sets ts
+  LEFT JOIN LATERAL (
+    SELECT COUNT(*) AS attempts_count, MAX(created_at) AS last_attempt_at
+    FROM public.attempts WHERE test_set_id = ts.id
+  ) a ON true
+  WHERE ts.owner_id = auth.uid()
+  ORDER BY ts.created_at DESC;
+$$;
+GRANT EXECUTE ON FUNCTION public.list_my_test_sets() TO authenticated;
+
 CREATE OR REPLACE FUNCTION public.purge_expired_respondent_pii()
 RETURNS integer LANGUAGE plpgsql SECURITY DEFINER SET search_path = public
 AS $$

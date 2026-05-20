@@ -64,6 +64,12 @@ const TVORBA: NavItem[] = [
   },
   { key: "tests", to: "/app/tests", testid: "app-shell-sidebar-link-tests", icon: ClipboardList },
   {
+    key: "edu_tests",
+    to: "/app/edu-tests",
+    testid: "app-shell-sidebar-link-edu-tests",
+    icon: ClipboardList,
+  },
+  {
     key: "templates",
     to: "/app/templates",
     testid: "app-shell-sidebar-link-templates",

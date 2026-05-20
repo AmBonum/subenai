@@ -220,7 +220,22 @@
       "unauthorized": "Nesprávne heslo, alebo sa zostava nenašla.",
       "network_error": "Pripojenie sa nepodarilo. Skontroluj sieť.",
       "generic": "Chyba pri overovaní hesla. Skús to prosím znova."
-    }
+    },
+    "claim_hint_signed_in": "Po úspešnom overení sa tento test pripojí k tvojmu účtu — nájdeš ho v Mojich edu testoch.",
+    "claim_hint_anonymous_prefix": "Chceš tento test trvalo v zozname Moje edu testy?",
+    "claim_hint_signup_cta": "Zaregistruj sa"
+  },
+  "edu_tests_list": {
+    "heading": "Moje edu testy",
+    "description": "Zoznam edu testov, ktoré si pripojil/a k svojmu účtu zadaním autorského hesla na stránke výsledkov.",
+    "loading": "Načítavam tvoje testy…",
+    "error": "Niečo sa pokazilo pri načítaní zoznamu. Obnov stránku.",
+    "unauthenticated": "Tento zoznam je dostupný len prihláseným používateľom.",
+    "empty_body": "Zatiaľ si nepripojil/a žiadny edu test.",
+    "empty_hint": "Otvor stránku výsledkov svojho edu testu (/test/builder/<id>/results), zadaj heslo a test sa automaticky pripojí.",
+    "untitled_label": "Edu test bez názvu",
+    "meta_line": "{questions} otázok · vyhovenie pri ≥ {threshold} % · respondentov: {attempts}",
+    "open": "Otvoriť výsledky"
   },
   "respondents": {
     "title": "Respondenti ({count})",

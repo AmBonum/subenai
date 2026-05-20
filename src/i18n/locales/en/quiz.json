@@ -220,7 +220,22 @@
       "unauthorized": "Wrong password, or the set was not found.",
       "network_error": "Connection failed. Check your network.",
       "generic": "Error verifying password. Please try again."
-    }
+    },
+    "claim_hint_signed_in": "After successful verification this test will be linked to your account — you'll find it in My edu tests.",
+    "claim_hint_anonymous_prefix": "Want this test in your My edu tests list permanently?",
+    "claim_hint_signup_cta": "Sign up"
+  },
+  "edu_tests_list": {
+    "heading": "My edu tests",
+    "description": "Edu tests you have linked to your account by entering the author password on the results page.",
+    "loading": "Loading your tests…",
+    "error": "Something went wrong while loading the list. Reload the page.",
+    "unauthenticated": "This list is only available to signed-in users.",
+    "empty_body": "You haven't linked any edu test yet.",
+    "empty_hint": "Open the results page of your edu test (/test/builder/<id>/results), enter the password and the test will be linked automatically.",
+    "untitled_label": "Untitled edu test",
+    "meta_line": "{questions} questions · pass at ≥ {threshold}% · respondents: {attempts}",
+    "open": "Open results"
   },
   "respondents": {
     "title": "Respondents ({count})",

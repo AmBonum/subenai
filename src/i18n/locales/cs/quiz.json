@@ -220,7 +220,22 @@
       "unauthorized": "Nesprávné heslo, nebo se sada nenašla.",
       "network_error": "Připojení se nepodařilo. Zkontroluj síť.",
       "generic": "Chyba při ověřování hesla. Zkus to prosím znovu."
-    }
+    },
+    "claim_hint_signed_in": "Po úspěšném ověření se tento test připojí k tvému účtu — najdeš ho v Mých edu testech.",
+    "claim_hint_anonymous_prefix": "Chceš tento test trvale v seznamu Moje edu testy?",
+    "claim_hint_signup_cta": "Zaregistruj se"
+  },
+  "edu_tests_list": {
+    "heading": "Moje edu testy",
+    "description": "Seznam edu testů, které jsi připojil/a ke svému účtu zadáním autorského hesla na stránce výsledků.",
+    "loading": "Načítám tvé testy…",
+    "error": "Něco se pokazilo při načítání seznamu. Obnov stránku.",
+    "unauthenticated": "Tento seznam je dostupný jen přihlášeným uživatelům.",
+    "empty_body": "Zatím jsi nepřipojil/a žádný edu test.",
+    "empty_hint": "Otevři stránku výsledků svého edu testu (/test/builder/<id>/results), zadej heslo a test se automaticky připojí.",
+    "untitled_label": "Edu test bez názvu",
+    "meta_line": "{questions} otázek · vyhovení při ≥ {threshold} % · respondentů: {attempts}",
+    "open": "Otevřít výsledky"
   },
   "respondents": {
     "title": "Respondenti ({count})",

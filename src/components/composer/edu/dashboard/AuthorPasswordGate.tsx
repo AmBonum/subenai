@@ -1,5 +1,8 @@
 import { useId, useState, type FormEvent } from "react";
+import { Link } from "@tanstack/react-router";
 import { tFor } from "@/i18n/quiz";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   setId: string;
@@ -11,6 +14,7 @@ type SubmitState = "idle" | "submitting" | "error";
 export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
   const t = tFor("author_gate");
   const tCommon = tFor("common");
+  const { isAuthenticated } = useAuth();
   const formId = useId();
   const passwordId = useId();
   const errorId = useId();
@@ -33,6 +37,16 @@ export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
       });
       const payload = (await response.json()) as { ok?: boolean; error?: string };
       if (response.ok && payload.ok) {
+        // E38 Phase F — best-effort claim. If the user is signed in we
+        // also link the set to their auth.uid via claim_test_set so it
+        // shows up in /app/edu-tests later. The RPC is idempotent and
+        // safe to fire even if the set is already owned by them. We
+        // fire-and-forget: dashboard access stays gated by the JWT
+        // cookie that verify-author-password just set, not by claim
+        // success, so a failed claim never blocks the user.
+        if (isAuthenticated) {
+          void supabase.rpc("claim_test_set", { set_id: setId, password });
+        }
         setPassword("");
         onAuthenticated();
         return;
@@ -115,6 +129,34 @@ export function AuthorPasswordGate({ setId, onAuthenticated }: Props) {
       >
         {state === "submitting" ? tCommon("verifying") : t("submit")}
       </button>
+
+      {/* E38 Phase F — claim affordance. Signed-in users see a positive
+          confirmation that this set will be linked to their account on
+          success. Anonymous users see a sign-up nudge that frames
+          accounts as "permanent ownership" rather than friction. */}
+      {isAuthenticated ? (
+        <p
+          data-testid="vysledky-gate-claim-hint-signed-in"
+          className="text-xs text-muted-foreground"
+        >
+          {t("claim_hint_signed_in")}
+        </p>
+      ) : (
+        <p
+          data-testid="vysledky-gate-claim-hint-anonymous"
+          className="text-xs text-muted-foreground"
+        >
+          {t("claim_hint_anonymous_prefix")}{" "}
+          <Link
+            data-testid="vysledky-gate-claim-signup-link"
+            to="/signup"
+            className="font-semibold text-primary hover:underline"
+          >
+            {t("claim_hint_signup_cta")}
+          </Link>
+          .
+        </p>
+      )}
     </form>
   );
 }
