@@ -70,4 +70,17 @@ export class AppAccountProfilePage extends BasePage {
   get initialsError() {
     return this.page.getByTestId("app-account-profile-initials-error");
   }
+
+  // E42 P-18 + P-28 — GDPR Art. 15 + Art. 20 self-service export card
+  // rendered on /app/account/profile. The card mounts unconditionally;
+  // the button is enabled when not pending, disabled while a request
+  // is in flight.
+
+  get dataExportCard() {
+    return this.page.getByTestId("data-export-card");
+  }
+
+  get dataExportButton() {
+    return this.page.getByTestId("data-export-button");
+  }
 }

@@ -96,6 +96,9 @@
     "row_preview": "Preview",
     "row_use": "Use template",
     "empty_state": "No templates match this filter.",
+    "empty_state_no_templates_title": "No templates have been added yet.",
+    "empty_state_no_templates_body": "We're preparing templates — they'll arrive gradually. In the meantime you can create a test from scratch.",
+    "empty_state_no_templates_cta": "Create a test from scratch",
     "questions_count": "{count} questions"
   },
   "history": {

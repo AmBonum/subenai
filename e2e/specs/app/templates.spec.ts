@@ -27,35 +27,61 @@ const TPL_003 = {
 };
 
 test.describe("/app/templates", () => {
-  // TC-01: Empty state when no templates are available
-  test("TC-01: empty state when no templates are available", async ({ context, page }) => {
+  // TC-01: Zero-rows empty state — the templates table itself is empty.
+  // This is the production state on 2026-05-21: no seed migration has
+  // inserted any rows, so the user lands on an empty page. The
+  // pre-hotfix copy ("Pre tento filter nemáme žiadne šablóny") was
+  // misleading because no filter is active. Distinct empty state with
+  // a "create from scratch" CTA replaces it.
+  test("TC-01: zero-rows empty state renders the 'no templates yet' card with a CTA", async ({
+    context,
+    page,
+  }) => {
     await setupEducator(context, page, { tables: { templates: [] } });
     const templates = new AppTemplatesPage(page);
 
-    await test.step("Navigate to /app/templates", async () => {
-      await templates.open();
-    });
+    await templates.open();
+    await expect(templates.root).toBeVisible();
+    await expect(templates.pageHeader).toContainText("Šablóny");
+    await expect(templates.searchInput).toBeVisible();
+    await expect(templates.categoryFilter).toBeVisible();
 
-    await test.step("Verify the page root is visible", async () => {
-      await expect(templates.root).toBeVisible();
-    });
+    // The new zero-rows card — not the filter-miss card.
+    await expect(templates.emptyStateNoTemplates).toBeVisible();
+    await expect(templates.emptyStateNoTemplates).toContainText("Šablóny zatiaľ neboli pridané.");
+    await expect(templates.emptyStateNoTemplates).toContainText(
+      "Šablóny pripravujeme — pribudnú postupne. Medzitým môžeš vytvoriť test od nuly.",
+    );
 
-    await test.step('Verify page heading contains "Šablóny"', async () => {
-      await expect(templates.pageHeader).toContainText("Šablóny");
-    });
+    // The filter-miss card MUST NOT be visible in this state.
+    await expect(templates.emptyState).toHaveCount(0);
 
-    await test.step("Verify search input and category filter are visible", async () => {
-      await expect(templates.searchInput).toBeVisible();
-      await expect(templates.categoryFilter).toBeVisible();
-    });
+    // CTA navigates to /app/tests/new (start a wizard from scratch,
+    // no templateId).
+    await expect(templates.emptyStateNoTemplatesCta).toBeVisible();
+    await expect(templates.emptyStateNoTemplatesCta).toHaveText(/Vytvoriť test od nuly/);
+    await templates.emptyStateNoTemplatesCta.click();
+    await expect(page).toHaveURL(/\/app\/tests\/new(\?|$)/);
+  });
 
-    await test.step("Verify empty-state card is visible", async () => {
-      await expect(templates.emptyState).toBeVisible();
-    });
+  // TC-01b: Filter-miss empty state — rows exist but the user's
+  // current search/category filter matches none of them.
+  test("TC-01b: filter-miss empty state renders the 'no templates match this filter' copy", async ({
+    context,
+    page,
+  }) => {
+    await setupEducator(context, page, { tables: { templates: [TPL_001, TPL_002] } });
+    const templates = new AppTemplatesPage(page);
 
-    await test.step('Verify empty-state contains "Pre tento filter nemáme žiadne šablóny."', async () => {
-      await expect(templates.emptyState).toContainText("Pre tento filter nemáme žiadne šablóny.");
-    });
+    await templates.open();
+    await templates.searchInput.fill("xyzzy-no-such-template");
+
+    await expect(templates.emptyState).toBeVisible();
+    await expect(templates.emptyState).toContainText("Pre tento filter nemáme žiadne šablóny.");
+
+    // The zero-rows card MUST NOT be visible — there ARE rows, the
+    // filter just doesn't match.
+    await expect(templates.emptyStateNoTemplates).toHaveCount(0);
   });
 
   // TC-02: Populated state — template cards render name and category badge

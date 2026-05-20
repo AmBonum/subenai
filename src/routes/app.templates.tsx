@@ -93,7 +93,31 @@ function TemplatesPage() {
         </CardContent>
       </Card>
 
-      {filtered.length === 0 ? (
+      {filtered.length === 0 && templates.length === 0 && !templatesQ.isLoading ? (
+        // No rows in the templates table at all — a content/data state,
+        // not a filter miss. The pre-2026-05-21 copy ("Pre tento filter
+        // nemáme žiadne šablóny") confused users who landed here with
+        // no filter active and an empty production DB (E36 hot-fix).
+        <Card data-testid="templates-list-empty-state-no-templates">
+          <CardContent className="space-y-3 p-8 text-center">
+            <p className="text-sm font-medium text-foreground">
+              {t("empty_state_no_templates_title")}
+            </p>
+            <p className="text-sm text-muted-foreground">{t("empty_state_no_templates_body")}</p>
+            <Button
+              variant="default"
+              onClick={() => nav({ to: "/app/tests/new", search: { step: 1 } })}
+              data-testid="templates-list-empty-state-no-templates-cta"
+              className="mt-2"
+            >
+              <Sparkles className="mr-2 h-4 w-4" />
+              {t("empty_state_no_templates_cta")}
+            </Button>
+          </CardContent>
+        </Card>
+      ) : filtered.length === 0 ? (
+        // Filter returned no matches but the table has rows — the
+        // existing copy applies.
         <Card data-testid="templates-list-empty-state">
           <CardContent className="p-8 text-center text-sm text-muted-foreground">
             {t("empty_state")}
