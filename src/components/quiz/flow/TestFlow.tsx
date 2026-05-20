@@ -226,7 +226,11 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
         onRestart={restart}
         passingThreshold={passingThreshold}
         passLabel={passLabel}
-        edu={config.kind === "composer" ? config.edu : undefined}
+        edu={
+          config.kind === "composer" && config.edu
+            ? { ...config.edu, testSetId: config.testSetId }
+            : undefined
+        }
         // Pass the live questions array so the AnswerReviewSection can
         // resolve each card by id — DB-served questions have UUIDs that
         // don't exist in the static QUESTIONS bundle (AH-11.5b.1), so

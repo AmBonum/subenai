@@ -101,3 +101,63 @@ describe("ResultsView.persistResult — answers payload (E3.1)", () => {
     expect(screen.getByText(/Tvoje skóre/i)).toBeInTheDocument();
   });
 });
+
+describe("ResultsView.persistResult — edu share URL (BUG-share-link)", () => {
+  // Edu/builder respondents have respondent_name set on their attempts
+  // row. The anon SELECT policy filters those rows out, so /r/<share_id>
+  // returned "Výsledok neexistuje" to recipients. Fix: edu shares emit a
+  // TEST-INVITATION URL pointing at the test_set itself instead.
+  const TEST_SET_ID = "3f25484b-b9ae-4bdd-ba70-6af890a9f5bf";
+
+  beforeEach(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({ share_id: "AAAA1111" }),
+      }),
+    );
+  });
+
+  function renderEduResults() {
+    return render(
+      <ConsentProvider>
+        <ResultsView
+          result={baseResult}
+          answers={[makeAnswer(0)]}
+          onRestart={() => {}}
+          edu={{
+            token: "edu-token",
+            respondentName: "Anna Test",
+            respondentEmail: "anna@example.sk",
+            testSetId: TEST_SET_ID,
+          }}
+        />
+      </ConsentProvider>,
+    );
+  }
+
+  it("POSTs to /api/finish-edu-attempt instead of inserting directly", async () => {
+    renderEduResults();
+    await waitFor(() => expect(fetch).toHaveBeenCalled());
+    const [url, init] = (fetch as unknown as { mock: { calls: [string, RequestInit][] } }).mock
+      .calls[0];
+    expect(url).toBe("/api/finish-edu-attempt");
+    expect(init.method).toBe("POST");
+    expect(insertSpy).not.toHaveBeenCalled();
+  });
+
+  it("emits a TEST-INVITATION share URL (/test/builder/<testSetId>), never the broken /r/<share_id>", async () => {
+    renderEduResults();
+    // The score-reveal animation gates the share section behind a ~1.2s
+    // setTimeout — bump the default 1s timeout so the input mounts.
+    const shareInput = (await screen.findByTestId(
+      "quiz-results-share-url",
+      {},
+      { timeout: 3000 },
+    )) as HTMLInputElement;
+    expect(shareInput.value).toContain(`/test/builder/${TEST_SET_ID}`);
+    expect(shareInput.value).not.toMatch(/\/r\/[A-Z0-9]{8}/);
+  });
+});

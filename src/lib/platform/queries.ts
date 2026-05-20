@@ -145,22 +145,6 @@ const mapAudience = (row: RespondentGroupsRow): Audience => ({
   updated_at: row.updated_at,
 });
 
-type TemplatesRow = {
-  id: string;
-  title: string;
-  description: string | null;
-  question_ids: string[];
-  gdpr_purpose: string;
-};
-
-const mapTemplate = (row: TemplatesRow): Template => ({
-  id: row.id,
-  title: row.title,
-  description: row.description ?? "",
-  question_ids: row.question_ids ?? [],
-  gdpr_purpose: row.gdpr_purpose as Template["gdpr_purpose"],
-});
-
 type NotificationsRow = {
   id: string;
   user_id: string;
@@ -531,18 +515,112 @@ export function useDeleteAudience() {
 }
 
 // ---------------------------------------------------------------------------
-// Templates
+// Templates (E44 — ownership + visibility model)
+//
+// RLS enforces who sees what: every authenticated user reads platform
+// defaults (owner_id IS NULL) + their own rows + public published rows.
+// Mutations on owned rows are RLS-restricted to `owner_id = auth.uid()`;
+// the explicit `.eq("owner_id", auth.uid())` filter in the mutations is
+// defense in depth, not the gate.
 // ---------------------------------------------------------------------------
 
-const TEMPLATES_COLS = "id, title, description, question_ids, gdpr_purpose";
+type TemplatesRow = {
+  id: string;
+  title: string;
+  description: string | null;
+  question_ids: string[];
+  gdpr_purpose: string;
+  owner_id: string | null;
+  visibility: string;
+  fork_of: string | null;
+  status: string;
+  license: string;
+  author_display_name: string | null;
+  age_rating: string;
+  slug: string | null;
+  published_at: string | null;
+  updated_at: string;
+  created_at: string;
+};
 
-export function useTemplates() {
+const TEMPLATES_COLS =
+  "id, title, description, question_ids, gdpr_purpose, owner_id, visibility, fork_of, status, license, author_display_name, age_rating, slug, published_at, updated_at, created_at";
+
+const mapTemplate = (row: TemplatesRow): Template => ({
+  id: row.id,
+  title: row.title,
+  description: row.description ?? "",
+  question_ids: row.question_ids ?? [],
+  gdpr_purpose: row.gdpr_purpose as Template["gdpr_purpose"],
+  owner_id: row.owner_id,
+  visibility: row.visibility as Template["visibility"],
+  fork_of: row.fork_of,
+  status: row.status as Template["status"],
+  license: row.license as Template["license"],
+  author_display_name: row.author_display_name,
+  age_rating: row.age_rating as Template["age_rating"],
+  slug: row.slug,
+  published_at: row.published_at,
+  updated_at: row.updated_at,
+  created_at: row.created_at,
+});
+
+async function fetchCurrentUserId(): Promise<string | null> {
+  const { data } = await supabase.auth.getUser();
+  return data.user?.id ?? null;
+}
+
+// Public + platform-default rows visible to everyone (anon-readable
+// portion of the table). UI: "Verejné" tab.
+export function usePublicTemplates() {
   return useQuery({
-    queryKey: ["user", "templates"],
+    queryKey: ["user", "templates", "public"],
     queryFn: async (): Promise<Template[]> => {
       const { data, error } = await supabase
         .from("templates")
         .select(TEMPLATES_COLS)
+        .or("owner_id.is.null,and(visibility.eq.public,status.eq.published)")
+        .order("published_at", { ascending: false, nullsFirst: false })
+        .order("title", { ascending: true });
+      if (error) throw error;
+      return (data ?? []).map((r) => mapTemplate(r as TemplatesRow));
+    },
+  });
+}
+
+// Only the caller's own rows (any visibility / status). UI: "Moje" tab.
+export function useMyTemplates() {
+  return useQuery({
+    queryKey: ["user", "templates", "mine"],
+    queryFn: async (): Promise<Template[]> => {
+      const uid = await fetchCurrentUserId();
+      if (!uid) return [];
+      const { data, error } = await supabase
+        .from("templates")
+        .select(TEMPLATES_COLS)
+        .eq("owner_id", uid)
+        .order("updated_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map((r) => mapTemplate(r as TemplatesRow));
+    },
+  });
+}
+
+// Union view kept for legacy callers (e.g. /app/tests/new picker) that
+// still want defaults + public + mine in one list. New UI uses the two
+// dedicated hooks above.
+export function useTemplates() {
+  return useQuery({
+    queryKey: ["user", "templates"],
+    queryFn: async (): Promise<Template[]> => {
+      const uid = await fetchCurrentUserId();
+      const filter = uid
+        ? `owner_id.is.null,owner_id.eq.${uid},and(visibility.eq.public,status.eq.published)`
+        : "owner_id.is.null,and(visibility.eq.public,status.eq.published)";
+      const { data, error } = await supabase
+        .from("templates")
+        .select(TEMPLATES_COLS)
+        .or(filter)
         .order("title", { ascending: true });
       if (error) throw error;
       return (data ?? []).map((r) => mapTemplate(r as TemplatesRow));
@@ -567,6 +645,88 @@ export function useTemplate(id: string | undefined) {
   });
 }
 
+// Duplicate any template the caller can read into a private copy they
+// own. Sets `fork_of` for attribution + audit. Title gets a Slovak
+// suffix unless the caller passes a custom one.
+export function useDuplicateTemplate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ source, title }: { source: Template; title?: string }) => {
+      const uid = await fetchCurrentUserId();
+      if (!uid) throw new Error("not_authenticated");
+      const { data, error } = await supabase
+        .from("templates")
+        .insert({
+          title: title ?? `${source.title} (kópia)`,
+          description: source.description,
+          question_ids: source.question_ids,
+          gdpr_purpose: source.gdpr_purpose as never,
+          owner_id: uid,
+          visibility: "private",
+          fork_of: source.id,
+          status: "draft",
+          age_rating: source.age_rating as never,
+        })
+        .select(TEMPLATES_COLS)
+        .single();
+      if (error) throw error;
+      return mapTemplate(data as TemplatesRow);
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "templates"] });
+    },
+  });
+}
+
+// Edit a row the caller owns. RLS rejects everything else.
+export function useUpdateOwnTemplate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, patch }: { id: string; patch: Partial<Template> }) => {
+      const uid = await fetchCurrentUserId();
+      if (!uid) throw new Error("not_authenticated");
+      const update: Record<string, unknown> = {};
+      if (patch.title !== undefined) update.title = patch.title;
+      if (patch.description !== undefined) update.description = patch.description;
+      if (patch.question_ids) update.question_ids = patch.question_ids;
+      if (patch.gdpr_purpose) update.gdpr_purpose = patch.gdpr_purpose;
+      if (patch.age_rating) update.age_rating = patch.age_rating;
+      const { error } = await supabase
+        .from("templates")
+        .update(update)
+        .eq("id", id)
+        .eq("owner_id", uid);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "templates"] });
+    },
+  });
+}
+
+// Delete a row the caller owns. RLS rejects everything else; the
+// `forbid_default_template_mutation` trigger backstops platform defaults.
+export function useDeleteOwnTemplate() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const uid = await fetchCurrentUserId();
+      if (!uid) throw new Error("not_authenticated");
+      const { error } = await supabase.from("templates").delete().eq("id", id).eq("owner_id", uid);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "templates"] });
+    },
+  });
+}
+
+/**
+ * @deprecated E44 — admin-only path. Use `useDuplicateTemplate` for the
+ * user-side "fork a default" flow. This shim stays only for legacy
+ * admin code that may still call it; new code should use the
+ * `/admin/templates` route's dedicated mutations (Phase C).
+ */
 export function useCreateTemplate() {
   const qc = useQueryClient();
   return useMutation({
@@ -588,6 +748,7 @@ export function useCreateTemplate() {
   });
 }
 
+/** @deprecated E44 — use `useUpdateOwnTemplate`. */
 export function useUpdateTemplate() {
   const qc = useQueryClient();
   return useMutation({
@@ -604,6 +765,7 @@ export function useUpdateTemplate() {
   });
 }
 
+/** @deprecated E44 — use `useDeleteOwnTemplate`. */
 export function useDeleteTemplate() {
   const qc = useQueryClient();
   return useMutation({

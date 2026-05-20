@@ -9,9 +9,18 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
-> Žiadne nové používateľsky-viditeľné zmeny mimo [1.13.0]. Ďalší release
-> označíme keď bude pripravený ucelený balík (typicky 5+ stories alebo
-> jedna väčšia funkcia).
+### Pridané
+- **Šablóny v `/app/templates`: pribudla tvoja vlastná knižnica.** Predvolené
+  šablóny vidíš stále, ale teraz si môžeš vytvoriť svoju kópiu, upraviť ju
+  a vymazať — a to bez ovplyvnenia ostatných používateľov. Verejné odosielanie
+  vlastných šablón a admin schvaľovanie príde v ďalšej aktualizácii.
+
+### Opravené
+- **Zdieľanie výsledku po custom teste už neukazuje „Výsledok neexistuje".**
+  Keď respondent v edukačnom režime dokončí test, tlačidlo *Pošli kamošovi*
+  teraz zdieľa pozvánku na ten istý test (nie odkaz na konkrétny výsledok
+  s osobnými údajmi) — kamoš si tak môže test sám prejsť a porovnať skóre.
+  Verejný scam quiz funguje bez zmeny.
 
 ## [1.13.0] — 2026-05-20
 
