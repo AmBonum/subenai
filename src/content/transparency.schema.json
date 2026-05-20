@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Subenai transparency registry",
+  "description": "Auditable record of charity transfers per the 10 % donation policy declared on /about.",
+  "type": "object",
+  "required": ["version", "policy", "transfers", "audit"],
+  "properties": {
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "policy": {
+      "type": "object",
+      "required": ["charity_share_pct", "recipient", "frequency", "first_period_end"],
+      "properties": {
+        "charity_share_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "recipient": { "type": "string", "minLength": 1 },
+        "frequency": { "enum": ["annual", "semiannual", "quarterly"] },
+        "first_period_end": { "type": "string", "format": "date" },
+        "note": { "type": "string" }
+      }
+    },
+    "transfers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["period_end", "recipient", "amount_eur", "documented_at"],
+        "properties": {
+          "period_end": { "type": "string", "format": "date" },
+          "recipient": { "type": "string", "minLength": 1 },
+          "amount_eur": { "type": "number", "minimum": 0 },
+          "documented_at": { "type": "string", "format": "date" },
+          "bank_reference": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "required": ["policy_url", "registry_url", "complaint_route"],
+      "properties": {
+        "policy_url": { "type": "string", "format": "uri" },
+        "registry_url": { "type": "string", "format": "uri" },
+        "complaint_route": { "type": "string" }
+      }
+    }
+  }
+}
