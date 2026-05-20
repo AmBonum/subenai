@@ -2,7 +2,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 const params: { testId: string } = { testId: "tst_unknown" };
-const searchState: { tab: "results" | "analytics" | "settings"; share?: string } = {
+const searchState: {
+  tab: "results" | "analytics" | "questions" | "settings";
+  share?: string;
+} = {
   tab: "results",
 };
 
@@ -50,9 +53,29 @@ describe("/app/tests/$testId (AH-5.3 editor)", () => {
     expect(screen.getByTestId("test-editor-root")).toBeInTheDocument();
     expect(screen.getByTestId("test-editor-tabs-results")).toBeInTheDocument();
     expect(screen.getByTestId("test-editor-tabs-analytics")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-tabs-questions")).toBeInTheDocument();
     expect(screen.getByTestId("test-editor-tabs-settings")).toBeInTheDocument();
     expect(screen.getByTestId("test-editor-share-button")).toBeInTheDocument();
     expect(screen.getByTestId("test-editor-publish-button")).toBeInTheDocument();
+  });
+
+  it("renders the Questions tab editor with count + add button", () => {
+    params.testId = "tst_002";
+    searchState.tab = "questions";
+    render(<Page />);
+    expect(screen.getByTestId("test-editor-questions-panel")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-questions-root")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-questions-count")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-questions-add-button")).toBeInTheDocument();
+  });
+
+  it("renders the Order Mode toggle on the Settings tab with both options", () => {
+    params.testId = "tst_002";
+    searchState.tab = "settings";
+    render(<Page />);
+    expect(screen.getByTestId("test-editor-order-mode-root")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-order-mode-option-fixed")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-order-mode-option-random")).toBeInTheDocument();
   });
 
   it("settings tab exposes title input + save button", () => {

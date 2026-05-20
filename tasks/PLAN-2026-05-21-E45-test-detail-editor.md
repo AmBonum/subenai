@@ -2,7 +2,7 @@
 
 **Owner:** Claude — drives the user-facing editor on `/app/tests/$testId` so authors can manage questions, lock the test with a password, and send invites by email — closing the "create-test" → "share" loop after publish.
 **Date opened:** 2026-05-21
-**Status:** 🟡 Planned — branch `feature/E45-test-detail-editor` (will be created from latest main after PR #79 merges)
+**Status:** 🟢 Phase 1 done (questions + order mode merged on `feature/E45-phase-1-questions-order`) — Phases 2-4 still pending.
 **Originating request:** From the test detail page (`/app/tests/$testId?tab=results`), the author should be able to: (1) edit questions — add / remove / reorder — and choose random vs fixed order; (2) set, change, or clear a password that respondents must enter before taking the test; (3) send the test link + password to a list of email addresses, all from the same screen. All four sub-features must hold senior-level UX/UI, full coverage by unit + integration + security + functional tests.
 
 ## TL;DR
@@ -64,12 +64,12 @@ The schema already supports most of it: `tests.password_hash` exists; `test_ques
 
 | ID | Title | Effort | Priority | Status |
 |---|---|---|---|---|
-| E45.1 | Migration `20260521160000_test_question_order_mode.sql` — new enum `test_question_order_mode` + column on `tests` + DEPLOY_SETUP mirror + supabase types | `S` | `P1` | 🟡 Ready |
-| E45.2 | Queries: `useTestQuestions`, `useUpdateTestQuestionOrder`, `useAddQuestionsToTest`, `useRemoveQuestionFromTest`, `useUpdateTestOrderMode` | `S` | `P1` | 🟡 Ready |
-| E45.3 | `/app/tests/$testId` UI: new "Questions" tab with editor (reuses `QuestionPickerDialog` from PR #79); Settings tab gains Order Mode toggle | `M` | `P1` | 🟡 Ready |
-| E45.4 | Respondent flow: TestFlow respects `question_order_mode` — seeded shuffle by `session_id` when `random` | `S` | `P1` | 🟡 Ready |
-| E45.5 | Tests: queries unit, editor component, shuffle determinism unit, e2e stub | `M` | `P1` | 🟡 Ready |
-| E45.6 | Docs: story files E45.1-6 + CHANGELOG entry | `XS` | `P2` | 🟡 Ready |
+| ~~E45.1 Migration `20260521210000_test_question_order_mode.sql` — enum + columns + DEPLOY_SETUP mirror + supabase types~~ | (closed) | `S` | `P1` | ✅ Done |
+| ~~E45.2 Queries: `useAddQuestionsToTest`, `useRemoveQuestionFromTest`, `useUpdateTestQuestionOrder`, `useUpdateTestOrderMode`~~ | (closed) | `S` | `P1` | ✅ Done |
+| ~~E45.3 `/app/tests/$testId` UI: new "Questions" tab + Order Mode toggle in Settings + i18n sk/en/cs~~ | (closed) | `M` | `P1` | ✅ Done |
+| ~~E45.4 Respondent flow: TestFlow respects `question_order_mode` — seeded shuffle by `session_id` when `random`~~ | (closed) | `S` | `P1` | ✅ Done |
+| ~~E45.5 Tests: shuffle determinism (18) + QuestionsEditor (6) + OrderModeToggle (3) + route test extensions~~ | (closed) | `M` | `P1` | ✅ Done |
+| ~~E45.6 Docs: stories E45.1-4 + CHANGELOG entry~~ | (closed) | `XS` | `P2` | ✅ Done |
 
 ### Phase 2 — Password protection (PR-2)
 

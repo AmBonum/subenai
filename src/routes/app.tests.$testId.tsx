@@ -1,7 +1,16 @@
 import { createFileRoute, Link, useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { z } from "zod";
-import { ArrowLeft, Archive, BarChart3, Save, Send, Settings, Share2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Archive,
+  BarChart3,
+  ListTree,
+  Save,
+  Send,
+  Settings,
+  Share2,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +21,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ShareDialog } from "@/components/user/ShareDialog";
+import { QuestionsEditor } from "@/components/app/tests/QuestionsEditor";
+import { OrderModeToggle } from "@/components/app/tests/OrderModeToggle";
 import { toast } from "sonner";
 import {
   useArchiveTest,
@@ -26,9 +37,11 @@ import { tFor as tAppShell } from "@/i18n/app-shell";
 const tRoutes = tAppShell("route_titles");
 
 const editorSearch = z.object({
-  tab: z.enum(["results", "analytics", "settings"]).catch("results"),
+  tab: z.enum(["results", "analytics", "questions", "settings"]).catch("results"),
   share: z.string().optional(),
 });
+
+type EditorTab = "results" | "analytics" | "questions" | "settings";
 
 export const Route = createFileRoute("/app/tests/$testId")({
   validateSearch: editorSearch,
@@ -95,7 +108,7 @@ function TestEditorPage() {
     publishMut.mutate(test.id, { onError: (err) => toast.error(err.message) });
   };
 
-  const setTab = (tab: "results" | "analytics" | "settings") => {
+  const setTab = (tab: EditorTab) => {
     nav({ search: (prev) => ({ ...prev, tab }), replace: true });
   };
 
@@ -147,7 +160,7 @@ function TestEditorPage() {
         }
       />
 
-      <Tabs value={search.tab ?? "results"} onValueChange={(v) => setTab(v as "results")}>
+      <Tabs value={search.tab ?? "results"} onValueChange={(v) => setTab(v as EditorTab)}>
         <TabsList>
           <TabsTrigger value="results" data-testid="test-editor-tabs-results">
             <BarChart3 className="mr-1 h-3 w-3" />
@@ -156,6 +169,10 @@ function TestEditorPage() {
           <TabsTrigger value="analytics" data-testid="test-editor-tabs-analytics">
             <BarChart3 className="mr-1 h-3 w-3" />
             {t("tab_analytics")}
+          </TabsTrigger>
+          <TabsTrigger value="questions" data-testid="test-editor-tabs-questions">
+            <ListTree className="mr-1 h-3 w-3" />
+            {t("tab_questions")}
           </TabsTrigger>
           <TabsTrigger value="settings" data-testid="test-editor-tabs-settings">
             <Settings className="mr-1 h-3 w-3" />
@@ -187,12 +204,23 @@ function TestEditorPage() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="questions" className="mt-4">
+          <Card data-testid="test-editor-questions-panel">
+            <CardHeader>
+              <CardTitle>{t("tab_questions")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <QuestionsEditor testId={test.id} questionIds={test.question_ids} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="settings" className="mt-4">
           <Card data-testid="test-editor-settings-panel">
             <CardHeader>
               <CardTitle>{t("tab_settings")}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="ed-title">{t("title_input_label")}</Label>
                 <Input
@@ -212,6 +240,7 @@ function TestEditorPage() {
                   data-testid="test-editor-description-input"
                 />
               </div>
+              <OrderModeToggle testId={test.id} value={test.question_order_mode} />
               <div className="flex justify-end">
                 <Button
                   onClick={onSave}

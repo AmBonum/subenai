@@ -4280,6 +4280,29 @@ REVOKE ALL ON FUNCTION public.anonymize_expired_dpa_requests() FROM anon, authen
 GRANT EXECUTE ON FUNCTION public.anonymize_expired_dpa_requests() TO service_role;
 
 -- ============================================================================
+-- 20260521210000_test_question_order_mode.sql (E45.1)
+-- ============================================================================
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'test_question_order_mode') THEN
+    CREATE TYPE public.test_question_order_mode AS ENUM ('fixed', 'random');
+  END IF;
+END$$;
+
+ALTER TABLE public.tests
+  ADD COLUMN IF NOT EXISTS question_order_mode public.test_question_order_mode
+    NOT NULL DEFAULT 'fixed';
+
+ALTER TABLE public.tests
+  ADD COLUMN IF NOT EXISTS source_template_id UUID
+    REFERENCES public.templates(id) ON DELETE SET NULL;
+
+CREATE INDEX IF NOT EXISTS tests_source_template_id_idx
+  ON public.tests (source_template_id)
+  WHERE source_template_id IS NOT NULL;
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT

@@ -21,6 +21,18 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   okamžite vyrobí znova presne to isté PDF, čo dostala škola pri
   podaní (vrátane pôvodného dátumu — kvôli auditovateľnosti podľa
   čl. 28 ods. 9 GDPR), bez akéhokoľvek e-mailu navyše.
+- **Úprava otázok a náhodné poradie v detaile testu — `/app/tests/<id>`.**
+  V detaile už hotového testu pribudla záložka *Otázky*, kde môžeš
+  pridať, odobrať alebo pretiahnuť poradie otázok bez toho, aby si test
+  musel/a vytvárať nanovo. V *Nastaveniach* je nová sekcia *Poradie
+  otázok* s prepínačom *Pevné* / *Náhodné*. Pri voľbe *Náhodné* každý
+  respondent dostane vlastné poradie (rovnaký človek pri obnovení
+  stránky uvidí to isté poradie — anti-cheat proti zdieľaniu
+  screenshotov), no skóre nie je nijako ovplyvnené. Ak sa pokúsiš
+  odstrániť otázku, na ktorú už niekto odpovedal, dostaneš jasnú
+  hlášku — historické odpovede sa nikdy nestratia. Editor pamätá aj
+  pôvodnú šablónu, z ktorej si test forkol/a (prejaví sa v ďalšej fáze
+  ako breadcrumb *Z šablóny*).
 - **Automatizovaný DPA tok pre školy — `/schools/dpa`.** Doteraz „Napíš
   nám — dostaneš DPA do 1 pracovného dňa" otváral e-mailového klienta
   a operator ručne posielal PDF. Teraz na `/schools` klikneš na zelený

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { CheckCircle2, Sparkles } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import {
   submitRespondentAnswer,
   finalizeRespondentSession,
 } from "@/lib/respondent/queries";
+import { resolveQuestionOrder } from "@/lib/quiz/shuffle";
 import type { Question } from "@/lib/platform/types";
 import type { SafeTestProjection } from "@/lib/respondent/take-test.functions";
 import { tFor } from "@/i18n/respondent-flow";
@@ -46,7 +47,16 @@ export function TakeTestFlow({ test, questionIds, shareId, onClose }: TakeTestFl
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const questions = questionIds.map((qid) => getQuestion(qid)).filter(Boolean) as Question[];
+  // E45 Phase 1 — resolve display order. When the test's
+  // question_order_mode is 'random' AND we have a session.id (intake done),
+  // shuffle deterministically so a reload mid-take rehydrates the same
+  // sequence. Pre-intake (sessionId === null) we keep the DB order so the
+  // server-rendered shell doesn't briefly show a leaked random order.
+  const orderedQuestionIds = useMemo(
+    () => resolveQuestionOrder(questionIds, test.question_order_mode, sessionId),
+    [questionIds, test.question_order_mode, sessionId],
+  );
+  const questions = orderedQuestionIds.map((qid) => getQuestion(qid)).filter(Boolean) as Question[];
 
   const onIntakeSubmit = async (vals: Record<string, string>, c: boolean) => {
     if (submitting) return;

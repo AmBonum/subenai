@@ -78,6 +78,7 @@
     "page_eyebrow": "Test",
     "tab_results": "Results",
     "tab_analytics": "Analytics",
+    "tab_questions": "Questions",
     "tab_settings": "Settings",
     "title_input_label": "Name",
     "description_input_label": "Description",
@@ -87,7 +88,35 @@
     "share_button": "Share",
     "not_found_title": "Test not found",
     "not_found_body": "This test either doesn't exist or doesn't belong to you.",
-    "back_to_list": "Back to list"
+    "back_to_list": "Back to list",
+    "questions": {
+      "count_label": "{count} of {max} questions",
+      "hint": "Add, remove, or reorder questions. Changes save automatically.",
+      "add_button": "Add questions",
+      "empty_title": "This test has no questions yet.",
+      "empty_body": "Pick questions from the library to populate it.",
+      "position_aria": "Position {idx}",
+      "missing_prompt": "Question not available in the library.",
+      "move_up_aria": "Move up",
+      "move_down_aria": "Move down",
+      "remove_aria": "Remove question",
+      "add_success": "Added: {count}",
+      "add_failed": "Adding questions failed.",
+      "remove_success": "Question removed.",
+      "remove_failed": "Removing failed.",
+      "remove_blocked_fk": "This question can't be removed — some respondents have already answered it. Duplicate the test and edit the new version instead.",
+      "reorder_failed": "Reordering failed. Try again."
+    },
+    "order_mode": {
+      "label": "Question order",
+      "hint": "Fixed keeps the original order for every respondent. Random shuffles per session (the same respondent sees the same order on reload).",
+      "fixed_title": "Fixed order",
+      "fixed_body": "All respondents see questions in the order you set.",
+      "random_title": "Random order",
+      "random_body": "Each respondent gets their own order. Scores are unaffected — display-only anti-cheat.",
+      "update_success": "Order updated.",
+      "update_failed": "Order update failed."
+    }
   },
   "share_dialog": {
     "title": "Share test",

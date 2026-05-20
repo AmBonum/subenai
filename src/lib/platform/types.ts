@@ -3,6 +3,7 @@
 
 export type Role = "owner" | "editor" | "viewer";
 export type TestStatus = "draft" | "published" | "archived";
+export type QuestionOrderMode = "fixed" | "random";
 export type GdprPurpose =
   | "marketing"
   | "research"
@@ -120,6 +121,8 @@ export interface Test {
   anonymize_after_days: number | null;
   allow_behavioral_tracking: boolean;
   expires_at: string | null;
+  question_order_mode: QuestionOrderMode;
+  source_template_id: string | null;
   created_at: string;
   updated_at: string;
   published_at: string | null;

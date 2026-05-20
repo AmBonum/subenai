@@ -265,6 +265,8 @@ export const createTest = (input: Partial<Test> & { title: string }) => {
     anonymize_after_days: 90,
     allow_behavioral_tracking: true,
     expires_at: null,
+    question_order_mode: input.question_order_mode ?? "fixed",
+    source_template_id: input.source_template_id ?? null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     published_at: null,

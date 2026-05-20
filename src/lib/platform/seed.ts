@@ -275,6 +275,8 @@ export const SEED_TESTS: Test[] = TEST_TITLES.map((title, i) => {
     anonymize_after_days: i % 2 === 0 ? 90 : null,
     allow_behavioral_tracking: i % 3 !== 0,
     expires_at: i % 5 === 0 ? daysAgo(-30) : null,
+    question_order_mode: i % 6 === 0 ? "random" : "fixed",
+    source_template_id: null,
     created_at: daysAgo(90 - i),
     updated_at: daysAgo(Math.max(1, 30 - i)),
     published_at: status === "published" ? daysAgo(40 - i) : null,

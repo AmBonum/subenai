@@ -78,6 +78,7 @@
     "page_eyebrow": "Test",
     "tab_results": "Výsledky",
     "tab_analytics": "Analytika",
+    "tab_questions": "Otázky",
     "tab_settings": "Nastavení",
     "title_input_label": "Název",
     "description_input_label": "Popis",
@@ -87,7 +88,35 @@
     "share_button": "Sdílet",
     "not_found_title": "Test nenalezen",
     "not_found_body": "Tento test buď neexistuje, nebo vám nepatří.",
-    "back_to_list": "Zpět na seznam"
+    "back_to_list": "Zpět na seznam",
+    "questions": {
+      "count_label": "{count} z {max} otázek",
+      "hint": "Přidej, odeber nebo změň pořadí otázek. Změny se ukládají automaticky.",
+      "add_button": "Přidat otázky",
+      "empty_title": "Tento test zatím nemá žádné otázky.",
+      "empty_body": "Vyber otázky z knihovny a přidej je do testu.",
+      "position_aria": "Pozice {idx}",
+      "missing_prompt": "Otázka není dostupná v knihovně.",
+      "move_up_aria": "Posunout výš",
+      "move_down_aria": "Posunout níž",
+      "remove_aria": "Odstranit otázku",
+      "add_success": "Přidáno: {count}",
+      "add_failed": "Přidání otázek selhalo.",
+      "remove_success": "Otázka odstraněna.",
+      "remove_failed": "Odstranění selhalo.",
+      "remove_blocked_fk": "Tuto otázku nelze odstranit — někteří respondenti na ni už odpověděli. Duplikuj test a uprav novou verzi.",
+      "reorder_failed": "Změna pořadí selhala. Zkus to znovu."
+    },
+    "order_mode": {
+      "label": "Pořadí otázek",
+      "hint": "Pevné zachová původní pořadí pro všechny respondenty. Náhodné zamíchá otázky pro každou relaci zvlášť (stejný respondent vidí při obnovení stránky to samé pořadí).",
+      "fixed_title": "Pevné pořadí",
+      "fixed_body": "Všichni respondenti uvidí otázky ve stejném pořadí, jaké jsi nastavil/a.",
+      "random_title": "Náhodné pořadí",
+      "random_body": "Každý respondent dostane vlastní pořadí. Skóre není ovlivněno — pouze anti-cheat zobrazení.",
+      "update_success": "Pořadí aktualizováno.",
+      "update_failed": "Změna pořadí selhala."
+    }
   },
   "share_dialog": {
     "title": "Sdílet test",
