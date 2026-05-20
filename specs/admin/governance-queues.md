@@ -4,8 +4,8 @@
 **Routes:** `/admin/audit`, `/admin/dsr`, `/admin/reports`
 **Components under test:** `src/components/admin/{AuditLogViewer,DsrQueue,ReportsQueue}.tsx`, plus route shells
 **API endpoints:** `GET /rest/v1/audit_log`, `GET /rest/v1/dsr_requests`, `GET /rest/v1/reports`
-**Source stories:** AH-7, AH-8 (governance + respondent epic)
-**Last updated:** 2026-05-19
+**Source stories:** AH-7, AH-8 (governance + respondent epic), E43 (audit-log read-flow lock)
+**Last updated:** 2026-05-20
 
 ---
 
@@ -27,11 +27,10 @@ infrastructure.
 
 ## Out of scope
 
-- Filter dropdown interactions (status, type, actor, date range).
 - Row action mutations (resolve DSR, dismiss report, etc.).
-- Pagination beyond first page.
-- PII flag toggling on audit-log rows.
 - Cross-route navigation between queues.
+- Filter dropdown interactions for DSR / reports queues (TC-02, TC-03);
+  audit-log filter coverage is in TC-04–TC-08 below.
 
 ---
 
@@ -61,3 +60,60 @@ infrastructure.
 **Then** `data-testid="admin-reports-root"` is visible
 **and** the empty-state card `data-testid="reports-queue-empty-state"` is visible
 **and** no `reports-queue-row-*` elements exist
+
+---
+
+## Audit log read-flow (E43)
+
+E35.1 matrix marked the audit-log INSERT path as locked
+(`tests/lib/supabase/audit-log-immutable.test.ts` + the RLS-enforcement
+suite). The READ path was marked partial: a unit test exists
+(`tests/routes/admin/audit.test.tsx`) but no Playwright spec exercised
+the populated read flow. TC-04–TC-08 close that gap — they exercise the
+viewer the way an admin actually uses it, not just the empty shell.
+
+## TC-04: `/admin/audit` renders table and rows when audit_log has entries
+
+**Prerequisites**: admin session primed with three seeded `audit_log`
+rows (mix of actors, actions, PII flags).
+**When** the admin visits `/admin/audit`
+**Then** `data-testid="audit-log-table"` is visible
+**and** the empty-state card is NOT visible
+**and** three rows matching `audit-log-row-*` are rendered
+
+## TC-05: Actor filter narrows the visible rows
+
+**Prerequisites**: TC-04 seed (rows authored by both `alice` and `bob`).
+**When** the admin types `alice` into `data-testid="audit-log-filter-actor"`
+**Then** only the row(s) with `actor_name` containing `alice` remain visible
+**and** rows authored by `bob` are no longer in the DOM
+
+## TC-06: Action filter narrows the visible rows
+
+**Prerequisites**: TC-04 seed (rows with actions `respondent_invite_sent`
+and `dsr_request_resolved`).
+**When** the admin opens `data-testid="audit-log-filter-action"` and
+selects `dsr_request_resolved`
+**Then** only the row(s) with that action remain visible
+
+## TC-07: PII-only filter narrows the visible rows
+
+**Prerequisites**: TC-04 seed (one row with `pii_access: true`, two with
+`pii_access: false`).
+**When** the admin opens `data-testid="audit-log-filter-pii"` and selects
+the "only PII" option (Slovak `audit_log.filter_pii_only`)
+**Then** exactly one row remains visible
+**and** that row carries the PII badge (`ShieldAlert` icon block).
+
+## TC-08: Pagination — next/prev advances by `PAGE_SIZE` (25)
+
+**Prerequisites**: admin session primed with 30 seeded `audit_log` rows.
+**When** the admin lands on `/admin/audit`
+**Then** the page shows 25 rows
+**and** the prev button (`data-testid="audit-log-pagination-prev"`) is
+disabled
+**and** the next button is enabled.
+**When** the admin clicks next
+**Then** the page shows the remaining 5 rows
+**and** the next button is now disabled
+**and** the prev button is enabled.
