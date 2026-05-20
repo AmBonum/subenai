@@ -85,8 +85,8 @@ describe("AH-9.9 robots.txt", () => {
     expect(txt).toMatch(/^Disallow:\s*\/auth\/\s*$/m);
   });
 
-  it("E32 — disallows /test/zostav/ (per-set composer URLs)", () => {
-    expect(txt).toMatch(/^Disallow:\s*\/test\/zostav\/\s*$/m);
+  it("E32/E33 — disallows /test/builder/ (per-set composer URLs)", () => {
+    expect(txt).toMatch(/^Disallow:\s*\/test\/builder\/\s*$/m);
   });
 
   it("retains the sitemap pointer", () => {

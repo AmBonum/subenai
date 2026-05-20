@@ -61,7 +61,7 @@ async function injectAuthorCookie(
       value: token,
       domain,
       // Cookie path SHOULD match the real Set-Cookie from
-      // /api/verify-author-password, which uses /test/zostava/${setId}.
+      // /api/verify-author-password, which uses /test/builder/${setId}.
       // But fetch("/api/results-data") from the page is NOT path-matched
       // by that scope — the browser refuses to send the cookie. Setting
       // path="/" here is what the test needs to exercise the dashboard;
@@ -93,7 +93,7 @@ test.describe("Happy paths", () => {
     const intake = new IntakeFormPage(page);
     const results = new ResultsGatePage(page);
 
-    await test.step("Open the composer at /test/zostav", async () => {
+    await test.step("Open the composer at /test/builder", async () => {
       await composer.open();
       await page.setViewportSize({ width: 1280, height: 800 });
     });
@@ -137,7 +137,7 @@ test.describe("Happy paths", () => {
     let respondentUrl = "";
     await test.step("Capture the respondent URL from the dialog", async () => {
       respondentUrl = (await composer.eduSuccessPublicLink.textContent()) ?? "";
-      expect(respondentUrl).toContain("/test/zostava/");
+      expect(respondentUrl).toContain("/test/builder/");
     });
 
     await test.step("Check acknowledgement checkbox and close dialog", async () => {
@@ -523,7 +523,7 @@ test.describe("Negative scenarios", () => {
           value:
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXRfaWQiOiJ0ZXN0IiwibmFtZSI6IngiLCJlbWFpbCI6InhAZTJlLnRlc3QiLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6OTk5OTk5OTk5OX0.BADINVALIDSIGNATURE",
           domain,
-          path: `/test/zostava/${edu.id}`,
+          path: `/test/builder/${edu.id}`,
           httpOnly: true,
           secure: false,
           sameSite: "Lax",

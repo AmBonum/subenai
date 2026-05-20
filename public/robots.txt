@@ -17,6 +17,6 @@ Disallow: /auth/
 # the crawl itself.
 Disallow: /t/
 Disallow: /r/
-Disallow: /test/zostav/
+Disallow: /test/builder/
 
 Sitemap: https://subenai.sk/sitemap.xml

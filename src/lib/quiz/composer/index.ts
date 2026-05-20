@@ -80,7 +80,7 @@ export function validateComposerConfig(config: ComposerConfig): ComposerValidati
 /**
  * Returns the live `Question` objects for a list of IDs in the same
  * order as the input, dropping any IDs that no longer exist in the
- * bundle. Used by both `/test/zostava/$id` (DB-loaded set) and the
+ * bundle. Used by both `/test/builder/$id` (DB-loaded set) and the
  * URL `?config=` fallback path.
  *
  * The `missing` count lets the caller surface a toast warning when a
@@ -115,7 +115,7 @@ export function computeHoneypotRatio(ids: readonly string[]): number {
 
 /**
  * Stable, URL-safe encoding of a composer selection. Used for the
- * `/test/zostav?config=...` share path that bypasses DB writes for
+ * `/test/builder?config=...` share path that bypasses DB writes for
  * small sets. We hand-roll base64url so the same code runs in
  * Worker (no Buffer) and the browser (no atob padding pitfalls).
  */

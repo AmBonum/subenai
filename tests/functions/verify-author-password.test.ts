@@ -61,7 +61,7 @@ describe("POST /api/verify-author-password", () => {
     // would silently break the auth loop — the dashboard never loads. The
     // set_id is enforced server-side via JWT claims, not cookie scope.
     expect(setCookie).toContain("Path=/");
-    expect(setCookie).not.toContain("Path=/test/zostava/");
+    expect(setCookie).not.toContain("Path=/test/builder/");
     const token = setCookie.split(";")[0].split("=")[1];
     const verify = await verifyEduAuthorToken(token, env.JWT_SECRET);
     expect(verify.ok).toBe(true);
@@ -130,18 +130,18 @@ describe("DELETE /api/verify-author-password (logout)", () => {
     // Path would create a new path-scoped cookie instead of clearing the
     // root-scope one — logout would silently leave the auth cookie live.
     expect(setCookie).toContain("Path=/");
-    expect(setCookie).not.toContain("Path=/test/zostava/");
+    expect(setCookie).not.toContain("Path=/test/builder/");
   });
 });
 
 describe("buildCookie helper", () => {
   it("uses Path=/ so cookie reaches /api/* endpoints called from the dashboard", () => {
-    // Regression sentinel: prior implementation used Path=/test/zostava/${setId}
+    // Regression sentinel: prior implementation used Path=/test/builder/${setId}
     // which caused the browser to refuse sending the cookie on the
     // /api/results-data fetch, breaking the dashboard for every real user.
     // Pinned 2026-05-20 from /schools how-it-works contract test (P0).
     const c = __test__.buildCookie("abc-123", "tok", 60);
     expect(c).toContain("Path=/");
-    expect(c).not.toContain("Path=/test/zostava/abc-123");
+    expect(c).not.toContain("Path=/test/builder/abc-123");
   });
 });

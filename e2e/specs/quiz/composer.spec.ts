@@ -46,7 +46,7 @@ test.describe("Custom test composer", () => {
     page,
     composer,
   }) => {
-    await test.step("Open /test/zostav", async () => {
+    await test.step("Open /test/builder", async () => {
       await composer.open();
     });
 
@@ -85,7 +85,7 @@ test.describe("Custom test composer", () => {
     page,
     composer,
   }) => {
-    await test.step("Open /test/zostav", async () => {
+    await test.step("Open /test/builder", async () => {
       await composer.open();
     });
 
@@ -145,7 +145,7 @@ test.describe("Custom test composer", () => {
     page,
     composer,
   }) => {
-    await test.step("Open /test/zostav", async () => {
+    await test.step("Open /test/builder", async () => {
       await composer.open();
     });
 
@@ -163,14 +163,14 @@ test.describe("Custom test composer", () => {
       await expect(composer.heading).toHaveCount(0);
     });
 
-    await test.step("Verify the URL stays at /test/zostav (no navigation)", async () => {
+    await test.step("Verify the URL stays at /test/builder (no navigation)", async () => {
       await expect(page).toHaveURL(/\/test\/zostav/);
     });
   });
 
   // TC-04: URL share — clicking the copy button shows the share toast
   test("TC-04: URL copy button shows the share toast after click", async ({ page, composer }) => {
-    await test.step("Open /test/zostav", async () => {
+    await test.step("Open /test/builder", async () => {
       await composer.open();
     });
 
@@ -198,7 +198,7 @@ test.describe("Custom test composer", () => {
     });
   });
 
-  // TC-05: DB share — submit POSTs to /api/test-sets and navigates to /test/zostava/$id
+  // TC-05: DB share — submit POSTs to /api/test-sets and navigates to /test/builder/$id
   test("TC-05: submitting with > 10 questions POSTs to /api/test-sets and navigates to the set route", async ({
     page,
     composer,
@@ -207,7 +207,7 @@ test.describe("Custom test composer", () => {
       await stubTestSets(page, { status: 201, body: { id: "test-set-e2e" } });
     });
 
-    await test.step("Open /test/zostav", async () => {
+    await test.step("Open /test/builder", async () => {
       await composer.open();
     });
 
@@ -223,7 +223,7 @@ test.describe("Custom test composer", () => {
       await composer.clickSubmit();
     });
 
-    await test.step("Verify the page navigates to /test/zostava/test-set-e2e", async () => {
+    await test.step("Verify the page navigates to /test/builder/test-set-e2e", async () => {
       await expect(page).toHaveURL(/\/test\/zostava\/test-set-e2e/);
     });
   });
@@ -239,7 +239,7 @@ test.describe("Custom test composer", () => {
       maxQuestions: 6,
     });
 
-    await test.step("Open /test/zostav?config=<encoded-with-one-renamed-id>", async () => {
+    await test.step("Open /test/builder?config=<encoded-with-one-renamed-id>", async () => {
       await composer.open(`?config=${encoded}`);
     });
 

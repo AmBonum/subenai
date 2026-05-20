@@ -87,7 +87,7 @@ export function SchoolsHero() {
 
       <div className="mt-7 flex flex-wrap items-center gap-3">
         <Link
-          to={ROUTES.zostav}
+          to={ROUTES.builder}
           className="inline-flex items-center gap-1.5 rounded-full bg-success px-6 py-3 text-sm font-bold text-success-foreground shadow-md transition-transform hover:-translate-y-0.5 hover:shadow-lg"
           data-testid="schools-hero-cta"
         >

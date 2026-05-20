@@ -1,8 +1,8 @@
 import { BasePage } from "../BasePage";
 
-/** POM for the /test/zostav composer surface with edu-mode controls. */
+/** POM for the /test/builder composer surface with edu-mode controls. */
 export class ComposerEduPage extends BasePage {
-  static readonly PATH = "/test/zostav" as const;
+  static readonly PATH = "/test/builder" as const;
 
   async open() {
     return this.goto(ComposerEduPage.PATH);

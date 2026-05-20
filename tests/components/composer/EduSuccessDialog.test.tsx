@@ -16,8 +16,8 @@ describe("EduSuccessDialog — author copy-out flow", () => {
     const onClose = vi.fn();
     render(
       <EduSuccessDialog
-        publicUrl="https://subenai.sk/test/zostava/abc123"
-        resultsUrl="https://subenai.sk/test/zostava/abc123/vysledky"
+        publicUrl="https://subenai.sk/test/builder/abc123"
+        resultsUrl="https://subenai.sk/test/builder/abc123/results"
         password="strong-author-pw-9"
         onClose={onClose}
       />,
@@ -27,8 +27,8 @@ describe("EduSuccessDialog — author copy-out flow", () => {
 
   it("shows public link, results link and password verbatim", () => {
     setup();
-    expect(screen.getByText("https://subenai.sk/test/zostava/abc123")).toBeInTheDocument();
-    expect(screen.getByText("https://subenai.sk/test/zostava/abc123/vysledky")).toBeInTheDocument();
+    expect(screen.getByText("https://subenai.sk/test/builder/abc123")).toBeInTheDocument();
+    expect(screen.getByText("https://subenai.sk/test/builder/abc123/results")).toBeInTheDocument();
     expect(screen.getByText("strong-author-pw-9")).toBeInTheDocument();
   });
 

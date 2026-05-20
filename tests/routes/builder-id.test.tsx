@@ -63,10 +63,12 @@ vi.mock("@/integrations/supabase/client", () => {
   };
 });
 
-// `ZostavaView` moved from `test.zostava.$id.lazy` to
-// `test.zostava.$id.index.lazy` on 2026-05-19 (Outlet refactor — parent
+// `BuilderSetView` moved from `test.builder.$id.lazy` to
+// `test.builder.$id.index.lazy` on 2026-05-19 (Outlet refactor — parent
 // now renders <Outlet /> and the page content lives in the index sibling).
-import { ZostavaView } from "@/routes/test.zostava.$id.index.lazy";
+// E33 — renamed export + file from ZostavaView to BuilderSetView (URL
+// rebrand to `/test/builder/$id`).
+import { BuilderSetView } from "@/routes/test.builder.$id.index.lazy";
 import { QUESTIONS } from "@/lib/quiz/bank/questions";
 
 const realIds = QUESTIONS.slice(0, 6).map((q) => q.id);
@@ -75,7 +77,7 @@ function setMockResult(value: { data: unknown; error: unknown }) {
   mocks.result = value;
 }
 
-describe("ZostavaView (/test/zostava/$id)", () => {
+describe("BuilderSetView (/test/builder/$id)", () => {
   it("shows loading state initially then renders intro on success", async () => {
     setMockResult({
       data: {
@@ -89,7 +91,7 @@ describe("ZostavaView (/test/zostava/$id)", () => {
       },
       error: null,
     });
-    render(<ZostavaView id="fixture-set" />);
+    render(<BuilderSetView id="fixture-set" />);
     expect(screen.getByText(/Načítavam zostavu/i)).toBeInTheDocument();
     await waitFor(() => {
       expect(screen.getByRole("heading", { name: "E-shop Q1 2026" })).toBeInTheDocument();
@@ -114,7 +116,7 @@ describe("ZostavaView (/test/zostava/$id)", () => {
       },
       error: null,
     });
-    render(<ZostavaView id="fixture-set" />);
+    render(<BuilderSetView id="fixture-set" />);
     await waitFor(() => {
       expect(
         screen.getByRole("heading", { name: /Pripravený test pre teba/i }),
@@ -124,7 +126,7 @@ describe("ZostavaView (/test/zostava/$id)", () => {
 
   it("shows not_found state when DB returns no row", async () => {
     setMockResult({ data: null, error: null });
-    render(<ZostavaView id="fixture-set" />);
+    render(<BuilderSetView id="fixture-set" />);
     await waitFor(() => {
       expect(screen.getByRole("heading", { name: /Test nenájdený/i })).toBeInTheDocument();
     });
@@ -132,7 +134,7 @@ describe("ZostavaView (/test/zostava/$id)", () => {
 
   it("shows error state when DB returns an error", async () => {
     setMockResult({ data: null, error: { message: "boom" } });
-    render(<ZostavaView id="fixture-set" />);
+    render(<BuilderSetView id="fixture-set" />);
     await waitFor(() => {
       expect(screen.getByRole("heading", { name: /Niečo sa pokazilo/i })).toBeInTheDocument();
     });
@@ -151,7 +153,7 @@ describe("ZostavaView (/test/zostava/$id)", () => {
       },
       error: null,
     });
-    render(<ZostavaView id="fixture-set" />);
+    render(<BuilderSetView id="fixture-set" />);
     await waitFor(() => {
       expect(screen.getByRole("status")).toHaveTextContent(/Z pôvodnej zostavy chýba 1 otázka/);
     });
@@ -170,7 +172,7 @@ describe("ZostavaView (/test/zostava/$id)", () => {
       },
       error: null,
     });
-    render(<ZostavaView id="fixture-set" />);
+    render(<BuilderSetView id="fixture-set" />);
     await waitFor(() => {
       const startBtn = screen.getByRole("button", { name: /Spustiť test/i });
       expect(startBtn).toBeDisabled();

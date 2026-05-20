@@ -39,7 +39,7 @@ const MEGA_ITEMS: readonly MegaMenuItemDef[] = [
         },
         {
           headingKey: "panel_section_lektorov",
-          links: [{ key: "composer", labelKey: "panel_link_composer", href: ROUTES.zostav }],
+          links: [{ key: "composer", labelKey: "panel_link_composer", href: ROUTES.builder }],
         },
       ],
       featured: {

@@ -1,7 +1,7 @@
 import { BasePage } from "../BasePage";
 
 export class ComposerPage extends BasePage {
-  static readonly PATH = "/test/zostav" as const;
+  static readonly PATH = "/test/builder" as const;
 
   async open(queryString = "") {
     return this.goto(`${ComposerPage.PATH}${queryString}`);

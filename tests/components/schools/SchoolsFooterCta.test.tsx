@@ -20,11 +20,11 @@ describe("SchoolsFooterCta", () => {
     expect(screen.getByTestId("schools-footer-cta-blog")).toBeInTheDocument();
   });
 
-  it("Composer card points to /test/zostav (primary action)", () => {
+  it("Composer card points to /test/builder (primary action)", () => {
     render(<SchoolsFooterCta />);
     expect(screen.getByTestId("schools-footer-cta-composer")).toHaveAttribute(
       "data-to",
-      "/test/zostav",
+      "/test/builder",
     );
   });
 

@@ -43,9 +43,9 @@ describe("admin route shims — import & symbol existence", () => {
     ["admin/blog/index", () => import("@/routes/admin/blog/index")],
     ["admin/blog/new", () => import("@/routes/admin/blog/new")],
     // Other 0% route shims that are similarly trivial.
-    ["test.zostav", () => import("@/routes/test.zostav")],
-    ["test.zostava.$id", () => import("@/routes/test.zostava.$id")],
-    ["test.zostava.$id.vysledky", () => import("@/routes/test.zostava.$id.vysledky")],
+    ["test.builder", () => import("@/routes/test.builder")],
+    ["test.builder.$id", () => import("@/routes/test.builder.$id")],
+    ["test.builder.$id.results", () => import("@/routes/test.builder.$id.results")],
   ])("loads %s and exposes `Route`", async (_label, loader) => {
     const mod = await loader();
     expect(mod.Route).toBeDefined();

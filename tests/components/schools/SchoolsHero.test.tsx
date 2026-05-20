@@ -30,7 +30,7 @@ describe("SchoolsHero", () => {
   it("renders the primary CTA targeting Composer", () => {
     render(<SchoolsHero />);
     const cta = screen.getByTestId("schools-hero-cta");
-    expect(cta).toHaveAttribute("data-to", "/test/zostav");
+    expect(cta).toHaveAttribute("data-to", "/test/builder");
   });
 
   it("renders the secondary CTA targeting /test", () => {

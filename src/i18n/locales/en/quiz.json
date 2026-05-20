@@ -507,7 +507,7 @@
     "faq_q4": "What data do you collect?",
     "faq_a4": "We store only anonymized answers and scores — no name, email or IP. After the test you get a unique link that you can share without your results being traceable back to you.",
     "faq_q5": "Can I send the test to colleagues?",
-    "faq_a5": "Yes — send them a link to a specific pack (e.g. /tests/eshop) or build your own using the composer at /test/zostav. Each person gets their own anonymous result.",
+    "faq_a5": "Yes — send them a link to a specific pack (e.g. /tests/eshop) or build your own using the composer at /test/builder. Each person gets their own anonymous result.",
     "empty": "No pack yet for the selected industries. Try another filter or build your own test.",
     "cta_standard": "Standard test (15 questions)",
     "cta_courses": "See free courses",

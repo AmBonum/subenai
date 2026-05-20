@@ -21,7 +21,7 @@ export function SchoolsStickyCta() {
       aria-label={t("skoly.sticky_cta")}
     >
       <Link
-        to={ROUTES.zostav}
+        to={ROUTES.builder}
         className="flex w-full items-center justify-center gap-2 rounded-full bg-success px-5 py-3 text-sm font-bold text-success-foreground shadow-md"
         data-testid="schools-sticky-cta"
       >

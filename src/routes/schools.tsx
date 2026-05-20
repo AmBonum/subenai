@@ -21,7 +21,7 @@ import { tFor } from "@/i18n/marketing";
 // Public marketing page for the edu-mode flow. NOT auth-gated by
 // design — GDPR Art. 28 disclosure must be crawlable BEFORE a school
 // decision-maker signs anything, and the underlying product
-// (Composer edu-mode at /test/zostav) is itself public + password-
+// (Composer edu-mode at /test/builder) is itself public + password-
 // gated, so an /app/schools route would duplicate without value.
 //
 // Page is composed of small focused sections (see ./components/schools).

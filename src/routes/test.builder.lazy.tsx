@@ -54,13 +54,13 @@ function loadInitialFromConfig(encoded: string | undefined): InitialLoad | null 
   };
 }
 
-export const Route = createLazyFileRoute("/test/zostav")({
+export const Route = createLazyFileRoute("/test/builder")({
   component: ComposerPage,
 });
 
 export function ComposerPage() {
   const t = useMemo(() => tFor("composer"), []);
-  const search = useSearch({ from: "/test/zostav" });
+  const search = useSearch({ from: "/test/builder" });
   const navigate = useNavigate();
 
   const initial = useMemo(() => loadInitialFromConfig(search.config), [search.config]);
@@ -234,7 +234,7 @@ export function ComposerPage() {
       creatorLabel: creatorLabel.trim() || undefined,
       sourcePackSlugs: selectedPackSlugs.size > 0 ? Array.from(selectedPackSlugs) : undefined,
     });
-    const url = `${window.location.origin}${ROUTES.zostav}?config=${encoded}`;
+    const url = `${window.location.origin}${ROUTES.builder}?config=${encoded}`;
     const ok = await copyToClipboard(url);
     if (ok) {
       setShareToast(t("share_toast"));
@@ -279,13 +279,13 @@ export function ComposerPage() {
       // the password the moment the dialog disappears.
       if (collectsResponses) {
         const origin = typeof window !== "undefined" ? window.location.origin : "";
-        const publicUrl = `${origin}${payload.url ?? `/test/zostava/${payload.id}`}`;
-        const resultsUrl = `${origin}${payload.results_url ?? `${payload.url}/vysledky`}`;
+        const publicUrl = `${origin}${payload.url ?? `/test/builder/${payload.id}`}`;
+        const resultsUrl = `${origin}${payload.results_url ?? `${payload.url}/results`}`;
         setEduSuccess({ publicUrl, resultsUrl, password: authorPassword });
         setSubmitting(false);
         return;
       }
-      navigate({ to: ROUTES.zostava, params: { id: payload.id } });
+      navigate({ to: ROUTES.builderSet, params: { id: payload.id } });
     } catch {
       setError("network_error");
       setSubmitting(false);
@@ -294,7 +294,7 @@ export function ComposerPage() {
 
   // Inline self-run mode (AC-12): the user clicked "Spustiť pre seba".
   // No DB write; the test runs on the in-memory selection. Browser
-  // back returns to the same /test/zostav URL — composer state lives
+  // back returns to the same /test/builder URL — composer state lives
   // in component memory, so a hard reload would reset. Recommended UX
   // path for "I want to keep this draft" is the URL share-out below.
   if (selfRunning) {

@@ -507,7 +507,7 @@
     "faq_q4": "Jaké údaje sbíráte?",
     "faq_a4": "Ukládáme jen anonymizované odpovědi a skóre — žádné jméno, e-mail ani IP. Po testu dostaneš jedinečný odkaz, který můžeš sdílet, aniž by se tvé výsledky daly zpětně identifikovat.",
     "faq_q5": "Můžu test poslat kolegům?",
-    "faq_a5": "Ano — pošli jim odkaz na konkrétní balík (např. /tests/eshop) nebo si sestav vlastní v komponéru na /test/zostav. Každý dostane svůj vlastní anonymní výsledek.",
+    "faq_a5": "Ano — pošli jim odkaz na konkrétní balík (např. /tests/eshop) nebo si sestav vlastní v komponéru na /test/builder. Každý dostane svůj vlastní anonymní výsledek.",
     "empty": "Pro vybrané obory zatím nemáme pack. Zkus jiný filtr nebo si sestav vlastní test.",
     "cta_standard": "Standardní test (15 otázek)",
     "cta_courses": "Prohlédni bezplatné kurzy",

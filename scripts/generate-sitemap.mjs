@@ -29,7 +29,7 @@ const STATIC_ROUTES = [
   { loc: "/sponsors/all", priority: "0.3", changefreq: "weekly" },
   { loc: "/manage-support", priority: "0.3", changefreq: "yearly" },
   { loc: "/changelog", priority: "0.4", changefreq: "weekly" },
-  { loc: "/test/zostav", priority: "0.7", changefreq: "monthly" },
+  { loc: "/test/builder", priority: "0.7", changefreq: "monthly" },
   { loc: "/schools", priority: "0.7", changefreq: "monthly" },
   { loc: "/blog", priority: "0.8", changefreq: "daily" },
 ];
