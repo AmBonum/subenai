@@ -1,0 +1,85 @@
+# E35.8 — OWASP ZAP DAST baseline scan.
+#
+# What this runs:
+#   - ZAP baseline scan (passive only) against the target URL.
+#   - Generates HTML + JSON reports as workflow artifacts (90-day retention).
+#   - Posts a Markdown summary as a comment on the workflow run (and PR,
+#     if triggered from a PR via workflow_dispatch).
+#
+# Best practices applied (https://www.zaproxy.org/docs/automate/):
+#   1. Baseline only — no active scan in CI. Active scan is destructive
+#      and high-load; it lives in `zap-full-scan.yml` (manual / weekly).
+#   2. `.zap/rules.tsv` controls per-rule severity. We start with mostly
+#      WARN so a noisy first run doesn't block work; ratchet to FAIL as
+#      findings get triaged.
+#   3. Target URL is parameterised (workflow_dispatch input + scheduled
+#      default to production). No localhost — ZAP must see real
+#      `_headers`, CSP, HSTS as Cloudflare serves them.
+#   4. `cmd_options: '-T 5'` caps the spider crawl at 5 minutes so the
+#      job is bounded.
+#   5. No `fail_action` initially — exit code 0 even on WARN findings;
+#      flip to `fail_action: true` once rules.tsv is calibrated.
+#   6. `allow_issue_writing: false` — don't auto-file GitHub Issues from
+#      every alert. Triage from the Markdown summary instead; file
+#      issues by hand for what matters.
+#
+# Manual run:
+#   GitHub → Actions → "OWASP ZAP baseline" → Run workflow.
+#   Optionally override the target URL (e.g. a Cloudflare preview).
+
+name: OWASP ZAP baseline
+
+on:
+  schedule:
+    # Weekly Monday 04:00 UTC — out-of-business hours for SK timezone.
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "URL to scan (omit for production)"
+        required: false
+        default: "https://subenai.sk"
+
+permissions:
+  # Required for the action to comment on issues / PRs.
+  issues: write
+  # Required to upload the reports as workflow artifacts.
+  contents: read
+  # Required for the action to post a check-run summary.
+  checks: write
+
+jobs:
+  zap-baseline:
+    name: ZAP baseline scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository (for .zap/rules.tsv)
+        uses: actions/checkout@v4
+
+      - name: Resolve target URL
+        id: target
+        run: |
+          if [ -n "${{ inputs.target }}" ]; then
+            echo "url=${{ inputs.target }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "url=https://subenai.sk" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run ZAP baseline
+        uses: zaproxy/action-baseline@v0.13.0
+        with:
+          target: ${{ steps.target.outputs.url }}
+          rules_file_name: ".zap/rules.tsv"
+          # -T 5: cap spider crawl at 5 minutes
+          # -a:   include alpha-quality rules (more coverage, more noise)
+          # -j:   use the AJAX spider too (modern SPA support, slower)
+          cmd_options: "-T 5 -a -j"
+          # Don't fail the job on findings yet. Once rules.tsv is
+          # calibrated (a couple of green baseline runs), flip to true.
+          fail_action: false
+          # Don't auto-file an issue per finding — too noisy. We read
+          # the Markdown summary attached to the workflow run instead.
+          allow_issue_writing: false
+          artifact_name: "zap-baseline-report"

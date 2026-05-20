@@ -1,0 +1,62 @@
+# E35.7 — Dependabot configuration.
+#
+# Free, GitHub-native dependency update bot. No SaaS.
+#
+# Best practices applied (https://docs.github.com/en/code-security/dependabot/):
+#   1. Group minor + patch updates so the PR queue stays manageable
+#      — one weekly PR with 30 patch bumps, not 30 separate PRs.
+#   2. Major version bumps remain individual PRs because they often
+#      need code changes (breaking changes, deprecations).
+#   3. Cap open PRs per ecosystem so a busy week doesn't bury real
+#      review work.
+#   4. Schedule daily for npm (the higher-churn ecosystem) and weekly
+#      for github-actions (slower-moving, mostly action version bumps).
+#   5. `commit-message.prefix: "chore(deps)"` matches subenai's
+#      Conventional Commits scope from `tasks/DEFINITION_OF_DONE.md`.
+#   6. No `reviewers` field — CODEOWNERS handles assignment when set;
+#      otherwise the maintainer reviews from the Dependabot tab.
+
+version: 2
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "06:00"
+      timezone: "Europe/Bratislava"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      # All minor + patch updates land as ONE weekly PR per ecosystem.
+      # Major bumps remain individual PRs so each can be reviewed for
+      # breaking changes.
+      npm-minor-and-patch:
+        patterns: ["*"]
+        update-types:
+          - "minor"
+          - "patch"
+    # Ignore intentionally-pinned packages (none today; placeholder
+    # for the future when we pin React / TanStack versions for
+    # API stability reasons).
+    ignore: []
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Bratislava"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"
+    groups:
+      gha-minor-and-patch:
+        patterns: ["*"]
+        update-types:
+          - "minor"
+          - "patch"

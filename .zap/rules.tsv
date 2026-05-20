@@ -1,0 +1,72 @@
+# E35.8 — ZAP rule overrides for subenai.sk.
+#
+# Format (tab-separated):
+#   <Rule ID>	<Threshold: IGNORE|WARN|FAIL>	<Optional note>
+#
+# Default threshold for unlisted rules is WARN (set in workflow YAML).
+# Bump a rule to FAIL once we've confirmed the finding type is real
+# AND triaged out of the codebase. Bump to IGNORE only with a written
+# justification (cite a follow-up epic or a documented accepted risk).
+#
+# Reference: https://www.zaproxy.org/docs/alerts/ — every rule ID
+# below has a doc page at /docs/alerts/<ID>/.
+#
+# Strategy (E35.8 day 1):
+#   - Everything stays WARN by default.
+#   - We explicitly IGNORE the rules below for documented reasons.
+#   - First few PRs surface the real findings; triage them on the
+#     workflow's Markdown summary.
+#   - Once the baseline is consistently green, flip individual
+#     high-confidence rules to FAIL (e.g. 10038 CSP).
+
+# 10049	Storable and Cacheable Content	IGNORE
+#   Static marketing pages legitimately ship with Cache-Control headers
+#   from Cloudflare. Not a vuln; just informational.
+10049	IGNORE	Static legal/marketing pages are intentionally cacheable.
+
+# 10027	Information Disclosure - Suspicious Comments	IGNORE
+#   We ship source maps in production for debuggability. Comments in
+#   the bundle are React/Vite-generated, not secret leaks.
+10027	IGNORE	Bundled React/Vite comments — no secret leakage.
+
+# 10096	Timestamp Disclosure	WARN
+#   GA + Stripe responses include timestamps; not actionable.
+10096	WARN	Third-party processor response timestamps.
+
+# 10063	Permissions Policy Header Not Set	WARN
+#   We DO set Permissions-Policy in `_headers`. If this flags, it means
+#   ZAP saw a route that bypassed the header — investigate.
+10063	WARN	Should always pass; investigate if it fires.
+
+# 10038	Content Security Policy (CSP) Header Not Set	WARN
+#   Same — we set CSP. A finding here means a route is leaking around
+#   `_headers` (e.g. a route returned by an API endpoint without the
+#   CF Pages header injection).
+10038	WARN	Should always pass; tests/security/headers-contract.test.ts locks this.
+
+# 10202	Absence of Anti-CSRF Tokens	WARN
+#   We don't have form-based auth. Magic-link flow is rate-limited +
+#   uses Turnstile. Stripe Checkout has its own CSRF cookie (`m`).
+#   Flip to IGNORE if the only forms ZAP finds are the magic-link form.
+10202	WARN	Magic-link auth uses Turnstile; review per-form.
+
+# 10054	Cookie Without SameSite Attribute	WARN
+#   Stripe sets cookies we don't control. Confirm any subenai-owned
+#   cookie carries SameSite=Lax or Strict before flipping to FAIL.
+10054	WARN	Triage per cookie owner (subenai vs Stripe).
+
+# 10055	CSP Wildcard Directive	WARN
+#   Our CSP uses wildcards like `*.supabase.co`. Legitimate per-host
+#   subdomain wildcards are NOT the dangerous `*` standalone. ZAP
+#   doesn't distinguish; we accept this as a known-noisy rule.
+10055	WARN	Subdomain wildcards are intentional (Supabase).
+
+# 10094	Base64 Disclosure	WARN
+#   The OG default image is base64-encoded in the build output (build
+#   step generates it). Flag any UNEXPECTED base64 finding outside the
+#   OG asset.
+10094	WARN	OG default image is intentionally base64.
+
+# 10109	Modern Web Application	IGNORE
+#   Informational — ZAP detected a modern SPA. Not a finding.
+10109	IGNORE	Informational; subenai is a TanStack Start SPA.

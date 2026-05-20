@@ -1,0 +1,70 @@
+# E35.7 — npm audit (free-tier, native to npm).
+#
+# Separate workflow from `ci.yml` so:
+#   1. A new CVE landing in the npm advisory database doesn't suddenly
+#      red-line every PR for unrelated work — npm audit runs in its
+#      own job and the rest of CI keeps signal.
+#   2. The schedule trigger surfaces NEW CVEs even when the codebase
+#      hasn't changed (a PR-only audit would miss a Sunday CVE drop
+#      until the next code change).
+#   3. Tuning the audit threshold (high-only? moderate?) doesn't
+#      require editing the main CI workflow.
+#
+# Threshold rationale:
+#   - `--audit-level=high` fails the job on high / critical CVEs only.
+#   - Moderate / low findings still appear in the job log for triage
+#     but don't break the build. This is the npm default and the
+#     industry-standard balance between signal and noise.
+#   - `--omit=dev` removes devDependencies from the audit. Build tools
+#     (vite plugins, eslint configs, etc.) regularly carry low-severity
+#     CVEs that don't affect the shipped bundle. We keep the audit
+#     focused on what runs in the browser / on Cloudflare Pages.
+
+name: npm audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/npm-audit.yml"
+  schedule:
+    # Weekly Wednesday 05:00 UTC — staggered with CodeQL (Tuesday) and
+    # ZAP (Monday) to spread Actions minutes across the week.
+    - cron: "0 5 * * 3"
+  workflow_dispatch: {}
+
+concurrency:
+  group: npm-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: npm audit (production deps, high+)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Run npm audit (production deps only, fail on high/critical)
+        # --omit=dev: scan only what ships to users
+        # --audit-level=high: warn on moderate, fail on high/critical
+        # exit code is non-zero if --audit-level threshold is hit
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Show full advisory list (any severity, dev included) for triage
+        if: always()
+        run: npm audit || true
