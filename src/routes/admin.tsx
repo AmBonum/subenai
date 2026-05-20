@@ -62,7 +62,17 @@ function AdminLayout() {
             </div>
           </header>
 
-          <main className="flex-1 p-4 md:p-6 lg:p-8" data-testid="admin-shell-main">
+          {/* `min-w-0` mirrors the AppShell pattern at
+              `src/components/user/AppShell.tsx:311`. Without it, this
+              flex item defaults to `min-width: auto` (= content
+              min-width), so any admin page with a wide `<Table>`,
+              long unbreakable header, or `<pre>` could force the
+              entire shell to overflow the viewport on narrow widths
+              — same root cause as the /cookies bug fixed in PR #69.
+              shadcn `<Table>` already wraps in `overflow-auto` and
+              would handle its own scroll, but only if its ancestor
+              flex chain is allowed to shrink. */}
+          <main className="min-w-0 flex-1 p-4 md:p-6 lg:p-8" data-testid="admin-shell-main">
             <Outlet />
           </main>
         </SidebarInset>
