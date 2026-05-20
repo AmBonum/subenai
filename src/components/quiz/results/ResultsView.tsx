@@ -25,6 +25,17 @@ interface EduContextProp {
   token: string;
   respondentName: string;
   respondentEmail: string;
+  // testSetId is the parent custom test the respondent just took.
+  // For edu attempts we share a TEST-INVITATION URL ("here, take this
+  // too") instead of the result URL `/r/<share_id>`, because edu
+  // attempts have respondent_name set and the anon SELECT policy on
+  // `attempts` filters those out — a recipient of `/r/<share_id>`
+  // would hit "Výsledok neexistuje". The invitation URL points at the
+  // test set itself so the friend can take the test, not at the
+  // respondent's PII-tagged row. Public-quiz (non-edu) flow keeps the
+  // result URL because those rows have respondent_name IS NULL and
+  // are publicly readable by design.
+  testSetId: string;
 }
 
 interface Props {
@@ -201,7 +212,10 @@ export function ResultsView({
           return;
         }
         setShareId(id);
-        setShareUrl(`${window.location.origin}/r/${id}`);
+        // Edu/builder respondents share the TEST invitation, not their
+        // PII-tagged result row. See EduContextProp comment for why
+        // `/r/${id}` would be a broken link here.
+        setShareUrl(`${window.location.origin}/test/builder/${edu.testSetId}`);
         return;
       }
 
