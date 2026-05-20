@@ -56,7 +56,7 @@ This epic replaces the `mailto:` with a real intake flow: school contact fills a
 
 | ID | Title | Effort | Priority | Status |
 |---|---|---|---|---|
-| [E40.1](./stories/E40.1-dpa-requests-schema.md) | `dpa_requests` table + RLS + types regen + RPC for retention | `S` | `P1` | 🟡 Ready |
+| [E40.1](./stories/E40.1-dpa-requests-schema.md) | `dpa_requests` table + RLS + types regen + RPC for retention | `S` | `P1` | ✅ Done |
 | [E40.2](./stories/E40.2-dpa-form-route.md) | `/schools/dpa` route + intake form + server function (download path) | `M` | `P1` | 🟡 Ready |
 | [E40.3](./stories/E40.3-dpa-pdf-template.md) | Slovak Art. 28 DPA template v0.1 + react-pdf render harness | `L` | `P1` | 🟡 Ready |
 | [E40.4](./stories/E40.4-dpa-email-delivery.md) | Resend integration + e-mail attachment path + env secret | `M` | `P1` | 🟡 Ready |
