@@ -291,11 +291,17 @@
           "purpose": "Anonymous Supabase session — without it your test result cannot be saved via Row Level Security",
           "duration": "~1 hour (auto-refresh)"
         },
+        "locale": {
+          "category": "Necessary",
+          "key": "subenai.locale",
+          "purpose": "Your selected site language (sk / cs / en). Falls under the ePrivacy \"strictly necessary\" exemption — without it we couldn't render the page in the language you chose.",
+          "duration": "until the browser is cleared"
+        },
         "prefs": {
           "category": "Preferences",
-          "key": "future",
-          "purpose": "Remembering language / theme",
-          "duration": "12 months"
+          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open",
+          "purpose": "Remembering UI preferences between visits: sidebar open/closed state, whether you've seen the dashboard intro banner, whether you've dismissed the profile-completion nudge, whether you have the /blog pillar lists expanded. Without these cookies / localStorage entries every button still works — you just have to re-select on next visit. Language (`subenai.locale`) is always stored as strictly necessary so the page renders in the correct language.",
+          "duration": "1 week (sidebar) to 12 months (others) / until cleared"
         },
         "analytics": {
           "category": "Analytics",

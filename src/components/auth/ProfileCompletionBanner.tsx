@@ -9,6 +9,7 @@ import { Link } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useCurrentProfile } from "@/lib/platform/queries";
+import { hasConsent, loadConsent } from "@/lib/consent";
 import { tFor } from "@/i18n/auth";
 
 const dismissKey = (uid: string) => `subenai.profile-banner.dismissed.${uid}`;
@@ -41,7 +42,10 @@ export function ProfileCompletionBanner() {
   if (dismissed) return null;
 
   const onDismiss = () => {
-    if (typeof window !== "undefined" && profile.id) {
+    // E40 — per-user dismiss flag is a "preferences" cookie per /cookies.
+    // Without consent the banner re-appears next session; dismissing
+    // it still hides it for the current session.
+    if (typeof window !== "undefined" && profile.id && hasConsent(loadConsent(), "preferences")) {
       window.localStorage.setItem(dismissKey(profile.id), "1");
     }
     setDismissed(true);

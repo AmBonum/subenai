@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { trackBlogPillarsToggle } from "@/lib/analytics/blog-events";
+import { hasConsent, loadConsent } from "@/lib/consent";
 
 const STORAGE_KEY = "blog:pillars-open";
 const DESKTOP_MQ = "(min-width: 768px)";
@@ -37,7 +38,10 @@ export function useBlogPillarsCollapsed() {
 
   const setOpen = useCallback((next: boolean) => {
     setOpenState(next);
-    if (typeof window !== "undefined") {
+    // E40 — only persist the toggle if user consented to "preferences".
+    // Without consent the toggle still works for the active session;
+    // it just doesn't survive reload.
+    if (typeof window !== "undefined" && hasConsent(loadConsent(), "preferences")) {
       window.localStorage.setItem(STORAGE_KEY, next ? "1" : "0");
     }
     trackBlogPillarsToggle({ open: next });

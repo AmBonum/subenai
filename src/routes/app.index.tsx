@@ -20,6 +20,7 @@ import { RecommendationsDashboardCard } from "@/components/user/RecommendationsD
 import { RetestDashboardCard } from "@/components/user/RetestDashboardCard";
 import { PeerDashboardCard } from "@/components/user/PeerDashboardCard";
 import { useTests, useUserRespondents, useUserSessions } from "@/lib/platform/queries";
+import { hasConsent, loadConsent } from "@/lib/consent";
 import { tFor } from "@/i18n/app-shell";
 
 const tRoutes = tFor("route_titles");
@@ -44,10 +45,15 @@ function useIntroBanner(): { visible: boolean; dismiss: () => void } {
     }
   }, []);
   const dismiss = () => {
-    try {
-      window.localStorage.setItem(INTRO_KEY, "1");
-    } catch {
-      // ignore
+    // E40 — intro-banner dismiss flag is a "preferences" cookie per
+    // /cookies. Without consent the banner re-appears next visit;
+    // dismissing it still hides it for the current session.
+    if (hasConsent(loadConsent(), "preferences")) {
+      try {
+        window.localStorage.setItem(INTRO_KEY, "1");
+      } catch {
+        // ignore
+      }
     }
     setVisible(false);
   };

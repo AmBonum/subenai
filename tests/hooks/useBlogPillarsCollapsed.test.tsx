@@ -7,6 +7,15 @@ vi.mock("@/lib/analytics/blog-events", () => ({
 
 import { useBlogPillarsCollapsed, __test__ } from "@/hooks/useBlogPillarsCollapsed";
 import { trackBlogPillarsToggle } from "@/lib/analytics/blog-events";
+import { ALL_ACCEPTED, saveConsent } from "@/lib/consent";
+
+// E40 — UI-state writes are now gated by hasConsent(record, "preferences").
+// Tests that assert localStorage was written must first seed an accepting
+// consent record. `seedConsent()` is the canonical pattern used across
+// the suite.
+function seedConsent(): void {
+  saveConsent(ALL_ACCEPTED);
+}
 
 const { STORAGE_KEY, DESKTOP_MQ } = __test__;
 
@@ -79,6 +88,7 @@ describe("useBlogPillarsCollapsed", () => {
   });
 
   it("setOpen(true) writes localStorage='1' AND fires analytics with state:open", () => {
+    seedConsent();
     stubMatchMedia(false);
     const { result } = renderHook(() => useBlogPillarsCollapsed());
     act(() => result.current.setOpen(true));
@@ -87,11 +97,21 @@ describe("useBlogPillarsCollapsed", () => {
   });
 
   it("setOpen(false) writes localStorage='0' AND fires analytics with state:closed", () => {
+    seedConsent();
     stubMatchMedia(true);
     const { result } = renderHook(() => useBlogPillarsCollapsed());
     act(() => result.current.setOpen(false));
     expect(window.localStorage.getItem(STORAGE_KEY)).toBe("0");
     expect(trackBlogPillarsToggle).toHaveBeenCalledWith({ open: false });
+  });
+
+  it("setOpen WITHOUT preferences consent: in-memory only, no localStorage write", () => {
+    // E40 contract: without consent the toggle works but doesn't persist.
+    stubMatchMedia(false);
+    const { result } = renderHook(() => useBlogPillarsCollapsed());
+    act(() => result.current.setOpen(true));
+    expect(result.current.open, "state still updates in-memory").toBe(true);
+    expect(window.localStorage.getItem(STORAGE_KEY), "no consent → no persistence").toBeNull();
   });
 
   it("hydration default-state application does NOT emit analytics (only user actions do)", () => {
