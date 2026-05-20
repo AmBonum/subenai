@@ -185,6 +185,7 @@ export function SchoolsDpaForm() {
         templateVersion?: string;
         generatedAt?: string;
         error?: string;
+        reason?: string;
       };
       if (
         !response.ok ||
@@ -193,7 +194,11 @@ export function SchoolsDpaForm() {
         !payload.fileName ||
         !payload.templateVersion
       ) {
-        setError(payload.error ?? "error_generic");
+        const errorCode = payload.error ?? "error_generic";
+        // Append the server-supplied `reason` (e.g. Postgres SQLSTATE
+        // 42P01 = undefined_table) so operators can diagnose without
+        // diving into CF Pages real-time logs.
+        setError(payload.reason ? `${errorCode}:${payload.reason}` : errorCode);
         setSubmitting(false);
         resetTurnstile();
         return;
