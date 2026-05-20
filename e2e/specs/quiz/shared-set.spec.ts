@@ -57,6 +57,24 @@ test.describe("Shared-set routes — /test/builder/$id", () => {
       await expect(sharedSet.startButton).toBeVisible();
       await expect(sharedSet.startButton).toBeEnabled();
     });
+
+    // E34 Phase 2 — the senior landing hero must render the eyebrow,
+    // subline, and trust line in addition to the heading. This is the
+    // regression sentinel for "did we accidentally revert the hero copy"
+    // — the user-facing conversion lever for cold first-time visitors.
+    await test.step("Verify the senior hero renders eyebrow + subline + trust line (D3 = confidence framing)", async () => {
+      await expect(page.getByTestId("respondent-hero-eyebrow")).toHaveText(
+        "TEST BEZPEČNOSTI · 5 MINÚT",
+      );
+      await expect(page.getByTestId("respondent-hero-subline")).toContainText(
+        "slepé miesta v rozpoznávaní podvodov",
+      );
+      // Seeded set has collects_responses=false → no-collect trust line
+      // (no row stored, only the respondent sees their score).
+      await expect(page.getByTestId("respondent-hero-trust")).toContainText(
+        "Výsledky vidíš len ty",
+      );
+    });
   });
 
   // TC-02: Not-found state when set id does not exist

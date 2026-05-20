@@ -117,10 +117,14 @@ describe("BuilderSetView (/test/builder/$id)", () => {
       error: null,
     });
     render(<BuilderSetView id="fixture-set" />);
+    // E34 Phase 2 — fallback heading changed from "Pripravený test pre teba"
+    // (bland) → "Vieš rozpoznať phishing?" (confidence framing per D3
+    // override). Other RespondentLandingHero behaviour is unit-tested in
+    // tests/components/composer/RespondentLandingHero.test.tsx — this
+    // assertion only verifies that the route mounts the hero with the
+    // provocative fallback when creator_label is null.
     await waitFor(() => {
-      expect(
-        screen.getByRole("heading", { name: /Pripravený test pre teba/i }),
-      ).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: /Vieš rozpoznať phishing/i })).toBeInTheDocument();
     });
   });
 

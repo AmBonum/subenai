@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
-import { Eye, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Copy, Eye, Trash2 } from "lucide-react";
 import type { RespondentRow } from "@/lib/edu/types";
 import { tFor } from "@/i18n/quiz";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { RespondentDetailModal } from "./RespondentDetailModal";
+import { copyToClipboard } from "@/lib/browser/clipboard";
+import { SITE_ORIGIN } from "@/config/site";
 
 type SortKey = "name" | "score" | "created_at";
 type SortDir = "asc" | "desc";
@@ -12,9 +14,18 @@ interface Props {
   rows: RespondentRow[];
   passingThreshold: number;
   onDelete: (attemptId: string) => Promise<boolean>;
+  /**
+   * Test set id (UUID). When provided, the empty state renders the
+   * respondent share URL inline with a "Kopírovať link" button so the
+   * author doesn't have to navigate back to the composer to find it
+   * (E34 Phase 2 audit fix C5 / M3). Optional for back-compat with
+   * existing test scaffolding; behaviour falls back to the plain copy
+   * empty state when missing.
+   */
+  setId?: string;
 }
 
-export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
+export function RespondentsTable({ rows, passingThreshold, onDelete, setId }: Props) {
   const t = tFor("respondents");
   const tCommon = tFor("common");
   const [query, setQuery] = useState("");
@@ -29,6 +40,22 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
   // as confirmTarget; render gated on null inside the modal itself so
   // closing animations play out properly.
   const [detailTarget, setDetailTarget] = useState<RespondentRow | null>(null);
+  // E34 Phase 2 — transient toast for the empty-state share-URL copy
+  // affordance. Auto-clears after 3 s (same cadence as the composer's
+  // share toast in test.builder.index.lazy.tsx).
+  const [copyToast, setCopyToast] = useState<string | null>(null);
+  useEffect(() => {
+    if (!copyToast) return;
+    const handle = window.setTimeout(() => setCopyToast(null), 3000);
+    return () => window.clearTimeout(handle);
+  }, [copyToast]);
+
+  const shareUrl = setId ? `${SITE_ORIGIN}/test/builder/${setId}` : null;
+  async function handleCopyShareUrl(): Promise<void> {
+    if (!shareUrl) return;
+    const ok = await copyToClipboard(shareUrl);
+    if (ok) setCopyToast(t("copy_share_url_toast"));
+  }
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -107,12 +134,51 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
       </div>
 
       {sorted.length === 0 ? (
-        <p
-          data-testid="resp-table-empty"
-          className="rounded-xl border border-border/60 bg-card/40 p-6 text-center text-sm text-muted-foreground"
-        >
-          {rows.length === 0 ? t("empty_no_rows") : t("empty_filter")}
-        </p>
+        rows.length === 0 && shareUrl ? (
+          // E34 Phase 2 — empty + we have a setId → render the share URL
+          // inline with a Copy button. Author doesn't have to navigate back
+          // to the composer to find their own share link.
+          <div
+            data-testid="resp-table-empty"
+            className="space-y-3 rounded-xl border border-border/60 bg-card/40 p-6 text-center text-sm text-muted-foreground sm:text-left"
+          >
+            <p>{t("empty_no_rows_with_link_prefix")}</p>
+            <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <code
+                data-testid="resp-table-share-url"
+                className="break-all rounded-md bg-muted/60 px-2 py-1 text-xs text-foreground"
+              >
+                {shareUrl}
+              </code>
+              <button
+                type="button"
+                data-testid="resp-table-copy-share-url"
+                onClick={() => void handleCopyShareUrl()}
+                aria-label={t("copy_share_url_aria")}
+                className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary hover:text-primary"
+              >
+                <Copy className="size-3.5" aria-hidden />
+                {t("copy_share_url_label")}
+              </button>
+            </div>
+            {copyToast ? (
+              <p
+                data-testid="resp-table-copy-share-url-toast"
+                role="status"
+                className="text-xs font-semibold text-emerald-600 dark:text-emerald-400"
+              >
+                {copyToast}
+              </p>
+            ) : null}
+          </div>
+        ) : (
+          <p
+            data-testid="resp-table-empty"
+            className="rounded-xl border border-border/60 bg-card/40 p-6 text-center text-sm text-muted-foreground"
+          >
+            {rows.length === 0 ? t("empty_no_rows") : t("empty_filter")}
+          </p>
+        )
       ) : (
         <div className="overflow-x-auto rounded-xl border border-border/60">
           <table data-testid="resp-table-table" className="w-full text-sm">

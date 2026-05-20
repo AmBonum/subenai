@@ -420,6 +420,16 @@ export function ResultsView({
               weak category). Renders only when ≥1 category < 50 %. */}
           <WeakCategoryRecommendations breakdown={result.breakdown} />
 
+          {/* E34 Phase 2 (D4 = "(a) /tests + (c) /courses inline") — the
+              generic "see more tests" upsell. WeakCategoryRecommendations
+              already delivers (c) — a contextual /courses link per weak
+              category. This block delivers (a): a single subtle CTA so
+              respondents who scored well (no weak categories surfaced)
+              still have a next-step affordance instead of dropping off
+              the page. Tone matches the surrounding cards — informational,
+              not pushy. */}
+          <MoreTestsCta />
+
           {/* Insights */}
           {result.insights.length > 0 && (
             <div className="mt-6 animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-card">
@@ -587,6 +597,30 @@ export function ResultsView({
         onOpenChange={setTrapOpen}
         onAcknowledged={handleTrapAcknowledged}
       />
+    </div>
+  );
+}
+
+// E34 Phase 2 — post-score upsell CTA. Subtle by design: a single card,
+// no pushy framing, links to /tests so the respondent can keep training on
+// a topic that matches their industry. We don't try to convert here; the
+// goal is "don't drop off — there's more value next door".
+function MoreTestsCta() {
+  const t = tFor("results");
+  return (
+    <div
+      data-testid="more-tests-cta"
+      className="mt-6 animate-fade-in-up rounded-2xl border border-border bg-card p-6 shadow-card"
+    >
+      <h3 className="text-base font-bold text-foreground">{t("more_tests_cta_heading")}</h3>
+      <p className="mt-2 text-sm text-muted-foreground">{t("more_tests_cta_body")}</p>
+      <Link
+        to="/tests"
+        data-testid="more-tests-cta-button"
+        className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary underline-offset-2 hover:underline"
+      >
+        {t("more_tests_cta_button")}
+      </Link>
     </div>
   );
 }

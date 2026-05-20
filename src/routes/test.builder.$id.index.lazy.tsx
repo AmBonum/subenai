@@ -6,6 +6,7 @@ import {
   RespondentIntakeForm,
   type RespondentIntakeOk,
 } from "@/components/composer/edu/intake/RespondentIntakeForm";
+import { RespondentLandingHero } from "@/components/composer/edu/intake/RespondentLandingHero";
 import { supabase } from "@/integrations/supabase/client";
 import { resolveQuestions } from "@/lib/quiz/composer";
 import { ROUTES } from "@/config/routes";
@@ -148,10 +149,16 @@ export function BuilderSetView({ id }: Props) {
             <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
               ← {tCommon("back_home")}
             </Link>
-            <h1 className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
-              {testSet.creator_label?.trim() || t("fallback_heading")}
-            </h1>
-            <p className="mt-3 text-base text-muted-foreground sm:text-lg">
+            <div className="mt-4">
+              {/* E34 Phase 2 — senior hero replaces the bare h1.
+                  See src/components/composer/edu/intake/RespondentLandingHero.tsx
+                  for the 3-line copy rationale (eyebrow / heading / trust). */}
+              <RespondentLandingHero
+                creatorLabel={testSet.creator_label}
+                collectsResponses={testSet.collects_responses}
+              />
+            </div>
+            <p className="mt-4 text-sm text-muted-foreground">
               {t("questions_emoji_intake", {
                 n: resolved.questions.length,
                 threshold: testSet.passing_threshold,
@@ -173,7 +180,6 @@ export function BuilderSetView({ id }: Props) {
     );
   }
 
-  const heading = testSet.creator_label?.trim() || t("fallback_heading");
   const sourcesLine =
     testSet.source_pack_slugs && testSet.source_pack_slugs.length > 0
       ? t(testSet.source_pack_slugs.length === 1 ? "sources_singular" : "sources_plural", {
@@ -188,13 +194,17 @@ export function BuilderSetView({ id }: Props) {
           <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
             ← {tCommon("back_home")}
           </Link>
-          <h1
-            data-testid="shared-set-heading"
-            className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl"
-          >
-            {heading}
-          </h1>
-          <p className="mt-3 text-base text-muted-foreground sm:text-lg">
+          <div className="mt-4" data-testid="shared-set-heading">
+            {/* E34 Phase 2 — same hero as the edu intake path so the
+                visual experience is consistent. testid kept on the
+                wrapper for back-compat with shared-set.spec.ts TC-01,
+                which asserts `getByTestId("shared-set-heading")`. */}
+            <RespondentLandingHero
+              creatorLabel={testSet.creator_label}
+              collectsResponses={testSet.collects_responses}
+            />
+          </div>
+          <p className="mt-4 text-sm text-muted-foreground">
             <span data-testid="shared-set-question-count" aria-label={t("questions_count_aria")}>
               {t("questions_emoji", { n: resolved.questions.length })}
             </span>
