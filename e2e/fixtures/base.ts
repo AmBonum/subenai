@@ -14,6 +14,7 @@ import { MarketingHomePage } from "../poms/marketing/HomePage";
 import { AboutPage } from "../poms/marketing/AboutPage";
 import { ContactPage } from "../poms/marketing/ContactPage";
 import { SchoolsPage } from "../poms/marketing/SchoolsPage";
+import { SchoolsDpaPage } from "../poms/marketing/SchoolsDpaPage";
 import { SupportPage } from "../poms/marketing/SupportPage";
 import { SponsorsPage } from "../poms/marketing/SponsorsPage";
 import { ManageSupportPage } from "../poms/marketing/ManageSupportPage";
@@ -78,6 +79,7 @@ type Fixtures = {
   about: AboutPage;
   contact: ContactPage;
   schools: SchoolsPage;
+  schoolsDpa: SchoolsDpaPage;
   support: SupportPage;
   sponsors: SponsorsPage;
   manageSupport: ManageSupportPage;
@@ -120,6 +122,9 @@ export const test = base.extend<Fixtures>({
   },
   schools: async ({ page }, use) => {
     await use(new SchoolsPage(page));
+  },
+  schoolsDpa: async ({ page }, use) => {
+    await use(new SchoolsDpaPage(page));
   },
   support: async ({ page }, use) => {
     await use(new SupportPage(page));

@@ -63,14 +63,22 @@ test.describe("/schools — senior marketing landing (E19)", () => {
     await expect(schools.workflowStepHeading(4)).toContainText("Krok 4");
   });
 
-  test("GDPR card surfaces the DPA callout as a first-class CTA (mailto)", async ({ schools }) => {
+  test("GDPR card surfaces the DPA callout as a first-class CTA", async ({ schools }) => {
+    // E40 — the CTA target depends on the build-time feature flag
+    // `VITE_DPA_FLOW_ENABLED`. Production has it ON → internal link to
+    // `/schools/dpa`. Dev / CI without the env var → legacy mailto
+    // fallback. Both states are valid by design (the fallback ships so
+    // /schools never has a dead button while we wait on legal review),
+    // so this spec accepts EITHER href and locks the other invariants:
+    // the box renders, the link is visible, the URL is one of the two
+    // sanctioned shapes. The dedicated /schools/dpa form happy-path is
+    // tested in `schools-dpa.spec.ts`.
     await schools.open();
     await expect(schools.gdprCard).toBeVisible();
     await expect(schools.dpaBox).toBeVisible();
     await expect(schools.dpaLink).toBeVisible();
     const href = await schools.dpaLink.getAttribute("href");
-    expect(href).toMatch(/^mailto:/);
-    expect(href).toContain("DPA");
+    expect(href).toMatch(/^(mailto:.*DPA|\/schools\/dpa)/);
   });
 
   test("FAQ accordion replaces the prose wall — both categories visible, click toggles open", async ({
