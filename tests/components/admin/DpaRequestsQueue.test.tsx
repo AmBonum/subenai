@@ -112,4 +112,11 @@ describe("DpaRequestsQueue", () => {
     await user.click(screen.getByTestId("dpa-queue-anonymise-row-1"));
     expect(mutateAnonymise).not.toHaveBeenCalled();
   });
+
+  it("exposes the CSV export button (enabled when there's at least one filtered row)", () => {
+    render(<DpaRequestsQueue />);
+    const btn = screen.getByTestId("dpa-queue-export-csv");
+    expect(btn).toBeInTheDocument();
+    expect(btn).not.toBeDisabled();
+  });
 });

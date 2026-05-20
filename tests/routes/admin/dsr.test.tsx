@@ -45,4 +45,22 @@ describe("/admin/dsr", () => {
       expect(updates[0].patch.status).toBe("completed");
     });
   });
+
+  it("exposes the new search input + CSV export button (parity with /admin/dpa-requests)", () => {
+    render(<Page />);
+    expect(screen.getByTestId("dsr-queue-search")).toBeInTheDocument();
+    expect(screen.getByTestId("dsr-queue-export-csv")).toBeInTheDocument();
+  });
+
+  it("search filters rows by requester email substring", async () => {
+    render(<Page />);
+    const seededRow = screen.getByTestId("dsr-queue-row-dsr_001");
+    expect(seededRow).toBeInTheDocument();
+    fireEvent.change(screen.getByTestId("dsr-queue-search"), {
+      target: { value: "zzz_no_such_email_zzz" },
+    });
+    await waitFor(() => {
+      expect(screen.queryByTestId("dsr-queue-row-dsr_001")).not.toBeInTheDocument();
+    });
+  });
 });

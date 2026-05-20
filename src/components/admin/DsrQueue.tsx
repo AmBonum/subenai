@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Check, X, Clock } from "lucide-react";
+import { Check, X, Clock, FileDown } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -23,6 +24,7 @@ import {
 import { useAdminDSRQueue, useUpdateDSRStatus } from "@/lib/admin/queries";
 import type { DSRRequest, DSRType } from "@/lib/platform/types";
 import { classifyDsrSla, daysRemaining, type DsrSlaVariant } from "@/lib/admin/dsr-sla";
+import { exportToCSV } from "@/lib/admin/export";
 import { tFor } from "@/i18n/governance";
 
 const STATUSES: DSRRequest["status"][] = ["open", "in_progress", "completed", "rejected"];
@@ -48,14 +50,20 @@ export function DsrQueue() {
   const dsr = useMemo(() => dsrQuery.data ?? [], [dsrQuery.data]);
   const [status, setStatus] = useState<string>("all");
   const [type, setType] = useState<string>("all");
+  const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
+    const needle = search.trim().toLowerCase();
     return dsr.filter((d) => {
       if (status !== "all" && d.status !== status) return false;
       if (type !== "all" && d.type !== type) return false;
+      if (needle) {
+        const haystack = `${d.requester_email} ${d.note ?? ""}`.toLowerCase();
+        if (!haystack.includes(needle)) return false;
+      }
       return true;
     });
-  }, [dsr, status, type]);
+  }, [dsr, status, type, search]);
 
   const now = new Date();
 
@@ -73,10 +81,38 @@ export function DsrQueue() {
     );
   };
 
+  const onExport = () => {
+    // GDPR Art. 12(3) — controller must respond to DSRs "without undue
+    // delay and in any event within one month". Auditors / DPOs need
+    // historical visibility on response times to prove compliance.
+    // Export the current filtered view (date / status / type / search).
+    exportToCSV(
+      filtered,
+      [
+        { key: "id", label: t("csv_id") },
+        { key: "created_at", label: t("csv_created") },
+        { key: "requester_email", label: t("csv_requester") },
+        { key: "type", label: t("csv_type") },
+        { key: "status", label: t("csv_status") },
+        { key: "note", label: t("csv_note") },
+      ],
+      `dsr-requests-${new Date().toISOString().slice(0, 10)}`,
+    );
+    toast.success(t("toast_exported", { count: filtered.length }));
+  };
+
   return (
     <div className="space-y-4" data-testid="dsr-queue-root">
       <Card className="border-border/60">
         <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t("search_placeholder")}
+            aria-label={t("search_placeholder")}
+            data-testid="dsr-queue-search"
+            className="w-full sm:max-w-xs"
+          />
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger
               className="w-full sm:w-[200px]"
@@ -111,6 +147,18 @@ export function DsrQueue() {
               ))}
             </SelectContent>
           </Select>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onExport}
+            disabled={filtered.length === 0}
+            data-testid="dsr-queue-export-csv"
+            className="sm:ml-auto"
+          >
+            <FileDown className="mr-1.5 size-4" />
+            {t("action_export_csv")}
+          </Button>
         </CardContent>
       </Card>
 

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { RotateCcw, EyeOff, Download } from "lucide-react";
+import { RotateCcw, EyeOff, Download, FileDown } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +31,7 @@ import {
   type DpaRequestStatus,
   type DpaEmailStatus,
 } from "@/lib/admin/queries";
+import { exportToCSV } from "@/lib/admin/export";
 import { tFor } from "@/i18n/governance";
 
 const STATUSES: DpaRequestStatus[] = ["pending", "delivered", "signed", "cancelled"];
@@ -125,6 +126,32 @@ export function DpaRequestsQueue() {
     );
   };
 
+  const onExport = () => {
+    // GDPR Art. 30 ("records of processing activities") + Art. 28(9)
+    // ("written agreement") — operator may need to show counsel /
+    // supervisory authority the full DPA queue with timestamps + email
+    // delivery status. Export the current filtered view so the operator
+    // can scope by date/status before exporting (Excel-friendly: BOM +
+    // RFC 4180 quoting handled by exportToCSV).
+    exportToCSV(
+      filtered,
+      [
+        { key: "id", label: t("csv_id") },
+        { key: "created_at", label: t("csv_created") },
+        { key: "school_name", label: t("csv_school") },
+        { key: "contact_name", label: t("csv_contact_name") },
+        { key: "contact_email", label: t("csv_contact_email") },
+        { key: "dpa_version", label: t("csv_version") },
+        { key: "status", label: t("csv_status") },
+        { key: "email_status", label: t("csv_email_status") },
+        { key: "email_error", label: t("csv_email_error") },
+        { key: "anonymized_at", label: t("csv_anonymized_at") },
+      ],
+      `dpa-requests-${new Date().toISOString().slice(0, 10)}`,
+    );
+    toast.success(t("toast_exported", { count: filtered.length }));
+  };
+
   return (
     <div className="space-y-4" data-testid="dpa-queue-root">
       <Card className="border-border/60">
@@ -171,6 +198,18 @@ export function DpaRequestsQueue() {
               ))}
             </SelectContent>
           </Select>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onExport}
+            disabled={filtered.length === 0}
+            data-testid="dpa-queue-export-csv"
+            className="sm:ml-auto"
+          >
+            <FileDown className="mr-1.5 size-4" />
+            {t("action_export_csv")}
+          </Button>
         </CardContent>
       </Card>
 
