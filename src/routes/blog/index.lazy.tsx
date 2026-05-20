@@ -14,6 +14,7 @@ import {
 import { isPillarSlug } from "@/lib/blog/pillar-slugs";
 import { useBlogPostList } from "@/lib/blog/queries";
 import { buildBlogIndexJsonLd } from "@/lib/seo/blog-jsonld";
+import { formatArticleCount } from "@/lib/blog/slovak-plurals";
 import { useState } from "react";
 
 export const Route = createLazyFileRoute("/blog/")({
@@ -220,24 +221,35 @@ function BlogIndexPage() {
           PillarsSection owns its open/closed state. */}
       {pillars.length > 0 && normalizedSearch.length < 2 && <PillarsSection pillars={pillars} />}
 
-      {/* Cluster grid (filter chips now live in ScopeBar above) */}
+      {/* Cluster grid (filter chips now live in ScopeBar above).
+          Heading swaps to a search-results frame the moment the user
+          starts searching (≥2 chars — same threshold the empty-state
+          + pillars-hide flows already use). Otherwise it stays the
+          editorial "najnovšie články" + "podľa témy" subheading. */}
       {clusters.length > 0 && (
         <section
           className="mt-12 border-t border-border pt-10 md:mt-16 md:pt-12"
           data-testid="blog-index-clusters-section"
+          data-mode={normalizedSearch.length > 1 ? "search" : "latest"}
         >
           <div>
             <h2
               className="text-2xl font-bold tracking-tight md:text-3xl"
               data-testid="blog-index-clusters-heading"
             >
-              {t("latest_heading")}
+              {normalizedSearch.length > 1
+                ? t("search_results_heading", { query: searchQuery.trim() })
+                : t("latest_heading")}
             </h2>
             <p
               className="mt-2 text-sm text-muted-foreground"
               data-testid="blog-index-clusters-subheading"
             >
-              {t("category_heading")}
+              {normalizedSearch.length > 1
+                ? t("search_results_subheading", {
+                    count: formatArticleCount(filteredClusters.length),
+                  })
+                : t("category_heading")}
             </p>
           </div>
           {emptyKind !== null ? (

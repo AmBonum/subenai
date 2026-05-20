@@ -80,7 +80,7 @@ These integration tests treat the whole route component as one unit (route + laz
 
 **When** the list resolves
 **Then** `blog-index-pillars-section` is visible
-**and** `blog-index-pillars-heading` contains "základní sprievodcovia"
+**and** `blog-index-pillars-heading` contains "sprievodcovia digitálnou bezpečnosťou"
 **and** for every pillar slug there is a `blog-pillar-card-<slug>`
 **and** every pillar card has a `blog-post-card-pillar-badge-<slug>` reading "sprievodca"
 **and** the pillar count subhead matches the visible count (e.g. "3 hĺbkových sprievodcov")

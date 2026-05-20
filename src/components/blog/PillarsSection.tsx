@@ -46,18 +46,32 @@ export function PillarsSection({ pillars }: PillarsSectionProps) {
           data-testid="blog-index-pillars-toggle"
           aria-label={open ? t("pillars_toggle_hide") : t("pillars_toggle_show")}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <ChevronDown
               aria-hidden="true"
               className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180"
             />
-            <div>
+            <div className="min-w-0 flex-1">
               <h2
                 className="text-2xl font-bold tracking-tight md:text-3xl"
                 data-testid="blog-index-pillars-heading"
               >
                 {t("pillar_heading")}
               </h2>
+              {/* Mobile-only count under the heading. Lives inside the
+                  text column so a 3-line wrapped heading (e.g.
+                  "sprievodcovia digitálnou bezpečnosťou") doesn't get
+                  shoulder-checked off-screen by the trailing trailing
+                  count span — the prior layout did exactly that, the
+                  span had `whitespace-nowrap` and pushed the heading
+                  off the viewport. Desktop renders the count on the
+                  right via the sibling span below. */}
+              <p
+                className="mt-1 text-xs text-muted-foreground md:hidden"
+                data-testid="blog-index-pillars-subheading-mobile"
+              >
+                {formatPillarCount(pillars.length)}
+              </p>
               <p
                 className="mt-1 hidden max-w-2xl text-sm text-muted-foreground md:block"
                 data-testid="blog-index-pillars-description"
@@ -72,18 +86,22 @@ export function PillarsSection({ pillars }: PillarsSectionProps) {
           >
             {formatPillarCount(pillars.length)}
           </span>
-          <span
-            className="whitespace-nowrap text-xs text-muted-foreground md:hidden"
-            data-testid="blog-index-pillars-subheading-mobile"
-          >
-            {formatPillarCount(pillars.length)}
-          </span>
         </CollapsibleTrigger>
 
-        {/* forceMount keeps pillar cards in the DOM (with `hidden`
-            attribute when closed) so search engines + assistive tech
-            still see them when the user has the section collapsed. */}
-        <CollapsibleContent forceMount data-testid="blog-index-pillars-content">
+        {/* forceMount keeps pillar cards in the DOM when closed so
+            search-engine crawlers and assistive tech still index the
+            links. In forceMount mode Radix does NOT set the `hidden`
+            attribute itself — it delegates visibility to CSS — so we
+            add `data-[state=closed]:hidden` to actually hide the list
+            when the user collapses the section. Without that class the
+            toggle would flip data-state but nothing would change
+            visually (regression: pre-2026-05-20 fix shipped without
+            this class, click "did nothing"). */}
+        <CollapsibleContent
+          forceMount
+          className="data-[state=closed]:hidden"
+          data-testid="blog-index-pillars-content"
+        >
           <ul
             className="mt-6 grid gap-6 md:mt-8 md:grid-cols-2 lg:grid-cols-3"
             data-testid="blog-index-pillars-list"
