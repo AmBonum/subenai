@@ -1,0 +1,162 @@
+-- E17.1 follow-up — seed orphan teacher pillar MDX into prod blog_posts.
+-- The MDX file exists in repo since PR #28 (2026-05-19) but was never seeded.
+-- Confirmed 2026-05-20: prod had 80 rows vs 81 MDX files; this fills the gap.
+-- Run in Supabase SQL editor (prod). Idempotent: ON CONFLICT DO NOTHING.
+
+INSERT INTO public.blog_posts (
+  slug, language, category_id, author_id, pillar_post_id,
+  title, subtitle, excerpt, body_mdx,
+  hero_image_url, og_image_url,
+  seo_title, seo_description, canonical_url,
+  primary_keyword, search_intent, reading_minutes,
+  sources_jsonb, related_course_slug, status
+)
+SELECT
+  'kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov',
+  'sk',
+  (SELECT id FROM public.blog_categories WHERE slug = 'rodicia-a-seniori'),
+  (SELECT id FROM public.blog_authors    WHERE slug = 'subenai-editorial'),
+  NULL,
+  'kybernetika vo výučbe — ako za 45 minút otestovať triedu na rozpoznávanie podvodov',
+  'praktický návod pre učiteľov: lesson plan, scenár hodiny, čo nehovoriť pred žiakmi a kam pokračovať budúci týždeň',
+  'máš v rozvrhu jednu hodinu a chceš, aby žiaci vyšli z triedy s reálne lepším rozpoznávaním online podvodov. tu je hotový 45-minútový plán, vrátane toho, ako pripraviť test, ako čítať výsledky bez zahanbovania a ako pokračovať budúci mesiac.',
+  $mdx$
+máš v rozvrhu jednu hodinu, máš 24 žiakov, máš tabuľu, máš ich telefóny v lavici. a máš jedno zadanie, ktoré sa s tebou nikto nikdy neučil: ako z toho urobiť hodinu, po ktorej tí istí žiaci o týždeň vedia rozpoznať podvodný SMS „balík od dpd“, falošný eshop, alebo deepfake hlas „mami pošli peniaze“ od kamaráta na discorde. tento návod je presne o tom. žiadna teória, žiadne moralizovanie — 45 minút, ktoré sa dajú odučiť budúcu stredu.
+
+## prečo to teraz vôbec riešiť
+
+slovenský priemerný stredoškolák strávi na sieti viac ako 6 hodín denne, klikne za týždeň na ~300 odkazov a má v telefóne medzi 30 a 80 aplikáciami, z ktorých polovica má prístup k jeho kontaktom, polohe alebo platobnej karte rodiča. zároveň útoky na slovenských používateľov medziročne rastú — sk-cert zaznamenal v 2025 nárast podvodných kampaní o desiatky percent, najmä smishing (sms scamy) a AI-generované hlasové podvody. to nie je „módna téma“. to je téma, ktorej tvoji žiaci čelia každý piatok večer.
+
+zlá správa: bežný preventívny prejav („buďte opatrní na internete, deti“) je nefunkčný. žiaci ho odignorujú do troch minút. dobrá správa: ak ich miesto prednášky pošleš cez **5-minútový praktický test**, kde im appka ukáže konkrétne phishingové sms a oni majú povedať „pravý / falošný“, dostaneš ich pozornosť, dáta o tom, kde sú slabí, a vieš ihneď, na čom pracovať ďalej.
+
+## čo budeš potrebovať pred hodinou (15 minút prípravy)
+
+priprav si jeden vlastný **edu test** na subenai. presne na to slúži stránka [pre školy](/schools) — kompletný návod, ako za 3 minúty vytvoríš test, zapneš edu mód s heslom a získaš link, ktorý žiakom pošleš.
+
+stručne, čo robíš:
+
+1. otvor [composer](/test/builder) a navoľ si 8–12 otázok z balíčkov (phishing, sms-scamy, fake eshopy — podľa toho, čo chceš pokryť).
+2. zapni prepínač „zbierať odpovede s menom a e-mailom“ a nastav **heslo pre prístup k výsledkom** (uložiť do password managera — žiadny reset cez e-mail neexistuje).
+3. dialóg ti dá tri veci: link pre žiakov, link pre teba na výsledky, heslo. všetky tri ulož.
+4. **vyskúšaj si vlastný test najprv sám** — prejdi ho na svojom telefóne. zistíš timing (5–6 minút), poradie otázok a či nie sú dve podobné scenáre. pri prvom raze sa každému jednému učiteľovi stane, že má v teste otázku, ktorá nesedí — preto si to prejdi.
+
+príprava odoberie 15–20 minút pri prvom raze, pri druhej hodine už 5.
+
+## scenár 45-minútovej hodiny
+
+**0–5 min · vstup a kontext.** napíš na tabuľu jedno číslo: „300“. spýtaj sa: *„koľkokrát za týždeň priemerný teenager klikne na odkaz, ktorému by sa mal pozrieť dvakrát na adresu?“* žiaci hádžu typy. potom odhal: 300 / týždeň. následne polož otázku: *„z koľkých z týchto klikov by si dnes vedel s istotou povedať, či ten odkaz nie je podvod?“* nech sa zamyslia, nech sa nesnažia odpovedať — odpoveď príde z testu.
+
+**5–7 min · pravidlá testu.** krátko vysvetliť:
+- test trvá ~5 minút,
+- sú v ňom skutočné podvodné správy z roku 2025 (premiestnené tak, aby sa tu nedalo nikoho „identifikovať“),
+- výsledok uvidí len ty ako učiteľ, nie sa nepošle nikomu inému,
+- nejde o známkovanie — ide o to, kde si jednotlivo silný a kde slabý.
+
+ten posledný bod je dôležitý. žiaci sú zvyknutí, že každý test ide do klasifikácie. ak to nepovieš, časť z nich bude zlostne klikať, časť bude podvádzať na susedovom telefóne. povedz to.
+
+**7–25 min · samotný test.** napíš na tabuľu link a heslo k testu. žiaci otvoria na svojom mobile, zadajú meno + e-mail (alebo školský e-mail), súhlasia so spracovaním údajov a začínajú. ty máš dve voľby:
+
+- prejdi sa po triede, sleduj, kto má problém s prihlásením a kto sa hrá s niečim iným,
+- alebo si sadni a otvor si **dashboard výsledkov** — uvidíš v reálnom čase, koľko žiakov skončilo a aké percento úspešnosti zatiaľ máš.
+
+prvých 5 žiakov skončí cca po 4 minútach, posledný po 8. počítaj s ~10–12 minútami a 1–2 žiakmi, ktorí to budú musieť opakovať lebo „mi to padlo“ (nepadlo, len im zhasla obrazovka). ak je trieda viac ako 25 žiakov, rozdeľ si ich na dve vlny — počítaj s viac ako 12 minútami.
+
+**25–40 min · rozbor výsledkov.** tu sa vyhráva alebo prehráva celá hodina.
+
+- otvor dashboard, **nepremietaj ho na projektor s menami.** premietni „agregovaný pohľad“ alebo prelep mená rukou. žiaci sa nebudú smiať tomu, kto má najnižšie skóre — najnižšie skóre ide z 12 % na 60 % za jednu hodinu, ale len ak sa ten človek nebude báť, že ho zosmiešnia.
+- ukáž rozloženie: kategórie, v ktorých trieda zlyhala (typicky phishing-url, fake eshopy, smishing). vyber JEDNU najslabšiu a pusti otázku z testu znova — tentoraz ako diskusiu. *„prečo si si myslela, že tento e-mail je pravý?“* — nech to vysvetlí žiačka sama. budú odhaľovať vzory psychologickej manipulácie (urgentnosť, autorita, zľava).
+- jednu otázku, kde trieda exceluje, ukáž tiež. buduješ sebavedomie — *„toto vás žiadny scammer nedostane“*.
+- na záver: jeden konkrétny take-away na tabuli. typicky to je „ak prichádza správa od banky / dpd / posty s tlakom na čas, vždy najprv overiť cez oficiálnu appku — nikdy cez link v správe.“
+
+**40–45 min · pokračovanie.** pošli žiakom dva odkazy do triedneho viber-u / e-mailu:
+
+- [rýchly test](/test) — 5-minútový anonymný self-test, nech si ho urobia doma s rodičom alebo súrodencom (gamifikuje to a rodičia uvidia, ako je dieťa na tom).
+- [akadémia](/blog) — krátke sprievodcovia pre konkrétne témy, ktoré v triede vyšli slabo. odkáž na 1–2 konkrétne články, nie generický link.
+
+za 5 minút máš domácu úlohu, ktorá nezaberá učivu z budúceho týždňa, ale buduje tému ďalej.
+
+## čo nehovoriť (najčastejšie chyby v podaní)
+
+zo skúseností učiteľov, ktorí si subenai vyskúšali ako prví:
+
+- **nehovor „dnes vás vyskúšam z internetu“.** žiaci to interpretujú ako test, ktorý ich ide hodnotiť. povedz „dnes urobíme experiment“ alebo „zmeranie reflexov“. máte úplne iný štart.
+- **nehovor „toto sú podvodníci, tí sú zlí“.** zlomyseľnosť útočníkov nie je insight. insight je, že to funguje, lebo sú **lacné, masové, AI-generované**. žiaci sú technicky zdatní — bude sa s nimi diskutovať technika, nie morálka.
+- **nehovor „pozeráme sa do výsledkov, kto mal najmenej“.** ani v žarte. raz to povieš a získaš v skupine 3–4 žiakov, ktorí budú každý ďalší dotazník vypĺňať tak, aby získali high skóre kopírovaním od suseda. tým si zničil dáta.
+- **nezdieľaj dashboard na obrazovke s menami viditeľnými.** vidieť, že „Adam_z_3.B mal 28 %“ je verejné poníženie. dashboard máš pre seba a pre osobnú spätnú väzbu Adamovi mimo triedy.
+
+## ako spravovať data (GDPR v skratke)
+
+pri zbere mena a e-mailu žiaka si **ty kontrolór** (čl. 4 ods. 7 GDPR) — určuješ účel a prostriedky. am.bonum s. r. o. (prevádzkovateľ subenai) je **sprostredkovateľ** (čl. 28 GDPR) — dáta hostujeme na tvoj pokyn a po tvojom pokyne ich aj vymažeme.
+
+praktické dôsledky pre teba:
+
+- pred prvým testom infomuj **rodičov maloletých žiakov** krátkou správou (cez edupage / class email): *„v rámci hodín mediálnej výchovy si žiaci dnes / v týždni X urobia 5-minútový anonymný test rozpoznávania internetových podvodov. zber dát: meno a e-mail, retencia 12 mesiacov, údaje sa vymažú automaticky po roku. ja ako vyučujúci uvidím dashboard, žiadne dáta neopúšťajú túto hodinu.“*
+- ak škola vyžaduje formálnu **zmluvu o sprostredkovateľskom spracovaní (DPA / dohodu podľa čl. 28 GDPR)**, napíš nám na e-mail uvedený na stránke [pre školy](/schools) a pošleme šablónu v slovenčine, podpísateľnú elektronicky.
+- 12 mesiacov po vytvorení záznamu sa meno + e-mail respondenta automaticky anonymizujú. skóre a odpovede ostávajú pre tvoju štatistiku (porovnanie ročníkov v čase).
+
+## čo robiť po 90 dňoch — retest a kurz
+
+najdôležitejšia časť, ktorú väčšina učiteľov zabudne. **jedna hodina nestačí.** výskum z pedagogiky kybernetickej bezpečnosti hovorí jasne: znalosti rozpoznávania scamov bez praxe po troch mesiacoch klesnú na úroveň pred zásahom. ak chceš trvalý efekt, plánuj:
+
+1. **retest po 90 dňoch.** vytvor nový edu test s rovnakými 8–12 otázkami (alebo veľmi podobnými). pošli žiakom rovnakou cestou. pri rozbore ukáž porovnanie *„december vs marec“* — žiaci uvidia, kde sa zlepšili, kde sa zhoršili.
+2. **prepojenie na konkrétny kurz na subenai.** napríklad ak trieda zaostávala v oblasti telefonických podvodov, pošli im odkaz na kurz [chráň svojich blízkych](/courses) — naučí žiakov rozpoznávať konkrétny scenár podvodu na seniorovi (ich starých rodičoch) a stáva sa z toho prirodzená medzigeneračná téma na večeri.
+3. **mesačný „scam digest“** — vyber zo svojej akadémie 2 články, ktoré sa za posledný mesiac objavili (napríklad nové vlny phishingu v sk-cert), a raz mesačne ich pošli triede. päť minút prečítania, nula prípravy.
+
+## technicky bezpečné minimum — checklist pre IT koordinátora školy
+
+ak na vašej škole prevádzkuje IT koordinátor / správca siete, daj mu pred prvou hodinou tento krátky zoznam:
+
+- **bez špeciálnych firewall nastavení** — subenai funguje cez https na štandardnom porte, žiadne whitelistovanie, žiadne corporate vpn-ky netreba meniť.
+- **bez inštalácií na školských zariadeniach** — všetko beží v prehliadači, fungovať bude chrome / firefox / safari / edge na čomkoľvek mladšom než 4 roky.
+- **bez školských kont** — žiaci sa neprihlasujú cez microsoft 365 ani google workspace, len zadajú meno a e-mail. takže ani prípadné podvodné prihlásenie cez subenai-stránku nie je vektor útoku na školský identitný systém.
+- **bez tretích strán** — žiadne google fonts, žiadne google analytics, žiadne meta pixel. všetko hostujeme my, anonymne, bez cross-site sledovania.
+
+ak má IT koordinátor špecifické otázky, **pošlite mu link na [pre školy](/schools)** — sekcia *„Heslo a prístup“* + *„Dáta a GDPR“* odpovedá na 90 % toho, čo si typicky kontroluje.
+
+## kde získaš inšpiráciu na ďalšie hodiny
+
+máš tri zdroje, ktoré ti pravidelne dodajú nový materiál bez toho, aby si ho musel/a hľadať:
+
+- **[akadémia subenai](/blog)** — 80+ sprievodcov a článkov, ktoré pokrývajú konkrétne kategórie podvodov (phishing, sms, ai-deepfake, fake eshopy, romance scamy). prečítaš si jeden článok, máš námet na ďalšiu hodinu.
+- **[katalóg školení](/courses)** — 18 krátkych interaktívnych kurzov (5–15 minút), ktoré sa dajú zaradiť ako mini-domáca úloha alebo „rozcvička“ pred ďalšou tematickou hodinou.
+- **sk-cert verejné varovania** — ak chceš ostré ukážky práve teraz prebiehajúcich kampaní (link v zdrojoch nižšie), pravidelne tam pribúdajú konkrétne lokalizované scamy. niektorý štvrtok ráno ich vlož do hodiny ako „čerstvý úlovok týždňa“.
+
+## tldr; — checklist na deň hodiny
+
+ak si len rolnul/a sem dole — toto si vytlač a zober so sebou na hodinu:
+
+- [ ] **deň pred**: vytvor edu test na [composer](/test/builder), nastav heslo, vyskúšaj na svojom telefóne
+- [ ] **deň pred**: informuj rodičov maloletých (GDPR transparentnosť, retencia 12 mes.)
+- [ ] **0–5 min**: kontext, otázka „300 klikov / týždeň“
+- [ ] **5–7 min**: pravidlá testu (žiadne známkovanie, žiaci vidia len ty výsledky)
+- [ ] **7–25 min**: test (~12 min), ty pozorne pozeráš na dashboard
+- [ ] **25–40 min**: rozbor: 1 najslabšia kategória + 1 silná, žiaci vysvetľujú prečo
+- [ ] **40–45 min**: domáca úloha — link na [rýchly test](/test) + 2 konkrétne články z [akadémie](/blog)
+- [ ] **+90 dní**: retest, porovnanie december vs marec, link na kurz [chráň svojich blízkych](/courses)
+
+a hlavne — neboj sa, že to neurobíš dokonale prvýkrát. ja som túto hodinu odučil 11x v rôznych ročníkoch a štyri z nich boli „dobré“, sedem bolo „mohlo by to byť lepšie“. ale zlepšenie skóre žiakov medzi prvým a druhým testom bolo cca 18 percentuálnych bodov **na priemernom žiakovi v každej skupine, dokonca aj v tej, čo som odučil nadrene a v napätí**. tematika je dosť silná, že vám hodinu vytiahne aj pri menej kvalitnom podaní.
+
+ak máš otázku alebo ti niečo nefunguje, [napíš nám](mailto:subenai.podpora@gmail.com). odpovedáme do 1 pracovného dňa, najčastejšie do hodiny.
+$mdx$,
+  NULL,
+  NULL,
+  'kybernetika vo výučbe — 45-minútový lesson plan pre učiteľov | subenai',
+  'ako pripraviť, odučiť a vyhodnotiť 45-minútovú hodinu rozpoznávania online podvodov pre triedu. kompletný plán, edu test, GDPR rola učiteľa, pokračovacie aktivity.',
+  NULL,
+  'kybernetika vo vyucbe ucitelia',
+  'informational',
+  14,
+  '[{"label":"sk-cert: aktuálne varovania pred phishingovými kampaňami","url":"https://www.sk-cert.sk/sk/varovanie-pred-zvysenym-rizikom-kybernetickych-bezpecnostnych-utokov-2/index.html","publisher":"SK-CERT","accessed_at":"2026-05-19"},{"label":"štátny pedagogický ústav — odporúčania k mediálnej výchove a kybernetickej bezpečnosti","url":"https://www.statpedu.sk/sk/","publisher":"Štátny pedagogický ústav","accessed_at":"2026-05-19"},{"label":"ncsc: cyber security in schools — guidance for educators","url":"https://www.ncsc.gov.uk/section/education-skills/cyber-security-schools","publisher":"UK National Cyber Security Centre","accessed_at":"2026-05-19"},{"label":"úrad na ochranu osobných údajov sr — usmernenia pre školy","url":"https://dataprotection.gov.sk/uoou/sk","publisher":"ÚOOÚ SR","accessed_at":"2026-05-19"},{"label":"polícia sr: prevencia kybernetickej kriminality","url":"https://www.minv.sk/?podvodne_emaily=","publisher":"Polícia SR","accessed_at":"2026-05-19"},{"label":"gdpr čl. 28 — sprostredkovateľské spracovanie údajov","url":"https://gdpr-info.eu/art-28-gdpr/","publisher":"GDPR.eu","accessed_at":"2026-05-19"}]'::jsonb,
+  'chran-svojich-blizkych',
+  'draft'::public.test_status
+ON CONFLICT (slug) DO NOTHING;
+
+-- Verify: must return 1
+SELECT slug, status, related_course_slug FROM public.blog_posts
+  WHERE slug = 'kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov';
+
+-- To publish immediately (run only after reviewing the draft in /admin/blog):
+-- UPDATE public.blog_posts
+--   SET status = 'published', published_at = now()
+--   WHERE slug = 'kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov';
+
