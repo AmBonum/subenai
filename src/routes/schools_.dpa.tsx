@@ -25,7 +25,29 @@ export const Route = createFileRoute("/schools_/dpa")({
       { name: "robots", content: "noindex, nofollow" },
       { name: "language", content: "sk-SK" },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/schools/dpa` }],
+    links: [
+      { rel: "canonical", href: `${SITE_ORIGIN}/schools/dpa` },
+      // Preload the Noto Sans TTFs the DPA PDF renderer (E40.3) will
+      // ask for at form-submit time. ~1.1 MB combined — fetching them
+      // while the user is still typing avoids a noticeable stall when
+      // they click "Vyhotoviť DPA". crossorigin=anonymous is required
+      // for the preload to be matched against the eventual react-pdf
+      // fetch (which is also same-origin anonymous).
+      {
+        rel: "preload",
+        as: "font",
+        type: "font/ttf",
+        href: "/fonts/NotoSans-Regular.ttf",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        as: "font",
+        type: "font/ttf",
+        href: "/fonts/NotoSans-Bold.ttf",
+        crossOrigin: "anonymous",
+      },
+    ],
   }),
   component: SchoolsDpaPage,
 });
