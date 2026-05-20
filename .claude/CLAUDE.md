@@ -11,6 +11,52 @@
 - **Verify before claiming done.** Before saying "done" / "fixed" /
   "passing", run the affected suites and paste the result.
 
+## Audit test user (every session — production Supabase)
+
+When a session needs to drive `/app/*` routes through the browser (live
+responsive audits, smoke checks, UI verification), use this pre-seeded
+account. Do NOT sign up a new one — production Supabase enforces email
+confirmation, the rate limit eats fresh attempts after a few tries, and
+disposable inboxes lose the confirmation token. The seeded account
+bypasses all of that.
+
+```
+email:    audit-bot@subenai.test
+password: AuditBot-2026-secure
+user_id:  00000000-0000-4000-8000-0000a0d17b07
+role:     user (NOT admin)
+```
+
+**To sign in from a browser/agent context**: navigate to `/login`, fill
+the two inputs, click submit. The session lands you in `/app` (the user
+is pre-onboarded via `profile_preferences.onboarded_at`).
+
+**To re-seed (idempotent, run via Supabase dashboard SQL editor)**:
+`supabase/scripts/seed-audit-test-user.sql` — `ON CONFLICT` merges, so
+re-running is safe.
+
+**Scope**: `/app/*` and every public route. **NOT** `/admin/*` — admin
+additionally requires `aal2` (TOTP). To extend coverage, enrol a TOTP
+factor on this account via UI, then store the secret in 1Password and
+add a note here. The seed script has a commented-out `INSERT INTO
+public.user_roles` snippet for the admin role promotion. PR #72 already
+shipped preventive `min-w-0` to the admin shell so the most likely
+overflow class is covered even without runtime verification.
+
+**Never put these creds in `.env`** that is checked into git, in test
+fixtures, or in commit messages. They live in this file (CLAUDE.md is
+already a project-instructions file scoped to local Claude Code) plus
+inside the dashboard. If you need a per-session shortcut for the dev
+sign-in helper, set them locally in `.env`:
+
+```bash
+VITE_DEV_TEST_USER_EMAIL=audit-bot@subenai.test
+VITE_DEV_TEST_USER_PASSWORD=AuditBot-2026-secure
+```
+
+The `.env` file is gitignored; the yellow "DEV E36 audit helper" panel
+on `/login` will then show a one-click sign-in button.
+
 ## Stack snapshot (read once, don't re-derive)
 - TanStack Start + Vite + React 19 + TS strict, file-based router in
   `src/routes/**`. App alias is `@/*` → `src/*`.
