@@ -13,6 +13,18 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > celý balík funkcionality (sponsorship, zber custom-test odpovedí, atď.)
 > kompletne otestovaný v reálnej prevádzke.
 
+### Zmenené
+- **Stránka *Cookies* — explicitne deklarované UI predvoľby a jazyk.**
+  Predtým sme niektoré drobné UI pomocníky (stav postranného panelu,
+  rozbalené piliere na blogu, zatvorený uvítací banner na dashboarde,
+  zatvorená výzva na doplnenie profilu, voľba jazyka) ukladali bez toho,
+  aby boli explicitne uvedené v zozname cookies. Teraz každý z nich má
+  vlastný riadok v tabuľke `Cookies` (jazyk pod kategóriou *Nevyhnutné*
+  ako „strictly necessary" výnimka ePrivacy, ostatné pod kategóriou
+  *Predvoľby*). Cookie banner sa znova zobrazí (verzia 1.5.0 → 1.6.0)
+  aby si mohol/mohla potvrdiť nový rozsah. Bez súhlasu s *Predvoľbami*
+  ti UI naďalej funguje, len si pri ďalšej návšteve treba znova vybrať.
+
 ## Sady testov, školenia a častejšie otázky — senior refresh
 
 Veľký refresh troch *discovery* plôch, kde noví návštevníci pristávajú

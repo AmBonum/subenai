@@ -8,7 +8,14 @@ import { ROUTES } from "@/config/routes";
 import { DocTocSidebar, type DocTocItem } from "@/components/layout/DocTocSidebar";
 import { tFor } from "@/i18n/legal";
 
-const COOKIE_ROW_KEYS = ["consent", "supabase", "prefs", "analytics", "marketing"] as const;
+const COOKIE_ROW_KEYS = [
+  "consent",
+  "supabase",
+  "locale",
+  "prefs",
+  "analytics",
+  "marketing",
+] as const;
 
 const STRIPE_ROW_KEYS = ["stripe_mid", "stripe_sid", "stripe_m", "stripe_test"] as const;
 

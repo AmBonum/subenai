@@ -291,11 +291,17 @@
           "purpose": "Anonymní Supabase relace — bez ní nelze uložit váš výsledek testu přes Row Level Security",
           "duration": "~1 hodina (auto-refresh)"
         },
+        "locale": {
+          "category": "Nezbytné",
+          "key": "subenai.locale",
+          "purpose": "Vaše volba jazyka stránky (sk / cs / en). Spadá pod „strictly necessary\" výjimku ePrivacy — bez ní bychom nemohli stránku vykreslit ve vybraném jazyce.",
+          "duration": "do smazání prohlížeče"
+        },
         "prefs": {
           "category": "Předvolby",
-          "key": "budoucí",
-          "purpose": "Zapamatování jazyka / motivu",
-          "duration": "12 měsíců"
+          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open",
+          "purpose": "Zapamatování UI předvoleb mezi návštěvami: stav postranního panelu (otevřeno/zavřeno), zda jste viděli uvítací banner na dashboardu, zda jste zavřeli nudge na doplnění profilu, zda máte v /blog otevřené seznamy pilířů. Bez těchto cookies / localStorage záznamů vám fungují všechna tlačítka, jen si při příští návštěvě musíte znovu vybrat. Jazyk (`subenai.locale`) se ukládá vždy jako nezbytný pro vykreslení stránky ve správném jazyce.",
+          "duration": "1 týden (sidebar) až 12 měsíců (ostatní) / do smazání"
         },
         "analytics": {
           "category": "Analytika",
