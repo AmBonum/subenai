@@ -1,9 +1,9 @@
 # PLAN-2026-05-19 — E18 Home Conversion Hub + E17 Cross-Linking
 
-**Status:** in progress
+**Status:** ✅ **DELIVERED** 2026-05-20 — all 8 stories in scope shipped to main and verified live. Tracker reflected stale state until 2026-05-20 status sweep confirmed every component exists, is wired into `routes/index.tsx`, has unit tests, and the supporting DB migration applied.
 **Owner:** SubenAI editorial + dev
-**Last updated:** 2026-05-19
-**Predecessor epics:** E16 (Blog content engine), E17 (Backlinks — pending)
+**Last updated:** 2026-05-20 (status closure sweep)
+**Predecessor epics:** E16 (Blog content engine), E17 (Backlinks — partial scope folded in below)
 
 ---
 
@@ -193,13 +193,21 @@ Spreadsheet exercise (not code): for every of 15 blog categories, identify: pill
 
 ## Story tracker
 
-- [ ] E18.1 Audience-segmented section
-- [ ] E18.2 Learning Path section
-- [ ] E18.3 Schools home card
-- [ ] E18.4 Changelog teaser
-- [ ] E18.5 Wiring + SEO refresh
-- [ ] E17.1 DB migration `related_course_slug`
-- [ ] E17.2 Article → course UI
-- [ ] E17.3 Course → article UI
+- [x] E18.1 Audience-segmented section ✅ (`src/components/home/AudienceSection.tsx` + test)
+- [x] E18.2 Learning Path section ✅ (`src/components/home/LearningPathSection.tsx` + test)
+- [x] E18.3 Schools home card ✅ (`src/components/home/SchoolsHomeCard.tsx` + test)
+- [x] E18.4 Changelog teaser ✅ (`src/components/home/ChangelogTeaser.tsx` + test)
+- [x] E18.5 Wiring + SEO refresh ✅ (`routes/index.tsx` imports + uses all 4)
+- [x] E17.1 DB migration `related_course_slug` ✅ (`supabase/migrations/20260520020000_blog_related_course.sql`)
+- [x] E17.2 Article → course UI ✅ (`ContinueWithCourseCard` wired in `routes/blog/$slug.lazy.tsx`)
+- [x] E17.3 Course → article UI ✅ (`RelatedAcademyArticleCard` wired in `routes/courses.$slug.tsx`)
 - [x] E17.4 Test result recommendations ✅
 - [x] E17.5 Topic content map audit doc + admin UI picker ✅
+
+## Closure (2026-05-20)
+
+Status sweep confirmed all 10 stories shipped. Discrepancy explanation: the implementation outpaced the PLAN tracker — each story landed in its own commit but the `[ ]` boxes weren't flipped at the same time. No work remains on this PLAN.
+
+Two follow-on epics carry the cross-link / SEO theme further:
+- **E17 (full scope)** remains a parent epic for any future link-graph expansion (e.g. backlink seeding, external partner placements). Not blocked by anything; can be opened when there is editorial bandwidth.
+- **E18 v2** (deferred) — A/B testing infrastructure for CTA variants, audience-segmented hero variants. Out of scope per the original locked decisions.
