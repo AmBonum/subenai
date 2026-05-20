@@ -2,7 +2,23 @@
 
 **Owner:** Claude (synthesis) — senior agent, 4-lens audit
 **Date opened:** 2026-05-20
-**Status:** 🟡 PLAN DRAFTED — awaiting project-owner decisions D1–D11 before implementation phases start
+**Status:** 🟢 DECISIONS LOCKED 2026-05-20 — owner walked D1–D11 in 3 batches; 10/11 senior defaults picked, 1 override (D3 → confidence framing for engagement). Phase 1 implementation kicks off next on `feature/E34-phase-1-drilldown-funnel`.
+
+## Locked decisions (2026-05-20 owner sign-off)
+
+| ID | Decision | Locked | Note |
+|---|---|---|---|
+| D1 | Drill-down scope | **(a) Full per-question breakdown** | Schema migration adds `answers JSONB` |
+| D2 | Funnel visibility | **(a) Server-side `intake_started_at`** | Same migration as D1 |
+| D3 | Landing copy direction | **(b) Confidence framing** | OVERRIDE — owner picked provocative for engagement |
+| D4 | Post-score upsell | **(a)+(c) Hybrid** | `/tests` CTA + contextual `/courses` card for weakest category |
+| D5 | Dashboard email | **(b) Defer + copy-link button** | No broadcast surface; surface "Pošli ďalším" copy + 1-click re-share |
+| D6 | CSV GDPR caveat | **(a) Header comment in CSV** | 2-line `#` Slovak prefix at top of file |
+| D7 | OG meta on share links | **(b) Personalized** | `"Test od {creator_label} — 5 minút"` via SSR head() |
+| D8 | Sort persistence | **Persist across filter** | Lift sort state up; preserve through re-render |
+| D9 | New `set_attempts` columns | **Both in one migration** | `answers JSONB` + `intake_started_at TIMESTAMPTZ`, both nullable |
+| D10 | Shipping order | **(b) 3 sequential PRs** | Phase 1 (drill-down + funnel) → Phase 2 (marketing/copy) → Phase 3 (compliance polish + e2e) |
+| D11 | Migration timing | **(a) Migration in Phase 1 PR** | User applies SQL on prod after merge, per CLAUDE.md |
 **Surfaces in scope:**
 - `/test/builder/$id` — respondent landing (the "should I trust this?" moment)
 - `/test/builder/$id` → IntakeForm → QuizFlow → score view (the respondent take)
