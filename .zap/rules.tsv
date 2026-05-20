@@ -1,4 +1,5 @@
 # E35.8 — ZAP rule overrides for subenai.sk.
+# E43 — calibration pass: explicit WARN→FAIL promotion plan per rule.
 #
 # Format (tab-separated):
 #   <Rule ID>	<Threshold: IGNORE|WARN|FAIL>	<Optional note>
@@ -11,13 +12,20 @@
 # Reference: https://www.zaproxy.org/docs/alerts/ — every rule ID
 # below has a doc page at /docs/alerts/<ID>/.
 #
-# Strategy (E35.8 day 1):
-#   - Everything stays WARN by default.
-#   - We explicitly IGNORE the rules below for documented reasons.
-#   - First few PRs surface the real findings; triage them on the
-#     workflow's Markdown summary.
-#   - Once the baseline is consistently green, flip individual
-#     high-confidence rules to FAIL (e.g. 10038 CSP).
+# Calibration policy (E43, 2026-05-20):
+#   1. Every WARN-graded rule below carries an explicit promotion
+#      criterion: "promote to FAIL after N consecutive green baseline
+#      runs". The Mon 04:00 UTC schedule produces one run/week, so
+#      "N=4" means roughly one month.
+#   2. Before promoting a rule, verify on the latest workflow run that
+#      WARN-NEW=0 for that rule across the four runs. If the rule has
+#      fired even once, reset the counter and document why.
+#   3. IGNORE entries are forever-decisions. Adding a new IGNORE row
+#      requires a write-up here AND a CHANGELOG entry — we don't want
+#      ZAP coverage silently shrinking over time.
+#   4. Promotion changes ship in a separate PR titled
+#      `chore(security): promote ZAP rule <ID> WARN→FAIL`, NEVER
+#      bundled with a feature PR.
 
 # 10049	Storable and Cacheable Content	IGNORE
 #   Static marketing pages legitimately ship with Cache-Control headers
@@ -31,41 +39,67 @@
 
 # 10096	Timestamp Disclosure	WARN
 #   GA + Stripe responses include timestamps; not actionable.
+#   Promotion plan: candidate for IGNORE — these are third-party
+#   responses we don't control. Keep WARN one more month, then move
+#   to IGNORE with a CHANGELOG note. Promoting to FAIL is not viable
+#   because the source is external.
 10096	WARN	Third-party processor response timestamps.
 
 # 10063	Permissions Policy Header Not Set	WARN
 #   We DO set Permissions-Policy in `_headers`. If this flags, it means
 #   ZAP saw a route that bypassed the header — investigate.
-10063	WARN	Should always pass; investigate if it fires.
+#   Promotion plan: PROMOTE TO FAIL after 4 consecutive green baseline
+#   runs (target: 2026-06-15+). Coverage is already locked by
+#   tests/security/headers-contract.ts so prod drift is the only way
+#   this can fire — exactly what a FAIL signal should catch.
+10063	WARN	Promote→FAIL once 4 green baselines confirm prod parity.
 
 # 10038	Content Security Policy (CSP) Header Not Set	WARN
 #   Same — we set CSP. A finding here means a route is leaking around
 #   `_headers` (e.g. a route returned by an API endpoint without the
 #   CF Pages header injection).
-10038	WARN	Should always pass; tests/security/headers-contract.test.ts locks this.
+#   Promotion plan: PROMOTE TO FAIL together with 10063 — same
+#   guarantee (file-locked) and same risk profile (drift only).
+10038	WARN	Promote→FAIL with 10063 once 4 green baselines pass.
 
 # 10202	Absence of Anti-CSRF Tokens	WARN
 #   We don't have form-based auth. Magic-link flow is rate-limited +
 #   uses Turnstile. Stripe Checkout has its own CSRF cookie (`m`).
 #   Flip to IGNORE if the only forms ZAP finds are the magic-link form.
-10202	WARN	Magic-link auth uses Turnstile; review per-form.
+#   Promotion plan: NEVER FAIL — ZAP's anti-CSRF detector is heuristic
+#   and trips on any form, including search inputs. Move to IGNORE
+#   once we've audited the next baseline report and confirmed every
+#   flagged form is one of: magic-link (Turnstile-gated), Stripe
+#   Checkout (CSRF=`m` cookie), Composer admin forms (admin role).
+10202	WARN	Heuristic; audit one more report then move to IGNORE.
 
 # 10054	Cookie Without SameSite Attribute	WARN
 #   Stripe sets cookies we don't control. Confirm any subenai-owned
 #   cookie carries SameSite=Lax or Strict before flipping to FAIL.
-10054	WARN	Triage per cookie owner (subenai vs Stripe).
+#   Promotion plan: IGNORE for third-party (Stripe), but we cannot
+#   express "only fail on first-party cookies" in rules.tsv. Action:
+#   keep WARN; in parallel, add a unit test that asserts every cookie
+#   set in functions/_middleware.ts carries SameSite=Lax — that test
+#   IS the FAIL signal we want, scoped correctly.
+10054	WARN	Cannot scope to first-party; covered by middleware unit test.
 
 # 10055	CSP Wildcard Directive	WARN
 #   Our CSP uses wildcards like `*.supabase.co`. Legitimate per-host
 #   subdomain wildcards are NOT the dangerous `*` standalone. ZAP
 #   doesn't distinguish; we accept this as a known-noisy rule.
-10055	WARN	Subdomain wildcards are intentional (Supabase).
+#   Promotion plan: keep WARN forever. The dangerous variant (`*`
+#   alone, or wildcards in script-src) is locked by
+#   tests/security/headers-contract.ts — that file IS the FAIL signal.
+10055	WARN	Subdomain wildcards are intentional (Supabase); keep WARN.
 
 # 10094	Base64 Disclosure	WARN
 #   The OG default image is base64-encoded in the build output (build
 #   step generates it). Flag any UNEXPECTED base64 finding outside the
 #   OG asset.
-10094	WARN	OG default image is intentionally base64.
+#   Promotion plan: keep WARN — the build pipeline embeds the OG image
+#   as data-URI deliberately (saves a request on every share). Until
+#   we ship a stable CDN URL for the OG asset, this is by-design noise.
+10094	WARN	OG default image is intentionally base64; revisit when CDN-hosted.
 
 # 10109	Modern Web Application	IGNORE
 #   Informational — ZAP detected a modern SPA. Not a finding.
