@@ -40,6 +40,54 @@ export class AdminAuditPage extends BasePage {
   rowByPrefix() {
     return this.page.locator("[data-testid^='audit-log-row-']");
   }
+
+  rowById(id: string) {
+    return this.page.getByTestId(`audit-log-row-${id}`);
+  }
+
+  get filterActor() {
+    return this.page.getByTestId("audit-log-filter-actor");
+  }
+
+  get filterAction() {
+    return this.page.getByTestId("audit-log-filter-action");
+  }
+
+  get filterPii() {
+    return this.page.getByTestId("audit-log-filter-pii");
+  }
+
+  get filterDateFrom() {
+    return this.page.getByTestId("audit-log-filter-date-from");
+  }
+
+  get filterDateTo() {
+    return this.page.getByTestId("audit-log-filter-date-to");
+  }
+
+  get paginationPrev() {
+    return this.page.getByTestId("audit-log-pagination-prev");
+  }
+
+  get paginationNext() {
+    return this.page.getByTestId("audit-log-pagination-next");
+  }
+
+  /**
+   * Open the action Select and pick `action` (matches the `<SelectItem>`
+   * value verbatim — these are action codes, not Slovak labels, so the
+   * arg is e.g. `dsr_request_resolved`).
+   */
+  async selectAction(action: string) {
+    await this.filterAction.click();
+    await this.page.getByRole("option", { name: action }).click();
+  }
+
+  /** Pick the "Len PII prístupy" option in the PII filter Select. */
+  async selectPiiOnly() {
+    await this.filterPii.click();
+    await this.page.getByRole("option", { name: "Len PII prístupy" }).click();
+  }
 }
 
 export class AdminDsrPage extends BasePage {

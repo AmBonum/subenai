@@ -34,6 +34,120 @@ test.describe("/admin/audit — audit log viewer", () => {
   });
 });
 
+test.describe("/admin/audit — populated read flow (E43)", () => {
+  // E43 — locks the audit-log READ side end-to-end. Insert side is
+  // covered by tests/lib/supabase/audit-log-immutable.test.ts plus the
+  // RLS-enforcement integration suite; this spec exercises the viewer
+  // the way an admin actually uses it.
+  const baseRow = {
+    actor_id: "00000000-0000-0000-0000-000000000aaa",
+    target_type: "respondent",
+    target_id: "respondent-id",
+    details: "noted",
+  };
+  const seededRows = [
+    {
+      ...baseRow,
+      id: "audit-001",
+      actor_name: "alice",
+      action: "respondent_invite_sent",
+      pii_access: false,
+      at: "2026-05-20T12:00:00.000Z",
+    },
+    {
+      ...baseRow,
+      id: "audit-002",
+      actor_name: "alice",
+      action: "dsr_request_resolved",
+      pii_access: true,
+      at: "2026-05-20T11:00:00.000Z",
+    },
+    {
+      ...baseRow,
+      id: "audit-003",
+      actor_name: "bob",
+      action: "respondent_invite_sent",
+      pii_access: false,
+      at: "2026-05-20T10:00:00.000Z",
+    },
+  ];
+
+  test("TC-04: renders table and rows when audit_log is populated", async ({ context, page }) => {
+    await setupAdmin(context, page, { tables: { audit_log: seededRows } });
+
+    const audit = new AdminAuditPage(page);
+    await audit.open();
+
+    await expect(audit.viewerRoot).toBeVisible();
+    await expect(audit.table).toBeVisible();
+    await expect(audit.emptyState).toHaveCount(0);
+    await expect(audit.rowByPrefix()).toHaveCount(3);
+  });
+
+  test("TC-05: actor filter narrows visible rows", async ({ context, page }) => {
+    await setupAdmin(context, page, { tables: { audit_log: seededRows } });
+
+    const audit = new AdminAuditPage(page);
+    await audit.open();
+    await audit.filterActor.fill("alice");
+
+    await expect(audit.rowByPrefix()).toHaveCount(2);
+    await expect(audit.rowById("audit-001")).toBeVisible();
+    await expect(audit.rowById("audit-002")).toBeVisible();
+    await expect(audit.rowById("audit-003")).toHaveCount(0);
+  });
+
+  test("TC-06: action filter narrows visible rows", async ({ context, page }) => {
+    await setupAdmin(context, page, { tables: { audit_log: seededRows } });
+
+    const audit = new AdminAuditPage(page);
+    await audit.open();
+    await audit.selectAction("dsr_request_resolved");
+
+    await expect(audit.rowByPrefix()).toHaveCount(1);
+    await expect(audit.rowById("audit-002")).toBeVisible();
+  });
+
+  test("TC-07: PII-only filter shows only rows with pii_access=true", async ({ context, page }) => {
+    await setupAdmin(context, page, { tables: { audit_log: seededRows } });
+
+    const audit = new AdminAuditPage(page);
+    await audit.open();
+    await audit.selectPiiOnly();
+
+    await expect(audit.rowByPrefix()).toHaveCount(1);
+    await expect(audit.rowById("audit-002")).toBeVisible();
+  });
+
+  test("TC-08: pagination advances by PAGE_SIZE (25)", async ({ context, page }) => {
+    // 30 rows → page 1 = 25 visible, page 2 = 5 visible.
+    const rows = Array.from({ length: 30 }, (_, i) => ({
+      ...baseRow,
+      id: `audit-page-${String(i).padStart(3, "0")}`,
+      actor_name: "alice",
+      action: "respondent_invite_sent",
+      pii_access: false,
+      // Distinct timestamps so the .order("at", desc) projection is
+      // deterministic (one row per minute, latest first).
+      at: new Date(Date.UTC(2026, 4, 20, 12, 0, i)).toISOString(),
+    }));
+    await setupAdmin(context, page, { tables: { audit_log: rows } });
+
+    const audit = new AdminAuditPage(page);
+    await audit.open();
+
+    await expect(audit.rowByPrefix()).toHaveCount(25);
+    await expect(audit.paginationPrev).toBeDisabled();
+    await expect(audit.paginationNext).toBeEnabled();
+
+    await audit.paginationNext.click();
+
+    await expect(audit.rowByPrefix()).toHaveCount(5);
+    await expect(audit.paginationNext).toBeDisabled();
+    await expect(audit.paginationPrev).toBeEnabled();
+  });
+});
+
 test.describe("/admin/dsr — DSR queue", () => {
   test("TC-02: page renders with seeded open request, header count interpolates", async ({
     context,
