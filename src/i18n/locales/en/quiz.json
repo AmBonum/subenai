@@ -324,7 +324,11 @@
     "heading_with_label": "{label} — team results",
     "meta_line": "{count} questions · pass at ≥ {threshold}% · respondents: {respondents}",
     "download_csv": "Download CSV",
-    "logout": "Log out"
+    "logout": "Log out",
+    "copy_share_link": "Copy link",
+    "copy_share_link_aria": "Copy the public test link for re-sharing",
+    "copy_share_link_toast": "Copied — send to colleagues who haven't taken the test yet",
+    "reshare_hint": "Send to more team members →"
   },
   "share": {
     "meta_title": "Result {shareId} · subenai",

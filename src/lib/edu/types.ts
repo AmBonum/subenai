@@ -43,10 +43,33 @@ export interface ResultsDataPayload {
 }
 
 /** Build a CSV string from respondent rows — kept here so server + client
- *  agree on the shape and unit tests cover it without DOM. */
-export function rowsToCsv(rows: RespondentRow[], passingThreshold: number): string {
+ *  agree on the shape and unit tests cover it without DOM.
+ *
+ *  E34 Phase 3 (D6) — output is prefixed with two `#`-commented header
+ *  lines that flag the file as containing personal data + reference the
+ *  privacy policy. RFC 4180 doesn't specify comment syntax, but every
+ *  spreadsheet (Excel, LibreOffice, Numbers, Google Sheets) treats
+ *  `# `-prefixed leading rows as a single-cell row that the author
+ *  will visually skip — i.e. zero parser breakage, full readability
+ *  on double-click. The author downloaded the file; they'll open it →
+ *  they read the caveat → they know what they're handling.
+ *
+ *  The optional `generatedAt` arg lets callers pin a deterministic
+ *  timestamp (unit tests + CI golden files). Production callers omit
+ *  it and we fall back to `new Date()`.
+ */
+export function rowsToCsv(
+  rows: RespondentRow[],
+  passingThreshold: number,
+  generatedAt: Date = new Date(),
+): string {
+  const ts = generatedAt.toISOString();
   const header = ["Meno", "Email", "Skóre", "Percentil", "Vyhovel", "Čas (s)", "Dátum"];
-  const lines = [header.map(csvField).join(",")];
+  const lines = [
+    `# subenai.sk — výsledky edu testu · vygenerované ${ts}`,
+    "# OBSAHUJE OSOBNÉ ÚDAJE (meno, email respondentov). Spracuj v súlade s GDPR — viď subenai.sk/privacy",
+    header.map(csvField).join(","),
+  ];
   for (const r of rows) {
     lines.push(
       [
