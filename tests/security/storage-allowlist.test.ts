@@ -121,7 +121,10 @@ function isOnAllowlist(keyExpr: string, allowlist: DeclaredStorage[]): boolean {
 
 describe("storage allowlist — document.cookie writes in src/", () => {
   // Capture: document.cookie = `${KEY}=...` or document.cookie = "key=..."
-  const writes = findWrites(/document\.cookie\s*=\s*[`"'][^`"';]*?(?:\$\{)?([A-Z_a-zA-Z0-9.-]+)/);
+  // Character class is `[A-Za-z0-9_.-]` — alphanumerics + identifier
+  // continuation chars only. The previous `[A-Z_a-zA-Z0-9.-]` had
+  // redundant overlapping ranges (CodeQL js/overly-large-range).
+  const writes = findWrites(/document\.cookie\s*=\s*[`"'][^`"';]*?(?:\$\{)?([A-Za-z0-9_.-]+)/);
 
   it("every cookie write is either on the declared allowlist or on the tracked-undeclared list", () => {
     const declared = [...COOKIE_KEYS, ...UNDECLARED_BUT_TRACKED];
@@ -135,7 +138,10 @@ describe("storage allowlist — document.cookie writes in src/", () => {
 
 describe("storage allowlist — localStorage.setItem writes in src/", () => {
   // Capture: window.localStorage.setItem(KEY, ...) or localStorage.setItem(KEY, ...)
-  const writes = findWrites(/localStorage\.setItem\(\s*([A-Z_a-zA-Z0-9.()[\]"'`-]+)/);
+  // Reordered character class to `[A-Za-z0-9_.()[\]"'`-]` — same
+  // surface, no redundant `A-Z` + `a-zA-Z` overlap (CodeQL
+  // js/overly-large-range).
+  const writes = findWrites(/localStorage\.setItem\(\s*([A-Za-z0-9_.()[\]"'`-]+)/);
 
   it("every localStorage write is either on the declared allowlist or on the tracked-undeclared list", () => {
     const declared = [...LOCALSTORAGE_KEYS, ...UNDECLARED_BUT_TRACKED];

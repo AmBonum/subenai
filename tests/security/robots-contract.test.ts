@@ -21,6 +21,13 @@ const ROBOTS_PATH = resolve(process.cwd(), "public/robots.txt");
 const ROBOTS_TEXT = readFileSync(ROBOTS_PATH, "utf8");
 const SITE_ORIGIN = "https://subenai.sk";
 
+// Full regex-metachar escape — `replace(/[/]/g, "\\/")` only escaped
+// the slash and would silently miss e.g. a future entry containing `.`
+// or `?`. CodeQL js/incomplete-sanitization flagged that.
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+}
+
 const REQUIRED_DISALLOWS = [
   "/app/", // auth-gated user dashboard
   "/admin/", // admin tooling
@@ -42,7 +49,7 @@ describe("public/robots.txt — fundamentals", () => {
   });
 
   it.each(REQUIRED_DISALLOWS)("disallows %s", (path) => {
-    const pattern = new RegExp(`Disallow:\\s*${path.replace(/[/]/g, "\\/")}`);
+    const pattern = new RegExp(`Disallow:\\s*${escapeRegExp(path)}`);
     expect(
       pattern.test(ROBOTS_TEXT),
       `robots.txt must contain "Disallow: ${path}" — auth-gated or unique-per-user surface`,
@@ -56,7 +63,7 @@ describe("public/robots.txt — fundamentals", () => {
 
   it("does NOT explicitly Allow any disallowed surface (which would override the rule)", () => {
     for (const disallowed of REQUIRED_DISALLOWS) {
-      const allowPattern = new RegExp(`Allow:\\s*${disallowed.replace(/[/]/g, "\\/")}`);
+      const allowPattern = new RegExp(`Allow:\\s*${escapeRegExp(disallowed)}`);
       expect(
         allowPattern.test(ROBOTS_TEXT),
         `robots.txt must not Allow "${disallowed}" — would override Disallow`,
