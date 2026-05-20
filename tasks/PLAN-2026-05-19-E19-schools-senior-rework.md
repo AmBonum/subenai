@@ -1,5 +1,10 @@
 # E19 — `/schools` senior-level rework + documentation visualization
 
+> **Status**: ✅ **DELIVERED** 2026-05-20 — all 8 stories shipped. Status
+> closure swept 2026-05-20 (third PLAN file this week to surface the
+> "tracker outpaced by impl" antipattern after E18 + E21). Codebase verify
+> below — every story has its artifact in main.
+>
 > **Branch**: `feature/E16-blog` (continuation of the open PR #27 epic — no
 > DB schema change, no `/app` surface, no auth changes; expanding the existing
 > marketing-side work).
@@ -25,14 +30,14 @@ triangle shipped in E17.
 
 | # | Story | Status |
 |---|---|---|
-| E19.1 | SEO head() + structured data (FAQPage + HowTo + EducationalOrg JSON-LD) | ☐ |
-| E19.2 | Persona hero — lime kicker, outcome H1, three persona chips, primary CTA | ☐ |
-| E19.3 | Edu-mode workflow visualization (4 step cards + inline abstract SVGs) | ☐ |
-| E19.4 | Persona comparison table (riaditeľ / IT koord / učiteľ) | ☐ |
-| E19.5 | Collapsible FAQ (via HomeFaqSection adapter) + mobile sticky CTA | ☐ |
-| E19.6 | GDPR card + explicit DPA callout box (replaces hidden mailto) | ☐ |
-| E19.7 | Breadcrumb + footer cross-link triangle (test / composer / blog) | ☐ |
-| E19.8 | Playwright e2e POM + spec under `e2e/specs/marketing/schools.spec.ts` | ☐ |
+| E19.1 | SEO head() + structured data (FAQPage + HowTo + EducationalOrg JSON-LD) | ✅ shipped — `src/lib/seo/schools-jsonld.ts` + 8 `buildSchools…` refs in `routes/schools.tsx` head() |
+| E19.2 | Persona hero — lime kicker, outcome H1, three persona chips, primary CTA | ✅ shipped — `src/components/schools/SchoolsHero.tsx` |
+| E19.3 | Edu-mode workflow visualization (4 step cards + inline abstract SVGs) | ✅ shipped — `src/components/schools/EduWorkflowSteps.tsx` |
+| E19.4 | Persona comparison table (riaditeľ / IT koord / učiteľ) | ✅ shipped — `src/components/schools/PersonaComparisonTable.tsx` |
+| E19.5 | Collapsible FAQ (via HomeFaqSection adapter) + mobile sticky CTA | ✅ shipped — `SchoolsFaqSection.tsx` + `SchoolsStickyCta.tsx` |
+| E19.6 | GDPR card + explicit DPA callout box (replaces hidden mailto) | ✅ shipped — `src/components/schools/SchoolsGdprCard.tsx` (file leads with "E19.6 — GDPR card with explicit DPA callout") |
+| E19.7 | Breadcrumb + footer cross-link triangle (test / composer / blog) | ✅ shipped — `SchoolsBreadcrumb.tsx` + `SchoolsFooterCta.tsx` |
+| E19.8 | Playwright e2e POM + spec under `e2e/specs/marketing/schools.spec.ts` | ✅ shipped — both `marketing/schools.spec.ts` and the supplementary `edu/schools-howitworks-contract.spec.ts` (E78) cover the page |
 
 ## E19.1 — SEO head() + structured data
 

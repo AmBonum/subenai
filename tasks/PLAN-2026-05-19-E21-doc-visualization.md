@@ -1,9 +1,10 @@
 # E21 — Documentation visualization + senior rework
 
-> **Status**: in-progress 2026-05-19. Closes the doc-side deliverables
-> the user originally asked for back in the /schools rework that were
-> deferred as "Out of scope E20+" (E19 plan § Out of scope).
-> Testing coverage is NOT in scope — owned by a separate agent.
+> **Status**: ✅ **DELIVERED** 2026-05-20 — all 9 stories resolved (5 ✅ shipped,
+> 2 ⏭️ deferred with rationale, 2 confirmed non-issues). Status closure swept
+> 2026-05-20 after the parallel E18/E34 closure passes. Codebase verify:
+> `DocTocSidebar.tsx`, `legal-jsonld.ts`, reworked `privacy.tsx` +
+> `cookies.tsx` + `app.help.tsx` all live in main.
 
 ## Goal
 

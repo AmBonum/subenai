@@ -1,5 +1,13 @@
 # PLAN — E17 Backlinks & Authority Building — 2026-05-19
 
+> **Status** (2026-05-20): 🟢 **Code-side foundation shipped** (E17.1 ✅) —
+> tracker + templates live. E17.2–E17.7 are **owner-executed outreach**
+> (sending emails to SK-CERT, banks, press) and cannot be agent-shipped.
+> E17.8 (scenario-card embed widget) is the only remaining eng task —
+> deferred until first 3 Tier-A links convert (no point shipping embed
+> infra before there's an audience).
+> E17.9 + E17.10 are recurring (quarterly review + anchor diversity audit).
+
 ## Goal & Business Value
 
 Drive **referring-domain growth** for the freshly-published 80-article
@@ -118,7 +126,7 @@ Each outreach pitch passes through this gate before sending:
 
 | Story id | Name | Effort | Order | Notes |
 |---|---|---|---|---|
-| E17.1 | Backlinks tracker doc + outreach templates | S | 1 | `tasks/blog/backlinks-tracker.md` + `tasks/blog/outreach-templates.md`. Authoring artifacts. |
+| E17.1 ✅ | Backlinks tracker doc + outreach templates | S | 1 | **Shipped 2026-05-20** — `tasks/blog/backlinks-tracker.md` (42-target sheet + quarterly review + anchor-text audit + dead-link sweep) and `tasks/blog/outreach-templates.md` (4 templates: authority cite / guest post / HARO reply / directory submission). User executes the outreach work in E17.2–E17.7. |
 | E17.2 | Tier A SK authority outreach wave (12 targets) | M | 2 | SK-CERT, NBS, NBÚ, Polícia SR (preventívne centrum), MIRRI, MV SR, MPSVR (IPčko), SOI, Finančná správa, Národná koncepcia ochrany detí, Slovensko.sk content authors. Pitch: cite SubenAI pillars as additional consumer resource. |
 | E17.3 | Tier B SK banks + ISPs outreach (10 targets) | M | 3 | Tatra banka, SLSP, VÚB, ČSOB, mBank, Poštová banka, Unicredit, Orange SK, Slovak Telekom, O2 SK. Pitch: link to phishing/SMS/AI pillars as "secondary reading" from their security pages. |
 | E17.4 | Tier C SK press outreach (8 targets) | M | 4 | Denník N, SME, Pravda, Trend, hospodárske noviny, aktuality.sk, dennikn.sk consumer section, Týždeň. Pitch: pillar P10 (študenti scams) + pillar P4 (sociálne siete) as cite-worthy for student/social trend articles. |
