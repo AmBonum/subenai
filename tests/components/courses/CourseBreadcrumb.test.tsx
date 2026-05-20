@@ -9,7 +9,11 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => {
-      const { to, params: _params, ...domProps } = rest as {
+      const {
+        to,
+        params: _params,
+        ...domProps
+      } = rest as {
         to?: string;
         params?: Record<string, string>;
       };

@@ -1,0 +1,92 @@
+-- E17.1 backfill — sync blog_posts.related_course_slug from MDX frontmatter
+-- Generated 2026-05-20T15:18:36Z. Idempotent: safe to re-run.
+-- Run in Supabase SQL editor against PRODUCTION after merging to main.
+-- Column exists from migration 20260520020000_blog_related_course.sql.
+
+BEGIN;
+
+UPDATE public.blog_posts SET related_course_slug = 'ai-bezpecnost-co-nezdielat' WHERE slug = 'ai-phishing-personalizovany-podvod';
+UPDATE public.blog_posts SET related_course_slug = 'ai-bezpecnost-co-nezdielat' WHERE slug = 'chatgpt-podvody-falosne-investicie';
+UPDATE public.blog_posts SET related_course_slug = 'ai-hlasove-a-deepfake-podvody' WHERE slug = 'ai-a-moderne-podvody-deepfake-voice-cloning';
+UPDATE public.blog_posts SET related_course_slug = 'ai-hlasove-a-deepfake-podvody' WHERE slug = 'ai-generovane-fotky-fake-profily';
+UPDATE public.blog_posts SET related_course_slug = 'ai-hlasove-a-deepfake-podvody' WHERE slug = 'deepfake-video-ako-spoznat';
+UPDATE public.blog_posts SET related_course_slug = 'ai-hlasove-a-deepfake-podvody' WHERE slug = 'klonovanie-hlasu-podvod-volanie-rodina';
+UPDATE public.blog_posts SET related_course_slug = 'bec-pracovisko-fake-ceo' WHERE slug = 'internet-iq-test-pre-firmy-zamestnancov';
+UPDATE public.blog_posts SET related_course_slug = 'bezpecne-online-nakupy' WHERE slug = 'bezpecne-nakupovanie-online-slovensko';
+UPDATE public.blog_posts SET related_course_slug = 'bezpecne-online-nakupy' WHERE slug = 'platobne-karty-virtualne-revolut-wise';
+UPDATE public.blog_posts SET related_course_slug = 'chran-svojich-blizkych' WHERE slug = 'kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov';
+UPDATE public.blog_posts SET related_course_slug = 'chran-svojich-blizkych' WHERE slug = 'senior-prvy-smartfon-bezpecnost';
+UPDATE public.blog_posts SET related_course_slug = 'co-robit-po-podvode' WHERE slug = 'co-robit-ked-som-klikol-na-phishing';
+UPDATE public.blog_posts SET related_course_slug = 'co-robit-po-podvode' WHERE slug = 'hacknuty-facebook-ucet-co-robit';
+UPDATE public.blog_posts SET related_course_slug = 'co-robit-po-podvode' WHERE slug = 'nechcene-platby-z-uctu-co-robit';
+UPDATE public.blog_posts SET related_course_slug = 'co-robit-po-podvode' WHERE slug = 'poistenie-proti-kybernetickym-podvodom';
+UPDATE public.blog_posts SET related_course_slug = 'co-robit-po-podvode' WHERE slug = 'reklamacia-z-podvodneho-eshopu';
+UPDATE public.blog_posts SET related_course_slug = 'data-hygiene' WHERE slug = 'aktualizacie-systemu-preco-su-dolezite';
+UPDATE public.blog_posts SET related_course_slug = 'data-hygiene' WHERE slug = 'digitalna-bezpecnost-kompletny-navod';
+UPDATE public.blog_posts SET related_course_slug = 'data-hygiene' WHERE slug = 'kviz-iq-internet-bezpecnost';
+UPDATE public.blog_posts SET related_course_slug = 'email-phishing' WHERE slug = 'ako-rozpoznat-phishingovy-email-za-10-sekund';
+UPDATE public.blog_posts SET related_course_slug = 'email-phishing' WHERE slug = 'falosna-faktura-email-co-robit';
+UPDATE public.blog_posts SET related_course_slug = 'email-phishing' WHERE slug = 'kviz-rozpoznas-phishingovy-email';
+UPDATE public.blog_posts SET related_course_slug = 'email-phishing' WHERE slug = 'phishing-cez-google-formulare';
+UPDATE public.blog_posts SET related_course_slug = 'email-phishing' WHERE slug = 'phishing-kompletny-sprievodca';
+UPDATE public.blog_posts SET related_course_slug = 'email-phishing' WHERE slug = 'podvodne-emaily-z-banky-ako-spoznat';
+UPDATE public.blog_posts SET related_course_slug = 'email-phishing' WHERE slug = 'spear-phishing-vs-bezny-phishing';
+UPDATE public.blog_posts SET related_course_slug = 'fake-eshop-ako-overit' WHERE slug = 'ako-overit-eshop-pred-nakupom-7-krokov';
+UPDATE public.blog_posts SET related_course_slug = 'fake-eshop-ako-overit' WHERE slug = 'dropshipping-vs-podvodny-eshop';
+UPDATE public.blog_posts SET related_course_slug = 'fake-eshop-ako-overit' WHERE slug = 'fake-eshopy-ako-odhalit';
+UPDATE public.blog_posts SET related_course_slug = 'fake-eshop-ako-overit' WHERE slug = 'kviz-falosny-eshop-alebo-pravy';
+UPDATE public.blog_posts SET related_course_slug = 'fake-eshop-ako-overit' WHERE slug = 'recenzie-na-eshope-falosne-rozpoznat';
+UPDATE public.blog_posts SET related_course_slug = 'hesla-2fa-passkeys' WHERE slug = 'najlepsi-spravca-hesiel-porovnanie-2026';
+UPDATE public.blog_posts SET related_course_slug = 'hesla-2fa-passkeys' WHERE slug = 'ochrana-pred-phishingom-2fa-passkey';
+UPDATE public.blog_posts SET related_course_slug = 'hesla-2fa-passkeys' WHERE slug = 'silne-heslo-2026-vs-passkey';
+UPDATE public.blog_posts SET related_course_slug = 'hesla-2fa-passkeys' WHERE slug = 'sluzby-monitoring-uniku-dat';
+UPDATE public.blog_posts SET related_course_slug = 'hesla-2fa-passkeys' WHERE slug = 'spravca-hesiel-porovnanie';
+UPDATE public.blog_posts SET related_course_slug = 'hesla-2fa-passkeys' WHERE slug = 'uniknute-heslo-overit-haveibeenpwned';
+UPDATE public.blog_posts SET related_course_slug = 'hesla-2fa-passkeys' WHERE slug = 'yubikey-vs-google-titan-vs-passkey';
+UPDATE public.blog_posts SET related_course_slug = 'investicne-podvody-krypto-ai' WHERE slug = 'krypto-podvody-2026-pump-and-dump';
+UPDATE public.blog_posts SET related_course_slug = 'investicne-podvody-krypto-ai' WHERE slug = 'telegram-whatsapp-scam-skupiny';
+UPDATE public.blog_posts SET related_course_slug = 'kradez-kont-socialnych-sieti' WHERE slug = 'fake-profily-instagram-tiktok';
+UPDATE public.blog_posts SET related_course_slug = 'kradez-kont-socialnych-sieti' WHERE slug = 'podvodne-sutaze-a-giveawayy';
+UPDATE public.blog_posts SET related_course_slug = 'kradez-kont-socialnych-sieti' WHERE slug = 'podvody-na-socialnych-sietach';
+UPDATE public.blog_posts SET related_course_slug = 'malvertising-fake-reklamy' WHERE slug = 'podvodne-reklamy-facebook-instagram-eshop';
+UPDATE public.blog_posts SET related_course_slug = 'marketplace-bazos-podvody' WHERE slug = 'bazos-vinted-marketplace-podvody';
+UPDATE public.blog_posts SET related_course_slug = 'pribehy-skutocnych-obeti' WHERE slug = 'pribeh-deepfake-ceo-firma';
+UPDATE public.blog_posts SET related_course_slug = 'pribehy-skutocnych-obeti' WHERE slug = 'pribeh-naletela-som-na-podvod-banka';
+UPDATE public.blog_posts SET related_course_slug = 'pribehy-skutocnych-obeti' WHERE slug = 'pribeh-romance-scam-rok-laska';
+UPDATE public.blog_posts SET related_course_slug = 'pribehy-skutocnych-obeti' WHERE slug = 'pribeh-senior-falosny-policajt';
+UPDATE public.blog_posts SET related_course_slug = 'psychologia-podvodov' WHERE slug = 'autorita-policia-banka-manipulacia';
+UPDATE public.blog_posts SET related_course_slug = 'psychologia-podvodov' WHERE slug = 'naliehavost-ako-zbran-podvodnika';
+UPDATE public.blog_posts SET related_course_slug = 'psychologia-podvodov' WHERE slug = 'preco-aj-inteligentni-ludia-naletia';
+UPDATE public.blog_posts SET related_course_slug = 'psychologia-podvodov' WHERE slug = 'psychologia-internetovych-podvodov';
+UPDATE public.blog_posts SET related_course_slug = 'psychologia-podvodov' WHERE slug = 'strach-vs-hramotnost-strachu';
+UPDATE public.blog_posts SET related_course_slug = 'rodina-deti-seniori' WHERE slug = 'ako-hovorit-s-detmi-o-podvodoch';
+UPDATE public.blog_posts SET related_course_slug = 'rodina-deti-seniori' WHERE slug = 'bezpecnost-pre-rodicov-deti-seniorov';
+UPDATE public.blog_posts SET related_course_slug = 'rodina-deti-seniori' WHERE slug = 'kviz-internetova-bezpecnost-pre-rodicov';
+UPDATE public.blog_posts SET related_course_slug = 'rodina-deti-seniori' WHERE slug = 'kybersikana-co-robit';
+UPDATE public.blog_posts SET related_course_slug = 'rodina-deti-seniori' WHERE slug = 'rodicovska-kontrola-aplikacie-porovnanie';
+UPDATE public.blog_posts SET related_course_slug = 'rodina-deti-seniori' WHERE slug = 'rodicovska-kontrola-iphone-android';
+UPDATE public.blog_posts SET related_course_slug = 'romance-scams-catfishing' WHERE slug = 'romance-scam-laska-cez-internet';
+UPDATE public.blog_posts SET related_course_slug = 'sms-smishing' WHERE slug = '12-najcastejsich-podvodnych-sms-2026';
+UPDATE public.blog_posts SET related_course_slug = 'sms-smishing' WHERE slug = 'kviz-scam-sms-rozpozna';
+UPDATE public.blog_posts SET related_course_slug = 'sms-smishing' WHERE slug = 'phishing-na-balikovu-zasielku';
+UPDATE public.blog_posts SET related_course_slug = 'sms-smishing' WHERE slug = 'scam-sms-a-podvodne-hovory';
+UPDATE public.blog_posts SET related_course_slug = 'sms-smishing' WHERE slug = 'sms-z-banky-overit-ci-je-pravda';
+UPDATE public.blog_posts SET related_course_slug = 'studenti-online' WHERE slug = 'internet-safety-pre-studentov';
+UPDATE public.blog_posts SET related_course_slug = 'top-podvody-2026-sk' WHERE slug = 'ai-akt-eu-co-znamena-pre-bezneho-cloveka';
+UPDATE public.blog_posts SET related_course_slug = 'top-podvody-2026-sk' WHERE slug = 'nove-techniky-phishingu-2026';
+UPDATE public.blog_posts SET related_course_slug = 'top-podvody-2026-sk' WHERE slug = 'rebrand-slovenska-posta-slovak-post-podvody';
+UPDATE public.blog_posts SET related_course_slug = 'top-podvody-2026-sk' WHERE slug = 'top-podvody-slovensko-2026';
+UPDATE public.blog_posts SET related_course_slug = 'vishing-telefonicke-podvody' WHERE slug = 'ako-blokovat-spam-volania-android-iphone';
+UPDATE public.blog_posts SET related_course_slug = 'vishing-telefonicke-podvody' WHERE slug = 'hovor-od-falosneho-policajta-co-robit';
+UPDATE public.blog_posts SET related_course_slug = 'vishing-telefonicke-podvody' WHERE slug = 'one-ring-scam-zmeskany-hovor-zo-zahranicia';
+UPDATE public.blog_posts SET related_course_slug = 'vishing-telefonicke-podvody' WHERE slug = 'overit-telefonne-cislo-kto-mi-vola';
+UPDATE public.blog_posts SET related_course_slug = 'vpn-antivirus-zalohy' WHERE slug = 'eset-vs-bitdefender-vs-kaspersky';
+UPDATE public.blog_posts SET related_course_slug = 'vpn-antivirus-zalohy' WHERE slug = 'najlepsi-antivirus-2026-slovensko';
+UPDATE public.blog_posts SET related_course_slug = 'vpn-antivirus-zalohy' WHERE slug = 'najlepsia-vpn-2026-slovensko';
+UPDATE public.blog_posts SET related_course_slug = 'vpn-antivirus-zalohy' WHERE slug = 'verejna-wifi-rizika-a-obrana';
+UPDATE public.blog_posts SET related_course_slug = 'vpn-antivirus-zalohy' WHERE slug = 'vpn-ci-naozaj-potrebujem';
+UPDATE public.blog_posts SET related_course_slug = 'vpn-antivirus-zalohy' WHERE slug = 'zalohovanie-dat-3-2-1-pravidlo';
+
+SELECT COUNT(*) AS linked FROM public.blog_posts WHERE related_course_slug IS NOT NULL;
+
+COMMIT;
