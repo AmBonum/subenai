@@ -58,24 +58,23 @@ beforeEach(() => {
 });
 
 describe("POST /api/dpa-request", () => {
-  it("happy path returns base64 PDF + requestId + filename", async () => {
+  it("happy path returns request metadata for client-side PDF render", async () => {
     mockFetch({ turnstileOk: true, insertedId: "req-abc" });
     const r = await onRequestPost({ request: buildRequest(validBody), env });
     expect(r.status).toBe(200);
     const body = (await r.json()) as {
       ok: boolean;
       requestId: string;
-      pdfBase64: string;
       fileName: string;
       templateVersion: string;
+      generatedAt: string;
     };
     expect(body.ok).toBe(true);
     expect(body.requestId).toBe("req-abc");
     expect(body.templateVersion).toBe("v0.1");
     expect(body.fileName).toMatch(/^DPA-subenai-.*-v0\.1\.pdf$/);
-    // PDF starts with %PDF magic bytes once decoded.
-    const decoded = atob(body.pdfBase64);
-    expect(decoded.startsWith("%PDF-1.")).toBe(true);
+    expect(typeof body.generatedAt).toBe("string");
+    expect(new Date(body.generatedAt).toString()).not.toBe("Invalid Date");
   });
 
   it("400 invalid_json on malformed body", async () => {

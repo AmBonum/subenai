@@ -787,6 +787,7 @@
     "error_school_cooldown": "Pre tento názov školy bola DPA žiadosť vytvorená nedávno. Skús to neskôr.",
     "error_daily_cap": "Dnešný limit žiadostí sme vyčerpali. Napíš nám priamo na",
     "error_generic": "Vyhotovenie DPA zlyhalo. Skús to znova alebo nám napíš na",
+    "error_render_failed": "Generovanie PDF v prehliadači zlyhalo. Obnov stránku a skús to znova, prípadne nám napíš na",
     "error_turnstile_failed": "Overenie bota zlyhalo. Obnov stránku a skús to znova.",
     "feature_disabled_heading": "DPA tok je v príprave",
     "feature_disabled_body": "Automatizovaná žiadosť o DPA práve prechádza právnym auditom. Medzitým nám napíš na",

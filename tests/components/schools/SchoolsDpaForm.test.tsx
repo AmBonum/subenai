@@ -2,6 +2,13 @@ import { afterAll, describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+// Mock the lazy-loaded PDF renderer so vitest doesn't try to pull
+// @react-pdf/renderer into the test runtime. The form just calls
+// renderDpaPdfBlob(...) — we replace it with a 1-byte stub blob.
+vi.mock("@/lib/dpa/render.client", () => ({
+  renderDpaPdfBlob: vi.fn(async () => new Blob(["%PDF-1.4 stub"], { type: "application/pdf" })),
+}));
+
 // VITE_TURNSTILE_SITE_KEY is unset in test env → form sets token to
 // "disabled" and accepts submit without a real widget render. Lets us
 // exercise the rest of the form without bootstrapping Turnstile JS.
@@ -21,8 +28,6 @@ afterAll(() => {
   URL.createObjectURL = originalCreateObjectURL;
   URL.revokeObjectURL = originalRevokeObjectURL;
 });
-
-const validPdfBase64 = btoa("%PDF-1.4\nstub\n%%EOF");
 
 describe("SchoolsDpaForm", () => {
   it("renders all three fields, consent checkbox, and Turnstile container", () => {
@@ -54,15 +59,15 @@ describe("SchoolsDpaForm", () => {
     expect(submit.disabled).toBe(false);
   });
 
-  it("happy path POSTs payload, decodes base64 PDF, triggers download, shows success state", async () => {
+  it("happy path POSTs payload, renders PDF client-side, triggers download, shows success state", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
         JSON.stringify({
           ok: true,
           requestId: "req-xyz",
-          pdfBase64: validPdfBase64,
           fileName: "DPA-subenai-gymnazium-v0.1.pdf",
           templateVersion: "v0.1",
+          generatedAt: new Date().toISOString(),
         }),
         { status: 200 },
       ),

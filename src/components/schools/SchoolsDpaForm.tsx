@@ -33,13 +33,6 @@ interface SuccessState {
   email: string;
 }
 
-function decodeBase64ToBlob(base64: string, mime: string): Blob {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return new Blob([bytes], { type: mime });
-}
-
 function triggerDownload(blob: Blob, filename: string): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -155,22 +148,41 @@ export function SchoolsDpaForm() {
       const payload = (await response.json().catch(() => ({}))) as {
         ok?: boolean;
         requestId?: string;
-        pdfBase64?: string;
         fileName?: string;
+        templateVersion?: string;
+        generatedAt?: string;
         error?: string;
       };
-      if (!response.ok || !payload.ok || !payload.pdfBase64 || !payload.fileName) {
+      if (
+        !response.ok ||
+        !payload.ok ||
+        !payload.requestId ||
+        !payload.fileName ||
+        !payload.templateVersion
+      ) {
         setError(payload.error ?? "error_generic");
         setSubmitting(false);
         resetTurnstile();
         return;
       }
-      const blob = decodeBase64ToBlob(payload.pdfBase64, "application/pdf");
+
+      // Client-side PDF render (E40.3) — lazy-imports @react-pdf/renderer
+      // and the Slovak Art. 28 template only when the form is actually
+      // submitted, keeping the route's initial bundle small.
+      const { renderDpaPdfBlob } = await import("@/lib/dpa/render.client");
+      const blob = await renderDpaPdfBlob({
+        schoolName: schoolName.trim(),
+        contactName: contactName.trim(),
+        contactEmail: contactEmail.trim(),
+        requestId: payload.requestId,
+        version: payload.templateVersion,
+        generatedAt: payload.generatedAt ? new Date(payload.generatedAt) : new Date(),
+      });
       triggerDownload(blob, payload.fileName);
-      setSuccess({ requestId: payload.requestId ?? "", email: contactEmail.trim() });
+      setSuccess({ requestId: payload.requestId, email: contactEmail.trim() });
       setSubmitting(false);
     } catch {
-      setError("network_error");
+      setError("render_failed");
       setSubmitting(false);
       resetTurnstile();
     }
@@ -295,6 +307,7 @@ export function SchoolsDpaForm() {
               rate_limited: t("skoly_dpa.error_rate_limited"),
               school_cooldown: t("skoly_dpa.error_school_cooldown"),
               daily_cap_reached: t("skoly_dpa.error_daily_cap"),
+              render_failed: t("skoly_dpa.error_render_failed"),
             };
             const friendly = map[error];
             if (friendly) {
