@@ -120,6 +120,7 @@
     "action_duplicate": "Duplikovat",
     "action_edit": "Upravit",
     "action_delete": "Smazat",
+    "row_action_submit_public": "Odeslat ke zveřejnění",
     "empty_state_public_filter": "Pro tento filtr nemáme žádné veřejné šablony. Zkus změnit kategorii nebo hledaný výraz.",
     "empty_state_mine_no_copies": "Ještě sis žádnou šablonu nezduplikoval. Začni z veřejné knihovny.",
     "empty_state_mine_no_copies_cta": "Prohlédnout veřejné",
@@ -169,6 +170,38 @@
       "thirteen_plus": "13+",
       "sixteen_plus": "16+",
       "eighteen_plus": "18+"
+    },
+    "submission": {
+      "dialog_title": "Odeslat šablonu ke zveřejnění",
+      "author_name_label": "Autor (tvoje zobrazované jméno)",
+      "author_name_link": "Změnit v profilu",
+      "age_rating_label": "Věková kategorie",
+      "age_rating_options": {
+        "all": "Bez věkového omezení",
+        "thirteen_plus": "13+",
+        "sixteen_plus": "16+",
+        "eighteen_plus": "18+"
+      },
+      "consent_checkbox_label": "Souhlasím se zveřejněním této šablony pod licencí Creative Commons CC BY 4.0 (autorství si ponechávám) a chápu, že již jednou zveřejněnou kopii nelze odvolat z rukou uživatelů, kteří si ji stáhli nebo forkli.",
+      "consent_details_heading": "Detail: co přesně tím dáváš",
+      "consent_details_body": "Kliknutím na \"Odeslat ke zveřejnění\" uděluješ veřejnosti licenci Creative Commons CC BY 4.0 na tvou šablonu (https://creativecommons.org/licenses/by/4.0/). Konkrétně: kdokoli si ji může prohlédnout, použít, upravit, šířit i komerčně — povinný je pouze uvést tebe jako autora a odkaz na původní stránku. Autorství a osobnostní práva podle § 17 zákona č. 185/2015 Z. z. ti zůstávají; licenci uděluješ navíc ke svému vlastnictví, neprodáváš jej. Tuto licenci nelze odvolat pro kopie, které si už někdo stáhl nebo forkl — to je součástí definice CC BY 4.0. Veřejnou kopii na subenai.sk umíme odstranit na základě tvé žádosti (GDPR čl. 17), ale nedokážeme stáhnout kopie z internetu. Před zveřejněním tvou šablonu automaticky zkontroluje AI moderátor a ručně schválí administrátor — to trvá obvykle méně než 24 hodin. Plné podmínky: /privacy.",
+      "attribution_preview_heading": "Takto bude tvoje šablona podepsána na veřejné stránce:",
+      "attribution_preview_template": "{name} · CC BY 4.0 · subenai.sk/sablony/{slug}",
+      "attribution_preview_date_line": "Zveřejněno {date}",
+      "attribution_preview_slug_placeholder": "{nazev-sablony}",
+      "submit_button": "Odeslat ke kontrole",
+      "cancel_button": "Zrušit",
+      "submitting_loading": "Ověřujeme šablonu…",
+      "verdict_success_title": "Šablona prošla automatickou kontrolou",
+      "verdict_success_body": "Administrátor ji ručně schválí — obvykle do 24 hodin.",
+      "verdict_held_title": "Šablona jde k ruční kontrole",
+      "verdict_held_body": "Důvod: {reason}. Ozveme se hned, jakmile bude verdikt.",
+      "verdict_error_rate_limit_user": "Dnes jsi už použil/a 5 kontrol. Zkus zítra.",
+      "verdict_error_rate_limit_global": "Právě je hodně žádostí. Zkus za pár minut.",
+      "verdict_error_cooldown": "Tuto šablonu můžeš odeslat znovu až po 24 hodinách od zamítnutí.",
+      "verdict_error_budget": "Denní limit kontrol je vyčerpán. Zkus zítra nebo nám napiš.",
+      "verdict_error_generic": "Nepodařilo se odeslat. Zkus znovu nebo nám napiš.",
+      "verdict_close": "Zavřít"
     }
   },
   "history": {

@@ -120,6 +120,7 @@
     "action_duplicate": "Duplicate",
     "action_edit": "Edit",
     "action_delete": "Delete",
+    "row_action_submit_public": "Submit for publication",
     "empty_state_public_filter": "No public templates match this filter. Try changing the category or search term.",
     "empty_state_mine_no_copies": "You haven't duplicated any template yet. Start from the public library.",
     "empty_state_mine_no_copies_cta": "Browse public",
@@ -169,6 +170,38 @@
       "thirteen_plus": "13+",
       "sixteen_plus": "16+",
       "eighteen_plus": "18+"
+    },
+    "submission": {
+      "dialog_title": "Submit template for publication",
+      "author_name_label": "Author (your display name)",
+      "author_name_link": "Change in profile",
+      "age_rating_label": "Age rating",
+      "age_rating_options": {
+        "all": "No age restriction",
+        "thirteen_plus": "13+",
+        "sixteen_plus": "16+",
+        "eighteen_plus": "18+"
+      },
+      "consent_checkbox_label": "I agree to publish this template under the Creative Commons CC BY 4.0 license (I keep authorship) and understand that once published, copies already downloaded or forked by users cannot be retracted.",
+      "consent_details_heading": "Detail: what exactly you are granting",
+      "consent_details_body": "By clicking \"Submit for publication\" you grant the public a Creative Commons CC BY 4.0 license to your template (https://creativecommons.org/licenses/by/4.0/). Anyone may view, use, modify and distribute it (including commercially) — they must only credit you as the author and link to the original page. Authorship and moral rights under § 17 of Slovak Act 185/2015 Z. z. remain yours; the license is granted in addition to your ownership, you are not selling it. This license cannot be revoked for copies already downloaded or forked — that is part of the CC BY 4.0 definition. We can remove the public copy on subenai.sk upon your request (GDPR Art. 17), but cannot pull copies off the wider internet. Before publication your template is automatically reviewed by an AI moderator and manually approved by an administrator — usually within 24 hours. Full terms: /privacy.",
+      "attribution_preview_heading": "This is how your template will be credited on the public page:",
+      "attribution_preview_template": "{name} · CC BY 4.0 · subenai.sk/sablony/{slug}",
+      "attribution_preview_date_line": "Published {date}",
+      "attribution_preview_slug_placeholder": "{template-slug}",
+      "submit_button": "Submit for review",
+      "cancel_button": "Cancel",
+      "submitting_loading": "Verifying template…",
+      "verdict_success_title": "Template passed the automated check",
+      "verdict_success_body": "An administrator will manually approve it — usually within 24 hours.",
+      "verdict_held_title": "Template goes to manual review",
+      "verdict_held_body": "Reason: {reason}. We will get back to you as soon as there is a verdict.",
+      "verdict_error_rate_limit_user": "You have used all 5 checks for today. Try again tomorrow.",
+      "verdict_error_rate_limit_global": "There are a lot of requests right now. Try again in a few minutes.",
+      "verdict_error_cooldown": "You can re-submit this template only 24 hours after rejection.",
+      "verdict_error_budget": "The daily check budget has been exhausted. Try again tomorrow or contact us.",
+      "verdict_error_generic": "Could not submit. Try again or contact us.",
+      "verdict_close": "Close"
     }
   },
   "history": {

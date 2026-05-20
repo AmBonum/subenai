@@ -1,4 +1,4 @@
-import { Copy, Layers, MoreVertical, Pencil, Sparkles, Trash2 } from "lucide-react";
+import { Copy, Layers, MoreVertical, Pencil, Send, Sparkles, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ interface TemplateCardProps {
   onDuplicate: (template: Template) => void;
   onEdit?: (template: Template) => void;
   onDelete?: (template: Template) => void;
+  onSubmitPublic?: (template: Template) => void;
 }
 
 function pluralKey(
@@ -56,6 +57,7 @@ export function TemplateCard({
   onDuplicate,
   onEdit,
   onDelete,
+  onSubmitPublic,
 }: TemplateCardProps) {
   const t = tFor("templates");
   const id = template.id;
@@ -197,6 +199,15 @@ export function TemplateCard({
                   <Pencil className="h-4 w-4" aria-hidden="true" />
                   <span>{t("action_edit")}</span>
                   <DropdownMenuShortcut>E</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              )}
+              {isOwned && onSubmitPublic && template.visibility !== "public" && (
+                <DropdownMenuItem
+                  data-testid={`templates-card-${id}-action-submit`}
+                  onSelect={() => onSubmitPublic(template)}
+                >
+                  <Send className="h-4 w-4" aria-hidden="true" />
+                  <span>{t("row_action_submit_public")}</span>
                 </DropdownMenuItem>
               )}
               {isOwned && onDelete && (

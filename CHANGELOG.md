@@ -56,6 +56,15 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   šablóny vidíš stále, ale teraz si môžeš vytvoriť svoju kópiu, upraviť ju
   a vymazať — a to bez ovplyvnenia ostatných používateľov. Verejné odosielanie
   vlastných šablón a admin schvaľovanie príde v ďalšej aktualizácii.
+- **Odoslať vlastnú šablónu na zverejnenie (Creative Commons CC BY 4.0).** Na
+  každej *tvojej* šablóne pribudla položka *Odoslať na zverejnenie* v menu
+  akcií. V dialógu si potvrdíš autorstvo, vyberieš vekové ohraničenie a dáš
+  výslovný súhlas s licenciou CC BY 4.0. AI moderátor (Anthropic Claude
+  Haiku) tvoju šablónu okamžite skontroluje na bezpečnosť, vulgarizmy
+  a copyright vlajky; verdikt vidíš v dialógu do 1–3 sekúnd. Schválené
+  šablóny sa objavia vo verejnej knižnici po ručnom potvrdení administrátorom
+  — ručná moderátorská fronta a verejná galéria `/sablony` prídu v ďalších
+  aktualizáciách.
 - **Stiahnutie tvojich údajov (GDPR čl. 15 / čl. 20).** Na stránke
   *Môj profil* (`/app/account/profile`) je nová karta *Stiahnutie
   tvojich údajov*. Kliknutím dostaneš JSON snapshot všetkého, čo o

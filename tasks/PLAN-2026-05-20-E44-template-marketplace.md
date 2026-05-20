@@ -87,10 +87,10 @@ The submission flow lives on a **new table** `public.template_submissions` (Phas
 
 | ID    | Title                                                                                              | Effort | Priority | Status |
 |-------|----------------------------------------------------------------------------------------------------|--------|----------|--------|
-| E44.6 | Migration `template_submissions.sql` — new table + RLS (owner reads own; admin reads/writes all)   | `S`   | `P1` | ⏳ Blocked on A |
-| E44.7 | CF Function `functions/api/templates/precheck.ts` — Claude Haiku 4.5, structured output, rate-limit, cost ceiling | `M` | `P1` | ⏳ Blocked on A |
-| E44.8 | Submission dialog: CC BY 4.0 consent checkbox + age-rating self-declare + author display name confirmation | `S` | `P1` | ⏳ Blocked on A |
-| E44.9 | Integration tests: precheck contract, rate-limit, cost ceiling boundary; submission RLS  | `M` | `P2` | ⏳ Blocked on A |
+| E44.6 | Migration `template_submissions.sql` — new table + RLS (owner reads own; admin reads/writes all)   | `S`   | `P1` | ✅ Done (2026-05-21, PR-B) |
+| E44.7 | CF Function `functions/api/templates/precheck.ts` — Claude Haiku 4.5, structured output, rate-limit, cost ceiling | `M` | `P1` | ✅ Done (2026-05-21, PR-B) |
+| E44.8 | Submission dialog: CC BY 4.0 consent checkbox + age-rating self-declare + author display name confirmation | `S` | `P1` | ✅ Done (2026-05-21, PR-B) |
+| E44.9 | Integration tests: precheck contract, rate-limit, cost ceiling boundary; submission RLS  | `M` | `P2` | ✅ Done (2026-05-21, PR-B) |
 
 ### Phase C — Admin moderation queue + notifications (PR-C)
 

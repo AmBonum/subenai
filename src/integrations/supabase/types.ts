@@ -1238,6 +1238,68 @@ export type Database = {
           },
         ];
       };
+      template_submissions: {
+        Row: {
+          id: string;
+          template_id: string;
+          author_id: string;
+          author_display_name: string;
+          age_rating_declared: Database["public"]["Enums"]["template_age_rating"];
+          license: Database["public"]["Enums"]["template_license"];
+          status: Database["public"]["Enums"]["template_submission_status"];
+          precheck: Json | null;
+          precheck_passed: boolean | null;
+          precheck_at: string | null;
+          rejection_reason: string | null;
+          reviewed_at: string | null;
+          reviewer_id: string | null;
+          submitted_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          template_id: string;
+          author_id: string;
+          author_display_name: string;
+          age_rating_declared: Database["public"]["Enums"]["template_age_rating"];
+          license?: Database["public"]["Enums"]["template_license"];
+          status?: Database["public"]["Enums"]["template_submission_status"];
+          precheck?: Json | null;
+          precheck_passed?: boolean | null;
+          precheck_at?: string | null;
+          rejection_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewer_id?: string | null;
+          submitted_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          template_id?: string;
+          author_id?: string;
+          author_display_name?: string;
+          age_rating_declared?: Database["public"]["Enums"]["template_age_rating"];
+          license?: Database["public"]["Enums"]["template_license"];
+          status?: Database["public"]["Enums"]["template_submission_status"];
+          precheck?: Json | null;
+          precheck_passed?: boolean | null;
+          precheck_at?: string | null;
+          rejection_reason?: string | null;
+          reviewed_at?: string | null;
+          reviewer_id?: string | null;
+          submitted_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "template_submissions_template_id_fkey";
+            columns: ["template_id"];
+            isOneToOne: false;
+            referencedRelation: "templates";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       test_questions: {
         Row: { test_id: string; question_id: string; position: number };
         Insert: { test_id: string; question_id: string; position?: number };
@@ -1754,6 +1816,7 @@ export type Database = {
       template_status: "draft" | "published";
       template_license: "cc-by-4.0";
       template_age_rating: "all" | "thirteen_plus" | "sixteen_plus" | "eighteen_plus";
+      template_submission_status: "pending" | "approved" | "rejected" | "withdrawn";
     };
     CompositeTypes: {
       [_ in never]: never;
