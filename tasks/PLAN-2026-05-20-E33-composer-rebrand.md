@@ -303,14 +303,40 @@ Surfaces concrete number (243), 4-lens example list, anti-LMS positioning.
 - `e2e/poms/composer/ComposerResultsPage.ts` — author results gate + table
 - `e2e/poms/composer/ShareToastPom.ts` — toast assertions
 
-### Deliverables — Phase 2
-- 6 new spec files (~30 TCs total, replacing the current 6 with a fuller contract)
-- 4 new POMs
-- 1 new mock: `e2e/mocks/api/test-sets-rate-limit.ts` for TC-21/22
-- 1 new fixture: `e2e/fixtures/composer.ts` — pre-builds a composer state for responder/results tests
-- Existing `e2e/specs/quiz/composer.spec.ts` deleted (TCs migrated to the new structure)
-- Add `composer:e2e` npm script and CI label trigger
-- E2E run time budget: ≤ 3 minutes for the composer suite (parallelisable)
+### Deliverables — Phase 2 ✅ (shipped 2026-05-20 via feature/E33-phase-2-e2e-contract)
+Senior trim from the original plan (30→12 TCs, 6→3 spec files) after surveying
+existing coverage — the original 30 included ~18 TCs already covered by
+`e2e/specs/quiz/composer.spec.ts` and `e2e/specs/edu/schools-howitworks-contract.spec.ts`.
+Phase 2 fills the gaps instead of duplicating:
+
+- **`e2e/specs/composer/build-ux.spec.ts`** (5 TCs) — Phase 1 UX validation:
+  TC-07 section 3 above fold at 1024×768; TC-08 collapsed-by-default picker;
+  TC-09 eyebrow + intro_v2 verbatim Slovak; TC-10 pluralisation 1/3/5;
+  TC-11 explainer callout + escape-hatch CTA to /tests.
+- **`e2e/specs/composer/round-trip.spec.ts`** (5 TCs) — the critical data-
+  integrity surface: TC-30 full UI round-trip (2 respondents drive intake +
+  quiz UI → author dashboard reflects scores); TC-31 name/email faithfulness
+  (no normalisation/escaping); TC-32 aggregate recompute after delete;
+  TC-33 CSV row consistency with table (GDPR-adjacent); TC-34 10-respondent
+  table scale.
+- **`e2e/specs/composer/seo-jsonld.spec.ts`** (2 TCs) — TC-50 WebApplication
+  block emitted at `/test/builder` (regression sentinel for someone
+  removing the `<script>` from `head()`); TC-51 all fields required for
+  Google's "Free Tool" rich badge (`isAccessibleForFree`, `offers.price=0`,
+  provider=subenai).
+- **`e2e/poms/quiz/ComposerPage.ts`** extended with Phase 1 UX getters
+  (step2*, explainer*) + `expandStep2Picker()` / `expandExplainer()` helpers.
+- New POMs deferred: existing `IntakeFormPage`, `ResultsGatePage`,
+  `QuizFlowPage` cover the round-trip surface — no `e2e/poms/composer/`
+  directory needed.
+- Existing `e2e/specs/quiz/composer.spec.ts` **kept as-is** (covers the
+  build-flow basics + URL-share + stale-notice — different concerns from
+  the new 3 spec files, not duplicates).
+
+**TCs deferred to a future PR** (not blocking Phase 2 close):
+- Multi-tab author auth states (low-value — same user)
+- Rate-limit-per-set isolation (partially covered by TC-04/TC-05 in edu spec)
+- Sliding-window cookie TTL renewal (would need to fake-tick time)
 
 ---
 
