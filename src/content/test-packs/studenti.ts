@@ -4,7 +4,7 @@ export const studentiPack: TestPack = {
   slug: "studenti",
   title: "Študenti (16+) — podvody, na ktoré naletia pri štúdiu",
   tagline:
-    "Fake prenájmy izby pred zápisom, phishing univerzitnÿch portálov AIS2, falošné Erasmus+ štipendiá, Discord Nitro a job scam-y. 13 otázok.",
+    "Fake prenájmy izby pred zápisom, phishing univerzitných portálov AIS2, falošné Erasmus+ štipendiá, Discord Nitro a job scam-y. 13 otázok.",
   industry: "studenti",
   industryEmoji: "🎓",
   targetPersona:
