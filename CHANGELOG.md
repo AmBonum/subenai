@@ -10,6 +10,24 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
+- **Automatizovaný DPA tok pre školy — `/schools/dpa`.** Doteraz „Napíš
+  nám — dostaneš DPA do 1 pracovného dňa" otváral e-mailového klienta
+  a operator ručne posielal PDF. Teraz na `/schools` klikneš na zelený
+  pill *Napíš nám — dostaneš DPA do 1 pracovného dňa*, dostaneš sa na
+  krátky formulár (meno, e-mail, názov školy + GDPR súhlas + Cloudflare
+  Turnstile), klikneš *Vyhotoviť DPA* a PDF sa stiahne okamžite.
+  Kópiu posielame aj na zadaný e-mail. Šablóna pokrýva všetkých 11
+  povinných klauzúl čl. 28(3) GDPR (slovenský preklad podľa Zákona č.
+  18/2018 Z.z.), príloha A so zoznamom kategórií údajov, príloha B s
+  technicko-organizačnými opatreniami a kompletným zoznamom
+  sub-procesorov. Kontaktné údaje (meno, e-mail) sa po 12 mesiacoch
+  automaticky anonymizujú; názov školy a verzia DPA ostávajú pre
+  štatistiku. Operator vidí všetky žiadosti v `/admin/dpa-requests`
+  vrátane stavu doručenia e-mailu, znovu-poslania a manuálnej
+  anonymizácie. **Tok je za feature flagom** — kým neprejde právnym
+  auditom, vygenerované PDF nesie diagonálny vodoznak „DRAFT —
+  NEZAVÄZUJÚCA UKÁŽKA · NEPODPISOVAŤ". Verzie šablóny sledujeme
+  cez stĺpec `dpa_version` pre účely čl. 28 ods. 9 GDPR.
 - **Pripoj si edu testy k svojmu účtu — nová sekcia *Moje edu testy*
   v `/app/edu-tests`.** Edu test, ktorý si vytvoril/a anonymne (cez
   composer + autorské heslo), teraz vieš trvalo pripojiť k svojmu

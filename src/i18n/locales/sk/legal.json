@@ -94,6 +94,11 @@
           "purpose": "Sponzorské platby (faktúra, AML, účtovníctvo)",
           "basis": "Plnenie zmluvy + zákon č. 431/2002 Z. z. / čl. 6 ods. 1 písm. b a c GDPR",
           "retention": "10 rokov"
+        },
+        "dpa": {
+          "purpose": "Žiadosť o DPA (meno, e-mail kontaktu, názov školy)",
+          "basis": "Predzmluvné opatrenia / čl. 6 ods. 1 písm. b GDPR",
+          "retention": "12 mesiacov, potom automatická anonymizácia mena + e-mailu (názov školy + verzia DPA ostávajú pre štatistiku)"
         }
       }
     },
@@ -157,7 +162,7 @@
       "self_service_code": "/r/abc123",
       "self_service_suffix": ") a kliknúť na tlačidlo „Vymazať tento výsledok\" v dolnej časti stránky. Riadok je okamžite fyzicky vymazaný z databázy a share link prestane existovať. Bez emailovej komunikácie, bez čakania.",
       "retention_label": "Automatická retencia:",
-      "retention_prefix": " Spúšťame naplánovanú dennú úlohu o 03:00 UTC, ktorá (a) fyzicky vymaže pokusy staršie než 36 mesiacov, (b) anonymizuje anti-cheat údaje pri pokusoch starších než 12 mesiacov a (c) v edu režime anonymizuje meno + e-mail respondenta po 12 mesiacoch. Doba sa neresetuje žiadnou aktivitou — počíta sa od pôvodného vytvorenia pokusu. Tieto pravidlá sú zapísané v migráciách (",
+      "retention_prefix": " Spúšťame naplánovanú dennú úlohu o 03:00 UTC, ktorá (a) fyzicky vymaže pokusy staršie než 36 mesiacov, (b) anonymizuje anti-cheat údaje pri pokusoch starších než 12 mesiacov, (c) v edu režime anonymizuje meno + e-mail respondenta po 12 mesiacoch a (d) anonymizuje meno + e-mail kontaktu DPA žiadosti po 12 mesiacoch. Doba sa neresetuje žiadnou aktivitou — počíta sa od pôvodného vytvorenia záznamu. Tieto pravidlá sú zapísané v migráciách (",
       "retention_code": "20260426110000_*, 20260521120000_*, 20260521130000_*",
       "retention_suffix": ") a nie sú odporúčaním."
     },

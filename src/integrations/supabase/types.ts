@@ -666,6 +666,51 @@ export type Database = {
         };
         Relationships: [];
       };
+      dpa_requests: {
+        Row: {
+          id: string;
+          created_at: string;
+          downloaded_at: string | null;
+          contact_name: string | null;
+          contact_email: string | null;
+          school_name: string;
+          dpa_version: string;
+          status: "pending" | "delivered" | "signed" | "cancelled";
+          email_status: "pending" | "sent" | "failed";
+          email_error: string | null;
+          ip_hash: string | null;
+          anonymized_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          downloaded_at?: string | null;
+          contact_name?: string | null;
+          contact_email?: string | null;
+          school_name: string;
+          dpa_version: string;
+          status?: "pending" | "delivered" | "signed" | "cancelled";
+          email_status?: "pending" | "sent" | "failed";
+          email_error?: string | null;
+          ip_hash?: string | null;
+          anonymized_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          downloaded_at?: string | null;
+          contact_name?: string | null;
+          contact_email?: string | null;
+          school_name?: string;
+          dpa_version?: string;
+          status?: "pending" | "delivered" | "signed" | "cancelled";
+          email_status?: "pending" | "sent" | "failed";
+          email_error?: string | null;
+          ip_hash?: string | null;
+          anonymized_at?: string | null;
+        };
+        Relationships: [];
+      };
       dsr_requests: {
         Row: {
           id: string;
@@ -1701,6 +1746,10 @@ export type Database = {
         }>;
       };
       purge_expired_respondent_pii: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
+      anonymize_expired_dpa_requests: {
         Args: Record<string, never>;
         Returns: number;
       };

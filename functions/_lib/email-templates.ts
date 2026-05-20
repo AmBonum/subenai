@@ -45,6 +45,37 @@ export function magicLinkPortalEmail(portalUrl: string): {
   return { subject, html, text };
 }
 
+export function dpaDeliveryEmail(input: {
+  schoolName: string;
+  contactName: string;
+  requestId: string;
+}): { subject: string; html: string; text: string } {
+  const subject = `subenai — DPA pre ${input.schoolName}`;
+  const html = wrap(`
+    <p style="font-size:15px;line-height:1.6">
+      ${escapeText(input.contactName)}, posielame ti DPA pre školu
+      <strong>${escapeText(input.schoolName)}</strong> ako prílohu (PDF, ${" "}Art. 28 GDPR).
+    </p>
+    <p style="font-size:14px;line-height:1.6">
+      Zmluvu si prečítajte, vytlačte alebo podpíšte elektronicky a sken nám pošlite späť
+      na tento e-mail. Po podpise zmluvu archivujeme v zmysle účtovných predpisov; do
+      podpisu môžete žiadosť kedykoľvek zrušiť odpoveďou na tento e-mail.
+    </p>
+    <p style="font-size:13px;line-height:1.6;color:#475569">
+      Žiadosť ID: <code>${escapeText(input.requestId)}</code><br />
+      Verzia šablóny a dátum vyhotovenia sú uvedené v päte PDF prílohy.
+    </p>
+  `);
+  const text = [
+    `${input.contactName}, posielame ti DPA pre školu ${input.schoolName} v prílohe (PDF, Art. 28 GDPR).`,
+    "",
+    "Prečítaj si zmluvu, podpíš ju štatutárom školy a sken nám pošli späť na tento e-mail.",
+    "",
+    `Žiadosť ID: ${input.requestId}`,
+  ].join("\n");
+  return { subject, html, text };
+}
+
 export function refundAlertEmail(input: {
   paymentIntentId: string;
   refundedEur: number;

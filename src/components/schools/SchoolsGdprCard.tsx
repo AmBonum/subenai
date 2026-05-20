@@ -3,6 +3,7 @@ import { FileSignature, ShieldCheck } from "lucide-react";
 
 import { ROUTES } from "@/config/routes";
 import { CONTACT_EMAIL } from "@/config/site";
+import { IS_DPA_FLOW_ENABLED } from "@/lib/dpa/feature-flag";
 import { tFor } from "@/i18n/marketing";
 
 // E19.6 — GDPR card with explicit DPA callout.
@@ -82,13 +83,23 @@ export function SchoolsGdprCard() {
         <p className="mt-2 text-sm text-muted-foreground" data-testid="schools-gdpr-dpa-body">
           {t("skoly.gdpr_dpa_body")}
         </p>
-        <a
-          href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("subenai — DPA pre školu")}`}
-          className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-success px-5 py-2.5 text-sm font-semibold text-success-foreground transition-transform hover:-translate-y-0.5"
-          data-testid="schools-gdpr-dpa-link"
-        >
-          {t("skoly.gdpr_dpa_cta")}
-        </a>
+        {IS_DPA_FLOW_ENABLED ? (
+          <Link
+            to="/schools/dpa"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-success px-5 py-2.5 text-sm font-semibold text-success-foreground transition-transform hover:-translate-y-0.5"
+            data-testid="schools-gdpr-dpa-link"
+          >
+            {t("skoly.gdpr_dpa_cta")}
+          </Link>
+        ) : (
+          <a
+            href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("subenai — DPA pre školu")}`}
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-success px-5 py-2.5 text-sm font-semibold text-success-foreground transition-transform hover:-translate-y-0.5"
+            data-testid="schools-gdpr-dpa-link"
+          >
+            {t("skoly.gdpr_dpa_cta")}
+          </a>
+        )}
       </div>
     </section>
   );

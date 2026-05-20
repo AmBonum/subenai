@@ -32,7 +32,9 @@ describe("SchoolsGdprCard", () => {
     expect(screen.getByTestId("schools-gdpr-dpa-body")).toBeInTheDocument();
   });
 
-  it("DPA CTA is a mailto link with DPA-prefilled subject", () => {
+  it("DPA CTA is a mailto link with DPA-prefilled subject when flag is off", () => {
+    // In Vitest, import.meta.env.VITE_DPA_FLOW_ENABLED is unset so the
+    // feature-flag module resolves to false — mailto branch fires.
     render(<SchoolsGdprCard />);
     const link = screen.getByTestId("schools-gdpr-dpa-link");
     const href = link.getAttribute("href") ?? "";

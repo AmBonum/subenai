@@ -36,6 +36,7 @@ import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
 import { Route as TestBuilderRouteImport } from './routes/test.builder'
 import { Route as TShareIdRouteImport } from './routes/t.$shareId'
 import { Route as SponsorsAllRouteImport } from './routes/sponsors.all'
+import { Route as SchoolsDpaRouteImport } from './routes/schools_.dpa'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
@@ -72,6 +73,7 @@ import { Route as AdminNavigationRouteImport } from './routes/admin/navigation'
 import { Route as AdminHeaderRouteImport } from './routes/admin/header'
 import { Route as AdminFooterRouteImport } from './routes/admin/footer'
 import { Route as AdminDsrRouteImport } from './routes/admin/dsr'
+import { Route as AdminDpaRequestsRouteImport } from './routes/admin/dpa-requests'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
@@ -236,6 +238,11 @@ const SponsorsAllRoute = SponsorsAllRouteImport.update({
   id: '/all',
   path: '/all',
   getParentRoute: () => SponsorsRoute,
+} as any)
+const SchoolsDpaRoute = SchoolsDpaRouteImport.update({
+  id: '/schools_/dpa',
+  path: '/schools/dpa',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const SSlugRoute = SSlugRouteImport.update({
   id: '/s/$slug',
@@ -437,6 +444,13 @@ const AdminDsrRoute = AdminDsrRouteImport.update({
   path: '/dsr',
   getParentRoute: () => AdminRoute,
 } as any).lazy(() => import('./routes/admin/dsr.lazy').then((d) => d.Route))
+const AdminDpaRequestsRoute = AdminDpaRequestsRouteImport.update({
+  id: '/dpa-requests',
+  path: '/dpa-requests',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/dpa-requests.lazy').then((d) => d.Route),
+)
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
@@ -631,6 +645,7 @@ export interface FileRoutesByFullPath {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/dpa-requests': typeof AdminDpaRequestsRoute
   '/admin/dsr': typeof AdminDsrRoute
   '/admin/footer': typeof AdminFooterRoute
   '/admin/header': typeof AdminHeaderRoute
@@ -667,6 +682,7 @@ export interface FileRoutesByFullPath {
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/schools/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
   '/test/builder': typeof TestBuilderRouteWithChildren
@@ -719,6 +735,7 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/dpa-requests': typeof AdminDpaRequestsRoute
   '/admin/dsr': typeof AdminDsrRoute
   '/admin/footer': typeof AdminFooterRoute
   '/admin/header': typeof AdminHeaderRoute
@@ -753,6 +770,7 @@ export interface FileRoutesByTo {
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/schools/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
   '/tests/$slug': typeof TestsSlugRoute
@@ -808,6 +826,7 @@ export interface FileRoutesById {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/dpa-requests': typeof AdminDpaRequestsRoute
   '/admin/dsr': typeof AdminDsrRoute
   '/admin/footer': typeof AdminFooterRoute
   '/admin/header': typeof AdminHeaderRoute
@@ -844,6 +863,7 @@ export interface FileRoutesById {
   '/login_/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/schools_/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
   '/test/builder': typeof TestBuilderRouteWithChildren
@@ -902,6 +922,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
+    | '/admin/dpa-requests'
     | '/admin/dsr'
     | '/admin/footer'
     | '/admin/header'
@@ -938,6 +959,7 @@ export interface FileRouteTypes {
     | '/login/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/schools/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
     | '/test/builder'
@@ -990,6 +1012,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/admin/audit'
     | '/admin/categories'
+    | '/admin/dpa-requests'
     | '/admin/dsr'
     | '/admin/footer'
     | '/admin/header'
@@ -1024,6 +1047,7 @@ export interface FileRouteTypes {
     | '/login/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/schools/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
     | '/tests/$slug'
@@ -1078,6 +1102,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
+    | '/admin/dpa-requests'
     | '/admin/dsr'
     | '/admin/footer'
     | '/admin/header'
@@ -1114,6 +1139,7 @@ export interface FileRouteTypes {
     | '/login_/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/schools_/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
     | '/test/builder'
@@ -1176,6 +1202,7 @@ export interface RootRouteChildren {
   LoginVerify2faRoute: typeof LoginVerify2faRoute
   RShareIdRoute: typeof RShareIdRoute
   SSlugRoute: typeof SSlugRoute
+  SchoolsDpaRoute: typeof SchoolsDpaRoute
   TShareIdRoute: typeof TShareIdRoute
   TestBuilderRoute: typeof TestBuilderRouteWithChildren
   TestsSlugRoute: typeof TestsSlugRoute
@@ -1378,6 +1405,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sponsors/all'
       preLoaderRoute: typeof SponsorsAllRouteImport
       parentRoute: typeof SponsorsRoute
+    }
+    '/schools_/dpa': {
+      id: '/schools_/dpa'
+      path: '/schools/dpa'
+      fullPath: '/schools/dpa'
+      preLoaderRoute: typeof SchoolsDpaRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/s/$slug': {
       id: '/s/$slug'
@@ -1631,6 +1665,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDsrRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/dpa-requests': {
+      id: '/admin/dpa-requests'
+      path: '/dpa-requests'
+      fullPath: '/admin/dpa-requests'
+      preLoaderRoute: typeof AdminDpaRequestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/categories': {
       id: '/admin/categories'
       path: '/categories'
@@ -1869,6 +1910,7 @@ interface AdminRouteChildren {
   AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
   AdminAuditRoute: typeof AdminAuditRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminDpaRequestsRoute: typeof AdminDpaRequestsRoute
   AdminDsrRoute: typeof AdminDsrRoute
   AdminFooterRoute: typeof AdminFooterRoute
   AdminHeaderRoute: typeof AdminHeaderRoute
@@ -1895,6 +1937,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAnswerSetsRoute: AdminAnswerSetsRouteWithChildren,
   AdminAuditRoute: AdminAuditRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminDpaRequestsRoute: AdminDpaRequestsRoute,
   AdminDsrRoute: AdminDsrRoute,
   AdminFooterRoute: AdminFooterRoute,
   AdminHeaderRoute: AdminHeaderRoute,
@@ -2046,6 +2089,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginVerify2faRoute: LoginVerify2faRoute,
   RShareIdRoute: RShareIdRoute,
   SSlugRoute: SSlugRoute,
+  SchoolsDpaRoute: SchoolsDpaRoute,
   TShareIdRoute: TShareIdRoute,
   TestBuilderRoute: TestBuilderRouteWithChildren,
   TestsSlugRoute: TestsSlugRoute,
