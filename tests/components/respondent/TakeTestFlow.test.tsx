@@ -22,13 +22,19 @@ const test: SafeTestProjection = {
   status: "published",
 };
 
+// E39 — shareId must match the regex [a-zA-Z0-9]{6,12} (zod boundary).
+// The previous "share-id-12345" had hyphens that the gate now rejects.
+const TEST_SHARE_ID = "shareid12345";
+const TEST_SESSION_ID = "11111111-1111-1111-1111-111111111111";
+const TEST_SESSION_TOKEN = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
+
 function renderFlow(opts: { questionIds?: string[] } = {}) {
   const onClose = vi.fn();
   render(
     <TakeTestFlow
       test={test}
       questionIds={opts.questionIds ?? []}
-      shareId="share-id-12345"
+      shareId={TEST_SHARE_ID}
       onClose={onClose}
     />,
   );
@@ -50,7 +56,7 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
 
   it("calls start_respondent_session on intake submit and advances to questions", async () => {
     rpcMock.mockResolvedValueOnce({
-      data: { session_id: "ses_uuid_1", session_token: "tok_1" },
+      data: { session_id: TEST_SESSION_ID, session_token: TEST_SESSION_TOKEN },
       error: null,
     });
     renderFlow({ questionIds: [] });
@@ -59,7 +65,7 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
       expect(rpcMock).toHaveBeenCalledWith(
         "start_respondent_session",
         expect.objectContaining({
-          p_share_id: "share-id-12345",
+          p_share_id: TEST_SHARE_ID,
           p_intake: { if_name: "Anna" },
           p_consent_given: true,
         }),
@@ -78,7 +84,7 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
 
   it("does NOT call finalize when there are no questions to answer", async () => {
     rpcMock.mockResolvedValueOnce({
-      data: { session_id: "ses_uuid_1", session_token: "tok_1" },
+      data: { session_id: TEST_SESSION_ID, session_token: TEST_SESSION_TOKEN },
       error: null,
     });
     renderFlow({ questionIds: [] });

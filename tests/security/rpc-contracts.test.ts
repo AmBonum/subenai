@@ -215,14 +215,24 @@ describe("log_audit_event RPC contract", () => {
 // ---------------------------------------------------------------------------
 // start_respondent_session — happy path, no automatic retry on success.
 // ---------------------------------------------------------------------------
+// E39 — fixtures use real-shape values that satisfy the zod boundary
+// (uuids for session_id / session_token; share_id matches the migration
+// regex). Without this, the zod gate rejects the input client-side and
+// the RPC is never called.
+const SESS_1 = "11111111-1111-1111-1111-111111111111";
+const SESS_2 = "22222222-2222-2222-2222-222222222222";
+const TOK_1 = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
+const TOK_XYZ = "cccccccc-cccc-cccc-cccc-cccccccccccc";
+const SESS_FROM_SERVER = "33333333-3333-3333-3333-333333333333";
+
 describe("start_respondent_session RPC contract", () => {
   it("is invoked exactly once on a successful start (no retry, no double-call)", async () => {
     rpcMock.mockResolvedValueOnce({
-      data: { session_id: "sess_1", session_token: "tok_1" },
+      data: { session_id: SESS_1, session_token: TOK_1 },
       error: null,
     });
     await startRespondentSession({
-      shareId: "share_abc",
+      shareId: "shareabc",
       intake: { if_name: "Anna" },
       consent: true,
     });
@@ -236,7 +246,7 @@ describe("start_respondent_session RPC contract", () => {
     });
     await expect(
       startRespondentSession({
-        shareId: "share_abc",
+        shareId: "shareabc",
         intake: {},
         consent: true,
       }),
@@ -253,11 +263,11 @@ describe("start_respondent_session RPC contract", () => {
 describe("submit_respondent_answer RPC contract", () => {
   it("threads the EXACT session id returned by start_respondent_session", async () => {
     rpcMock.mockResolvedValueOnce({
-      data: { session_id: "sess_from_server", session_token: "tok_xyz" },
+      data: { session_id: SESS_FROM_SERVER, session_token: TOK_XYZ },
       error: null,
     });
     const { sessionId, sessionToken } = await startRespondentSession({
-      shareId: "share_xyz",
+      shareId: "sharexyz",
       intake: {},
       consent: true,
     });
@@ -271,8 +281,8 @@ describe("submit_respondent_answer RPC contract", () => {
       timeMs: 1200,
     });
     const [, args] = rpcMock.mock.calls[1] as [string, RpcArgs];
-    expect(args.p_session_id).toBe("sess_from_server");
-    expect(args.p_session_token).toBe("tok_xyz");
+    expect(args.p_session_id).toBe(SESS_FROM_SERVER);
+    expect(args.p_session_token).toBe(TOK_XYZ);
   });
 });
 
@@ -283,21 +293,21 @@ describe("finalize_respondent_session RPC contract", () => {
   it("sends the full { p_session_id, p_score, p_session_token } triple", async () => {
     rpcMock.mockResolvedValueOnce({ data: null, error: null });
     await finalizeRespondentSession({
-      sessionId: "sess_1",
-      sessionToken: "tok_1",
+      sessionId: SESS_1,
+      sessionToken: TOK_1,
       score: 82,
     });
     const [name, args] = rpcMock.mock.calls[0] as [string, RpcArgs];
     expect(name).toBe("finalize_respondent_session");
-    expect(args.p_session_id).toBe("sess_1");
-    expect(args.p_session_token).toBe("tok_1");
+    expect(args.p_session_id).toBe(SESS_1);
+    expect(args.p_session_token).toBe(TOK_1);
     expect(args.p_score).toBe(82);
   });
 
   it("defaults a missing session_token to null (Phase-0 grace window)", async () => {
     rpcMock.mockResolvedValueOnce({ data: null, error: null });
     await finalizeRespondentSession({
-      sessionId: "sess_2",
+      sessionId: SESS_2,
       score: null,
     });
     const [, args] = rpcMock.mock.calls[0] as [string, RpcArgs];
