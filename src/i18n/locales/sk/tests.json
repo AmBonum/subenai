@@ -120,6 +120,7 @@
     "action_duplicate": "Duplikovať",
     "action_edit": "Upraviť",
     "action_delete": "Vymazať",
+    "row_action_submit_public": "Odoslať na zverejnenie",
     "empty_state_public_filter": "Pre tento filter nemáme žiadne verejné šablóny. Skús zmeniť kategóriu alebo vyhľadávací výraz.",
     "empty_state_mine_no_copies": "Ešte si si žiadnu šablónu nezduplikoval. Začni z verejnej knižnice.",
     "empty_state_mine_no_copies_cta": "Pozrieť verejné",
@@ -169,6 +170,38 @@
       "thirteen_plus": "13+",
       "sixteen_plus": "16+",
       "eighteen_plus": "18+"
+    },
+    "submission": {
+      "dialog_title": "Odoslať šablónu na zverejnenie",
+      "author_name_label": "Autor (tvoje zobrazované meno)",
+      "author_name_link": "Zmeniť v profile",
+      "age_rating_label": "Veková kategória",
+      "age_rating_options": {
+        "all": "Bez vekového obmedzenia",
+        "thirteen_plus": "13+",
+        "sixteen_plus": "16+",
+        "eighteen_plus": "18+"
+      },
+      "consent_checkbox_label": "Súhlasím so zverejnením tejto šablóny pod licenciou Creative Commons CC BY 4.0 (autorstvo si ponechávam) a chápem, že už raz zverejnenú kópiu nemožno odvolať z rúk používateľov, ktorí si ju stiahli alebo forkli.",
+      "consent_details_heading": "Detail: čo presne tým dávaš",
+      "consent_details_body": "Kliknutím na \"Odoslať na zverejnenie\" udeľuješ verejnosti licenciu Creative Commons CC BY 4.0 na tvoju šablónu (https://creativecommons.org/licenses/by/4.0/deed.sk). Konkrétne: ktokoľvek si ju môže pozrieť, použiť, upraviť, šíriť aj komerčne — povinný je iba uviesť teba ako autora a odkaz na pôvodnú stránku. Autorstvo a osobnostné práva podľa § 17 zákona č. 185/2015 Z. z. ti zostávajú; licenciu udeľuješ navyše k svojmu vlastníctvu, nepredávaš ho. Túto licenciu nemožno odvolať pre kópie, ktoré si už niekto stiahol alebo forkol — to je súčasťou definície CC BY 4.0. Verejnú kópiu na subenai.sk vieme odstrániť na základe tvojej žiadosti (GDPR čl. 17), ale nedokážeme stiahnuť kópie z internetu. Pred zverejnením tvoju šablónu automaticky skontroluje AI moderátor a manuálne schváli administrátor — toto trvá zvyčajne menej než 24 hodín. Plné podmienky: /privacy.",
+      "attribution_preview_heading": "Takto bude tvoja šablóna podpísaná na verejnej stránke:",
+      "attribution_preview_template": "{name} · CC BY 4.0 · subenai.sk/sablony/{slug}",
+      "attribution_preview_date_line": "Zverejnené {date}",
+      "attribution_preview_slug_placeholder": "{nazov-sablony}",
+      "submit_button": "Odoslať na kontrolu",
+      "cancel_button": "Zrušiť",
+      "submitting_loading": "Overujeme šablónu…",
+      "verdict_success_title": "Šablóna prešla automatickou kontrolou",
+      "verdict_success_body": "Admin ju manuálne schváli — zvyčajne do 24 hodín.",
+      "verdict_held_title": "Šablóna ide na ručnú kontrolu",
+      "verdict_held_body": "Dôvod: {reason}. Ozveme sa hneď ako bude verdikt.",
+      "verdict_error_rate_limit_user": "Dnes si už použil/a 5 kontrol. Skús zajtra.",
+      "verdict_error_rate_limit_global": "Práve je veľa žiadostí. Skús o pár minút.",
+      "verdict_error_cooldown": "Túto šablónu môžeš odoslať znova až po 24 hodinách od zamietnutia.",
+      "verdict_error_budget": "Denný limit kontrol je vyčerpaný. Skús zajtra alebo napíš nám.",
+      "verdict_error_generic": "Nepodarilo sa odoslať. Skús znova alebo napíš nám.",
+      "verdict_close": "Zavrieť"
     }
   },
   "history": {

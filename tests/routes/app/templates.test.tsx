@@ -57,6 +57,21 @@ vi.mock("@/lib/platform/queries", () => ({
     mutateAsync: vi.fn().mockResolvedValue(undefined),
     isPending: false,
   }),
+  useSubmitTemplate: () => ({
+    mutate: vi.fn(),
+    mutateAsync: vi.fn().mockResolvedValue(undefined),
+    isPending: false,
+    reset: vi.fn(),
+  }),
+  SubmitTemplateError: class SubmitTemplateError extends Error {
+    code: string;
+    status: number;
+    constructor(code: string, status: number) {
+      super(code);
+      this.code = code;
+      this.status = status;
+    }
+  },
 }));
 
 import { Route } from "@/routes/app.templates";

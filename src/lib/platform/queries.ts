@@ -14,6 +14,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
 import { getCurrentLocale } from "@/i18n/locale-context";
+import type { PrecheckVerdict } from "@/lib/templates/precheckSchema";
 
 import type { Option, Visual } from "@/lib/quiz/bank/questions";
 
@@ -700,6 +701,89 @@ export function useUpdateOwnTemplate() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["user", "templates"] });
+    },
+  });
+}
+
+// E44.8 — Submit a private template for public publication. POSTs to the
+// /api/templates/precheck Cloudflare Function which runs the Claude Haiku
+// AI moderation pass and writes a `template_submissions` row. Returns a
+// verdict the dialog can render.
+export type SubmitTemplateAgeRating = "all" | "13+" | "16+" | "18+";
+
+export interface SubmitTemplateInput {
+  template: Template;
+  age_rating_self_declared: SubmitTemplateAgeRating;
+}
+
+export interface SubmitTemplateOutput extends PrecheckVerdict {
+  submission_id: string;
+}
+
+export class SubmitTemplateError extends Error {
+  readonly code: string;
+  readonly status: number;
+  constructor(code: string, status: number) {
+    super(code);
+    this.name = "SubmitTemplateError";
+    this.code = code;
+    this.status = status;
+  }
+}
+
+export function useSubmitTemplate() {
+  const qc = useQueryClient();
+  return useMutation<SubmitTemplateOutput, SubmitTemplateError, SubmitTemplateInput>({
+    mutationFn: async ({ template, age_rating_self_declared }) => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) throw new SubmitTemplateError("unauthorized", 401);
+
+      // Question text join lands when Phase B integrates with the question
+      // library RPC; for now we send the question_ids stringified so the
+      // AI sees something deterministic to reason about.
+      const question_texts = template.question_ids.map((q) => q);
+
+      const res = await fetch("/api/templates/precheck", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          template_id: template.id,
+          title: template.title,
+          description: template.description,
+          question_texts,
+          age_rating_self_declared,
+          cc_by_consent: true,
+        }),
+      });
+
+      const body = (await res.json().catch(() => null)) as
+        | { error?: string; submission_id?: string }
+        | (PrecheckVerdict & { submission_id: string })
+        | null;
+
+      if (!res.ok) {
+        const code =
+          body && "error" in body && typeof body.error === "string" ? body.error : "request_failed";
+        throw new SubmitTemplateError(code, res.status);
+      }
+      if (!body || !("submission_id" in body) || !body.submission_id) {
+        throw new SubmitTemplateError("invalid_response", 502);
+      }
+      const verdict = body as PrecheckVerdict & { submission_id: string };
+      return {
+        submission_id: verdict.submission_id,
+        precheck_passed: verdict.precheck_passed,
+        age_rating: verdict.age_rating,
+        summary: verdict.summary,
+        held_for_admin_review: verdict.held_for_admin_review,
+      };
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "submissions"] });
     },
   });
 }

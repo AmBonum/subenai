@@ -20,6 +20,7 @@ import { TemplatesTabs, type TemplatesTab } from "@/components/app/templates/Tem
 import { TemplateEditDialog } from "@/components/app/templates/TemplateEditDialog";
 import { TemplateDuplicateDialog } from "@/components/app/templates/TemplateDuplicateDialog";
 import { TemplateDeleteConfirm } from "@/components/app/templates/TemplateDeleteConfirm";
+import { TemplateSubmitDialog } from "@/components/app/templates/TemplateSubmitDialog";
 import { useCurrentProfile, useMyTemplates, usePublicTemplates } from "@/lib/platform/queries";
 import type { GdprPurpose, Template } from "@/lib/platform/types";
 import { tFor } from "@/i18n/tests";
@@ -39,7 +40,7 @@ export const Route = createFileRoute("/app/templates")({
   component: TemplatesPage,
 });
 
-type DialogKind = "edit" | "duplicate" | "delete" | null;
+type DialogKind = "edit" | "duplicate" | "delete" | "submit" | null;
 
 function TemplatesPage() {
   const t = tFor("templates");
@@ -292,6 +293,7 @@ function TemplatesPage() {
               onDuplicate={(x) => openDialog("duplicate", x)}
               onEdit={(x) => openDialog("edit", x)}
               onDelete={(x) => openDialog("delete", x)}
+              onSubmitPublic={(x) => openDialog("submit", x)}
             />
           ))}
         </div>
@@ -312,6 +314,11 @@ function TemplatesPage() {
         template={dialogTemplate}
         open={dialog === "delete"}
         onOpenChange={closeDialog}
+      />
+      <TemplateSubmitDialog
+        template={dialogTemplate}
+        open={dialog === "submit"}
+        onClose={() => setDialog(null)}
       />
     </div>
   );
