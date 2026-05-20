@@ -234,8 +234,17 @@ export function SchoolsDpaForm() {
         emailDelivered,
       });
       setSubmitting(false);
-    } catch {
-      setError("render_failed");
+    } catch (e) {
+      // Capture name + truncated message so the UI shows
+      // `(render_failed:TypeError:Failed to fetch)` etc. — pinpointing
+      // which step (lazy import, react-pdf render, blob convert) threw.
+      // Most plausible go-live causes: lazy chunk 404 / CSP block /
+      // template runtime error. Browser console also gets the raw error.
+      const err = e as Error;
+      const name = err?.name ?? "Error";
+      const msg = (err?.message ?? "").replace(/[^a-zA-Z0-9_ :/-]/g, "").slice(0, 40);
+      console.error("DPA client-side render/post failed", err);
+      setError(msg ? `render_failed:${name}:${msg}` : `render_failed:${name}`);
       setSubmitting(false);
       resetTurnstile();
     }
