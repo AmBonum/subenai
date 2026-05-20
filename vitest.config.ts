@@ -10,6 +10,12 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./tests/setup.ts"],
     include: ["tests/**/*.test.{ts,tsx}"],
+    // Integration tests live in `tests/integration/**` and run via a
+    // separate config (`vitest.integration.config.ts`) that loads
+    // `.env.test.local` + hits a live local Supabase. They MUST NOT
+    // be picked up by the default `npm test` because they require an
+    // out-of-process dependency that CI doesn't always have.
+    exclude: ["tests/integration/**", "node_modules/**", "dist/**"],
     css: false,
     // Default 5000ms was tight under parallel load — once the suite
     // grew past ~180 files, userEvent + waitFor chains in heavy

@@ -1,0 +1,67 @@
+# E35.8 — OWASP ZAP DAST full scan.
+#
+# Full scan = passive + active. Active scan sends real attack payloads
+# (SQLi, XSS, path traversal, etc.) at the target. NEVER point this at
+# a production database without explicit sign-off.
+#
+# Default cadence: manual only (workflow_dispatch). Set up a separate
+# preview / staging environment when running this regularly.
+#
+# When you run it:
+#   - Pick a target URL (preview deploy or staging — NOT production
+#     unless you have an explicit blast-radius assessment).
+#   - Reviews the artifact in the workflow run summary.
+#   - Triage findings into `.zap/rules.tsv` (WARN / FAIL / IGNORE).
+#
+# Why manual-only:
+#   1. Active scan creates real DB writes against the target. Production
+#      writes are a no-go.
+#   2. Active scan can take 30+ minutes — not suitable for per-PR CI.
+#   3. The first run is almost always noisy; a human should triage
+#      before scheduling it on a cron.
+
+name: OWASP ZAP full scan (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "URL to active-scan (PREVIEW or STAGING only, never prod without sign-off)"
+        required: true
+        type: string
+
+permissions:
+  issues: write
+  contents: read
+  checks: write
+
+jobs:
+  zap-full:
+    name: ZAP full scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Guard against scanning production by accident
+        run: |
+          target="${{ inputs.target }}"
+          # The guard is intentionally loud — a real prod-active-scan
+          # decision must override it by editing the workflow.
+          if [[ "$target" == *"subenai.sk"* && "$target" != *"preview"* && "$target" != *"staging"* ]]; then
+            echo "::error::Refusing to active-scan a production-like URL ($target)."
+            echo "::error::Active scan creates DB writes. Set target to a preview / staging URL."
+            exit 1
+          fi
+
+      - name: Run ZAP full scan
+        uses: zaproxy/action-full-scan@v0.10.0
+        with:
+          target: ${{ inputs.target }}
+          rules_file_name: ".zap/rules.tsv"
+          cmd_options: "-a -j"
+          fail_action: false
+          allow_issue_writing: false
+          artifact_name: "zap-full-scan-report"

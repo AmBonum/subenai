@@ -1,0 +1,88 @@
+# E35.7 — CodeQL SAST analysis (free-tier GitHub-native).
+#
+# CodeQL is GitHub's static analysis engine. Free for public repos,
+# free within the standard Actions minutes quota for private repos.
+# No paid SaaS, no third-party API, no rate-limited cloud.
+#
+# Best practices applied:
+#   1. Use the unified `javascript-typescript` language (covers both
+#      our TS source AND any JS in scripts/, functions/).
+#   2. Run on PRs against main + on push to main + weekly schedule.
+#      Weekly catches new CVE / rule additions even when the codebase
+#      hasn't changed.
+#   3. `paths-ignore` excludes pure documentation so a typo-fix PR
+#      doesn't burn Actions minutes on an unchanged-code scan.
+#   4. Use the `security-extended` query suite — finds more vulns at
+#      the cost of a longer scan. The `security-and-quality` suite is
+#      even bigger but tends to over-report style issues; extended is
+#      the senior sweet spot.
+#   5. `category` namespaces the findings in the Security tab so two
+#      different languages / configs don't collide.
+#
+# Triage:
+#   GitHub → Security → Code scanning alerts.
+#   Findings are auto-deduplicated across runs.
+
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - "tasks/**"
+      - "specs/**"
+      - "CHANGELOG.md"
+      - ".gitignore"
+  schedule:
+    # Weekly Tuesday 05:00 UTC — staggered with ZAP baseline (Monday 04:00).
+    - cron: "0 5 * * 2"
+  workflow_dispatch: {}
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  # Required to upload SARIF results to the Security tab.
+  security-events: write
+  # Required to read the repository.
+  contents: read
+  # Required for actions/checkout to work on PRs from forks.
+  actions: read
+
+jobs:
+  analyze:
+    name: Analyze (javascript-typescript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript-typescript"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # security-extended catches more vulns than the default suite
+          # without the style noise of security-and-quality.
+          queries: security-extended
+
+      # The autobuild step is required for compiled languages; for
+      # javascript-typescript it's a no-op that returns instantly.
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
