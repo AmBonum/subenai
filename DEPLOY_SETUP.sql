@@ -4203,6 +4203,83 @@ CREATE POLICY template_submissions_admin_all ON public.template_submissions
     WITH CHECK (public.has_role(auth.uid(), 'admin'));
 
 -- ============================================================================
+-- 20260521200000_dpa_requests.sql (E40.1)
+-- ============================================================================
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+CREATE TABLE IF NOT EXISTS public.dpa_requests (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  downloaded_at timestamptz,
+  contact_name text,
+  contact_email text,
+  school_name text NOT NULL,
+  dpa_version text NOT NULL,
+  status text NOT NULL DEFAULT 'pending'
+    CHECK (status IN ('pending', 'delivered', 'signed', 'cancelled')),
+  email_status text NOT NULL DEFAULT 'pending'
+    CHECK (email_status IN ('pending', 'sent', 'failed')),
+  email_error text,
+  ip_hash text,
+  anonymized_at timestamptz,
+  CONSTRAINT dpa_requests_anonymised_consistent CHECK (
+    (anonymized_at IS NULL) OR (contact_name IS NULL AND contact_email IS NULL)
+  )
+);
+
+ALTER TABLE public.dpa_requests ENABLE ROW LEVEL SECURITY;
+
+CREATE INDEX IF NOT EXISTS dpa_requests_created_at_idx
+  ON public.dpa_requests (created_at DESC);
+
+CREATE INDEX IF NOT EXISTS dpa_requests_school_name_trgm_idx
+  ON public.dpa_requests USING gin (school_name gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS dpa_requests_status_idx
+  ON public.dpa_requests (status)
+  WHERE status <> 'cancelled';
+
+DROP POLICY IF EXISTS dpa_requests_admin_read ON public.dpa_requests;
+CREATE POLICY dpa_requests_admin_read ON public.dpa_requests
+  FOR SELECT TO authenticated
+  USING (public.has_role(auth.uid(), 'admin'));
+
+DROP POLICY IF EXISTS dpa_requests_admin_update ON public.dpa_requests;
+CREATE POLICY dpa_requests_admin_update ON public.dpa_requests
+  FOR UPDATE TO authenticated
+  USING (public.has_role(auth.uid(), 'admin'))
+  WITH CHECK (public.has_role(auth.uid(), 'admin'));
+
+CREATE OR REPLACE FUNCTION public.anonymize_expired_dpa_requests()
+RETURNS integer
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  touched_count integer;
+BEGIN
+  WITH updated AS (
+    UPDATE public.dpa_requests
+    SET
+      contact_name = NULL,
+      contact_email = NULL,
+      anonymized_at = now()
+    WHERE created_at < (now() - interval '12 months')
+      AND anonymized_at IS NULL
+    RETURNING 1
+  )
+  SELECT count(*) INTO touched_count FROM updated;
+  RETURN touched_count;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.anonymize_expired_dpa_requests() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.anonymize_expired_dpa_requests() FROM anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.anonymize_expired_dpa_requests() TO service_role;
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT
