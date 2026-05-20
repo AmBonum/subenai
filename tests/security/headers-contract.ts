@@ -37,6 +37,12 @@ export const CSP_ALLOWLIST: Record<string, readonly string[]> = {
   "script-src": [
     "'self'",
     "'unsafe-inline'",
+    // E40 hotfix #84 — @react-pdf/renderer v4 instantiates the
+    // yoga-layout-wasm module for PDF layout (table column widths in
+    // the DPA template). 'wasm-unsafe-eval' is the modern narrow
+    // keyword that allows WebAssembly compilation only, NOT
+    // eval()/Function() of JS strings (safer than 'unsafe-eval').
+    "'wasm-unsafe-eval'",
     "https://js.stripe.com",
     "https://checkout.stripe.com",
     "https://challenges.cloudflare.com",
@@ -58,6 +64,11 @@ export const CSP_ALLOWLIST: Record<string, readonly string[]> = {
   "font-src": ["'self'", "data:"],
   "connect-src": [
     "'self'",
+    // E40 hotfix #84 — @react-pdf/renderer fetches its yoga-layout-wasm
+    // module as a `data:application/octet-stream;base64,…` URL.
+    // connect-src must allow data: so the runtime fetch succeeds before
+    // WebAssembly.instantiate() runs.
+    "data:",
     "https://*.supabase.co",
     "https://api.stripe.com",
     "https://q.stripe.com",
