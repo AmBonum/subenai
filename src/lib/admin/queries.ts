@@ -1636,3 +1636,118 @@ export function useAdminActivity(limit = 20) {
     },
   });
 }
+
+// ---------------------------------------------------------------------------
+// DPA requests queue (E40.5)
+// ---------------------------------------------------------------------------
+
+export type DpaRequestStatus = "pending" | "delivered" | "signed" | "cancelled";
+export type DpaEmailStatus = "pending" | "sent" | "failed";
+
+export interface AdminDpaRequest {
+  id: string;
+  created_at: string;
+  contact_name: string | null;
+  contact_email: string | null;
+  school_name: string;
+  dpa_version: string;
+  status: DpaRequestStatus;
+  email_status: DpaEmailStatus;
+  email_error: string | null;
+  anonymized_at: string | null;
+}
+
+export function useAdminDpaRequests() {
+  return useQuery({
+    queryKey: ["admin", "dpa_requests"],
+    queryFn: async (): Promise<AdminDpaRequest[]> => {
+      const { data, error } = await supabase
+        .from("dpa_requests")
+        .select(
+          "id, created_at, contact_name, contact_email, school_name, dpa_version, status, email_status, email_error, anonymized_at",
+        )
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as AdminDpaRequest[];
+    },
+  });
+}
+
+export function useUpdateDpaRequestStatus() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: DpaRequestStatus }) => {
+      const { error } = await supabase.from("dpa_requests").update({ status }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "dpa_requests"] }),
+  });
+}
+
+export function useAnonymiseDpaRequest() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      const { error } = await supabase
+        .from("dpa_requests")
+        .update({
+          contact_name: null,
+          contact_email: null,
+          anonymized_at: new Date().toISOString(),
+        })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "dpa_requests"] }),
+  });
+}
+
+export function useResendDpaEmail() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ row }: { row: AdminDpaRequest }) => {
+      if (!row.contact_name || !row.contact_email) {
+        throw new Error("anonymised");
+      }
+      const { renderDpaPdfBlob } = await import("@/lib/dpa/render.client");
+      const blob = await renderDpaPdfBlob({
+        schoolName: row.school_name,
+        contactName: row.contact_name,
+        contactEmail: row.contact_email,
+        requestId: row.id,
+        version: row.dpa_version,
+      });
+      const pdfBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const r = String(reader.result ?? "");
+          const idx = r.indexOf(",");
+          resolve(idx >= 0 ? r.slice(idx + 1) : r);
+        };
+        reader.onerror = () => reject(new Error("read_blob_failed"));
+        reader.readAsDataURL(blob);
+      });
+      // Reset email_status to 'pending' so the handler's 409 already_sent
+      // guard does not refuse a legitimate admin-triggered re-send.
+      await supabase.from("dpa_requests").update({ email_status: "pending" }).eq("id", row.id);
+      const response = await fetch("/api/dpa-email-attach", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          requestId: row.id,
+          fileName: `DPA-subenai-${row.school_name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "")
+            .slice(0, 60)}-${row.dpa_version}.pdf`,
+          pdfBase64,
+        }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!response.ok || !payload.ok) {
+        throw new Error(payload.error ?? "send_failed");
+      }
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "dpa_requests"] }),
+  });
+}

@@ -60,7 +60,7 @@ This epic replaces the `mailto:` with a real intake flow: school contact fills a
 | [E40.2](./stories/E40.2-dpa-form-route.md) | `/schools/dpa` route + intake form + server function (download path) | `M` | `P1` | ✅ Done |
 | [E40.3](./stories/E40.3-dpa-pdf-template.md) | Slovak Art. 28 DPA template v0.1 + react-pdf render harness | `L` | `P1` | ✅ Done |
 | [E40.4](./stories/E40.4-dpa-email-delivery.md) | Resend integration + e-mail attachment path + env secret | `S` | `P1` | ✅ Done |
-| [E40.5](./stories/E40.5-admin-dpa-panel.md) | `/admin/dpa-requests` list + detail + status flips | `M` | `P2` | 🟡 Ready |
+| [E40.5](./stories/E40.5-admin-dpa-panel.md) | `/admin/dpa-requests` list + detail + status flips | `M` | `P2` | ✅ Done |
 | [E40.6](./stories/E40.6-retention-integration.md) | Extend E38 retention cron to call new anonymise RPC + privacy copy + CHANGELOG + CTA rewire | `S` | `P2` | 🟡 Ready |
 
 **Total estimate:** ~7–9 dev-days for one developer working solo. With the feature-flag gate (D5) the epic can ship in two phases — phase A (E40.1–E40.4 behind flag, on a staging URL for legal review) and phase B (legal sign-off → flag on → E40.5 + E40.6 land on main).

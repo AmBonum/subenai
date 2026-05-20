@@ -73,6 +73,7 @@ import { Route as AdminNavigationRouteImport } from './routes/admin/navigation'
 import { Route as AdminHeaderRouteImport } from './routes/admin/header'
 import { Route as AdminFooterRouteImport } from './routes/admin/footer'
 import { Route as AdminDsrRouteImport } from './routes/admin/dsr'
+import { Route as AdminDpaRequestsRouteImport } from './routes/admin/dpa-requests'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
@@ -443,6 +444,13 @@ const AdminDsrRoute = AdminDsrRouteImport.update({
   path: '/dsr',
   getParentRoute: () => AdminRoute,
 } as any).lazy(() => import('./routes/admin/dsr.lazy').then((d) => d.Route))
+const AdminDpaRequestsRoute = AdminDpaRequestsRouteImport.update({
+  id: '/dpa-requests',
+  path: '/dpa-requests',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/dpa-requests.lazy').then((d) => d.Route),
+)
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
@@ -637,6 +645,7 @@ export interface FileRoutesByFullPath {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/dpa-requests': typeof AdminDpaRequestsRoute
   '/admin/dsr': typeof AdminDsrRoute
   '/admin/footer': typeof AdminFooterRoute
   '/admin/header': typeof AdminHeaderRoute
@@ -726,6 +735,7 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/dpa-requests': typeof AdminDpaRequestsRoute
   '/admin/dsr': typeof AdminDsrRoute
   '/admin/footer': typeof AdminFooterRoute
   '/admin/header': typeof AdminHeaderRoute
@@ -816,6 +826,7 @@ export interface FileRoutesById {
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/dpa-requests': typeof AdminDpaRequestsRoute
   '/admin/dsr': typeof AdminDsrRoute
   '/admin/footer': typeof AdminFooterRoute
   '/admin/header': typeof AdminHeaderRoute
@@ -911,6 +922,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
+    | '/admin/dpa-requests'
     | '/admin/dsr'
     | '/admin/footer'
     | '/admin/header'
@@ -1000,6 +1012,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/admin/audit'
     | '/admin/categories'
+    | '/admin/dpa-requests'
     | '/admin/dsr'
     | '/admin/footer'
     | '/admin/header'
@@ -1089,6 +1102,7 @@ export interface FileRouteTypes {
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
+    | '/admin/dpa-requests'
     | '/admin/dsr'
     | '/admin/footer'
     | '/admin/header'
@@ -1651,6 +1665,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDsrRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/dpa-requests': {
+      id: '/admin/dpa-requests'
+      path: '/dpa-requests'
+      fullPath: '/admin/dpa-requests'
+      preLoaderRoute: typeof AdminDpaRequestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/categories': {
       id: '/admin/categories'
       path: '/categories'
@@ -1889,6 +1910,7 @@ interface AdminRouteChildren {
   AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
   AdminAuditRoute: typeof AdminAuditRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminDpaRequestsRoute: typeof AdminDpaRequestsRoute
   AdminDsrRoute: typeof AdminDsrRoute
   AdminFooterRoute: typeof AdminFooterRoute
   AdminHeaderRoute: typeof AdminHeaderRoute
@@ -1915,6 +1937,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAnswerSetsRoute: AdminAnswerSetsRouteWithChildren,
   AdminAuditRoute: AdminAuditRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminDpaRequestsRoute: AdminDpaRequestsRoute,
   AdminDsrRoute: AdminDsrRoute,
   AdminFooterRoute: AdminFooterRoute,
   AdminHeaderRoute: AdminHeaderRoute,
