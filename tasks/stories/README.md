@@ -2,9 +2,9 @@
 
 Generated 2026-05-01. This file is the **single source of truth** for a quick overview — the detail of each story lives in its own `.md` file.
 
-> **State: 58 / 60 stories ✅ Done, 2 🟡 Ready (awaiting implementation).**
+> **State: 58 / 60 base stories ✅ Done, 2 🟡 Ready. E44 (Template Marketplace) added 2026-05-20 — Phase A scoped 5 stories, 0/5 done, 🟡 In progress.**
 >
-> Once the last 2 are finished, the entire `tasks/stories` directory can be marked as complete.
+> Total open work: 2 legacy stories (E7.3, E7.4) + 5 Phase A stories of E44.
 
 ## Summary by epic
 
@@ -22,15 +22,21 @@ Generated 2026-05-01. This file is the **single source of truth** for a quick ov
 | **E10** Sponsorship infrastructure | [PLAN-2026-04-26](../PLAN-2026-04-26-custom-tests-sponsorship.md#epic-10--sponsorship-infrastructure) | 5/5 | ✅ Epic complete |
 | **E11** Sponsorship UI + invoicing | [PLAN-2026-04-26](../PLAN-2026-04-26-custom-tests-sponsorship.md#epic-11--sponsorship-ui--invoicing) | 8/8 | ✅ Epic complete |
 | **E12** Education mode | [PLAN-2026-04-26](../PLAN-2026-04-26-custom-tests-sponsorship.md#epic-12--education-mode-autori-zbierajú-výsledky) | 7/7 | ✅ Epic complete |
+| **E44** Template Marketplace (Phase A) | [PLAN-2026-05-20](../PLAN-2026-05-20-E44-template-marketplace.md#phase-a--foundation-db--rls--private-crud-on-apptemplates-this-pr) | 0/5 | 🟡 In progress |
 
-**11 / 12 epics are 100 % done. The last one (E7) has 2/6 stories pending.**
+**11 / 12 legacy epics are 100 % done. E7 has 2/6 stories pending. E44 Phase A has 0/5 stories done (5 🟡 Ready).**
 
 ## Pending — what's left
 
 - **[E7.3](./E7.3-industry-packs-batch-b.md)** — Industry packs B (5 packs: dispatch, transport, marketing, healthcare, schools). Effort `M`, Priority `P2`.
 - **[E7.4](./E7.4-industry-packs-batch-c.md)** — Industry packs C (5 packs: machine shops, tyre service, SME accounting, HORECA, repair shops). Effort `M`, Priority `P3`.
+- **[E44.1](./E44.1-templates-migration.md)** — `templates_v2_ownership.sql` migration: 4 enums, 10 columns, 6 RLS policies, 3 indexes, 2 triggers, 15 default templates, types sync. Effort `M`, Priority `P1`.
+- **[E44.2](./E44.2-queries-layer-rewrite.md)** — Queries split: `useMyTemplates` / `usePublicTemplates` + duplicate / update / delete mutations + `Template` type extension. Effort `S`, Priority `P1`.
+- **[E44.3](./E44.3-templates-ui-rewrite.md)** — `/app/templates` UI rebuild: tabs, kebab menu, three dialogs, 14 UX fixes, 47 test-ids, keyboard shortcuts, a11y. Effort `M`, Priority `P1`.
+- **[E44.4](./E44.4-templates-tests.md)** — Vitest unit + component, DB SQL contract, Playwright e2e stub + POM. Effort `M`, Priority `P1`.
+- **[E44.5](./E44.5-phase-a-docs.md)** — Phase A docs: 5 story files, CHANGELOG line, stories README update. Effort `XS`, Priority `P2`.
 
-Both are content-only — adding 5 + 5 packs to `src/content/test-packs/`. No code change in UI / API. After they ship, this README can be reduced to "✅ All stories Done".
+E7.3 and E7.4 are content-only — adding 5 + 5 packs to `src/content/test-packs/`. E44 Phase A is a full schema + UI rebuild (single PR-A on `feature/E44-template-marketplace`).
 
 ## Convention
 

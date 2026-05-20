@@ -224,12 +224,28 @@ export interface DSRRequest {
   resolved_at: string | null;
 }
 
+export type TemplateVisibility = "private" | "public" | "unlisted";
+export type TemplateStatus = "draft" | "published";
+export type TemplateLicense = "cc-by-4.0";
+export type TemplateAgeRating = "all" | "thirteen_plus" | "sixteen_plus" | "eighteen_plus";
+
 export interface Template {
   id: string;
   title: string;
   description: string;
   question_ids: string[];
   gdpr_purpose: GdprPurpose;
+  owner_id: string | null;
+  visibility: TemplateVisibility;
+  fork_of: string | null;
+  status: TemplateStatus;
+  license: TemplateLicense;
+  author_display_name: string | null;
+  age_rating: TemplateAgeRating;
+  slug: string | null;
+  published_at: string | null;
+  updated_at: string;
+  created_at: string;
 }
 
 // ---------- AH-11.2a additions: user-side query shapes ----------

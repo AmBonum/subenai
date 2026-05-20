@@ -543,42 +543,73 @@ export const SEED_DSR: DSRRequest[] = [
 ];
 
 // ---------- Templates ----------
+const seedDefault = (
+  id: string,
+  title: string,
+  description: string,
+  questions: string[],
+  gdpr_purpose: Template["gdpr_purpose"],
+  slug: string,
+): Template => ({
+  id,
+  title,
+  description,
+  question_ids: questions,
+  gdpr_purpose,
+  owner_id: null,
+  visibility: "public",
+  fork_of: null,
+  status: "published",
+  license: "cc-by-4.0",
+  author_display_name: null,
+  age_rating: "all",
+  slug,
+  published_at: daysAgo(30),
+  updated_at: daysAgo(30),
+  created_at: daysAgo(30),
+});
+
 export const SEED_TEMPLATES: Template[] = [
-  {
-    id: "tpl_001",
-    title: "Onboarding kolegov",
-    description: "Základná bezpečnostná hygiena pre nový tím",
-    question_ids: SEED_QUESTIONS.slice(0, 8).map((q) => q.id),
-    gdpr_purpose: "internal_training",
-  },
-  {
-    id: "tpl_002",
-    title: "Phishing 101",
-    description: "Najčastejšie útoky e-mailom",
-    question_ids: SEED_QUESTIONS.slice(8, 16).map((q) => q.id),
-    gdpr_purpose: "education",
-  },
-  {
-    id: "tpl_003",
-    title: "SMS podvody",
-    description: "Smishing scenáre pre širokú verejnosť",
-    question_ids: SEED_QUESTIONS.slice(16, 22).map((q) => q.id),
-    gdpr_purpose: "education",
-  },
-  {
-    id: "tpl_004",
-    title: "Senior — základ",
-    description: "Pre rodičov a starých rodičov",
-    question_ids: SEED_QUESTIONS.slice(22, 28).map((q) => q.id),
-    gdpr_purpose: "education",
-  },
-  {
-    id: "tpl_005",
-    title: "HR recruitment screen",
-    description: "Posúdenie security awareness uchádzača",
-    question_ids: SEED_QUESTIONS.slice(28, 38).map((q) => q.id),
-    gdpr_purpose: "recruitment",
-  },
+  seedDefault(
+    "tpl_001",
+    "Onboarding kolegov",
+    "Základná bezpečnostná hygiena pre nový tím",
+    SEED_QUESTIONS.slice(0, 8).map((q) => q.id),
+    "internal_training",
+    "onboarding-kolegov",
+  ),
+  seedDefault(
+    "tpl_002",
+    "Phishing 101",
+    "Najčastejšie útoky e-mailom",
+    SEED_QUESTIONS.slice(8, 16).map((q) => q.id),
+    "education",
+    "phishing-101",
+  ),
+  seedDefault(
+    "tpl_003",
+    "SMS podvody",
+    "Smishing scenáre pre širokú verejnosť",
+    SEED_QUESTIONS.slice(16, 22).map((q) => q.id),
+    "education",
+    "sms-podvody",
+  ),
+  seedDefault(
+    "tpl_004",
+    "Senior — základ",
+    "Pre rodičov a starých rodičov",
+    SEED_QUESTIONS.slice(22, 28).map((q) => q.id),
+    "education",
+    "senior-zaklad",
+  ),
+  seedDefault(
+    "tpl_005",
+    "HR recruitment screen",
+    "Posúdenie security awareness uchádzača",
+    SEED_QUESTIONS.slice(28, 38).map((q) => q.id),
+    "recruitment",
+    "hr-recruitment-screen",
+  ),
 ];
 
 // ---------- Respondent groups ----------

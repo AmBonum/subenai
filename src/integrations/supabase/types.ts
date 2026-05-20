@@ -1178,6 +1178,16 @@ export type Database = {
           question_ids: string[];
           gdpr_purpose: Database["public"]["Enums"]["gdpr_purpose"];
           created_at: string;
+          owner_id: string | null;
+          visibility: Database["public"]["Enums"]["template_visibility"];
+          fork_of: string | null;
+          status: Database["public"]["Enums"]["template_status"];
+          license: Database["public"]["Enums"]["template_license"];
+          author_display_name: string | null;
+          age_rating: Database["public"]["Enums"]["template_age_rating"];
+          slug: string | null;
+          published_at: string | null;
+          updated_at: string;
         };
         Insert: {
           id?: string;
@@ -1186,6 +1196,16 @@ export type Database = {
           question_ids?: string[];
           gdpr_purpose?: Database["public"]["Enums"]["gdpr_purpose"];
           created_at?: string;
+          owner_id?: string | null;
+          visibility?: Database["public"]["Enums"]["template_visibility"];
+          fork_of?: string | null;
+          status?: Database["public"]["Enums"]["template_status"];
+          license?: Database["public"]["Enums"]["template_license"];
+          author_display_name?: string | null;
+          age_rating?: Database["public"]["Enums"]["template_age_rating"];
+          slug?: string | null;
+          published_at?: string | null;
+          updated_at?: string;
         };
         Update: {
           id?: string;
@@ -1194,8 +1214,26 @@ export type Database = {
           question_ids?: string[];
           gdpr_purpose?: Database["public"]["Enums"]["gdpr_purpose"];
           created_at?: string;
+          owner_id?: string | null;
+          visibility?: Database["public"]["Enums"]["template_visibility"];
+          fork_of?: string | null;
+          status?: Database["public"]["Enums"]["template_status"];
+          license?: Database["public"]["Enums"]["template_license"];
+          author_display_name?: string | null;
+          age_rating?: Database["public"]["Enums"]["template_age_rating"];
+          slug?: string | null;
+          published_at?: string | null;
+          updated_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "templates_fork_of_fkey";
+            columns: ["fork_of"];
+            isOneToOne: false;
+            referencedRelation: "templates";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       test_questions: {
         Row: { test_id: string; question_id: string; position: number };
@@ -1692,6 +1730,10 @@ export type Database = {
       team_role: "owner" | "editor" | "viewer";
       dsr_type: "access" | "erase" | "portability";
       dsr_status: "open" | "in_progress" | "completed" | "rejected";
+      template_visibility: "private" | "public" | "unlisted";
+      template_status: "draft" | "published";
+      template_license: "cc-by-4.0";
+      template_age_rating: "all" | "thirteen_plus" | "sixteen_plus" | "eighteen_plus";
     };
     CompositeTypes: {
       [_ in never]: never;
