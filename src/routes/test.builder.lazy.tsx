@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { createLazyFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { PackPreloadChips } from "@/components/composer/build/PackPreloadChips";
-import { QuestionPicker } from "@/components/composer/build/QuestionPicker";
+import { ComposerStep2Picker } from "@/components/composer/build/ComposerStep2Picker";
+import { ComposerExplainer } from "@/components/composer/build/ComposerExplainer";
 import { ComposerSettings } from "@/components/composer/build/ComposerSettings";
 import { EduSettings, EDU_PASSWORD_MIN_LEN } from "@/components/composer/edu/intake/EduSettings";
 import { EduSuccessDialog } from "@/components/composer/edu/intake/EduSuccessDialog";
@@ -318,22 +319,33 @@ export function ComposerPage() {
   return (
     <div className="min-h-screen bg-background pb-40">
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
-        <header className="mb-10 text-center md:text-left">
+        <header className="mb-8 text-center md:text-left">
           <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
             ← {tFor("common")("back_home")}
           </Link>
+          <p
+            data-testid="composer-page-eyebrow"
+            className="mt-4 text-xs font-bold uppercase tracking-widest text-primary"
+          >
+            {t("eyebrow")}
+          </p>
           <h1
             data-testid="composer-page-heading"
-            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+            className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
           >
             {t("page_heading")}
           </h1>
-          <p className="mt-3 text-base text-muted-foreground sm:text-lg">
-            {t("page_intro.prefix")}
-            <strong className="text-foreground">{t("page_intro.strong")}</strong>
-            {t("page_intro.suffix")}
+          <p
+            data-testid="composer-page-intro"
+            className="mt-3 text-base text-muted-foreground sm:text-lg"
+          >
+            {t("intro_v2_prefix")}
+            <strong className="text-foreground">{t("intro_v2_count")}</strong>
+            {t("intro_v2_suffix")}
           </p>
         </header>
+
+        <ComposerExplainer />
 
         {staleNotice ? (
           <div
@@ -386,7 +398,7 @@ export function ComposerPage() {
             <h3 id="step-2-h" className="text-lg font-semibold text-foreground">
               <span className="text-primary">2.</span> {t("step_2_heading")}
             </h3>
-            <QuestionPicker
+            <ComposerStep2Picker
               questions={QUESTIONS}
               selectedIds={selectedIds}
               onToggle={toggleQuestion}
