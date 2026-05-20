@@ -69,7 +69,7 @@
     "eyebrow": "PRE TÍM · 5 MINÚT",
     "intro_v2_prefix": "Vyber zo ",
     "intro_v2_count": "243 otázok",
-    "intro_v2_suffix": " podľa toho, čo tvoj tím skutočne stretáva — phishing v e-shope, vishing v call-centre, fake faktúra v účtarni. Pošli link, dostaneš anonymné výsledky podľa hodnotenia ktoré si si určil/a. Žiadna registrácia, žiadny LMS.",
+    "intro_v2_suffix": " podľa toho, čo tvoj tím skutočne stretáva — phishing v e-shope, vishing v call-centre, falošná faktúra v účtarni. Pošli link, dostaneš anonymné výsledky podľa hodnotenia ktoré si si určil/a. Žiadna registrácia, žiadny LMS.",
     "explainer_heading": "Kedy si zostaviť vlastný test vs. použiť hotový?",
     "explainer_custom": "Vlastný (tu): keď chceš presne vybrať otázky alebo zmiešať viacero tém pre tím s rôznymi rizikami.",
     "explainer_pack": "Hotový balík: keď chceš okamžite spustiť — máme 9 odvetví od e-shopu po IT.",
@@ -126,7 +126,7 @@
     "categories": {
       "phishing": "Phishing",
       "url": "URL",
-      "fake_vs_real": "Fake vs. real",
+      "fake_vs_real": "Falošné vs. skutočné",
       "scenario": "Scenár",
       "honeypot": "Vyzerá podozrivo, ale OK"
     },
@@ -302,7 +302,7 @@
     "go_test": "Otestuj sa",
     "header_label": "Cudzí výsledok",
     "context_kicker": "čo je tento výsledok?",
-    "context_body": "subenai je 5-minútový test, ktorý zmeria, ako rozpoznávaš online podvody — phishing, fake e-shopy, vishing, deepfaky. Anonymný, bez registrácie, zadarmo.",
+    "context_body": "subenai je 5-minútový test, ktorý zmeria, ako rozpoznávaš online podvody — phishing, falošné e-shopy, vishing, deepfaky. Anonymný, bez registrácie, zadarmo.",
     "compare_cta": "Porovnaj sa — otestuj sa za 5 minút",
     "compare_cta_sub": "Hneď uvidíš, či by si dopadol/a lepšie",
     "percentile": {
@@ -390,7 +390,7 @@
     "categories": {
       "phishing": "Phishing",
       "url": "URL",
-      "fake_vs_real": "Fake vs. real",
+      "fake_vs_real": "Falošné vs. skutočné",
       "scenario": "Scenár",
       "honeypot": "Vyzerá podozrivo, ale OK"
     }
@@ -492,7 +492,7 @@
     "og_description": "Phishing, podvodné SMS a online scamy — testy kybernetickej bezpečnosti pre e-shop, gastro, IT, autoservis a ďalšie odvetvia.",
     "list_name": "Industry test packy",
     "page_heading": "Otestuj svoju branžu. Bez registrácie.",
-    "page_intro": "Phishing v e-shope vyzerá inak ako vishing v call-centre, fake faktúra v účtarni inak ako podozrivé SMS od kuriéra. Vyber si sadu otázok, ktoré skutočne stretávaš v práci — a zisti, kde máš slepé miesta. 5 minút, žiadna registrácia, výsledok hneď.",
+    "page_intro": "Phishing v e-shope vyzerá inak ako vishing v call-centre, falošná faktúra v účtarni inak ako podozrivé SMS od kuriéra. Vyber si sadu otázok, ktoré skutočne stretávaš v práci — a zisti, kde máš slepé miesta. 5 minút, žiadna registrácia, výsledok hneď.",
     "value_anonymous": "Anonymne",
     "value_anonymous_desc": "Žiadne meno, e-mail ani IP",
     "value_fast": "5 minút",
@@ -547,7 +547,7 @@
     "meta_description": "Bezplatné kurzy kybernetickej bezpečnosti: phishing, vishing, smishing, online podvody, ochrana údajov. Reálne príklady zo slovenského prostredia.",
     "og_description": "Bezplatné kurzy kybernetickej bezpečnosti: phishing, vishing, smishing, online podvody. Reálne príklady zo slovenského prostredia.",
     "list_name": "Bezplatné kurzy o digitálnej obozretnosti",
-    "page_heading": "Bezplatné školenia v 5 témach — phishing, vishing, smishing, fake e-shopy, investičné podvody.",
+    "page_heading": "Bezplatné školenia v 5 témach — phishing, vishing, smishing, falošné e-shopy, investičné podvody.",
     "page_intro": "Každé školenie je 10-minútová stránka s reálnymi príkladmi zo slovenského internetu — žiadne PDF na 60 strán. Pre seba, pre kolegov, pre rodičov. Po každej téme ti odporučíme aj článok z blogu, ak chceš ísť hlbšie.",
     "value_short": "10 minút",
     "value_short_desc": "Krátka stránka, nie 60-stranové PDF",

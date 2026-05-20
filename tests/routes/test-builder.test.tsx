@@ -83,7 +83,7 @@ vi.mock("@/lib/browser/clipboard", () => ({
   copyToClipboard: (text: string) => clipboardMock.write(text),
 }));
 
-import { ComposerPage } from "@/routes/test.builder.lazy";
+import { ComposerPage } from "@/routes/test.builder.index.lazy";
 import { QUESTIONS } from "@/lib/quiz/bank/questions";
 import { encodeConfig } from "@/lib/quiz/composer";
 

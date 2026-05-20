@@ -317,7 +317,7 @@
     "how_cards": {
       "questions_n": "15",
       "questions_title": "otázok",
-      "questions_sub": "phishing, scam, fake stránky",
+      "questions_sub": "phishing, scam, falošné stránky",
       "time_n": "90s",
       "time_title": "limit",
       "time_sub": "čas beží, žiadne googlenie",
@@ -420,11 +420,11 @@
       "testy": {
         "title": "Testy",
         "testy_q": "Čo sú testy pre firmy?",
-        "testy_a_prefix": "Predpripravené sady otázok prispôsobené konkrétnej branži. E-shop dostane otázky o falošných objednávkach, gastro o fake kontrolách, IT o BEC podvodoch. Stačí zdieľať link s tímom — výsledok dostane každý sám pre seba. ",
+        "testy_a_prefix": "Predpripravené sady otázok prispôsobené konkrétnej branži. E-shop dostane otázky o falošných objednávkach, gastro o falošných kontrolách, IT o BEC podvodoch. Stačí zdieľať link s tímom — výsledok dostane každý sám pre seba. ",
         "testy_a_link": "Pozrieť testy",
         "testy_a_suffix": ".",
         "demograficke_q": "Existujú testy pre bežných ľudí, nie len firmy?",
-        "demograficke_a_prefix": "Áno — máme sady pre žiakov do 16 rokov (herné a školské scam-y), študentov (fake prenájmy, falošné štipendiá), seniorov (AI klonovanie hlasu, dverové podvody) a všeobecný test pre každého. Nájdeš ich vsekcii ",
+        "demograficke_a_prefix": "Áno — máme sady pre žiakov do 16 rokov (herné a školské scam-y), študentov (falošné prenájmy, falošné štipendiá), seniorov (AI klonovanie hlasu, dverové podvody) a všeobecný test pre každého. Nájdeš ich vsekcii ",
         "demograficke_a_link": "Testy",
         "demograficke_a_suffix": "."
       },
@@ -448,7 +448,7 @@
         "akademia_q": "Kde si môžem prečítať podrobnejšie články?",
         "akademia_a_prefix": "V ",
         "akademia_a_link": "akadémii subenai",
-        "akademia_a_suffix": " — 80+ článkov v slovenčine: 10 pillar sprievodcov (phishing, scam SMS, AI scamy, fake e-shopy, bezpečnosť pre seniorov, …) a 70 kratších návodov. Všetko zadarmo, bez paywallu, s citáciami slovenských autorít. Aktualizujeme týždenne podľa nových scam vĺn.",
+        "akademia_a_suffix": " — 80+ článkov v slovenčine: 10 pillar sprievodcov (phishing, scam SMS, AI scamy, falošné e-shopy, bezpečnosť pre seniorov, …) a 70 kratších návodov. Všetko zadarmo, bez paywallu, s citáciami slovenských autorít. Aktualizujeme týždenne podľa nových scam vĺn.",
         "audience_q": "Pre koho je akadémia určená?",
         "audience_a_prefix": "Pre kohokoľvek, kto chce do témy ísť hlbšie — rodičia, seniori, učitelia, IT administrátori, novinári. Obsah je členený podľa kategórií (phishing, SMS, AI, rodičia, študenti, …) a podľa toho, či si tam ide niekto úplne nový alebo už pokročilý. ",
         "audience_a_link": "Otvor akadémiu",
