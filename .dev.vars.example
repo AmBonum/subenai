@@ -31,11 +31,13 @@ STRIPE_WEBHOOK_SECRET=whsec_replace_me
 # Unset   = accept either (legacy permissive default).
 EXPECTED_LIVEMODE=false
 
-# --- Supabase (E10.3 webhook needs service role) ----------------------------
+# --- Supabase (E10.3 webhook needs service role; E44 precheck needs both) ---
 # Service role key bypasses RLS — NEVER ship to the client bundle.
-# Get from Supabase Dashboard → Project Settings → API → service_role key.
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=eyJ_replace_me
+# Anon key is needed by E44 precheck to verify caller JWT (matches the
+# value of VITE_SUPABASE_ANON_KEY in .env — anon is designed to be public).
+# Get both from Supabase Dashboard → Project Settings → API.
+SUPABASE_ANON_KEY=eyJ_replace_me_anon
+SUPABASE_SERVICE_ROLE_KEY=eyJ_replace_me_service_role
 
 # --- Cloudflare Turnstile (E11.4 portal magic link verification) ------------
 # Server-side secret used to validate the token the browser submits with the

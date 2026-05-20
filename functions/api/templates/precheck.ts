@@ -45,7 +45,9 @@ interface Env {
   PRECHECK_PER_USER_PER_DAY?: string;
   PRECHECK_PER_HOUR_GLOBAL?: string;
   PRECHECK_PER_IP_PER_HOUR?: string;
-  SUPABASE_URL: string;
+  // Anon key is needed to verify the caller's JWT via supabase.auth.getUser.
+  // The URL itself is the PROD_SUPABASE_URL constant (matches the pattern in
+  // every other CF function in this repo — see functions/_lib/supabase-url.ts).
   SUPABASE_ANON_KEY: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
 }
@@ -121,7 +123,7 @@ interface VerifiedCaller {
 }
 
 async function verifyCaller(token: string, env: Env): Promise<VerifiedCaller | null> {
-  const anon = createClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, {
+  const anon = createClient(PROD_SUPABASE_URL, env.SUPABASE_ANON_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
     global: { headers: { Authorization: `Bearer ${token}` } },
   });
@@ -215,8 +217,11 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   const { request, env } = ctx;
 
   if (!env.ANTHROPIC_API_KEY) return jsonResponse(500, { error: "anthropic_not_configured" });
-  if (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY || !env.SUPABASE_SERVICE_ROLE_KEY) {
-    return jsonResponse(500, { error: "supabase_not_configured" });
+  if (!env.SUPABASE_ANON_KEY) {
+    return jsonResponse(500, { error: "supabase_anon_not_configured" });
+  }
+  if (!env.SUPABASE_SERVICE_ROLE_KEY) {
+    return jsonResponse(500, { error: "supabase_service_role_not_configured" });
   }
 
   // 1. Auth.
