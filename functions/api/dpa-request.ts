@@ -156,8 +156,15 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     return jsonResponse(500, { error: "supabase_not_configured" });
   }
 
-  const supabaseUrl = env.SUPABASE_URL || PROD_SUPABASE_URL;
-  const supabase = createClient(supabaseUrl, env.SUPABASE_SERVICE_ROLE_KEY, {
+  // HARDCODED URL — env.SUPABASE_URL in CF Pages production env is stale
+  // (points to a retired project wbrxnahwzqbabbdcdrjv.supabase.co per
+  // functions/_lib/supabase-url.ts header). Reading env.SUPABASE_URL here
+  // causes Cloudflare error 1016 (origin DNS error) when the request lands
+  // on the dead origin. Match the pattern used by functions/api/test-sets.ts
+  // and other handlers: always use PROD_SUPABASE_URL until the operator
+  // cleans up the Cloudflare Pages env var (see supabase-url.ts removal
+  // criteria).
+  const supabase = createClient(PROD_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
