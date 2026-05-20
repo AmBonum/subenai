@@ -31,6 +31,39 @@ declare global {
 interface SuccessState {
   requestId: string;
   email: string;
+  emailDelivered: boolean;
+}
+
+async function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result ?? "");
+      const idx = result.indexOf(",");
+      resolve(idx >= 0 ? result.slice(idx + 1) : result);
+    };
+    reader.onerror = () => reject(new Error("read_blob_failed"));
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function postDpaEmail(args: {
+  requestId: string;
+  fileName: string;
+  pdfBase64: string;
+}): Promise<boolean> {
+  try {
+    const response = await fetch("/api/dpa-email-attach", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(args),
+    });
+    if (!response.ok) return false;
+    const payload = (await response.json().catch(() => ({}))) as { ok?: boolean };
+    return Boolean(payload.ok);
+  } catch {
+    return false;
+  }
 }
 
 function triggerDownload(blob: Blob, filename: string): void {
@@ -179,7 +212,22 @@ export function SchoolsDpaForm() {
         generatedAt: payload.generatedAt ? new Date(payload.generatedAt) : new Date(),
       });
       triggerDownload(blob, payload.fileName);
-      setSuccess({ requestId: payload.requestId, email: contactEmail.trim() });
+
+      // E40.4 — best-effort e-mail copy. Failure here does NOT roll back
+      // the download; the user keeps the PDF either way and the admin
+      // can re-send manually via /admin/dpa-requests.
+      const pdfBase64 = await blobToBase64(blob);
+      const emailDelivered = await postDpaEmail({
+        requestId: payload.requestId,
+        fileName: payload.fileName,
+        pdfBase64,
+      });
+
+      setSuccess({
+        requestId: payload.requestId,
+        email: contactEmail.trim(),
+        emailDelivered,
+      });
       setSubmitting(false);
     } catch {
       setError("render_failed");
@@ -199,16 +247,36 @@ export function SchoolsDpaForm() {
         <h2 className="text-2xl font-bold tracking-tight text-foreground">
           {t("skoly_dpa.success_heading")}
         </h2>
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          {t("skoly_dpa.success_body")}{" "}
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="underline underline-offset-2 hover:text-foreground"
+        {success.emailDelivered ? (
+          <p
+            className="text-sm leading-relaxed text-muted-foreground"
+            data-testid="schools-dpa-form-success-with-email"
           >
-            {CONTACT_EMAIL}
-          </a>
-          .
-        </p>
+            {t("skoly_dpa.success_with_email_prefix")} <strong>{success.email}</strong>.{" "}
+            {t("skoly_dpa.success_body")}{" "}
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              {CONTACT_EMAIL}
+            </a>
+            .
+          </p>
+        ) : (
+          <p
+            className="text-sm leading-relaxed text-muted-foreground"
+            data-testid="schools-dpa-form-success-no-email"
+          >
+            {t("skoly_dpa.success_no_email")}{" "}
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              {CONTACT_EMAIL}
+            </a>
+            .
+          </p>
+        )}
         {success.requestId ? (
           <p className="text-xs text-muted-foreground">
             {t("skoly_dpa.success_request_id")} <code>{success.requestId}</code>

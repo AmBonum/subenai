@@ -4,12 +4,22 @@ export interface EmailEnv {
   EMAIL_REPLY_TO: string;
 }
 
+export interface EmailAttachment {
+  filename: string;
+  /** Base64-encoded file contents (no data: prefix). */
+  content: string;
+  /** Optional MIME hint — Resend infers from filename if omitted. */
+  contentType?: string;
+}
+
 export interface SendEmailInput {
   to: string;
   subject: string;
   html: string;
   text?: string;
   idempotencyKey?: string;
+  /** Optional file attachments forwarded to Resend (E40.4). */
+  attachments?: EmailAttachment[];
 }
 
 export interface SendEmailResult {
@@ -36,6 +46,15 @@ export async function sendEmail(env: EmailEnv, input: SendEmailInput): Promise<S
     html: input.html,
     ...(input.text ? { text: input.text } : {}),
     reply_to: env.EMAIL_REPLY_TO,
+    ...(input.attachments && input.attachments.length > 0
+      ? {
+          attachments: input.attachments.map((a) => ({
+            filename: a.filename,
+            content: a.content,
+            ...(a.contentType ? { content_type: a.contentType } : {}),
+          })),
+        }
+      : {}),
   };
 
   let response: Response;

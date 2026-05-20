@@ -59,19 +59,26 @@ describe("SchoolsDpaForm", () => {
     expect(submit.disabled).toBe(false);
   });
 
-  it("happy path POSTs payload, renders PDF client-side, triggers download, shows success state", async () => {
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          ok: true,
-          requestId: "req-xyz",
-          fileName: "DPA-subenai-gymnazium-v0.1.pdf",
-          templateVersion: "v0.1",
-          generatedAt: new Date().toISOString(),
-        }),
-        { status: 200 },
-      ),
-    );
+  it("happy path POSTs payload, renders PDF client-side, posts to email handler, shows success-with-email", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async (url) => {
+      const u = typeof url === "string" ? url : (url as Request).url;
+      if (u.includes("/api/dpa-request")) {
+        return new Response(
+          JSON.stringify({
+            ok: true,
+            requestId: "11111111-2222-3333-4444-555555555555",
+            fileName: "DPA-subenai-gymnazium-v0.1.pdf",
+            templateVersion: "v0.1",
+            generatedAt: new Date().toISOString(),
+          }),
+          { status: 200 },
+        );
+      }
+      if (u.includes("/api/dpa-email-attach")) {
+        return new Response(JSON.stringify({ ok: true, messageId: "msg-1" }), { status: 200 });
+      }
+      return new Response("unstubbed", { status: 500 });
+    });
 
     const user = userEvent.setup();
     render(<SchoolsDpaForm />);
@@ -83,16 +90,66 @@ describe("SchoolsDpaForm", () => {
     await user.click(screen.getByTestId("schools-dpa-form-submit"));
 
     await waitFor(() => {
-      expect(screen.getByTestId("schools-dpa-form-success")).toBeInTheDocument();
+      expect(screen.getByTestId("schools-dpa-form-success-with-email")).toBeInTheDocument();
     });
-    expect(fetchSpy).toHaveBeenCalledWith("/api/dpa-request", expect.any(Object));
-    const call = fetchSpy.mock.calls[0]?.[1] as RequestInit;
-    const body = JSON.parse(call.body as string) as Record<string, unknown>;
-    expect(body.contact_name).toBe("Jana Nováková");
-    expect(body.contact_email).toBe("jana@skola.sk");
-    expect(body.school_name).toBe("Gymnázium Zlatá brána");
-    expect(body.consent_dpa_processing).toBe(true);
-    expect(body.turnstile_token).toBe("disabled");
+    const requestCall = fetchSpy.mock.calls.find((c) => String(c[0]).includes("/api/dpa-request"));
+    expect(requestCall).toBeTruthy();
+    const requestBody = JSON.parse((requestCall![1] as RequestInit).body as string) as Record<
+      string,
+      unknown
+    >;
+    expect(requestBody.contact_name).toBe("Jana Nováková");
+    expect(requestBody.contact_email).toBe("jana@skola.sk");
+    expect(requestBody.school_name).toBe("Gymnázium Zlatá brána");
+    expect(requestBody.consent_dpa_processing).toBe(true);
+
+    const emailCall = fetchSpy.mock.calls.find((c) =>
+      String(c[0]).includes("/api/dpa-email-attach"),
+    );
+    expect(emailCall, "form should POST to email handler after download").toBeTruthy();
+    const emailBody = JSON.parse((emailCall![1] as RequestInit).body as string) as Record<
+      string,
+      unknown
+    >;
+    expect(emailBody.requestId).toBe("11111111-2222-3333-4444-555555555555");
+    expect(emailBody.fileName).toBe("DPA-subenai-gymnazium-v0.1.pdf");
+    expect(typeof emailBody.pdfBase64).toBe("string");
+    expect(URL.createObjectURL).toHaveBeenCalled();
+  });
+
+  it("e-mail failure does not roll back the download — success-no-email state shows", async () => {
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (url) => {
+      const u = typeof url === "string" ? url : (url as Request).url;
+      if (u.includes("/api/dpa-request")) {
+        return new Response(
+          JSON.stringify({
+            ok: true,
+            requestId: "22222222-3333-4444-5555-666666666666",
+            fileName: "DPA-subenai-test-v0.1.pdf",
+            templateVersion: "v0.1",
+            generatedAt: new Date().toISOString(),
+          }),
+          { status: 200 },
+        );
+      }
+      if (u.includes("/api/dpa-email-attach")) {
+        return new Response(JSON.stringify({ error: "send_failed" }), { status: 502 });
+      }
+      return new Response("unstubbed", { status: 500 });
+    });
+
+    const user = userEvent.setup();
+    render(<SchoolsDpaForm />);
+
+    await user.type(screen.getByTestId("schools-dpa-form-name"), "Jana Nováková");
+    await user.type(screen.getByTestId("schools-dpa-form-email"), "jana@skola.sk");
+    await user.type(screen.getByTestId("schools-dpa-form-school"), "Gymnázium Zlatá brána");
+    await user.click(screen.getByTestId("schools-dpa-form-consent"));
+    await user.click(screen.getByTestId("schools-dpa-form-submit"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("schools-dpa-form-success-no-email")).toBeInTheDocument();
+    });
     expect(URL.createObjectURL).toHaveBeenCalled();
   });
 
