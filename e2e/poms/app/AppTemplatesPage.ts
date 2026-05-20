@@ -23,8 +23,18 @@ export class AppTemplatesPage extends BasePage {
     return this.page.getByTestId("templates-list-category-filter");
   }
 
+  /** Filter-miss empty state (rows exist, but the search/category filter matches nothing). */
   get emptyState() {
     return this.page.getByTestId("templates-list-empty-state");
+  }
+
+  /** Zero-rows empty state — the templates table itself is empty (production DB state). */
+  get emptyStateNoTemplates() {
+    return this.page.getByTestId("templates-list-empty-state-no-templates");
+  }
+
+  get emptyStateNoTemplatesCta() {
+    return this.page.getByTestId("templates-list-empty-state-no-templates-cta");
   }
 
   templateRow(id: string) {

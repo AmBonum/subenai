@@ -13,7 +13,7 @@ test.describe("/app shell — auth gate", () => {
   });
 });
 
-test.describe("/app shell — authenticated", () => {
+test.describe("/app shell — authenticated (desktop)", () => {
   test.beforeEach(async ({ context, page }) => {
     await setupEducator(context, page);
   });
@@ -34,5 +34,90 @@ test.describe("/app shell — authenticated", () => {
     await shell.open();
     await shell.sidebarLinkTests.click();
     await expect(page).toHaveURL(/\/app\/tests/);
+  });
+
+  test("Account link lights up on /app/legal/dsr as well as /app/account/*", async ({ page }) => {
+    const shell = new AppShellPage(page);
+    await page.goto("/app/legal/dsr");
+    // The "Account" sidebar link is active on legacy /legal/dsr routes
+    // because they render as tabs under the same surface. Active state is
+    // expressed via the `text-primary` class — assert via class match on
+    // the locator's resolved className.
+    const cls = await shell.sidebarLinkAccountProfile.getAttribute("class");
+    expect(cls).toMatch(/text-primary/);
+  });
+
+  test("mobile drawer trigger is hidden on desktop", async ({ page }) => {
+    const shell = new AppShellPage(page);
+    await shell.open();
+    // The hamburger is `lg:hidden`. Playwright `toBeVisible()` returns
+    // false for elements with `display:none`, which is what Tailwind
+    // emits at the active breakpoint.
+    await expect(shell.mobileTrigger).toBeHidden();
+  });
+});
+
+test.describe("/app shell — mobile drawer @mobile", () => {
+  test.beforeEach(async ({ context, page }) => {
+    await setupEducator(context, page);
+  });
+
+  test("hamburger trigger is visible at mobile viewport", async ({ page }) => {
+    const shell = new AppShellPage(page);
+    await shell.open();
+    // Desktop sidebar is `display:none` at <lg; the trigger takes its place.
+    await expect(shell.sidebar).toBeHidden();
+    await expect(shell.mobileTrigger).toBeVisible();
+  });
+
+  test("clicking trigger opens the drawer and reveals the nav", async ({ page }) => {
+    const shell = new AppShellPage(page);
+    await shell.open();
+    await shell.mobileTrigger.click();
+    await expect(shell.mobileDrawer).toBeVisible();
+    await expect(shell.mobileNav).toBeVisible();
+    await expect(shell.mobileLinkDashboard).toBeVisible();
+    await expect(shell.mobileLinkTests).toBeVisible();
+    await expect(shell.mobileLinkTeams).toBeVisible();
+    await expect(shell.mobileLinkAccountProfile).toBeVisible();
+  });
+
+  test("clicking a drawer link navigates AND auto-closes the drawer", async ({ page }) => {
+    const shell = new AppShellPage(page);
+    await shell.open();
+    await shell.mobileTrigger.click();
+    await expect(shell.mobileDrawer).toBeVisible();
+    await shell.mobileLinkTests.click();
+    await expect(page).toHaveURL(/\/app\/tests/);
+    // useEffect tied to `loc.pathname` flips `mobileOpen` back to false on
+    // any route change — the drawer should unmount.
+    await expect(shell.mobileDrawer).toBeHidden();
+  });
+
+  test("close button dismisses the drawer without navigating", async ({ page }) => {
+    const shell = new AppShellPage(page);
+    await shell.open();
+    await shell.mobileTrigger.click();
+    await expect(shell.mobileDrawer).toBeVisible();
+    await shell.mobileClose.click();
+    await expect(shell.mobileDrawer).toBeHidden();
+    await expect(page).toHaveURL(/\/app(\?|$)/);
+  });
+
+  test("Escape key closes the drawer (Radix focus-trap contract)", async ({ page }) => {
+    const shell = new AppShellPage(page);
+    await shell.open();
+    await shell.mobileTrigger.click();
+    await expect(shell.mobileDrawer).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(shell.mobileDrawer).toBeHidden();
+  });
+
+  test("drawer logout button is wired and matches the desktop affordance", async ({ page }) => {
+    const shell = new AppShellPage(page);
+    await shell.open();
+    await shell.mobileTrigger.click();
+    await expect(shell.mobileLogout).toBeVisible();
+    await expect(shell.mobileLogout).toBeEnabled();
   });
 });

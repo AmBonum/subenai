@@ -42,4 +42,8 @@ export class AppLibraryPage extends BasePage {
   get allRows() {
     return this.page.locator('[data-testid^="library-row-qp_"]');
   }
+
+  get showingCapped() {
+    return this.page.getByTestId("library-showing-capped");
+  }
 }

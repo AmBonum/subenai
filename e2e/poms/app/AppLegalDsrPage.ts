@@ -67,4 +67,21 @@ export class AppLegalDsrPage extends BasePage {
   historyRow(id: string) {
     return this.page.getByTestId(`app-legal-dsr-history-row-${id}`);
   }
+
+  // ---- AccountTabs (shared header above the DSR page) ----------------------
+  get accountTabs() {
+    return this.page.getByTestId("app-account-tabs");
+  }
+
+  get accountTabProfile() {
+    return this.page.getByTestId("app-account-tab-profile");
+  }
+
+  get accountTabSecurity() {
+    return this.page.getByTestId("app-account-tab-security");
+  }
+
+  get accountTabDsr() {
+    return this.page.getByTestId("app-account-tab-dsr");
+  }
 }

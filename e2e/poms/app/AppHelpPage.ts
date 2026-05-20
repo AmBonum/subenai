@@ -50,4 +50,38 @@ export class AppHelpPage extends BasePage {
   get pageHeader() {
     return this.page.getByTestId("app-help-page-header");
   }
+
+  // ---- Empty state (no-match search) --------------------------------------
+  get emptyState() {
+    return this.page.getByTestId("app-help-empty-state");
+  }
+
+  get emptyStateTitle() {
+    return this.page.getByTestId("app-help-empty-title");
+  }
+
+  get emptyStateCta() {
+    return this.page.getByTestId("app-help-empty-cta");
+  }
+
+  // ---- Quick-links bridge to public legal + changelog ---------------------
+  get quickLinksSection() {
+    return this.page.getByTestId("app-help-quick-links");
+  }
+
+  get quickLinkPrivacy() {
+    return this.page.getByTestId("app-help-quick-link-privacy");
+  }
+
+  get quickLinkCookies() {
+    return this.page.getByTestId("app-help-quick-link-cookies");
+  }
+
+  get quickLinkChangelog() {
+    return this.page.getByTestId("app-help-quick-link-changelog");
+  }
+
+  get quickLinkSchools() {
+    return this.page.getByTestId("app-help-quick-link-schools");
+  }
 }

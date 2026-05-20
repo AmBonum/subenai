@@ -96,6 +96,9 @@
     "row_preview": "Náhled",
     "row_use": "Použít šablonu",
     "empty_state": "Pro tento filtr nemáme žádné šablony.",
+    "empty_state_no_templates_title": "Šablony zatím nebyly přidány.",
+    "empty_state_no_templates_body": "Šablony připravujeme — postupně přibudou. Mezitím můžeš vytvořit test od nuly.",
+    "empty_state_no_templates_cta": "Vytvořit test od nuly",
     "questions_count": "{count} otázek"
   },
   "history": {

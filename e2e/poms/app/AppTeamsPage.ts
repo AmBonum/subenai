@@ -31,6 +31,10 @@ export class AppTeamsPage extends BasePage {
     return this.page.getByTestId("app-teams-invite-button");
   }
 
+  get inviteRoleSelect() {
+    return this.page.getByTestId("app-teams-invite-role-select");
+  }
+
   get membersList() {
     return this.page.getByTestId("app-teams-members-list");
   }
@@ -45,5 +49,13 @@ export class AppTeamsPage extends BasePage {
 
   memberRow(memberId: string) {
     return this.page.getByTestId(`app-teams-member-row-${memberId}`);
+  }
+
+  memberRoleSelect(memberId: string) {
+    return this.page.getByTestId(`app-teams-member-role-select-${memberId}`);
+  }
+
+  memberRemoveButton(memberId: string) {
+    return this.page.getByTestId(`app-teams-member-remove-${memberId}`);
   }
 }

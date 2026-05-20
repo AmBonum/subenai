@@ -2,15 +2,35 @@ import { test, expect } from "../../fixtures/base";
 import { setupEducator } from "../../setup/app-shell";
 import { AppLegalDsrPage } from "../../poms/app/AppLegalDsrPage";
 
-test.describe("/app/legal/dsr — GDPR data subject request page", () => {
-  test.beforeEach(async ({ context, page }) => {
-    await setupEducator(context, page, { tables: { dsr_requests: [] } });
-  });
+const DSR_OPEN_ROW = {
+  id: "dsr_seeded_001",
+  requester_email: "seeded.subject@example.sk",
+  type: "erase",
+  status: "open",
+  note: "Žiadosť o výmaz – seed.",
+  created_at: "2026-05-15T08:00:00.000Z",
+  sla_due_at: "2026-06-14T08:00:00.000Z",
+  resolved_at: null,
+};
 
+const DSR_COMPLETED_ROW = {
+  id: "dsr_seeded_002",
+  requester_email: "seeded.completed@example.sk",
+  type: "access",
+  status: "completed",
+  note: null,
+  created_at: "2026-05-10T08:00:00.000Z",
+  sla_due_at: "2026-06-09T08:00:00.000Z",
+  resolved_at: "2026-05-12T08:00:00.000Z",
+};
+
+test.describe("/app/legal/dsr — GDPR data subject request page", () => {
   // TC-01: Page renders with title, subtitle, form card, submit button, and empty history
   test("TC-01: page renders with title, subtitle, form card, and empty history", async ({
+    context,
     page,
   }) => {
+    await setupEducator(context, page, { tables: { dsr_requests: [] } });
     const dsr = new AppLegalDsrPage(page);
 
     await test.step("Navigate to /app/legal/dsr", async () => {
@@ -44,8 +64,10 @@ test.describe("/app/legal/dsr — GDPR data subject request page", () => {
 
   // TC-02: Submitting a valid access request shows the success banner
   test("TC-02: submitting a valid access request shows success banner and clears the email", async ({
+    context,
     page,
   }) => {
+    await setupEducator(context, page, { tables: { dsr_requests: [] } });
     const dsr = new AppLegalDsrPage(page);
 
     await test.step("Navigate to /app/legal/dsr", async () => {
@@ -72,8 +94,10 @@ test.describe("/app/legal/dsr — GDPR data subject request page", () => {
 
   // TC-03: Submitting with an invalid email shows an inline validation error
   test("TC-03: submitting with an invalid email shows validation error and no success banner", async ({
+    context,
     page,
   }) => {
+    await setupEducator(context, page, { tables: { dsr_requests: [] } });
     const dsr = new AppLegalDsrPage(page);
 
     await test.step("Navigate to /app/legal/dsr", async () => {
@@ -96,5 +120,133 @@ test.describe("/app/legal/dsr — GDPR data subject request page", () => {
     await test.step("Verify the success banner is absent", async () => {
       await expect(dsr.successBanner).toHaveCount(0);
     });
+  });
+
+  // TC-04: Submitting with an empty email shows the validation error
+  test("TC-04: submitting with an empty email shows validation error and no insert occurs", async ({
+    context,
+    page,
+  }) => {
+    await setupEducator(context, page, { tables: { dsr_requests: [] } });
+    const dsr = new AppLegalDsrPage(page);
+
+    await test.step("Navigate to /app/legal/dsr", async () => {
+      await dsr.open();
+    });
+
+    await test.step("Leave the email field empty and click submit", async () => {
+      // No fill — the form's controlled state stays as `""`. The
+      // pre-network regex check fails first so the mutation never fires.
+      await dsr.submitButton.click();
+    });
+
+    await test.step("Verify the error banner surfaces the invalid-email copy", async () => {
+      await expect(dsr.errorBanner).toBeVisible();
+      await expect(dsr.errorBanner).toHaveText("Neplatný e-mail.");
+    });
+
+    await test.step("Verify the empty-history copy still renders (no row was inserted)", async () => {
+      await expect(dsr.historyEmpty).toHaveText("Zatiaľ nie sú žiadne žiadosti.");
+    });
+  });
+
+  // TC-05: History card renders seeded rows with email, type label, and status badge
+  test("TC-05: history card renders seeded rows with email, type label, and status badge", async ({
+    context,
+    page,
+  }) => {
+    await setupEducator(context, page, {
+      tables: { dsr_requests: [DSR_OPEN_ROW, DSR_COMPLETED_ROW] },
+    });
+    const dsr = new AppLegalDsrPage(page);
+
+    await test.step("Navigate to /app/legal/dsr", async () => {
+      await dsr.open();
+    });
+
+    await test.step("Verify the empty-history message is gone", async () => {
+      await expect(dsr.historyEmpty).toHaveCount(0);
+    });
+
+    await test.step("Verify the seeded 'erase / open' row renders with its email, type label and note", async () => {
+      const row = dsr.historyRow(DSR_OPEN_ROW.id);
+      await expect(row).toBeVisible();
+      await expect(row).toContainText("seeded.subject@example.sk");
+      // i18n: dsr_form.type.erase = "Výmaz (čl. 17 — právo na zabudnutie)"
+      await expect(row).toContainText("Výmaz");
+      await expect(row).toContainText("Žiadosť o výmaz – seed.");
+      // status.open → "Otvorené"
+      await expect(row).toContainText("Otvorené");
+    });
+
+    await test.step("Verify the seeded 'access / completed' row renders with its email and status", async () => {
+      const row = dsr.historyRow(DSR_COMPLETED_ROW.id);
+      await expect(row).toBeVisible();
+      await expect(row).toContainText("seeded.completed@example.sk");
+      // i18n: dsr_form.type.access = "Prístup k údajom (čl. 15)"
+      await expect(row).toContainText("Prístup");
+      // status.completed → "Uzavreté"
+      await expect(row).toContainText("Uzavreté");
+    });
+  });
+
+  // TC-06: AccountTabs nav exposes DSR as the active tab on /app/legal/dsr
+  test("TC-06: AccountTabs nav exposes DSR as the active tab on /app/legal/dsr", async ({
+    context,
+    page,
+  }) => {
+    await setupEducator(context, page, { tables: { dsr_requests: [] } });
+    const dsr = new AppLegalDsrPage(page);
+
+    await test.step("Navigate to /app/legal/dsr", async () => {
+      await dsr.open();
+    });
+
+    await test.step("Verify the DSR account tab is visible and marked aria-current=page", async () => {
+      await expect(dsr.accountTabs).toBeVisible();
+      await expect(dsr.accountTabDsr).toBeVisible();
+      await expect(dsr.accountTabDsr).toHaveAttribute("aria-current", "page");
+    });
+
+    await test.step("Verify the profile + security sibling tabs are visible but not active", async () => {
+      await expect(dsr.accountTabProfile).toBeVisible();
+      await expect(dsr.accountTabProfile).not.toHaveAttribute("aria-current", "page");
+      await expect(dsr.accountTabSecurity).toBeVisible();
+      await expect(dsr.accountTabSecurity).not.toHaveAttribute("aria-current", "page");
+    });
+  });
+});
+
+test.describe("/app/legal/dsr — mobile responsive @mobile", () => {
+  test("form card stacks vertically and renders without horizontal overflow on Pixel 7", async ({
+    context,
+    page,
+  }) => {
+    await setupEducator(context, page, {
+      tables: { dsr_requests: [DSR_OPEN_ROW] },
+    });
+    const dsr = new AppLegalDsrPage(page);
+    await dsr.open();
+
+    await expect(dsr.root).toBeVisible();
+    await expect(dsr.formCard).toBeVisible();
+    await expect(dsr.historyCard).toBeVisible();
+
+    // Email input must claim a comfortable share of the 412px viewport,
+    // not get squeezed into a half-row by a flex-row stack.
+    const emailBox = await dsr.emailInput.boundingBox();
+    expect(emailBox?.width).toBeGreaterThan(250);
+
+    // Submit button is a primary CTA — must remain a tappable target.
+    const submitBox = await dsr.submitButton.boundingBox();
+    expect(submitBox?.height).toBeGreaterThanOrEqual(32);
+
+    // Seeded history row must sit fully inside the viewport — no
+    // horizontal overflow even when the requester email is long.
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(1);
+    await expect(dsr.historyRow(DSR_OPEN_ROW.id)).toBeVisible();
   });
 });

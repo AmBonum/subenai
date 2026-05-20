@@ -94,6 +94,51 @@ export class AppShellPage extends BasePage {
     return this.page.getByTestId("app-shell-sidebar-notifications-badge");
   }
 
+  // Mobile drawer (E36 A1). Hamburger trigger + Sheet content live on
+  // viewports <lg; the desktop `sidebar` aside is `display:none` but
+  // stays in DOM. Mobile nav links are namespaced
+  // `app-shell-mobile-link-*` to keep desktop assertions unambiguous.
+
+  get mobileTrigger() {
+    return this.page.getByTestId("app-shell-mobile-trigger");
+  }
+
+  get mobileDrawer() {
+    return this.page.getByTestId("app-shell-mobile-drawer");
+  }
+
+  get mobileClose() {
+    return this.page.getByTestId("app-shell-mobile-close");
+  }
+
+  get mobileNav() {
+    return this.page.getByTestId("app-shell-mobile-nav");
+  }
+
+  get mobileLinkDashboard() {
+    return this.page.getByTestId("app-shell-mobile-link-dashboard");
+  }
+
+  get mobileLinkTests() {
+    return this.page.getByTestId("app-shell-mobile-link-tests");
+  }
+
+  get mobileLinkTeams() {
+    return this.page.getByTestId("app-shell-mobile-link-teams");
+  }
+
+  get mobileLinkNotifications() {
+    return this.page.getByTestId("app-shell-mobile-link-notifications");
+  }
+
+  get mobileLinkAccountProfile() {
+    return this.page.getByTestId("app-shell-mobile-link-account-profile");
+  }
+
+  get mobileLogout() {
+    return this.page.getByTestId("app-shell-mobile-logout");
+  }
+
   get main() {
     return this.page.getByTestId("app-shell-main");
   }
