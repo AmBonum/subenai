@@ -10,6 +10,7 @@
 //   - purge_expired_attempts: drop attempts older than 36 months
 //   - anonymize_expired_anticheat: NULL flags + timing on attempts > 12mo
 //   - anonymize_expired_edu_respondents: NULL respondent_name + email > 12mo
+//   - anonymize_expired_dpa_requests: NULL DPA contact PII > 12mo (E40.6)
 //
 // Env (required, set as GitHub Actions repo secrets):
 //   SUPABASE_URL                  — project URL
@@ -32,6 +33,10 @@ const RPCS = [
   {
     name: "anonymize_expired_edu_respondents",
     description: "NULL edu respondent name + email older than 12 months",
+  },
+  {
+    name: "anonymize_expired_dpa_requests",
+    description: "NULL DPA contact name + email older than 12 months (E40.6)",
   },
 ];
 

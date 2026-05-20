@@ -45,11 +45,12 @@ afterEach(() => {
 });
 
 describe("scripts/run-retention.mjs — main()", () => {
-  it("calls all three RPCs in declared order and returns 0", async () => {
+  it("calls all four RPCs in declared order and returns 0", async () => {
     const { calls, createClient } = makeMockClient({
       purge_expired_attempts: { data: 3, error: null },
       anonymize_expired_anticheat: { data: 7, error: null },
       anonymize_expired_edu_respondents: { data: 2, error: null },
+      anonymize_expired_dpa_requests: { data: 1, error: null },
     });
     const { main } = await import("../../scripts/run-retention.mjs");
     const code = await main({ createClient });
@@ -58,6 +59,7 @@ describe("scripts/run-retention.mjs — main()", () => {
       "purge_expired_attempts",
       "anonymize_expired_anticheat",
       "anonymize_expired_edu_respondents",
+      "anonymize_expired_dpa_requests",
     ]);
   });
 
@@ -66,6 +68,7 @@ describe("scripts/run-retention.mjs — main()", () => {
       purge_expired_attempts: { data: 0, error: null },
       anonymize_expired_anticheat: { data: null, error: { message: "permission denied" } },
       anonymize_expired_edu_respondents: { data: 0, error: null },
+      anonymize_expired_dpa_requests: { data: 0, error: null },
     });
     const { main } = await import("../../scripts/run-retention.mjs");
     const code = await main({ createClient });
@@ -74,6 +77,7 @@ describe("scripts/run-retention.mjs — main()", () => {
       "purge_expired_attempts",
       "anonymize_expired_anticheat",
       "anonymize_expired_edu_respondents",
+      "anonymize_expired_dpa_requests",
     ]);
   });
 

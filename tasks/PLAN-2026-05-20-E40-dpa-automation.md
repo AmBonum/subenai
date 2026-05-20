@@ -2,7 +2,7 @@
 
 **Owner:** Claude — drives the follow-up on E19's explicit out-of-scope row "DPA PDF generation or download endpoint" ([PLAN-E19:200](./PLAN-2026-05-19-E19-schools-senior-rework.md))
 **Date opened:** 2026-05-20
-**Status:** 🟡 Planned — branch `feature/E40-dpa-automation` to be created from `main`
+**Status:** ✅ DELIVERED 2026-05-20 — all 6 stories shipped on branch `feature/E40-dpa-automation`, awaiting PR #77 merge + post-merge legal review per [tasks/E40-runbook.md](./E40-runbook.md)
 
 ## TL;DR
 
@@ -61,7 +61,7 @@ This epic replaces the `mailto:` with a real intake flow: school contact fills a
 | [E40.3](./stories/E40.3-dpa-pdf-template.md) | Slovak Art. 28 DPA template v0.1 + react-pdf render harness | `L` | `P1` | ✅ Done |
 | [E40.4](./stories/E40.4-dpa-email-delivery.md) | Resend integration + e-mail attachment path + env secret | `S` | `P1` | ✅ Done |
 | [E40.5](./stories/E40.5-admin-dpa-panel.md) | `/admin/dpa-requests` list + detail + status flips | `M` | `P2` | ✅ Done |
-| [E40.6](./stories/E40.6-retention-integration.md) | Extend E38 retention cron to call new anonymise RPC + privacy copy + CHANGELOG + CTA rewire | `S` | `P2` | 🟡 Ready |
+| [E40.6](./stories/E40.6-retention-integration.md) | Extend E38 retention cron to call new anonymise RPC + privacy copy + CHANGELOG + CTA rewire | `S` | `P2` | ✅ Done |
 
 **Total estimate:** ~7–9 dev-days for one developer working solo. With the feature-flag gate (D5) the epic can ship in two phases — phase A (E40.1–E40.4 behind flag, on a staging URL for legal review) and phase B (legal sign-off → flag on → E40.5 + E40.6 land on main).
 

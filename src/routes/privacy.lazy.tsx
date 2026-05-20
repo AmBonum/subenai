@@ -17,6 +17,7 @@ const PROCESSING_ROW_KEYS = [
   "analytics",
   "consent_record",
   "sponsorship",
+  "dpa",
 ] as const;
 
 // E21.3 — section IDs are the contract for the on-page TOC + deep
