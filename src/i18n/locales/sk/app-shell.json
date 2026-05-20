@@ -282,6 +282,15 @@
       "security": "Bezpečnosť",
       "dsr": "GDPR"
     },
+    "data_export": {
+      "card_title": "Stiahnutie tvojich údajov (GDPR čl. 15 / čl. 20)",
+      "card_desc": "Stiahni si JSON snapshot všetkých záznamov, ktoré evidujeme pod tvojím účtom — profil, prípadné DSR žiadosti a poznámky k ďalším dátovým plochám. Súbor je v strojovo čitateľnom formáte (právo na prenosnosť podľa čl. 20 GDPR).",
+      "button": "Stiahnuť moje údaje (JSON)",
+      "downloading": "Pripravujem export…",
+      "error_unauthorized": "Tvoja relácia vypršala — prihlás sa znova a skús to ešte raz.",
+      "error_generic": "Export sa nepodaril. Skús to o chvíľu znova, alebo nám napíš na subenai.podpora@gmail.com.",
+      "success_toast": "Hotovo. Export sa stiahol do tvojho prehliadača."
+    },
     "profile": {
       "page_header_eyebrow": "Účet",
       "page_header_title": "Môj profil",

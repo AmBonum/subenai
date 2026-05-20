@@ -13,6 +13,7 @@ import { useCurrentProfile, useUpdateProfile } from "@/lib/platform/queries";
 import { useShareHandle, useUpdateShareHandle } from "@/lib/platform/retention-queries";
 import { PageHeader } from "@/components/app/page-header";
 import { AccountTabs } from "@/components/user/AccountTabs";
+import { DataExportCard } from "@/components/user/DataExportCard";
 import { tFor } from "@/i18n/app-shell";
 
 const tRoutes = tFor("route_titles");
@@ -297,6 +298,8 @@ function ProfilePage() {
           </Button>
         </CardContent>
       </Card>
+
+      <DataExportCard />
     </div>
   );
 }
