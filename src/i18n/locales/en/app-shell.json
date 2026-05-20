@@ -3,6 +3,9 @@
     "brand": "SubenAI",
     "brand_subtitle": "For educators",
     "logout_aria": "Sign out",
+    "open_menu_aria": "Open navigation",
+    "close_menu_aria": "Close navigation",
+    "mobile_nav_title": "App navigation",
     "admin": "Platform admin",
     "groups": {
       "tvorba": "Author",

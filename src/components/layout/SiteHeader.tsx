@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, UserCog, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from "@/components/ui/sheet";
 import {
   Accordion,
@@ -11,8 +11,11 @@ import {
 import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
 import { MegaMenu } from "@/components/layout/mega-menu";
 import type { MegaMenuItemDef } from "@/components/layout/mega-menu";
+import { HeaderUserMenu } from "@/components/layout/HeaderUserMenu";
 import { ROUTES } from "@/config/routes";
 import { useAuth } from "@/hooks/useAuth";
+import { useCurrentProfile } from "@/lib/platform/queries";
+import { signOutAndRedirect } from "@/lib/auth/signout";
 import { tFor } from "@/i18n/marketing";
 
 // Phase 1 menu structure — 4 top-level items + right-side CTA pill that
@@ -178,20 +181,12 @@ export function SiteHeader() {
           className="hidden items-center gap-1 min-[820px]:flex min-[820px]:gap-2"
         >
           <MegaMenu items={MEGA_ITEMS} activeSlug={activeSlug} />
-          {isAuthenticated && (
-            <Link
-              to="/app"
-              data-testid="site-header-nav-link-app"
-              className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {t("nav.app")}
-            </Link>
-          )}
           {/* Slot is empty while LOCALE_SWITCHER_ENABLED = false */}
           <div data-testid="header-desktop-locale">
             <LocaleSwitcher />
           </div>
           <CtaPill ariaLabel={ctaLong} />
+          {isAuthenticated && <HeaderUserMenu />}
         </div>
 
         {/* Mobile hamburger — shown below 820px (paired with the desktop
@@ -231,15 +226,7 @@ export function SiteHeader() {
             <MobileMenu items={MEGA_ITEMS} activeSlug={activeSlug} />
 
             <div className="flex flex-col gap-3 border-t border-border/40 px-5 py-5">
-              {isAuthenticated && (
-                <Link
-                  to="/app"
-                  data-testid="site-header-mobile-nav-link-app"
-                  className="block rounded-xl px-4 py-3 text-base font-semibold text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
-                >
-                  {t("nav.app")}
-                </Link>
-              )}
+              {isAuthenticated && <MobileUserSection />}
               <div className="flex justify-center" data-testid="header-mobile-locale">
                 <LocaleSwitcher variant="outline" />
               </div>
@@ -345,6 +332,68 @@ function MobileMenu({
           );
         })}
       </Accordion>
+    </div>
+  );
+}
+
+function MobileUserSection() {
+  const profileQ = useCurrentProfile();
+  const me = profileQ.data;
+  const t = tFor("header");
+  const initials = me?.avatar_initials ?? me?.display_name?.slice(0, 2).toUpperCase() ?? "";
+  const name = me?.display_name ?? me?.email ?? "";
+
+  return (
+    <div
+      className="flex flex-col gap-2 rounded-2xl border border-border/60 bg-card/40 p-3"
+      data-testid="header-mobile-user-section"
+    >
+      <div className="flex items-center gap-3 px-1 py-1">
+        <span
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground"
+          data-testid="header-mobile-user-avatar"
+        >
+          {initials}
+        </span>
+        <div className="flex min-w-0 flex-col">
+          <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+            {t("user_menu.signed_in_as")}
+          </span>
+          <span
+            className="truncate text-sm font-semibold text-foreground"
+            data-testid="header-mobile-user-name"
+          >
+            {name}
+          </span>
+        </div>
+      </div>
+      <Link
+        to="/app"
+        data-testid="site-header-mobile-nav-link-app"
+        className="flex items-center gap-2 rounded-xl px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-card"
+      >
+        <LayoutDashboard className="h-4 w-4" />
+        {t("user_menu.app")}
+      </Link>
+      <Link
+        to="/app/account/profile"
+        data-testid="header-mobile-user-profile"
+        className="flex items-center gap-2 rounded-xl px-3 py-3 text-base font-medium text-foreground transition-colors hover:bg-card"
+      >
+        <UserCog className="h-4 w-4" />
+        {t("user_menu.profile")}
+      </Link>
+      <button
+        type="button"
+        data-testid="header-mobile-user-signout"
+        onClick={() => {
+          void signOutAndRedirect("/");
+        }}
+        className="flex items-center gap-2 rounded-xl px-3 py-3 text-base font-medium text-destructive transition-colors hover:bg-card"
+      >
+        <LogOut className="h-4 w-4" />
+        {t("user_menu.signout")}
+      </button>
     </div>
   );
 }

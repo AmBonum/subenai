@@ -67,3 +67,6 @@ public/blog/rss.xml
 # Claude Code session runtime artifacts (per-worktree scheduling locks
 # and similar ephemeral state).
 .claude/scheduled_tasks.lock
+
+# E36 audit visual baseline (binary PNGs, regenerated locally on demand)
+.audit-screenshots/
