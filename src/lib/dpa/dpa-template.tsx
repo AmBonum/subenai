@@ -31,9 +31,33 @@
  * file. See tasks/E40-runbook.md for the sign-off log.
  */
 
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Document, Font, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 
 import { SUB_PROCESSORS } from "./sub-processors";
+
+// React-PDF ships only the 14 standard PDF Type 1 fonts (Helvetica,
+// Times, Courier and their variants). All use WinAnsi encoding which
+// is Latin-1 ONLY — Slovak characters beyond Latin-1 (č ľ ť ň Č Ľ Ť Ň
+// and capital variants) render as garbage in the output PDF: "podľa"
+// becomes "pod>a", "Ľubomír" becomes "=ubomír", "IČO" becomes "IO",
+// "spracúvať" becomes "spracúvae", etc.
+//
+// Solution: register an open-licensed Unicode TTF that has full Latin
+// Extended coverage. Noto Sans is Google's purpose-built global-script
+// family (SIL Open Font License 1.1) — Regular + Bold weights ship
+// in public/fonts/ and lazy-load with this template chunk.
+//
+// Font.register MUST run at module top-level (not inside the
+// component) so react-pdf has the font metrics available the moment
+// pdf().toBlob() resolves a <Text fontFamily="NotoSans"> node.
+Font.register({
+  family: "NotoSans",
+  src: "/fonts/NotoSans-Regular.ttf",
+});
+Font.register({
+  family: "NotoSansBold",
+  src: "/fonts/NotoSans-Bold.ttf",
+});
 
 export interface DpaTemplateProps {
   schoolName: string;
@@ -60,12 +84,12 @@ const styles = StyleSheet.create({
     padding: 48,
     fontSize: 10,
     color: PALETTE.fg,
-    fontFamily: "Helvetica",
+    fontFamily: "NotoSans",
     lineHeight: 1.4,
   },
   title: {
     fontSize: 16,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
     textAlign: "center",
     marginBottom: 4,
   },
@@ -89,7 +113,7 @@ const styles = StyleSheet.create({
   },
   partyName: {
     fontSize: 11,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
     marginBottom: 2,
   },
   partyMeta: {
@@ -98,13 +122,13 @@ const styles = StyleSheet.create({
   },
   sectionHeading: {
     fontSize: 11,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
     marginTop: 12,
     marginBottom: 6,
   },
   clauseHeading: {
     fontSize: 10,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
     marginTop: 8,
     marginBottom: 4,
   },
@@ -117,13 +141,15 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   emph: {
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
   },
   smallNote: {
+    // NotoSans family ships Regular + Bold only — italic variant
+    // dropped to keep the bundle under 1.2 MB. Visual differentiation
+    // for footnotes comes from the smaller font-size + muted colour.
     fontSize: 8,
     color: PALETTE.muted,
     marginTop: 6,
-    fontStyle: "italic",
   },
   signatureRow: {
     flexDirection: "row",
@@ -170,7 +196,7 @@ const styles = StyleSheet.create({
   },
   watermarkText: {
     fontSize: 56,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
     color: PALETTE.watermark,
     opacity: 0.18,
     transform: "rotate(-30deg)",
@@ -178,7 +204,7 @@ const styles = StyleSheet.create({
   },
   annexTitle: {
     fontSize: 13,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
     marginTop: 16,
     marginBottom: 8,
     textAlign: "center",
@@ -200,7 +226,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 6,
     fontSize: 9,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
   },
   tableCell: {
     flex: 1,
