@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const qrQuishingCourse: Course = {
   slug: "qr-quishing",
   title: `QR quishing — falošné QR kódy na parkoviskách, reštauráciách a vo schránke`,
-  tagline: "Naskenovanie QR kódu trvá sekundu. Stratiť prihlasovacie údaje tiež.",
+  tagline:
+    "Naskenovať QR kód trvá sekundu. Stratiť prihlasovacie údaje tiež. Ako rozoznáš falošné QR na parkovisku, v reštaurácii a v schránke.",
   category: "sms",
   difficulty: "začiatočník",
   estimatedMinutes: 6,

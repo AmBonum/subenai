@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const aiPomocnikCourse: Course = {
   slug: "ai-pomocnik-kazdy-den",
   title: `AI asistent — ako z neho dostať presne to, čo chceš`,
-  tagline: `Preklad, recept, list lekárovi — AI to zvládne za 10 sekúnd. Keď vieš ako sa opýtať.`,
+  tagline:
+    "Preklad, recept, list lekárovi alebo úradu — AI to zvládne za 10 sekúnd, keď vieš, ako sa opýtať. 6 šablón promtov pre bežný život.",
   category: "obecne",
   difficulty: "začiatočník",
   estimatedMinutes: 9,

@@ -20,6 +20,16 @@ import { pigButcheringCourse } from "./pig-butchering-podvod";
 import { malvertisingCourse } from "./malvertising-fake-reklamy";
 import { aiBezpecnostCourse } from "./ai-bezpecnost-co-nezdielat";
 import { aiPomocnikCourse } from "./ai-pomocnik-kazdy-den";
+import { psychologiaPodvodovCourse } from "./psychologia-podvodov";
+import { fakeEshopOverenieCourse } from "./fake-eshop-ako-overit";
+import { bezpecneOnlineNakupyCourse } from "./bezpecne-online-nakupy";
+import { rodinaDetiSenioriCourse } from "./rodina-deti-seniori";
+import { studentiOnlineCourse } from "./studenti-online";
+import { pribehyObetiCourse } from "./pribehy-skutocnych-obeti";
+import { hesla2faPasskeysCourse } from "./hesla-2fa-passkeys";
+import { vpnAntivirusZalohyCourse } from "./vpn-antivirus-zalohy";
+import { coRobitPoPodvodeCourse } from "./co-robit-po-podvode";
+import { topPodvody2026Course } from "./top-podvody-2026-sk";
 
 export type { Course, CourseCategory, CourseSection, CourseDifficulty } from "./_schema";
 export { courseSchema } from "./_schema";
@@ -43,6 +53,16 @@ export const COURSES: Course[] = [
   malvertisingCourse,
   aiBezpecnostCourse,
   aiPomocnikCourse,
+  psychologiaPodvodovCourse,
+  fakeEshopOverenieCourse,
+  bezpecneOnlineNakupyCourse,
+  rodinaDetiSenioriCourse,
+  studentiOnlineCourse,
+  pribehyObetiCourse,
+  hesla2faPasskeysCourse,
+  vpnAntivirusZalohyCourse,
+  coRobitPoPodvodeCourse,
+  topPodvody2026Course,
 ];
 
 const slugs = new Set<string>();

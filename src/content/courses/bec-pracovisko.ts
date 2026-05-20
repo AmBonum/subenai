@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const becWorkplaceCourse: Course = {
   slug: "bec-pracovisko-fake-ceo",
   title: `BEC: keď ti „CEO" napíše súrne preveď 50 000 EUR`,
-  tagline: `Business Email Compromise — najdrahšia forma firemného phishingu. 5 typov + 6 procesných obrán.`,
+  tagline:
+    "Business Email Compromise je najdrahšia forma firemného phishingu: 5 typov + 6 procesných obrán pre účtovníkov a HR.",
   category: "obecne",
   difficulty: "pokročilý",
   estimatedMinutes: 13,

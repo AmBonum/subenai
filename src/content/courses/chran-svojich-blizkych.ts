@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const ochranaBlizkychCourse: Course = {
   slug: "chran-svojich-blizkych",
   title: `Chráň svojich blízkych — ako pomôcť rodičom a starým rodičom`,
-  tagline: "Seniori sú primárny cieľ. Vedieť im pomôcť je rovnako dôležité ako chrániť seba.",
+  tagline:
+    "Seniori sú primárny cieľ podvodníkov v SR. Tu je sprievodca, ako pomôcť rodičom a starým rodičom rozpoznať podvod skôr, než zavolajú.",
   category: "obecne",
   difficulty: "začiatočník",
   estimatedMinutes: 8,

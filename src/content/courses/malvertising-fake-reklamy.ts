@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const malvertisingCourse: Course = {
   slug: "malvertising-fake-reklamy",
   title: "Falošné Google reklamy — banka na prvom mieste, no nie vaša",
-  tagline: 'Hľadáš „VÚB prihlásenie" a klikneš na prvý výsledok. Ten prvý nemusí byť VÚB.',
+  tagline:
+    'Hľadáš „VÚB prihlásenie" a klikneš na prvý Google výsledok. Prvý výsledok nemusí byť VÚB — ako rozoznáš falošnú reklamu od pravého výsledku.',
   category: "obecne",
   difficulty: "pokročilý",
   estimatedMinutes: 8,

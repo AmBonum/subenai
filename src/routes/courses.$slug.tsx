@@ -1,12 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getCourseBySlug } from "@/content/courses";
 import type { CourseSection } from "@/content/courses/_schema";
+import { CourseBreadcrumb } from "@/components/courses/Breadcrumb";
 import { CourseHero } from "@/components/courses/CourseHero";
 import { CourseSectionView } from "@/components/courses/sections/CourseSections";
 import { RelatedAcademyArticleCard } from "@/components/courses/RelatedAcademyArticleCard";
 import { RelatedCourses } from "@/components/courses/RelatedCourses";
 import { Button } from "@/components/ui/button";
 import { buildCourseJsonLd } from "@/lib/seo/course-jsonld";
+import { buildBreadcrumbJsonLd } from "@/lib/seo/breadcrumb-jsonld";
 import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/quiz";
 const COPYRIGHT_HOLDER = "subenai";
@@ -52,6 +54,16 @@ export const Route = createFileRoute("/courses/$slug")({
           type: "application/ld+json",
           children: JSON.stringify(buildCourseJsonLd(course)),
         },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(
+            buildBreadcrumbJsonLd([
+              { name: t("breadcrumb_home"), url: SITE_ORIGIN },
+              { name: t("breadcrumb_courses"), url: `${SITE_ORIGIN}/courses` },
+              { name: course.title, url },
+            ]),
+          ),
+        },
       ],
     };
   },
@@ -71,6 +83,13 @@ function CoursePage() {
       itemType="https://schema.org/Course"
     >
       <main className="mx-auto max-w-3xl px-4 pb-12 pt-12 sm:pt-16">
+        <CourseBreadcrumb
+          items={[
+            { label: t("breadcrumb_home"), to: "/" },
+            { label: t("breadcrumb_courses"), to: "/courses" },
+            { label: course.title },
+          ]}
+        />
         <CourseHero course={course} />
 
         {course.sections.map((section: CourseSection, idx: number) => (

@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const marketplaceCourse: Course = {
   slug: "marketplace-bazos-podvody",
   title: `Bazoš a Marketplace — ako rozoznať podvodný inzerát`,
-  tagline: `Auto za polovicu, byt v centre za 200 €, „kupec" cez WhatsApp. Pravidlá pre kupujúceho aj predávajúceho.`,
+  tagline:
+    'Auto za polovicu, byt v centre za 200 € a „kupec" cez WhatsApp: pravidlá pre Bazoš, Vinted aj Marketplace.',
   category: "marketplace",
   difficulty: "začiatočník",
   estimatedMinutes: 9,

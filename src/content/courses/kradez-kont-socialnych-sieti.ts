@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const kradezKontCourse: Course = {
   slug: "kradez-kont-socialnych-sieti",
   title: `Krádež účtu na sociálnych sieťach — ako ju predísť a čo robiť po nej`,
-  tagline: "Napadnutý Instagram za 30 sekúnd. Obnova trvá dni. Prevencia trvá 5 minút.",
+  tagline:
+    "Napadnutý Instagram za 30 sekúnd, obnova trvá dni. Tu je 5-minútová prevencia a krok-za-krokom postup, keď ti účet ukradnú.",
   category: "obecne",
   difficulty: "začiatočník",
   estimatedMinutes: 7,

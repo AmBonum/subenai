@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const emailPhishingCourse: Course = {
   slug: "email-phishing",
   title: "Email phishing — ako rozoznať podvodný e-mail",
-  tagline: "Falošná banka, falošný Microsoft, falošný šéf. 6 vzorov + checklist na 30 sekúnd.",
+  tagline:
+    "Falošná banka, falošný Microsoft, falošný šéf: 6 typických vzorov a 30-sekundový checklist, ktorým ich odhalíš.",
   category: "email",
   difficulty: "začiatočník",
   estimatedMinutes: 9,

@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const naborPraceScamCourse: Course = {
   slug: "brigady-a-pracovne-podvody",
   title: `Falošné brigády a pracovné ponuky — ako poznáš scam pred prvým dňom`,
-  tagline: "Platia vopred, žiadajú občiansky, sľubujú €500 týždenne. A to je problém.",
+  tagline:
+    'Platia vopred, žiadajú občiansky, sľubujú €500 týždenne za „prácu z domu": ako spoznáš scam pred prvým pracovným dňom.',
   category: "marketplace",
   difficulty: "začiatočník",
   estimatedMinutes: 7,

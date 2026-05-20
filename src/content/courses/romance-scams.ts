@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const romanceScamsCourse: Course = {
   slug: "romance-scams-catfishing",
   title: `Online láska, ktorá ťa pripraví o úspory`,
-  tagline: `Catfishing pattern, „vojakovi v Sýrii treba peniaze" a 4 ďalšie príbehy z reálneho života.`,
+  tagline:
+    'Catfishing pattern, „vojakovi v Sýrii treba peniaze" a 4 ďalšie príbehy: ako vyzerá online láska, ktorá ťa pripraví o úspory.',
   category: "vztahy",
   difficulty: "začiatočník",
   estimatedMinutes: 10,
