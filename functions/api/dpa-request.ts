@@ -176,20 +176,45 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     .single();
 
   if (insertError || !inserted) {
-    // PostgrestError exposes `code` (5-char PG SQLSTATE like 42P01) and a
-    // human-readable `message`. Log both server-side; surface ONLY the
-    // sanitised code to the client so debugging the initial go-live
-    // (table missing, wrong project, RLS misconfig) does not require
-    // diving into Cloudflare Pages real-time logs. The message itself
-    // can leak schema details so we never return it.
-    type PostgrestError = { code?: string; message?: string; details?: string };
-    const pgErr = insertError as PostgrestError | null;
+    // Goal: hand the operator a `reason` they can act on without diving
+    // into Cloudflare Pages real-time logs. Layered fallbacks, most
+    // specific first:
+    //   1. PostgREST SQLSTATE code (42P01, 42501, ...) — best signal
+    //   2. supabase-js error name (e.g. "AuthApiError", "TypeError")
+    //   3. sanitised message snippet (40 chars, ascii + a few punct only)
+    //   4. "no_row_returned" when error is null but data is null too
+    //   5. "opaque" — log the full shape, surrender cleanly
+    type LooseErr = {
+      code?: string;
+      message?: string;
+      name?: string;
+      details?: string;
+      status?: number;
+    };
+    const e = insertError as LooseErr | null;
+    const safe = (s: string) => s.replace(/[^a-zA-Z0-9_ :/-]/g, "").slice(0, 40);
+    let reason: string;
+    if (!insertError && !inserted) {
+      reason = "no_row_returned";
+    } else if (e?.code) {
+      reason = e.code;
+    } else if (e?.name && e?.message) {
+      reason = `${e.name}:${safe(e.message)}`;
+    } else if (e?.message) {
+      reason = safe(e.message);
+    } else {
+      reason = "opaque";
+    }
     console.error("dpa-request insert failed", {
-      code: pgErr?.code,
-      message: pgErr?.message,
-      details: pgErr?.details,
+      reason,
+      code: e?.code,
+      name: e?.name,
+      status: e?.status,
+      message: e?.message,
+      details: e?.details,
+      insertedIsNull: !inserted,
     });
-    return jsonResponse(500, { error: "insert_failed", reason: pgErr?.code ?? "unknown" });
+    return jsonResponse(500, { error: "insert_failed", reason });
   }
 
   return jsonResponse(200, {
