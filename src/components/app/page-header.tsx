@@ -40,13 +40,18 @@ export function PageHeader({
             {eyebrow}
           </span>
         )}
+        {/* `flex items-center` keeps the icon + title aligned on a single
+            line, but at <sm titles like "Tvoji respondenti vs. Slovensko"
+            push the accent word out of column flow without flex-wrap and
+            it visually detaches from the head (E36 A3 finding 2026-05-20).
+            `flex-wrap` lets the accent fall to the next line cleanly while
+            preserving the icon-aligned look on wider viewports. */}
         <h1
-          className="flex items-center gap-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+          className="flex flex-wrap items-center gap-x-2 gap-y-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
           data-testid="app-shell-page-header-title"
         >
-          {Icon && <Icon className="h-6 w-6 text-primary" />}
+          {Icon && <Icon className="h-6 w-6 shrink-0 text-primary" />}
           {head && <span>{head}</span>}
-          {head && " "}
           <span className="text-gradient-primary">{accent}</span>
         </h1>
         {subtitle && (

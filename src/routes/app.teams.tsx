@@ -111,15 +111,20 @@ function TeamsPage() {
         <CardHeader>
           <CardTitle>{t("invite_card_title")}</CardTitle>
         </CardHeader>
-        <CardContent className="flex gap-2">
+        {/* On mobile the three controls (email · role · invite) overflow
+            horizontally — the email input truncated to "email@fi" at 375px
+            (E36 A3 finding 2026-05-20). Stack vertically <sm, restore the
+            horizontal row at sm+. */}
+        <CardContent className="flex flex-col gap-2 sm:flex-row">
           <Input
+            className="flex-1"
             placeholder={t("invite_email_placeholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             data-testid="app-teams-invite-email-input"
           />
           <Select value={role} onValueChange={(v) => setRole(v as Role)}>
-            <SelectTrigger className="w-32" data-testid="app-teams-invite-role-select">
+            <SelectTrigger className="w-full sm:w-32" data-testid="app-teams-invite-role-select">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -134,6 +139,7 @@ function TeamsPage() {
             onClick={invite}
             disabled={inviteMut.isPending}
             data-testid="app-teams-invite-button"
+            className="w-full sm:w-auto"
           >
             <UserPlus className="mr-2 h-4 w-4" /> {t("invite_button")}
           </Button>

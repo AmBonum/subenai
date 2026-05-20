@@ -93,25 +93,32 @@ function TestsList() {
               data-testid="tests-list-search-input"
             />
           </div>
-          <Tabs value={status} onValueChange={(v) => setStatus(v as StatusFilter)}>
-            <TabsList data-testid="tests-list-status-filter">
-              <TabsTrigger value="all">
-                {t("status_all")} ({owned.length})
-              </TabsTrigger>
-              <TabsTrigger value="published">
-                <Send className="mr-1 h-3 w-3" />
-                {t("status_published")}
-              </TabsTrigger>
-              <TabsTrigger value="draft">
-                <FileEdit className="mr-1 h-3 w-3" />
-                {t("status_draft")}
-              </TabsTrigger>
-              <TabsTrigger value="archived">
-                <Archive className="mr-1 h-3 w-3" />
-                {t("status_archived")}
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          {/* TabsList is `inline-flex` so the four status chips never wrap;
+              on viewports <420px the "Archív" trigger overflows the parent
+              (E36 A3 finding 2026-05-20). Wrapping in an overflow-x-auto
+              container lets mobile users swipe the chip row horizontally
+              without breaking the desktop layout. */}
+          <div className="-mx-1 max-w-full overflow-x-auto px-1">
+            <Tabs value={status} onValueChange={(v) => setStatus(v as StatusFilter)}>
+              <TabsList data-testid="tests-list-status-filter">
+                <TabsTrigger value="all">
+                  {t("status_all")} ({owned.length})
+                </TabsTrigger>
+                <TabsTrigger value="published">
+                  <Send className="mr-1 h-3 w-3" />
+                  {t("status_published")}
+                </TabsTrigger>
+                <TabsTrigger value="draft">
+                  <FileEdit className="mr-1 h-3 w-3" />
+                  {t("status_draft")}
+                </TabsTrigger>
+                <TabsTrigger value="archived">
+                  <Archive className="mr-1 h-3 w-3" />
+                  {t("status_archived")}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
           <Select value={branch} onValueChange={setBranch}>
             <SelectTrigger className="w-44" data-testid="tests-list-branch-filter">
               <SelectValue />

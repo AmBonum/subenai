@@ -12,6 +12,13 @@
       "kontakt": "Contact",
       "app": "My tests"
     },
+    "user_menu": {
+      "trigger_aria": "Open user menu",
+      "signed_in_as": "Signed in as",
+      "app": "My tests",
+      "profile": "Profile & settings",
+      "signout": "Sign out"
+    },
     "menu": {
       "rychly_test": {
         "label": "Quick test",

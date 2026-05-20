@@ -27,12 +27,46 @@ function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [devLoading, setDevLoading] = useState(false);
   const [resetBanner, setResetBanner] = useState(false);
   // Phase 3: after a credentials failure we surface a "this email may be
   // registered via Google" hint. Supabase returns the same opaque error
   // for wrong-password vs OAuth-only, so we offer the Google path as a
   // fallback action alongside the generic message — no probing required.
   const [showOAuthCollision, setShowOAuthCollision] = useState(false);
+
+  // E36 A0 — dev-only one-click sign-in for the /app audit workflow.
+  // `import.meta.env.DEV` is folded to literal `false` in prod builds, so
+  // the entire block tree-shakes out. The `VITE_DEV_*` env vars also
+  // inline at build time; if they are unset in production .env the
+  // button would not render even if the DEV check were bypassed.
+  const devEmail = import.meta.env.VITE_DEV_TEST_USER_EMAIL as string | undefined;
+  const devPassword = import.meta.env.VITE_DEV_TEST_USER_PASSWORD as string | undefined;
+  const showDevSignIn = import.meta.env.DEV;
+  const devReady = Boolean(devEmail && devPassword);
+
+  const onDevSignIn = async () => {
+    if (!devEmail || !devPassword) return;
+    setError(null);
+    setShowOAuthCollision(false);
+    setDevLoading(true);
+    try {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: devEmail.trim(),
+        password: devPassword,
+      });
+      if (authError || !data.session) {
+        setError(authError?.message ?? t("error_generic"));
+        return;
+      }
+      const target = await decidePostLoginTarget(data.session);
+      navigate(target.search ? { to: target.to, search: target.search } : { to: target.to });
+    } catch (e) {
+      setError((e as Error)?.message ?? t("error_generic"));
+    } finally {
+      setDevLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -134,6 +168,44 @@ function LoginPage() {
             </svg>
             {googleLoading ? tc("google_loading") : tc("continue_with_google")}
           </Button>
+          {showDevSignIn && (
+            <div
+              className="mt-3 rounded-md border border-amber-500/50 bg-amber-500/10 p-3 text-xs"
+              data-testid="login-dev-banner"
+            >
+              <p className="mb-2 flex items-center gap-2 font-semibold text-amber-700 dark:text-amber-300">
+                <span className="rounded bg-amber-500/30 px-1.5 py-0.5 text-[10px] uppercase tracking-wider">
+                  DEV
+                </span>
+                E36 audit helper
+              </p>
+              {devReady ? (
+                <>
+                  <p className="mb-2 text-muted-foreground" data-testid="login-dev-banner-email">
+                    {devEmail}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full border-amber-500/50 hover:bg-amber-500/20"
+                    disabled={devLoading || submitting || googleLoading}
+                    onClick={() => {
+                      void onDevSignIn();
+                    }}
+                    data-testid="login-dev-signin"
+                  >
+                    {devLoading ? "Prihlasujem…" : "Prihlásiť ako test user (DEV)"}
+                  </Button>
+                </>
+              ) : (
+                <p className="text-muted-foreground" data-testid="login-dev-banner-missing">
+                  Nastav <code>VITE_DEV_TEST_USER_EMAIL</code> a{" "}
+                  <code>VITE_DEV_TEST_USER_PASSWORD</code> v <code>.env</code> a reštartuj dev
+                  server. Tento panel sa nezobrazí v produkčnom builde.
+                </p>
+              )}
+            </div>
+          )}
           <div className="my-4 flex items-center gap-2 text-xs text-muted-foreground">
             <div className="h-px flex-1 bg-border" />
             <span>{tc("or_separator")}</span>

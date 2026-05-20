@@ -3,6 +3,9 @@
     "brand": "SubenAI",
     "brand_subtitle": "Pre lektorov",
     "logout_aria": "Odhlásiť sa",
+    "open_menu_aria": "Otvoriť navigáciu",
+    "close_menu_aria": "Zavrieť navigáciu",
+    "mobile_nav_title": "Navigácia aplikácie",
     "admin": "Admin platformy",
     "groups": {
       "tvorba": "Tvorba",

@@ -1,20 +1,35 @@
 import { defineConfig, devices } from "@playwright/test";
 
 /**
- * Playwright config with TWO projects:
+ * Playwright config with FOUR projects:
  *
- *   integration   — API-level tests (no browser). Live in e2e/integration/.
- *                   Use `request` fixture from "@playwright/test"; do NOT
- *                   touch the `page` fixture from these tests.
+ *   integration         — API-level tests (no browser). Live in
+ *                         e2e/integration/. Use `request` fixture from
+ *                         "@playwright/test"; do NOT touch the `page`
+ *                         fixture from these tests.
  *
- *   e2e-chromium  — browser tests using Chromium. Live in e2e/specs/.
- *                   Use the composed `test` fixture from
- *                   `e2e/fixtures/base.ts`.
+ *   e2e-chromium        — Desktop Chrome browser tests. Live in
+ *                         e2e/specs/. Use composed `test` fixture from
+ *                         `e2e/fixtures/base.ts`.
+ *
+ *   e2e-mobile-chromium — Same specs as e2e-chromium but emulating
+ *                         Pixel 7 (412×915, touch, mobile UA). Only
+ *                         runs specs tagged with the `@mobile` annotation
+ *                         (see `e2e/specs/app/**` for usage). Wired up
+ *                         in E36 B1 (2026-05-20) to cover the AppShell
+ *                         mobile drawer and per-page responsive
+ *                         contracts.
+ *
+ *   e2e-tablet-chromium — Same specs as e2e-chromium but emulating
+ *                         iPad Pro 11 (834×1194, touch). Tagged with
+ *                         `@tablet`.
  *
  * Run a subset:
  *   npx playwright test --project=integration
  *   npx playwright test --project=e2e-chromium
- *   npm run e2e            # both
+ *   npx playwright test --project=e2e-mobile-chromium
+ *   npx playwright test --project=e2e-tablet-chromium
+ *   npm run e2e            # all projects
  *
  * BASE_URL override:
  *   BASE_URL=https://subenai.sk npm run e2e
@@ -47,6 +62,32 @@ export default defineConfig({
       testMatch: ["e2e/specs/**/*.spec.ts"],
       // WIP: fixtures podakovanie / stripeCheckout not yet wired into base.ts. Unblock by adding them to e2e/fixtures/base.ts or by deleting this testIgnore once fixtures land.
       testIgnore: ["e2e/specs/sponsorship/podpora-donate-flow.spec.ts"],
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "e2e-mobile-chromium",
+      testMatch: ["e2e/specs/**/*.spec.ts"],
+      // Only run specs that declare `test.use({ tag: ["@mobile"] })` or
+      // are explicitly grep'd in. Default is to skip mobile-viewport for
+      // every legacy spec until it's been audited (E36 B2).
+      grep: /@mobile/,
+      use: { ...devices["Pixel 7"] },
+    },
+    {
+      name: "e2e-tablet-chromium",
+      testMatch: ["e2e/specs/**/*.spec.ts"],
+      grep: /@tablet/,
+      use: { ...devices["iPad Pro 11"] },
+    },
+    {
+      name: "audit-screenshots",
+      // Side-channel project for the E36 A3 visual audit. NOT part of
+      // `npm run e2e`; invoked manually with
+      //   npx playwright test --project=audit-screenshots
+      // Sweeps every /app route at mobile + tablet viewports and writes
+      // PNGs to `.audit-screenshots/`. Uses the existing setupAppShell
+      // fixture so no real Supabase auth is needed.
+      testMatch: ["e2e/audit/**/*.audit.ts"],
       use: { ...devices["Desktop Chrome"] },
     },
   ],

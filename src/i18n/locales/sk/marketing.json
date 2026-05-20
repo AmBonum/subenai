@@ -12,6 +12,13 @@
       "kontakt": "Kontakt",
       "app": "Moje testy"
     },
+    "user_menu": {
+      "trigger_aria": "Otvoriť menu používateľa",
+      "signed_in_as": "Prihlásený/á ako",
+      "app": "Moje testy",
+      "profile": "Profil a nastavenia",
+      "signout": "Odhlásiť sa"
+    },
     "menu": {
       "rychly_test": {
         "label": "Rýchly test",
