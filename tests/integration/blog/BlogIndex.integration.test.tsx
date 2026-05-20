@@ -113,7 +113,7 @@ describe("/blog index — happy paths", () => {
     render(<BlogIndexPage />);
     const section = screen.getByTestId("blog-index-pillars-section");
     expect(within(section).getByTestId("blog-index-pillars-heading")).toHaveTextContent(
-      "základní sprievodcovia",
+      "sprievodcovia digitálnou bezpečnosťou",
     );
     expect(
       within(section).getByTestId(`blog-pillar-card-${PILLAR_PHISHING.slug}`),
@@ -397,6 +397,21 @@ describe("/blog index — redesigned scope bar + URL state", () => {
     fireEvent.click(trigger);
     expect(trigger).toHaveAttribute("data-state", "closed");
     expect(content).toHaveAttribute("data-state", "closed");
+  });
+
+  it("TC-23b: pillars content carries the data-state CSS hide hook (forceMount visibility regression sentinel)", () => {
+    // The pillars content is rendered with <CollapsibleContent forceMount>
+    // so the cards stay in the DOM for SEO/a11y. But forceMount means
+    // Radix does NOT set `hidden` itself — visibility is delegated to
+    // CSS via `data-[state=closed]:hidden`. Without that class the
+    // click flips data-state but nothing changes visually (exact bug
+    // shipped before 2026-05-20). jsdom can't compute Tailwind utility
+    // classes, so we assert on the className contract directly — this
+    // is the canonical regression hook.
+    mockList([PILLAR_PHISHING, PILLAR_SMS]);
+    render(<BlogIndexPage />);
+    const content = screen.getByTestId("blog-index-pillars-content");
+    expect(content.className).toContain("data-[state=closed]:hidden");
   });
 
   it("TC-24: scope bar is omitted entirely when there are zero posts (no empty chips)", () => {

@@ -62,8 +62,14 @@ function PrivacyPage() {
           <p className="mt-2 text-sm text-muted-foreground">{t("last_updated")}</p>
         </header>
 
+        {/* `min-w-0` mirrors the cookies-route fix — defensive, since
+            the article today has no <table>/<pre>/long-URL that would
+            force overflow, but the shared `grid + prose` shape is
+            identical and any future content addition would reproduce
+            the cookies bug on 320/375 px viewports. See cookies.lazy.tsx
+            for the full reasoning. */}
         <div className="grid gap-10 lg:grid-cols-[1fr_240px]">
-          <article className="prose prose-sm max-w-none space-y-6 text-foreground prose-headings:text-foreground prose-a:text-primary">
+          <article className="prose prose-sm min-w-0 max-w-none space-y-6 text-foreground prose-headings:text-foreground prose-a:text-primary">
             {/* Mobile TOC stays here so it's at the top of the flow on small screens */}
             <div className="lg:hidden">
               <DocTocSidebar items={TOC_ITEMS} testIdPrefix="privacy" />

@@ -59,8 +59,17 @@ function CookiesPage() {
           </p>
         </header>
 
+        {/* `min-w-0` on the article is load-bearing: CSS grid items
+            default to `min-width: auto` (= content min-width), so the
+            cookies category table (intrinsic ~580 px wide) was forcing
+            this column to overflow on 320/375 px viewports. The table
+            already has `overflow-x-auto` on its own wrapper at line
+            97, but that's a no-op while the parent grid track keeps
+            stretching to the table's intrinsic width. `min-w-0` lets
+            the column shrink to its grid-track size and the table
+            wrapper's own scroll then engages as intended. */}
         <div className="grid gap-10 lg:grid-cols-[1fr_240px]">
-          <article className="prose prose-sm max-w-none space-y-6 text-foreground prose-headings:text-foreground prose-a:text-primary">
+          <article className="prose prose-sm min-w-0 max-w-none space-y-6 text-foreground prose-headings:text-foreground prose-a:text-primary">
             <div className="lg:hidden">
               <DocTocSidebar items={TOC_ITEMS} testIdPrefix="cookies" />
             </div>
