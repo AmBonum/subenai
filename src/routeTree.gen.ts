@@ -102,7 +102,7 @@ const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/support.lazy').then((d) => d.Route))
 const SponsorsRoute = SponsorsRouteImport.update({
   id: '/sponsors',
   path: '/sponsors',
@@ -122,7 +122,7 @@ const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/privacy.lazy').then((d) => d.Route))
 const ManageSupportRoute = ManageSupportRouteImport.update({
   id: '/manage-support',
   path: '/manage-support',
@@ -142,7 +142,7 @@ const CookiesRoute = CookiesRouteImport.update({
   id: '/cookies',
   path: '/cookies',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/cookies.lazy').then((d) => d.Route))
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -167,7 +167,7 @@ const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -212,7 +212,9 @@ const ThankYouSessionIdRoute = ThankYouSessionIdRouteImport.update({
   id: '/thank-you/$sessionId',
   path: '/thank-you/$sessionId',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/thank-you.$sessionId.lazy').then((d) => d.Route),
+)
 const TestsSlugRoute = TestsSlugRouteImport.update({
   id: '/tests/$slug',
   path: '/tests/$slug',

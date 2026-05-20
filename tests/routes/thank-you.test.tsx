@@ -12,6 +12,10 @@ vi.mock("@tanstack/react-router", () => ({
     () =>
     <T,>(opts: T) =>
       opts,
+  createLazyFileRoute:
+    () =>
+    <T,>(opts: T) =>
+      opts,
   useParams: () => ({ sessionId: "cs_test_session_id" }),
 }));
 
@@ -19,7 +23,7 @@ vi.mock("@/hooks/useConsent", () => ({
   useConsent: () => ({ openPreferences: vi.fn(), record: null }),
 }));
 
-import { ThankYouView } from "@/routes/thank-you.$sessionId";
+import { ThankYouView } from "@/routes/thank-you.$sessionId.lazy";
 
 const originalLocation = window.location;
 

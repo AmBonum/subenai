@@ -12,6 +12,10 @@ vi.mock("@tanstack/react-router", () => ({
     () =>
     <T,>(opts: T) =>
       opts,
+  createLazyFileRoute:
+    () =>
+    <T,>(opts: T) =>
+      opts,
   useSearch: () => ({}),
 }));
 
@@ -19,7 +23,7 @@ vi.mock("@/hooks/useConsent", () => ({
   useConsent: () => ({ openPreferences: vi.fn(), record: null }),
 }));
 
-import { DonateForm } from "@/routes/support";
+import { DonateForm } from "@/routes/support.lazy";
 
 const originalLocation = window.location;
 

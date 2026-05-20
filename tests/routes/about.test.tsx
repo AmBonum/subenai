@@ -12,6 +12,10 @@ vi.mock("@tanstack/react-router", () => ({
     () =>
     <T,>(opts: T) =>
       opts,
+  createLazyFileRoute:
+    () =>
+    <T,>(opts: T) =>
+      opts,
 }));
 
 vi.mock("@/hooks/useConsent", () => ({
@@ -21,7 +25,7 @@ vi.mock("@/hooks/useConsent", () => ({
   }),
 }));
 
-import { AboutPage } from "@/routes/about";
+import { AboutPage } from "@/routes/about.lazy";
 
 describe("AboutPage (/about)", () => {
   it("renders the hero with project name and tagline", () => {
