@@ -36,6 +36,7 @@ import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
 import { Route as TestBuilderRouteImport } from './routes/test.builder'
 import { Route as TShareIdRouteImport } from './routes/t.$shareId'
 import { Route as SponsorsAllRouteImport } from './routes/sponsors.all'
+import { Route as SchoolsDpaRouteImport } from './routes/schools_.dpa'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
@@ -236,6 +237,11 @@ const SponsorsAllRoute = SponsorsAllRouteImport.update({
   id: '/all',
   path: '/all',
   getParentRoute: () => SponsorsRoute,
+} as any)
+const SchoolsDpaRoute = SchoolsDpaRouteImport.update({
+  id: '/schools_/dpa',
+  path: '/schools/dpa',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const SSlugRoute = SSlugRouteImport.update({
   id: '/s/$slug',
@@ -667,6 +673,7 @@ export interface FileRoutesByFullPath {
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/schools/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
   '/test/builder': typeof TestBuilderRouteWithChildren
@@ -753,6 +760,7 @@ export interface FileRoutesByTo {
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/schools/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
   '/tests/$slug': typeof TestsSlugRoute
@@ -844,6 +852,7 @@ export interface FileRoutesById {
   '/login_/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/schools_/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
   '/test/builder': typeof TestBuilderRouteWithChildren
@@ -938,6 +947,7 @@ export interface FileRouteTypes {
     | '/login/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/schools/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
     | '/test/builder'
@@ -1024,6 +1034,7 @@ export interface FileRouteTypes {
     | '/login/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/schools/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
     | '/tests/$slug'
@@ -1114,6 +1125,7 @@ export interface FileRouteTypes {
     | '/login_/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/schools_/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
     | '/test/builder'
@@ -1176,6 +1188,7 @@ export interface RootRouteChildren {
   LoginVerify2faRoute: typeof LoginVerify2faRoute
   RShareIdRoute: typeof RShareIdRoute
   SSlugRoute: typeof SSlugRoute
+  SchoolsDpaRoute: typeof SchoolsDpaRoute
   TShareIdRoute: typeof TShareIdRoute
   TestBuilderRoute: typeof TestBuilderRouteWithChildren
   TestsSlugRoute: typeof TestsSlugRoute
@@ -1378,6 +1391,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sponsors/all'
       preLoaderRoute: typeof SponsorsAllRouteImport
       parentRoute: typeof SponsorsRoute
+    }
+    '/schools_/dpa': {
+      id: '/schools_/dpa'
+      path: '/schools/dpa'
+      fullPath: '/schools/dpa'
+      preLoaderRoute: typeof SchoolsDpaRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/s/$slug': {
       id: '/s/$slug'
@@ -2046,6 +2066,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginVerify2faRoute: LoginVerify2faRoute,
   RShareIdRoute: RShareIdRoute,
   SSlugRoute: SSlugRoute,
+  SchoolsDpaRoute: SchoolsDpaRoute,
   TShareIdRoute: TShareIdRoute,
   TestBuilderRoute: TestBuilderRouteWithChildren,
   TestsSlugRoute: TestsSlugRoute,
