@@ -763,14 +763,17 @@
     "footer_cta_blog_label": "Otvor akadémiu →"
   },
   "zmeny": {
-    "meta_title": "Zmeny a verzie — subenai",
-    "meta_description": "Verejný changelog projektu subenai — čo sa pridalo, zmenilo a opravilo v každej verzii. Aktualizovaný pri každom deploy.",
+    "meta_title": "Zmeny, novinky a verzie — subenai",
+    "meta_description": "Čo nové v subenai: nové sady testov, funkcie pre školy, GDPR samoobsluha, transparentné dáta a opravy. Verejný changelog, aktualizovaný po každom nasadení.",
+    "og_image_alt": "subenai — Zmeny a verzie",
     "jsonld_name": "Zmeny a verzie — subenai",
-    "back_home": "← Späť na domov",
+    "jsonld_description": "Verejný changelog projektu subenai s prehľadom všetkých verzií, nových funkcií, opráv a bezpečnostných aktualizácií. Žiadne tiché updaty.",
+    "back_home": "Späť na domov",
+    "back_home_aria": "Späť na domovskú stránku",
     "title": "Zmeny a verzie",
-    "lead": "Verejný zoznam toho, čo sa v projekte za posledné obdobie zmenilo.",
-    "last_deploy_prefix": " Posledný deploy: ",
-    "last_deploy_version": " (verzia {version}).",
+    "lead": "Každú zmenu v subenai zverejňujeme — nové funkcie, opravy aj bezpečnostné úpravy. Žiadne tiché updaty.",
+    "last_deploy_prefix": " Naposledy nasadené ",
+    "last_deploy_version": ", verzia {version}.",
     "empty": "Zatiaľ žiadne verzie.",
     "list_aria": "Zoznam verzií",
     "empty_version": "(prázdna verzia — len interné zmeny)",
@@ -779,6 +782,9 @@
     "kind_fixed": "Opravené",
     "kind_removed": "Odstránené",
     "kind_deprecated": "Zastarané",
-    "kind_security": "Bezpečnosť"
+    "kind_security": "Bezpečnosť",
+    "permalink_aria": "Odkaz na verziu {version}",
+    "breadcrumb_home": "Domov",
+    "breadcrumb_self": "Zmeny"
   }
 }
