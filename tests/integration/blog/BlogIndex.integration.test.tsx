@@ -373,15 +373,30 @@ describe("/blog index — redesigned scope bar + URL state", () => {
     expect(within(list).getByTestId(`blog-post-card-${CLUSTER_SMS_1.slug}`)).toBeInTheDocument();
   });
 
-  it("TC-23: pillars section renders a collapsible trigger with show/hide aria-label", () => {
+  it("TC-23: pillars trigger toggles Radix data-state AND aria-label on click", () => {
     mockList([PILLAR_PHISHING, PILLAR_SMS]);
     render(<BlogIndexPage />);
     const trigger = screen.getByTestId("blog-index-pillars-toggle");
+    const content = screen.getByTestId("blog-index-pillars-content");
     // In jsdom (no matchMedia), default is `closed` — trigger advertises
-    // "show" affordance to the user (open the section).
+    // "show" affordance + Radix wires data-state="closed" + hidden.
     expect(trigger).toHaveAttribute("aria-label", "zobraziť sprievodcov");
+    expect(trigger).toHaveAttribute("data-state", "closed");
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(content).toHaveAttribute("data-state", "closed");
+    // Production regression sentinel — click MUST flip Radix data-state.
+    // (Earlier `asChild` wiring rendered correct attrs but click was a
+    // no-op in production; default Root + Trigger inside a plain section
+    // is the working shape.)
     fireEvent.click(trigger);
     expect(trigger).toHaveAttribute("aria-label", "skryť sprievodcov");
+    expect(trigger).toHaveAttribute("data-state", "open");
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    expect(content).toHaveAttribute("data-state", "open");
+    // And a second click MUST close it again — round-trip.
+    fireEvent.click(trigger);
+    expect(trigger).toHaveAttribute("data-state", "closed");
+    expect(content).toHaveAttribute("data-state", "closed");
   });
 
   it("TC-24: scope bar is omitted entirely when there are zero posts (no empty chips)", () => {

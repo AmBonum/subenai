@@ -18,6 +18,15 @@ interface PillarsSectionProps {
 // responsible for hiding the section entirely during ≥2-char search
 // (the trigger doesn't render at all then); the Collapsible is only
 // for the open/closed user choice within the visible state.
+//
+// 2026-05-20 fix: dropped `<Collapsible asChild>` on the <section>.
+// asChild composes refs + props via Slot, but a Slot wrapping a
+// non-button element with internal Trigger children was producing a
+// production-only click no-op (Radix tracks state correctly but the
+// trigger's button click handler didn't update the controlled state).
+// Default-Root (renders its own <div>) keeps the section as a child
+// element inside; the extra div is a one-liner cost with zero semantic
+// loss.
 export function PillarsSection({ pillars }: PillarsSectionProps) {
   const t = tFor("index");
   const { open, setOpen, hydrated } = useBlogPillarsCollapsed();
@@ -25,22 +34,15 @@ export function PillarsSection({ pillars }: PillarsSectionProps) {
   if (pillars.length === 0) return null;
 
   return (
-    <Collapsible
-      open={open}
-      onOpenChange={setOpen}
-      asChild
-      // Inert until hydrated so a server-rendered "closed" state doesn't
-      // briefly animate open on desktop. Radix manages its own data-state
-      // attribute we hook into for the chevron rotation below.
+    <section
+      id="sprievodcovia"
+      className="mt-12 scroll-mt-24 border-t border-border pt-10 md:mt-16 md:pt-12"
+      data-testid="blog-index-pillars-section"
+      data-hydrated={hydrated ? "true" : "false"}
     >
-      <section
-        id="sprievodcovia"
-        className="mt-12 scroll-mt-24 border-t border-border pt-10 md:mt-16 md:pt-12"
-        data-testid="blog-index-pillars-section"
-        data-hydrated={hydrated ? "true" : "false"}
-      >
+      <Collapsible open={open} onOpenChange={setOpen}>
         <CollapsibleTrigger
-          className="group flex w-full items-center justify-between gap-4 text-left"
+          className="group flex w-full cursor-pointer items-center justify-between gap-4 rounded-lg p-1 text-left transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
           data-testid="blog-index-pillars-toggle"
           aria-label={open ? t("pillars_toggle_hide") : t("pillars_toggle_show")}
         >
@@ -93,7 +95,7 @@ export function PillarsSection({ pillars }: PillarsSectionProps) {
             ))}
           </ul>
         </CollapsibleContent>
-      </section>
-    </Collapsible>
+      </Collapsible>
+    </section>
   );
 }
