@@ -312,7 +312,7 @@
     "how_cards": {
       "questions_n": "15",
       "questions_title": "otázek",
-      "questions_sub": "phishing, scam, fake stránky",
+      "questions_sub": "phishing, scam, falešné stránky",
       "time_n": "90s",
       "time_title": "limit",
       "time_sub": "čas běží, žádné googlení",
@@ -355,11 +355,11 @@
       "testy": {
         "title": "Testy",
         "testy_q": "Co jsou testy pro firmy?",
-        "testy_a_prefix": "Připravené sady otázek přizpůsobené konkrétnímu oboru. E-shop dostane otázky o falešných objednávkách, gastro o fake kontrolách, IT o BEC podvodech. Stačí sdílet odkaz s týmem — výsledek dostane každý sám pro sebe. ",
+        "testy_a_prefix": "Připravené sady otázek přizpůsobené konkrétnímu oboru. E-shop dostane otázky o falešných objednávkách, gastro o falešných kontrolách, IT o BEC podvodech. Stačí sdílet odkaz s týmem — výsledek dostane každý sám pro sebe. ",
         "testy_a_link": "Prohlédnout testy",
         "testy_a_suffix": ".",
         "demograficke_q": "Existují testy pro běžné lidi, nejen firmy?",
-        "demograficke_a_prefix": "Ano — máme sady pro žáky do 16 let (herní a školní scamy), studenty (fake pronájmy, falešná stipendia), seniory (AI klonování hlasu, dveřní podvody) a obecný test pro každého. Najdete je v sekci ",
+        "demograficke_a_prefix": "Ano — máme sady pro žáky do 16 let (herní a školní scamy), studenty (falešné pronájmy, falešná stipendia), seniory (AI klonování hlasu, dveřní podvody) a obecný test pro každého. Najdete je v sekci ",
         "demograficke_a_link": "Testy",
         "demograficke_a_suffix": "."
       },

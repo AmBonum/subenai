@@ -44,6 +44,7 @@ describe("admin route shims — import & symbol existence", () => {
     ["admin/blog/new", () => import("@/routes/admin/blog/new")],
     // Other 0% route shims that are similarly trivial.
     ["test.builder", () => import("@/routes/test.builder")],
+    ["test.builder.index", () => import("@/routes/test.builder.index")],
     ["test.builder.$id", () => import("@/routes/test.builder.$id")],
     ["test.builder.$id.results", () => import("@/routes/test.builder.$id.results")],
   ])("loads %s and exposes `Route`", async (_label, loader) => {

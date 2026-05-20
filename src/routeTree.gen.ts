@@ -75,6 +75,7 @@ import { Route as AdminDsrRouteImport } from './routes/admin/dsr'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
+import { Route as TestBuilderIndexRouteImport } from './routes/test.builder.index'
 import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
 import { Route as AdminTestsIndexRouteImport } from './routes/admin/tests.index'
 import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
@@ -449,6 +450,13 @@ const AdminAnswerSetsRoute = AdminAnswerSetsRouteImport.update({
   path: '/answer-sets',
   getParentRoute: () => AdminRoute,
 } as any)
+const TestBuilderIndexRoute = TestBuilderIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TestBuilderRoute,
+} as any).lazy(() =>
+  import('./routes/test.builder.index.lazy').then((d) => d.Route),
+)
 const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
   id: '/tests/',
   path: '/tests/',
@@ -669,6 +677,7 @@ export interface FileRoutesByFullPath {
   '/admin/pages/': typeof AdminPagesIndexRoute
   '/admin/tests/': typeof AdminTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
+  '/test/builder/': typeof TestBuilderIndexRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRoute
   '/test/builder/$id/': typeof TestBuilderIdIndexRoute
 }
@@ -723,7 +732,6 @@ export interface FileRoutesByTo {
   '/s/$slug': typeof SSlugRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
-  '/test/builder': typeof TestBuilderRouteWithChildren
   '/tests/$slug': typeof TestsSlugRoute
   '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
   '/admin': typeof AdminIndexRoute
@@ -751,6 +759,7 @@ export interface FileRoutesByTo {
   '/admin/pages': typeof AdminPagesIndexRoute
   '/admin/tests': typeof AdminTestsIndexRoute
   '/app/tests': typeof AppTestsIndexRoute
+  '/test/builder': typeof TestBuilderIndexRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRoute
   '/test/builder/$id': typeof TestBuilderIdIndexRoute
 }
@@ -841,6 +850,7 @@ export interface FileRoutesById {
   '/admin/pages/': typeof AdminPagesIndexRoute
   '/admin/tests/': typeof AdminTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
+  '/test/builder/': typeof TestBuilderIndexRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRoute
   '/test/builder/$id/': typeof TestBuilderIdIndexRoute
 }
@@ -932,6 +942,7 @@ export interface FileRouteTypes {
     | '/admin/pages/'
     | '/admin/tests/'
     | '/app/tests/'
+    | '/test/builder/'
     | '/test/builder/$id/results'
     | '/test/builder/$id/'
   fileRoutesByTo: FileRoutesByTo
@@ -986,7 +997,6 @@ export interface FileRouteTypes {
     | '/s/$slug'
     | '/sponsors/all'
     | '/t/$shareId'
-    | '/test/builder'
     | '/tests/$slug'
     | '/thank-you/$sessionId'
     | '/admin'
@@ -1014,6 +1024,7 @@ export interface FileRouteTypes {
     | '/admin/pages'
     | '/admin/tests'
     | '/app/tests'
+    | '/test/builder'
     | '/test/builder/$id/results'
     | '/test/builder/$id'
   id:
@@ -1103,6 +1114,7 @@ export interface FileRouteTypes {
     | '/admin/pages/'
     | '/admin/tests/'
     | '/app/tests/'
+    | '/test/builder/'
     | '/test/builder/$id/results'
     | '/test/builder/$id/'
   fileRoutesById: FileRoutesById
@@ -1607,6 +1619,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnswerSetsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/test/builder/': {
+      id: '/test/builder/'
+      path: '/'
+      fullPath: '/test/builder/'
+      preLoaderRoute: typeof TestBuilderIndexRouteImport
+      parentRoute: typeof TestBuilderRoute
+    }
     '/app/tests/': {
       id: '/app/tests/'
       path: '/tests'
@@ -1931,10 +1950,12 @@ const TestBuilderIdRouteWithChildren = TestBuilderIdRoute._addFileChildren(
 
 interface TestBuilderRouteChildren {
   TestBuilderIdRoute: typeof TestBuilderIdRouteWithChildren
+  TestBuilderIndexRoute: typeof TestBuilderIndexRoute
 }
 
 const TestBuilderRouteChildren: TestBuilderRouteChildren = {
   TestBuilderIdRoute: TestBuilderIdRouteWithChildren,
+  TestBuilderIndexRoute: TestBuilderIndexRoute,
 }
 
 const TestBuilderRouteWithChildren = TestBuilderRoute._addFileChildren(
