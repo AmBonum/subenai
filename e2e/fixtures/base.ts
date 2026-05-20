@@ -20,6 +20,7 @@ import { ManageSupportPage } from "../poms/marketing/ManageSupportPage";
 import { PodporaPage } from "../poms/sponsorship/PodporaPage";
 import { PrivacyPage, CookiesPage, ChangelogPage } from "../poms/marketing/LegalPages";
 import { TestsDirectoryPage } from "../poms/quiz/TestsDirectoryPage";
+import { NetworkSentinel } from "../poms/security/NetworkSentinel";
 
 // Minimal .env loader so specs don't need playwright.config.ts to import
 // dotenv (kept dependency-free). `VITE_SUPABASE_PROJECT_ID` is read by
@@ -89,6 +90,7 @@ type Fixtures = {
   privacy: PrivacyPage;
   cookies: CookiesPage;
   changelog: ChangelogPage;
+  sentinel: NetworkSentinel;
 };
 
 export const test = base.extend<Fixtures>({
@@ -154,6 +156,11 @@ export const test = base.extend<Fixtures>({
   },
   changelog: async ({ page }, use) => {
     await use(new ChangelogPage(page));
+  },
+  sentinel: async ({ page }, use) => {
+    // Construct BEFORE the spec's first navigation so the request
+    // listener catches every request from the page-load onwards.
+    await use(new NetworkSentinel(page));
   },
 });
 
