@@ -22,8 +22,12 @@ test.describe("/app/sets/$setId", () => {
       await expect(setsDetail.pageHeaderWrapper).toBeVisible();
     });
 
-    await test.step('Verify the heading contains "SMS podvody — základná sada"', async () => {
-      await expect(setsDetail.pageHeaderTitle).toContainText("SMS podvody — základná sada");
+    await test.step('Verify the heading contains "SMS podvody — základná"', async () => {
+      // PageHeader splits the title into head + accent spans; textContent
+      // concatenates them with no whitespace, so we assert against the
+      // head substring ("SMS podvody — základná") which lives in a single
+      // span. Visual gap is provided by `gap-x-2` on the flex container.
+      await expect(setsDetail.pageHeaderTitle).toContainText("SMS podvody — základná");
     });
 
     await test.step('Verify the correct-answers column is visible with heading "Správne odpovede"', async () => {
@@ -126,6 +130,96 @@ test.describe("/app/sets/$setId", () => {
 
     await test.step("Verify the URL is now /app/library", async () => {
       await expect(page).toHaveURL(/\/app\/library/);
+    });
+  });
+
+  // TC-05: A second set (as_002) renders its own title and answer rows
+  test("TC-05: navigating to a different set id renders that set's title and answers", async ({
+    page,
+  }) => {
+    await setupEducator(page.context(), page);
+    const setsDetail = new AppSetsDetailPage(page);
+
+    await test.step("Navigate to /app/sets/as_002", async () => {
+      await setsDetail.open("as_002");
+    });
+
+    await test.step('Verify the heading contains "Phishing email —"', async () => {
+      // PageHeader splits "Phishing email — banka" into head + accent
+      // spans; assert on the head substring which lives in a single span.
+      await expect(setsDetail.pageHeaderTitle).toContainText("Phishing email —");
+    });
+
+    await test.step("Verify both columns are visible and populated", async () => {
+      await expect(setsDetail.correctColumn).toBeVisible();
+      await expect(setsDetail.incorrectColumn).toBeVisible();
+      await expect(setsDetail.correctRow(0)).toBeVisible();
+      await expect(setsDetail.incorrectRow(0)).toBeVisible();
+    });
+
+    await test.step("Verify the not-found card is not rendered", async () => {
+      await expect(setsDetail.notFoundCard).toHaveCount(0);
+    });
+  });
+
+  // TC-06: Answer rows expose the per-row explanation copy from the seed
+  test("TC-06: correct and incorrect rows render the seed explanation text", async ({ page }) => {
+    await setupEducator(page.context(), page);
+    const setsDetail = new AppSetsDetailPage(page);
+
+    await test.step("Navigate to /app/sets/as_001", async () => {
+      await setsDetail.open("as_001");
+    });
+
+    await test.step("Verify the first correct row exposes its 'Toto je odporúčaný postup' explanation", async () => {
+      await expect(setsDetail.correctRow(0)).toContainText("Toto je odporúčaný postup");
+    });
+
+    await test.step("Verify the first incorrect row exposes its 'Typická chyba' explanation", async () => {
+      await expect(setsDetail.incorrectRow(0)).toContainText("Typická chyba");
+    });
+  });
+});
+
+test.describe("/app/sets/$setId @mobile", () => {
+  // TC-07: at mobile width the two answer columns stack vertically with no horizontal overflow
+  test("TC-07: answer columns stack and the page renders without horizontal overflow at mobile width", async ({
+    page,
+    context,
+  }) => {
+    await setupEducator(context, page);
+    const setsDetail = new AppSetsDetailPage(page);
+
+    await test.step("Open /app/sets/as_001 at Pixel 7 viewport", async () => {
+      await setsDetail.open("as_001");
+    });
+
+    await test.step("Verify both answer columns are visible", async () => {
+      await expect(setsDetail.correctColumn).toBeVisible();
+      await expect(setsDetail.incorrectColumn).toBeVisible();
+    });
+
+    await test.step("Verify the columns stack vertically (incorrect column sits below correct column)", async () => {
+      const correctBox = await setsDetail.correctColumn.boundingBox();
+      const incorrectBox = await setsDetail.incorrectColumn.boundingBox();
+      expect(correctBox).toBeTruthy();
+      expect(incorrectBox).toBeTruthy();
+      // At lg:grid-cols-2 the columns are side-by-side; below lg they
+      // stack — the incorrect column should start AFTER the correct
+      // column ends on the y-axis.
+      expect(incorrectBox!.y).toBeGreaterThanOrEqual(correctBox!.y + correctBox!.height - 8);
+    });
+
+    await test.step("Verify the columns span most of the viewport width", async () => {
+      const correctBox = await setsDetail.correctColumn.boundingBox();
+      expect(correctBox?.width).toBeGreaterThan(300);
+    });
+
+    await test.step("Verify the document body does not horizontally overflow the viewport", async () => {
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow).toBeLessThanOrEqual(1);
     });
   });
 });

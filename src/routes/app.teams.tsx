@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Users, UserPlus, Crown, Pencil, Eye, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -42,11 +42,27 @@ function TeamsPage() {
   const inviteMut = useInviteTeamMember();
   const removeMut = useRemoveTeamMember();
   const updateRoleMut = useUpdateTeamMemberRole();
-  const teams = teamsQ.data ?? [];
-  const members = membersQ.data ?? [];
-  const [activeTeam, setActiveTeam] = useState(teams[0]?.id ?? "");
+  // `teamsQ.data ?? []` returned a fresh `[]` on every render, which made
+  // the activeTeam-sync useEffect below see a "changed" dependency every
+  // render. Memoize so the reference stays stable while data is loading.
+  const teams = useMemo(() => teamsQ.data ?? [], [teamsQ.data]);
+  const members = useMemo(() => membersQ.data ?? [], [membersQ.data]);
+  const [activeTeam, setActiveTeam] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<Role>("editor");
+
+  // `useState(teams[0]?.id ?? "")` runs once at mount when `teams` is
+  // still empty (TanStack Query hasn't resolved yet), so the initial
+  // selection was effectively always "" — the members list rendered
+  // empty even when team_members existed for the first team.
+  // Sync the active team to the first one whenever teams resolve,
+  // unless the user already picked one (preserve explicit choice).
+  // E36 B3 bug discovery 2026-05-20.
+  useEffect(() => {
+    if (!activeTeam && teams.length > 0) {
+      setActiveTeam(teams[0].id);
+    }
+  }, [teams, activeTeam]);
 
   const teamMembers = members.filter((m) => m.team_id === activeTeam);
 

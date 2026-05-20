@@ -58,4 +58,16 @@ export class AppAccountProfilePage extends BasePage {
   get gotoSecurity() {
     return this.page.getByTestId("app-account-profile-goto-security");
   }
+
+  get nameError() {
+    return this.page.getByTestId("app-account-profile-name-error");
+  }
+
+  get emailError() {
+    return this.page.getByTestId("app-account-profile-email-error");
+  }
+
+  get initialsError() {
+    return this.page.getByTestId("app-account-profile-initials-error");
+  }
 }

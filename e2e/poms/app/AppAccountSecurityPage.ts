@@ -51,6 +51,10 @@ export class AppAccountSecurityPage extends BasePage {
     return this.page.getByTestId(`app-account-security-revoke-${sessionId}`);
   }
 
+  sessionRow(sessionId: string) {
+    return this.page.getByTestId(`app-account-security-session-row-${sessionId}`);
+  }
+
   /** First Sonner toast notification rendered by the global Toaster. */
   get toast() {
     return this.page.locator("[data-sonner-toast]").first();

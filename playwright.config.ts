@@ -62,20 +62,32 @@ export default defineConfig({
       testMatch: ["e2e/specs/**/*.spec.ts"],
       // WIP: fixtures podakovanie / stripeCheckout not yet wired into base.ts. Unblock by adding them to e2e/fixtures/base.ts or by deleting this testIgnore once fixtures land.
       testIgnore: ["e2e/specs/sponsorship/podpora-donate-flow.spec.ts"],
+      // Mobile- and tablet-scoped assertions (drawer trigger visible,
+      // invite form stacked) only hold at <lg viewports — exclude them
+      // here so the desktop project does not try to assert against a
+      // `display:none` element. Those tests run exclusively on
+      // `e2e-mobile-chromium` / `e2e-tablet-chromium` below.
+      grepInvert: /@(mobile|tablet)/,
       use: { ...devices["Desktop Chrome"] },
     },
     {
       name: "e2e-mobile-chromium",
       testMatch: ["e2e/specs/**/*.spec.ts"],
-      // Only run specs that declare `test.use({ tag: ["@mobile"] })` or
-      // are explicitly grep'd in. Default is to skip mobile-viewport for
-      // every legacy spec until it's been audited (E36 B2).
+      // Same WIP carve-out as `e2e-chromium` — the sponsorship spec
+      // expects fixtures not yet composed into base.ts and fails at
+      // compile time on every project that picks it up.
+      testIgnore: ["e2e/specs/sponsorship/podpora-donate-flow.spec.ts"],
+      // Only run specs that opt-in via the `@mobile` tag (see
+      // `e2e/specs/app/{shell,teams,…}.spec.ts` for usage). Default is
+      // to skip mobile-viewport for every legacy spec until it's been
+      // audited (E36 B2).
       grep: /@mobile/,
       use: { ...devices["Pixel 7"] },
     },
     {
       name: "e2e-tablet-chromium",
       testMatch: ["e2e/specs/**/*.spec.ts"],
+      testIgnore: ["e2e/specs/sponsorship/podpora-donate-flow.spec.ts"],
       grep: /@tablet/,
       use: { ...devices["iPad Pro 11"] },
     },
