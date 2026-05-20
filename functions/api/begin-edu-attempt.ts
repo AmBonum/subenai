@@ -16,6 +16,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { ipRateLimit, readClientIp, parsePositiveInt } from "../_lib/security";
 import { signEduAttemptToken } from "../_lib/jwt";
+import { PROD_SUPABASE_URL } from "../_lib/supabase-url";
 
 interface Env {
   SUPABASE_URL: string;
@@ -123,7 +124,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     return jsonResponse(429, { error: "rate_limited" });
   }
 
-  const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+  const supabase = createClient(PROD_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 

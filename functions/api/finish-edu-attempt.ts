@@ -11,6 +11,7 @@ import { createClient } from "@supabase/supabase-js";
 import { ipRateLimit, readClientIp, parsePositiveInt } from "../_lib/security";
 import { verifyEduAttemptToken } from "../_lib/jwt";
 import type { Database, Json } from "../../src/integrations/supabase/types";
+import { PROD_SUPABASE_URL } from "../_lib/supabase-url";
 
 interface Env {
   SUPABASE_URL: string;
@@ -111,7 +112,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     return jsonResponse(400, { error: "invalid_shape" });
   }
 
-  const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+  const supabase = createClient(PROD_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 

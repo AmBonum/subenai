@@ -3,6 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import { sendEmail } from "../_lib/email";
 import { refundAlertEmail } from "../_lib/email-templates";
+import { PROD_SUPABASE_URL } from "../_lib/supabase-url";
 
 export interface Env {
   STRIPE_SECRET_KEY: string;
@@ -69,7 +70,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     return jsonResponse(400, { error: "livemode_mismatch" });
   }
 
-  const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+  const supabase = createClient(PROD_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 

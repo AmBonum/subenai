@@ -10,6 +10,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { verifyEduAuthorToken, EDU_AUTHOR_COOKIE_NAME } from "../_lib/jwt";
+import { PROD_SUPABASE_URL } from "../_lib/supabase-url";
 
 interface Env {
   SUPABASE_URL: string;
@@ -158,7 +159,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   }
 
   const setId = verification.claims.set_id;
-  const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+  const supabase = createClient(PROD_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 

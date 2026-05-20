@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
 import { STRIPE_API_VERSION } from "./stripe-webhook";
+import { PROD_SUPABASE_URL } from "../_lib/supabase-url";
 
 interface Env {
   STRIPE_SECRET_KEY: string;
@@ -82,7 +83,7 @@ export async function onRequestGet(ctx: RequestContext): Promise<Response> {
     });
   }
 
-  const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+  const supabase = createClient(PROD_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
