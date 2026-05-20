@@ -3,6 +3,7 @@
     "meta_title": "Zásady ochrany soukromí — subenai",
     "meta_description": "Jaké údaje zpracováváme, na jakém právním základě, jak dlouho je uchováváme a jaká máte práva podle GDPR a slovenského zákona o ochraně osobních údajů.",
     "back_home": "← Zpět na domovskou stránku",
+    "back": "← Zpět",
     "title": "Zásady ochrany soukromí",
     "last_updated": "Poslední aktualizace: 18. května 2026 (verze 1.4.0)",
     "s1": {
@@ -258,6 +259,7 @@
     "meta_title": "Zásady používání cookies — subenai",
     "meta_description": "Jaké úložiště a cookies používá subenai, k čemu slouží, jak dlouho zůstávají a jak je můžete spravovat.",
     "back_home": "← Zpět na domovskou stránku",
+    "back": "← Zpět",
     "title": "Zásady používání cookies",
     "version_line": "Verze {version} · Poslední aktualizace: 19. května 2026",
     "s1": {
@@ -299,9 +301,9 @@
         },
         "prefs": {
           "category": "Předvolby",
-          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open",
-          "purpose": "Zapamatování UI předvoleb mezi návštěvami: stav postranního panelu (otevřeno/zavřeno), zda jste viděli uvítací banner na dashboardu, zda jste zavřeli nudge na doplnění profilu, zda máte v /blog otevřené seznamy pilířů. Bez těchto cookies / localStorage záznamů vám fungují všechna tlačítka, jen si při příští návštěvě musíte znovu vybrat. Jazyk (`subenai.locale`) se ukládá vždy jako nezbytný pro vykreslení stránky ve správném jazyce.",
-          "duration": "1 týden (sidebar) až 12 měsíců (ostatní) / do smazání"
+          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, iiq_edu_intake:* (sessionStorage)",
+          "purpose": "Zapamatování UI předvoleb a rozpracovaných formulářů mezi návštěvami: stav postranního panelu (otevřeno/zavřeno), zda jste viděli uvítací banner na dashboardu, zda jste zavřeli nudge na doplnění profilu, zda máte v /blog otevřené seznamy pilířů, a jméno/e-mail rozepsané v intake formuláři sdíleného testu (`iiq_edu_intake:*` — pouze v sessionStorage, mažeme po odeslání). Bez těchto cookies / localStorage / sessionStorage záznamů vám fungují všechna tlačítka, jen si při příští návštěvě musíte znovu vybrat. Jazyk (`subenai.locale`) se ukládá vždy jako nezbytný pro vykreslení stránky ve správném jazyce.",
+          "duration": "relace karty (intake formulář), 1 týden (sidebar), až 12 měsíců (ostatní) / do smazání"
         },
         "analytics": {
           "category": "Analytika",

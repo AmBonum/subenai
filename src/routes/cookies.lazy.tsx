@@ -6,6 +6,7 @@ import { useConsent } from "@/hooks/useConsent";
 import { CONSENT_VERSION } from "@/lib/consent";
 import { ROUTES } from "@/config/routes";
 import { DocTocSidebar, type DocTocItem } from "@/components/layout/DocTocSidebar";
+import { SmartBackLink } from "@/components/layout/SmartBackLink";
 import { tFor } from "@/i18n/legal";
 
 const COOKIE_ROW_KEYS = [
@@ -41,13 +42,13 @@ function CookiesPage() {
     <div className="min-h-screen bg-background">
       <main className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-10">
-          <Link
-            to={ROUTES.home}
-            data-testid="cookies-back-home"
+          <SmartBackLink
+            fallbackTo={ROUTES.home}
+            backLabel={t("back")}
+            fallbackLabel={t("back_home")}
+            testId="cookies-back-home"
             className="text-sm text-muted-foreground hover:text-foreground"
-          >
-            {t("back_home")}
-          </Link>
+          />
           <h1
             data-testid="cookies-heading"
             className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"

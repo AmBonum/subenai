@@ -3,6 +3,7 @@
     "meta_title": "Privacy policy — subenai",
     "meta_description": "What data we process, on what legal basis, how long we retain it and what rights you have under GDPR and the Slovak Personal Data Protection Act.",
     "back_home": "← Back to home",
+    "back": "← Back",
     "title": "Privacy policy",
     "last_updated": "Last updated: 18 May 2026 (version 1.4.0)",
     "s1": {
@@ -258,6 +259,7 @@
     "meta_title": "Cookies policy — subenai",
     "meta_description": "What storage and cookies subenai uses, what they are for, how long they remain and how you can manage them.",
     "back_home": "← Back to home",
+    "back": "← Back",
     "title": "Cookies policy",
     "version_line": "Version {version} · Last updated: 19 May 2026",
     "s1": {
@@ -299,9 +301,9 @@
         },
         "prefs": {
           "category": "Preferences",
-          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open",
-          "purpose": "Remembering UI preferences between visits: sidebar open/closed state, whether you've seen the dashboard intro banner, whether you've dismissed the profile-completion nudge, whether you have the /blog pillar lists expanded. Without these cookies / localStorage entries every button still works — you just have to re-select on next visit. Language (`subenai.locale`) is always stored as strictly necessary so the page renders in the correct language.",
-          "duration": "1 week (sidebar) to 12 months (others) / until cleared"
+          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, iiq_edu_intake:* (sessionStorage)",
+          "purpose": "Remembering UI preferences and in-progress forms between visits: sidebar open/closed state, whether you've seen the dashboard intro banner, whether you've dismissed the profile-completion nudge, whether you have the /blog pillar lists expanded, and the name/email you started typing into a shared-test intake form (`iiq_edu_intake:*` — sessionStorage only, wiped after submit). Without these cookies / localStorage / sessionStorage entries every button still works — you just have to re-select on next visit. Language (`subenai.locale`) is always stored as strictly necessary so the page renders in the correct language.",
+          "duration": "tab session (intake form), 1 week (sidebar), up to 12 months (others) / until cleared"
         },
         "analytics": {
           "category": "Analytics",

@@ -123,6 +123,7 @@ export type Database = {
           creator_label: string | null;
           id: string;
           max_questions: number;
+          owner_id: string | null;
           passing_threshold: number;
           question_ids: string[];
           source_pack_slugs: string[] | null;
@@ -134,6 +135,7 @@ export type Database = {
           creator_label?: string | null;
           id?: string;
           max_questions: number;
+          owner_id?: string | null;
           passing_threshold?: number;
           question_ids: string[];
           source_pack_slugs?: string[] | null;
@@ -145,6 +147,7 @@ export type Database = {
           creator_label?: string | null;
           id?: string;
           max_questions?: number;
+          owner_id?: string | null;
           passing_threshold?: number;
           question_ids?: string[];
           source_pack_slugs?: string[] | null;
@@ -1617,6 +1620,23 @@ export type Database = {
       verify_test_set_password: {
         Args: { set_id: string; password: string };
         Returns: boolean;
+      };
+      claim_test_set: {
+        Args: { set_id: string; password: string };
+        Returns: { ok: boolean; reason?: string; already_owned?: boolean };
+      };
+      list_my_test_sets: {
+        Args: Record<string, never>;
+        Returns: Array<{
+          id: string;
+          creator_label: string | null;
+          passing_threshold: number;
+          question_count: number;
+          collects_responses: boolean;
+          created_at: string;
+          attempts_count: number;
+          last_attempt_at: string | null;
+        }>;
       };
       purge_expired_respondent_pii: {
         Args: Record<string, never>;

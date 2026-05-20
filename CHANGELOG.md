@@ -10,10 +10,66 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
+- **Pripoj si edu testy k svojmu účtu — nová sekcia *Moje edu testy*
+  v `/app/edu-tests`.** Edu test, ktorý si vytvoril/a anonymne (cez
+  composer + autorské heslo), teraz vieš trvalo pripojiť k svojmu
+  prihlásenému účtu. Ako: prihlás sa, otvor stránku výsledkov svojho
+  testu, zadaj heslo — pri úspešnom overení sa test automaticky
+  pripojí. V `/app/edu-tests` máš zoznam všetkých takto pripojených
+  edu testov s počtom respondentov a priamym odkazom na ich výsledky.
+  Ak si pôvodne test vytvoril/a anonymne a nikdy si si ho nenárokoval/a,
+  ostane verejne dostupný cez share link aj naďalej — pripojenie
+  nemení žiadne práva, len ti uľahčí prístup z hlavného menu. Test
+  bez majiteľa môže nárokovať len ten, kto pozná autorské heslo,
+  takže nárokovanie nie je zneužiteľné.
+- **PDF export výsledkov tvojho edu testu.** Vedľa tlačidla *Stiahnuť
+  CSV* a *Stiahnuť JSON* je teraz aj *Stiahnuť PDF*. Vygeneruje sa
+  tlačiteľný A4 dokument s názvom tvojho testu, súhrnnými štatistikami,
+  distribúciou skóre a tabuľkou respondentov — vrátane viditeľnej
+  GDPR poznámky a čísla strany v päte (vhodné na odovzdanie tlačenej
+  kópie HR alebo vedeniu školy). Ak máš na tabuľke nastavené filtre
+  (napr. *Iba vyhoveli* alebo skóre 70–90), PDF zachytí presne tú
+  zúženú vzorku — v hlavičke uvidíš riadok *Aktívne filtre: …* a nad
+  tabuľkou *Zobrazené N z M (zúžené filtrom)*. PDF generujeme priamo
+  v tvojom prehliadači (~500 KB knižnica sa stiahne len pri prvom
+  kliknutí na PDF), takže meno a email respondentov neopúšťajú tvoje
+  zariadenie navyše voči normálnemu spracovaniu.
+- **Grafy na stránke výsledkov tvojho edu testu.** Tabuľka respondentov
+  na `/test/builder/<id>/results` má teraz vedľa zoznamu aj rýchle
+  vizualizácie: stĺpcový graf distribúcie skóre (rovnaké štyri pásma
+  ako v Súhrnných štatistikách), donut „Vyhovel / Nevyhovel" s počtami
+  a legendou, a stĺpcový graf doby vyplnenia (do 2 minút / 2–4 / 4–6 /
+  6+ minút). Pre čítače obrazovky každá karta obsahuje krátky textový
+  popis — slepý/-á respondent/ka si neprečíta SVG, ale dostane všetky
+  čísla v jednej vete.
+- **Filtre na stránke výsledkov tvojho edu testu.** Tabuľka respondentov
+  na `/test/builder/<id>/results` má teraz panel filtrov — môžeš si
+  zobraziť iba tých, ktorí vyhoveli (alebo iba tých, ktorí nevyhoveli),
+  zúžiť rozsah skóre, alebo vybrať dátumový interval kedy test
+  vyplnili. Filtre fungujú spolu (logické AND), počet aktívnych filtrov
+  vidíš v chip-e nad tabuľkou, tlačidlo *Vymazať filtre* obnoví
+  pôvodný pohľad. Nastavený stav je súčasťou URL, takže ak pošleš
+  niekomu link s `?pass=yes&scoreMin=80`, otvorí presne ten istý
+  zúžený výber. Žiadne nové cookies ani ukladanie — všetko žije iba
+  v adrese stránky.
 - **Šablóny v `/app/templates`: pribudla tvoja vlastná knižnica.** Predvolené
   šablóny vidíš stále, ale teraz si môžeš vytvoriť svoju kópiu, upraviť ju
   a vymazať — a to bez ovplyvnenia ostatných používateľov. Verejné odosielanie
   vlastných šablón a admin schvaľovanie príde v ďalšej aktualizácii.
+- **Stiahnutie tvojich údajov (GDPR čl. 15 / čl. 20).** Na stránke
+  *Môj profil* (`/app/account/profile`) je nová karta *Stiahnutie
+  tvojich údajov*. Kliknutím dostaneš JSON snapshot všetkého, čo o
+  tebe evidujeme — profil, prípadné GDPR žiadosti a poznámky k
+  anonymným testom (tie sú prístupné cez tvoj share link). JSON je
+  strojovo čitateľný, takže ho vieš preniesť do iného systému (právo
+  na prenosnosť podľa čl. 20 GDPR). Žiadne čakanie na operátora,
+  hotovo do pár sekúnd.
+- **Transparentnostný register.** Verejný JSON registrík transferov
+  na charitu (`/transparency.json`). Každý budúci transfer dostane v
+  ňom riadok s dátumom, sumou a príjemcom — kontrolovateľné kýmkoľvek
+  bez nás. Aktuálne je v ňom politika (10 % z čistých sponzorských
+  príjmov, recipient *Nadácia Slniečka*, ročný cyklus) a prázdny zoznam
+  transferov, ktorý začneme dopĺňať od EOY 2026.
 
 ### Opravené
 - **Zdieľanie výsledku po custom teste už neukazuje „Výsledok neexistuje".**

@@ -77,6 +77,7 @@ import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as TestBuilderIndexRouteImport } from './routes/test.builder.index'
 import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
+import { Route as AppEduTestsIndexRouteImport } from './routes/app.edu-tests.index'
 import { Route as AdminTestsIndexRouteImport } from './routes/admin/tests.index'
 import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
@@ -97,6 +98,7 @@ import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
 import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
 import { Route as TestBuilderIdIndexRouteImport } from './routes/test.builder.$id.index'
 import { Route as TestBuilderIdResultsRouteImport } from './routes/test.builder.$id.results'
+import { Route as TestBuilderIdResultsAttemptIdRouteImport } from './routes/test.builder.$id.results.$attemptId'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -464,6 +466,13 @@ const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
   path: '/tests/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppEduTestsIndexRoute = AppEduTestsIndexRouteImport.update({
+  id: '/edu-tests/',
+  path: '/edu-tests/',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() =>
+  import('./routes/app.edu-tests.index.lazy').then((d) => d.Route),
+)
 const AdminTestsIndexRoute = AdminTestsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -592,6 +601,16 @@ const TestBuilderIdResultsRoute = TestBuilderIdResultsRouteImport.update({
 } as any).lazy(() =>
   import('./routes/test.builder.$id.results.lazy').then((d) => d.Route),
 )
+const TestBuilderIdResultsAttemptIdRoute =
+  TestBuilderIdResultsAttemptIdRouteImport.update({
+    id: '/$attemptId',
+    path: '/$attemptId',
+    getParentRoute: () => TestBuilderIdResultsRoute,
+  } as any).lazy(() =>
+    import('./routes/test.builder.$id.results.$attemptId.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -678,10 +697,12 @@ export interface FileRoutesByFullPath {
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/pages/': typeof AdminPagesIndexRoute
   '/admin/tests/': typeof AdminTestsIndexRoute
+  '/app/edu-tests/': typeof AppEduTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/builder/': typeof TestBuilderIndexRoute
-  '/test/builder/$id/results': typeof TestBuilderIdResultsRoute
+  '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
   '/test/builder/$id/': typeof TestBuilderIdIndexRoute
+  '/test/builder/$id/results/$attemptId': typeof TestBuilderIdResultsAttemptIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -760,10 +781,12 @@ export interface FileRoutesByTo {
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/pages': typeof AdminPagesIndexRoute
   '/admin/tests': typeof AdminTestsIndexRoute
+  '/app/edu-tests': typeof AppEduTestsIndexRoute
   '/app/tests': typeof AppTestsIndexRoute
   '/test/builder': typeof TestBuilderIndexRoute
-  '/test/builder/$id/results': typeof TestBuilderIdResultsRoute
+  '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
   '/test/builder/$id': typeof TestBuilderIdIndexRoute
+  '/test/builder/$id/results/$attemptId': typeof TestBuilderIdResultsAttemptIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -851,10 +874,12 @@ export interface FileRoutesById {
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/pages/': typeof AdminPagesIndexRoute
   '/admin/tests/': typeof AdminTestsIndexRoute
+  '/app/edu-tests/': typeof AppEduTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/builder/': typeof TestBuilderIndexRoute
-  '/test/builder/$id/results': typeof TestBuilderIdResultsRoute
+  '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
   '/test/builder/$id/': typeof TestBuilderIdIndexRoute
+  '/test/builder/$id/results/$attemptId': typeof TestBuilderIdResultsAttemptIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -943,10 +968,12 @@ export interface FileRouteTypes {
     | '/admin/blog/'
     | '/admin/pages/'
     | '/admin/tests/'
+    | '/app/edu-tests/'
     | '/app/tests/'
     | '/test/builder/'
     | '/test/builder/$id/results'
     | '/test/builder/$id/'
+    | '/test/builder/$id/results/$attemptId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1025,10 +1052,12 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/pages'
     | '/admin/tests'
+    | '/app/edu-tests'
     | '/app/tests'
     | '/test/builder'
     | '/test/builder/$id/results'
     | '/test/builder/$id'
+    | '/test/builder/$id/results/$attemptId'
   id:
     | '__root__'
     | '/'
@@ -1115,10 +1144,12 @@ export interface FileRouteTypes {
     | '/admin/blog/'
     | '/admin/pages/'
     | '/admin/tests/'
+    | '/app/edu-tests/'
     | '/app/tests/'
     | '/test/builder/'
     | '/test/builder/$id/results'
     | '/test/builder/$id/'
+    | '/test/builder/$id/results/$attemptId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1635,6 +1666,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTestsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/edu-tests/': {
+      id: '/app/edu-tests/'
+      path: '/edu-tests'
+      fullPath: '/app/edu-tests/'
+      preLoaderRoute: typeof AppEduTestsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/admin/tests/': {
       id: '/admin/tests/'
       path: '/'
@@ -1775,6 +1813,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestBuilderIdResultsRouteImport
       parentRoute: typeof TestBuilderIdRoute
     }
+    '/test/builder/$id/results/$attemptId': {
+      id: '/test/builder/$id/results/$attemptId'
+      path: '/$attemptId'
+      fullPath: '/test/builder/$id/results/$attemptId'
+      preLoaderRoute: typeof TestBuilderIdResultsAttemptIdRouteImport
+      parentRoute: typeof TestBuilderIdResultsRoute
+    }
   }
 }
 
@@ -1894,6 +1939,7 @@ interface AppRouteChildren {
   AppSetsSetIdRoute: typeof AppSetsSetIdRoute
   AppTestsTestIdRoute: typeof AppTestsTestIdRoute
   AppTestsNewRoute: typeof AppTestsNewRoute
+  AppEduTestsIndexRoute: typeof AppEduTestsIndexRoute
   AppTestsIndexRoute: typeof AppTestsIndexRoute
 }
 
@@ -1917,6 +1963,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSetsSetIdRoute: AppSetsSetIdRoute,
   AppTestsTestIdRoute: AppTestsTestIdRoute,
   AppTestsNewRoute: AppTestsNewRoute,
+  AppEduTestsIndexRoute: AppEduTestsIndexRoute,
   AppTestsIndexRoute: AppTestsIndexRoute,
 }
 
@@ -1936,13 +1983,24 @@ const SponsorsRouteWithChildren = SponsorsRoute._addFileChildren(
   SponsorsRouteChildren,
 )
 
+interface TestBuilderIdResultsRouteChildren {
+  TestBuilderIdResultsAttemptIdRoute: typeof TestBuilderIdResultsAttemptIdRoute
+}
+
+const TestBuilderIdResultsRouteChildren: TestBuilderIdResultsRouteChildren = {
+  TestBuilderIdResultsAttemptIdRoute: TestBuilderIdResultsAttemptIdRoute,
+}
+
+const TestBuilderIdResultsRouteWithChildren =
+  TestBuilderIdResultsRoute._addFileChildren(TestBuilderIdResultsRouteChildren)
+
 interface TestBuilderIdRouteChildren {
-  TestBuilderIdResultsRoute: typeof TestBuilderIdResultsRoute
+  TestBuilderIdResultsRoute: typeof TestBuilderIdResultsRouteWithChildren
   TestBuilderIdIndexRoute: typeof TestBuilderIdIndexRoute
 }
 
 const TestBuilderIdRouteChildren: TestBuilderIdRouteChildren = {
-  TestBuilderIdResultsRoute: TestBuilderIdResultsRoute,
+  TestBuilderIdResultsRoute: TestBuilderIdResultsRouteWithChildren,
   TestBuilderIdIndexRoute: TestBuilderIdIndexRoute,
 }
 
