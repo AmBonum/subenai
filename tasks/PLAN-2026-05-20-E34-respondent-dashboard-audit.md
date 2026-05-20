@@ -2,7 +2,25 @@
 
 **Owner:** Claude (synthesis) — senior agent, 4-lens audit
 **Date opened:** 2026-05-20
-**Status:** 🟢 DECISIONS LOCKED 2026-05-20 — owner walked D1–D11 in 3 batches; 10/11 senior defaults picked, 1 override (D3 → confidence framing for engagement). Phase 1 implementation kicks off next on `feature/E34-phase-1-drilldown-funnel`.
+**Status:** ✅ **DELIVERED** 2026-05-20 — all 11 decisions resolved (D2 explicitly deferred to Phase 1.5 with separate GDPR design). Shipped across 4 PRs (#51, #52, #53, #54) over a single day. Two-agent parallel work surfaced one duplication (D3+D4 implemented twice — see PR #53 description) which was resolved cleanly via rebase + cherry-pick.
+
+## Shipped (closure)
+
+| Decision | PR | Status | Notes |
+|---|---|---|---|
+| D1 — Drill-down per-question | #51 | ✅ | Discovery: `attempts.answers` JSONB already existed (E3.1 migration). No schema migration needed. |
+| D2 — Funnel (intake_started_at) | — | 🟡 Phase 1.5 deferred | Needs GDPR review for persisting PII on abandoners + `forbid_attempt_score_changes` trigger update. Own decision tree. |
+| D3 — Confidence landing copy | #52 | ✅ | `RespondentLandingHero` component, 4-line eyebrow/heading/subline/trust. Owner override at lock time: (b) confidence over (a) trust. |
+| D4 — Hybrid upsell | #52 | ✅ | `MoreTestsCta` component pairs with existing `WeakCategoryRecommendations` (E17.4). |
+| D5 — Dashboard re-share | #54 | ✅ | PR #52 shipped empty-state half; #54 extends to persistent dashboard-header affordance. |
+| D6 — CSV GDPR caveat | #54 | ✅ | 2 `#`-prefixed lines before column header (timestamp + GDPR + privacy URL). |
+| D7 — Personalized OG meta | #53 | ✅ | TanStack loader fetches `creator_label`; `head()` emits `og:title` "Test od {creator} — 5 minút · subenai" + full og/twitter card. |
+| D8 — Sort persistence | #54 | ✅ | Audit found already correct via `useState`. Added regression sentinel to catch future refactors. |
+| D9 — Schema migration | — | n/a | D1 found existing schema; D2 deferred. No migration shipped this epic. |
+| D10 — Shipping order | — | ✅ | 4 PRs landed sequentially (Phase 1, Phase 2 × 2, Phase 3). |
+| D11 — Migration timing | — | n/a | No migration shipped. |
+
+**One open follow-up:** Phase 1.5 (D2 funnel) when there's appetite for the privacy redesign.
 
 ## Locked decisions (2026-05-20 owner sign-off)
 
