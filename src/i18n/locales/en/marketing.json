@@ -14,10 +14,13 @@
     },
     "user_menu": {
       "trigger_aria": "Open user menu",
+      "trigger_aria_with_name": "User menu: {name}",
+      "loading_aria": "Loading profile",
       "signed_in_as": "Signed in as",
       "app": "My tests",
       "profile": "Profile & settings",
-      "signout": "Sign out"
+      "signout": "Sign out",
+      "signed_out_toast": "You have been signed out."
     },
     "menu": {
       "rychly_test": {

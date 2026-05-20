@@ -13,7 +13,7 @@ const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/legal/dsr")({
   head: () => ({
-    meta: [{ title: tRoutes("dsr") }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("dsr") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: DsrPage,
 });

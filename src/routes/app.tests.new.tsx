@@ -42,7 +42,7 @@ const stepSchema = z.object({
 export const Route = createFileRoute("/app/tests/new")({
   validateSearch: stepSchema,
   head: () => ({
-    meta: [{ title: tRoutes("tests_new") }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("tests_new") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: WizardPage,
 });

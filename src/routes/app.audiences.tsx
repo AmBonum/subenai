@@ -20,10 +20,13 @@ import {
 } from "@/lib/platform/queries";
 import type { RespondentGroup } from "@/lib/platform/types";
 import { tFor } from "@/i18n/tests";
+import { tFor as tAppShell } from "@/i18n/app-shell";
+
+const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/audiences")({
   head: () => ({
-    meta: [{ title: "Skupiny respondentov · SubenAI" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("audiences") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: AudiencesPage,
 });

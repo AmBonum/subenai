@@ -22,7 +22,7 @@ const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/history")({
   head: () => ({
-    meta: [{ title: tRoutes("history") }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("history") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: HistoryPage,
 });

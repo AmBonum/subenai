@@ -4,9 +4,11 @@ import { HeadContent, Outlet, createRootRoute, useMatches } from "@tanstack/reac
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ConsentPreferencesDialog } from "@/components/consent/ConsentPreferencesDialog";
 import { GoogleAnalyticsManager } from "@/components/analytics/GoogleAnalyticsManager";
+import { SignedOutFlash } from "@/components/auth/SignedOutFlash";
 import { Footer } from "@/components/layout/Footer";
 import { NotFoundPage } from "@/components/layout/NotFoundPage";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { Toaster } from "@/components/ui/sonner";
 import { LocaleProvider } from "@/i18n/locale-context";
 
 const queryClient = new QueryClient({
@@ -33,6 +35,13 @@ function RootComponent() {
   const hideSiteFooter = matches.some(
     (m) => (m.staticData as { hideSiteFooter?: boolean } | undefined)?.hideSiteFooter === true,
   );
+  // /app and /admin mount their own positioned Toasters; rendering a
+  // second one here would duplicate every toast on those surfaces
+  // (sonner uses a single global store). Public routes have no Toaster
+  // otherwise — without this one the signed-out flash on `/` is silent.
+  const isInsidePrivateShell = matches.some(
+    (m) => m.routeId.startsWith("/app") || m.routeId.startsWith("/admin"),
+  );
   return (
     <QueryClientProvider client={queryClient}>
       <LocaleProvider>
@@ -48,6 +57,8 @@ function RootComponent() {
         {!hideSiteFooter && <Footer />}
         <ConsentBanner />
         <ConsentPreferencesDialog />
+        {!isInsidePrivateShell && <Toaster position="top-center" />}
+        <SignedOutFlash />
       </LocaleProvider>
     </QueryClientProvider>
   );
