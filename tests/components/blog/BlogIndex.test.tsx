@@ -10,7 +10,22 @@ import {
   CLUSTER_PHISHING_2,
   CLUSTER_SMS_1,
   CLUSTER_SMS_2,
-} from "./fixtures";
+} from "../../integration/blog/fixtures";
+
+// 2026-05-20: moved from `tests/integration/blog/BlogIndex.integration.test.tsx`.
+// The previous location ran under `vitest.integration.config.ts` (env: node,
+// setupFiles: setup-integration.ts — DB-focused, no jsdom, no RTL mocks).
+// This file uses React Testing Library which requires `document`, so all 30
+// cases failed silently with `ReferenceError: document is not defined` from
+// the moment the file was committed (e34cca3, 2026-05-19) — `npm test`
+// excluded `tests/integration/**` so the failures never surfaced in default
+// CI. The "integration" label was a misnomer: there's no live DB here, only
+// a fully-mocked `useBlogPostList` + router shims. Belongs alongside the
+// other component-level tests under `tests/components/blog/`.
+//
+// Fixtures stay at `tests/integration/blog/fixtures.ts` — 7 other component
+// tests already import them from that path and moving them would churn
+// unrelated files.
 
 // ---- Mocks ---------------------------------------------------------------
 
