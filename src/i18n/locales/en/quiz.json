@@ -228,6 +228,10 @@
     "search_placeholder": "Search by name or email…",
     "search_aria": "Filter respondents",
     "empty_no_rows": "No responses yet. Send respondents the public link.",
+    "empty_no_rows_with_link_prefix": "No responses yet. Send respondents this link:",
+    "copy_share_url_label": "Copy link",
+    "copy_share_url_aria": "Copy the test link to clipboard",
+    "copy_share_url_toast": "Link copied — paste it into your message.",
     "empty_filter": "Filter found no records.",
     "caption_by_name": "Edu test respondents sorted by name",
     "caption_by_score": "Edu test respondents sorted by score",
@@ -297,6 +301,14 @@
     "empty_questions": "No valid question remained in this set. Let the author know, or build your own test.",
     "self_run_label": "this test"
   },
+  "respondent_landing": {
+    "eyebrow": "SECURITY TEST · 5 MINUTES",
+    "heading_default": "Can you spot a phishing attempt?",
+    "subline": "A 5-minute test reveals where your blind spots in scam recognition are.",
+    "trust_line_default": "Anonymous, no signup.",
+    "trust_line_author": "Your team wants to know. Only {author} sees your name and score.",
+    "trust_line_no_collect": "Only you see your results. We store nothing."
+  },
   "results_page": {
     "meta_title": "Edu test results — subenai",
     "verifying": "Verifying access…",
@@ -306,6 +318,7 @@
     "error_body": "Try refreshing the page.",
     "heading_gate": "Edu test results",
     "heading_default": "Edu test results",
+    "heading_with_label": "{label} — team results",
     "meta_line": "{count} questions · pass at ≥ {threshold}% · respondents: {respondents}",
     "download_csv": "Download CSV",
     "logout": "Log out"
@@ -402,6 +415,9 @@
     "answers_loading": "Loading answers…",
     "answers_region_aria": "Answer details — {n} answers available",
     "restart": "Try again",
+    "more_tests_cta_heading": "Keep training",
+    "more_tests_cta_body": "We have 9 industries — from e-commerce to IT. Pick a test built for your field.",
+    "more_tests_cta_button": "See more tests →",
     "share_app_title": "subenai",
     "categories": {
       "phishing": "Phishing",

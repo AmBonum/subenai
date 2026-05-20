@@ -22,6 +22,17 @@ export class SharedSetPage extends BasePage {
   }
 
   get heading() {
+    // E34 Phase 2 — the `shared-set-heading` testid is now on the wrapper
+    // that includes the eyebrow + heading + subline + trust line. To keep
+    // `toHaveText(creator_label)` assertions exact, this getter resolves
+    // to the inner `<h1>` (respondent-hero-heading) instead, which carries
+    // only the heading string. The outer wrapper is still queryable via
+    // `headingArea` below if a test wants to assert on the whole hero.
+    return this.page.getByTestId("respondent-hero-heading");
+  }
+
+  /** The entire hero block (eyebrow + heading + subline + trust line). */
+  get headingArea() {
     return this.page.getByTestId("shared-set-heading");
   }
 

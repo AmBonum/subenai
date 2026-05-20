@@ -228,6 +228,10 @@
     "search_placeholder": "Hledat podle jména nebo e-mailu…",
     "search_aria": "Filtrovat respondenty",
     "empty_no_rows": "Zatím žádné odpovědi. Pošli respondentům veřejný odkaz.",
+    "empty_no_rows_with_link_prefix": "Zatím žádné odpovědi. Pošli respondentům tento odkaz:",
+    "copy_share_url_label": "Kopírovat odkaz",
+    "copy_share_url_aria": "Zkopírovat odkaz na test do schránky",
+    "copy_share_url_toast": "Odkaz zkopírován — vlož ho do zprávy.",
     "empty_filter": "Filtr nenašel žádný záznam.",
     "caption_by_name": "Respondenti edu testu seřazeni podle jména",
     "caption_by_score": "Respondenti edu testu seřazeni podle skóre",
@@ -297,6 +301,14 @@
     "empty_questions": "Z této sady nezůstala žádná platná otázka. Dej autorovi vědět, nebo si sestav vlastní test.",
     "self_run_label": "tento test"
   },
+  "respondent_landing": {
+    "eyebrow": "TEST BEZPEČNOSTI · 5 MINUT",
+    "heading_default": "Poznáš phishing?",
+    "subline": "5minutový test odhalí, kde máš slabá místa v rozpoznávání podvodů.",
+    "trust_line_default": "Anonymní, bez registrace.",
+    "trust_line_author": "Tvůj tým to chce vědět. Skóre + jméno vidí jen {author}.",
+    "trust_line_no_collect": "Výsledky vidíš jen ty. Nikam se neukládají."
+  },
   "results_page": {
     "meta_title": "Výsledky edu testu — subenai",
     "verifying": "Ověřuji přístup…",
@@ -306,6 +318,7 @@
     "error_body": "Zkus obnovit stránku.",
     "heading_gate": "Výsledky edu testu",
     "heading_default": "Výsledky edu testu",
+    "heading_with_label": "{label} — výsledky týmu",
     "meta_line": "{count} otázek · vyhovění při ≥ {threshold} % · respondentů: {respondents}",
     "download_csv": "Stáhnout CSV",
     "logout": "Odhlásit"
@@ -402,6 +415,9 @@
     "answers_loading": "Načítám odpovědi…",
     "answers_region_aria": "Detail odpovědí — {n} odpovědí dostupných",
     "restart": "Zkusit znovu",
+    "more_tests_cta_heading": "Pokračuj v tréninku",
+    "more_tests_cta_body": "Máme 9 oborů — od e-shopu po IT. Vyber si test podle své branže.",
+    "more_tests_cta_button": "Prohlédnout další testy →",
     "share_app_title": "subenai",
     "categories": {
       "phishing": "Phishing",

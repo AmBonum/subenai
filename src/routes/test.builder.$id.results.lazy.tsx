@@ -160,7 +160,13 @@ export function ResultsView({ id }: Props) {
               data-testid="vysledky-dashboard-heading"
               className="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl"
             >
-              {data.creator_label?.trim() || t("heading_default")}
+              {/* E34 Phase 2 (C4) — when creator_label is present, frame the
+                  page as the team's outcome ("Onboarding Q1 — výsledky tímu")
+                  rather than the generic "Výsledky edu testu". Falls back to
+                  the generic when label is null. */}
+              {data.creator_label?.trim()
+                ? t("heading_with_label", { label: data.creator_label.trim() })
+                : t("heading_default")}
             </h1>
             <p data-testid="vysledky-meta-line" className="mt-2 text-sm text-muted-foreground">
               {t("meta_line", {
@@ -191,6 +197,7 @@ export function ResultsView({ id }: Props) {
             rows={data.rows}
             passingThreshold={data.passing_threshold}
             onDelete={handleDelete}
+            setId={id}
           />
         </div>
       </main>

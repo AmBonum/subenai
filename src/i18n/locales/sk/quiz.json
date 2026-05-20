@@ -228,6 +228,10 @@
     "search_placeholder": "Hľadať podľa mena alebo e-mailu…",
     "search_aria": "Filtrovať respondentov",
     "empty_no_rows": "Zatiaľ žiadne odpovede. Pošli respondentom verejný link.",
+    "empty_no_rows_with_link_prefix": "Zatiaľ žiadne odpovede. Pošli respondentom tento link:",
+    "copy_share_url_label": "Kopírovať link",
+    "copy_share_url_aria": "Skopírovať link na test do schránky",
+    "copy_share_url_toast": "Link skopírovaný — vlož ho do správy.",
     "empty_filter": "Filter nenašiel žiadny záznam.",
     "caption_by_name": "Respondenti edu testu zoradení podľa mena",
     "caption_by_score": "Respondenti edu testu zoradení podľa skóre",
@@ -297,6 +301,14 @@
     "empty_questions": "Z tejto zostavy nezostala žiadna platná otázka. Daj autorovi vedieť, alebo si zostav vlastný test.",
     "self_run_label": "tento test"
   },
+  "respondent_landing": {
+    "eyebrow": "TEST BEZPEČNOSTI · 5 MINÚT",
+    "heading_default": "Vieš rozpoznať phishing?",
+    "subline": "5-minútový test odhalí, kde máš slepé miesta v rozpoznávaní podvodov.",
+    "trust_line_default": "Anonymné, bez registrácie.",
+    "trust_line_author": "Tvoj tím to chce vedieť. Skóre + meno vidí len {author}.",
+    "trust_line_no_collect": "Výsledky vidíš len ty. Nikam sa neukladajú."
+  },
   "results_page": {
     "meta_title": "Výsledky edu testu — subenai",
     "verifying": "Overujem prístup…",
@@ -306,6 +318,7 @@
     "error_body": "Skús obnoviť stránku.",
     "heading_gate": "Výsledky edu testu",
     "heading_default": "Výsledky edu testu",
+    "heading_with_label": "{label} — výsledky tímu",
     "meta_line": "{count} otázok · vyhovenie pri ≥ {threshold} % · respondentov: {respondents}",
     "download_csv": "Stiahnuť CSV",
     "logout": "Odhlásiť"
@@ -406,6 +419,9 @@
     "answers_loading": "Načítavam odpovede…",
     "answers_region_aria": "Detail odpovedí — {n} odpovedí dostupných",
     "restart": "Skús znova",
+    "more_tests_cta_heading": "Pokračuj v tréningu",
+    "more_tests_cta_body": "Máme 9 odvetví — od e-shopu po IT. Vyber si test podľa tvojej brandže.",
+    "more_tests_cta_button": "Pozri ďalšie testy →",
     "share_app_title": "subenai",
     "categories": {
       "phishing": "Phishing",
