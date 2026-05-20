@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { createLazyFileRoute, Link, useParams } from "@tanstack/react-router";
+import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthorPasswordGate } from "@/components/composer/edu/dashboard/AuthorPasswordGate";
 import { AggregateStats } from "@/components/composer/edu/dashboard/AggregateStats";
 import { RespondentsTable } from "@/components/composer/edu/dashboard/RespondentsTable";
 import { rowsToCsv, type ResultsDataPayload } from "@/lib/edu/types";
 import { ROUTES } from "@/config/routes";
+import { SITE_ORIGIN } from "@/config/site";
+import { copyToClipboard } from "@/lib/browser/clipboard";
 import { tFor } from "@/i18n/quiz";
 
 type Phase = "loading" | "needs_auth" | "ready" | "error" | "not_found";
@@ -28,6 +31,21 @@ export function ResultsView({ id }: Props) {
   const tCommon = tFor("common");
   const [phase, setPhase] = useState<Phase>("loading");
   const [data, setData] = useState<ResultsDataPayload | null>(null);
+  // E34 Phase 3 (D5) — dashboard-level re-share affordance. RespondentsTable
+  // already shows the share URL when rows.length === 0 (PR #52); this
+  // adds a persistent 1-click copy button in the dashboard header so an
+  // author can re-share to additional team members WITHOUT having to
+  // clear the table first. Transient 3s toast confirms the copy.
+  const [reshareToast, setReshareToast] = useState<string | null>(null);
+  useEffect(() => {
+    if (!reshareToast) return;
+    const handle = window.setTimeout(() => setReshareToast(null), 3000);
+    return () => window.clearTimeout(handle);
+  }, [reshareToast]);
+  async function handleCopyShareLink(): Promise<void> {
+    const ok = await copyToClipboard(`${SITE_ORIGIN}/test/builder/${id}`);
+    if (ok) setReshareToast(t("copy_share_link_toast"));
+  }
 
   const fetchData = useCallback(async () => {
     try {
@@ -176,18 +194,44 @@ export function ResultsView({ id }: Props) {
               })}
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              data-testid="vysledky-download-csv-button"
-              variant="outline"
-              onClick={downloadCsv}
-              disabled={data.rows.length === 0}
+          <div className="flex flex-col items-stretch gap-2 sm:items-end">
+            <div className="flex flex-wrap gap-2">
+              <Button
+                data-testid="vysledky-copy-share-link-button"
+                variant="outline"
+                onClick={() => void handleCopyShareLink()}
+                aria-label={t("copy_share_link_aria")}
+              >
+                <Copy className="size-4" aria-hidden />
+                {t("copy_share_link")}
+              </Button>
+              <Button
+                data-testid="vysledky-download-csv-button"
+                variant="outline"
+                onClick={downloadCsv}
+                disabled={data.rows.length === 0}
+              >
+                {t("download_csv")}
+              </Button>
+              <Button data-testid="vysledky-logout-button" variant="outline" onClick={handleLogout}>
+                {t("logout")}
+              </Button>
+            </div>
+            <p
+              data-testid="vysledky-reshare-hint"
+              className="text-xs text-muted-foreground sm:text-right"
             >
-              {t("download_csv")}
-            </Button>
-            <Button data-testid="vysledky-logout-button" variant="outline" onClick={handleLogout}>
-              {t("logout")}
-            </Button>
+              {t("reshare_hint")}
+            </p>
+            {reshareToast ? (
+              <p
+                data-testid="vysledky-copy-share-link-toast"
+                role="status"
+                className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 sm:text-right"
+              >
+                {reshareToast}
+              </p>
+            ) : null}
           </div>
         </header>
 

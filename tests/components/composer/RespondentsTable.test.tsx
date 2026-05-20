@@ -82,6 +82,36 @@ describe("RespondentsTable", () => {
     expect(skoreTh.getAttribute("aria-sort")).toBe("ascending");
   });
 
+  it("D8 — sort choice persists across filter changes (no reset on search type)", async () => {
+    const user = userEvent.setup();
+    render(
+      <RespondentsTable
+        rows={[
+          makeRow({ id: "1", respondent_name: "Anna", final_score: 90 }),
+          makeRow({ id: "2", respondent_name: "Boris", final_score: 30 }),
+          makeRow({ id: "3", respondent_name: "Cira", final_score: 60 }),
+        ]}
+        passingThreshold={70}
+        onDelete={vi.fn()}
+      />,
+    );
+    // Set sort to Skóre · ascending (click twice — first goes desc, second asc).
+    const skoreTh = screen.getByRole("columnheader", { name: /Skóre/i });
+    await user.click(within(skoreTh).getByRole("button"));
+    await user.click(within(skoreTh).getByRole("button"));
+    expect(skoreTh.getAttribute("aria-sort")).toBe("ascending");
+
+    // Typing in the filter must NOT reset the sort choice — this is the
+    // "React paper-cut" guard. If sort state ever gets lifted to a parent
+    // that re-mounts on filter, this test catches the regression.
+    await user.type(screen.getByLabelText(/Filtrovať respondentov/i), "a");
+    expect(skoreTh.getAttribute("aria-sort")).toBe("ascending");
+
+    // And clearing the filter back to "" also preserves the choice.
+    await user.clear(screen.getByLabelText(/Filtrovať respondentov/i));
+    expect(skoreTh.getAttribute("aria-sort")).toBe("ascending");
+  });
+
   it("opens the designed confirm dialog on delete click; cancelling does NOT call onDelete", async () => {
     const onDelete = vi.fn().mockResolvedValue(true);
     const user = userEvent.setup();

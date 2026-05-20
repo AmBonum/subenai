@@ -324,7 +324,11 @@
     "heading_with_label": "{label} — výsledky tímu",
     "meta_line": "{count} otázok · vyhovenie pri ≥ {threshold} % · respondentov: {respondents}",
     "download_csv": "Stiahnuť CSV",
-    "logout": "Odhlásiť"
+    "logout": "Odhlásiť",
+    "copy_share_link": "Skopírovať link",
+    "copy_share_link_aria": "Skopírovať verejný odkaz na test pre re-share",
+    "copy_share_link_toast": "Skopírované — pošli kolegom, ktorí ešte test neurobili",
+    "reshare_hint": "Pošli ďalším členom tímu →"
   },
   "share": {
     "meta_title": "Výsledok {shareId} · subenai",
