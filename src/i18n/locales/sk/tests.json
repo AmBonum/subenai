@@ -78,6 +78,7 @@
     "page_eyebrow": "Test",
     "tab_results": "Výsledky",
     "tab_analytics": "Analytika",
+    "tab_questions": "Otázky",
     "tab_settings": "Nastavenia",
     "title_input_label": "Názov",
     "description_input_label": "Popis",
@@ -87,7 +88,35 @@
     "share_button": "Zdieľať",
     "not_found_title": "Test sa nenašiel",
     "not_found_body": "Tento test buď neexistuje, alebo ti nepatrí.",
-    "back_to_list": "Späť na zoznam"
+    "back_to_list": "Späť na zoznam",
+    "questions": {
+      "count_label": "{count} z {max} otázok",
+      "hint": "Pridaj, odober alebo zmeň poradie otázok. Zmeny sa ukladajú automaticky.",
+      "add_button": "Pridať otázky",
+      "empty_title": "Tento test zatiaľ nemá žiadne otázky.",
+      "empty_body": "Vyber otázky z knižnice a pridaj ich do testu.",
+      "position_aria": "Pozícia {idx}",
+      "missing_prompt": "Otázka nie je dostupná v knižnici.",
+      "move_up_aria": "Posunúť vyššie",
+      "move_down_aria": "Posunúť nižšie",
+      "remove_aria": "Odstrániť otázku",
+      "add_success": "Pridané: {count}",
+      "add_failed": "Pridanie otázok zlyhalo.",
+      "remove_success": "Otázka odstránená.",
+      "remove_failed": "Odstránenie zlyhalo.",
+      "remove_blocked_fk": "Túto otázku nie je možné odstrániť — niektorí respondenti už na ňu odpovedali. Duplikuj test a uprav ho v novej verzii.",
+      "reorder_failed": "Zmena poradia zlyhala. Skús to znova."
+    },
+    "order_mode": {
+      "label": "Poradie otázok",
+      "hint": "Pevné zachová pôvodné poradie pre všetkých respondentov. Náhodné premieša otázky pre každú reláciu zvlášť (rovnaký respondent vidí pri obnovení stránky to isté poradie).",
+      "fixed_title": "Pevné poradie",
+      "fixed_body": "Všetci respondenti uvidia otázky v rovnakom poradí, aké si nastavil/a.",
+      "random_title": "Náhodné poradie",
+      "random_body": "Každý respondent dostane vlastné poradie. Skóre nie je ovplyvnené — len anti-cheat zobrazenia.",
+      "update_success": "Poradie aktualizované.",
+      "update_failed": "Zmena poradia zlyhala."
+    }
   },
   "share_dialog": {
     "title": "Zdieľať test",

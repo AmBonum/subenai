@@ -24,6 +24,9 @@ export const SAFE_TEST_COLUMNS = [
   "gdpr_purpose",
   "allow_behavioral_tracking",
   "status",
+  // E45 Phase 1 — non-sensitive: controls only the UI order respondents
+  // see. NOT password_hash, NOT owner_id, NOT source_template_id.
+  "question_order_mode",
 ] as const;
 
 export type SafeTestProjection = {
@@ -34,6 +37,7 @@ export type SafeTestProjection = {
   gdpr_purpose: string;
   allow_behavioral_tracking: boolean;
   status: string;
+  question_order_mode: "fixed" | "random";
 };
 
 export const TakeTestInputSchema = z.object({
@@ -69,5 +73,6 @@ export function takeTestFn(input: TakeTestInput): SafeTestProjection | null {
     gdpr_purpose: test.gdpr_purpose,
     allow_behavioral_tracking: test.allow_behavioral_tracking,
     status: test.status,
+    question_order_mode: test.question_order_mode,
   };
 }

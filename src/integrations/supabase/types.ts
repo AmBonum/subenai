@@ -1402,6 +1402,8 @@ export type Database = {
           allow_behavioral_tracking: boolean;
           expires_at: string | null;
           published_at: string | null;
+          question_order_mode: Database["public"]["Enums"]["test_question_order_mode"];
+          source_template_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -1425,6 +1427,8 @@ export type Database = {
           allow_behavioral_tracking?: boolean;
           expires_at?: string | null;
           published_at?: string | null;
+          question_order_mode?: Database["public"]["Enums"]["test_question_order_mode"];
+          source_template_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -1448,6 +1452,8 @@ export type Database = {
           allow_behavioral_tracking?: boolean;
           expires_at?: string | null;
           published_at?: string | null;
+          question_order_mode?: Database["public"]["Enums"]["test_question_order_mode"];
+          source_template_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -1829,6 +1835,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "moderator" | "user";
       test_status: "draft" | "published" | "archived";
+      test_question_order_mode: "fixed" | "random";
       question_type:
         | "single"
         | "multi"
@@ -1993,6 +2000,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "moderator", "user"],
       test_status: ["draft", "published", "archived"],
+      test_question_order_mode: ["fixed", "random"],
       question_type: [
         "single",
         "multi",

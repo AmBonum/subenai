@@ -61,6 +61,8 @@ type TestsRow = {
   allow_behavioral_tracking: boolean;
   expires_at: string | null;
   published_at: string | null;
+  question_order_mode: string | null;
+  source_template_id: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -87,6 +89,10 @@ const mapTest = (row: TestsRow, question_ids: string[] = []): Test => ({
   anonymize_after_days: row.anonymize_after_days,
   allow_behavioral_tracking: row.allow_behavioral_tracking,
   expires_at: row.expires_at,
+  question_order_mode: (row.question_order_mode === "random"
+    ? "random"
+    : "fixed") as Test["question_order_mode"],
+  source_template_id: row.source_template_id,
   created_at: row.created_at,
   updated_at: row.updated_at,
   published_at: row.published_at,
@@ -259,7 +265,7 @@ const mapLibraryQuestion = (row: QuestionsRow): LibraryQuestion => ({
 // ---------------------------------------------------------------------------
 
 const TESTS_COLS =
-  "id, slug, share_id, owner_id, team_id, title, description, status, version, password_hash, segmentation, gdpr_purpose, intake_fields, branches, notif_config, anonymize_after_days, allow_behavioral_tracking, expires_at, published_at, created_at, updated_at";
+  "id, slug, share_id, owner_id, team_id, title, description, status, version, password_hash, segmentation, gdpr_purpose, intake_fields, branches, notif_config, anonymize_after_days, allow_behavioral_tracking, expires_at, published_at, question_order_mode, source_template_id, created_at, updated_at";
 
 export function useTests() {
   return useQuery({
@@ -338,11 +344,114 @@ export function useUpdateTest() {
         update.anonymize_after_days = patch.anonymize_after_days;
       if (patch.allow_behavioral_tracking !== undefined)
         update.allow_behavioral_tracking = patch.allow_behavioral_tracking;
+      if (patch.question_order_mode !== undefined)
+        update.question_order_mode = patch.question_order_mode;
+      if (patch.source_template_id !== undefined)
+        update.source_template_id = patch.source_template_id;
       update.updated_at = new Date().toISOString();
       const { error } = await supabase.from("tests").update(update).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests"] }),
+  });
+}
+
+// ---------------------------------------------------------------------------
+// E45 Phase 1 — test_questions editor + question_order_mode hooks
+//
+// All four hooks operate on a single test the caller owns. RLS on
+// `test_questions` already inherits the ownership invariant from `tests`
+// (the policy joins via test_id → tests.owner_id), so no client-side owner
+// check is needed — Supabase rejects writes from a non-owner with 401.
+// ---------------------------------------------------------------------------
+
+export function useAddQuestionsToTest(testId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (questionIds: string[]) => {
+      if (questionIds.length === 0) return;
+      // Append after the highest current position. Two-step (read max, then
+      // insert) is safe under RLS because the test is owner-scoped and only
+      // the owner is hitting this endpoint — no concurrent writer.
+      const { data: maxRow, error: maxErr } = await supabase
+        .from("test_questions")
+        .select("position")
+        .eq("test_id", testId)
+        .order("position", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (maxErr) throw maxErr;
+      const startPos = ((maxRow as { position: number } | null)?.position ?? -1) + 1;
+      const rows = questionIds.map((qid, i) => ({
+        test_id: testId,
+        question_id: qid,
+        position: startPos + i,
+      }));
+      const { error } = await supabase.from("test_questions").insert(rows);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests", testId] }),
+  });
+}
+
+export function useRemoveQuestionFromTest(testId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (questionId: string) => {
+      // R1 mitigation: if any session_answer references this question_id
+      // for this test, the DB throws a FK violation (23503). Surface it
+      // verbatim so the UI can render the actionable error message.
+      const { error } = await supabase
+        .from("test_questions")
+        .delete()
+        .eq("test_id", testId)
+        .eq("question_id", questionId);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests", testId] }),
+  });
+}
+
+export function useUpdateTestQuestionOrder(testId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (orderedQuestionIds: string[]) => {
+      // Bulk-rewrite positions. Strategy: delete then re-insert preserves
+      // historical session_answers (those FK question_id, not the
+      // test_questions row) while sidestepping the unique (test_id,
+      // position) constraint that would block a same-row swap.
+      const { error: delErr } = await supabase
+        .from("test_questions")
+        .delete()
+        .eq("test_id", testId);
+      if (delErr) throw delErr;
+      if (orderedQuestionIds.length === 0) return;
+      const rows = orderedQuestionIds.map((qid, i) => ({
+        test_id: testId,
+        question_id: qid,
+        position: i,
+      }));
+      const { error: insErr } = await supabase.from("test_questions").insert(rows);
+      if (insErr) throw insErr;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests", testId] }),
+  });
+}
+
+export function useUpdateTestOrderMode(testId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (mode: "fixed" | "random") => {
+      const { error } = await supabase
+        .from("tests")
+        .update({ question_order_mode: mode, updated_at: new Date().toISOString() })
+        .eq("id", testId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "tests", testId] });
+      qc.invalidateQueries({ queryKey: ["user", "tests"] });
+    },
   });
 }
 

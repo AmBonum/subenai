@@ -155,11 +155,28 @@ All required env vars are already provisioned from E11 (see `tasks/E11-email-run
 
 If invite volume jumps suddenly (e.g. an author with 5000 students sends 5000 invites in one batch), `subenai.sk` reputation drops because Gmail / Outlook penalize sudden volume spikes from low-reputation domains. Mitigation, layered:
 
-1. **Soft cap at the send endpoint.** Phase 3 hard-codes per-author daily quota 200 (D6). At Resend free-tier 100/day, the per-author quota actually exceeds the account-level quota — meaning the global Resend limit becomes the real cap. Increase Resend tier to **Pro (50 000/mo, 1 000/day)** before opening invites to >50 active authors. Pro tier costs $20/mo; cross-funded by sponsorships per the E10 budget.
-2. **Slow-start per author.** First three days of invite-sending capability for a new author = soft cap 10/day, ramping by 2x/day until 200/day floor. Implementable via `author_send_capacity` view on `audit_log` rows. Phase 3 ships D6's static cap; slow-start is Phase 5+.
-3. **Subdomain split.** When a sustained spike is anticipated (school-year start, university exam season), move invite sends to a dedicated subdomain `invites.subenai.sk` (own DKIM, own SPF) so a reputation hit on invites does not poison transactional `noreply@subenai.sk` (magic links, refund alerts). Phase 5+.
+1. **Soft cap at the send endpoint, recalibrated for free tier.** Per-user
+   decision 2026-05-21: stay on **Resend free tier (100/day account-wide)**
+   for E45 Phase 3. The per-author daily quota previously written as 200
+   (D6) is **revised to 50** so 2 active authors can saturate their day-cap
+   without colliding with each other or with transactional sends (magic
+   links, DPA delivery, refund alerts) that share the same account.
+   Per-test daily quota also drops from 100 → **50** for the same reason.
+   Re-evaluate the Pro upgrade ($20/mo, 1000/day) once steady-state daily
+   invite volume exceeds 60 (Resend dashboard alert at 60 % of cap).
+2. **Slow-start per author.** First three days of invite-sending capability
+   for a new author = soft cap 10/day, ramping by 2x/day until the
+   per-author floor (currently 50/day). Implementable via
+   `author_send_capacity` view on `audit_log` rows. Phase 3 ships the
+   revised static cap; slow-start is Phase 5+.
+3. **Subdomain split.** When a sustained spike is anticipated (school-year
+   start, university exam season), move invite sends to a dedicated
+   subdomain `invites.subenai.sk` (own DKIM, own SPF) so a reputation hit
+   on invites does not poison transactional `noreply@subenai.sk`. Phase 5+.
 
-For Phase 3 launch, **action item:** verify Resend account is on Pro tier (or upgrade) before E45.14 PR-3 merges. Documented in E45.17 deploy checklist.
+For Phase 3 launch, **action item:** confirm the Resend account is on the
+free tier (100/day) and that the **D6 per-author cap is 50, per-test cap 50**
+in the CF function constants. Documented in E45.17 deploy checklist.
 
 ## 8. Rate-limit matrix (D6 + economic justification)
 
@@ -168,8 +185,8 @@ Resend pricing reference (Pro tier, 2026-Q2): $20/mo for 50 000 messages = $0.00
 | Layer | Limit | Window | Justification (attack economics) |
 |---|---|---|---|
 | **Per-IP per-hour** | 50 sends | 1h sliding | Caps a single attacker's burst at $0.02/hr. Even a 24/7 attacker pinning the IP limit costs us $0.48/day per IP — within tolerable noise. |
-| **Per-test per-day** | 100 sends | 24h calendar (UTC) | A single test's invite list realistically tops out around 50 (one class, one team). 100 = 2x buffer for re-sends + bounce retries (Phase 5+). Beyond 100/day, the use-case shifts from "invite peers" to "newsletter-style blast" — out of scope. |
-| **Per-author per-day** | 200 sends | 24h calendar (UTC) | Author with 2-3 tests at the per-test cap = 200. Higher numbers indicate either (a) school-year start (legitimate, but bump after manual review) or (b) abuse. Manual review queue triggered at 80% of cap. |
+| **Per-test per-day** | 50 sends *(revised 2026-05-21 — see § 7.2)* | 24h calendar (UTC) | A single test's invite list realistically tops out around 50 (one class, one team). On Resend free tier, 50 is the account-wide cap shared with transactional sends — going higher per-test risks crowding out magic-link delivery. Beyond 50/day, the use-case shifts from "invite peers" to "newsletter-style blast" — out of scope. |
+| **Per-author per-day** | 50 sends *(revised 2026-05-21 — see § 7.2)* | 24h calendar (UTC) | Author with 2-3 tests still bounded by the per-test cap. On free tier (100/day shared account), 50 lets at most 2 authors saturate their day. Higher numbers indicate either (a) school-year start (legitimate, but bump after manual review + Pro upgrade) or (b) abuse. Manual review queue triggered at 80 % of cap. |
 | **Global per-hour** | 500 sends | 1h sliding | Platform-wide anti-abuse ceiling. At $0.0004/msg, a sustained 500/hr attack costs us $4.80/day in Resend fees — fast enough to detect within the Resend dashboard's daily summary, slow enough that we don't pre-emptively starve a legitimate spike. Trips an `OPS_EMAIL` alert. |
 
 **Implementation hints (for E45.14):**
