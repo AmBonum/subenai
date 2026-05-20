@@ -14,6 +14,39 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
+// E44.fu1: the wizard now reads from useLibraryQuestions (real DB) and routes
+// "Pridať otázky" through the QuestionPickerDialog. Stub the hook so step 3
+// has a known dataset to drive the picker against.
+vi.mock("@/lib/platform/queries", async () => {
+  const actual =
+    await vi.importActual<typeof import("@/lib/platform/queries")>("@/lib/platform/queries");
+  return {
+    ...actual,
+    useLibraryQuestions: () => ({
+      data: [
+        {
+          id: "stub-q-1",
+          prompt: "Stub question prompt one",
+          branch_slug: "phishing",
+          difficulty: "easy",
+          status: "approved",
+          created_at: "2026-01-01T00:00:00Z",
+        },
+        {
+          id: "stub-q-2",
+          prompt: "Stub question prompt two",
+          branch_slug: "phishing",
+          difficulty: "medium",
+          status: "approved",
+          created_at: "2026-01-01T00:00:00Z",
+        },
+      ],
+      isLoading: false,
+      error: null,
+    }),
+  };
+});
+
 const searchState: { step: number; templateId?: string } = { step: 1 };
 
 // Re-route navigate calls that change `search.step` into our local state so
@@ -85,7 +118,11 @@ describe("/app/tests/new (AH-5.2 wizard)", () => {
     rerender(<Page />);
     fireEvent.click(screen.getByTestId("new-test-wizard-step-2-next"));
     rerender(<Page />);
-    fireEvent.click(screen.getByTestId("new-test-wizard-question-add-button"));
+    // Empty state on step 3 — click the empty-state CTA to open the picker.
+    fireEvent.click(screen.getByTestId("new-test-wizard-step-3-empty-cta"));
+    // Picker dialog mounts. Tick the first question's checkbox and submit.
+    fireEvent.click(screen.getByTestId("question-picker-row-stub-q-1-checkbox"));
+    fireEvent.click(screen.getByTestId("question-picker-submit-button"));
     fireEvent.click(screen.getByTestId("new-test-wizard-step-3-next"));
     // useCreateTest is now async (Supabase INSERT); wait for the onSuccess
     // callback to flip the wizard to step 4 before asserting the share link.
