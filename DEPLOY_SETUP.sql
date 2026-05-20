@@ -3788,6 +3788,67 @@ REVOKE ALL ON FUNCTION public.anonymize_expired_edu_respondents() FROM anon, aut
 GRANT EXECUTE ON FUNCTION public.anonymize_expired_edu_respondents() TO service_role;
 
 -- ============================================================================
+-- E42 — GDPR Art. 15 + Art. 20 self-service export (20260521140000)
+-- ============================================================================
+-- SECURITY DEFINER RPC returning a JSON snapshot of every record we
+-- hold under the calling user's auth.uid(). Anonymous callers are
+-- rejected. Used by /api/account/export-data + DataExportCard UI.
+
+CREATE OR REPLACE FUNCTION public.export_my_data()
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_user_id uuid := auth.uid();
+  v_email   text;
+  v_payload jsonb;
+BEGIN
+  IF v_user_id IS NULL THEN
+    RAISE EXCEPTION 'unauthorized'
+      USING ERRCODE = '42501', HINT = 'GDPR Art. 15 export requires an authenticated session';
+  END IF;
+
+  SELECT email INTO v_email FROM public.profiles WHERE id = v_user_id;
+
+  v_payload := jsonb_build_object(
+    'generated_at', now(),
+    'subject',      jsonb_build_object('user_id', v_user_id, 'email', v_email),
+    'rights', jsonb_build_object(
+      'access',      'GDPR Art. 15',
+      'portability', 'GDPR Art. 20',
+      'erasure',     'GDPR Art. 17 — see /app/account/profile for delete'
+    ),
+    'records', jsonb_build_object(
+      'profile',
+        COALESCE(
+          (SELECT to_jsonb(p) FROM public.profiles p WHERE p.id = v_user_id),
+          'null'::jsonb
+        ),
+      'dsr_requests',
+        COALESCE(
+          (SELECT jsonb_agg(to_jsonb(d) ORDER BY d.created_at DESC)
+             FROM public.dsr_requests d
+             WHERE v_email IS NOT NULL AND d.requester_email = v_email),
+          '[]'::jsonb
+        ),
+      'attempts_note',
+        'Anonymous quiz attempts are not linked to your user account. '
+        'Your share link (/r/<share_id>) is the access surface for those rows. '
+        'Edu-mode attempts where you were the respondent are owned by the '
+        'test author; exercise Art. 15 with them.'
+    )
+  );
+
+  RETURN v_payload;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.export_my_data() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.export_my_data() TO authenticated;
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT

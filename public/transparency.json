@@ -1,0 +1,17 @@
+{
+  "$schema": "../src/content/transparency.schema.json",
+  "version": "1.0.0",
+  "policy": {
+    "charity_share_pct": 10,
+    "recipient": "Nadácia Slniečka",
+    "frequency": "annual",
+    "first_period_end": "2026-12-31",
+    "note": "Subenai donates 10 % of net sponsorship revenue (after Stripe fees) to charity at the end of each calendar year. Each transfer is committed to this registry within 30 days of the bank statement clearing."
+  },
+  "transfers": [],
+  "audit": {
+    "policy_url": "https://subenai.sk/about",
+    "registry_url": "https://subenai.sk/transparency.json",
+    "complaint_route": "subenai.podpora@gmail.com"
+  }
+}

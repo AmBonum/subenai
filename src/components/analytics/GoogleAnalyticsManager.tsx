@@ -1,23 +1,12 @@
 import { useEffect } from "react";
 import { useConsent } from "@/hooks/useConsent";
+import { applyDoNotTrackOverride, type GtagConsentState } from "./do-not-track";
 
 declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
   }
-}
-
-type ConsentValue = "granted" | "denied";
-
-interface GtagConsentState {
-  ad_storage: ConsentValue;
-  ad_user_data: ConsentValue;
-  ad_personalization: ConsentValue;
-  analytics_storage: ConsentValue;
-  functionality_storage: ConsentValue;
-  personalization_storage: ConsentValue;
-  security_storage: ConsentValue;
 }
 
 function deniedState(): GtagConsentState {
@@ -53,7 +42,7 @@ export function GoogleAnalyticsManager() {
 
   useEffect(() => {
     if (!hydrated) return;
-    const consentState = record
+    const baseState = record
       ? buildConsentState({
           analytics: record.categories.analytics,
           marketing: record.categories.marketing,
@@ -61,7 +50,7 @@ export function GoogleAnalyticsManager() {
         })
       : deniedState();
 
-    window.gtag?.("consent", "update", consentState);
+    window.gtag?.("consent", "update", applyDoNotTrackOverride(baseState));
   }, [hydrated, record]);
 
   return null;

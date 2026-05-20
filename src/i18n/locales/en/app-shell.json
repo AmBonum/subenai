@@ -285,6 +285,15 @@
       "security": "Security",
       "dsr": "GDPR"
     },
+    "data_export": {
+      "card_title": "Download your data (GDPR Art. 15 / Art. 20)",
+      "card_desc": "Download a JSON snapshot of every record we hold under your account — profile, any DSR submissions, and notes on adjacent data surfaces. The file is machine-readable (right to portability per GDPR Art. 20).",
+      "button": "Download my data (JSON)",
+      "downloading": "Preparing export…",
+      "error_unauthorized": "Your session expired — sign in again and retry.",
+      "error_generic": "Export failed. Please retry shortly, or email us at subenai.podpora@gmail.com.",
+      "success_toast": "Done. The export has been saved by your browser."
+    },
     "profile": {
       "page_header_eyebrow": "Account",
       "page_header_title": "My profile",
