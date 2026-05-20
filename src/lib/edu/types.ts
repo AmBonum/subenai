@@ -42,6 +42,64 @@ export interface ResultsDataPayload {
   stats: AggregateStats;
 }
 
+/**
+ * Structured filter state for the RespondentsTable. Lives on the URL
+ * search-params of the parent /results route so a deep link reproduces
+ * the exact view (no consent gating needed — URL params aren't storage).
+ * `undefined` means "no constraint on this axis" — Clear filters resets
+ * everything to undefined. The name/email free-text filter stays in
+ * component state because high-frequency keystrokes aren't worth the
+ * URL churn (same call as the blog index).
+ */
+export interface RespondentFilters {
+  /** "yes" → only passing rows, "no" → only failing rows, undefined → both. */
+  pass?: "yes" | "no";
+  /** Inclusive lower bound on final_score, 0–100. */
+  scoreMin?: number;
+  /** Inclusive upper bound on final_score, 0–100. */
+  scoreMax?: number;
+  /** ISO date YYYY-MM-DD — inclusive lower bound on created_at. */
+  dateFrom?: string;
+  /** ISO date YYYY-MM-DD — inclusive upper bound on created_at (end-of-day). */
+  dateTo?: string;
+}
+
+export const EMPTY_RESPONDENT_FILTERS: RespondentFilters = {};
+
+export function countActiveFilters(f: RespondentFilters): number {
+  let n = 0;
+  if (f.pass !== undefined) n += 1;
+  if (f.scoreMin !== undefined) n += 1;
+  if (f.scoreMax !== undefined) n += 1;
+  if (f.dateFrom !== undefined) n += 1;
+  if (f.dateTo !== undefined) n += 1;
+  return n;
+}
+
+/**
+ * Apply the structured filters to a row list. Free-text name/email
+ * query stays orthogonal — RespondentsTable composes both. Pulled out
+ * here so server-side CSV/JSON exports could honour the same filters
+ * if we ever choose to (today they export the full set).
+ */
+export function applyRespondentFilters(
+  rows: RespondentRow[],
+  filters: RespondentFilters,
+  passingThreshold: number,
+): RespondentRow[] {
+  return rows.filter((r) => {
+    if (filters.pass === "yes" && r.final_score < passingThreshold) return false;
+    if (filters.pass === "no" && r.final_score >= passingThreshold) return false;
+    if (filters.scoreMin !== undefined && r.final_score < filters.scoreMin) return false;
+    if (filters.scoreMax !== undefined && r.final_score > filters.scoreMax) return false;
+    if (filters.dateFrom && r.created_at < filters.dateFrom) return false;
+    // dateTo is end-of-day inclusive: any timestamp on that calendar day
+    // counts. `${dateTo}T23:59:59.999Z` is the simplest UTC-safe form.
+    if (filters.dateTo && r.created_at > `${filters.dateTo}T23:59:59.999Z`) return false;
+    return true;
+  });
+}
+
 /** Build a CSV string from respondent rows — kept here so server + client
  *  agree on the shape and unit tests cover it without DOM.
  *

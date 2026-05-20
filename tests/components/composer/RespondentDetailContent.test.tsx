@@ -1,22 +1,21 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen, within, cleanup } from "@testing-library/react";
 import { afterEach } from "vitest";
 
-import { RespondentDetailModal } from "@/components/composer/edu/dashboard/RespondentDetailModal";
+import { RespondentDetailContent } from "@/components/composer/edu/dashboard/RespondentDetailContent";
 import type { RespondentRow } from "@/lib/edu/types";
 
-// E34 Phase 1 — drill-down modal unit tests.
+// E38 Phase B — drill-down content unit tests.
 //
-// Why a unit test on top of the e2e in round-trip.spec.ts: the modal does
-// real work the e2e can't easily assert — per-category rollup math,
-// status-enum mapping (correct / wrong / skipped), question-bank lookup
-// fallback when an id has been removed, parseAnswers() degradation for
-// historical rows. Those are arithmetic / branching paths, not visual
-// flows, so Vitest is the right speed/granularity.
+// Same arithmetic surface as the old RespondentDetailModal tests (per-
+// category rollup math, status-enum mapping, question-bank lookup
+// fallback, parseAnswers() degradation for historical rows) but
+// targeted at the route-rendered content component now that the modal
+// is gone. Page chrome (heading, prev/next nav) lives on the route
+// itself and is exercised by the round-trip e2e + a dedicated route
+// test below.
 
 // `p-sms-posta-1` is the very first question in the bank (`QUESTIONS[0]`).
-// Stable across migrations; picked because we need a real question id the
-// modal can look up via `getQuestionById()` without mocking the bank.
 const REAL_Q_ID = "p-sms-posta-1";
 
 function makeRow(overrides: Partial<RespondentRow> = {}): RespondentRow {
@@ -27,7 +26,7 @@ function makeRow(overrides: Partial<RespondentRow> = {}): RespondentRow {
     respondent_email: "anna@example.sk",
     final_score: 60,
     percentile: 50,
-    total_time_ms: 73_000, // 73 s → "73 s" in subtitle
+    total_time_ms: 73_000,
     created_at: "2026-05-20T10:00:00Z",
     answers: null,
     ...overrides,
@@ -38,28 +37,10 @@ afterEach(() => {
   cleanup();
 });
 
-describe("RespondentDetailModal — E34 Phase 1 drill-down", () => {
-  it("renders nothing when row is null (closed state)", () => {
-    render(<RespondentDetailModal row={null} onClose={vi.fn()} />);
-    expect(screen.queryByTestId("respondent-detail-root")).toBeNull();
-  });
-
-  it("renders heading + subtitle with the respondent's name, email, score, and time-in-seconds", () => {
-    render(<RespondentDetailModal row={makeRow()} onClose={vi.fn()} />);
-
-    const heading = screen.getByTestId("respondent-detail-heading");
-    expect(heading.textContent).toContain("Anna Testovacia");
-
-    const subtitle = screen.getByTestId("respondent-detail-subtitle");
-    expect(subtitle.textContent).toContain("anna@example.sk");
-    expect(subtitle.textContent).toContain("60");
-    expect(subtitle.textContent).toContain("73");
-  });
-
+describe("RespondentDetailContent — E38 Phase B drill-down body", () => {
   it("shows the documented fallback when the row has no parseable answers (historical / pre-feature rows)", () => {
-    render(<RespondentDetailModal row={makeRow({ answers: null })} onClose={vi.fn()} />);
+    render(<RespondentDetailContent row={makeRow({ answers: null })} />);
     expect(screen.getByTestId("respondent-detail-fallback")).toBeVisible();
-    // No per-question section when there's no data to render.
     expect(screen.queryByTestId("respondent-detail-questions")).toBeNull();
   });
 
@@ -67,7 +48,7 @@ describe("RespondentDetailModal — E34 Phase 1 drill-down", () => {
     const answers = [
       {
         questionId: REAL_Q_ID,
-        optionId: "x", // wrong, deliberate
+        optionId: "x",
         correct: false,
         severity: "medium" as const,
         responseMs: 4500,
@@ -75,13 +56,11 @@ describe("RespondentDetailModal — E34 Phase 1 drill-down", () => {
         difficulty: "easy" as const,
       },
     ];
-    render(<RespondentDetailModal row={makeRow({ answers })} onClose={vi.fn()} />);
-
+    render(<RespondentDetailContent row={makeRow({ answers })} />);
     const row = screen.getByTestId(`respondent-detail-question-${REAL_Q_ID}`);
     expect(row).toBeVisible();
     expect(row.textContent).toContain("Vybraná odpoveď:");
     expect(row.textContent).toContain("Správna odpoveď:");
-    // Wrong status badge ("Nesprávne") in Slovak.
     expect(within(row).getByText("Nesprávne")).toBeVisible();
   });
 
@@ -97,10 +76,9 @@ describe("RespondentDetailModal — E34 Phase 1 drill-down", () => {
         difficulty: "easy" as const,
       },
     ];
-    render(<RespondentDetailModal row={makeRow({ answers })} onClose={vi.fn()} />);
+    render(<RespondentDetailContent row={makeRow({ answers })} />);
     const row = screen.getByTestId(`respondent-detail-question-${REAL_Q_ID}`);
     expect(within(row).getByText("Nezodpovedaná")).toBeVisible();
-    // Picked column reads "(nevybrané)" rather than an empty cell.
     expect(row.textContent).toContain("(nevybrané)");
   });
 
@@ -134,15 +112,13 @@ describe("RespondentDetailModal — E34 Phase 1 drill-down", () => {
         difficulty: "easy" as const,
       },
     ];
-    render(<RespondentDetailModal row={makeRow({ answers })} onClose={vi.fn()} />);
+    render(<RespondentDetailContent row={makeRow({ answers })} />);
 
     const phishingCard = screen.getByTestId("respondent-detail-category-phishing");
-    // 0 of 2 correct → 0 %, weak (amber border).
     expect(phishingCard.textContent).toContain("0 z 2");
     expect(phishingCard.className).toContain("amber");
 
     const urlCard = screen.getByTestId("respondent-detail-category-url");
-    // 1 of 1 → 100 %, not weak.
     expect(urlCard.textContent).toContain("1 z 1");
     expect(urlCard.className).not.toContain("amber");
   });
@@ -159,7 +135,7 @@ describe("RespondentDetailModal — E34 Phase 1 drill-down", () => {
         difficulty: "easy" as const,
       },
     ];
-    render(<RespondentDetailModal row={makeRow({ answers })} onClose={vi.fn()} />);
+    render(<RespondentDetailContent row={makeRow({ answers })} />);
     expect(screen.queryByTestId("respondent-detail-category-strip")).toBeNull();
   });
 
@@ -175,7 +151,7 @@ describe("RespondentDetailModal — E34 Phase 1 drill-down", () => {
         difficulty: "easy" as const,
       },
     ];
-    render(<RespondentDetailModal row={makeRow({ answers })} onClose={vi.fn()} />);
+    render(<RespondentDetailContent row={makeRow({ answers })} />);
     const row = screen.getByTestId(
       "respondent-detail-question-this-question-id-does-not-exist-in-the-bank",
     );

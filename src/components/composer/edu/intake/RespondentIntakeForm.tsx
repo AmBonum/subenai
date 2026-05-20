@@ -1,13 +1,63 @@
-import { useId, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/config/routes";
+import { useConsent } from "@/hooks/useConsent";
 import { tFor } from "@/i18n/quiz";
 
 const NAME_MIN_LEN = 2;
 const NAME_MAX_LEN = 80;
 const EMAIL_MAX_LEN = 254;
 const EMAIL_REGEX = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+// sessionStorage key — tab-scoped so the user's input survives a quick
+// navigation away (e.g. clicking the privacy-policy link) and back, but
+// dies with the tab. Per-set so multiple shared sets don't collide.
+const INTAKE_STORAGE_PREFIX = "iiq_edu_intake:";
+
+interface StoredIntake {
+  name: string;
+  email: string;
+  consent: boolean;
+}
+
+function storageKey(setId: string): string {
+  return `${INTAKE_STORAGE_PREFIX}${setId}`;
+}
+
+function readStored(setId: string): StoredIntake | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(storageKey(setId));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<StoredIntake>;
+    return {
+      name: typeof parsed.name === "string" ? parsed.name : "",
+      email: typeof parsed.email === "string" ? parsed.email : "",
+      consent: parsed.consent === true,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeStored(setId: string, value: StoredIntake): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.setItem(storageKey(setId), JSON.stringify(value));
+  } catch {
+    // quota / disabled — silently degrade
+  }
+}
+
+function clearStored(setId: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.removeItem(storageKey(setId));
+  } catch {
+    // ignore
+  }
+}
 
 export interface RespondentIntakeOk {
   token: string;
@@ -31,6 +81,10 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
   const emailId = useId();
   const consentId = useId();
   const errorId = useId();
+  const { isAllowed, hydrated } = useConsent();
+  // Functional remember-state on the user's terminal equipment is the
+  // "preferences" category per ePrivacy / src/lib/consent.ts.
+  const persistenceAllowed = isAllowed("preferences");
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -39,6 +93,41 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
   const [honeypot, setHoneypot] = useState("");
   const [state, setState] = useState<SubmitState>("idle");
   const [errorCode, setErrorCode] = useState<string | null>(null);
+  // Guards the auto-save effect from clobbering storage on the same
+  // tick that the restore effect runs (initial mount race).
+  const restoredRef = useRef(false);
+
+  // Restore on mount — runs once after consent hydration so we don't
+  // accidentally read storage that the user hasn't authorised. If the
+  // user revoked (or never granted) preferences, any stale copy from a
+  // prior session is wiped immediately so it can't leak forward.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!persistenceAllowed) {
+      clearStored(setId);
+      restoredRef.current = true;
+      return;
+    }
+    const stored = readStored(setId);
+    if (stored) {
+      setName(stored.name.slice(0, NAME_MAX_LEN));
+      setEmail(stored.email.slice(0, EMAIL_MAX_LEN));
+      setConsent(stored.consent);
+    }
+    restoredRef.current = true;
+  }, [hydrated, persistenceAllowed, setId]);
+
+  // Auto-save on every change, but only after the restore pass and
+  // only with consent. If the user revokes preferences mid-session,
+  // we proactively wipe the stored copy.
+  useEffect(() => {
+    if (!restoredRef.current) return;
+    if (!persistenceAllowed) {
+      clearStored(setId);
+      return;
+    }
+    writeStored(setId, { name, email, consent });
+  }, [name, email, consent, persistenceAllowed, setId]);
 
   const trimmedName = name.trim();
   const trimmedEmail = email.trim();
@@ -72,6 +161,7 @@ export function RespondentIntakeForm({ setId, authorLabel, onReady }: Props) {
         setState("error");
         return;
       }
+      clearStored(setId);
       onReady({ token: payload.token, name: trimmedName, email: trimmedEmail.toLowerCase() });
     } catch {
       setErrorCode("network_error");

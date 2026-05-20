@@ -1,11 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
-import { createLazyFileRoute, Link, useParams } from "@tanstack/react-router";
+import {
+  createLazyFileRoute,
+  Link,
+  useNavigate,
+  useParams,
+  useSearch,
+} from "@tanstack/react-router";
 import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthorPasswordGate } from "@/components/composer/edu/dashboard/AuthorPasswordGate";
 import { AggregateStats } from "@/components/composer/edu/dashboard/AggregateStats";
+import { ResultsCharts } from "@/components/composer/edu/dashboard/ResultsCharts";
 import { RespondentsTable } from "@/components/composer/edu/dashboard/RespondentsTable";
-import { rowsToCsv, type ResultsDataPayload } from "@/lib/edu/types";
+import { rowsToCsv, type RespondentFilters, type ResultsDataPayload } from "@/lib/edu/types";
+import { buildPdfData, buildPdfFilename, slugifyForFilename } from "@/lib/edu/pdf-data";
 import { ROUTES } from "@/config/routes";
 import { SITE_ORIGIN } from "@/config/site";
 import { copyToClipboard } from "@/lib/browser/clipboard";
@@ -19,14 +27,28 @@ export const Route = createLazyFileRoute("/test/builder/$id/results")({
 
 function ResultsPage() {
   const { id } = useParams({ from: "/test/builder/$id/results" });
-  return <ResultsView id={id} />;
+  const search = useSearch({ from: "/test/builder/$id/results" });
+  const navigate = useNavigate({ from: "/test/builder/$id/results" });
+  const handleFiltersChange = useCallback(
+    (next: RespondentFilters): void => {
+      // `validateSearch` strips `undefined` keys so the URL stays clean
+      // (`/results` not `/results?pass=&scoreMin=`). Replace, don't push,
+      // so the back button still returns to the previous *page* rather
+      // than walking back through every filter change.
+      void navigate({ search: next, replace: true });
+    },
+    [navigate],
+  );
+  return <ResultsView id={id} filters={search} onFiltersChange={handleFiltersChange} />;
 }
 
 interface Props {
   id: string;
+  filters?: RespondentFilters;
+  onFiltersChange?: (next: RespondentFilters) => void;
 }
 
-export function ResultsView({ id }: Props) {
+export function ResultsView({ id, filters, onFiltersChange }: Props) {
   const t = tFor("results_page");
   const tCommon = tFor("common");
   const [phase, setPhase] = useState<Phase>("loading");
@@ -111,15 +133,54 @@ export function ResultsView({ id }: Props) {
     // Excel-friendly UTF-8 BOM so Slovak diacritics aren't mojibake on
     // double-click.
     const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    const slug = (data.creator_label ?? "edu-test").replace(/[^a-z0-9-]+/gi, "-").toLowerCase();
-    link.download = `${slug || "edu-test"}-${id.slice(0, 8)}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
+    triggerDownload(blob, `${slugifyForFilename(data.creator_label)}-${id.slice(0, 8)}.csv`);
+  }
+
+  // E38 Phase E — dynamic import so @react-pdf/renderer (~250 KB)
+  // ships as its own chunk that only downloads after the author clicks.
+  // Authors who never export pay zero PDF cost on initial load.
+  async function downloadPdf() {
+    if (!data) return;
+    const [{ pdf }, { ResultsPdf }] = await Promise.all([
+      import("@react-pdf/renderer"),
+      import("@/lib/edu/pdf-document"),
+    ]);
+    const pdfData = buildPdfData({
+      rows: data.rows,
+      stats: data.stats,
+      filters: filters ?? {},
+      passingThreshold: data.passing_threshold,
+      creatorLabel: data.creator_label,
+      generatedAt: new Date(),
+    });
+    const blob = await pdf(<ResultsPdf data={pdfData} />).toBlob();
+    triggerDownload(blob, buildPdfFilename(data.creator_label, id));
+  }
+
+  function downloadJson() {
+    if (!data) return;
+    // Pretty-printed for human-readable archives; consumers that need
+    // compactness can re-stringify. Privacy header sits in a sibling
+    // `_meta` key (JSON has no comment syntax) so a parser still sees
+    // valid JSON while readers see the same disclosure as the CSV file.
+    const exportPayload = {
+      _meta: {
+        source: "subenai.sk",
+        generated_at: new Date().toISOString(),
+        privacy_notice:
+          "OBSAHUJE OSOBNÉ ÚDAJE (meno, email respondentov). Spracuj v súlade s GDPR — viď subenai.sk/privacy",
+        set_id: data.set_id,
+        creator_label: data.creator_label,
+        passing_threshold: data.passing_threshold,
+        question_count: data.question_count,
+      },
+      stats: data.stats,
+      rows: data.rows,
+    };
+    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], {
+      type: "application/json;charset=utf-8",
+    });
+    triggerDownload(blob, `${slugifyForFilename(data.creator_label)}-${id.slice(0, 8)}.json`);
   }
 
   if (phase === "loading") {
@@ -213,6 +274,22 @@ export function ResultsView({ id }: Props) {
               >
                 {t("download_csv")}
               </Button>
+              <Button
+                data-testid="vysledky-download-json-button"
+                variant="outline"
+                onClick={downloadJson}
+                disabled={data.rows.length === 0}
+              >
+                {t("download_json")}
+              </Button>
+              <Button
+                data-testid="vysledky-download-pdf-button"
+                variant="outline"
+                onClick={() => void downloadPdf()}
+                disabled={data.rows.length === 0}
+              >
+                {t("download_pdf")}
+              </Button>
               <Button data-testid="vysledky-logout-button" variant="outline" onClick={handleLogout}>
                 {t("logout")}
               </Button>
@@ -237,16 +314,30 @@ export function ResultsView({ id }: Props) {
 
         <div className="mt-8 space-y-8">
           <AggregateStats stats={data.stats} />
+          <ResultsCharts stats={data.stats} rows={data.rows} />
           <RespondentsTable
             rows={data.rows}
             passingThreshold={data.passing_threshold}
             onDelete={handleDelete}
             setId={id}
+            filters={filters}
+            onFiltersChange={onFiltersChange}
           />
         </div>
       </main>
     </div>
   );
+}
+
+function triggerDownload(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 function CenteredMessage({ children, tone }: { children: React.ReactNode; tone?: "warn" }) {
