@@ -33,43 +33,32 @@ interface DeclaredStorage {
 const COOKIE_KEYS: DeclaredStorage[] = [
   {
     key: "SIDEBAR_COOKIE_NAME",
-    declaredAt:
-      "NOT DECLARED — see matrix X-1. Follow-up E40 to either add to /cookies prefs row or remove.",
+    declaredAt: "/cookies s2 row `prefs` (E40) — sidebar_state, preferences category",
   },
 ];
 
 const LOCALSTORAGE_KEYS: DeclaredStorage[] = [
   { key: "CONSENT_STORAGE_KEY", declaredAt: "/cookies s2 row `iiq_consent`" },
   { key: "TRAP_SEEN_STORAGE_KEY", declaredAt: "/privacy s2 trap section" },
-];
-
-/** Keys we know exist in code but are NOT declared. Used to differentiate
- * "expected red" (already in the matrix) from "regression" (new unknown
- * write). Each entry must cite the follow-up epic. */
-const UNDECLARED_BUT_TRACKED: DeclaredStorage[] = [
-  {
-    key: "SIDEBAR_COOKIE_NAME",
-    declaredAt: "matrix X-1 — sidebar UI state, E40",
-  },
-  {
-    key: "subenai.locale",
-    declaredAt:
-      "matrix X-2 — locale preference; /cookies declares prefs as 'budúce' but locale already used. E40",
-  },
   {
     key: "STORAGE_KEY",
     declaredAt:
-      "matrix X-3 / X-4 — module-level constant in multiple files (locale-context, useBlogPillarsCollapsed). E40",
+      "/cookies s2 row `locale` + `prefs` (E40) — module-level constants in locale-context (necessary) and useBlogPillarsCollapsed (preferences)",
   },
-  {
-    key: "INTRO_KEY",
-    declaredAt: "matrix X-4 — app intro flag. E40",
-  },
+  { key: "INTRO_KEY", declaredAt: "/cookies s2 row `prefs` (E40) — dashboard intro flag" },
   {
     key: "dismissKey",
-    declaredAt: "matrix X-5 — profile completion banner dismiss flag. E40",
+    declaredAt:
+      "/cookies s2 row `prefs` (E40) — `subenai.profile-banner.dismissed.*` per-user dismissal",
   },
+  { key: "subenai.locale", declaredAt: "/cookies s2 row `locale` (E40) — language preference" },
 ];
+
+/** Keys we know exist in code but are NOT declared. Empty after E40 —
+ * every storage write site is now on a declared allowlist row or in a
+ * follow-up epic with a documented owner. New unknown writes added in
+ * a future change will surface here as test failures. */
+const UNDECLARED_BUT_TRACKED: DeclaredStorage[] = [];
 
 function* walkSourceFiles(dir: string): Iterable<string> {
   for (const entry of readdirSync(dir)) {
