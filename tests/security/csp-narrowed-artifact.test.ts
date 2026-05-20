@@ -15,8 +15,14 @@
 // assertions run.
 
 import { describe, expect, it } from "vitest";
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { join, resolve } from "node:path";
+
+import {
+  extractInlineScripts,
+  computeScriptHashes,
+  // @ts-expect-error — .mjs without declaration; runtime import is fine.
+} from "../../scripts/extract-csp-hashes.mjs";
 
 const ARTIFACT_PATH = resolve(process.cwd(), "dist/client/_headers");
 const ARTIFACT_EXISTS = existsSync(ARTIFACT_PATH);
@@ -67,6 +73,40 @@ describe.skipIf(!ARTIFACT_EXISTS)("dist/client/_headers — Phase B narrowed CSP
 
   it("retains report-uri /api/csp-report (Phase A reporter is still wired)", () => {
     expect(csp).toContain("report-uri /api/csp-report");
+  });
+
+  // Hash integrity: re-walk dist/client/**.html, recompute hashes
+  // from scratch, and assert every hash is present in script-src.
+  // This catches:
+  //   - regex drift between extract-csp-hashes.mjs and reality
+  //   - manual edits to _headers that delete a legitimate hash
+  //   - a second run of extract-csp-hashes producing different output
+  //     (i.e. non-idempotent — should never happen)
+  it("script-src contains a 'sha256-…' for every inline script in dist/client/**.html", () => {
+    function findHtmlFiles(dir: string): string[] {
+      const out: string[] = [];
+      for (const entry of readdirSync(dir)) {
+        const full = join(dir, entry);
+        const s = statSync(full);
+        if (s.isDirectory()) out.push(...findHtmlFiles(full));
+        else if (entry.endsWith(".html")) out.push(full);
+      }
+      return out;
+    }
+
+    const distDir = resolve(process.cwd(), "dist/client");
+    const htmlFiles = findHtmlFiles(distDir);
+    const allBodies: string[] = [];
+    for (const file of htmlFiles) {
+      allBodies.push(...extractInlineScripts(readFileSync(file, "utf8")));
+    }
+    const expectedHashes = computeScriptHashes(allBodies);
+    for (const hash of expectedHashes) {
+      expect(
+        scriptSources,
+        `script-src must include ${hash} for an inline script found in dist/client/**.html`,
+      ).toContain(hash);
+    }
   });
 });
 
