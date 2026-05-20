@@ -1,0 +1,62 @@
+# E38.3 — daily retention cron.
+#
+# Replaces pg_cron (not available on Supabase Free tier) with a
+# GitHub Actions scheduled workflow. Runs every day at 03:00 UTC and
+# calls three retention RPCs against production Supabase:
+#
+#   1. purge_expired_attempts       — DELETE attempts older than 36 mo
+#   2. anonymize_expired_anticheat  — NULL flags + timing > 12 mo
+#   3. anonymize_expired_edu_respondents — NULL respondent name + email > 12 mo
+#
+# Required repo secrets:
+#   SUPABASE_URL                  — project URL (same as VITE_SUPABASE_URL)
+#   SUPABASE_SERVICE_ROLE_KEY     — service-role JWT (never expose client-side)
+#
+# Manual run:
+#   GitHub → Actions → "Retention cron" → Run workflow.
+#   Useful to verify after merge or to backfill if a scheduled run was
+#   delayed by GH peak load.
+
+name: Retention cron
+
+on:
+  schedule:
+    # Daily 03:00 UTC — off-peak for SK timezone, 30+ min after the
+    # other security crons (ZAP Mon 04, CodeQL Tue 05, npm audit Wed 05).
+    - cron: "0 3 * * *"
+  workflow_dispatch: {}
+
+# Single-flight: never run two retention crons at the same time. If a
+# previous run is still in progress, the next scheduled tick is skipped.
+concurrency:
+  group: retention-cron
+  cancel-in-progress: false
+
+permissions:
+  # Read only — script invokes RPCs, no repo writes / issue files.
+  contents: read
+
+jobs:
+  retention:
+    name: Run daily retention RPCs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout (for scripts/run-retention.mjs)
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install runtime deps
+        run: npm ci --omit=dev
+
+      - name: Run retention RPCs
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/run-retention.mjs

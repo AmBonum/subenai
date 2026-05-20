@@ -3724,6 +3724,70 @@ BEGIN
 END$$;
 
 -- ============================================================================
+-- E38 — Retention crons + auto-anonymisation (20260521120000, 20260521130000)
+-- ============================================================================
+-- Two new SECURITY DEFINER functions for the GitHub Actions daily
+-- retention cron (`.github/workflows/retention-cron.yml`). pg_cron is
+-- not used (Supabase Free tier doesn't have it). See tasks/E38-runbook.md.
+
+CREATE OR REPLACE FUNCTION public.anonymize_expired_anticheat()
+RETURNS integer
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  touched_count integer;
+BEGIN
+  WITH updated AS (
+    UPDATE public.attempts
+    SET
+      flags = '[]'::jsonb,
+      total_time_ms = NULL
+    WHERE created_at < (now() - interval '12 months')
+      AND (
+        (flags IS NOT NULL AND flags <> '[]'::jsonb)
+        OR total_time_ms IS NOT NULL
+      )
+    RETURNING 1
+  )
+  SELECT count(*) INTO touched_count FROM updated;
+  RETURN touched_count;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.anonymize_expired_anticheat() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.anonymize_expired_anticheat() FROM anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.anonymize_expired_anticheat() TO service_role;
+
+CREATE OR REPLACE FUNCTION public.anonymize_expired_edu_respondents()
+RETURNS integer
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  touched_count integer;
+BEGIN
+  WITH updated AS (
+    UPDATE public.attempts
+    SET
+      respondent_name = NULL,
+      respondent_email = NULL
+    WHERE created_at < (now() - interval '12 months')
+      AND (respondent_name IS NOT NULL OR respondent_email IS NOT NULL)
+    RETURNING 1
+  )
+  SELECT count(*) INTO touched_count FROM updated;
+  RETURN touched_count;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.anonymize_expired_edu_respondents() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.anonymize_expired_edu_respondents() FROM anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.anonymize_expired_edu_respondents() TO service_role;
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT
