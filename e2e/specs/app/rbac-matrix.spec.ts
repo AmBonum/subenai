@@ -128,7 +128,7 @@ test.describe("RBAC — admin (AAL2) @rbac", () => {
   for (const path of ADMIN_ROUTES) {
     test(`admin visiting ${path} loads (no redirect)`, async ({ page }) => {
       await page.goto(path, { waitUntil: "domcontentloaded" });
-      await expect(page).toHaveURL(new RegExp(path.replace(/\//g, "\\/")));
+      await expect(page).toHaveURL(new RegExp(path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
     });
   }
 
