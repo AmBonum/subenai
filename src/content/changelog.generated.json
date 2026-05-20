@@ -1,5 +1,23 @@
 [
   {
+    "version": "1.13.0",
+    "date": "2026-05-20",
+    "added": [],
+    "changed": [
+      "**Akadémia — sekcia sprievodcov má nové meno.** Doteraz sa volala",
+      "**Akadémia — pri vyhľadávaní sa sekcia článkov premenuje.** Predtým",
+      "**Akadémia — filter kategórií na mobile sa už nescrolluje vodorovne.**"
+    ],
+    "fixed": [
+      "**Akadémia — rozbaľovací zoznam sprievodcov sa po kliknutí konečne",
+      "**Akadémia — nadpis sekcie a počet sprievodcov sa na úzkych",
+      "**Cookies a Ochrana osobných údajov sa zmestia do 320 px obrazovky.**"
+    ],
+    "removed": [],
+    "deprecated": [],
+    "security": []
+  },
+  {
     "version": "1.12.0",
     "date": "2026-05-20",
     "added": [
