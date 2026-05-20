@@ -1,6 +1,10 @@
 import { describe, it, expect } from "vitest";
 
-import { formatArticleCount, formatPublishedArticleCount } from "@/lib/blog/slovak-plurals";
+import {
+  formatArticleCount,
+  formatPillarCount,
+  formatPublishedArticleCount,
+} from "@/lib/blog/slovak-plurals";
 
 // Slovak grammatical number has three forms, not two:
 //   1 → singular nominative
@@ -42,5 +46,23 @@ describe("formatPublishedArticleCount", () => {
   it("uses plural genitive for 5+", () => {
     expect(formatPublishedArticleCount(5)).toBe("5 publikovaných článkov");
     expect(formatPublishedArticleCount(80)).toBe("80 publikovaných článkov");
+  });
+});
+
+describe("formatPillarCount", () => {
+  it("uses singular nominative for 1", () => {
+    expect(formatPillarCount(1)).toBe("1 hĺbkový sprievodca");
+  });
+
+  it("uses plural nominative for 2, 3, 4 (regression: /blog index header)", () => {
+    expect(formatPillarCount(2)).toBe("2 hĺbkoví sprievodcovia");
+    expect(formatPillarCount(3)).toBe("3 hĺbkoví sprievodcovia");
+    expect(formatPillarCount(4)).toBe("4 hĺbkoví sprievodcovia");
+  });
+
+  it("uses plural genitive for 5+ and 0", () => {
+    expect(formatPillarCount(0)).toBe("0 hĺbkových sprievodcov");
+    expect(formatPillarCount(5)).toBe("5 hĺbkových sprievodcov");
+    expect(formatPillarCount(11)).toBe("11 hĺbkových sprievodcov");
   });
 });

@@ -18,7 +18,23 @@ const PAGE_TITLE = "akadémia subenai — návody o internetových podvodoch";
 const BLOG_INDEX_DESCRIPTION =
   "akadémia subenai — sprievodcovia a návody, ako rozpoznať scam skôr, než ťa dostane. reálne príklady, psychológia manipulácie, krátke testy. v slovenčine.";
 
+// `?cat=<slug>` encodes the active category chip on the index page so a
+// filtered view is shareable / bookmarkable. We deliberately do NOT
+// encode `?q=<search>` — search is high-frequency / typeahead and
+// Slovak-diacritics URLs are ugly; the search box stays client-only.
+// `/blog/kategoria/$slug` is a separate surface with its own SEO; this
+// param keeps the user on the unified index experience.
+interface BlogIndexSearch {
+  cat?: string;
+}
+
 export const Route = createFileRoute("/blog/")({
+  validateSearch: (raw: Record<string, unknown>): BlogIndexSearch => {
+    const cat = raw.cat;
+    return {
+      cat: typeof cat === "string" && cat.length > 0 ? cat : undefined,
+    };
+  },
   head: () => {
     const url = `${SITE_ORIGIN}/blog`;
     return {

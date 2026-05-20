@@ -17,7 +17,7 @@ export function BlogSearchInput({
 }: BlogSearchInputProps) {
   const id = useId();
   return (
-    <div className="relative w-full max-w-sm" data-testid="blog-search-root">
+    <div className="relative w-full md:max-w-md" data-testid="blog-search-root">
       <label htmlFor={id} className="sr-only">
         {placeholder}
       </label>

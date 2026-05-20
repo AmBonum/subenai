@@ -13,6 +13,7 @@
 //
 // Call sites are wired in:
 //   • routes/blog/index.lazy.tsx           → blog_index_view, blog_filter_change, blog_search
+//   • components/blog/PillarsSection.tsx   → blog_pillars_toggle
 //   • routes/blog/$slug.lazy.tsx           → blog_post_view, blog_related_click
 //   • routes/blog/kategoria/$slug.lazy.tsx → blog_category_view
 //   • routes/blog/autor/$slug.lazy.tsx     → blog_author_view
@@ -138,6 +139,16 @@ export function trackBlogTocClick(input: { post_slug: string; heading_id: string
   trackEvent("blog_toc_click", {
     post_slug: input.post_slug,
     heading_id: input.heading_id,
+    language: LANG,
+  });
+}
+
+// Fires only on user-initiated toggle of the /blog index pillars section
+// (NOT on hydration-time default-state application). Bounded volume:
+// expected ≤ 1 toggle per session for most users.
+export function trackBlogPillarsToggle(input: { open: boolean }): void {
+  trackEvent("blog_pillars_toggle", {
+    state: input.open ? "open" : "closed",
     language: LANG,
   });
 }

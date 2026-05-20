@@ -1,10 +1,10 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { createLazyFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef } from "react";
 
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
+import { BlogScopeBar } from "@/components/blog/BlogScopeBar";
 import { BlogSearchEmptyState } from "@/components/blog/BlogSearchEmptyState";
-import { BlogSearchInput } from "@/components/blog/BlogSearchInput";
-import { CategoryFilter } from "@/components/blog/CategoryFilter";
+import { PillarsSection } from "@/components/blog/PillarsSection";
 import { tFor } from "@/i18n/blog";
 import {
   trackBlogFilterChange,
@@ -14,6 +14,7 @@ import {
 import { isPillarSlug } from "@/lib/blog/pillar-slugs";
 import { useBlogPostList } from "@/lib/blog/queries";
 import { buildBlogIndexJsonLd } from "@/lib/seo/blog-jsonld";
+import { useState } from "react";
 
 export const Route = createLazyFileRoute("/blog/")({
   component: BlogIndexPage,
@@ -22,7 +23,12 @@ export const Route = createLazyFileRoute("/blog/")({
 function BlogIndexPage() {
   const t = tFor("index");
   const query = useBlogPostList();
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  // Active category lives in the URL search params so `/blog?cat=...`
+  // round-trips through reload + share. Search query stays in
+  // component state (high-frequency keystrokes; not worth URL churn).
+  const { cat } = useSearch({ from: "/blog/" });
+  const activeCategory = cat ?? null;
+  const navigate = useNavigate({ from: "/blog/" });
   const [searchQuery, setSearchQuery] = useState("");
   const normalizedSearch = searchQuery.trim().toLowerCase();
 
@@ -88,12 +94,18 @@ function BlogIndexPage() {
     return () => window.clearTimeout(handle);
   }, [normalizedSearch, filteredClusters.length]);
 
-  // Wraps setActiveCategory so the chip click both updates UI state
-  // AND fires the filter analytics. Using a callback ref preserves
-  // referential stability for the CategoryFilter prop.
-  const lastFilterRef = useRef<string | null>(null);
+  // Wraps the chip-click → navigate so the URL search param updates
+  // AND fires the filter analytics on actual change (no duplicate
+  // events when the same chip is re-pressed). `replace: true` keeps
+  // the back button useful — users shouldn't have to step through
+  // every chip click.
+  const lastFilterRef = useRef<string | null>(activeCategory);
   const handleCategoryChange = (next: string | null): void => {
-    setActiveCategory(next);
+    void navigate({
+      to: "/blog",
+      search: (prev) => ({ ...prev, cat: next ?? undefined }),
+      replace: true,
+    });
     if (lastFilterRef.current !== next) {
       lastFilterRef.current = next;
       trackBlogFilterChange({ category_slug: next });
@@ -104,7 +116,11 @@ function BlogIndexPage() {
   // we surface a suggested-categories chip row + a fallback pillars
   // grid so the reader has a clear next step.
   const handleClearFilters = (): void => {
-    setActiveCategory(null);
+    void navigate({
+      to: "/blog",
+      search: (prev) => ({ ...prev, cat: undefined }),
+      replace: true,
+    });
     setSearchQuery("");
     if (lastFilterRef.current !== null) {
       lastFilterRef.current = null;
@@ -129,9 +145,10 @@ function BlogIndexPage() {
     : undefined;
 
   return (
-    <main className="container mx-auto px-4 py-12" data-testid="blog-index-root">
-      {/* Hero — title + supporting copy + scam-of-the-week feel */}
-      <header className="mx-auto max-w-4xl text-center" data-testid="blog-index-hero">
+    <main className="container mx-auto px-4 py-8 md:py-12" data-testid="blog-index-root">
+      {/* Hero — compressed on mobile so the ScopeBar reaches fold-1.
+          Left-aligned on small screens (reading flow), centered desktop. */}
+      <header className="mx-auto max-w-4xl text-left md:text-center" data-testid="blog-index-hero">
         <p
           className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary"
           data-testid="blog-index-eyebrow"
@@ -139,21 +156,35 @@ function BlogIndexPage() {
           <span aria-hidden="true">🎓</span> {t("eyebrow")}
         </p>
         <h1
-          className="mt-6 text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl"
+          className="mt-4 text-3xl font-bold tracking-tight md:mt-6 md:text-5xl lg:text-6xl"
           data-testid="blog-index-title"
         >
           {t("title")}
         </h1>
         <p
-          className="mt-6 text-lg text-muted-foreground md:text-xl"
+          className="mt-4 text-base text-muted-foreground md:mt-6 md:text-xl"
           data-testid="blog-index-description"
         >
           {t("description")}
         </p>
-        <div className="mt-8 flex justify-center" data-testid="blog-index-search-wrapper">
-          <BlogSearchInput value={searchQuery} onChange={setSearchQuery} />
-        </div>
       </header>
+
+      {/* Combined Scope Card — search + filter chips. Lives directly
+          under hero so the most important controls are above the fold
+          on mobile. Skipped during loading/error/empty since chips
+          would be empty anyway. */}
+      {query.data && query.data.length > 0 && (
+        <div data-testid="blog-index-scope-wrapper">
+          <BlogScopeBar
+            searchValue={searchQuery}
+            onSearchChange={setSearchQuery}
+            categoryOptions={categoryOptions}
+            activeCategorySlug={activeCategory}
+            onCategoryChange={handleCategoryChange}
+            totalClusterCount={clusters.length}
+          />
+        </div>
+      )}
 
       {query.isLoading && (
         <p className="mt-12 text-center text-muted-foreground" data-testid="blog-index-loading">
@@ -183,84 +214,31 @@ function BlogIndexPage() {
         />
       )}
 
-      {/* Featured pillars — top-of-page editorial anchors.
-          Hidden during an active search (≥ 2 chars) because the
-          reader has expressed a specific topical intent and the
-          pillar grid becomes pure visual noise that pushes the
-          actual matches below the fold. Category-only filtering
-          keeps pillars visible — pillars ARE the editorial spine
-          of every category. */}
-      {pillars.length > 0 && normalizedSearch.length < 2 && (
-        <section
-          id="sprievodcovia"
-          className="mt-16 scroll-mt-24 border-t border-border pt-12"
-          data-testid="blog-index-pillars-section"
-        >
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <h2
-                className="text-2xl font-bold tracking-tight md:text-3xl"
-                data-testid="blog-index-pillars-heading"
-              >
-                {t("pillar_heading")}
-              </h2>
-              <p
-                className="mt-2 max-w-2xl text-sm text-muted-foreground"
-                data-testid="blog-index-pillars-description"
-              >
-                hĺbkové sprievodce témami — najdôležitejšie články, do ktorých sa oplatí investovať
-                10+ minút. odporúčame ich ako prvé čítanie ku každej oblasti bezpečnosti.
-              </p>
-            </div>
-            <p
-              className="hidden text-sm text-muted-foreground md:block"
-              data-testid="blog-index-pillars-subheading"
-            >
-              {pillars.length} hĺbkových sprievodcov
-            </p>
-          </div>
-          <ul
-            className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3"
-            data-testid="blog-index-pillars-list"
-          >
-            {pillars.map((post) => (
-              <li key={post.id} data-testid={`blog-pillar-card-${post.slug}`}>
-                <BlogPostCard post={post} variant="featured" />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {/* Featured pillars — collapsible. Caller hides the section
+          entirely when search ≥ 2 chars (the user has expressed
+          topical intent and we want matches above pillars). Otherwise
+          PillarsSection owns its open/closed state. */}
+      {pillars.length > 0 && normalizedSearch.length < 2 && <PillarsSection pillars={pillars} />}
 
-      {/* Cluster grid with category filter */}
+      {/* Cluster grid (filter chips now live in ScopeBar above) */}
       {clusters.length > 0 && (
         <section
-          className="mt-16 border-t border-border pt-12"
+          className="mt-12 border-t border-border pt-10 md:mt-16 md:pt-12"
           data-testid="blog-index-clusters-section"
         >
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2
-                className="text-2xl font-bold tracking-tight md:text-3xl"
-                data-testid="blog-index-clusters-heading"
-              >
-                {t("latest_heading")}
-              </h2>
-              <p
-                className="mt-2 text-sm text-muted-foreground"
-                data-testid="blog-index-clusters-subheading"
-              >
-                {t("category_heading")}
-              </p>
-            </div>
-          </div>
-          <div className="mt-6">
-            <CategoryFilter
-              options={categoryOptions}
-              activeSlug={activeCategory}
-              onChange={handleCategoryChange}
-              totalCount={clusters.length}
-            />
+          <div>
+            <h2
+              className="text-2xl font-bold tracking-tight md:text-3xl"
+              data-testid="blog-index-clusters-heading"
+            >
+              {t("latest_heading")}
+            </h2>
+            <p
+              className="mt-2 text-sm text-muted-foreground"
+              data-testid="blog-index-clusters-subheading"
+            >
+              {t("category_heading")}
+            </p>
           </div>
           {emptyKind !== null ? (
             <BlogSearchEmptyState

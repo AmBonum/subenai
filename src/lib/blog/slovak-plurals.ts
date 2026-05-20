@@ -26,6 +26,11 @@ const FORMS: Record<string, PluralForms> = {
     many: "publikovaných článkov",
   },
   question: { one: "otázka", few: "otázky", many: "otázok" },
+  pillar: {
+    one: "hĺbkový sprievodca",
+    few: "hĺbkoví sprievodcovia",
+    many: "hĺbkových sprievodcov",
+  },
 };
 
 function pickForm(n: number, forms: PluralForms): string {
@@ -44,4 +49,8 @@ export function formatPublishedArticleCount(n: number): string {
 
 export function formatQuestionCount(n: number): string {
   return `${n} ${pickForm(n, FORMS.question)}`;
+}
+
+export function formatPillarCount(n: number): string {
+  return `${n} ${pickForm(n, FORMS.pillar)}`;
 }

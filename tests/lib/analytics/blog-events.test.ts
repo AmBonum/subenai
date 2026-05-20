@@ -11,6 +11,7 @@ import {
   trackBlogScenarioAnswer,
   trackBlogSearch,
   trackBlogShareClick,
+  trackBlogPillarsToggle,
   trackBlogTocClick,
 } from "@/lib/analytics/blog-events";
 
@@ -152,6 +153,19 @@ describe("blog GA4 events", () => {
     expect(gtagSpy).toHaveBeenCalledWith("event", "blog_toc_click", {
       post_slug: "p",
       heading_id: "co-je-phishing",
+      language: "sk",
+    });
+  });
+
+  it("blog_pillars_toggle stringifies open boolean to state:open|closed", () => {
+    trackBlogPillarsToggle({ open: true });
+    expect(gtagSpy).toHaveBeenCalledWith("event", "blog_pillars_toggle", {
+      state: "open",
+      language: "sk",
+    });
+    trackBlogPillarsToggle({ open: false });
+    expect(gtagSpy).toHaveBeenCalledWith("event", "blog_pillars_toggle", {
+      state: "closed",
       language: "sk",
     });
   });

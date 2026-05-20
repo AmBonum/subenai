@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, within } from "@testing-library/react";
-import type { ComponentProps, ReactNode } from "react";
+import { useSyncExternalStore, type ComponentProps, type ReactNode } from "react";
 
 import {
   PILLAR_PHISHING,
@@ -24,6 +24,38 @@ vi.mock("@/lib/blog/queries", async () => {
   };
 });
 
+// Router mock — adds shims for useSearch + useNavigate so the page can
+// read `?cat=` from URL state and write it back on chip clicks. The
+// search state is kept in a tiny external store so React subscribers
+// re-render when navigate updates it (mirrors what TanStack Router
+// does in production).
+type SearchState = { cat?: string };
+let searchState: SearchState = {};
+const listeners = new Set<() => void>();
+const subscribe = (cb: () => void) => {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+};
+const getSnapshot = () => searchState;
+const setSearchState = (next: SearchState) => {
+  searchState = next;
+  listeners.forEach((cb) => cb());
+};
+
+const navigateMock = vi.fn();
+
+function resetRouterState(): void {
+  setSearchState({});
+  navigateMock.mockReset();
+  navigateMock.mockImplementation(
+    (opts: { search?: ((prev: SearchState) => SearchState) | SearchState }) => {
+      const next =
+        typeof opts.search === "function" ? opts.search(searchState) : (opts.search ?? searchState);
+      setSearchState(next);
+    },
+  );
+}
+
 vi.mock("@tanstack/react-router", () => ({
   createLazyFileRoute: () => (opts: unknown) => opts,
   Link: ({ to, children, ...rest }: { to: unknown; children: ReactNode } & ComponentProps<"a">) => (
@@ -31,6 +63,8 @@ vi.mock("@tanstack/react-router", () => ({
       {children}
     </a>
   ),
+  useSearch: () => useSyncExternalStore(subscribe, getSnapshot, getSnapshot),
+  useNavigate: () => navigateMock,
 }));
 
 // Import the route component AFTER mocks so the Link / createLazyFileRoute
@@ -43,6 +77,7 @@ const BlogIndexPage = (Route as unknown as { component: () => React.ReactElement
 
 beforeEach(() => {
   useBlogPostList.mockReset();
+  resetRouterState();
 });
 
 function mockList(
@@ -88,8 +123,11 @@ describe("/blog index — happy paths", () => {
     expect(
       within(section).getByTestId(`blog-post-card-pillar-badge-${PILLAR_PHISHING.slug}`),
     ).toHaveTextContent("sprievodca");
+    // Slovak grammar: 2–4 → "few" form (nominative plural). Previously
+    // the inline ternary used always-genitive ("hĺbkových sprievodcov")
+    // which is grammatically wrong for 3. formatPillarCount fixes that.
     expect(within(section).getByTestId("blog-index-pillars-subheading")).toHaveTextContent(
-      "3 hĺbkových sprievodcov",
+      "3 hĺbkoví sprievodcovia",
     );
   });
 
@@ -291,5 +329,65 @@ describe("/blog index — negative paths", () => {
     expect(screen.getByTestId("blog-index-list").querySelectorAll("li").length).toBe(2);
     expect((screen.getByTestId("blog-search-input") as HTMLInputElement).value).toBe("");
     expect(screen.getByTestId("blog-category-filter-all")).toHaveAttribute("aria-pressed", "true");
+  });
+});
+
+describe("/blog index — redesigned scope bar + URL state", () => {
+  it("TC-20: search input + category chips are grouped inside the ScopeBar surface", () => {
+    mockList([CLUSTER_PHISHING_1, CLUSTER_SMS_1]);
+    render(<BlogIndexPage />);
+    const bar = screen.getByTestId("blog-scope-bar");
+    expect(bar).toHaveAttribute("role", "search");
+    expect(within(bar).getByTestId("blog-search-input")).toBeInTheDocument();
+    expect(within(bar).getByTestId("blog-category-filter-all")).toBeInTheDocument();
+  });
+
+  it("TC-21: clicking a chip writes `?cat=<slug>` via navigate (URL state)", () => {
+    mockList([CLUSTER_PHISHING_1, CLUSTER_SMS_1]);
+    render(<BlogIndexPage />);
+    fireEvent.click(screen.getByTestId("blog-category-filter-phishing-a-emaily"));
+    expect(navigateMock).toHaveBeenCalled();
+    // Verify the latest call wrote `cat: "phishing-a-emaily"` via the
+    // function-form search updater (production: replace=true).
+    const lastCall = navigateMock.mock.calls.at(-1)?.[0] as {
+      search: (prev: SearchState) => SearchState;
+      replace?: boolean;
+    };
+    const next = lastCall.search({});
+    expect(next.cat).toBe("phishing-a-emaily");
+    expect(lastCall.replace).toBe(true);
+  });
+
+  it("TC-22: pre-existing `?cat=` in URL pre-selects the matching chip on mount", () => {
+    setSearchState({ cat: "sms-a-telefon" });
+    mockList([CLUSTER_PHISHING_1, CLUSTER_SMS_1]);
+    render(<BlogIndexPage />);
+    expect(screen.getByTestId("blog-category-filter-sms-a-telefon")).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByTestId("blog-category-filter-all")).toHaveAttribute("aria-pressed", "false");
+    // Cluster grid should already be narrowed to SMS posts.
+    const list = screen.getByTestId("blog-index-list");
+    expect(within(list).queryByTestId(`blog-post-card-${CLUSTER_PHISHING_1.slug}`)).toBeNull();
+    expect(within(list).getByTestId(`blog-post-card-${CLUSTER_SMS_1.slug}`)).toBeInTheDocument();
+  });
+
+  it("TC-23: pillars section renders a collapsible trigger with show/hide aria-label", () => {
+    mockList([PILLAR_PHISHING, PILLAR_SMS]);
+    render(<BlogIndexPage />);
+    const trigger = screen.getByTestId("blog-index-pillars-toggle");
+    // In jsdom (no matchMedia), default is `closed` — trigger advertises
+    // "show" affordance to the user (open the section).
+    expect(trigger).toHaveAttribute("aria-label", "zobraziť sprievodcov");
+    fireEvent.click(trigger);
+    expect(trigger).toHaveAttribute("aria-label", "skryť sprievodcov");
+  });
+
+  it("TC-24: scope bar is omitted entirely when there are zero posts (no empty chips)", () => {
+    mockList([]);
+    render(<BlogIndexPage />);
+    expect(screen.queryByTestId("blog-scope-bar")).toBeNull();
+    expect(screen.getByTestId("blog-index-empty")).toBeInTheDocument();
   });
 });
