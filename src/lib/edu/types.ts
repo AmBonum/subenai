@@ -11,6 +11,13 @@ export interface RespondentRow {
   percentile: number;
   total_time_ms: number;
   created_at: string;
+  /**
+   * Raw `attempts.answers` JSONB. Validate via `parseAnswers()` from
+   * `@/lib/quiz/bank/schema` at the drill-down render boundary (E34 Phase 1).
+   * `null` for historical rows where the column was not yet populated;
+   * the modal then renders the documented fallback.
+   */
+  answers: unknown;
 }
 
 export interface AggregateStats {

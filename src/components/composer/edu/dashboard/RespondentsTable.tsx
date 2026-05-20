@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Eye, Trash2 } from "lucide-react";
 import type { RespondentRow } from "@/lib/edu/types";
 import { tFor } from "@/i18n/quiz";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { RespondentDetailModal } from "./RespondentDetailModal";
 
 type SortKey = "name" | "score" | "created_at";
 type SortDir = "asc" | "desc";
@@ -24,6 +25,10 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
   // the row holds the person's name/email to render in the body; null
   // = dialog closed. The actual destructive call runs on confirm.
   const [confirmTarget, setConfirmTarget] = useState<RespondentRow | null>(null);
+  // E34 Phase 1 — drill-down detail modal target. Same null/row machine
+  // as confirmTarget; render gated on null inside the modal itself so
+  // closing animations play out properly.
+  const [detailTarget, setDetailTarget] = useState<RespondentRow | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -166,16 +171,27 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
                       {new Date(r.created_at).toLocaleDateString("sk-SK")}
                     </td>
                     <td className="px-3 py-2 text-right">
-                      <button
-                        type="button"
-                        data-testid={`resp-table-delete-btn-${r.id}`}
-                        onClick={() => setConfirmTarget(r)}
-                        disabled={pendingDelete === r.id}
-                        aria-label={t("delete_aria", { name: r.respondent_name })}
-                        className="inline-flex items-center justify-center rounded-md border border-border bg-background p-1.5 text-muted-foreground hover:border-destructive hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        <Trash2 className="size-4" aria-hidden />
-                      </button>
+                      <div className="inline-flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          data-testid={`resp-table-detail-btn-${r.id}`}
+                          onClick={() => setDetailTarget(r)}
+                          aria-label={t("detail_button_aria", { name: r.respondent_name })}
+                          className="inline-flex items-center justify-center rounded-md border border-border bg-background p-1.5 text-muted-foreground hover:border-primary hover:text-primary"
+                        >
+                          <Eye className="size-4" aria-hidden />
+                        </button>
+                        <button
+                          type="button"
+                          data-testid={`resp-table-delete-btn-${r.id}`}
+                          onClick={() => setConfirmTarget(r)}
+                          disabled={pendingDelete === r.id}
+                          aria-label={t("delete_aria", { name: r.respondent_name })}
+                          className="inline-flex items-center justify-center rounded-md border border-border bg-background p-1.5 text-muted-foreground hover:border-destructive hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <Trash2 className="size-4" aria-hidden />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -208,6 +224,8 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
           }
         }}
       />
+
+      <RespondentDetailModal row={detailTarget} onClose={() => setDetailTarget(null)} />
     </section>
   );
 }

@@ -11,6 +11,9 @@ const sample = (over: Partial<RespondentRow> = {}): RespondentRow => ({
   percentile: 75,
   total_time_ms: 123_456,
   created_at: "2026-05-01T08:00:00.000Z",
+  // E34 Phase 1 — `answers` is part of the contract. `null` here because
+  // rowsToCsv() doesn't consume it (CSV stays at aggregate level by design).
+  answers: null,
   ...over,
 });
 
