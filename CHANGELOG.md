@@ -10,6 +10,15 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
+- **Export CSV pre žiadosti GDPR (DSR) aj DPA žiadosti + vyhľadávanie
+  v DSR fronte.** V admin paneli na `/admin/dsr` aj `/admin/dpa-requests`
+  pribudlo tlačidlo *Export CSV* — vyexportuje aktuálne odfiltrovanú
+  vzorku (BOM + RFC 4180 escape, takže Excel správne zobrazí slovenské
+  znaky aj polia s čiarkami či úvodzovkami). Auditovateľne pre GDPR
+  čl. 30 (záznamy o spracovateľských činnostiach) a čl. 28 ods. 9
+  (písomné dohody so sprostredkovateľmi). V DSR fronte pribudlo aj
+  vyhľadávanie podľa e-mailu alebo poznámky — predtým bolo len v
+  DPA fronte.
 - **DPA žiadosti v admin paneli a v prehľade.** Žiadosti o spracovateľskú
   zmluvu (DPA) zo `/schools/dpa` teraz vidíš priamo z bočného menu admin
   konzoly — pribudla položka *DPA žiadosti* (a popri nej *Žiadosti
