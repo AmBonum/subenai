@@ -280,6 +280,9 @@
   },
   "composition": {
     "meta_title": "Zdieľaný test — subenai",
+    "og_title_with_creator": "Test od {creator} — 5 minút · subenai",
+    "og_title_fallback": "Test bezpečnosti — 5 minút · subenai",
+    "og_description": "Vieš rozpoznať podvod? Otestuj sa za 5 minút. Bez registrácie, anonymné výsledky.",
     "loading": "Načítavam zostavu…",
     "not_found_title": "Test nenájdený",
     "not_found_body": "Tento odkaz neukazuje na žiadnu zostavu. Mohol byť odstránený alebo URL je preklepnuté.",

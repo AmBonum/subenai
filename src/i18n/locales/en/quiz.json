@@ -280,6 +280,9 @@
   },
   "composition": {
     "meta_title": "Shared test — subenai",
+    "og_title_with_creator": "Test from {creator} — 5 minutes · subenai",
+    "og_title_fallback": "Security test — 5 minutes · subenai",
+    "og_description": "Can you spot a scam? Take the test in 5 minutes. No signup, anonymous results.",
     "loading": "Loading set…",
     "not_found_title": "Test not found",
     "not_found_body": "This link doesn't point to any set. It may have been removed or the URL is mistyped.",
