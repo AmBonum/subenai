@@ -64,7 +64,11 @@ describe("SiteHeader auth-aware nav (E36 A2: avatar+dropdown)", () => {
     render(<SiteHeader />);
     const trigger = screen.getByTestId("header-user-menu-trigger");
     expect(trigger).toBeInTheDocument();
-    expect(trigger).toHaveAttribute("aria-label", "Otvoriť menu používateľa");
+    // E36 C1: aria-label embeds the signed-in user's name (WCAG 4.1.2)
+    // when the profile has resolved. The generic fallback
+    // "Otvoriť menu používateľa" only shows pre-resolution or when no
+    // display_name/email is available.
+    expect(trigger).toHaveAttribute("aria-label", "Menu používateľa: Lubo Test");
     expect(screen.getByTestId("header-user-menu-avatar")).toHaveTextContent("LT");
   });
 
