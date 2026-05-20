@@ -157,4 +157,32 @@ describe("POST /api/dpa-request", () => {
     expect(r.status).toBe(500);
     expect(((await r.json()) as { error: string }).error).toBe("supabase_not_configured");
   });
+
+  it("500 insert_failed surfaces the Postgres error code in `reason`", async () => {
+    // PostgREST returns an error envelope with a `code` like '42P01' when
+    // the table doesn't exist. Mock that shape and assert the handler
+    // surfaces the code (not the human message) on the 500 response.
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+      const url = typeof input === "string" ? input : (input as Request).url;
+      if (url.includes("turnstile/v0/siteverify")) {
+        return new Response(JSON.stringify({ success: true }), { status: 200 });
+      }
+      if (url.includes("/rest/v1/dpa_requests")) {
+        return new Response(
+          JSON.stringify({
+            code: "42P01",
+            message: 'relation "dpa_requests" does not exist',
+            details: null,
+          }),
+          { status: 404, headers: { "content-type": "application/json" } },
+        );
+      }
+      return new Response("not stubbed", { status: 500 });
+    });
+    const r = await onRequestPost({ request: buildRequest(validBody), env });
+    expect(r.status).toBe(500);
+    const body = (await r.json()) as { error: string; reason: string };
+    expect(body.error).toBe("insert_failed");
+    expect(body.reason).toBe("42P01");
+  });
 });

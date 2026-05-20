@@ -176,8 +176,20 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     .single();
 
   if (insertError || !inserted) {
-    console.error("dpa-request insert failed", { message: insertError?.message });
-    return jsonResponse(500, { error: "insert_failed" });
+    // PostgrestError exposes `code` (5-char PG SQLSTATE like 42P01) and a
+    // human-readable `message`. Log both server-side; surface ONLY the
+    // sanitised code to the client so debugging the initial go-live
+    // (table missing, wrong project, RLS misconfig) does not require
+    // diving into Cloudflare Pages real-time logs. The message itself
+    // can leak schema details so we never return it.
+    type PostgrestError = { code?: string; message?: string; details?: string };
+    const pgErr = insertError as PostgrestError | null;
+    console.error("dpa-request insert failed", {
+      code: pgErr?.code,
+      message: pgErr?.message,
+      details: pgErr?.details,
+    });
+    return jsonResponse(500, { error: "insert_failed", reason: pgErr?.code ?? "unknown" });
   }
 
   return jsonResponse(200, {
