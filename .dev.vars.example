@@ -31,11 +31,13 @@ STRIPE_WEBHOOK_SECRET=whsec_replace_me
 # Unset   = accept either (legacy permissive default).
 EXPECTED_LIVEMODE=false
 
-# --- Supabase (E10.3 webhook needs service role) ----------------------------
+# --- Supabase (E10.3 webhook needs service role; E44 precheck needs both) ---
 # Service role key bypasses RLS — NEVER ship to the client bundle.
-# Get from Supabase Dashboard → Project Settings → API → service_role key.
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=eyJ_replace_me
+# Anon key is needed by E44 precheck to verify caller JWT (matches the
+# value of VITE_SUPABASE_ANON_KEY in .env — anon is designed to be public).
+# Get both from Supabase Dashboard → Project Settings → API.
+SUPABASE_ANON_KEY=eyJ_replace_me_anon
+SUPABASE_SERVICE_ROLE_KEY=eyJ_replace_me_service_role
 
 # --- Cloudflare Turnstile (E11.4 portal magic link verification) ------------
 # Server-side secret used to validate the token the browser submits with the
@@ -65,3 +67,27 @@ JWT_SECRET=replace_me_with_64_hex_chars
 
 # --- Site (informational; used in absolute URLs from server functions) ------
 SITE_ORIGIN=https://subenai.sk
+
+# --- Anthropic — Claude Haiku 4.5 precheck (E44.7) --------------------------
+# Used by functions/api/templates/precheck.ts to call the AI moderator on
+# user-submitted public templates. Get from https://console.anthropic.com
+# → Settings → API Keys. Use a workspace-scoped key (workspace = "subenai")
+# so cost tracking is isolated. Rotate quarterly; mark as "Secret" / Encrypt
+# in CF Pages dashboard so it doesn't leak in build logs.
+ANTHROPIC_API_KEY=sk-ant-api03-replace_me
+
+# Hard daily ceiling — below this all prechecks return 503 budget_exhausted.
+# Default 5 USD covers ~1500 cold-path / 2500 warm-path submissions per day.
+PRECHECK_DAILY_BUDGET_USD=5.00
+
+# Per-user per-day quota (anti-spam). 6th submission/day → 429.
+PRECHECK_PER_USER_PER_DAY=5
+
+# Global per-hour ceiling across all users (anti-storm) → 429.
+PRECHECK_PER_HOUR_GLOBAL=100
+
+# Per-IP per-hour ceiling (anti-bot). Cheapest first gate before user quota.
+PRECHECK_PER_IP_PER_HOUR=20
+
+# Model id override. Default matches tasks/E44-appendix-C.md § 1.
+PRECHECK_MODEL_ID=claude-haiku-4-5-20251001
