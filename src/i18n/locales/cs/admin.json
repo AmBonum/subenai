@@ -24,6 +24,8 @@
       "header": "Hlavička",
       "footer": "Patička",
       "blog": "Blog",
+      "dsr": "Žádosti GDPR",
+      "dpa_requests": "DPA žádosti",
       "settings": "Nastavení",
       "security": "Zabezpečení"
     },
@@ -38,6 +40,7 @@
     "stat_tests": "Testy",
     "stat_sessions": "Sezení",
     "stat_dsr_pending": "Čekající DSR",
+    "stat_dpa_pending": "Otevřené DPA",
     "recent_activity_title": "Nejnovější aktivita",
     "recent_activity_description": "Poslední události napříč platformou."
   },

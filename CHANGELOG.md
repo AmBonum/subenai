@@ -10,6 +10,17 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
+- **DPA žiadosti v admin paneli a v prehľade.** Žiadosti o spracovateľskú
+  zmluvu (DPA) zo `/schools/dpa` teraz vidíš priamo z bočného menu admin
+  konzoly — pribudla položka *DPA žiadosti* (a popri nej *Žiadosti
+  GDPR*, ktorá doteraz tiež nemala odkaz v menu). Na hlavnej dashboard
+  stránke `/admin` pribudla dlaždica *Otvorené DPA*, ktorá ukazuje
+  počet žiadostí so statusom *Čaká na vybavenie* alebo *Doručené* —
+  rovnaký princíp ako *Čakajúce DSR* vedľa nej. V riadku každej DPA
+  žiadosti je nové tlačidlo *Stiahnuť PDF*, ktoré v prehliadači
+  okamžite vyrobí znova presne to isté PDF, čo dostala škola pri
+  podaní (vrátane pôvodného dátumu — kvôli auditovateľnosti podľa
+  čl. 28 ods. 9 GDPR), bez akéhokoľvek e-mailu navyše.
 - **Automatizovaný DPA tok pre školy — `/schools/dpa`.** Doteraz „Napíš
   nám — dostaneš DPA do 1 pracovného dňa" otváral e-mailového klienta
   a operator ručne posielal PDF. Teraz na `/schools` klikneš na zelený

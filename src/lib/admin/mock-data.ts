@@ -369,6 +369,7 @@ export const dashboardStats = {
   total_tests: 42,
   total_sessions: 1284,
   pending_dsr: 3,
+  pending_dpa: 2,
 };
 
 export const mockAdminActivity: AdminActivityEvent[] = [

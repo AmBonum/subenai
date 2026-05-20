@@ -59,4 +59,14 @@ describe("AdminSidebar", () => {
     expect(screen.getByTestId("admin-shell-sidebar-link-trainings")).toBeInTheDocument();
     expect(screen.getByTestId("admin-shell-sidebar-link-categories")).toBeInTheDocument();
   });
+
+  it("surfaces governance routes (DSR + DPA) in the Systém group", () => {
+    // E40 close-out — both /admin/dsr and /admin/dpa-requests existed in
+    // the router but had no sidebar entry, so they were effectively
+    // hidden. Lock the discoverability here so a future refactor that
+    // drops them shows up in CR.
+    renderSidebar();
+    expect(screen.getByTestId("admin-shell-sidebar-link-dsr")).toBeInTheDocument();
+    expect(screen.getByTestId("admin-shell-sidebar-link-dpa-requests")).toBeInTheDocument();
+  });
 });

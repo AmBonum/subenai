@@ -20,13 +20,14 @@ type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
 
 describe("/admin index dashboard", () => {
-  it("renders the page header and four stat cards", () => {
+  it("renders the page header and five stat cards (incl. DPA + DSR)", () => {
     render(<Page />);
     expect(screen.getByTestId("admin-dashboard-page-header-root")).toBeInTheDocument();
     expect(screen.getByTestId("admin-stat-card-users")).toBeInTheDocument();
     expect(screen.getByTestId("admin-stat-card-tests")).toBeInTheDocument();
     expect(screen.getByTestId("admin-stat-card-sessions")).toBeInTheDocument();
     expect(screen.getByTestId("admin-stat-card-dsr-pending")).toBeInTheDocument();
+    expect(screen.getByTestId("admin-stat-card-dpa-pending")).toBeInTheDocument();
   });
 
   it("renders the recent activity card with seeded rows", () => {
