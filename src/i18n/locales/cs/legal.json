@@ -156,8 +156,8 @@
       "self_service_code": "/r/abc123",
       "self_service_suffix": ") a kliknout na tlačítko „Smazat tento výsledek\" ve spodní části stránky. Řádek je okamžitě fyzicky vymazán z databáze a sdílecí odkaz přestane existovat. Bez e-mailové komunikace, bez čekání.",
       "retention_label": "Automatická retence:",
-      "retention_prefix": " Naše databáze má naplánovanou denní úlohu (Postgres pg_cron, běží 03:17 UTC), která fyzicky vymaže záznamy starší než 36 měsíců. Doba se neresetuje žádnou aktivitou — počítá se od původního vytvoření pokusu. Tato pravidla jsou zapsána přímo v migracích (",
-      "retention_code": "20260426110000_*",
+      "retention_prefix": " Spouštíme naplánovanou denní úlohu v 03:00 UTC, která (a) fyzicky vymaže pokusy starší než 36 měsíců, (b) anonymizuje anti-cheat údaje u pokusů starších než 12 měsíců a (c) v edu režimu anonymizuje jméno + e-mail respondenta po 12 měsících. Doba se neresetuje žádnou aktivitou — počítá se od původního vytvoření pokusu. Tato pravidla jsou zapsána v migracích (",
+      "retention_code": "20260426110000_*, 20260521120000_*, 20260521130000_*",
       "retention_suffix": ") a nejsou doporučením."
     },
     "s6": {

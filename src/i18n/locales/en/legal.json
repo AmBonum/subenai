@@ -156,8 +156,8 @@
       "self_service_code": "/r/abc123",
       "self_service_suffix": ") and click the \"Delete this result\" button at the bottom of the page. The row is immediately and physically deleted from the database and the share link ceases to exist. No email correspondence, no waiting.",
       "retention_label": "Automatic retention:",
-      "retention_prefix": " Our database has a scheduled daily job (Postgres pg_cron, runs 03:17 UTC) that physically deletes records older than 36 months. The duration does not reset on activity — it is counted from the original creation of the attempt. These rules are written directly into the migrations (",
-      "retention_code": "20260426110000_*",
+      "retention_prefix": " A scheduled daily job runs at 03:00 UTC which (a) physically deletes attempts older than 36 months, (b) anonymises anti-cheat data on attempts older than 12 months, and (c) in edu mode anonymises the respondent's name + email after 12 months. The duration does not reset on activity — it is counted from the original creation of the attempt. These rules are written into the migrations (",
+      "retention_code": "20260426110000_*, 20260521120000_*, 20260521130000_*",
       "retention_suffix": ") and are not a recommendation."
     },
     "s6": {
