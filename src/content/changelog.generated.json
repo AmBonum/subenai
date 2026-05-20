@@ -1,5 +1,224 @@
 [
   {
+    "version": "1.12.0",
+    "date": "2026-05-20",
+    "added": [
+      "**Stiahnutie tvojich údajov (GDPR čl. 15 / čl. 20).** Na *Môj profil*",
+      "**Transparentnostný register transferov.** Nový verejný JSON",
+      "**Detail jedného respondenta v dashboarde edukačných testov.**",
+      "**Politika retencie pre free-tier účty.** Účty, ktoré sa neprihlásili",
+      "**Rešpekt voči *Do Not Track* a *Global Privacy Control*.** Keď má"
+    ],
+    "changed": [
+      "**Tvorba testov dostala kratšiu adresu a redizajnovaný editor.**",
+      "**`/app` je teraz plne responzívny od 320 px.** Predtým sa pri",
+      "**CSV export edu výsledkov má teraz GDPR hlavičku.** Súbor začína",
+      "**Akadémia — prehľadnejšie filtrovanie a navigácia.** Filter podľa",
+      "**Konfirmačné dialógy v tvorbe testov a edukačnom móde sú dizajnované.**",
+      "**Hlavička a odhlásenie.** Hlavička dostala vizuálnu kalibráciu",
+      "**Cookie banner sa znova zobrazí (verzia súhlasu 1.5.0 → 1.6.0).**"
+    ],
+    "fixed": [
+      "**`/test/builder/<id>` ukazoval editor namiesto výsledkov.** Kto si",
+      "**404 stránka ukazovala technické kľúče.** V niektorých prípadoch",
+      "**Klikateľnosť pilierov v Akadémii.** Klik na pilier v zbalenom"
+    ],
+    "removed": [],
+    "deprecated": [],
+    "security": []
+  },
+  {
+    "version": "1.11.1",
+    "date": "2026-05-20",
+    "added": [
+      "**`/tests` kompletný redizajn** — nový H1 *„Otestuj svoju branžu.",
+      "**`/courses` kompletný redizajn** — paralelný refresh: nový H1",
+      "**„Učenie pred testom\" prúžok na `/tests`** — pod FAQ sa zobrazia",
+      "**„Súvisiace v akadémii\" karta na detaile sady testov** — na",
+      "**FAQ sekcie sú teraz *senior-level*** — na `/tests` aj `/courses`:",
+      "**Featured karta v mega-menu** (rozbalená *Sady testov* alebo",
+      "**Zdieľaný výsledok testu (`/r/<id>`)** ukáže na Messenger / Slack /"
+    ],
+    "changed": [
+      "**Filter na `/tests`** sa volá teraz *„Pre koho je test:\"*",
+      "**Úvodný text `/courses`** vysvetľuje formát: *„Každé školenie"
+    ],
+    "fixed": [],
+    "removed": [],
+    "deprecated": [],
+    "security": []
+  },
+  {
+    "version": "1.11.0",
+    "date": "2026-05-19",
+    "added": [
+      "**`/schools` kompletne prerobená** — kicker, outcome-first H1",
+      "**Sprievodca pre učiteľov v Akadémii** — nový pillar článok",
+      "**„Obsah\" navigácia** na ľavej strane všetkých dlhých právnych",
+      "**GDPR samoobsluha** zvýraznená — žiadosť o prístup, opravu,",
+      "**Cookies — vidieť aktuálny stav súhlasu** — limetková karta s",
+      "**Pridaná zmienka o DNT a Global Privacy Control** v sekcii",
+      "**„Časté otázky o projekte\" na `/o-projekte`** — kto za subenai",
+      "**`/app/pomoc` — rýchle linky** do dokumentácie (*Ochrana",
+      "**404 stránka prerobená** — namiesto holého čísla 404 dostaneš"
+    ],
+    "changed": [
+      "**`/o-projekte`** — referencie na *„/changelog\"* a *„/sponsors\"*,"
+    ],
+    "fixed": [],
+    "removed": [],
+    "deprecated": [],
+    "security": []
+  },
+  {
+    "version": "1.10.0",
+    "date": "2026-05-19",
+    "added": [
+      "**Akadémia** v hlavičke — nová sekcia *„Sprievodcovia a návody —",
+      "**Domovská FAQ je dvojúrovňová** — kategórie sa najprv ukážu",
+      "**„Pre koho je subenai\"** na home — štyri persony (bežní ľudia,",
+      "**„Tvoja cesta učenia\"** na home — tri kroky (otestuj sa →",
+      "**Karta „Pre školy\"** zvýraznená na home (limetková farba pre B2B",
+      "**Teaser zmien** nad pätou — odkaz na `/zmeny` s ikonou „nové\".",
+      "**Po článku ti odporučíme školenie** — pod každým pillar článkom",
+      "**V školení ti odporučíme sprievodcu** — pod každým školením, ku",
+      "**Vo výsledkoch testu ti odporučíme aj školenie aj článok** — pre"
+    ],
+    "changed": [
+      "**Vyhľadávanie v Akadémii** — pri písaní v search baru sa skryjú",
+      "**Päta stránky** je teraz na všetkých relevantných podstránkach"
+    ],
+    "fixed": [],
+    "removed": [],
+    "deprecated": [],
+    "security": []
+  },
+  {
+    "version": "1.9.0",
+    "date": "2026-05-19",
+    "added": [
+      "**Mega-menu hlavička** — kategórie *Rýchly test · Sady testov ·",
+      "**Pre školy a lektorov** povýšené z päty na top-nav — najsilnejší",
+      "**/app onboarding** — pri prvom prihlásení 3 voliteľné otázky",
+      "**Týždenný súhrn** — každý pondelok ráno pošleme prehľad",
+      "**Odporúčané kurzy** — ak respondenti zaostávajú v téme, lektor",
+      "**Pripomienky retestov** — 90 dní po teste pripomenieme, aby si",
+      "**Porovnanie s ostatnými** (peer card) — anonymné porovnanie tvojej",
+      "**Zdieľateľný obrázok** — z `/app/peer` si stiahneš PNG (1200×630)",
+      "**/app sidebar** prerobený — z plochého zoznamu 14 položiek na",
+      "**Účet zlúčený** — profil, bezpečnosť a GDPR žiadosti teraz tabmi",
+      "**2FA prihlasovacie pole** s 6 samostatnými slotmi (autosubmit pri",
+      "**Brand v sidebare** — *„SubenAI · Pre lektorov\"*."
+    ],
+    "changed": [
+      "Logo v hlavičke sa pri stredných šírkach zmenšuje na `S` ikonu —",
+      "Prepínač jazyka dočasne skrytý. Slovenčina je predvolený jazyk;"
+    ],
+    "fixed": [
+      "Rozbitý odkaz `/docs` v sidebare (404).",
+      "Dvojitá hlavička na `/app` (renderovala sa dvakrát).",
+      "Krátky prázdny render na `/auth/reset-password` po načítaní odkazu",
+      "Nefunkčný *Preview* button pri šablónach (dočasne zakázaný)."
+    ],
+    "removed": [],
+    "deprecated": [],
+    "security": []
+  },
+  {
+    "version": "1.8.0",
+    "date": "2026-05-19",
+    "added": [
+      "**Prepínač jazyka** — `🇸🇰 Slovenčina / 🇬🇧 English / 🇨🇿 Čeština`",
+      "**Anglická a česká verzia všetkých stránok** — domov, sada testov,",
+      "**Kultúrne lokalizované scam scenáre** — všetkých 238 otázok má"
+    ],
+    "changed": [],
+    "fixed": [],
+    "removed": [],
+    "deprecated": [],
+    "security": [
+      "Žiadne. Lokalizácia je čisto prezentačná vrstva — obsah otázok"
+    ]
+  },
+  {
+    "version": "1.7.0",
+    "date": "2026-05-18",
+    "added": [
+      "**/signup** — verejná stránka registrácie e-mailom a heslom.",
+      "**Prihlásenie cez Google** — tlačidlo „Pokračovať cez Google\"",
+      "**/forgot-password** — formulár pre vyžiadanie obnovy hesla.",
+      "**/auth/reset-password** — stránka pre nastavenie nového hesla",
+      "**Doplnenie profilu** — nový používateľ, ktorému Google nedal plné"
+    ],
+    "changed": [],
+    "fixed": [],
+    "removed": [],
+    "deprecated": [],
+    "security": [
+      "Heslá nikdy neopúšťajú tvoj prehliadač v čitateľnej forme."
+    ]
+  },
+  {
+    "version": "1.5.0",
+    "date": "2026-05-18",
+    "added": [
+      "**Skutočná perzistencia respondentských odpovedí.** Odpovede z",
+      "**Verejné vypĺňanie testu cez odkaz** (`/t/<id>`) — anonymný",
+      "**Verejné CMS stránky** (`/s/<slug>`) — redakčne vytvorené stránky",
+      "**Odkaz „Moje testy\" v hlavičke a stĺpec „Platforma\" v päte** —",
+      "**Nový autentifikovaný workspace** na `/app` — prihlásení",
+      "**Dashboard na `/app`** — štyri prehľadové karty (aktívne testy,",
+      "**Moja história** (`/app/history`) — chronologická časová os",
+      "**Moje testy** (`/app/tests`) — prehľad všetkých tvojich testov s",
+      "**Sprievodca novým testom** (`/app/tests/new`) — štvorkrokový",
+      "**Detail testu** (`/app/tests/<id>`) — editor jedného testu s",
+      "**Šablóny testov** (`/app/templates`) — prehľadávateľná knižnica",
+      "**Skupiny respondentov** (`/app/audiences`) — tagované cohorty s",
+      "**Knižnica otázok pre tvorcov testov** (`/app/library`) —",
+      "**Detail sady odpovedí** (`/app/sets/$setId`) — read-only náhľad",
+      "**Účet** (`/app/account/profile`, `/app/account/security`) —",
+      "**Dvojfaktorové overenie (2FA) pre tvoj účet.** V *Účet →",
+      "**Tímy, notifikácie a centrum pomoci** v `/app` — prehľady, akcie",
+      "**GDPR žiadosť priamo v aplikácii** (`/app/legal/dsr`) — prihlásený",
+      "**Prihlasovacia stránka** na `/login` — e-mail + heslo. Slúži ako",
+      "Možnosť **podporiť projekt** jednorazovo alebo mesačne. Faktúru dostaneš e-mailom; mesačný odber zrušíš kedykoľvek jediným klikom v Stripe Customer Portal.",
+      "Stránka **O projekte** — cieľ, prečo sponsorship namiesto členstva, kam idú peniaze.",
+      "Verejný **zoznam sponzorov**, ktorí pri podpore zaškrtli súhlas so zverejnením mena. Anonymita je default.",
+      "Stránka **Spravovať podporu** — pošleme ti na e-mail magic-link na Stripe Customer Portal pre prípad, že si stratil/a potvrdzujúci e-mail.",
+      "Verejný changelog (toto stránka).",
+      "**6 ďalších školení** — AI a deepfake podvody, QR / quishing, krádež kont na sociálnych sieťach, podvody pri nábore do práce, fyzické podvody (skimming, fake POS), tipy ako chrániť seniorov a deti. Spolu je teraz dostupných **14 školení**.",
+      "**Demografické testy** popri firemných balíkoch — *Žiaci do 16*, *Študenti*, *Seniori* a *Všeobecný test*. Každý má vlastný výber otázok primeraný cieľovej skupine.",
+      "**Filter kategórií** na stránke *Školenia* — môžeš si zobraziť iba školenia o phishingu, scenároch alebo URL.",
+      "**FAQ sekcia** na úvodnej stránke s odpoveďami na najčastejšie otázky o teste, anonymite a podpore.",
+      "Po dokončení testu sa **úvodný titulok prispôsobuje skóre** — pre slabší výsledok motivačný tón, pre vysoký pochvalný.",
+      "**15 nových otázok** zameraných na konkrétne odvetvia a vekové skupiny (študenti, seniori, žiaci).",
+      "**20 nových otázok pre rozpoznávanie legitímnych SMS** od Slovenskej pošty, bánk a úradov (BalikoBOX kódy, 3D Secure, OTP, slovensko.sk, ePN) — učia rozlíšiť pravú správu od scamu, aby si neodignoroval/a dôležité doručenie.",
+      "**13 nových otázok pre konkrétne odvetvia** — e-shopy (BEC, IBAN-switch, fake reklamácia, account takeover), gastro (kompromitovaný POS terminál, fake supplier, malware v prílohe rezervácie), autoservisy (fake VIN check, fake reklamácia po oprave), pneuservisy (WhatsApp predfaktúra) a IT/dev (npm supply-chain, OAuth phishing, fake recruiter assignment).",
+      "**30 nových otázok typu „vyzerá podozrivo, ale je legit\"** — emaily od bánk, hovory polície / fraud teamu / lekára, pozostalostné inzeráty, transakčné SMS od Boltu / Woltu / Apple. Učia rozoznať, kedy je urgentný tón naozaj legitímny.",
+      "Stránka **Kontakt** s priamym linkom na `subenai.podpora@gmail.com` a 6 prednastavenými témami (technická pomoc, GDPR, sponzorstvo, spolupráca…). Odpovedáme typicky do 2 pracovných dní.",
+      "**Education mode** — autori vzdelávacích testov si v editore testov môžu zapnúť zber odpovedí s menom a e-mailom respondenta a chrániť výsledky vlastným heslom. *Ako respondent edu testu: kontrolórom tvojich údajov je autor testu, my (am.bonum) sme len sprostredkovateľ podľa čl. 28 GDPR.*",
+      "**Edu mód v editore testov** — v editore pribudol prepínač „Zbierať odpovede s menom a e-mailom\" so silným heslom autora (originál hesla neukladáme nikde). Po vytvorení testu sa zobrazí potvrdzovacie okno s linkom pre respondentov, linkom na výsledky a heslom — autor musí explicitne odkliknúť, že si ich uložil, predtým ako sa dialóg zatvorí (žiadny reset cez e-mail).",
+      "**Respondent intake pred edu testom** — keď autor zapne edu mód, respondent (študent / kolega) musí pred štartom zadať meno, e-mail a explicitne odsúhlasiť spracovanie osobných údajov (čl. 6 ods. 1 písm. a GDPR). Disclosure paragraf vidí kto je autor, kam idú údaje a 12-mesačnú dobu uchovávania. Prístup k zadávaniu je chránený proti automatizovanému zneužitiu.",
+      "**Dashboard výsledkov pre autora edu testu** — autor zadá svoje heslo a uvidí súhrn (priemer, medián, min/max, distribúciu skóre, pass rate) plus tabuľku respondentov so zoradením, vyhľadávaním a možnosťou jedným klikom zmazať konkrétneho respondenta. **CSV export** so slovenskou diakritikou pre analýzu v Exceli.",
+      "**Stránka „Pre školy a vzdelávacie inštitúcie\"** ([/skoly](skoly)) — návod ako pripraviť edu test, zdieľať link a pozrieť výsledky. Vysvetľuje GDPR rolu autora (kontrolór) a am.bonum (sprostredkovateľ podľa čl. 28 GDPR), retention politiku, a obsahuje vzor e-mailu pre respondentov + FAQ. Link v päte stránky."
+    ],
+    "changed": [
+      "**Používateľská doména napojená na živú databázu** — stránky `/app/*` (dashboard, testy, audiencie, šablóny, notifikácie, tímy, profil, GDPR formulár, história) teraz čítajú a zapisujú dáta priamo z produkčnej databázy. Každý používateľ vidí iba vlastné dáta.",
+      "**Identifikácia prevádzkovateľa** v zásadách ochrany súkromia — projekt teraz transparentne vystupuje ako am.bonum s. r. o. (predtým fyzická osoba). Cookie banner sa znova zobrazil, aby si mohol/a aktualizovať svoj súhlas pod správnu entitu.",
+      "**Súkromie** — pridaná samostatná sekcia *„Education mode\"* (zber edu odpovedí, role kontrolór/sprostredkovateľ, doba uchovávania 12 mesiacov). Cookie banner sa znova zobrazí, aby si súhlas potvrdil/a pod novú verziu zásad (1.3.0).",
+      "Texty na stránkach **O projekte**, **Cookies** a **Súkromie** o trackingu: sformulované tak, aby boli zrozumiteľné a konzistentné s tým, čo cookie banner naozaj robí — analytika a marketing sa zapnú **iba so súhlasom**.",
+      "V hlavičke stránky pribudol odkaz **Podporiť projekt**; v päte stránky **Sponzori**, **Zmeny** a **Kontakt**.",
+      "Firemné testy presunuté z `/test/firma/...` na kratší a zrozumiteľnejší **`/testy/...`**. Staré linky redirectujú.",
+      "Projekt presťahovaný na vlastnú doménu **subenai.sk**."
+    ],
+    "fixed": [
+      "Drobná chyba pri prepínaní medzi rôznymi testami: po dokončení jedného testu sa pri kliknutí na iný niekedy zobrazil starý výsledok. Teraz sa každý test začne čisto od prvej otázky."
+    ],
+    "removed": [],
+    "deprecated": [],
+    "security": []
+  },
+  {
     "version": "1.4.0",
     "date": "2026-04-26",
     "added": [],
