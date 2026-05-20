@@ -4097,6 +4097,112 @@ INSERT INTO public.templates (
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
+-- E44.6 — Template submissions (mirror of 20260521150000_template_submissions.sql)
+-- ============================================================================
+
+DO $$
+BEGIN
+  CREATE TYPE public.template_submission_status AS ENUM (
+    'pending',
+    'approved',
+    'rejected',
+    'withdrawn'
+  );
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
+
+CREATE TABLE IF NOT EXISTS public.template_submissions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  template_id uuid NOT NULL REFERENCES public.templates(id) ON DELETE CASCADE,
+  author_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  author_display_name text NOT NULL,
+  age_rating_declared public.template_age_rating NOT NULL,
+  license public.template_license NOT NULL DEFAULT 'cc-by-4.0',
+  status public.template_submission_status NOT NULL DEFAULT 'pending',
+  precheck jsonb,
+  precheck_passed boolean,
+  precheck_at timestamptz,
+  rejection_reason text,
+  reviewed_at timestamptz,
+  reviewer_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+  submitted_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE public.template_submissions ENABLE ROW LEVEL SECURITY;
+
+CREATE INDEX IF NOT EXISTS template_submissions_template_idx
+  ON public.template_submissions (template_id, submitted_at DESC);
+CREATE INDEX IF NOT EXISTS template_submissions_author_idx
+  ON public.template_submissions (author_id, submitted_at DESC);
+CREATE INDEX IF NOT EXISTS template_submissions_admin_queue_idx
+  ON public.template_submissions (status, submitted_at)
+  WHERE status = 'pending';
+
+CREATE OR REPLACE FUNCTION public.touch_template_submissions_updated_at()
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path = public, pg_temp
+AS $$
+BEGIN
+  NEW.updated_at := now();
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS template_submissions_touch_updated_at ON public.template_submissions;
+CREATE TRIGGER template_submissions_touch_updated_at
+  BEFORE UPDATE ON public.template_submissions
+  FOR EACH ROW EXECUTE FUNCTION public.touch_template_submissions_updated_at();
+
+CREATE OR REPLACE FUNCTION public.forbid_template_submission_illegal_transitions()
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path = public, pg_temp
+AS $$
+BEGIN
+  IF OLD.status = NEW.status THEN
+    RETURN NEW;
+  END IF;
+  IF OLD.status = 'pending' AND NEW.status IN ('approved', 'rejected', 'withdrawn') THEN
+    RETURN NEW;
+  END IF;
+  IF OLD.status = 'rejected' AND NEW.status = 'pending' THEN
+    RETURN NEW;
+  END IF;
+  RAISE EXCEPTION 'template_submissions: illegal status transition % -> %', OLD.status, NEW.status;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS template_submissions_forbid_illegal_transitions
+  ON public.template_submissions;
+CREATE TRIGGER template_submissions_forbid_illegal_transitions
+  BEFORE UPDATE OF status ON public.template_submissions
+  FOR EACH ROW EXECUTE FUNCTION public.forbid_template_submission_illegal_transitions();
+
+DROP POLICY IF EXISTS template_submissions_author_read ON public.template_submissions;
+CREATE POLICY template_submissions_author_read ON public.template_submissions
+  FOR SELECT TO authenticated
+  USING (author_id = auth.uid());
+
+DROP POLICY IF EXISTS template_submissions_author_insert ON public.template_submissions;
+CREATE POLICY template_submissions_author_insert ON public.template_submissions
+  FOR INSERT TO authenticated
+  WITH CHECK (author_id = auth.uid());
+
+DROP POLICY IF EXISTS template_submissions_author_withdraw ON public.template_submissions;
+CREATE POLICY template_submissions_author_withdraw ON public.template_submissions
+  FOR UPDATE TO authenticated
+    USING (author_id = auth.uid() AND status = 'pending')
+    WITH CHECK (author_id = auth.uid());
+
+DROP POLICY IF EXISTS template_submissions_admin_all ON public.template_submissions;
+CREATE POLICY template_submissions_admin_all ON public.template_submissions
+  FOR ALL TO authenticated
+    USING (public.has_role(auth.uid(), 'admin'))
+    WITH CHECK (public.has_role(auth.uid(), 'admin'));
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT
