@@ -251,8 +251,6 @@ export function DpaTemplate(props: DpaTemplateProps) {
     >
       {/* ===================== STRANA 1 — Preambula ===================== */}
       <Page size="A4" style={styles.page} wrap>
-        {isDraft ? <Watermark /> : null}
-
         <Text style={styles.title}>Zmluva o spracúvaní osobných údajov{"\n"}podľa čl. 28 GDPR</Text>
         <Text style={styles.subtitle}>
           uzavretá v zmysle Nariadenia (EÚ) 2016/679 (GDPR) a Zákona č. 18/2018 Z.z. o ochrane
@@ -298,12 +296,11 @@ export function DpaTemplate(props: DpaTemplateProps) {
         </Text>
 
         <Footer version={version} requestId={requestId} />
+        {isDraft ? <Watermark /> : null}
       </Page>
 
       {/* ===================== STRANA 2 — Čl. 28(3)(a)–(e) ===================== */}
       <Page size="A4" style={styles.page} wrap>
-        {isDraft ? <Watermark /> : null}
-
         <Text style={styles.sectionHeading}>
           1. Predmet, doba, povaha a účel spracúvania [čl. 28(3)(a)]
         </Text>
@@ -366,12 +363,11 @@ export function DpaTemplate(props: DpaTemplateProps) {
         </Text>
 
         <Footer version={version} requestId={requestId} />
+        {isDraft ? <Watermark /> : null}
       </Page>
 
       {/* ===================== STRANA 3 — Čl. 28(3)(f)–(k) ===================== */}
       <Page size="A4" style={styles.page} wrap>
-        {isDraft ? <Watermark /> : null}
-
         <Text style={styles.sectionHeading}>6. Bezpečnostné opatrenia [čl. 28(3)(f) + čl. 32]</Text>
         <Text style={styles.paragraph}>
           Sprostredkovateľ zaviedol primerané technické a organizačné opatrenia s ohľadom na stav
@@ -443,12 +439,11 @@ export function DpaTemplate(props: DpaTemplateProps) {
         </Text>
 
         <Footer version={version} requestId={requestId} />
+        {isDraft ? <Watermark /> : null}
       </Page>
 
       {/* ===================== STRANA 4 — Závery + Podpisy ===================== */}
       <Page size="A4" style={styles.page} wrap>
-        {isDraft ? <Watermark /> : null}
-
         <Text style={styles.sectionHeading}>12. Záverečné ustanovenia</Text>
         <Text style={styles.paragraph}>
           Táto zmluva nadobúda platnosť a účinnosť dňom podpisu oboma stranami a uzatvára sa na dobu
@@ -484,12 +479,11 @@ export function DpaTemplate(props: DpaTemplateProps) {
         </View>
 
         <Footer version={version} requestId={requestId} />
+        {isDraft ? <Watermark /> : null}
       </Page>
 
       {/* ===================== STRANA 5 — Príloha A: Kategórie údajov ===================== */}
       <Page size="A4" style={styles.page} wrap>
-        {isDraft ? <Watermark /> : null}
-
         <Text style={styles.annexTitle}>
           Príloha A — Kategórie osobných údajov a dotknutých osôb
         </Text>
@@ -540,12 +534,11 @@ export function DpaTemplate(props: DpaTemplateProps) {
         </Text>
 
         <Footer version={version} requestId={requestId} />
+        {isDraft ? <Watermark /> : null}
       </Page>
 
       {/* ===================== STRANA 6 — Príloha B: Bezpečnosť + sub-procesory ===================== */}
       <Page size="A4" style={styles.page} wrap>
-        {isDraft ? <Watermark /> : null}
-
         <Text style={styles.annexTitle}>
           Príloha B — Technické a organizačné opatrenia + sub-procesory
         </Text>
@@ -615,6 +608,7 @@ export function DpaTemplate(props: DpaTemplateProps) {
         </Text>
 
         <Footer version={version} requestId={requestId} />
+        {isDraft ? <Watermark /> : null}
       </Page>
     </Document>
   );

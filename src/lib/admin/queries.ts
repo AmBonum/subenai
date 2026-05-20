@@ -1710,12 +1710,16 @@ export function useResendDpaEmail() {
         throw new Error("anonymised");
       }
       const { renderDpaPdfBlob } = await import("@/lib/dpa/render.client");
+      // Re-send must stamp the ORIGINAL generated date — not now() — so the
+      // re-delivered PDF matches the row's created_at for Art. 28(9) GDPR
+      // traceability ("which version did school X agree on, when").
       const blob = await renderDpaPdfBlob({
         schoolName: row.school_name,
         contactName: row.contact_name,
         contactEmail: row.contact_email,
         requestId: row.id,
         version: row.dpa_version,
+        generatedAt: new Date(row.created_at),
       });
       const pdfBase64 = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
@@ -1729,6 +1733,14 @@ export function useResendDpaEmail() {
       });
       // Reset email_status to 'pending' so the handler's 409 already_sent
       // guard does not refuse a legitimate admin-triggered re-send.
+      //
+      // KNOWN RACE (v1 acceptable): two admins clicking re-send within the
+      // same second both find email_status='pending' and both POST. The
+      // handler's Resend `Idempotency-Key: dpa-{requestId}` header is the
+      // mitigation — Resend dedupes server-side and returns the same
+      // message ID for both calls, so the school receives ONE e-mail.
+      // Tighter atomic guard (UPDATE … RETURNING in the handler) deferred
+      // to v1.1 if the admin team grows beyond a single operator.
       await supabase.from("dpa_requests").update({ email_status: "pending" }).eq("id", row.id);
       const response = await fetch("/api/dpa-email-attach", {
         method: "POST",
