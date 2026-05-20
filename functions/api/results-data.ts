@@ -36,6 +36,11 @@ export interface RespondentRow {
   percentile: number;
   total_time_ms: number;
   created_at: string;
+  // E34 Phase 1 — raw JSONB from `attempts.answers`. Kept as `unknown` here
+  // (server-side; never trust the DB shape) and validated client-side at
+  // the drill-down render boundary via `parseAnswers()`. Historical rows
+  // (pre-E3.1, ~Apr 2026) may be `null` — the modal renders a fallback.
+  answers: unknown;
 }
 
 export interface AggregateStats {
@@ -174,10 +179,15 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   }
   if (!setRow) return jsonResponse(404, { error: "set_not_found" });
 
+  // E34 Phase 1 — `answers` JSONB widened into the SELECT so the dashboard's
+  // per-respondent drill-down (RespondentDetailModal) can render which
+  // questions each respondent got wrong. The column has existed since
+  // E3.1 (migration 20260426000000_attempt_answers.sql) and is already
+  // persisted by /api/finish-edu-attempt — we just weren't exposing it.
   const { data: rows, error: rowsErr } = await supabase
     .from("attempts")
     .select(
-      "id, share_id, respondent_name, respondent_email, final_score, percentile, total_time_ms, created_at",
+      "id, share_id, respondent_name, respondent_email, final_score, percentile, total_time_ms, created_at, answers",
     )
     .eq("test_set_id", setId)
     .not("respondent_name", "is", null)
@@ -196,6 +206,11 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     percentile: r.percentile as number,
     total_time_ms: r.total_time_ms as number,
     created_at: r.created_at as string,
+    // Raw JSONB pass-through. Parsing + shape validation happens client-side
+    // via `parseAnswers()` at the drill-down render boundary, so a malformed
+    // historical row degrades to "Detail nedostupný" instead of failing
+    // the entire dashboard load.
+    answers: r.answers ?? null,
   }));
 
   const stats = computeAggregate(

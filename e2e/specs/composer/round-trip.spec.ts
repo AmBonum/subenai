@@ -321,4 +321,47 @@ test.describe("E33 Phase 2 — composer pipeline round-trip", () => {
       await expect(results.table).toContainText(r.email);
     }
   });
+
+  // TC-35 — E34 Phase 1: drill-down modal opens on Detail click, shows the
+  // respondent's name in the heading. The full drill-down content
+  // (per-category strip, per-question rows) is unit-tested in
+  // tests/components/composer/RespondentDetailModal.test.tsx — this e2e
+  // only verifies the modal MOUNTS from the dashboard, because the
+  // mount path is what would silently regress if a future refactor
+  // removed the Detail button or broke the data wiring in
+  // /api/results-data.
+  test("TC-35: dashboard drill-down — Detail button opens the per-respondent modal with name + content", async ({
+    context,
+    page,
+  }) => {
+    const seeded = await seedEduTest({
+      password: "drill-down-pw-99!",
+      creatorLabel: "E2E TC-35 drill-down",
+      respondents: [{ name: "Diana Drill", email: uniqueEmail("diana"), score: 80 }],
+    });
+
+    await injectAuthorCookie(context, seeded.id);
+    const results = new ResultsGatePage(page);
+    await results.open(seeded.id);
+    await expect(results.dashboard).toBeVisible({ timeout: 15_000 });
+
+    const attemptId = seeded.attempt_ids[0];
+    expect(attemptId, "seed should return an attempt_id").toBeTruthy();
+
+    // Modal not in DOM until click.
+    await expect(page.getByTestId("respondent-detail-root")).toHaveCount(0);
+
+    // Click the new Detail button (eye icon, sibling of the existing trash).
+    await page.getByTestId(`resp-table-detail-btn-${attemptId}`).click();
+
+    // Modal mounts with the respondent's name in the heading.
+    const modal = page.getByTestId("respondent-detail-root");
+    await expect(modal).toBeVisible({ timeout: 5_000 });
+    await expect(page.getByTestId("respondent-detail-heading")).toContainText("Diana Drill");
+
+    // ESC closes the modal (Radix Dialog default behaviour). Sentinel
+    // for "did we accidentally trap focus in a way that breaks ESC".
+    await page.keyboard.press("Escape");
+    await expect(page.getByTestId("respondent-detail-root")).toHaveCount(0);
+  });
 });

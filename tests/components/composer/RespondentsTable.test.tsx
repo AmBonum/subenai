@@ -14,6 +14,10 @@ const makeRow = (over: Partial<RespondentRow> = {}): RespondentRow => ({
   percentile: 75,
   total_time_ms: 12000,
   created_at: "2026-05-02T08:00:00.000Z",
+  // E34 Phase 1 — `answers` is part of the contract now. Default to `null`
+  // (historical-row fallback) unless a TC overrides; the drill-down modal
+  // renders its "fallback_no_answers" copy when null.
+  answers: null,
   ...over,
 });
 
@@ -122,5 +126,41 @@ describe("RespondentsTable", () => {
   it("shows empty state when zero rows", () => {
     render(<RespondentsTable rows={[]} passingThreshold={70} onDelete={vi.fn()} />);
     expect(screen.getByText(/Zatiaľ žiadne odpovede/i)).toBeInTheDocument();
+  });
+
+  // E34 Phase 1 — Detail button + drill-down modal integration.
+  it("renders a Detail button per row (alongside the existing delete trash)", () => {
+    render(
+      <RespondentsTable
+        rows={[makeRow({ id: "x1" }), makeRow({ id: "x2", respondent_name: "Other" })]}
+        passingThreshold={70}
+        onDelete={vi.fn()}
+      />,
+    );
+    expect(screen.getByTestId("resp-table-detail-btn-x1")).toBeInTheDocument();
+    expect(screen.getByTestId("resp-table-detail-btn-x2")).toBeInTheDocument();
+    // Both rows still have the delete trash — Detail is additive, not a replacement.
+    expect(screen.getByTestId("resp-table-delete-btn-x1")).toBeInTheDocument();
+  });
+
+  it("opens the drill-down modal on Detail click and renders the fallback when answers are null", async () => {
+    const user = userEvent.setup();
+    render(
+      <RespondentsTable
+        rows={[makeRow({ id: "x1", respondent_name: "Anna" })]}
+        passingThreshold={70}
+        onDelete={vi.fn()}
+      />,
+    );
+    // Modal not in DOM until clicked.
+    expect(screen.queryByTestId("respondent-detail-root")).toBeNull();
+
+    await user.click(screen.getByTestId("resp-table-detail-btn-x1"));
+
+    // Modal opens with the right respondent name in the header and the
+    // "no answers" fallback because the seeded row has answers=null.
+    const modal = await screen.findByTestId("respondent-detail-root");
+    expect(within(modal).getByTestId("respondent-detail-heading").textContent).toContain("Anna");
+    expect(within(modal).getByTestId("respondent-detail-fallback")).toBeInTheDocument();
   });
 });
