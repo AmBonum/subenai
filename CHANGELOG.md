@@ -13,7 +13,32 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 > celý balík funkcionality (sponsorship, zber custom-test odpovedí, atď.)
 > kompletne otestovaný v reálnej prevádzke.
 
+### Pridané
+- **Stiahnutie tvojich údajov (GDPR čl. 15 / čl. 20).** Na stránke
+  *Môj profil* (`/app/account/profile`) je nová karta *Stiahnutie
+  tvojich údajov*. Kliknutím dostaneš JSON snapshot všetkého, čo o
+  tebe evidujeme — profil, prípadné GDPR žiadosti a poznámky k
+  anonymným testom (tie sú prístupné cez tvoj share link). JSON je
+  strojovo čitateľný, takže ho vieš preniesť do iného systému (právo
+  na prenosnosť podľa čl. 20 GDPR). Žiadne čakanie na operátora,
+  hotovo do pár sekúnd.
+- **Transparentnostný register.** Verejný JSON registrík transferov
+  na charitu (`/transparency.json`). Každý budúci transfer dostane v
+  ňom riadok s dátumom, sumou a príjemcom — kontrolovateľné kýmkoľvek
+  bez nás. Aktuálne je v ňom politika (10 % z čistých sponzorských
+  príjmov, recipient *Nadácia Slniečka*, ročný cyklus) a prázdny zoznam
+  transferov, ktorý začneme dopĺňať od EOY 2026.
+
 ### Zmenené
+- **Cookie banner sa znova zobrazí.** Drobná oprava textu na
+  *Ochrane osobných údajov* (presnejšie vyjadrenie ako sa ukladá
+  záznam tvojho súhlasu) — žiadna zmena spracúvania, žiadny dôvod
+  na nový banner. Pôvodný 1.5.0 bump z mája 2026 stačí.
+- **Detekcia *Do Not Track* a *Global Privacy Control*.** Doteraz
+  sme to deklarovali na *Cookies* stránke, ale kód to nečítal — od
+  E42 ak má tvoj prehliadač zapnutý ktorýkoľvek z DNT/GPC signálov,
+  Google Analytics 4 sa nezapne ani vtedy, keby si v cookie dialógu
+  označil/a *Analytika*. Tvoja voľba v prehliadači má prednosť.
 - **Stránka *Cookies* — explicitne deklarované UI predvoľby a jazyk.**
   Predtým sme niektoré drobné UI pomocníky (stav postranného panelu,
   rozbalené piliere na blogu, zatvorený uvítací banner na dashboarde,

@@ -87,7 +87,7 @@
         "consent_record": {
           "purpose": "Record of consent itself",
           "basis": "Legal obligation / Art. 6(1)(c) GDPR",
-          "retention": "For the duration of consent + 12 months"
+          "retention": "Stored locally in your browser (key `iiq_consent`); you can delete it at any time by clearing localStorage. The banner re-appears on the next policy version change."
         },
         "sponsorship": {
           "purpose": "Sponsorship payments (invoice, AML, accounting)",

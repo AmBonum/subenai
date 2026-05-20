@@ -87,7 +87,7 @@
         "consent_record": {
           "purpose": "Záznam souhlasu samotného",
           "basis": "Plnění zákonné povinnosti / čl. 6 odst. 1 písm. c) GDPR",
-          "retention": "Po dobu platnosti souhlasu + 12 měsíců"
+          "retention": "Uloženo lokálně ve vašem prohlížeči (klíč `iiq_consent`), kdykoliv ho můžete smazat vyčištěním localStorage. Banner se znovu zobrazí při další změně verze zásad."
         },
         "sponsorship": {
           "purpose": "Sponzorské platby (faktura, AML, účetnictví)",
