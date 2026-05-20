@@ -78,9 +78,8 @@ describe("RespondentsTable", () => {
     expect(skoreTh.getAttribute("aria-sort")).toBe("ascending");
   });
 
-  it("calls onDelete only after window.confirm returns true", async () => {
+  it("opens the designed confirm dialog on delete click; cancelling does NOT call onDelete", async () => {
     const onDelete = vi.fn().mockResolvedValue(true);
-    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(false);
     const user = userEvent.setup();
     render(
       <RespondentsTable
@@ -90,11 +89,33 @@ describe("RespondentsTable", () => {
       />,
     );
     await user.click(screen.getByRole("button", { name: /Zmazať respondenta Cira/i }));
-    expect(confirmSpy).toHaveBeenCalled();
+    // Designed dialog mounts via Radix Portal — body text identifies it
+    // unambiguously (name + email of the targeted respondent).
+    const dialog = await screen.findByTestId("app-shell-confirm-dialog-root");
+    expect(within(dialog).getByTestId("app-shell-confirm-dialog-title")).toHaveTextContent(
+      /vymazať respondenta/i,
+    );
+    expect(within(dialog).getByTestId("app-shell-confirm-dialog-description")).toHaveTextContent(
+      /Cira/,
+    );
+    // Cancel — close the dialog, no destructive call.
+    await user.click(within(dialog).getByTestId("app-shell-confirm-dialog-cancel"));
     expect(onDelete).not.toHaveBeenCalled();
+  });
 
-    confirmSpy.mockReturnValue(true);
+  it("calls onDelete with the row id when the confirm button is pressed", async () => {
+    const onDelete = vi.fn().mockResolvedValue(true);
+    const user = userEvent.setup();
+    render(
+      <RespondentsTable
+        rows={[makeRow({ id: "att-99", respondent_name: "Cira" })]}
+        passingThreshold={70}
+        onDelete={onDelete}
+      />,
+    );
     await user.click(screen.getByRole("button", { name: /Zmazať respondenta Cira/i }));
+    const dialog = await screen.findByTestId("app-shell-confirm-dialog-root");
+    await user.click(within(dialog).getByTestId("app-shell-confirm-dialog-confirm"));
     expect(onDelete).toHaveBeenCalledWith("att-99");
   });
 

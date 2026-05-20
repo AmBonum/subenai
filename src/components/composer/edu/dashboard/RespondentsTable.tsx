@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Trash2 } from "lucide-react";
 import type { RespondentRow } from "@/lib/edu/types";
 import { tFor } from "@/i18n/quiz";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 
 type SortKey = "name" | "score" | "created_at";
 type SortDir = "asc" | "desc";
@@ -19,6 +20,10 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
   const [sortKey, setSortKey] = useState<SortKey>("created_at");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  // Designed AlertDialog replaces window.confirm. Two-state machine:
+  // the row holds the person's name/email to render in the body; null
+  // = dialog closed. The actual destructive call runs on confirm.
+  const [confirmTarget, setConfirmTarget] = useState<RespondentRow | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -60,14 +65,7 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
     return sortDir === "asc" ? "ascending" : "descending";
   }
 
-  async function handleDelete(row: RespondentRow) {
-    if (
-      !window.confirm(
-        t("delete_confirm", { name: row.respondent_name, email: row.respondent_email }),
-      )
-    ) {
-      return;
-    }
+  async function performDelete(row: RespondentRow): Promise<void> {
     setPendingDelete(row.id);
     try {
       await onDelete(row.id);
@@ -171,7 +169,7 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
                       <button
                         type="button"
                         data-testid={`resp-table-delete-btn-${r.id}`}
-                        onClick={() => handleDelete(r)}
+                        onClick={() => setConfirmTarget(r)}
                         disabled={pendingDelete === r.id}
                         aria-label={t("delete_aria", { name: r.respondent_name })}
                         className="inline-flex items-center justify-center rounded-md border border-border bg-background p-1.5 text-muted-foreground hover:border-destructive hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"
@@ -186,6 +184,30 @@ export function RespondentsTable({ rows, passingThreshold, onDelete }: Props) {
           </table>
         </div>
       )}
+
+      <ConfirmDialog
+        open={confirmTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setConfirmTarget(null);
+        }}
+        title={t("delete_confirm_title")}
+        description={
+          confirmTarget
+            ? t("delete_confirm_body", {
+                name: confirmTarget.respondent_name,
+                email: confirmTarget.respondent_email,
+              })
+            : ""
+        }
+        confirmLabel={t("delete_confirm_action")}
+        cancelLabel={t("delete_confirm_cancel")}
+        destructive
+        onConfirm={() => {
+          if (confirmTarget) {
+            void performDelete(confirmTarget);
+          }
+        }}
+      />
     </section>
   );
 }

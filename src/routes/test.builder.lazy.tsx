@@ -21,6 +21,7 @@ import {
 import { ROUTES } from "@/config/routes";
 import { copyToClipboard } from "@/lib/browser/clipboard";
 import { tFor } from "@/i18n/quiz";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 
 /**
  * Decode an incoming `?config=` URL into a usable composer config,
@@ -91,6 +92,10 @@ export function ComposerPage() {
     resultsUrl: string;
     password: string;
   } | null>(null);
+  // Designed AlertDialog replaces window.confirm for the destructive
+  // "clear all selections" action. Only opens at ≥10 selected items
+  // (smaller selections are cheap to redo, no prompt warranted).
+  const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
 
   const packs = useMemo(() => listPublishedPacks(), []);
   const honeypotRatio = useMemo(() => computeHoneypotRatio(Array.from(selectedIds)), [selectedIds]);
@@ -195,16 +200,34 @@ export function ComposerPage() {
     });
   }, []);
 
-  const clearAll = useCallback(() => {
-    if (selectedIds.size >= 10) {
-      const ok = window.confirm(t("clear_confirm", { n: selectedIds.size }));
-      if (!ok) return;
-    }
+  // Actual clear operation — pulled out so both the confirm-dialog
+  // "confirm" callback AND the short-circuit (<10 selections, no
+  // prompt) path can share it.
+  const performClear = useCallback(() => {
     setSelectedIds(new Set());
     setSelectedPackSlugs(new Set());
     setError(null);
     setStaleNotice(null);
-  }, [selectedIds.size, t]);
+  }, []);
+
+  const clearAll = useCallback(() => {
+    if (selectedIds.size >= 10) {
+      setClearConfirmOpen(true);
+      return;
+    }
+    performClear();
+  }, [selectedIds.size, performClear]);
+
+  // Slovak grammar picks the right pluralised body sentence for the
+  // confirmation dialog. 1 = "vybranú otázku", 2-4 = "vybrané otázky",
+  // 5+ / 0 = "vybraných otázok". Computed at use-site to avoid stale
+  // string refs inside the dialog when the count updates mid-open.
+  const clearConfirmBodyKey =
+    selectedIds.size === 1
+      ? "clear_confirm_body_one"
+      : selectedIds.size >= 2 && selectedIds.size <= 4
+        ? "clear_confirm_body_few"
+        : "clear_confirm_body_many";
 
   const selectedCount = selectedIds.size;
   const meetsMin = selectedCount >= COMPOSER_LIMITS.minQuestions;
@@ -550,6 +573,17 @@ export function ComposerPage() {
           }}
         />
       ) : null}
+
+      <ConfirmDialog
+        open={clearConfirmOpen}
+        onOpenChange={setClearConfirmOpen}
+        title={t("clear_confirm_title")}
+        description={t(clearConfirmBodyKey, { n: String(selectedIds.size) })}
+        confirmLabel={t("clear_confirm_action")}
+        cancelLabel={t("clear_confirm_cancel")}
+        destructive
+        onConfirm={performClear}
+      />
     </div>
   );
 }
