@@ -57,6 +57,24 @@ describe("extractInlineScripts", () => {
     const [body] = extractInlineScripts(html);
     expect(body).toBe("\n      a();\n    ");
   });
+
+  // CodeQL js/bad-tag-filter — a naive regex like `<\/script>` misses
+  // `</script >` with trailing whitespace before the gt. jsdom is a
+  // real WHATWG parser, so it handles every legal closing form.
+  it("handles closing tags with trailing whitespace (</script >)", () => {
+    expect(extractInlineScripts(`<script>x();</script >`)).toEqual(["x();"]);
+  });
+
+  it("handles mixed-case <SCRIPT> tags", () => {
+    expect(extractInlineScripts(`<SCRIPT>y();</SCRIPT>`)).toEqual(["y();"]);
+  });
+
+  it("treats <script src=…> with text content as an external (text is irrelevant for CSP)", () => {
+    // Per HTML spec, `<script src=…>some text</script>` ignores the
+    // inline body — the browser fetches from src. We skip it entirely.
+    const html = `<script src="/a.js">ignored body</script>`;
+    expect(extractInlineScripts(html)).toEqual([]);
+  });
 });
 
 describe("computeScriptHashes", () => {

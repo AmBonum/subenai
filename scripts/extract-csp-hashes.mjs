@@ -21,9 +21,11 @@
 // directly executes the CLI block at the bottom.
 
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { JSDOM } from "jsdom";
 
 /**
  * Pull every inline `<script>...</script>` body out of HTML.
@@ -31,19 +33,25 @@ import { fileURLToPath } from "node:url";
  * Keeps JSON-LD blocks (`<script type="application/ld+json">`) because
  * the browser still applies CSP to them.
  *
+ * Uses jsdom (a real WHATWG HTML parser) rather than a regex — a regex
+ * can't safely match HTML edge cases like `</script >` (trailing
+ * whitespace) or `<script>...<script>...</script>...</script>` (CodeQL
+ * `js/bad-tag-filter`). jsdom is already a devDep used by Vitest's
+ * jsdom environment, so this adds no new runtime cost.
+ *
  * @param {string} html
  * @returns {string[]} array of inline script bodies (raw text between
  *   the opening and closing tags), in document order.
  */
 export function extractInlineScripts(html) {
+  const dom = new JSDOM(html);
   const scripts = [];
-  const re = /<script\b([^>]*)>([\s\S]*?)<\/script>/gi;
-  let match;
-  while ((match = re.exec(html)) !== null) {
-    const attrs = match[1] ?? "";
-    const body = match[2] ?? "";
-    if (/\bsrc\s*=/i.test(attrs)) continue;
-    scripts.push(body);
+  for (const el of dom.window.document.querySelectorAll("script")) {
+    if (el.hasAttribute("src")) continue;
+    // `textContent` returns the raw script body — HTML doesn't decode
+    // entities inside `<script>` (it's a "raw text element" per the
+    // WHATWG spec), so this matches what the browser hashes for CSP.
+    scripts.push(el.textContent ?? "");
   }
   return scripts;
 }
@@ -110,6 +118,22 @@ function findHtmlFiles(dir) {
   return out;
 }
 
+/**
+ * Read a file, returning `null` for ENOENT rather than throwing. Any
+ * other error (permissions, IO) bubbles up.
+ *
+ * @param {string} path
+ * @returns {string | null}
+ */
+function readFileOrNull(path) {
+  try {
+    return readFileSync(path, "utf8");
+  } catch (err) {
+    if (err && /** @type {NodeJS.ErrnoException} */ (err).code === "ENOENT") return null;
+    throw err;
+  }
+}
+
 // --- CLI block ---------------------------------------------------------------
 
 const isMain =
@@ -118,27 +142,35 @@ if (isMain) {
   const distDir = resolve(process.cwd(), "dist/client");
   const headersPath = join(distDir, "_headers");
 
-  if (!existsSync(distDir)) {
-    console.error(`[csp-hashes] dist/client/ not found — run \`npm run build\` first.`);
-    process.exit(1);
-  }
-  if (!existsSync(headersPath)) {
+  // Read _headers first — fails fast if either the dir or the file is
+  // missing. Bundling the existence check into the read closes the
+  // TOCTOU window between `existsSync` and `readFileSync/writeFileSync`.
+  const before = readFileOrNull(headersPath);
+  if (before === null) {
     console.error(
-      `[csp-hashes] dist/client/_headers not found (was public/_headers copied to dist?)`,
+      `[csp-hashes] ${headersPath} not found — was \`npm run build\` run and did vite copy public/_headers?`,
     );
     process.exit(1);
   }
 
-  const htmlFiles = findHtmlFiles(distDir);
+  let htmlFiles;
+  try {
+    htmlFiles = findHtmlFiles(distDir);
+  } catch (err) {
+    if (err && /** @type {NodeJS.ErrnoException} */ (err).code === "ENOENT") {
+      console.error(`[csp-hashes] ${distDir} not found — run \`npm run build\` first.`);
+      process.exit(1);
+    }
+    throw err;
+  }
   if (htmlFiles.length === 0) {
-    console.error(`[csp-hashes] No HTML files found under dist/client/`);
+    console.error(`[csp-hashes] No HTML files found under ${distDir}`);
     process.exit(1);
   }
 
   const allScripts = [];
   for (const file of htmlFiles) {
-    const html = readFileSync(file, "utf8");
-    allScripts.push(...extractInlineScripts(html));
+    allScripts.push(...extractInlineScripts(readFileSync(file, "utf8")));
   }
   const hashes = computeScriptHashes(allScripts);
   if (hashes.length === 0) {
@@ -146,9 +178,7 @@ if (isMain) {
     process.exit(0);
   }
 
-  const before = readFileSync(headersPath, "utf8");
   const after = narrowCsp(before, hashes);
-
   if (after === before) {
     console.warn(
       `[csp-hashes] _headers unchanged — was 'unsafe-inline' already removed from script-src?`,
