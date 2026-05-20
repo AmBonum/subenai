@@ -1,8 +1,19 @@
 # E20 — Selective e2e test execution at PR level
 
-> **Status**: PROPOSED — awaiting user approval to modify
-> `.github/workflows/e2e.yml`. Per CLAUDE.md non-negotiable rules,
-> the workflow file cannot be touched without explicit ask.
+> **Status**: ✅ **DELIVERED** 2026-05-20 — closure sweep revealed E20 was
+> already shipped in `.github/workflows/e2e.yml` (the file leads with an
+> `E20 — opt-in browser e2e + always-on integration tests on PR.` comment).
+> The PLAN's "PROPOSED" header was stale from before that initial
+> implementation landed.
+>
+> **Policy revision (2026-05-20, this PR):** owner pushed back on
+> Decision #8 ("push to main always runs the full browser suite as
+> safety net"). Rationale: the merge-time 8-minute sweep was perceived
+> as wasted minutes when (a) relevant vitest coverage already runs via
+> ci.yml on every push and (b) PR-side label workflow handles the
+> UI-critical sweeps before merge. New policy: **main push runs
+> integration only — no automatic browser sweep**. For risky merges,
+> trigger the full browser suite manually via `workflow_dispatch`.
 
 ## 1. Goal
 
@@ -53,7 +64,7 @@ content commit touches no auth or app code yet runs both suites.
    `package*.json`, `tsconfig*.json`, `vite.config.ts`, `vitest.config.ts`,
    `playwright.config.ts`, `e2e/**`, `.github/workflows/**`,
    `src/integrations/supabase/client.ts`, `src/integrations/supabase/types.ts`.
-8. **`main` push runs both jobs at full**, regardless of paths.
+8. ~~**`main` push runs both jobs at full**, regardless of paths.~~ **REVISED 2026-05-20**: `main` push runs ONLY the integration job. Browser sweep on merge is OPT-IN via `workflow_dispatch`. (Owner decision — see file-level Status note.)
 9. **PR labels**:
    - `e2e:browser` → run chromium with selective filtering
    - `e2e:full` → run chromium with FULL suite (no filtering)
@@ -91,11 +102,15 @@ analysis in original plan).
 
 ## 7. Safety guarantees
 
-(a) cross-cutting always runs; (b) `e2e/**` or `playwright.config.ts`
-change → FULL; (c) `src/components/ui/**` or `src/styles.css`
-change → FULL (Tailwind v4 tokens cascade); (d) `package*.json` /
-`tsconfig*.json` → FULL; (e) PR label `e2e:full` → FULL; (f) push to
-main → FULL.
+(a) cross-cutting always runs WHEN browser job runs; (b) `e2e/**` or
+`playwright.config.ts` change → FULL (when triggered); (c)
+`src/components/ui/**` or `src/styles.css` change → FULL (Tailwind v4
+tokens cascade); (d) `package*.json` / `tsconfig*.json` → FULL; (e) PR
+label `e2e:full` → FULL; ~~(f) push to main → FULL.~~ **revised 2026-05-20:
+main push no longer triggers browser at all** — coverage relies on
+ci.yml vitest (which runs unconditionally on every push) + PR-side
+label opt-in pre-merge. Manual full sweep via `workflow_dispatch`
+when needed.
 
 ## 8. Validation plan
 

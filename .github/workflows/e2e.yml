@@ -2,11 +2,17 @@ name: E2E
 
 # E20 — opt-in browser e2e + always-on integration tests on PR.
 #
-# Default policy (chosen 2026-05-19 after measuring chromium e2e at ~8 min
-# wall-clock making PR feedback painfully slow):
+# Default policy (revised 2026-05-20 — owner decision dropped the
+# auto full-sweep on main push):
 #   - PR targeting main:    integration tests run by default (~1 min).
 #                           Browser tests are OPT-IN via a label.
-#   - push to main:         FULL browser suite runs as post-merge safety net.
+#   - push to main:         integration tests only — NO automatic browser
+#                           sweep. (Previous policy ran ~8 min on every
+#                           merge; owner pushed back that the relevant
+#                           coverage is already ensured by the PR-side
+#                           label workflow + ci.yml vitest on every push.)
+#                           If a risky merge needs full browser e2e,
+#                           trigger via workflow_dispatch.
 #   - workflow_dispatch:    FULL browser suite, manual trigger.
 #
 # PR labels:
@@ -160,13 +166,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
-    # Browser tests are OPT-IN on PR. The chromium suite is expensive
-    # (~3-8 min) and the typical PR doesn't need it — the reviewer or
-    # author applies `e2e:browser` (selective) or `e2e:full` (no filter)
-    # when the change is UI-critical. Post-merge push to main always
-    # runs the full suite as a safety net.
+    # Browser tests are OPT-IN. The chromium suite is expensive (~3-8
+    # min); the typical PR doesn't need it — the reviewer or author
+    # applies `e2e:browser` (selective) or `e2e:full` (no filter) when
+    # the change is UI-critical. Push to main NO LONGER triggers this
+    # job (owner policy revision 2026-05-20 — see file-level comment).
+    # For risky merges, use `workflow_dispatch` to run the full sweep
+    # manually after merge.
     if: |
-      github.event_name == 'push' ||
       github.event_name == 'workflow_dispatch' ||
       (
         github.event_name == 'pull_request' &&
@@ -177,9 +184,12 @@ jobs:
       )
     env:
       # Derived once, consumed by the spec-paths + run steps below.
+      # `push` was removed from the OR chain on 2026-05-20 (owner
+      # policy) — main-push no longer reaches this job at all, so the
+      # `push`-checks above can't fire. workflow_dispatch keeps the
+      # manual nuclear option open.
       IS_FULL: >-
         ${{
-          github.event_name == 'push' ||
           github.event_name == 'workflow_dispatch' ||
           needs.changes.outputs.full == 'true' ||
           contains(github.event.pull_request.labels.*.name, 'e2e:full')
