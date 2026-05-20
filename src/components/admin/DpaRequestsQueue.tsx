@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { RotateCcw, EyeOff } from "lucide-react";
+import { RotateCcw, EyeOff, Download } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +26,7 @@ import {
   useUpdateDpaRequestStatus,
   useAnonymiseDpaRequest,
   useResendDpaEmail,
+  useDownloadDpaPdf,
   type AdminDpaRequest,
   type DpaRequestStatus,
   type DpaEmailStatus,
@@ -62,6 +63,7 @@ export function DpaRequestsQueue() {
   const updateStatus = useUpdateDpaRequestStatus();
   const anonymise = useAnonymiseDpaRequest();
   const resend = useResendDpaEmail();
+  const download = useDownloadDpaPdf();
 
   const rows = useMemo(() => dpaQuery.data ?? [], [dpaQuery.data]);
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -109,6 +111,16 @@ export function DpaRequestsQueue() {
       {
         onSuccess: () => toast.success(t("toast_resent")),
         onError: (err: Error) => toast.error(`${t("toast_resend_failed")} (${err.message})`),
+      },
+    );
+  };
+
+  const onDownload = (row: AdminDpaRequest) => {
+    download.mutate(
+      { row },
+      {
+        onSuccess: () => toast.success(t("toast_downloaded")),
+        onError: (err: Error) => toast.error(`${t("toast_download_failed")} (${err.message})`),
       },
     );
   };
@@ -245,6 +257,16 @@ export function DpaRequestsQueue() {
                       {formatDate(row.created_at)}
                     </TableCell>
                     <TableCell className="space-x-2 text-right">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={anonymised || download.isPending}
+                        onClick={() => onDownload(row)}
+                        data-testid={`dpa-queue-download-${row.id}`}
+                      >
+                        <Download className="mr-1 size-3" />
+                        {t("action_download")}
+                      </Button>
                       <Button
                         variant="outline"
                         size="sm"

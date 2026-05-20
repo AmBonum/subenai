@@ -1107,10 +1107,28 @@ export function useAdminDashboardStats() {
           .from("dsr_requests")
           .select("id", { count: "exact", head: true })
           .in("status", ["open", "in_progress"]),
+        // E40 close-out — surface DPA backlog alongside DSR. "Pending"
+        // is the school's perspective: school submitted the form, we
+        // haven't reached signed/cancelled yet (delivered is still
+        // open from the operator's POV — they may still need to
+        // re-send / chase a signature).
+        supabase
+          .from("dpa_requests")
+          .select("id", { count: "exact", head: true })
+          .in("status", ["pending", "delivered"]),
       ]);
       for (const r of counts) if (r.error) throw r.error;
-      const [users, questions, pending, openReports, trainings, tests, sessions, pendingDsr] =
-        counts;
+      const [
+        users,
+        questions,
+        pending,
+        openReports,
+        trainings,
+        tests,
+        sessions,
+        pendingDsr,
+        pendingDpa,
+      ] = counts;
       return {
         total_users: users.count ?? 0,
         // TODO: derive when AH-12 schema enrichment lands (last_active_at)
@@ -1124,6 +1142,7 @@ export function useAdminDashboardStats() {
         total_tests: tests.count ?? 0,
         total_sessions: sessions.count ?? 0,
         pending_dsr: pendingDsr.count ?? 0,
+        pending_dpa: pendingDpa.count ?? 0,
       };
     },
   });
@@ -1699,6 +1718,51 @@ export function useAnonymiseDpaRequest() {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "dpa_requests"] }),
+  });
+}
+
+/**
+ * Admin: re-render the row's PDF in the browser and trigger a download.
+ *
+ * Same generator as the public form + the admin re-send (`useResendDpaEmail`),
+ * with `generatedAt` pinned to the row's `created_at` so the file matches
+ * what the school received on submission day. Lets counsel / operators
+ * verify ARt. 28(9) traceability without bothering the school.
+ *
+ * No network roundtrip — the PDF is built client-side and the function
+ * appends a hidden `<a download>` to fire the save dialog. Errors bubble
+ * to the caller so toast handling stays in the component.
+ */
+export function useDownloadDpaPdf() {
+  return useMutation({
+    mutationFn: async ({ row }: { row: AdminDpaRequest }) => {
+      if (!row.contact_name || !row.contact_email) {
+        throw new Error("anonymised");
+      }
+      const { renderDpaPdfBlob } = await import("@/lib/dpa/render.client");
+      const blob = await renderDpaPdfBlob({
+        schoolName: row.school_name,
+        contactName: row.contact_name,
+        contactEmail: row.contact_email,
+        requestId: row.id,
+        version: row.dpa_version,
+        generatedAt: new Date(row.created_at),
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `DPA-subenai-${row.school_name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 60)}-${row.dpa_version}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      // Release the object URL on next tick — Safari occasionally races
+      // the download save dialog if revoked synchronously.
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+    },
   });
 }
 

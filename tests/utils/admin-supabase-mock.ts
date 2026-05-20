@@ -792,5 +792,6 @@ export function seedAdminQueryClient(qc: QueryClient): void {
     total_tests: adminMockTables.tests.rows.length,
     total_sessions: 0,
     pending_dsr: 0,
+    pending_dpa: 0,
   });
 }

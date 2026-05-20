@@ -23,6 +23,8 @@ import {
   PanelTop,
   PanelBottom,
   ShieldCheck,
+  ScrollText,
+  UserCog,
 } from "lucide-react";
 
 import {
@@ -140,10 +142,25 @@ const cmsItems: NavItem[] = [
   },
 ];
 
-// AH-12.9 — /docs route does not exist yet; the AH-10.1 sidebar pointed at
-// it as a placeholder. Removed until a docs route lands. Add back as:
-//   { key: "docs", url: "/docs", icon: BookOpen, testid: "admin-shell-sidebar-link-docs" }
+// E40 close-out — surface the governance/compliance pages that already
+// exist (`/admin/dsr` from E37, `/admin/dpa-requests` from E40). Both
+// routes shipped with data hooks + queues but had no sidebar entry, so
+// admins could only reach them by typing the URL. Grouping with
+// settings + security keeps "Systém" as the catch-all for ops surfaces
+// instead of fragmenting into another group.
 const systemItems: NavItem[] = [
+  {
+    key: "dsr",
+    url: "/admin/dsr",
+    icon: UserCog,
+    testid: "admin-shell-sidebar-link-dsr",
+  },
+  {
+    key: "dpa_requests",
+    url: "/admin/dpa-requests",
+    icon: ScrollText,
+    testid: "admin-shell-sidebar-link-dpa-requests",
+  },
   {
     key: "settings",
     url: "/admin/settings",

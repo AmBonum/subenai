@@ -149,6 +149,7 @@ export interface AdminDashboardStats {
   total_tests: number;
   total_sessions: number;
   pending_dsr: number;
+  pending_dpa: number;
 }
 
 export interface ShareRatingTier {

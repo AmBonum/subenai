@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { Users, ClipboardList, Activity, ShieldAlert } from "lucide-react";
+import { Users, ClipboardList, Activity, ShieldAlert, ScrollText } from "lucide-react";
 
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatCard } from "@/components/admin/StatCard";
@@ -31,7 +31,7 @@ function AdminDashboardPage() {
         testId="admin-dashboard-page-header"
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <StatCard
           label={t("stat_users")}
           value={s?.total_users ?? 0}
@@ -63,6 +63,13 @@ function AdminDashboardPage() {
           icon={ShieldAlert}
           tone="warning"
           testId="admin-stat-card-dsr-pending"
+        />
+        <StatCard
+          label={t("stat_dpa_pending")}
+          value={s?.pending_dpa ?? 0}
+          icon={ScrollText}
+          tone="warning"
+          testId="admin-stat-card-dpa-pending"
         />
       </div>
 

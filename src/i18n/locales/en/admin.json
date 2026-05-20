@@ -24,6 +24,8 @@
       "header": "Header",
       "footer": "Footer",
       "blog": "Blog",
+      "dsr": "GDPR requests",
+      "dpa_requests": "DPA requests",
       "settings": "Settings",
       "security": "Security"
     },
@@ -38,6 +40,7 @@
     "stat_tests": "Tests",
     "stat_sessions": "Sessions",
     "stat_dsr_pending": "Pending DSRs",
+    "stat_dpa_pending": "Open DPAs",
     "recent_activity_title": "Recent activity",
     "recent_activity_description": "Latest events across the platform."
   },

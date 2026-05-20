@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 const mutateUpdateStatus = vi.fn();
 const mutateAnonymise = vi.fn();
 const mutateResend = vi.fn();
+const mutateDownload = vi.fn();
 
 vi.mock("@/lib/admin/queries", async () => {
   const actual = await vi.importActual<typeof import("@/lib/admin/queries")>("@/lib/admin/queries");
@@ -43,6 +44,7 @@ vi.mock("@/lib/admin/queries", async () => {
     useUpdateDpaRequestStatus: () => ({ mutate: mutateUpdateStatus, isPending: false }),
     useAnonymiseDpaRequest: () => ({ mutate: mutateAnonymise, isPending: false }),
     useResendDpaEmail: () => ({ mutate: mutateResend, isPending: false }),
+    useDownloadDpaPdf: () => ({ mutate: mutateDownload, isPending: false }),
   };
 });
 
@@ -81,6 +83,15 @@ describe("DpaRequestsQueue", () => {
     expect(mutateResend).toHaveBeenCalledTimes(1);
     const callArg = mutateResend.mock.calls[0][0] as { row: { id: string } };
     expect(callArg.row.id).toBe("row-2");
+  });
+
+  it("download button fires useDownloadDpaPdf with the row (Art. 28(9) inspection trail)", async () => {
+    const user = userEvent.setup();
+    render(<DpaRequestsQueue />);
+    await user.click(screen.getByTestId("dpa-queue-download-row-1"));
+    expect(mutateDownload).toHaveBeenCalledTimes(1);
+    const callArg = mutateDownload.mock.calls[0][0] as { row: { id: string } };
+    expect(callArg.row.id).toBe("row-1");
   });
 
   it("anonymise button requires confirm + fires the mutation", async () => {
