@@ -14,10 +14,13 @@
     },
     "user_menu": {
       "trigger_aria": "Otevřít menu uživatele",
+      "trigger_aria_with_name": "Menu uživatele: {name}",
+      "loading_aria": "Načítám profil",
       "signed_in_as": "Přihlášen/a jako",
       "app": "Moje testy",
       "profile": "Profil a nastavení",
-      "signout": "Odhlásit se"
+      "signout": "Odhlásit se",
+      "signed_out_toast": "Byli jste odhlášeni."
     },
     "menu": {
       "rychly_test": {

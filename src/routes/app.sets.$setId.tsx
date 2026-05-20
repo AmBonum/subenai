@@ -7,10 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/app/page-header";
 import { useAnswers, useAnswerSets } from "@/lib/admin/answer-sets-mock-store";
 import { tFor } from "@/i18n/questions";
+import { tFor as tAppShell } from "@/i18n/app-shell";
+
+const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/sets/$setId")({
   head: () => ({
-    meta: [{ title: "Detail sady · SubenAI" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("set_detail") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: UserSetDetailPage,
 });

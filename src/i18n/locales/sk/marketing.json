@@ -14,10 +14,13 @@
     },
     "user_menu": {
       "trigger_aria": "Otvoriť menu používateľa",
+      "trigger_aria_with_name": "Menu používateľa: {name}",
+      "loading_aria": "Načítavam profil",
       "signed_in_as": "Prihlásený/á ako",
       "app": "Moje testy",
       "profile": "Profil a nastavenia",
-      "signout": "Odhlásiť sa"
+      "signout": "Odhlásiť sa",
+      "signed_out_toast": "Boli ste odhlásení."
     },
     "menu": {
       "rychly_test": {

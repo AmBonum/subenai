@@ -21,6 +21,9 @@ import {
   useUserSessions,
 } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
+import { tFor as tAppShell } from "@/i18n/app-shell";
+
+const tRoutes = tAppShell("route_titles");
 
 const editorSearch = z.object({
   tab: z.enum(["results", "analytics", "settings"]).catch("results"),
@@ -30,7 +33,7 @@ const editorSearch = z.object({
 export const Route = createFileRoute("/app/tests/$testId")({
   validateSearch: editorSearch,
   head: () => ({
-    meta: [{ title: "Editor testu · SubenAI" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("test_editor") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: TestEditorPage,
 });

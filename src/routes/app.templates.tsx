@@ -22,7 +22,7 @@ const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/templates")({
   head: () => ({
-    meta: [{ title: tRoutes("templates") }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("templates") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: TemplatesPage,
 });

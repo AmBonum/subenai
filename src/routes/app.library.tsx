@@ -27,7 +27,7 @@ const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/library")({
   head: () => ({
-    meta: [{ title: tRoutes("library") }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("library") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: LibraryPage,
 });

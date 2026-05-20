@@ -121,3 +121,42 @@ test.describe("/app shell — mobile drawer @mobile", () => {
     await expect(shell.mobileLogout).toBeEnabled();
   });
 });
+
+test.describe("/app shell — signout flow (E36 C3)", () => {
+  test.beforeEach(async ({ context, page }) => {
+    await setupEducator(context, page);
+  });
+
+  // The "you have been signed out" toast travels across a hard-nav via
+  // sessionStorage (window.location.href = "/" wipes in-memory state).
+  // signOutAndRedirect writes the flag BEFORE the redirect; the public
+  // root mounts <SignedOutFlash /> which consumes the flag once and
+  // fires the sonner toast. The contract: after click → land on / with
+  // visible Slovak confirmation copy.
+  test("clicking the header logout fires signout and surfaces the confirmation toast on /", async ({
+    page,
+  }) => {
+    const shell = new AppShellPage(page);
+    await shell.open();
+    await expect(shell.headerLogout).toBeVisible();
+    await shell.headerLogout.click();
+    // Hard-nav to the public homepage.
+    await page.waitForURL(/\/(\?|$)/, { timeout: 5_000 });
+    // Sonner renders the toast in a portal — the text is the most
+    // resilient locator and is the actual user-facing surface.
+    await expect(page.getByText("Boli ste odhlásení.")).toBeVisible();
+  });
+
+  test("the toast is consumed once — a reload of / does NOT re-fire it", async ({ page }) => {
+    const shell = new AppShellPage(page);
+    await shell.open();
+    await shell.headerLogout.click();
+    await page.waitForURL(/\/(\?|$)/, { timeout: 5_000 });
+    await expect(page.getByText("Boli ste odhlásení.")).toBeVisible();
+    // Wait for the toast to dismiss, then reload — the flag was
+    // consumed so the second mount must not re-trigger.
+    await page.waitForTimeout(4_500);
+    await page.reload();
+    await expect(page.getByText("Boli ste odhlásení.")).toHaveCount(0);
+  });
+});

@@ -13,6 +13,7 @@
 // — protected routes re-check via getSession on each navigation.
 
 import { supabase } from "@/integrations/supabase/client";
+import { setSignedOutFlash } from "@/lib/auth/signout-flash";
 
 export async function signOutAndRedirect(redirectTo: string = "/"): Promise<void> {
   try {
@@ -20,6 +21,9 @@ export async function signOutAndRedirect(redirectTo: string = "/"): Promise<void
   } catch {
     // Swallow — we still want to land the user on a safe page.
   }
+  // Flash flag is set even when signOut throws — the user clicked sign
+  // out, so the destination page should still acknowledge it.
+  setSignedOutFlash();
   // Hard navigation rather than TanStack router navigate(): a full
   // page reload guarantees every module-level cached state (TanStack
   // Query, mock stores, custom hooks) drops to its initial state. The

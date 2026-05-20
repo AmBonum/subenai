@@ -18,10 +18,13 @@ import { PageHeader } from "@/components/app/page-header";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { useTests } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
+import { tFor as tAppShell } from "@/i18n/app-shell";
+
+const tRoutes = tAppShell("route_titles");
 
 export const Route = createFileRoute("/app/tests/")({
   head: () => ({
-    meta: [{ title: "Moje testy · SubenAI" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: tRoutes("tests_index") }, { name: "robots", content: "noindex,nofollow" }],
   }),
   component: TestsList,
 });

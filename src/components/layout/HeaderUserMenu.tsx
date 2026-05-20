@@ -18,17 +18,34 @@ export function HeaderUserMenu() {
   const t = tFor("header");
   const initials = me?.avatar_initials ?? me?.display_name?.slice(0, 2).toUpperCase() ?? "";
   const name = me?.display_name ?? me?.email ?? "";
+  // Skeleton trigger while the profile is in flight to avoid a flash
+  // of empty initials. Once data lands (or fails), the real trigger
+  // takes over.
+  if (profileQ.isLoading && !me) {
+    return (
+      <div
+        data-testid="header-user-menu-loading"
+        aria-label={t("user_menu.loading_aria")}
+        role="status"
+        className="inline-flex h-9 w-9 animate-pulse rounded-full border border-border/60 bg-card/40"
+      />
+    );
+  }
+  const triggerAria = name
+    ? t("user_menu.trigger_aria_with_name", { name })
+    : t("user_menu.trigger_aria");
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         data-testid="header-user-menu-trigger"
-        aria-label={t("user_menu.trigger_aria")}
+        aria-label={triggerAria}
         className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/40 py-1 pl-1 pr-3 text-sm font-medium text-foreground transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
         <span
           className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground"
           data-testid="header-user-menu-avatar"
+          aria-hidden="true"
         >
           {initials}
         </span>
