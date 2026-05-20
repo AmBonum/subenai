@@ -90,8 +90,11 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     return jsonResponse(500, { error: "email_not_configured" });
   }
 
-  const supabaseUrl = env.SUPABASE_URL || PROD_SUPABASE_URL;
-  const supabase = createClient(supabaseUrl, env.SUPABASE_SERVICE_ROLE_KEY, {
+  // HARDCODED URL — see dpa-request.ts for the rationale (env.SUPABASE_URL
+  // in CF Pages is stale, points to a retired project, causes CF error
+  // 1016 when used). Until the operator cleans up the env var we must
+  // always use PROD_SUPABASE_URL.
+  const supabase = createClient(PROD_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
