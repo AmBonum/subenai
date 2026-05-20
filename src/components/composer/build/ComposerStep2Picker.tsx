@@ -49,13 +49,13 @@ export function ComposerStep2Picker({ questions, selectedIds, onToggle }: Props)
     <div className="space-y-3" data-testid="composer-step-2-wrapper">
       <div
         data-testid="composer-step-2-summary"
-        className={`flex items-start justify-between gap-3 rounded-xl border p-4 transition-colors ${
+        className={`flex flex-col items-stretch gap-3 rounded-xl border p-4 transition-colors sm:flex-row sm:items-start sm:justify-between ${
           count === 0
             ? "border-dashed border-border/60 bg-card/30"
             : "border-primary/30 bg-primary/5"
         }`}
       >
-        <div className="flex items-start gap-3">
+        <div className="flex min-w-0 items-start gap-3">
           <div
             className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
               count === 0 ? "bg-muted/40 text-muted-foreground" : "bg-primary/15 text-primary"
@@ -64,7 +64,7 @@ export function ComposerStep2Picker({ questions, selectedIds, onToggle }: Props)
           >
             {count === 0 ? <Plus className="h-5 w-5" /> : <ListChecks className="h-5 w-5" />}
           </div>
-          <div className="flex flex-col gap-0.5">
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
             <span
               data-testid="composer-step-2-summary-text"
               className={`text-sm font-semibold ${
@@ -75,13 +75,22 @@ export function ComposerStep2Picker({ questions, selectedIds, onToggle }: Props)
             </span>
           </div>
         </div>
+        {/* Toggle was previously `inline-flex shrink-0` next to the
+            summary in a `justify-between` row, which forced the row
+            min-width to icon + text + button + gaps. On 320 px viewports
+            (composer audit, 2026-05-20) that pushed both this button
+            and the bottom fixed action bar 97 px past the right edge.
+            The new shape stacks the summary above the button on
+            <sm, falls back to side-by-side at sm+. `w-full sm:w-auto`
+            makes the button stretch on mobile (better tap target) and
+            sit at natural width on desktop. */}
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
           data-testid="composer-step-2-toggle"
           aria-expanded={expanded}
           aria-controls="composer-step-2-picker"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:bg-primary/15"
+          className="inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:bg-primary/15 sm:w-auto sm:justify-start"
         >
           {expanded ? t("step_2_close_picker") : t("step_2_open_picker")}
           <ChevronDown
