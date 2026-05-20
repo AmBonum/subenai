@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const aiBezpecnostCourse: Course = {
   slug: "ai-bezpecnost-co-nezdielat",
   title: `AI a bezpečnosť — čo chatbotu písať a čo nie`,
-  tagline: `ChatGPT, Gemini, Copilot sú šikovné nástroje. Ale čo za dáta im dávame?`,
+  tagline:
+    "ChatGPT, Gemini a Copilot sú šikovné nástroje. Aké údaje im NIKDY nedávať a ako bezpečne písať promty bez úniku citlivých dát.",
   category: "obecne",
   difficulty: "začiatočník",
   estimatedMinutes: 8,

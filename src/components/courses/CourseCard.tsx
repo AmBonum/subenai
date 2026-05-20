@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Clock } from "lucide-react";
 
 import type { Course } from "@/content/courses";
 import type { BlogPostListItem } from "@/lib/blog/queries";
@@ -54,12 +54,24 @@ export function CourseCard({ course, relatedArticle }: CourseCardProps) {
       </Link>
       <div className="flex flex-1 flex-col gap-2 p-5">
         <div className="flex items-start justify-between gap-3">
-          <span
-            data-testid={`courses-card-category-${course.slug}`}
-            className="rounded-full border border-border/60 bg-background/40 px-2 py-0.5 text-xs text-muted-foreground"
-          >
-            {tCourses(`category_label.${course.category}`)}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              data-testid={`courses-card-category-${course.slug}`}
+              className="rounded-full border border-border/60 bg-background/40 px-2 py-0.5 text-xs text-muted-foreground"
+            >
+              {tCourses(`category_label.${course.category}`)}
+            </span>
+            <span
+              data-testid={`courses-card-difficulty-${course.slug}`}
+              className={`rounded-full border px-2 py-0.5 text-[11px] font-medium ${
+                course.difficulty === "začiatočník"
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                  : "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300"
+              }`}
+            >
+              {course.difficulty}
+            </span>
+          </div>
         </div>
         <Link
           to="/courses/$slug"
@@ -75,8 +87,12 @@ export function CourseCard({ course, relatedArticle }: CourseCardProps) {
           </h3>
         </Link>
         <p className="line-clamp-3 text-sm text-muted-foreground">{course.tagline}</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          ⏱ {course.estimatedMinutes} min · {course.difficulty}
+        <p
+          data-testid={`courses-card-minutes-${course.slug}`}
+          className="mt-1 inline-flex w-fit items-center gap-1 rounded-full bg-muted/40 px-2 py-0.5 text-xs text-muted-foreground"
+        >
+          <Clock className="h-3 w-3" aria-hidden="true" />
+          {course.estimatedMinutes} min
         </p>
         {relatedArticle && (
           <Link

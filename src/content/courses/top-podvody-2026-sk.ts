@@ -1,0 +1,120 @@
+import type { Course } from "./_schema";
+
+export const topPodvody2026Course: Course = {
+  slug: "top-podvody-2026-sk",
+  title: "Top podvody na Slovensku v roku 2026",
+  tagline: "5 nových schém, ktoré v 2026 zarobili útočníkom najviac — a ako ich rozoznáš.",
+  category: "obecne",
+  difficulty: "začiatočník",
+  estimatedMinutes: 8,
+  heroEmoji: "🇸🇰",
+  relatedQuestionsCategory: "phishing",
+  publishedAt: "2026-05-20",
+  updatedAt: "2026-05-20",
+  sections: [
+    {
+      kind: "intro",
+      heading: "Top podvody na Slovensku v 2026 — čo sa zmenilo oproti 2025",
+      body: `Top podvody na Slovensku v 2026 majú jeden spoločný menovateľ: AI. Deepfake hlas z 8 sekúnd nahrávky, ChatGPT-generované e-maily bez gramatických chýb, falošné AI investičné platformy s realistickým UI. Zároveň prišli nové vlny — EÚ AI Akt (platný od augusta 2026) spustil vlnu phishingu „povinná registrácia AI nástrojov", rebranding Slovenskej pošty na „Slovak Post" v marci dal útočníkom 6 mesiacov priestoru s „aktualizácia údajov k novému značeniu" e-mailmi. Krypto pump-and-dump na meme coiny zlikvidoval slovenských retail investorov za vyše 12 miliónov €. Tento kurz prejde 5 najaktuálnejších schém v SR a ako každú rozoznáš za pár sekúnd.`,
+    },
+    {
+      kind: "example",
+      heading: `Schéma #1 — „Povinná registrácia AI nástrojov podľa EÚ AI Aktu"`,
+      visual: {
+        kind: "email",
+        from: "Európska komisia — AI Office",
+        fromEmail: "registration@eu-ai-act.compliance-portal.eu",
+        subject: "URGENT: Registrácia ChatGPT účtu podľa Article 12 AI Act — do 30.6.2026",
+        body: `Vážený užívateľ, podľa nového EÚ AI Aktu (účinný 1.8.2026) ste povinný registrovať váš účet OpenAI / Claude / Gemini cez oficiálny portál. Nesplnenie hrozí pokutou až 35 000 €. Registrácia: 5 minút, zdarma.`,
+        cta: "Registrovať účet",
+      },
+      commentary: `EÚ AI Akt nevyžaduje od jednotlivcov žiadnu registráciu — povinnosti má dodávateľ (OpenAI, Anthropic), nie ty. Doména eu-ai-act.compliance-portal.eu je phishing, oficiálny zdroj je digital-strategy.ec.europa.eu.`,
+    },
+    {
+      kind: "example",
+      heading: `Schéma #2 — „Slovak Post" rebranding podvod`,
+      visual: {
+        kind: "sms",
+        sender: "SlovakPost",
+        body: `Po rebrandingu na Slovak Post je nutne potvrdit vase doruciacie udaje, inak hrozi prerusenie sluzby. Overit: slovak-post.update-account.sk`,
+        time: "dnes 13:08",
+      },
+      commentary: `Slovenská pošta v marci 2026 prešla rebrandom — útočníci to využili na hromadné SMS „aktualizácia údajov". Skutočná pošta neposiela SMS s linkom. Doména slovak-post.update-account.sk je podvodná, pravá je posta.sk alebo nový brand slovakpost.sk.`,
+    },
+    {
+      kind: "example",
+      heading: `Schéma #3 — Krypto pump-and-dump na meme coiny`,
+      visual: {
+        kind: "instagram",
+        account: "slovak_crypto_signals",
+        verified: false,
+        body: `🚀 SLOVAK DOGE coin spúšťame v stredu 18:00 na Solane. Vstupná cena 0,0001 USDT. Cieľ 100x za 48 hodín. Posledných 200 miest v privátnej skupine, link v bio.`,
+        cta: "Pripojiť sa",
+        imageEmoji: "🐕",
+      },
+      commentary: `Klasický pump-and-dump. Influencer cez Telegram skupinu organizuje „pump" — všetci kúpia v rovnaký čas, cena vyletí, on a jeho ľudia predajú na vrchole, ostatní zostanú so 99 % stratou. V SR sa cez 2025–2026 stratilo viac ako 12 miliónov € na týchto schémach.`,
+    },
+    {
+      kind: "example",
+      heading: `Schéma #4 — Deepfake CEO call`,
+      visual: {
+        kind: "call",
+        caller: "CEO firmy (deepfake hlasu)",
+        number: "skrýva sa cez WhatsApp call — žiadne caller ID",
+        hint: "AI klon hlasu zo 8 sekúnd LinkedIn videa CEO",
+      },
+      commentary: `V 2026 BEC podvody postúpili — útočník volá cez WhatsApp s deepfake hlasom CEO, „súrny prevod 80 000 € na rakúsky účet, akvizícia, nikomu o tom nesmieš povedať". Hlas je 95 % autentický. Obrana: vždy druhé schválenie cez nezávislý kanál (osobne, alebo Slack DM s overením kontextu).`,
+    },
+    {
+      kind: "example",
+      heading: `Schéma #5 — Falošné AI investičné platformy s celebritami`,
+      visual: {
+        kind: "url",
+        url: "https://tradingbot-ai-elon-2026.com/sk/registracia",
+        secure: true,
+      },
+      commentary: `Reklama: „Elon Musk uvádza novú AI investičnú platformu pre Slovákov. Začnete s 250 €, do mesiaca máte 3 800 €." Deepfake video Elona / Andreja Kisku schvaľujúce platformu. Skutočnosť: pig-butchering platforma, peniaze nikdy nevidíš.`,
+    },
+    {
+      kind: "redflags",
+      heading: "Spoločné znaky podvodov v 2026",
+      flags: [
+        `AI generovaný obsah bez gramatických chýb — staré varovanie „hľadaj preklepy" už neplatí.`,
+        `Deepfake hlasy a videá — overenie cez druhý nezávislý kanál je nutné.`,
+        `Zneužívanie aktuálnych regulácií (EÚ AI Akt, GDPR aktualizácie, DORA) ako zámienka pre „povinnú akciu".`,
+        `Rebranding známych značiek (Slovenská pošta → Slovak Post) ako zámienka pre „aktualizáciu údajov".`,
+        `Krypto podvody s celebritami (Musk, Kiska, Kollár) — všetky deepfake, žiadna z nich nepropaguje krypto.`,
+        `Telegram / Discord komunity „signals" — pump-and-dump organizovaný cez „exkluzívne tipy".`,
+        `Tlak cez „limitované miesta" — „posledných 200 v skupine", „len prvých 50 účastníkov".`,
+      ],
+    },
+    {
+      kind: "do_dont",
+      heading: "Pravidlá pre 2026",
+      do: [
+        `Pri každej „úradnej" výzve (EÚ, ministerstvo, pošta) over informáciu na oficiálnom .gov / .gov.sk webe ručným zadaním adresy.`,
+        `Pri akejkoľvek finančnej požiadavke od šéfa / rodiny over druhým kanálom (osobne, Slack, iný telefón).`,
+        `Pre rodinu zaveď „kontrolné slovo" — útočník s deepfake hlasom ho nepozná.`,
+        `Krypto investície len cez regulované burzy (Coinbase, Kraken) — žiadne „signal" Telegram skupiny.`,
+      ],
+      dont: [
+        `Nereaguj na e-mail / SMS s výzvou „registrovať podľa EÚ regulácie" — žiadne také individuálne registrácie pre občanov neexistujú.`,
+        `Nedôveruj caller ID, deepfake videám, ani „celebritným" odporúčaniam investícií.`,
+        `Nepripájaj sa do „exkluzívnych" Telegram krypto skupín — sú pump-and-dump v 99 % prípadov.`,
+        `Nedôveruj „novej značke" bez overenia cez oficiálny web — fake rebranding domén je v 2026 top schéma.`,
+      ],
+    },
+    {
+      kind: "scenario",
+      heading: `Reálny scenár — „povinná aktualizácia údajov k Slovak Post"`,
+      story: `Príde ti SMS: „Slovak Post: Po rebrandingu je nutné potvrdiť doručovacie údaje, inak hrozí prerušenie služby. Overiť: slovak-post.update-account.sk." Naozaj čakáš balík z Aliexpressu — zdá sa to dôveryhodné.`,
+      right_action: `Otvor si posta.sk / slovakpost.sk priamo v prehliadači (zadáš ručne). Skontroluj stav zásielky cez Pošta SR appku. SMS so „povinnou aktualizáciou" ignoruješ a nahlasiš na 7726 (bezplatná linka pre spam SMS). Žiadna pošta nevyžaduje aktualizáciu cez SMS link — vždy iba cez prihlásenie do oficiálnej appky alebo na webe.`,
+    },
+  ],
+  sources: [
+    { label: "SK-CERT — aktuálne hrozby", url: "https://www.sk-cert.sk/" },
+    { label: "NBÚ — bezpečnostné odporúčania", url: "https://www.nbu.gov.sk/" },
+    { label: "Slovenská pošta — bezpečnostné upozornenia", url: "https://www.posta.sk/" },
+    { label: "Európska komisia — AI Act", url: "https://digital-strategy.ec.europa.eu/" },
+  ],
+};

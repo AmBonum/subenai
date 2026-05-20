@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const investmentScamsCourse: Course = {
   slug: "investicne-podvody-krypto-ai",
   title: `Krypto a „AI brokeri": prečo Elon Musk nezarába na Instagrame`,
-  tagline: `Reklamy s deepfake celebritami, pump & dump schémy, fake brokeri — 5 schém ktoré ti vezmú 10 000+ EUR.`,
+  tagline:
+    'Reklamy s deepfake Elonom, pump & dump tokeny a „AI brokeri" — 5 schém, ktorými ťa pripravia o 10 000 € a viac.',
   category: "investicie",
   difficulty: "pokročilý",
   estimatedMinutes: 12,

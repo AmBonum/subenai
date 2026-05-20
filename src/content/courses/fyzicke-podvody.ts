@@ -4,7 +4,7 @@ export const fyzickePodvodyCourse: Course = {
   slug: "fyzicke-podvody",
   title: `Fyzické podvody — ako vás okradnú „naživo"`,
   tagline:
-    "Falošný technik, výherný lístok, pomoc na ulici. Offline scamy sú dnes rovnako bežné ako phishing.",
+    '„Vy ste náš nový sused", „som z plynární", podvrhnutá platobná páska v reštaurácii — 6 podvodov, ktoré sa dejú naživo.',
   category: "obecne",
   difficulty: "začiatočník",
   estimatedMinutes: 8,

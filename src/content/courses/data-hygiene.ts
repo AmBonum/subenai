@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const dataHygieneCourse: Course = {
   slug: "data-hygiene",
   title: `Data hygiene — ako neprísť o digitálnu identitu`,
-  tagline: `2FA, password manager, kontrola únikov. 30 minút setup-u, ktorý ti zachráni roky problémov.`,
+  tagline:
+    "2FA, správca hesiel a kontrola únikov: 30 minút setup-u, ktorý ti zachráni roky digitálnych problémov.",
   category: "data",
   difficulty: "začiatočník",
   estimatedMinutes: 10,

@@ -4,7 +4,7 @@ export const aiDeepfakeCourse: Course = {
   slug: "ai-hlasove-a-deepfake-podvody",
   title: `AI deepfake podvody — falošný hlas, falošná tvár, skutočná škoda`,
   tagline:
-    '30 sekúnd hlasovej nahrávky stačí na klon. Ako spoznáte, že „syn" v telefóne nie je syn?',
+    '„Mama, prevedz mi 800 €" hlasom tvojho dieťaťa: ako fungujú voice cloning a deepfake video a ako ich rozoznáš naživo.',
   category: "voice",
   difficulty: "pokročilý",
   estimatedMinutes: 7,

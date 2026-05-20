@@ -4,7 +4,7 @@ export const pigButcheringCourse: Course = {
   slug: "pig-butchering-podvod",
   title: "Šafránové prasiatko — najdrahší podvod súčasnosti",
   tagline:
-    'Neznámy kontakt, romantika, „zázračné" krypto zisky. Takto ťa mesiac po mesiaci vyvedú zo sporení.',
+    "Najdrahší podvod súčasnosti: cudzinec na WhatsApp, falošný krypto účet, fingované zisky — a koniec, keď si vyberieš.",
   category: "investicie",
   difficulty: "pokročilý",
   estimatedMinutes: 10,

@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const smsSmishingCourse: Course = {
   slug: "sms-smishing",
   title: "Ako nedať sa nachytať na podvodné SMS",
-  tagline: "5 typov smiškov, ktoré teraz lietajú v SR — a ako ich rozoznať za 3 sekundy.",
+  tagline:
+    "5 typov podvodných SMS, ktoré teraz lietajú na Slovensku — a ako ich rozoznáš za 3 sekundy podľa červených vlajok.",
   category: "sms",
   difficulty: "začiatočník",
   estimatedMinutes: 8,

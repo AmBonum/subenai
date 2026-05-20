@@ -74,13 +74,13 @@ describe("/courses head() — E25 Phase 2 SEO blobs", () => {
     expect(types).toContain("FAQPage");
   });
 
-  it("FAQPage carries 5 Question entries", () => {
+  it("FAQPage carries 8 Question entries", () => {
     const out = cfg.options.head();
     const faq = (out.scripts ?? [])
       .map((s) => JSON.parse(s.children) as Record<string, unknown>)
       .find((b) => b["@type"] === "FAQPage");
     expect(faq).toBeDefined();
-    expect((faq!.mainEntity as unknown[]).length).toBe(5);
+    expect((faq!.mainEntity as unknown[]).length).toBe(8);
   });
 
   it("emits canonical + robots:index on the catalog index", () => {

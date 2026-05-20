@@ -1,4 +1,13 @@
-import { Gift, Clock, Award, Users, Share2 } from "lucide-react";
+import {
+  Gift,
+  Clock,
+  Award,
+  Users,
+  Share2,
+  Briefcase,
+  Smartphone,
+  ShieldCheck,
+} from "lucide-react";
 
 import { FaqAccordion, type FaqAccordionItemKey } from "@/components/ui/faq/FaqAccordion";
 import { ROUTES } from "@/config/routes";
@@ -16,6 +25,9 @@ import { tFor } from "@/i18n/quiz";
 //   q3 Award         — "Dostanem certifikát?"
 //   q4 Users         — "Pre koho sú určené?"
 //   q5 Share2        — "Môžem poslať kolegom?"
+//   q6 Briefcase     — "Pre firmy a zamestnancov?"
+//   q7 Smartphone    — "Pre seniorov / rodičov?"
+//   q8 ShieldCheck   — "Aktuálnosť obsahu?"
 
 const COURSES_FAQ_ICONS = {
   q1: Gift,
@@ -23,6 +35,9 @@ const COURSES_FAQ_ICONS = {
   q3: Award,
   q4: Users,
   q5: Share2,
+  q6: Briefcase,
+  q7: Smartphone,
+  q8: ShieldCheck,
 } as const;
 
 export function CoursesFaqSection() {

@@ -3,7 +3,8 @@ import type { Course } from "./_schema";
 export const vishingCourse: Course = {
   slug: "vishing-telefonicke-podvody",
   title: `Vishing — telefonické podvody „banky", „polície" a „Microsoftu"`,
-  tagline: "Falošný bankár, falošný policajt, falošný technik. Ako zložiť do 5 sekúnd.",
+  tagline:
+    '„Banka", „polícia" alebo „Microsoft" v telefóne? 4 scenáre + presné vety, ktorými hovor ukončíš za 5 sekúnd.',
   category: "voice",
   difficulty: "začiatočník",
   estimatedMinutes: 7,
