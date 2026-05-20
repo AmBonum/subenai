@@ -9,9 +9,48 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
-> Žiadne nové používateľsky-viditeľné zmeny mimo [1.12.0]. Ďalší release
+> Žiadne nové používateľsky-viditeľné zmeny mimo [1.13.0]. Ďalší release
 > označíme keď bude pripravený ucelený balík (typicky 5+ stories alebo
 > jedna väčšia funkcia).
+
+## [1.13.0] — 2026-05-20
+
+Drobnejší vizuálny release zameraný na Akadémiu (blog) a mobilné
+rozlíšenia. Hlavná oprava: rozbaľovací zoznam sprievodcov na Akadémii
+sa po kliknutí netváril, že niečo robí — vnútri to stav prepínalo, ale
+karty ostávali viditeľné v oboch stavoch. Plus séria menších mobilných
+opráv: dlhý titulok sekcie už nepretekal off-screen, filter kategórií
+na mobile nemá útrpný horizontálny scroll a stránky *Cookies* aj
+*Ochrana osobných údajov* sa konečne zmestia do 320 px obrazovky bez
+horizontálneho posúvania.
+
+### Zmenené
+- **Akadémia — sekcia sprievodcov má nové meno.** Doteraz sa volala
+  *„základní sprievodcovia"*, čo znelo začiatočnícky a nepovedalo, čo
+  v nej čaká. Nové meno *„sprievodcovia digitálnou bezpečnosťou"* je
+  presnejšie a uľahčuje nájsť stránku cez vyhľadávač.
+- **Akadémia — pri vyhľadávaní sa sekcia článkov premenuje.** Predtým
+  si pri zadaní `phishing` videl/a *„najnovšie články"* — zavádzajúce,
+  lebo zoznam ukazoval iba zhody. Po novom *„výsledky pre „phishing""*
+  + počet nájdených článkov pod ním.
+- **Akadémia — filter kategórií na mobile sa už nescrolluje vodorovne.**
+  Predtým bolo 13 chipov v takmer neviditeľnom horizontálnom scrollbare
+  (iOS ho úplne skrýva). Po novom vidíš *Všetko* + 3 najpopulárnejšie
+  kategórie a tlačidlo *„ďalšie kategórie (10)"* rozbalí zvyšok. Na
+  desktope sa nič nemení — všetky chipy ostávajú viditeľné.
+
+### Opravené
+- **Akadémia — rozbaľovací zoznam sprievodcov sa po kliknutí konečne
+  otvára a zatvára vizuálne.** Stav sa síce technicky prepínal (šípka
+  rotovala), ale karty ostávali viditeľné v oboch stavoch — kliknutie
+  *„nič nerobilo"*. Po novom kliknutie naozaj skryje alebo ukáže karty.
+- **Akadémia — nadpis sekcie a počet sprievodcov sa na úzkych
+  obrazovkách rozložia na dva riadky.** Doteraz dlhý nadpis vedľa
+  *„11 hĺbkových sprievodcov"* pretekal mimo viewport doprava.
+- **Cookies a Ochrana osobných údajov sa zmestia do 320 px obrazovky.**
+  Tabuľka kategórií cookies predtým rozšírila celú stránku doprava —
+  text nadpisov a paragrafov sa rezal mimo obrazovky. Po novom má
+  tabuľka vlastný horizontálny scroll, zvyšok stránky sedí.
 
 ## [1.12.0] — 2026-05-20
 
