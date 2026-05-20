@@ -68,7 +68,12 @@ jobs:
           fi
 
       - name: Run ZAP baseline
-        uses: zaproxy/action-baseline@v0.13.0
+        # E41 — upgraded from @v0.13.0. The 0.13.0 version returned a
+        # non-zero exit code on WARN-NEW > 0 even with `fail_action:
+        # false`, which made the workflow turn red on harmless findings
+        # and obscured the actual FAIL signal. 0.14.0 fixes the exit
+        # code semantics so `fail_action: false` truly means "advisory".
+        uses: zaproxy/action-baseline@v0.14.0
         with:
           target: ${{ steps.target.outputs.url }}
           rules_file_name: ".zap/rules.tsv"
