@@ -113,3 +113,48 @@ describe("/tests/$slug — E28 detail hero alignment", () => {
     expect(screen.getByTestId("test-pack-start-button")).toBeInTheDocument();
   });
 });
+
+// E37 CR follow-up — fetchPackWithQuestions returns `publishedAt: ""` when
+// the DB column is null, which made `new Date("").getFullYear()` render as
+// NaN in the copyright footer.
+describe("/tests/$slug — copyright year is never NaN", () => {
+  it("falls back to the current year when publishedAt is empty", async () => {
+    vi.resetModules();
+    const EMPTY_PACK: TestPack = { ...PACK_FIXTURE, publishedAt: "" };
+    const EMPTY_LOADER = {
+      pack: EMPTY_PACK,
+      questions: LOADER_DATA.questions,
+      allPacks: [EMPTY_PACK],
+    };
+    vi.doMock("@tanstack/react-router", async () => {
+      const actual =
+        await vi.importActual<typeof import("@tanstack/react-router")>("@tanstack/react-router");
+      return {
+        ...actual,
+        createFileRoute:
+          () =>
+          <T,>(config: T) => ({
+            ...(config as object),
+            useLoaderData: () => EMPTY_LOADER,
+          }),
+        notFound: () => new Error("not-found"),
+        Link: ({ to, children, ...rest }: { to: string; children: React.ReactNode }) => (
+          <a href={typeof to === "string" ? to : "#"} {...(rest as Record<string, unknown>)}>
+            {children}
+          </a>
+        ),
+      };
+    });
+    vi.doMock("@/components/quiz/flow/TestFlow", () => ({
+      TestFlow: () => <div data-testid="test-flow-stub" />,
+    }));
+    vi.doMock("@/components/test-packs/RelatedTestPackArticleCard", () => ({
+      RelatedTestPackArticleCard: () => null,
+    }));
+    const { Route: FreshRoute } = await import("@/routes/tests.$slug");
+    const Page = (FreshRoute as unknown as RouteCfg).component;
+    render(<Page />);
+    const copyright = screen.getByText(/©/);
+    expect(copyright.textContent).not.toMatch(/NaN/);
+  });
+});

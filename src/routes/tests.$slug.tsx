@@ -198,7 +198,9 @@ function PackPage() {
 
         <p className="mt-10 border-t border-border/60 pt-4 text-center text-xs text-muted-foreground">
           {t("pack_copyright", {
-            year: new Date(pack.publishedAt).getFullYear(),
+            year: pack.publishedAt
+              ? new Date(pack.publishedAt).getFullYear()
+              : new Date().getFullYear(),
             holder: COPYRIGHT_HOLDER,
           })}
         </p>
