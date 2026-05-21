@@ -28,8 +28,12 @@ const validPayload = {
 
 test.describe("POST /api/support-ticket-create — input validation", () => {
   test("rejects non-JSON body with 400 invalid_json", async ({ request }) => {
+    // Buffer.from() bypasses Playwright's string-to-JSON serialization —
+    // `{ data: "not json" }` would emit `"not json"` (valid JSON string
+    // literal) and the CF function would parse it successfully. We want
+    // actual non-parseable bytes on the wire.
     const r = await request.post(ENDPOINT, {
-      data: "not json at all",
+      data: Buffer.from("not json at all"),
       headers: { "content-type": "application/json" },
     });
     expect(r.status()).toBe(400);
@@ -42,8 +46,9 @@ test.describe("POST /api/support-ticket-create — input validation", () => {
     expect((await r.json()).error).toBe("subject_invalid");
   });
 
-  test("rejects too-short body with body_invalid", async ({ request }) => {
-    const r = await request.post(ENDPOINT, { data: { ...validPayload, body: "too short" } });
+  test("rejects empty body with body_invalid", async ({ request }) => {
+    // min length is 1 (after trim) — anything that trims to empty fails.
+    const r = await request.post(ENDPOINT, { data: { ...validPayload, body: "   " } });
     expect(r.status()).toBe(400);
     expect((await r.json()).error).toBe("body_invalid");
   });
@@ -72,9 +77,12 @@ test.describe("POST /api/support-ticket-create — input validation", () => {
     expect((await r.json()).error).toBe("subject_invalid");
   });
 
-  test("rejects body over 10k chars with body_invalid", async ({ request }) => {
+  test("rejects body over 5000 chars with body_invalid", async ({ request }) => {
+    // Production limit is 5000 (see CATEGORY_VALUES + body bounds in
+    // functions/api/support-ticket-create.ts). The reply handler allows
+    // up to 10000 — different limits per endpoint.
     const r = await request.post(ENDPOINT, {
-      data: { ...validPayload, body: "a".repeat(10_001) },
+      data: { ...validPayload, body: "a".repeat(5001) },
     });
     expect(r.status()).toBe(400);
     expect((await r.json()).error).toBe("body_invalid");

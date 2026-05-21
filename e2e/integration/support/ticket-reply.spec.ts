@@ -42,8 +42,11 @@ test.describe("POST /api/support-ticket-reply — payload validation", () => {
   const validJwtShape = "Bearer " + ["x", "x", "x"].join(".");
 
   test("returns 400 on malformed JSON", async ({ request }) => {
+    // Buffer.from() bypasses Playwright's string-to-JSON serialization
+    // so we send actual non-parseable bytes (see the matching test in
+    // ticket-create.spec.ts for the gotcha details).
     const r = await request.post(ENDPOINT, {
-      data: "not json",
+      data: Buffer.from("not json"),
       headers: { "content-type": "application/json", authorization: validJwtShape },
     });
     expect(r.status()).toBe(400);
