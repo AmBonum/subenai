@@ -1,7 +1,7 @@
 # E46 — Admin user-data manager (GDPR fulfilment engine)
 
 **Created:** 2026-05-21
-**Status:** 🟢 NEAR-CLOSEOUT — 6/7 phases shipped (5 in v1.14.2 + E46.5 cron in v1.14.3); E46.6 (rectification UI) deferred. See [Closeout note](#closeout-note-2026-05-21) below.
+**Status:** ✅ CLOSED — 7/7 phases shipped (5 in v1.14.2 + E46.5 cron + E46.6 rectification MVP in v1.14.3). See [Closeout note](#closeout-note-2026-05-21) below.
 **Owner:** _to assign_
 **Dependencies:** E37 (DSR queue), E40 (DPA queue), E42 (`export_my_data()` self-service)
 **Target:** Make every GDPR Art. 15–22 request actually fulfillable by a single admin click, with full audit trail.
@@ -35,7 +35,7 @@ Done definition: a DSR Art. 17 (right to erasure) request from start to finish i
 | ~~E46.3~~ | ~~`/admin/users/<user_id>` dossier — 8 sections grouped by domain, each section is collapsible + has its own row count + action buttons~~ | L | P0 | ✅ Done (MVP — PR #101). 2 of 8 sections shipped (identity, governance) + action toolbar. Remaining 6 sections moved out of E46 — see Closeout note. |
 | ~~E46.4~~ | ~~DSR queue integration: *Otvoriť dossier* link on each row + auto-resolve when fulfillment action completes~~ | S | P0 | ✅ Done (PR #105 — open-dossier link). Auto-resolve-on-action moved to E46.5. |
 | ~~E46.5~~ | ~~Audit log surface: typed-confirm dialog, two-step deletion (soft-mark then hard-delete after N minutes for rollback), audit_log row for every change~~ | M | P1 | ✅ Done — typed-confirm + audit_log row shipped in E46.1 + E46.3 (v1.14.2). **pending_erasures auto-execute cron** shipped via migration `20260521240000_e46_5_pending_erasure_cron.sql` — pg_cron job `pending-erasures-flush` runs every minute, processes rows past their 5-min grace window via `execute_pending_erasures()`. Per-row failures isolated; full forensic record preserved in `pending_erasures.pre_delete_snapshot` + `audit_log`. |
-| E46.6 | Per-row rectification UI for the 5 most-requested tables (`profiles`, `profile_preferences`, `respondents`, `dsr_requests`, `notifications`) | M | P1 | ⏸ Deferred — Art. 16 fulfilment today goes through manual Supabase SQL by operator. No production volume yet to justify the inline-edit UX. See Closeout note. |
+| ~~E46.6~~ | ~~Per-row rectification UI for the 5 most-requested tables (`profiles`, `profile_preferences`, `respondents`, `dsr_requests`, `notifications`)~~ | M | P1 | ✅ Done MVP — `profiles.display_name` end-to-end via new `rectify_user_data()` RPC (whitelisted at DB layer) + pencil-icon dialog in the dossier (audit_log captures OLD + NEW values). Other 4 tables still go through manual SQL per runbook §2 — extending the whitelist is a 1-commit drop-in when production volume justifies. |
 | ~~E46.7~~ | ~~Tests + privacy/cookies copy update + CHANGELOG + runbook entry~~ | S | P0 | ✅ Done (PR #109 — Playwright `dossier-flow.spec.ts` + `/privacy` s5 disclosure). Runbook landed separately in `tasks/E46-runbook.md`. |
 
 ### Out — explicitly NOT in this epic
@@ -160,7 +160,7 @@ When admin uses the dossier action to fulfill a request, the DSR row is auto-mar
 | ~~E46.3~~ | ~~`/admin/users/<user_id>` dossier route + 8 sections~~ | L | P0 | ✅ Done MVP (PR #101) | 2 of 8 sections shipped (identity + governance). Remaining 6 sections moved out of E46. |
 | ~~E46.4~~ | ~~DSR queue ↔ dossier link~~ | S | P0 | ✅ Done (PR #105) | Lookup hook + button. Auto-resolve-on-action moved to E46.5 (deferred). |
 | ~~E46.5~~ | ~~Typed-confirm dialog + 5-min pending-erasure cron~~ | M | P1 | ✅ Done | Typed-confirm in E46.3 (v1.14.2). Cron via pg_cron in migration `20260521240000_e46_5_pending_erasure_cron.sql` — every minute, `execute_pending_erasures()` worker, FOR UPDATE SKIP LOCKED for concurrency, per-row failure isolation. |
-| E46.6 | Per-row rectification edit (5 tables) | M | P1 | ⏸ Deferred | Inline drawer with form validation per table. No production volume yet to justify. |
+| ~~E46.6~~ | ~~Per-row rectification edit (5 tables)~~ | M | P1 | ✅ Done MVP | `profiles.display_name` only — `rectify_user_data()` RPC with DB whitelist, pencil-dialog UI in dossier, audit_log entry with OLD + NEW values. Extending to other tables is a drop-in. |
 | ~~E46.7~~ | ~~Tests + docs + CHANGELOG + runbook + privacy s5/s6 update~~ | S | P0 | ✅ Done (PR #109) | Playwright + `/privacy` s5 disclosure. Runbook at `tasks/E46-runbook.md`. |
 
 ## Sprint estimate
@@ -198,7 +198,7 @@ Breakdown:
 
 Partial-closeout state as of v1.14.2 (2026-05-21). Items marked ✅ have shipped; items marked ⏸ are explicitly deferred and tracked in the [Closeout note](#closeout-note-2026-05-21).
 
-- 🟢 All 7 stories — **6/7 done** (E46.1, E46.2, E46.3 MVP, E46.4, E46.5, E46.7). E46.6 (rectification UI) deferred.
+- ✅ All 7 stories shipped — E46.1, E46.2, E46.3 MVP, E46.4, E46.5, E46.6 MVP, E46.7. Epic is closed.
 - ✅ `npm run lint` 0/0, `npm test` 100% pass, `npm run build` ✓ (every shipped PR)
 - ✅ DB migrations applied on production Supabase post-merge (E46.1 migration applied via Supabase dashboard SQL editor)
 - ✅ Full Art. 17 erasure flow now end-to-end: submit DSR → admin opens dossier → typed-confirm hard delete → 5-min grace window → pg_cron auto-execute → user gone from `auth.users` (cascade) → `audit_log` records both enqueue + execute. Anonymise path still works synchronously as before.
@@ -227,37 +227,32 @@ Migration `20260521240000_e46_5_pending_erasure_cron.sql` ships the worker piece
 
 **Real-world impact:** Hard delete is now genuinely end-to-end. Worst case latency: 5-min grace + ≤1 min cron tick = ≤6 min from admin click to `auth.users` row gone.
 
-### E46.6 — Per-row rectification UI — DEFERRED
+### E46.6 — Per-row rectification UI — ✅ SHIPPED MVP (v1.14.3)
 
-**What ships today:** Art. 16 (rectification) requests come into `/admin/dsr` like any other DSR. The admin opens the requester's dossier (via E46.4 deep-link), reads the request note, then opens Supabase SQL editor and runs `UPDATE profiles SET display_name = 'correct value' WHERE id = '<uuid>'`. The audit log doesn't capture the *intent* of the change, only the trigger-emitted row.
+Migration `20260521250000_e46_6_rectify_user_data.sql` ships the RPC. The dossier UI shows a pencil icon next to the *Meno* (display_name) field; click → dialog → input → save fires `rectify_user_data(user_id, 'profiles', 'display_name', new_value)`. Audit log entry written with OLD + NEW values quoted via `%L` so apostrophes / Unicode survive.
 
-**What's missing:** The inline-edit drawer per dossier section. Each editable field (name, email-on-profile, audience kind, etc.) needs a pencil icon → drawer → form → mutation → per-field `audit_log` entry.
+**Scope notes:**
+- **DB whitelist:** Currently only `(profiles, display_name)` accepts the rectification. Any other (table, column) pair raises with a hint at the SQL level. Per E46 D-2, `auth.users.email` is explicitly NOT editable — the whitelist enforces this defence-in-depth in case the UI ever regresses.
+- **Defence-in-depth caps:** `p_new_value` rejected if NULL (would be erasure-disguised-as-rectification) or > 200 chars (malformed input safeguard).
+- **Extending the whitelist:** drop in a new `IF p_table = 'X' AND p_column = 'Y' THEN ... END IF;` block in the RPC, add a corresponding pencil button in the dossier section, and ship. No new architecture needed.
 
-**Real-world impact:** Low. Production rectification requests are rare today (0 in the last 12 months per DSR queue). The manual SQL path works but isn't operator-friendly — and the missing per-field audit entry is the same Art. 5(2) accountability gap as E46.5, but with much lower frequency.
+**What's still manual:** `profile_preferences`, `respondents`, `dsr_requests`, `notifications` rectifications still go through the runbook §2 manual SQL path. Production volume = 0 in 12 months; no operational pressure to extend further today.
 
-**Resume plan for E46.6:**
-1. Audit the 5 target tables (`profiles`, `profile_preferences`, `respondents`, `dsr_requests`, `notifications`) — for each, list which columns are user-editable per Art. 16 and which are derived/immutable.
-2. Build a generic `<InlineEditDrawer>` shadcn dialog component: takes a row, list of editable columns with per-column validation, fires a mutation + audit_log entry on save.
-3. Wire one section first (identity in the dossier) to prove the pattern, then iterate.
-4. Test: rectification update writes a `dsr_request_rectified` audit_log row with the OLD and NEW values JSON-serialized in `details`.
-5. Privacy doc: no change needed.
+### Epic state
 
-### Why deferred (not built now)
+All 7 phases shipped. The full DSR Art. 15 (export) + Art. 16 (rectify display_name) + Art. 17 (anonymise + hard-delete with auto-flush cron) flow is end-to-end in the admin dossier surface. Phase deliverables for closing v1.15.0+:
 
-- v1.14.2 already ships a functional MVP — Art. 15 (export) and Art. 17 anonymise are end-to-end. The hard-delete cron + rectification UI are improvements, not blockers.
-- E46.5 needs an infra wizard before code can land (Supabase pg_cron vs CF Worker — owner decision).
-- E46.6's production volume doesn't yet justify the inline-edit UX investment.
-- Closing the epic at 5/7 lets the next minor open with a clear "E46.5 + E46.6 follow-ups" focus instead of dragging the same epic across multiple minors.
+- Extend E46.6 whitelist to more tables as production rectification requests appear
+- Add the remaining 6 dossier sections (quiz activity, engagement, financial, audit timeline, sessions, behavioral_events aggregates) per the PII inventory in this PLAN
+- Consider expanding the audit_log retention to capture *view* events (D-5 says they age out after 36 months — could be useful for Art. 5(2) verification)
 
-### What to do if Art. 17 cron is needed urgently
+### What to do if Art. 17 cron is broken / paused
 
-Until E46.5 ships, the manual fallback is:
+Documented in `tasks/E46-runbook.md` as the *Emergency hard-delete* procedure. Service-role SQL fallback:
 ```sql
--- From Supabase SQL editor, as service role:
-SELECT public.erase_user_data('<user_id>', 'hard_delete');
--- This bypasses the 5-min grace window and immediately deletes.
+SELECT public.erase_user_data('<user_id>'::uuid, 'hard_delete');
 ```
-This is documented in `tasks/E46-runbook.md` as the *Emergency hard-delete (no grace)* procedure.
+Bypasses both the 5-min grace window and the cron — direct call to the underlying RPC. Use only with documented justification (regulator order, broken cron, manual retry of a previously-failed delete).
 
 ## Related work (already shipped — context for this epic)
 

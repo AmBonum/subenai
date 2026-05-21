@@ -1816,6 +1816,15 @@ export type Database = {
         Args: { p_user_id: string };
         Returns: boolean;
       };
+      rectify_user_data: {
+        Args: {
+          p_user_id: string;
+          p_table: string;
+          p_column: string;
+          p_new_value: string;
+        };
+        Returns: Json;
+      };
       assert_no_active_sponsorship: {
         Args: { p_user_id: string };
         Returns: undefined;

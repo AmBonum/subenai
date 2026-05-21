@@ -3,7 +3,7 @@
 **Created:** 2026-05-21
 **Audience:** SubenAI admin / DPO / on-call operator
 **Scope:** Procedures for handling every GDPR Art. 15–22 request that reaches us via `/admin/dsr`, e-mail, or paper letter.
-**State of tooling (v1.14.3):** Art. 15 export + Art. 16 (manual SQL until E46.6) + Art. 17 anonymise + Art. 17 hard-delete are all end-to-end via `/admin/users/<id>`. Hard-delete uses a 5-minute grace window then auto-executes via pg_cron (`pending-erasures-flush`, runs every minute). The *Emergency hard-delete* path at the bottom retracts to regulator-order use only.
+**State of tooling (v1.14.3):** All 5 GDPR rights are end-to-end via `/admin/users/<id>` for the MVP scope — Art. 15 export, Art. 16 rectification (`profiles.display_name` today; extending to more fields is a 1-commit drop-in), Art. 17 anonymise, Art. 17 hard-delete with 5-min grace window + auto-execute via pg_cron `pending-erasures-flush` (runs every minute). The *Emergency hard-delete* path at the bottom retracts to regulator-order use only.
 
 This runbook complements `/privacy` section 5 (the public-facing disclosure) — that document tells the data subject *what we do*; this one tells the operator *how to do it*.
 
@@ -38,19 +38,29 @@ Most common request. Read-only, no destructive action.
 
 ## 2. Art. 16 — Right to rectification (fix inaccurate data)
 
-Until E46.6 ships the inline-edit UI, this is a hand-edit through Supabase SQL editor. Document the change carefully.
+### 2a. For `profiles.display_name` (the MVP path — preferred)
 
-1. Open the dossier as above. Read the requester's `note` to identify which field needs correcting.
+1. Open the dossier as above. Read the requester's `note` to identify what field needs correcting.
 2. Cross-check that the requested correction is **factually verifiable** — e.g. a typo in `display_name` is fine; changing `email` is not (we require self-service via `/app/account/profile` for e-mail changes per E46 D-2).
-3. From Supabase SQL editor (service role), run the targeted `UPDATE`:
+3. In the dossier's *Identita + role* section, click the pencil icon next to *Meno*. A dialog opens with the current value pre-filled.
+4. Edit the value (max 200 chars) and click *Uložiť opravu*. The `rectify_user_data()` RPC fires, the dossier reloads with the corrected name, and an `audit_log` row is written with action `dsr_rectification_applied` + OLD and NEW values quoted in `details`.
+5. Send the requester a confirmation e-mail noting the corrected value. Mark the DSR `completed`.
+
+### 2b. For any other field (manual SQL path — interim)
+
+Until the rectify whitelist extends to more (table, column) pairs, fixes to fields other than `profiles.display_name` go through SQL editor. The path here is the historical pre-E46.6 procedure, preserved for completeness.
+
+1. Open the dossier as above. Read the requester's `note` to identify what field needs correcting.
+2. From Supabase SQL editor (service role), run the targeted `UPDATE`:
    ```sql
-   -- Example: fix a misspelled display name.
-   UPDATE public.profiles
-   SET display_name = 'Corrected Name'
-   WHERE id = '<userId>';
-   -- The forensic audit trigger writes an audit_log row automatically.
+   -- Example: fix a misspelled audience kind.
+   UPDATE public.profile_preferences
+   SET audience_kind = 'corrected_value'
+   WHERE user_id = '<userId>';
+   -- The forensic audit trigger writes an audit_log row automatically
+   -- for tables that have one wired (profiles does; many others don't).
    ```
-4. Manually write an `audit_log` entry capturing the request → change mapping:
+3. **Manually** write an `audit_log` entry capturing the request → change mapping (in addition to the auto-trigger if any):
    ```sql
    INSERT INTO public.audit_log (actor_name, action, target_type, target_id, pii_access, details)
    VALUES (
@@ -59,12 +69,12 @@ Until E46.6 ships the inline-edit UI, this is a hand-edit through Supabase SQL e
      'profile',
      '<userId>',
      true,
-     'DSR #<dsrId>: display_name corrected per Art. 16. Old value: "<old>". New value: "<new>".'
+     'DSR #<dsrId>: profile_preferences.audience_kind corrected per Art. 16. Old: ''<old>''. New: ''<new>''.'
    );
    ```
-5. Send the requester a confirmation e-mail noting the corrected value. Mark the DSR `completed`.
+4. Send the requester a confirmation e-mail. Mark the DSR `completed`.
 
-**Note:** When E46.6 ships, steps 3–4 collapse into a single click in the dossier's inline-edit drawer. Until then, the manual SQL path is the only option. Production volume is low (~0 requests in the last 12 months) so this is acceptable interim.
+**Note:** When operational volume justifies, extend the `rectify_user_data()` whitelist to cover the field (1-commit migration), then the UI driver, then this manual procedure retires for that field too.
 
 ---
 

@@ -10,6 +10,19 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
+- **Oprava mena používateľa (GDPR Art. 16) jedným klikom v admin paneli (E46.6).**
+  Doteraz, keď používateľ poslal GDPR žiadosť o opravu nesprávneho mena
+  (napr. preklep v *Meno* poli profilu), operátor musel otvoriť Supabase
+  SQL editor, ručne napísať `UPDATE profiles SET display_name = ...` a navyše
+  ručne dopísať záznam do audit logu. Od dnes: v dossier-i používateľa
+  (`/admin/users/<id>`) pribudla pri *Meno* poli ikona ceruzky. Klik
+  otvorí dialóg s aktuálnou hodnotou, operátor opraví a uloží — meno sa
+  zmení, do audit logu sa zapíše záznam so starou aj novou hodnotou
+  (povinnosť GDPR Art. 5 ods. 2). E-mail účtu ostáva neupraviteľný cez
+  toto rozhranie (zmena by rozbila magic-link autentifikáciu — používatelia
+  si môžu zmeniť e-mail sami v `/app/account/profile`). Pre používateľa
+  žiadna viditeľná zmena; pre operátora významné UX zlepšenie + úplný
+  forenzný záznam.
 - **Žiadosti o vymazanie (Art. 17) sa po novom dokončia automaticky (E46.5).**
   Doteraz admin v GDPR dossier-i klikol *Vymazať natvrdo*, napísal e-mail
   používateľa na potvrdenie, a žiadosť šla do 5-minútovej „grace" fronty

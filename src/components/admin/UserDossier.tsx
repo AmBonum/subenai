@@ -6,6 +6,7 @@ import {
   Download,
   EyeOff,
   Loader2,
+  Pencil,
   ShieldAlert,
   Trash2,
   Undo2,
@@ -30,6 +31,7 @@ import {
   useAnonymizeUser,
   useCancelPendingErasure,
   useEnqueueHardDelete,
+  useRectifyUserData,
   useUserDossier,
   type UserDossier as DossierData,
 } from "@/lib/admin/queries";
@@ -86,10 +88,17 @@ function DossierContent({ userId, dossier }: DossierContentProps) {
   const anonymize = useAnonymizeUser();
   const hardDelete = useEnqueueHardDelete();
   const cancelPending = useCancelPendingErasure();
+  const rectify = useRectifyUserData();
 
   const [anonymizeOpen, setAnonymizeOpen] = useState(false);
   const [hardDeleteOpen, setHardDeleteOpen] = useState(false);
   const [typedEmail, setTypedEmail] = useState("");
+
+  // E46.6 — rectification dialog state. The MVP wires ONE field
+  // (profiles.display_name). The shape is generic enough to drop in
+  // more fields once their DB whitelist entries land.
+  const [rectifyOpen, setRectifyOpen] = useState(false);
+  const [rectifyValue, setRectifyValue] = useState("");
 
   const profile = dossier.profile;
   const initials = avatarInitials(profile?.display_name, profile?.email);
@@ -262,7 +271,16 @@ function DossierContent({ userId, dossier }: DossierContentProps) {
             </Badge>
           </header>
           <dl className="grid gap-3 text-sm sm:grid-cols-2">
-            <DossierRow label={t("field_display_name")} value={profile?.display_name} />
+            <DossierRow
+              label={t("field_display_name")}
+              value={profile?.display_name}
+              onEdit={() => {
+                setRectifyValue(profile?.display_name ?? "");
+                setRectifyOpen(true);
+              }}
+              editTestId="admin-user-dossier-rectify-display-name"
+              editAriaLabel={t("rectify_display_name_button")}
+            />
             <DossierRow label={t("field_email")} value={profile?.email} />
             <DossierRow label={t("field_user_id")} value={userId} mono />
             <DossierRow label={t("field_created_at")} value={formatDate(profile?.created_at)} />
@@ -415,6 +433,75 @@ function DossierContent({ userId, dossier }: DossierContentProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* ── E46.6: Rectify display_name dialog ───────────────────────── */}
+      <Dialog
+        open={rectifyOpen}
+        onOpenChange={(open) => {
+          setRectifyOpen(open);
+          if (!open) setRectifyValue("");
+        }}
+      >
+        <DialogContent data-testid="admin-user-dossier-rectify-dialog">
+          <DialogHeader>
+            <DialogTitle>{t("rectify_dialog_title")}</DialogTitle>
+            <DialogDescription>{t("rectify_dialog_description")}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="rectify-input">{t("rectify_dialog_input_label")}</Label>
+            <Input
+              id="rectify-input"
+              value={rectifyValue}
+              onChange={(e) => setRectifyValue(e.target.value)}
+              maxLength={200}
+              data-testid="admin-user-dossier-rectify-input"
+              autoFocus
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setRectifyOpen(false)}
+              data-testid="admin-user-dossier-rectify-cancel"
+            >
+              {t("dialog_cancel")}
+            </Button>
+            <Button
+              type="button"
+              data-testid="admin-user-dossier-rectify-confirm"
+              disabled={
+                rectify.isPending ||
+                rectifyValue.trim() === "" ||
+                rectifyValue.trim() === (profile?.display_name ?? "")
+              }
+              onClick={() => {
+                rectify.mutate(
+                  {
+                    userId,
+                    table: "profiles",
+                    column: "display_name",
+                    newValue: rectifyValue.trim(),
+                  },
+                  {
+                    onSuccess: () => {
+                      toast.success(t("toast_rectified"));
+                      setRectifyOpen(false);
+                      setRectifyValue("");
+                    },
+                    onError: (err: Error) => {
+                      toast.error(t("toast_action_failed") + ": " + err.message);
+                    },
+                  },
+                );
+              }}
+            >
+              {rectify.isPending && <Loader2 className="mr-1.5 size-4 animate-spin" />}
+              {t("rectify_dialog_confirm")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -423,14 +510,35 @@ interface DossierRowProps {
   label: string;
   value: string | null | undefined;
   mono?: boolean;
+  // E46.6 — when present, renders a small pencil button next to the
+  // value that triggers `onEdit`. Used for fields where the dossier
+  // supports Art. 16 rectification via `rectify_user_data` RPC.
+  onEdit?: () => void;
+  editTestId?: string;
+  editAriaLabel?: string;
 }
 
-function DossierRow({ label, value, mono }: DossierRowProps) {
+function DossierRow({ label, value, mono, onEdit, editTestId, editAriaLabel }: DossierRowProps) {
   return (
     <div className="space-y-1">
       <dt className="text-xs text-muted-foreground">{label}</dt>
-      <dd className={`text-sm text-foreground ${mono ? "font-mono break-all" : ""}`}>
-        {value ?? "—"}
+      <dd className="flex items-center gap-1.5">
+        <span className={`text-sm text-foreground ${mono ? "font-mono break-all" : ""}`}>
+          {value ?? "—"}
+        </span>
+        {onEdit && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="size-6 shrink-0 text-muted-foreground hover:text-foreground"
+            data-testid={editTestId}
+            aria-label={editAriaLabel}
+            onClick={onEdit}
+          >
+            <Pencil className="size-3" />
+          </Button>
+        )}
       </dd>
     </div>
   );
