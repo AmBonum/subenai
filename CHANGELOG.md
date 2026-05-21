@@ -9,6 +9,8 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+## [1.14.3] — 2026-05-21
+
 ### Pridané
 - **Odkazy „Zobraziť dokumentáciu →" vo vysvetľujúcich paneloch už
   nekončia 404.** Vo všetkých paneloch v `/admin` a `/app` linka
