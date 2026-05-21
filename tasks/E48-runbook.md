@@ -248,14 +248,190 @@ INSERT INTO public.audit_log (...) VALUES (
 
 ---
 
-## §§ to be filled in by later phases
+## §6 — Debugging a missing confirmation email
 
-- **§6 — Debugging a missing confirmation email** (E48.5)
-- **§7 — When an admin reply email doesn't arrive** (E48.8)
-- **§8 — Adjusting per-admin notification settings** (E48.9)
-- **§9 — Running E48 tests locally** (E48.10)
-- **§11 — Escalating an `abuse_report` ticket to legal** (E48.11)
+A submitter says "I never got the confirmation email." Walk the chain:
 
-Each section will be added by the closing story of its phase. If you
-need one now, see the corresponding story file under
-`tasks/stories/E48.*.md`.
+1. **Did the ticket land in the DB?**
+   ```sql
+   SELECT id, status, submitter_email, created_at
+   FROM public.support_tickets
+   WHERE submitter_email ILIKE '<email>'
+   ORDER BY created_at DESC LIMIT 5;
+   ```
+   If no row: the submission never reached `submit_support_ticket()`.
+   Check Cloudflare Pages function logs for `/api/support-ticket-create`
+   (look for `turnstile_failed`, `rate_limited_*`, `category_invalid`).
+
+2. **Did the email handler fire?** Email dispatch in
+   `functions/api/support-ticket-create.ts` is **non-fatal** — a Resend
+   outage doesn't roll back the row. Grep CF logs for
+   `support-ticket-create email failed`. The error body Resend returned
+   is logged alongside the ticket id.
+
+3. **Is the recipient on Resend's suppression list?** Bounced or
+   complained addresses get auto-suppressed. Check the Resend dashboard
+   → Suppressions. Remove only after confirming the address is
+   legitimate.
+
+4. **Manually re-send.** If the row exists and email failed:
+   ```bash
+   curl -X POST https://api.resend.com/emails \
+     -H "Authorization: Bearer $RESEND_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "from": "noreply@subenai.sk",
+       "to": "<submitter_email>",
+       "subject": "Vaša žiadosť bola prijatá",
+       "html": "...",
+       "idempotency_key": "support-ticket-received-<ticket_id>"
+     }'
+   ```
+   The idempotency key prevents double-sends if you retry.
+
+5. **Re-issue the view-token link** if the original token was
+   compromised or never received: §10 *Re-issuing for a specific ticket*.
+
+---
+
+## §7 — When an admin reply email doesn't arrive
+
+The admin clicked *Send reply* in `/admin/tickets/{id}`, the UI showed
+the success toast, but the user reports no email.
+
+1. **Did the message row + status flip land?**
+   ```sql
+   SELECT m.id, m.author_kind, m.created_at, t.status
+   FROM public.support_ticket_messages m
+   JOIN public.support_tickets t ON t.id = m.ticket_id
+   WHERE m.ticket_id = '<ticket_uuid>'
+   ORDER BY m.created_at DESC;
+   ```
+   If the admin row is there but `status` is still `in_progress`/`new`,
+   the `transition_ticket_status` RPC failed silently — re-run from the
+   admin UI's *Začať riešiť* / *Označiť ako vyriešené* buttons until
+   the state machine reaches `waiting_user`.
+
+2. **Email dispatch is non-fatal in this handler too.** Check CF logs
+   for `support-ticket-reply email failed (message already saved)`.
+   The log includes `ticket_id` + `message_id` + Resend's error string.
+
+3. **The reply email has no view link if the view-token has been
+   invalidated or expired.** This is by design — once the submitter
+   creates an authenticated account and the admin invalidates the token
+   per §10, future replies use the user's `/app/help` thread instead.
+   Confirm the email body still contains the prose response even
+   without the link.
+
+4. **Manual re-send**: the idempotency key is
+   `support-ticket-reply-<message_id>`. Reuse it via the same Resend
+   curl pattern as §6 step 4.
+
+---
+
+## §8 — Adjusting per-admin notification settings
+
+> **Hard rule (D-5):** admins cannot edit another admin's notification
+> preferences. The RLS policy `admin_notification_preferences_owner_*`
+> enforces `user_id = auth.uid()`. There is **no service-role override
+> path** in the UI — and there shouldn't be: notification routing is a
+> personal preference, not a compliance-bearing setting.
+
+If a colleague is overwhelmed by notifications and asks for help:
+
+1. **Walk them to `/admin/settings/notifications`** (sidebar →
+   *Nastavenia* → card *Upozornenia z podpory* → button *Otvoriť
+   nastavenia upozornení*).
+
+2. **Suggested defaults by role:**
+   - On-call only: `enabled=true`, `channels.email=true`,
+     `channels.in_app=true`, `digest_cadence=instant`, all categories on.
+   - Daily triage: `digest_cadence=daily` (09:00 Europe/Bratislava).
+   - Vacation: `enabled=false` — single switch off.
+   - GDPR-only escalation queue: leave only `gdpr` + `abuse_report`
+     toggles on.
+
+3. **Confirm the row exists** if they expect emails but get none:
+   ```sql
+   SELECT enabled, channels, per_category, digest_cadence
+   FROM public.admin_notification_preferences
+   WHERE user_id = '<admin_user_id>';
+   ```
+   No row → they have never visited the page; the in-app fan-out
+   trigger defaults to *all categories on* per the
+   `COALESCE(..., true)` in `enqueue_admin_notifications_for_ticket()`.
+
+4. **Cron dispatcher for hourly/daily digests is a forward pointer**
+   — not yet wired. Until shipped, `digest_cadence` only affects which
+   admins are eligible for instant emails (any value other than `off`
+   results in instant delivery). When the dispatcher lands, this
+   section will be updated with the cron schedule + back-off rules.
+
+---
+
+## §9 — Running E48 tests locally
+
+The E48 test surface spans schema asserts, function contract tests,
+component tests, and CF function tests:
+
+```bash
+# Whole E48 suite
+npx vitest run \
+  tests/db/support-tickets-schema.test.ts \
+  tests/db/support-storage-bucket.test.ts \
+  tests/components/SupportContactForm.test.tsx \
+  tests/components/admin/AdminNotificationPreferences.test.tsx \
+  tests/functions/support-ticket-create.test.ts \
+  tests/functions/support-ticket-reply.test.ts \
+  tests/functions/email-templates-support.test.ts \
+  tests/routes/kontakt-ticket-view.test.tsx
+```
+
+Schema tests are **string-asserts over the migration SQL file** — they
+don't need a live Postgres. CF function tests stub `fetch` to intercept
+each Supabase REST endpoint and the Resend API by URL pattern (see
+`tests/functions/support-ticket-create.test.ts` for the canonical
+shape). Component tests use the shared `tests/utils/admin-query-wrapper.tsx`
+helper to wrap with a fresh `QueryClient` per test.
+
+For real DB integration (RLS shape, FSM enforcement, view-token hash
+validation), see the integration section in
+`tasks/stories/E48.10-test-pyramid-and-security.md`.
+
+---
+
+## §11 — Escalating an `abuse_report` ticket to legal
+
+`category=abuse_report` is the only category whose handling has a
+mandated chain of custody:
+
+1. **Do not reply from the admin UI directly.** A reply changes status
+   to `waiting_user` and notifies the reporter — premature disclosure
+   if legal still needs the report under wraps.
+
+2. **Set status to `in_progress` via *Začať riešiť*** (this audit-logs
+   the assignment without any external side-effects).
+
+3. **Dump the thread + attachments to legal**:
+   ```sql
+   SELECT to_jsonb(t.*) - 'view_token_hash' AS ticket,
+     (SELECT jsonb_agg(to_jsonb(m.*)) FROM public.support_ticket_messages m
+       WHERE m.ticket_id = t.id) AS messages,
+     (SELECT jsonb_agg(to_jsonb(a.*)) FROM public.support_ticket_attachments a
+       WHERE a.ticket_id = t.id) AS attachments
+   FROM public.support_tickets t
+   WHERE t.id = '<ticket_uuid>';
+   ```
+   Hand the JSON over via the existing legal escalation channel
+   (1Password "Legal escalations" vault, NOT email or chat).
+
+4. **Invalidate the view-token** (§10 *Re-issuing for a specific
+   ticket* but without re-issuing — set
+   `view_token_invalidated_at = now()`) so the reporter cannot watch
+   the thread evolve. They will still receive the eventual outcome
+   email manually drafted by legal counsel.
+
+5. **Resolve only after legal sign-off.** Resolution note must include
+   the legal escalation case number — it's captured in the audit log
+   `support_ticket_status_changed.note` field via
+   `transition_ticket_status(p_note := 'legal case #...')`.
