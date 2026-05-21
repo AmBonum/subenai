@@ -9,7 +9,7 @@ import { BasePage } from "../BasePage";
  * network layer so the widget doesn't have to actually validate.
  */
 export class KontaktPage extends BasePage {
-  static readonly PATH = "/kontakt" as const;
+  static readonly PATH = "/contact-form" as const;
 
   get root(): Locator {
     return this.page.getByTestId("kontakt-page-root");

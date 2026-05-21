@@ -10,7 +10,7 @@ import { BasePage } from "../BasePage";
  * the row — RLS denies any direct table read for anon.
  */
 export class KontaktTicketViewPage extends BasePage {
-  static readonly PATH_PREFIX = "/kontakt/ticket" as const;
+  static readonly PATH_PREFIX = "/contact-form/ticket" as const;
 
   get root(): Locator {
     return this.page.getByTestId("kontakt-ticket-view-root");
