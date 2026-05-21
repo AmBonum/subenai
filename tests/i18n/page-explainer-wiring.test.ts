@@ -107,6 +107,13 @@ const VARIANTS: VariantConfig[] = [
   },
 ];
 
+/** Escape every regex metacharacter so a value can be safely embedded in
+ *  a `new RegExp(...)`. CodeQL flagged a prior `replace(/\//g, "\\/")`
+ *  one-liner as incomplete escaping (missed `\`, `.`, `+`, etc.). */
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 /**
  * Find the matching closing `}` of a JSX expression that starts at a given
  * `{` position (e.g. after `actions={`). Returns -1 if unbalanced.
@@ -191,7 +198,7 @@ for (const variant of VARIANTS) {
     it.each(variant.routes)(`$file imports ${variant.componentName}`, ({ file }) => {
       const src = readFileSync(resolve(process.cwd(), file), "utf8");
       const importRe = new RegExp(
-        `import\\s*\\{\\s*${variant.componentName}\\s*\\}\\s*from\\s*["']${variant.importPath.replace(/\//g, "\\/")}["']`,
+        `import\\s*\\{\\s*${escapeRegex(variant.componentName)}\\s*\\}\\s*from\\s*["']${escapeRegex(variant.importPath)}["']`,
       );
       expect(src).toMatch(importRe);
     });
