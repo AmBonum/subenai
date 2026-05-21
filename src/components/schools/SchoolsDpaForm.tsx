@@ -32,6 +32,40 @@ interface SuccessState {
   requestId: string;
   email: string;
   emailDelivered: boolean;
+  /**
+   * True when the server inserted the row but the client could not
+   * complete the PDF render or email POST (stale chunk hash after a
+   * rolling deploy, WASM init blocked by CSP, etc.). The user's
+   * request IS in the queue — the admin sees it and can re-send.
+   * UX message reflects "queued, not failed" instead of the scary
+   * "DPA generation failed".
+   */
+  partial?: boolean;
+  /**
+   * True when the partial-success was caused by a dynamic-import
+   * fetch failure (stale chunk hash). UI prompts a hard reload so
+   * the next click hits the fresh chunk bundle.
+   */
+  staleChunk?: boolean;
+}
+
+/**
+ * Detects the classic "stale-chunk after rolling deploy" failure mode:
+ * the page HTML was served from deploy N but a lazy `import()` later
+ * tries to fetch a chunk hash that no longer exists, so the SPA
+ * fallback returns the index HTML instead of the JS module. The
+ * browser's error message is exact and stable.
+ */
+function isStaleChunkError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  const msg = err.message ?? "";
+  return (
+    msg.includes("Failed to fetch dynamically imported module") ||
+    msg.includes("Importing a module script failed") ||
+    msg.includes("error loading dynamically imported module") ||
+    // Strict MIME check rejects the HTML fallback (Chromium).
+    msg.includes("Expected a JavaScript-or-Wasm module script")
+  );
 }
 
 async function blobToBase64(blob: Blob): Promise<string> {
@@ -204,64 +238,118 @@ export function SchoolsDpaForm() {
         return;
       }
 
-      // Client-side PDF render (E40.3) — lazy-imports @react-pdf/renderer
-      // and the Slovak Art. 28 template only when the form is actually
-      // submitted, keeping the route's initial bundle small.
-      const { renderDpaPdfBlob } = await import("@/lib/dpa/render.client");
-      const blob = await renderDpaPdfBlob({
-        schoolName: schoolName.trim(),
-        contactName: contactName.trim(),
-        contactEmail: contactEmail.trim(),
-        requestId: payload.requestId,
-        version: payload.templateVersion,
-        generatedAt: payload.generatedAt ? new Date(payload.generatedAt) : new Date(),
-      });
-      triggerDownload(blob, payload.fileName);
+      // Past this point the server has already inserted the row in
+      // dpa_requests — `payload.requestId` is the proof. Anything that
+      // throws below is a CLIENT-side delivery problem (stale chunk
+      // hash after a rolling deploy, WASM blocked by CSP, template
+      // runtime bug). The admin still sees the row in /admin/dpa-requests
+      // and can manually resend, so we must NOT pretend the whole
+      // submission failed. The success UI shows a different state
+      // ("queued, we'll deliver from the server") instead of the scary
+      // red render_failed card the user got before this fix.
+      const acceptedRequestId = payload.requestId;
+      try {
+        // Client-side PDF render (E40.3) — lazy-imports @react-pdf/renderer
+        // and the Slovak Art. 28 template only when the form is actually
+        // submitted, keeping the route's initial bundle small.
+        const { renderDpaPdfBlob } = await import("@/lib/dpa/render.client");
+        const blob = await renderDpaPdfBlob({
+          schoolName: schoolName.trim(),
+          contactName: contactName.trim(),
+          contactEmail: contactEmail.trim(),
+          requestId: acceptedRequestId,
+          version: payload.templateVersion,
+          generatedAt: payload.generatedAt ? new Date(payload.generatedAt) : new Date(),
+        });
+        triggerDownload(blob, payload.fileName);
 
-      // E40.4 — best-effort e-mail copy. Failure here does NOT roll back
-      // the download; the user keeps the PDF either way and the admin
-      // can re-send manually via /admin/dpa-requests.
-      const pdfBase64 = await blobToBase64(blob);
-      const emailDelivered = await postDpaEmail({
-        requestId: payload.requestId,
-        fileName: payload.fileName,
-        pdfBase64,
-      });
+        // E40.4 — best-effort e-mail copy. Failure here does NOT roll back
+        // the download; the user keeps the PDF either way and the admin
+        // can re-send manually via /admin/dpa-requests.
+        const pdfBase64 = await blobToBase64(blob);
+        const emailDelivered = await postDpaEmail({
+          requestId: acceptedRequestId,
+          fileName: payload.fileName,
+          pdfBase64,
+        });
 
-      setSuccess({
-        requestId: payload.requestId,
-        email: contactEmail.trim(),
-        emailDelivered,
-      });
+        setSuccess({
+          requestId: acceptedRequestId,
+          email: contactEmail.trim(),
+          emailDelivered,
+        });
+      } catch (clientErr) {
+        // The row IS in the queue — degrade to "partial success" UX
+        // instead of a scary error. The admin queue picks the row up
+        // with email_status='pending' and a single click on
+        // /admin/dpa-requests → Znovu poslať delivers the PDF + email
+        // (we saw this end-to-end on prod when chunk-hash mismatched
+        // after the 1.14.0 deploy).
+        const stale = isStaleChunkError(clientErr);
+        console.error("DPA client-side render/post failed", clientErr);
+        setSuccess({
+          requestId: acceptedRequestId,
+          email: contactEmail.trim(),
+          emailDelivered: false,
+          partial: true,
+          staleChunk: stale,
+        });
+      }
       setSubmitting(false);
     } catch (e) {
-      // Capture name + truncated message so the UI shows
-      // `(render_failed:TypeError:Failed to fetch)` etc. — pinpointing
-      // which step (lazy import, react-pdf render, blob convert) threw.
-      // Most plausible go-live causes: lazy chunk 404 / CSP block /
-      // template runtime error. Browser console also gets the raw error.
+      // This catch only fires for failures BEFORE the server accepted
+      // the row (network down, CORS, Turnstile reject after request).
+      // Show the verbose error code so operators can diagnose.
       const err = e as Error;
       const name = err?.name ?? "Error";
       const msg = (err?.message ?? "").replace(/[^a-zA-Z0-9_ :/-]/g, "").slice(0, 40);
-      console.error("DPA client-side render/post failed", err);
-      setError(msg ? `render_failed:${name}:${msg}` : `render_failed:${name}`);
+      console.error("DPA submit failed before row was accepted", err);
+      setError(msg ? `submit_failed:${name}:${msg}` : `submit_failed:${name}`);
       setSubmitting(false);
       resetTurnstile();
     }
   }
 
   if (success) {
+    // Three states (visually distinct so operator + user both get
+    // accurate info — single source of truth: success.partial):
+    //   - full success: PDF downloaded + email delivered (green border)
+    //   - partial: row saved, client-side delivery failed (amber border).
+    //     Sub-state `staleChunk` adds a "Refresh the page" CTA — that's
+    //     the specific failure where the user's tab held a chunk hash
+    //     from a previous deploy.
+    const partial = success.partial === true;
+    const stale = success.staleChunk === true;
+    const borderClass = partial ? "border-amber-500/40" : "border-success/40";
     return (
       <section
         role="status"
         aria-live="polite"
         data-testid="schools-dpa-form-success"
-        className="space-y-4 rounded-2xl border border-success/40 bg-card p-8"
+        data-partial={partial ? "true" : undefined}
+        data-stale-chunk={stale ? "true" : undefined}
+        className={`space-y-4 rounded-2xl border ${borderClass} bg-card p-8`}
       >
         <h2 className="text-2xl font-bold tracking-tight text-foreground">
-          {t("skoly_dpa.success_heading")}
+          {partial ? t("skoly_dpa.success_partial_heading") : t("skoly_dpa.success_heading")}
         </h2>
-        {success.emailDelivered ? (
+        {partial ? (
+          <p
+            className="text-sm leading-relaxed text-muted-foreground"
+            data-testid="schools-dpa-form-success-partial"
+          >
+            {stale
+              ? t("skoly_dpa.success_partial_stale_body")
+              : t("skoly_dpa.success_partial_body")}{" "}
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              {CONTACT_EMAIL}
+            </a>
+            .
+          </p>
+        ) : success.emailDelivered ? (
           <p
             className="text-sm leading-relaxed text-muted-foreground"
             data-testid="schools-dpa-form-success-with-email"
@@ -291,6 +379,16 @@ export function SchoolsDpaForm() {
             .
           </p>
         )}
+        {partial && stale ? (
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            data-testid="schools-dpa-form-success-reload"
+            className="inline-flex items-center gap-1.5 rounded-full bg-success px-5 py-2.5 text-sm font-semibold text-success-foreground transition-transform hover:-translate-y-0.5"
+          >
+            {t("skoly_dpa.success_partial_reload_cta")}
+          </button>
+        ) : null}
         {success.requestId ? (
           <p className="text-xs text-muted-foreground">
             {t("skoly_dpa.success_request_id")} <code>{success.requestId}</code>

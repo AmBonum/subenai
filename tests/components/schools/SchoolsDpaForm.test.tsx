@@ -153,6 +153,64 @@ describe("SchoolsDpaForm", () => {
     expect(URL.createObjectURL).toHaveBeenCalled();
   });
 
+  it("stale chunk hash (rolling deploy mid-submit) → partial-success UI, not scary render_failed", async () => {
+    // Repro of the 2026-05-21 production incident: user opened the
+    // page during deploy N, submitted after deploy N+1 rolled out, so
+    // the lazy `import("@/lib/dpa/render.client")` resolved to the
+    // SPA HTML fallback instead of the JS chunk → browser throws
+    // `TypeError: Failed to fetch dynamically imported module`.
+    // We can't reproduce the import-time failure under vitest's
+    // module cache, so we simulate the equivalent post-import path:
+    // throw the EXACT same TypeError from inside renderDpaPdfBlob.
+    // The detector `isStaleChunkError` matches on the message string,
+    // so the partial-success branch and reload CTA fire identically.
+    const renderModule = await import("@/lib/dpa/render.client");
+    vi.mocked(renderModule.renderDpaPdfBlob).mockImplementationOnce(async () => {
+      throw new TypeError(
+        "Failed to fetch dynamically imported module: https://subenai.sk/assets/render.client-r9f45IhY.js",
+      );
+    });
+
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (url) => {
+      const u = typeof url === "string" ? url : (url as Request).url;
+      if (u.includes("/api/dpa-request")) {
+        return new Response(
+          JSON.stringify({
+            ok: true,
+            requestId: "stale-chunk-row-1",
+            fileName: "DPA-subenai-stale-v0.1.pdf",
+            templateVersion: "v0.1",
+            generatedAt: new Date().toISOString(),
+          }),
+          { status: 200 },
+        );
+      }
+      return new Response("unstubbed", { status: 500 });
+    });
+
+    const user = userEvent.setup();
+    render(<SchoolsDpaForm />);
+
+    await user.type(screen.getByTestId("schools-dpa-form-name"), "Jana Nováková");
+    await user.type(screen.getByTestId("schools-dpa-form-email"), "jana@skola.sk");
+    await user.type(screen.getByTestId("schools-dpa-form-school"), "Gymnázium Zlatá brána");
+    await user.click(screen.getByTestId("schools-dpa-form-consent"));
+    await user.click(screen.getByTestId("schools-dpa-form-submit"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("schools-dpa-form-success")).toBeInTheDocument();
+    });
+    // Partial success — NOT the error card
+    const root = screen.getByTestId("schools-dpa-form-success");
+    expect(root.getAttribute("data-partial")).toBe("true");
+    expect(root.getAttribute("data-stale-chunk")).toBe("true");
+    expect(screen.getByTestId("schools-dpa-form-success-partial")).toBeInTheDocument();
+    // Reload CTA must be present so user can recover without leaving.
+    expect(screen.getByTestId("schools-dpa-form-success-reload")).toBeInTheDocument();
+    // Request id (queue link for ops) still surfaced.
+    expect(screen.getByText(/stale-chunk-row-1/)).toBeInTheDocument();
+  });
+
   it("server error surfaces in the live status region with friendly Slovak copy", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ error: "rate_limited" }), { status: 429 }),

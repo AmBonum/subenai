@@ -9,7 +9,19 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
-## [1.14.0] — 2026-05-21
+### Opravené
+- **Formulár na `/schools/dpa` už nepovie „zlyhalo", keď žiadosť reálne
+  prešla.** Ak si na stránku prišiel/a ešte pred posledným deployom a
+  formulár si odoslal/a až po ňom, prehliadač mohol mať v cache starú
+  verziu nášho PDF rendereru — server tvoju žiadosť úspešne uložil
+  (admin ju vidí v queue, operátor ti ju vie poslať jedným kliknutím),
+  ale tvoj prehliadač nevedel chunk dotiahnuť a ukazoval ti červenú
+  hlášku *„Vyhotovenie DPA zlyhalo"*. Po novom v presne tejto situácii
+  uvidíš oranžovú kartu *„Žiadosť je v rade — PDF ti pošleme"*, ktorá
+  vysvetlí čo sa stalo + tlačidlo *Obnoviť stránku a skúsiť znova*.
+  Iné typy chýb (skutočný server fail, sieť padla) ostávajú červené.
+
+
 
 Veľký GDPR/governance release. Doteraz boli dve veci, ktoré sme robili
 ručne cez e-mail alebo SQL — žiadosť o spracovateľskú zmluvu (DPA) zo
