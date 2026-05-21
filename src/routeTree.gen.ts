@@ -96,6 +96,7 @@ import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
 import { Route as AppTestsTestIdRouteImport } from './routes/app.tests.$testId'
 import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
 import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
+import { Route as AppHelpContactRouteImport } from './routes/app.help.contact'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users.$userId'
@@ -587,6 +588,11 @@ const AppLegalDsrRoute = AppLegalDsrRouteImport.update({
   path: '/legal/dsr',
   getParentRoute: () => AppRoute,
 } as any)
+const AppHelpContactRoute = AppHelpContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => AppHelpRoute,
+} as any)
 const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
   id: '/account/security',
   path: '/account/security',
@@ -702,7 +708,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
   '/app/digest': typeof AppDigestRoute
-  '/app/help': typeof AppHelpRoute
+  '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -744,6 +750,7 @@ export interface FileRoutesByFullPath {
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/app/tests/$testId': typeof AppTestsTestIdRoute
@@ -796,7 +803,7 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
   '/app/digest': typeof AppDigestRoute
-  '/app/help': typeof AppHelpRoute
+  '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -837,6 +844,7 @@ export interface FileRoutesByTo {
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/app/tests/$testId': typeof AppTestsTestIdRoute
@@ -895,7 +903,7 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
   '/app/digest': typeof AppDigestRoute
-  '/app/help': typeof AppHelpRoute
+  '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -937,6 +945,7 @@ export interface FileRoutesById {
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/app/tests/$testId': typeof AppTestsTestIdRoute
@@ -1039,6 +1048,7 @@ export interface FileRouteTypes {
     | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/help/contact'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/app/tests/$testId'
@@ -1132,6 +1142,7 @@ export interface FileRouteTypes {
     | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/help/contact'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/app/tests/$testId'
@@ -1231,6 +1242,7 @@ export interface FileRouteTypes {
     | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/help/contact'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/app/tests/$testId'
@@ -1903,6 +1915,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLegalDsrRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/help/contact': {
+      id: '/app/help/contact'
+      path: '/contact'
+      fullPath: '/app/help/contact'
+      preLoaderRoute: typeof AppHelpContactRouteImport
+      parentRoute: typeof AppHelpRoute
+    }
     '/app/account/security': {
       id: '/app/account/security'
       path: '/account/security'
@@ -2093,10 +2112,21 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AppHelpRouteChildren {
+  AppHelpContactRoute: typeof AppHelpContactRoute
+}
+
+const AppHelpRouteChildren: AppHelpRouteChildren = {
+  AppHelpContactRoute: AppHelpContactRoute,
+}
+
+const AppHelpRouteWithChildren =
+  AppHelpRoute._addFileChildren(AppHelpRouteChildren)
+
 interface AppRouteChildren {
   AppAudiencesRoute: typeof AppAudiencesRoute
   AppDigestRoute: typeof AppDigestRoute
-  AppHelpRoute: typeof AppHelpRoute
+  AppHelpRoute: typeof AppHelpRouteWithChildren
   AppHistoryRoute: typeof AppHistoryRoute
   AppLibraryRoute: typeof AppLibraryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
@@ -2120,7 +2150,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAudiencesRoute: AppAudiencesRoute,
   AppDigestRoute: AppDigestRoute,
-  AppHelpRoute: AppHelpRoute,
+  AppHelpRoute: AppHelpRouteWithChildren,
   AppHistoryRoute: AppHistoryRoute,
   AppLibraryRoute: AppLibraryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
