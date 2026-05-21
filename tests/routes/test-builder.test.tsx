@@ -59,15 +59,13 @@ vi.mock("@/integrations/supabase/client", () => {
   return { supabase: { from: () => builder } };
 });
 
-vi.mock("@/content/test-packs", async () => {
-  const actual =
-    await vi.importActual<typeof import("@/content/test-packs")>("@/content/test-packs");
-  return {
-    ...actual,
-    listPublishedPacks: () => mocks.publishedPacks,
-    getPackBySlug: (slug: string) => mocks.publishedPacks.find((p) => p.slug === slug) ?? null,
-  };
-});
+vi.mock("@/lib/platform/pack-queries", () => ({
+  usePlatformPacks: () => ({ data: mocks.publishedPacks, isLoading: false }),
+  usePlatformPackQuestionIds: () => ({
+    data: new Map(mocks.publishedPacks.map((p) => [p.slug, p.questionIds])),
+    isLoading: false,
+  }),
+}));
 
 vi.mock("@/components/quiz/flow/TestFlow", () => ({
   TestFlow: (props: { config: { kind: string; questions: unknown[] } }) => {

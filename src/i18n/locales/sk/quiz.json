@@ -91,7 +91,8 @@
     "self_run_label": "tento test",
     "step_label_prefix_1": "1.",
     "step_label_prefix_2": "2.",
-    "step_label_prefix_3": "3."
+    "step_label_prefix_3": "3.",
+    "loading_packs": "Načítavam šablóny…"
   },
   "composer_settings": {
     "threshold_label": "Prah úspešnosti",
