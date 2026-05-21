@@ -155,6 +155,8 @@
       "right_complaint_suffix": " Úradu na ochranu osobných údajov SR — Hraničná 12, 820 07 Bratislava, ",
       "complaint_link": "dataprotection.gov.sk",
       "deadline": "Žiadosti vybavujeme do 30 dní od doručenia (čl. 12 ods. 3 GDPR). Bezplatne, pokiaľ žiadosť nie je zjavne neopodstatnená alebo neprimeraná.",
+      "fulfilment_label": "Ako vybavujeme žiadosti:",
+      "fulfilment_text": " Po overení identity (e-mail + jednorazový kód) operátor otvorí dossier daného účtu a vykoná požadovanú akciu — export Art. 15 JSON, opravu údajov, anonymizáciu alebo vymazanie. Pri nezvratnom vymazaní máme 5-minútové „grace\" okno, počas ktorého operátor môže akciu zrušiť (pre prípad preklepu). Každá akcia je automaticky zapísaná do interného audit logu (kto, kedy, aký účet, aká operácia) — slúži ako forenzný záznam pre prípadnú kontrolu Úradu na ochranu osobných údajov SR.",
       "self_service_label": "Self-service vymazanie:",
       "self_service_prefix": " Keďže pokus o test je čisto anonymný a neviazaný na e-mail, najrýchlejšia cesta k vymazaniu vlastného výsledku je ",
       "self_service_emph": "otvoriť svoj share link",

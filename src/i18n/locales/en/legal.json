@@ -150,6 +150,8 @@
       "right_complaint_suffix": " with the Slovak Office for Personal Data Protection — Hraničná 12, 820 07 Bratislava, ",
       "complaint_link": "dataprotection.gov.sk",
       "deadline": "We respond to requests within 30 days of receipt (Art. 12(3) GDPR). Free of charge, unless the request is manifestly unfounded or excessive.",
+      "fulfilment_label": "How we fulfil requests:",
+      "fulfilment_text": " After we verify your identity (e-mail + one-time code) an operator opens the dossier for the account and performs the requested action — Art. 15 JSON export, rectification, anonymisation, or erasure. Irreversible deletes have a 5-minute grace window during which the operator can cancel (typo safety net). Every action is automatically written to an internal audit log (who, when, which account, which operation) — it serves as the forensic record for any inspection by the Slovak Data Protection Authority.",
       "self_service_label": "Self-service erasure:",
       "self_service_prefix": " Since a test attempt is entirely anonymous and not tied to an email, the fastest way to erase your own result is to ",
       "self_service_emph": "open your share link",

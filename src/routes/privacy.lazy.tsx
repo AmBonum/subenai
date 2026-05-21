@@ -325,6 +325,17 @@ function PrivacyPage() {
               <p className="pt-2 text-sm leading-relaxed text-muted-foreground">
                 {t("s5.deadline")}
               </p>
+              {/* E46.7 — disclose the admin dossier fulfilment surface +
+                  audit logging. Required by the E46 plan close-out, and
+                  by Art. 12(3) transparency principle: users have a right
+                  to know HOW the controller actually handles a request. */}
+              <p
+                className="pt-2 text-sm leading-relaxed text-muted-foreground"
+                data-testid="privacy-fulfilment-disclosure"
+              >
+                <strong>{t("s5.fulfilment_label")}</strong>
+                {t("s5.fulfilment_text")}
+              </p>
 
               {/* E21.3 — DSR self-service callout (was buried inline before).
                   Surfaces the /app/legal/dsr path as a first-class CTA so a
