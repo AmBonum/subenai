@@ -1,5 +1,13 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { ShieldCheck, AlertTriangle, FileWarning, Calendar, ExternalLink } from "lucide-react";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import {
+  ShieldCheck,
+  AlertTriangle,
+  FileWarning,
+  Calendar,
+  ExternalLink,
+  BellRing,
+  ChevronRight,
+} from "lucide-react";
 
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
@@ -169,6 +177,30 @@ function AdminSettingsPage() {
               </li>
             ))}
           </ul>
+        </CardContent>
+      </Card>
+
+      <Card className="border-border/60" data-testid="admin-settings-notifications-section">
+        <CardContent className="space-y-3 p-6">
+          <header className="flex items-center gap-2">
+            <BellRing className="h-4 w-4 text-primary" aria-hidden="true" />
+            <h2 className="text-sm font-semibold text-foreground">Upozornenia z podpory</h2>
+          </header>
+          <p className="text-sm text-muted-foreground">
+            Hlavný prepínač, e-mailové vs. interné kanály, frekvencia a kategórie žiadostí.
+            Nastavenie platí iba pre váš účet.
+          </p>
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            data-testid="admin-settings-notifications-link"
+          >
+            <Link to="/admin/settings/notifications">
+              Otvoriť nastavenia upozornení
+              <ChevronRight className="ml-1 size-4" aria-hidden="true" />
+            </Link>
+          </Button>
         </CardContent>
       </Card>
 

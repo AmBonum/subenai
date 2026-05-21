@@ -2140,6 +2140,311 @@ export function useCancelPendingErasure() {
   });
 }
 
+// E48.6 — Admin support tickets queries.
+// useAdminSupportTickets reads support_tickets via the admin-all RLS policy
+// (has_role(uid, 'admin') gate). View is client-side filtered + capped at 200
+// rows. The partial admin_working_set_idx keeps the query fast at scale.
+
+export interface SupportTicketsFilters {
+  statuses?: string[];
+  categories?: string[];
+  query?: string;
+  includeArchived?: boolean;
+}
+
+export interface AdminSupportTicketRow {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  status: string;
+  category: string;
+  source: string;
+  subject: string;
+  body: string;
+  submitter_user_id: string | null;
+  submitter_email: string;
+  submitter_name: string | null;
+  assigned_to: string | null;
+  archived_at: string | null;
+  deleted_at: string | null;
+}
+
+export function useAdminSupportTickets(filters: SupportTicketsFilters = {}) {
+  const { statuses, categories, query, includeArchived } = filters;
+  return useQuery({
+    queryKey: ["admin", "support_tickets", statuses, categories, query, includeArchived],
+    queryFn: async (): Promise<AdminSupportTicketRow[]> => {
+      let q = supabase
+        .from("support_tickets")
+        .select(
+          "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, assigned_to, archived_at, deleted_at",
+        )
+        .is("deleted_at", null)
+        .order("created_at", { ascending: false })
+        .limit(200);
+
+      if (!includeArchived) {
+        q = q.is("archived_at", null);
+      }
+      if (statuses && statuses.length > 0) {
+        q = q.in("status", statuses);
+      }
+      if (categories && categories.length > 0) {
+        q = q.in("category", categories);
+      }
+      if (query && query.trim().length >= 2) {
+        // PostgreSQL LIKE/ILIKE pattern escaping. The three special chars
+        // are \, %, _. Backslash must be escaped FIRST — if we escaped %
+        // and _ first, the new backslashes they emit would get doubled
+        // again on a second pass, mangling the pattern. CodeQL caught the
+        // original 2-char-only escape as incomplete string encoding.
+        const escaped = query.trim().replace(/\\/g, "\\\\").replace(/[%_]/g, "\\$&");
+        const term = `%${escaped}%`;
+        q = q.or(`subject.ilike.${term},body.ilike.${term},submitter_email.ilike.${term}`);
+      }
+
+      const { data, error } = await q;
+      if (error) throw error;
+      return (data ?? []) as AdminSupportTicketRow[];
+    },
+  });
+}
+
+export function useAdminSupportTicketAttachmentCounts(ticketIds: string[]) {
+  return useQuery({
+    queryKey: ["admin", "support_tickets", "attachment_counts", ...ticketIds],
+    queryFn: async (): Promise<Record<string, number>> => {
+      if (ticketIds.length === 0) return {};
+      const { data, error } = await supabase
+        .from("support_ticket_attachments")
+        .select("ticket_id")
+        .in("ticket_id", ticketIds);
+      if (error) throw error;
+      const counts: Record<string, number> = {};
+      for (const r of (data ?? []) as { ticket_id: string }[]) {
+        counts[r.ticket_id] = (counts[r.ticket_id] ?? 0) + 1;
+      }
+      return counts;
+    },
+    enabled: ticketIds.length > 0,
+  });
+}
+
+export function useAdminSupportTicket(ticketId: string) {
+  return useQuery({
+    queryKey: ["admin", "support_ticket", ticketId],
+    queryFn: async (): Promise<AdminSupportTicketRow | null> => {
+      const { data, error } = await supabase
+        .from("support_tickets")
+        .select(
+          "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, assigned_to, archived_at, deleted_at",
+        )
+        .eq("id", ticketId)
+        .maybeSingle();
+      if (error) throw error;
+      return (data ?? null) as AdminSupportTicketRow | null;
+    },
+    enabled: !!ticketId,
+  });
+}
+
+export interface AdminSupportTicketMessage {
+  id: string;
+  ticket_id: string;
+  created_at: string;
+  author_kind: string;
+  author_user_id: string | null;
+  author_name: string;
+  body: string;
+}
+
+export function useAdminSupportTicketMessages(ticketId: string) {
+  return useQuery({
+    queryKey: ["admin", "support_ticket_messages", ticketId],
+    queryFn: async (): Promise<AdminSupportTicketMessage[]> => {
+      const { data, error } = await supabase
+        .from("support_ticket_messages")
+        .select("id, ticket_id, created_at, author_kind, author_user_id, author_name, body")
+        .eq("ticket_id", ticketId)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as AdminSupportTicketMessage[];
+    },
+    enabled: !!ticketId,
+  });
+}
+
+export interface AdminSupportTicketAttachment {
+  id: string;
+  ticket_id: string;
+  message_id: string | null;
+  filename: string;
+  mime_type: string;
+  size_bytes: number;
+  scan_status: string;
+  created_at: string;
+}
+
+export function useAdminSupportTicketAttachments(ticketId: string) {
+  return useQuery({
+    queryKey: ["admin", "support_ticket_attachments", ticketId],
+    queryFn: async (): Promise<AdminSupportTicketAttachment[]> => {
+      const { data, error } = await supabase
+        .from("support_ticket_attachments")
+        .select(
+          "id, ticket_id, message_id, filename, mime_type, size_bytes, scan_status, created_at",
+        )
+        .eq("ticket_id", ticketId)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as AdminSupportTicketAttachment[];
+    },
+    enabled: !!ticketId,
+  });
+}
+
+export function useTransitionTicketStatus() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      ticketId,
+      newStatus,
+      note,
+    }: {
+      ticketId: string;
+      newStatus: string;
+      note?: string;
+    }) => {
+      const { data, error } = await supabase.rpc("transition_ticket_status", {
+        p_ticket_id: ticketId,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        p_new_status: newStatus as any,
+        p_note: note ?? null,
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "support_tickets"] });
+    },
+  });
+}
+
+// E48.9 — admin notification preferences (per-user row in
+// admin_notification_preferences). RLS limits SELECT/UPDATE to the
+// owner only (auth.uid() = user_id) — admins cannot see or edit
+// another admin's prefs.
+
+export type SupportCategoryKey =
+  | "bug"
+  | "question"
+  | "feature_request"
+  | "abuse_report"
+  | "billing"
+  | "gdpr"
+  | "other";
+
+export type DigestCadence = "instant" | "hourly" | "daily" | "off";
+
+export interface AdminNotificationPreferences {
+  enabled: boolean;
+  channels: { email: boolean; in_app: boolean };
+  per_category: Record<SupportCategoryKey, boolean>;
+  digest_cadence: DigestCadence;
+}
+
+const NOTIFICATION_PREFERENCES_DEFAULTS: AdminNotificationPreferences = {
+  enabled: true,
+  channels: { email: true, in_app: true },
+  per_category: {
+    bug: true,
+    question: true,
+    feature_request: true,
+    abuse_report: true,
+    billing: true,
+    gdpr: true,
+    other: true,
+  },
+  digest_cadence: "instant",
+};
+
+export function getDefaultAdminNotificationPreferences(): AdminNotificationPreferences {
+  return {
+    ...NOTIFICATION_PREFERENCES_DEFAULTS,
+    channels: { ...NOTIFICATION_PREFERENCES_DEFAULTS.channels },
+    per_category: { ...NOTIFICATION_PREFERENCES_DEFAULTS.per_category },
+  };
+}
+
+export function useAdminNotificationPreferences() {
+  return useQuery({
+    queryKey: ["admin", "notification_preferences"],
+    queryFn: async (): Promise<AdminNotificationPreferences> => {
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData.user?.id;
+      if (!userId) throw new Error("not_authenticated");
+
+      const { data, error } = await supabase
+        .from("admin_notification_preferences")
+        .select("enabled, channels, per_category, digest_cadence")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) return getDefaultAdminNotificationPreferences();
+
+      const channelsRaw = (data.channels ?? {}) as Record<string, unknown>;
+      const perCategoryRaw = (data.per_category ?? {}) as Record<string, unknown>;
+      const defaults = getDefaultAdminNotificationPreferences();
+      return {
+        enabled: data.enabled,
+        channels: {
+          email: Boolean(channelsRaw.email ?? defaults.channels.email),
+          in_app: Boolean(channelsRaw.in_app ?? defaults.channels.in_app),
+        },
+        per_category: {
+          bug: Boolean(perCategoryRaw.bug ?? defaults.per_category.bug),
+          question: Boolean(perCategoryRaw.question ?? defaults.per_category.question),
+          feature_request: Boolean(
+            perCategoryRaw.feature_request ?? defaults.per_category.feature_request,
+          ),
+          abuse_report: Boolean(perCategoryRaw.abuse_report ?? defaults.per_category.abuse_report),
+          billing: Boolean(perCategoryRaw.billing ?? defaults.per_category.billing),
+          gdpr: Boolean(perCategoryRaw.gdpr ?? defaults.per_category.gdpr),
+          other: Boolean(perCategoryRaw.other ?? defaults.per_category.other),
+        },
+        digest_cadence: (data.digest_cadence as DigestCadence) ?? defaults.digest_cadence,
+      };
+    },
+  });
+}
+
+export function useUpdateAdminNotificationPreferences() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (prefs: AdminNotificationPreferences) => {
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData.user?.id;
+      if (!userId) throw new Error("not_authenticated");
+
+      const { error } = await supabase.from("admin_notification_preferences").upsert(
+        {
+          user_id: userId,
+          enabled: prefs.enabled,
+          channels: prefs.channels,
+          per_category: prefs.per_category,
+          digest_cadence: prefs.digest_cadence,
+        },
+        { onConflict: "user_id" },
+      );
+      if (error) throw error;
+      return prefs;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "notification_preferences"] });
+    },
+  });
+}
+
 // ---------------------------------------------------------------------------
 // E44 Phase C — template moderation queue
 // ---------------------------------------------------------------------------

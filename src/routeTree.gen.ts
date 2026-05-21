@@ -28,6 +28,7 @@ import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
 import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
 import { Route as SablonyIndexRouteImport } from './routes/sablony.index'
+import { Route as KontaktIndexRouteImport } from './routes/kontakt.index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
@@ -63,6 +64,7 @@ import { Route as AppDigestRouteImport } from './routes/app.digest'
 import { Route as AppAudiencesRouteImport } from './routes/app.audiences'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminTrainingsRouteImport } from './routes/admin/trainings'
+import { Route as AdminTicketsRouteImport } from './routes/admin/tickets'
 import { Route as AdminTestsRouteImport } from './routes/admin/tests'
 import { Route as AdminTemplatesRouteImport } from './routes/admin/templates'
 import { Route as AdminSupportRouteImport } from './routes/admin/support'
@@ -90,6 +92,7 @@ import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as AdminAnswerSetsIndexRouteImport } from './routes/admin/answer-sets.index'
 import { Route as TestBuilderIdRouteImport } from './routes/test.builder.$id'
+import { Route as KontaktTicketIdRouteImport } from './routes/kontakt.ticket.$id'
 import { Route as DocsAppSlugRouteImport } from './routes/docs.app.$slug'
 import { Route as DocsAdminSlugRouteImport } from './routes/docs.admin.$slug'
 import { Route as BlogKategoriaSlugRouteImport } from './routes/blog/kategoria/$slug'
@@ -98,10 +101,13 @@ import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
 import { Route as AppTestsTestIdRouteImport } from './routes/app.tests.$testId'
 import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
 import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
+import { Route as AppHelpContactRouteImport } from './routes/app.help.contact'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users.$userId'
+import { Route as AdminTicketsTicketIdRouteImport } from './routes/admin/tickets.$ticketId'
 import { Route as AdminTestsTestIdRouteImport } from './routes/admin/tests.$testId'
+import { Route as AdminSettingsNotificationsRouteImport } from './routes/admin/settings.notifications'
 import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$pageId'
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
 import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
@@ -205,6 +211,11 @@ const SablonyIndexRoute = SablonyIndexRouteImport.update({
   path: '/sablony/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/sablony.index.lazy').then((d) => d.Route))
+const KontaktIndexRoute = KontaktIndexRouteImport.update({
+  id: '/kontakt/',
+  path: '/kontakt/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
@@ -388,6 +399,11 @@ const AdminTrainingsRoute = AdminTrainingsRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/trainings.lazy').then((d) => d.Route),
 )
+const AdminTicketsRoute = AdminTicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/admin/tickets.lazy').then((d) => d.Route))
 const AdminTestsRoute = AdminTestsRouteImport.update({
   id: '/tests',
   path: '/tests',
@@ -557,6 +573,13 @@ const TestBuilderIdRoute = TestBuilderIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/test.builder.$id.lazy').then((d) => d.Route),
 )
+const KontaktTicketIdRoute = KontaktTicketIdRouteImport.update({
+  id: '/kontakt/ticket/$id',
+  path: '/kontakt/ticket/$id',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/kontakt.ticket.$id.lazy').then((d) => d.Route),
+)
 const DocsAppSlugRoute = DocsAppSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -601,6 +624,11 @@ const AppLegalDsrRoute = AppLegalDsrRouteImport.update({
   path: '/legal/dsr',
   getParentRoute: () => AppRoute,
 } as any)
+const AppHelpContactRoute = AppHelpContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => AppHelpRoute,
+} as any)
 const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
   id: '/account/security',
   path: '/account/security',
@@ -618,6 +646,13 @@ const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/users.$userId.lazy').then((d) => d.Route),
 )
+const AdminTicketsTicketIdRoute = AdminTicketsTicketIdRouteImport.update({
+  id: '/$ticketId',
+  path: '/$ticketId',
+  getParentRoute: () => AdminTicketsRoute,
+} as any).lazy(() =>
+  import('./routes/admin/tickets.$ticketId.lazy').then((d) => d.Route),
+)
 const AdminTestsTestIdRoute = AdminTestsTestIdRouteImport.update({
   id: '/$testId',
   path: '/$testId',
@@ -625,6 +660,14 @@ const AdminTestsTestIdRoute = AdminTestsTestIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/tests.$testId.lazy').then((d) => d.Route),
 )
+const AdminSettingsNotificationsRoute =
+  AdminSettingsNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AdminSettingsRoute,
+  } as any).lazy(() =>
+    import('./routes/admin/settings.notifications.lazy').then((d) => d.Route),
+  )
 const AdminPagesPageIdRoute = AdminPagesPageIdRouteImport.update({
   id: '/$pageId',
   path: '/$pageId',
@@ -708,16 +751,17 @@ export interface FileRoutesByFullPath {
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/security': typeof AdminSecurityRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
+  '/admin/tickets': typeof AdminTicketsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
   '/app/digest': typeof AppDigestRoute
-  '/app/help': typeof AppHelpRoute
+  '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -748,6 +792,7 @@ export interface FileRoutesByFullPath {
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/kontakt/': typeof KontaktIndexRoute
   '/sablony/': typeof SablonyIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
@@ -756,10 +801,13 @@ export interface FileRoutesByFullPath {
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
+  '/admin/settings/notifications': typeof AdminSettingsNotificationsRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
+  '/admin/tickets/$ticketId': typeof AdminTicketsTicketIdRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/app/tests/$testId': typeof AppTestsTestIdRoute
@@ -768,6 +816,7 @@ export interface FileRoutesByFullPath {
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
+  '/kontakt/ticket/$id': typeof KontaktTicketIdRoute
   '/test/builder/$id': typeof TestBuilderIdRouteWithChildren
   '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
@@ -805,15 +854,16 @@ export interface FileRoutesByTo {
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/security': typeof AdminSecurityRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/templates': typeof AdminTemplatesRoute
+  '/admin/tickets': typeof AdminTicketsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
   '/app/digest': typeof AppDigestRoute
-  '/app/help': typeof AppHelpRoute
+  '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -843,6 +893,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppIndexRoute
   '/blog': typeof BlogIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/kontakt': typeof KontaktIndexRoute
   '/sablony': typeof SablonyIndexRoute
   '/sponsors': typeof SponsorsIndexRoute
   '/test': typeof TestIndexRoute
@@ -851,10 +902,13 @@ export interface FileRoutesByTo {
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
+  '/admin/settings/notifications': typeof AdminSettingsNotificationsRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
+  '/admin/tickets/$ticketId': typeof AdminTicketsTicketIdRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/app/tests/$testId': typeof AppTestsTestIdRoute
@@ -863,6 +917,7 @@ export interface FileRoutesByTo {
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
+  '/kontakt/ticket/$id': typeof KontaktTicketIdRoute
   '/admin/answer-sets': typeof AdminAnswerSetsIndexRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/pages': typeof AdminPagesIndexRoute
@@ -905,16 +960,17 @@ export interface FileRoutesById {
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/security': typeof AdminSecurityRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/templates': typeof AdminTemplatesRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
+  '/admin/tickets': typeof AdminTicketsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
   '/app/digest': typeof AppDigestRoute
-  '/app/help': typeof AppHelpRoute
+  '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
@@ -945,6 +1001,7 @@ export interface FileRoutesById {
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/kontakt/': typeof KontaktIndexRoute
   '/sablony/': typeof SablonyIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
@@ -953,10 +1010,13 @@ export interface FileRoutesById {
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
+  '/admin/settings/notifications': typeof AdminSettingsNotificationsRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
+  '/admin/tickets/$ticketId': typeof AdminTicketsTicketIdRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
+  '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/app/tests/$testId': typeof AppTestsTestIdRoute
@@ -965,6 +1025,7 @@ export interface FileRoutesById {
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
+  '/kontakt/ticket/$id': typeof KontaktTicketIdRoute
   '/test/builder/$id': typeof TestBuilderIdRouteWithChildren
   '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
@@ -1014,6 +1075,7 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/admin/templates'
     | '/admin/tests'
+    | '/admin/tickets'
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
@@ -1049,6 +1111,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/blog/'
     | '/courses/'
+    | '/kontakt/'
     | '/sablony/'
     | '/sponsors/'
     | '/test/'
@@ -1057,10 +1120,13 @@ export interface FileRouteTypes {
     | '/admin/blog/$id'
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
+    | '/admin/settings/notifications'
     | '/admin/tests/$testId'
+    | '/admin/tickets/$ticketId'
     | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/help/contact'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/app/tests/$testId'
@@ -1069,6 +1135,7 @@ export interface FileRouteTypes {
     | '/blog/kategoria/$slug'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
+    | '/kontakt/ticket/$id'
     | '/test/builder/$id'
     | '/admin/answer-sets/'
     | '/admin/blog/'
@@ -1110,6 +1177,7 @@ export interface FileRouteTypes {
     | '/admin/share-card'
     | '/admin/support'
     | '/admin/templates'
+    | '/admin/tickets'
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
@@ -1144,6 +1212,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/blog'
     | '/courses'
+    | '/kontakt'
     | '/sablony'
     | '/sponsors'
     | '/test'
@@ -1152,10 +1221,13 @@ export interface FileRouteTypes {
     | '/admin/blog/$id'
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
+    | '/admin/settings/notifications'
     | '/admin/tests/$testId'
+    | '/admin/tickets/$ticketId'
     | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/help/contact'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/app/tests/$testId'
@@ -1164,6 +1236,7 @@ export interface FileRouteTypes {
     | '/blog/kategoria/$slug'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
+    | '/kontakt/ticket/$id'
     | '/admin/answer-sets'
     | '/admin/blog'
     | '/admin/pages'
@@ -1210,6 +1283,7 @@ export interface FileRouteTypes {
     | '/admin/support'
     | '/admin/templates'
     | '/admin/tests'
+    | '/admin/tickets'
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
@@ -1245,6 +1319,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/blog/'
     | '/courses/'
+    | '/kontakt/'
     | '/sablony/'
     | '/sponsors/'
     | '/test/'
@@ -1253,10 +1328,13 @@ export interface FileRouteTypes {
     | '/admin/blog/$id'
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
+    | '/admin/settings/notifications'
     | '/admin/tests/$testId'
+    | '/admin/tickets/$ticketId'
     | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
+    | '/app/help/contact'
     | '/app/legal/dsr'
     | '/app/sets/$setId'
     | '/app/tests/$testId'
@@ -1265,6 +1343,7 @@ export interface FileRouteTypes {
     | '/blog/kategoria/$slug'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
+    | '/kontakt/ticket/$id'
     | '/test/builder/$id'
     | '/admin/answer-sets/'
     | '/admin/blog/'
@@ -1312,11 +1391,13 @@ export interface RootRouteChildren {
   ThankYouSessionIdRoute: typeof ThankYouSessionIdRoute
   BlogIndexRoute: typeof BlogIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  KontaktIndexRoute: typeof KontaktIndexRoute
   SablonyIndexRoute: typeof SablonyIndexRoute
   TestIndexRoute: typeof TestIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
   BlogAutorSlugRoute: typeof BlogAutorSlugRoute
   BlogKategoriaSlugRoute: typeof BlogKategoriaSlugRoute
+  KontaktTicketIdRoute: typeof KontaktTicketIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1452,6 +1533,13 @@ declare module '@tanstack/react-router' {
       path: '/sablony'
       fullPath: '/sablony/'
       preLoaderRoute: typeof SablonyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kontakt/': {
+      id: '/kontakt/'
+      path: '/kontakt'
+      fullPath: '/kontakt/'
+      preLoaderRoute: typeof KontaktIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/': {
@@ -1699,6 +1787,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTrainingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/tickets': {
+      id: '/admin/tickets'
+      path: '/tickets'
+      fullPath: '/admin/tickets'
+      preLoaderRoute: typeof AdminTicketsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/tests': {
       id: '/admin/tests'
       path: '/tests'
@@ -1888,6 +1983,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestBuilderIdRouteImport
       parentRoute: typeof TestBuilderRoute
     }
+    '/kontakt/ticket/$id': {
+      id: '/kontakt/ticket/$id'
+      path: '/kontakt/ticket/$id'
+      fullPath: '/kontakt/ticket/$id'
+      preLoaderRoute: typeof KontaktTicketIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/docs/app/$slug': {
       id: '/docs/app/$slug'
       path: '/$slug'
@@ -1944,6 +2046,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLegalDsrRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/help/contact': {
+      id: '/app/help/contact'
+      path: '/contact'
+      fullPath: '/app/help/contact'
+      preLoaderRoute: typeof AppHelpContactRouteImport
+      parentRoute: typeof AppHelpRoute
+    }
     '/app/account/security': {
       id: '/app/account/security'
       path: '/account/security'
@@ -1965,12 +2074,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersUserIdRouteImport
       parentRoute: typeof AdminUsersRoute
     }
+    '/admin/tickets/$ticketId': {
+      id: '/admin/tickets/$ticketId'
+      path: '/$ticketId'
+      fullPath: '/admin/tickets/$ticketId'
+      preLoaderRoute: typeof AdminTicketsTicketIdRouteImport
+      parentRoute: typeof AdminTicketsRoute
+    }
     '/admin/tests/$testId': {
       id: '/admin/tests/$testId'
       path: '/$testId'
       fullPath: '/admin/tests/$testId'
       preLoaderRoute: typeof AdminTestsTestIdRouteImport
       parentRoute: typeof AdminTestsRoute
+    }
+    '/admin/settings/notifications': {
+      id: '/admin/settings/notifications'
+      path: '/notifications'
+      fullPath: '/admin/settings/notifications'
+      preLoaderRoute: typeof AdminSettingsNotificationsRouteImport
+      parentRoute: typeof AdminSettingsRoute
     }
     '/admin/pages/$pageId': {
       id: '/admin/pages/$pageId'
@@ -2052,6 +2175,18 @@ const AdminPagesRouteWithChildren = AdminPagesRoute._addFileChildren(
   AdminPagesRouteChildren,
 )
 
+interface AdminSettingsRouteChildren {
+  AdminSettingsNotificationsRoute: typeof AdminSettingsNotificationsRoute
+}
+
+const AdminSettingsRouteChildren: AdminSettingsRouteChildren = {
+  AdminSettingsNotificationsRoute: AdminSettingsNotificationsRoute,
+}
+
+const AdminSettingsRouteWithChildren = AdminSettingsRoute._addFileChildren(
+  AdminSettingsRouteChildren,
+)
+
 interface AdminTestsRouteChildren {
   AdminTestsTestIdRoute: typeof AdminTestsTestIdRoute
   AdminTestsIndexRoute: typeof AdminTestsIndexRoute
@@ -2064,6 +2199,18 @@ const AdminTestsRouteChildren: AdminTestsRouteChildren = {
 
 const AdminTestsRouteWithChildren = AdminTestsRoute._addFileChildren(
   AdminTestsRouteChildren,
+)
+
+interface AdminTicketsRouteChildren {
+  AdminTicketsTicketIdRoute: typeof AdminTicketsTicketIdRoute
+}
+
+const AdminTicketsRouteChildren: AdminTicketsRouteChildren = {
+  AdminTicketsTicketIdRoute: AdminTicketsTicketIdRoute,
+}
+
+const AdminTicketsRouteWithChildren = AdminTicketsRoute._addFileChildren(
+  AdminTicketsRouteChildren,
 )
 
 interface AdminUsersRouteChildren {
@@ -2093,11 +2240,12 @@ interface AdminRouteChildren {
   AdminReportsRoute: typeof AdminReportsRoute
   AdminRespondentsRoute: typeof AdminRespondentsRoute
   AdminSecurityRoute: typeof AdminSecurityRoute
-  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
   AdminShareCardRoute: typeof AdminShareCardRoute
   AdminSupportRoute: typeof AdminSupportRoute
   AdminTemplatesRoute: typeof AdminTemplatesRoute
   AdminTestsRoute: typeof AdminTestsRouteWithChildren
+  AdminTicketsRoute: typeof AdminTicketsRouteWithChildren
   AdminTrainingsRoute: typeof AdminTrainingsRoute
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
@@ -2121,11 +2269,12 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminReportsRoute: AdminReportsRoute,
   AdminRespondentsRoute: AdminRespondentsRoute,
   AdminSecurityRoute: AdminSecurityRoute,
-  AdminSettingsRoute: AdminSettingsRoute,
+  AdminSettingsRoute: AdminSettingsRouteWithChildren,
   AdminShareCardRoute: AdminShareCardRoute,
   AdminSupportRoute: AdminSupportRoute,
   AdminTemplatesRoute: AdminTemplatesRoute,
   AdminTestsRoute: AdminTestsRouteWithChildren,
+  AdminTicketsRoute: AdminTicketsRouteWithChildren,
   AdminTrainingsRoute: AdminTrainingsRoute,
   AdminUsersRoute: AdminUsersRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
@@ -2136,10 +2285,21 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AppHelpRouteChildren {
+  AppHelpContactRoute: typeof AppHelpContactRoute
+}
+
+const AppHelpRouteChildren: AppHelpRouteChildren = {
+  AppHelpContactRoute: AppHelpContactRoute,
+}
+
+const AppHelpRouteWithChildren =
+  AppHelpRoute._addFileChildren(AppHelpRouteChildren)
+
 interface AppRouteChildren {
   AppAudiencesRoute: typeof AppAudiencesRoute
   AppDigestRoute: typeof AppDigestRoute
-  AppHelpRoute: typeof AppHelpRoute
+  AppHelpRoute: typeof AppHelpRouteWithChildren
   AppHistoryRoute: typeof AppHistoryRoute
   AppLibraryRoute: typeof AppLibraryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
@@ -2163,7 +2323,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAudiencesRoute: AppAudiencesRoute,
   AppDigestRoute: AppDigestRoute,
-  AppHelpRoute: AppHelpRoute,
+  AppHelpRoute: AppHelpRouteWithChildren,
   AppHistoryRoute: AppHistoryRoute,
   AppLibraryRoute: AppLibraryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
@@ -2296,11 +2456,13 @@ const rootRouteChildren: RootRouteChildren = {
   ThankYouSessionIdRoute: ThankYouSessionIdRoute,
   BlogIndexRoute: BlogIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  KontaktIndexRoute: KontaktIndexRoute,
   SablonyIndexRoute: SablonyIndexRoute,
   TestIndexRoute: TestIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
   BlogAutorSlugRoute: BlogAutorSlugRoute,
   BlogKategoriaSlugRoute: BlogKategoriaSlugRoute,
+  KontaktTicketIdRoute: KontaktTicketIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

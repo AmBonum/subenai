@@ -72,13 +72,13 @@ describe("CoursesFaqSection — E26 senior upgrade", () => {
     expect(toggle).toHaveTextContent("Zbaliť všetko");
   });
 
-  it("renders rescue footer with /blog + /contact CTAs", () => {
+  it("renders rescue footer with /blog + /kontakt CTAs", () => {
     render(<CoursesFaqSection />);
     expect(screen.getByTestId("courses-faq-footer")).toHaveTextContent(/Nenašiel si odpoveď/);
     expect(screen.getByTestId("courses-faq-footer-cta-blog")).toHaveAttribute("href", "/blog");
     expect(screen.getByTestId("courses-faq-footer-cta-contact")).toHaveAttribute(
       "href",
-      "/contact",
+      "/kontakt",
     );
   });
 });

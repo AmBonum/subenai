@@ -9,6 +9,23 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+### Pridané
+- **Kontaktný formulár a centrum žiadostí o podporu (E48).** Na stránke
+  `/kontakt` môžu po novom napísať aj neprihlásení návštevníci — stačí
+  e-mail, predmet a krátky popis. Prihlásení používatelia majú v `/app`
+  rovnaký formulár pod položkou *Pomoc → Kontakt*. Po odoslaní príde na
+  váš e-mail potvrdenie aj odkaz, kde si môžete priebeh žiadosti
+  prezerať bez prihlasovania (odkaz je viazaný na bezpečnostný token a
+  platí 90 dní). Tím podpory odpovedá z administrácie a každá odpoveď
+  vám príde aj e-mailom. Prílohy (obrázky a PDF) sú obmedzené na
+  dôveryhodné typy a každý súbor sa interne sanitizuje pred uložením.
+- **Per-admin nastavenia upozornení z podpory** v
+  `/admin/settings/notifications`. Hlavný prepínač, kanály (e-mail +
+  v aplikácii), frekvencia (okamžite / hodinový súhrn / denný súhrn /
+  vypnuté) a prepínače pre každú z 7 kategórií žiadostí. Nastavenia
+  platia iba pre váš účet — nikto vrátane adminov ich nemôže meniť za
+  vás.
+
 ## [1.14.4] — 2026-05-21
 
 ### Pridané

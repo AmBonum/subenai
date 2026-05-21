@@ -1717,6 +1717,180 @@ export type Database = {
         };
         Relationships: [];
       };
+      admin_notification_preferences: {
+        Row: {
+          user_id: string;
+          created_at: string;
+          updated_at: string;
+          enabled: boolean;
+          channels: Json;
+          per_category: Json;
+          digest_cadence: string;
+        };
+        Insert: {
+          user_id: string;
+          created_at?: string;
+          updated_at?: string;
+          enabled?: boolean;
+          channels?: Json;
+          per_category?: Json;
+          digest_cadence?: string;
+        };
+        Update: {
+          user_id?: string;
+          created_at?: string;
+          updated_at?: string;
+          enabled?: boolean;
+          channels?: Json;
+          per_category?: Json;
+          digest_cadence?: string;
+        };
+        Relationships: [];
+      };
+      support_tickets: {
+        Row: {
+          id: string;
+          created_at: string;
+          updated_at: string;
+          status: Database["public"]["Enums"]["support_ticket_status"];
+          category: Database["public"]["Enums"]["support_ticket_category"];
+          source: Database["public"]["Enums"]["support_ticket_source"];
+          subject: string;
+          body: string;
+          submitter_user_id: string | null;
+          submitter_email: string;
+          submitter_name: string | null;
+          view_token_hash: string;
+          view_token_expires_at: string;
+          view_token_invalidated_at: string | null;
+          assigned_to: string | null;
+          resolved_at: string | null;
+          archived_at: string | null;
+          user_agent: string | null;
+          ip_country: string | null;
+          deleted_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+          status?: Database["public"]["Enums"]["support_ticket_status"];
+          category: Database["public"]["Enums"]["support_ticket_category"];
+          source?: Database["public"]["Enums"]["support_ticket_source"];
+          subject: string;
+          body: string;
+          submitter_user_id?: string | null;
+          submitter_email: string;
+          submitter_name?: string | null;
+          view_token_hash: string;
+          view_token_expires_at: string;
+          view_token_invalidated_at?: string | null;
+          assigned_to?: string | null;
+          resolved_at?: string | null;
+          archived_at?: string | null;
+          user_agent?: string | null;
+          ip_country?: string | null;
+          deleted_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+          status?: Database["public"]["Enums"]["support_ticket_status"];
+          category?: Database["public"]["Enums"]["support_ticket_category"];
+          source?: Database["public"]["Enums"]["support_ticket_source"];
+          subject?: string;
+          body?: string;
+          submitter_user_id?: string | null;
+          submitter_email?: string;
+          submitter_name?: string | null;
+          view_token_hash?: string;
+          view_token_expires_at?: string;
+          view_token_invalidated_at?: string | null;
+          assigned_to?: string | null;
+          resolved_at?: string | null;
+          archived_at?: string | null;
+          user_agent?: string | null;
+          ip_country?: string | null;
+          deleted_at?: string | null;
+        };
+        Relationships: [];
+      };
+      support_ticket_messages: {
+        Row: {
+          id: string;
+          ticket_id: string;
+          created_at: string;
+          author_kind: string;
+          author_user_id: string | null;
+          author_name: string;
+          body: string;
+          email_message_id: string | null;
+        };
+        Insert: {
+          id?: string;
+          ticket_id: string;
+          created_at?: string;
+          author_kind: string;
+          author_user_id?: string | null;
+          author_name: string;
+          body: string;
+          email_message_id?: string | null;
+        };
+        Update: {
+          id?: string;
+          ticket_id?: string;
+          created_at?: string;
+          author_kind?: string;
+          author_user_id?: string | null;
+          author_name?: string;
+          body?: string;
+          email_message_id?: string | null;
+        };
+        Relationships: [];
+      };
+      support_ticket_attachments: {
+        Row: {
+          id: string;
+          ticket_id: string;
+          message_id: string | null;
+          created_at: string;
+          filename: string;
+          mime_type: string;
+          size_bytes: number;
+          storage_path: string;
+          scan_status: Database["public"]["Enums"]["support_attachment_scan_status"];
+          scanned_at: string;
+          checksum_sha256: string;
+        };
+        Insert: {
+          id?: string;
+          ticket_id: string;
+          message_id?: string | null;
+          created_at?: string;
+          filename: string;
+          mime_type: string;
+          size_bytes: number;
+          storage_path: string;
+          scan_status?: Database["public"]["Enums"]["support_attachment_scan_status"];
+          scanned_at?: string;
+          checksum_sha256: string;
+        };
+        Update: {
+          id?: string;
+          ticket_id?: string;
+          message_id?: string | null;
+          created_at?: string;
+          filename?: string;
+          mime_type?: string;
+          size_bytes?: number;
+          storage_path?: string;
+          scan_status?: Database["public"]["Enums"]["support_attachment_scan_status"];
+          scanned_at?: string;
+          checksum_sha256?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       public_sponsors: {
@@ -1904,6 +2078,30 @@ export type Database = {
         Args: { p_user_id?: string | null };
         Returns: Json;
       };
+      submit_support_ticket: {
+        Args: { p_payload: Json };
+        Returns: Json;
+      };
+      get_ticket_thread_for_view_token: {
+        Args: {
+          p_ticket_id: string;
+          p_view_token: string;
+          p_ip_country?: string | null;
+        };
+        Returns: Json;
+      };
+      request_attachment_signed_url: {
+        Args: { p_attachment_id: string };
+        Returns: Json;
+      };
+      transition_ticket_status: {
+        Args: {
+          p_ticket_id: string;
+          p_new_status: Database["public"]["Enums"]["support_ticket_status"];
+          p_note?: string | null;
+        };
+        Returns: Json;
+      };
     };
     Enums: {
       app_role: "admin" | "moderator" | "user";
@@ -1946,6 +2144,23 @@ export type Database = {
       template_license: "cc-by-4.0";
       template_age_rating: "all" | "thirteen_plus" | "sixteen_plus" | "eighteen_plus";
       template_submission_status: "pending" | "approved" | "rejected" | "withdrawn";
+      support_ticket_status:
+        | "new"
+        | "in_progress"
+        | "waiting_user"
+        | "resolved"
+        | "reopened"
+        | "archived";
+      support_ticket_category:
+        | "bug"
+        | "question"
+        | "feature_request"
+        | "abuse_report"
+        | "billing"
+        | "gdpr"
+        | "other";
+      support_ticket_source: "public_form" | "app_form";
+      support_attachment_scan_status: "clean" | "error";
     };
     CompositeTypes: {
       [_ in never]: never;

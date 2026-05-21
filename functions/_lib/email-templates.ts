@@ -195,6 +195,154 @@ export function testInviteEmail(input: {
   return { subject, html, text };
 }
 
+// E48.5 — Support ticket transactional templates. Triggered by:
+//   - supportTicketReceivedEmail: /functions/api/support-ticket-create.ts
+//     immediately after submit_support_ticket() RPC returns. viewUrl is the
+//     anonymous-thread URL (with HMAC view_token); for authenticated
+//     submitters callers can pass undefined to suppress the link.
+//   - supportTicketReplyEmail: /functions/api/support-ticket-reply.ts (E48.8)
+//     when an admin replies. body is rendered with preserved line breaks,
+//     no Markdown.
+//   - supportTicketResolvedEmail: transition_ticket_status RPC consumer
+//     in /admin/tickets detail page (E48.7) when status flips to 'resolved'.
+
+const CATEGORY_LABEL_SK: Record<string, string> = {
+  bug: "Chyba alebo problém",
+  question: "Otázka",
+  feature_request: "Návrh na vylepšenie",
+  abuse_report: "Nahlásenie nevhodného obsahu",
+  billing: "Platby / sponzorstvo",
+  gdpr: "Žiadosť o údaje (GDPR)",
+  other: "Iné",
+};
+
+export function supportTicketReceivedEmail(input: {
+  ticketId: string;
+  subject: string;
+  category: string;
+  viewUrl?: string;
+}): { subject: string; html: string; text: string } {
+  const categoryLabel = CATEGORY_LABEL_SK[input.category] ?? input.category;
+  const mailSubject = `Vašu žiadosť o podporu sme prijali — ${input.ticketId}`;
+  const viewBlock = input.viewUrl
+    ? `
+    <p style="margin:24px 0">
+      <a href="${escapeAttr(input.viewUrl)}"
+         style="display:inline-block;background:linear-gradient(135deg,#bef264,#16a34a);color:#0f172a;text-decoration:none;font-weight:700;padding:12px 24px;border-radius:12px">
+        Zobraziť vlákno
+      </a>
+    </p>
+    <p style="font-size:13px;line-height:1.6;color:#475569">
+      Odkaz na vlákno je platný 90 dní. Stačí naň kliknúť — žiadne prihlásenie.
+    </p>`
+    : `
+    <p style="font-size:13px;line-height:1.6;color:#475569">
+      Stav žiadosti uvidíte v sekcii <strong>Pomoc → Moje žiadosti</strong> po prihlásení.
+    </p>`;
+
+  const html = wrap(`
+    <p style="font-size:15px;line-height:1.6">
+      Ďakujeme, vašu žiadosť sme prijali. Odpovieme čo najskôr,
+      <strong>najneskôr do dvoch pracovných dní</strong>.
+    </p>
+    <p style="font-size:14px;line-height:1.6">
+      <strong>Téma:</strong> ${escapeText(input.subject)}<br />
+      <strong>Kategória:</strong> ${escapeText(categoryLabel)}<br />
+      <strong>Číslo žiadosti:</strong> <code>${escapeText(input.ticketId)}</code>
+    </p>
+    ${viewBlock}
+  `);
+
+  const text = [
+    "Ďakujeme, vašu žiadosť sme prijali.",
+    "Odpovieme najneskôr do dvoch pracovných dní.",
+    "",
+    `Téma: ${input.subject}`,
+    `Kategória: ${categoryLabel}`,
+    `Číslo žiadosti: ${input.ticketId}`,
+    input.viewUrl ? `\nZobraziť vlákno: ${input.viewUrl}\n(odkaz platí 90 dní)` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return { subject: mailSubject, html, text };
+}
+
+export function supportTicketReplyEmail(input: {
+  ticketId: string;
+  adminName: string;
+  body: string;
+  viewUrl?: string;
+}): { subject: string; html: string; text: string } {
+  const mailSubject = `Re: vaša žiadosť o podporu — ${input.ticketId}`;
+  const bodyHtml = escapeText(input.body).replace(/\n/g, "<br />");
+  const viewBlock = input.viewUrl
+    ? `<p style="margin:20px 0"><a href="${escapeAttr(input.viewUrl)}" style="color:#16a34a;font-weight:600">Otvoriť celé vlákno →</a></p>`
+    : "";
+
+  const html = wrap(`
+    <p style="font-size:14px;line-height:1.6;color:#475569;margin-bottom:4px">
+      Odpoveď od <strong>${escapeText(input.adminName)}</strong> (subenai podpora)
+    </p>
+    <div style="background:#f8fafc;border-left:3px solid #16a34a;padding:16px 18px;border-radius:8px;font-size:15px;line-height:1.7;margin:16px 0">
+      ${bodyHtml}
+    </div>
+    ${viewBlock}
+    <p style="font-size:13px;line-height:1.6;color:#475569">
+      Ak chcete odpovedať, jednoducho odpíšte na tento e-mail — vaša odpoveď sa pripojí
+      ku žiadosti <code>${escapeText(input.ticketId)}</code>.
+    </p>
+  `);
+
+  const text = [
+    `Odpoveď od ${input.adminName} (subenai podpora):`,
+    "",
+    input.body,
+    "",
+    input.viewUrl ? `Celé vlákno: ${input.viewUrl}` : "",
+    `Žiadosť: ${input.ticketId}. Odpovedať môžete priamo na tento e-mail.`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return { subject: mailSubject, html, text };
+}
+
+export function supportTicketResolvedEmail(input: { ticketId: string; viewUrl?: string }): {
+  subject: string;
+  html: string;
+  text: string;
+} {
+  const mailSubject = `Vaša žiadosť o podporu bola uzavretá — ${input.ticketId}`;
+  const viewBlock = input.viewUrl
+    ? `<p style="margin:16px 0"><a href="${escapeAttr(input.viewUrl)}" style="color:#16a34a;font-weight:600">Pozrieť záznam →</a></p>`
+    : "";
+
+  const html = wrap(`
+    <p style="font-size:15px;line-height:1.6">
+      Vaša žiadosť <code>${escapeText(input.ticketId)}</code> bola uzavretá ako vyriešená.
+      Ďakujeme za spätnú väzbu.
+    </p>
+    ${viewBlock}
+    <p style="font-size:13px;line-height:1.6;color:#475569">
+      Ak ste neboli s riešením spokojní alebo sa problém vrátil, odpíšte na tento e-mail
+      a žiadosť znova otvoríme.
+    </p>
+  `);
+
+  const text = [
+    `Vaša žiadosť ${input.ticketId} bola uzavretá ako vyriešená.`,
+    "Ďakujeme za spätnú väzbu.",
+    input.viewUrl ? `\nPozrieť záznam: ${input.viewUrl}` : "",
+    "",
+    "Ak potrebujete znova otvoriť, jednoducho odpovedzte na tento e-mail.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return { subject: mailSubject, html, text };
+}
+
 function escapeText(value: string): string {
   return value.replace(/[&<>]/g, (ch) => {
     if (ch === "&") return "&amp;";

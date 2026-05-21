@@ -114,7 +114,9 @@ const mainItems: NavItem[] = [
   },
   {
     key: "support",
-    url: "/admin/support",
+    // E48.6 — /admin/support kept as a back-compat redirect to /admin/tickets
+    // (the empty AH-10.4 stub is now the ticketing console).
+    url: "/admin/tickets",
     icon: Heart,
     testid: "admin-shell-sidebar-link-support",
   },
