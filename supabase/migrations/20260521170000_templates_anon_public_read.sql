@@ -35,10 +35,12 @@ CREATE POLICY templates_anon_read_public_published ON public.templates
   USING (visibility = 'public' AND status = 'published');
 
 -- Self-check after applying:
---   SELECT polname, roles FROM pg_policies
+--   SELECT policyname, roles FROM pg_policies
 --     WHERE tablename = 'templates'
---       AND polname IN ('templates_anon_read_defaults', 'templates_anon_read_public_published');
+--       AND policyname IN ('templates_anon_read_defaults', 'templates_anon_read_public_published');
 --     -- expect 2 rows, each with roles = {anon}
+--   (Gotcha: the low-level `pg_policy` table uses `polname`, but the
+--   user-facing view `pg_policies` uses `policyname`. Don't mix.)
 --
 -- Smoke (run as anon JWT or via PostgREST without auth header):
 --   SELECT count(*) FROM public.templates WHERE owner_id IS NULL;
