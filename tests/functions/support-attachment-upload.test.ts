@@ -212,7 +212,13 @@ describe("POST /api/support-attachment-upload — input validation", () => {
 });
 
 describe("POST /api/support-attachment-upload — authorization", () => {
-  it("returns 404 when the ticket does not exist", async () => {
+  // Audit A8 — uniform 403 for both "ticket UUID doesn't exist" and
+  // "ticket exists but auth failed". The earlier 404 leaked whether a
+  // UUID was live, letting an unauthenticated attacker enumerate
+  // ticket IDs by probing the endpoint. Both arms now respond
+  // identically so the attacker can't distinguish the cases from the
+  // client side.
+  it("returns 403 not_authorized when the ticket does not exist (no enumeration leak)", async () => {
     mockFetch({ ticketMissing: true });
     const res = await onRequestPost({
       request: buildRequest({
@@ -222,8 +228,8 @@ describe("POST /api/support-attachment-upload — authorization", () => {
       }),
       env,
     });
-    expect(res.status).toBe(404);
-    expect((await res.json()).error).toBe("ticket_not_found");
+    expect(res.status).toBe(403);
+    expect((await res.json()).error).toBe("not_authorized");
   });
 
   it("returns 403 when view_token does not match the ticket hash", async () => {
