@@ -63,7 +63,10 @@
 -- Phase D's migration runs. Documented in:
 --   tasks/PLAN-2026-05-20-E37-tests-coverage.md (Phase D prerequisites)
 -- and in DEPLOY_SETUP.sql (admin-bootstrap section, follow-up note).
--- Phase D's migration fails fast (RAISE EXCEPTION) when the user is absent.
+-- Phases D + E NO-OP gracefully when the user is absent — they RAISE NOTICE
+-- and RETURN early so the migration as a whole still applies (B + C land,
+-- D + E re-attempt on the next run once the user exists). This is the
+-- Phase A3 design — no aborted partial-apply state.
 --
 -- Re-runnable: every CREATE uses IF NOT EXISTS / OR REPLACE. Re-applying
 -- this migration is a no-op.
@@ -1138,7 +1141,9 @@ ON CONFLICT (id) DO NOTHING;
 -- dashboard:
 --   Authentication → Users → Add user → email: platform@subenai.sk
 --   Auto-confirm: yes. Password: any strong value (no human login flow).
--- Phase D fails fast with RAISE EXCEPTION if the user is absent.
+-- Phase D NO-OPs gracefully when the user is absent (RAISE NOTICE + RETURN,
+-- no RAISE EXCEPTION) so the migration as a whole still applies. Re-run
+-- after creating the user to complete D.
 --
 -- All UUIDs are deterministic UUIDv5 from the URL namespace + slug, so
 -- the IDs match cross-environment (dev/staging/prod). Idempotent via
