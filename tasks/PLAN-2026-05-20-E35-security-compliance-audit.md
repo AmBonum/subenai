@@ -2,7 +2,12 @@
 
 **Owner:** Claude (synthesis) — senior agent, 5-dimension security audit
 **Date opened:** 2026-05-20
-**Status:** 🟡 In progress — branch `claude/nice-khorana-68a8b9`
+**Status:** ✅ **DELIVERED 2026-05-20.** All 8 stories ✅ Done.
+- PR [#56](https://github.com/AmBonum/subenai/pull/56) — E35.1 matrix + E35.2–E35.7 test coverage suites + E35.8 ZAP DAST workflows
+- PR [#58](https://github.com/AmBonum/subenai/pull/58) — E40 cookie alignment closed the last ❌ row in the E35.1 declaration↔implementation matrix
+- Follow-up security work landed under the E48 umbrella: PR [#130](https://github.com/AmBonum/subenai/pull/130) (48 TCs / 9 attack categories), PR [#133](https://github.com/AmBonum/subenai/pull/133) (JWT rate-limit collision + PostgREST injection + PDF filter + 5 more), PR [#137](https://github.com/AmBonum/subenai/pull/137) (attachment TOCTOU race fix)
+- Branch `claude/nice-khorana-68a8b9` referenced in the original status line never existed on origin — was a stale planning artefact
+
 **Approved plan:** `/Users/lubomir/.claude/plans/tranquil-snacking-lynx.md`
 
 ## TL;DR
