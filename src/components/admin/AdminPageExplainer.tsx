@@ -1,5 +1,5 @@
-import { useEffect, useId, useMemo, useState } from "react";
-import { ChevronDown, ExternalLink, Info } from "lucide-react";
+import { useId, useMemo, useState } from "react";
+import { ChevronDown, ExternalLink } from "lucide-react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { tFor } from "@/i18n/admin";
@@ -67,6 +67,12 @@ function writePersisted(pageKey: string, open: boolean): void {
   }
 }
 
+// Lazy-initialised on first render so reduced-motion users never see a
+// pre-effect frame with motion enabled (the previous useEffect-on-mount
+// pattern had a one-frame FOMR window). SSR-safe via the window guard.
+// Belt-and-suspenders: the chevron also carries `motion-reduce:transition-none`,
+// so even if this returns the wrong value on first paint, the OS-level
+// media query still wins via CSS.
 function readReducedMotion(): boolean {
   if (typeof window === "undefined" || !window.matchMedia) return false;
   try {
@@ -82,11 +88,7 @@ export function AdminPageExplainer({ pageKey }: AdminPageExplainerProps) {
   const bodyId = useId();
 
   const [open, setOpen] = useState<boolean>(() => readPersisted(pageKey));
-  const [reducedMotion, setReducedMotion] = useState<boolean>(false);
-
-  useEffect(() => {
-    setReducedMotion(readReducedMotion());
-  }, []);
+  const [reducedMotion] = useState<boolean>(() => readReducedMotion());
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
@@ -113,11 +115,13 @@ export function AdminPageExplainer({ pageKey }: AdminPageExplainerProps) {
   }, [pageKey, tObj]);
 
   return (
-    <div data-testid="admin-explainer-root" className="w-full">
+    // scroll-mt-20 keeps deep-link / focus jumps from landing under the
+    // admin shell's sticky 56-px header (z-20, semi-transparent).
+    <div data-testid="admin-explainer-root" className="w-full scroll-mt-20">
       <Collapsible open={open} onOpenChange={handleOpenChange}>
         <div
           className={cn(
-            "rounded-lg border border-border/60 bg-muted/40 shadow-sm",
+            "rounded-lg border border-border/60 bg-muted/60 shadow-sm",
             reducedMotion && "[&_*]:transition-none",
           )}
           data-reduced-motion={reducedMotion ? "true" : "false"}
@@ -126,26 +130,21 @@ export function AdminPageExplainer({ pageKey }: AdminPageExplainerProps) {
             data-testid="admin-explainer-toggle"
             aria-controls={bodyId}
             className={cn(
-              "group flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left",
-              "hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2",
+              "group flex w-full items-center justify-between gap-3 rounded-lg px-4 py-3 text-left",
+              "hover:bg-muted/80 focus-visible:outline-none focus-visible:ring-2",
               "focus-visible:ring-ring focus-visible:ring-offset-2",
             )}
           >
-            <Info
-              data-testid="admin-explainer-toggle-icon"
-              aria-hidden="true"
-              className="h-4 w-4 shrink-0 text-muted-foreground"
-            />
             <h2
               data-testid="admin-explainer-title"
-              className="flex-1 text-sm font-medium text-foreground"
+              className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground sm:text-base"
             >
               {title}
             </h2>
             <ChevronDown
               aria-hidden="true"
               className={cn(
-                "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
+                "h-4 w-4 shrink-0 text-muted-foreground transition-transform motion-reduce:transition-none",
                 open && "rotate-180",
               )}
             />
@@ -155,92 +154,101 @@ export function AdminPageExplainer({ pageKey }: AdminPageExplainerProps) {
             id={bodyId}
             className="overflow-hidden data-[state=closed]:hidden"
           >
-            <div className="space-y-4 border-t border-border/60 px-4 py-4 text-sm">
-              <p
-                data-testid="admin-explainer-lead"
-                className="text-muted-foreground leading-relaxed"
-              >
-                {lead}
-              </p>
+            <div className="border-t border-border/60 px-4 py-4 text-sm">
+              {/* max-w-prose constrains reading width to ~65ch on wide
+                  viewports; break-words lets long unbreakable tokens
+                  (env var names like VITE_DPA_TEMPLATE_DRAFT_WATERMARK)
+                  wrap on mobile instead of clipping inside the panel. */}
+              <div className="max-w-prose space-y-4 break-words">
+                <p
+                  data-testid="admin-explainer-lead"
+                  className="text-muted-foreground leading-relaxed"
+                >
+                  {lead}
+                </p>
 
-              {sections.configure?.items?.length ? (
-                <section data-testid="admin-explainer-section-configure" className="space-y-1">
-                  <h3
-                    data-testid="admin-explainer-section-configure-heading"
-                    className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
-                  >
-                    {configureHeading}
-                  </h3>
-                  <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
-                    {sections.configure.items.map((item, i) => (
-                      <li key={i} data-testid={`admin-explainer-configure-item-${i}`}>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              ) : null}
+                {sections.configure?.items?.length ? (
+                  <section data-testid="admin-explainer-section-configure" className="space-y-1.5">
+                    <h3
+                      data-testid="admin-explainer-section-configure-heading"
+                      className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
+                    >
+                      {configureHeading}
+                    </h3>
+                    <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
+                      {sections.configure.items.map((item, i) => (
+                        <li key={i} data-testid={`admin-explainer-configure-item-${i}`}>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ) : null}
 
-              {sections.time?.items?.length ? (
-                <section data-testid="admin-explainer-section-time" className="space-y-1">
-                  <h3
-                    data-testid="admin-explainer-section-time-heading"
-                    className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
-                  >
-                    {timeHeading}
-                  </h3>
-                  <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
-                    {sections.time.items.map((item, i) => (
-                      <li key={i} data-testid={`admin-explainer-time-item-${i}`}>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              ) : null}
+                {sections.time?.items?.length ? (
+                  <section data-testid="admin-explainer-section-time" className="space-y-1.5">
+                    <h3
+                      data-testid="admin-explainer-section-time-heading"
+                      className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
+                    >
+                      {timeHeading}
+                    </h3>
+                    <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
+                      {sections.time.items.map((item, i) => (
+                        <li key={i} data-testid={`admin-explainer-time-item-${i}`}>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ) : null}
 
-              {sections.pitfalls?.items?.length ? (
-                <section data-testid="admin-explainer-section-pitfalls" className="space-y-1">
-                  <h3
-                    data-testid="admin-explainer-section-pitfalls-heading"
-                    className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
-                  >
-                    {pitfallsHeading}
-                  </h3>
-                  <ul className="list-disc space-y-1 pl-5 text-muted-foreground">
-                    {sections.pitfalls.items.map((item, i) => (
-                      <li key={i} data-testid={`admin-explainer-pitfalls-item-${i}`}>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              ) : null}
+                {sections.pitfalls?.items?.length ? (
+                  <section data-testid="admin-explainer-section-pitfalls" className="space-y-1.5">
+                    <h3
+                      data-testid="admin-explainer-section-pitfalls-heading"
+                      className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
+                    >
+                      {pitfallsHeading}
+                    </h3>
+                    <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
+                      {sections.pitfalls.items.map((item, i) => (
+                        <li key={i} data-testid={`admin-explainer-pitfalls-item-${i}`}>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ) : null}
 
-              {sections.docs.length ? (
-                <section className="space-y-1">
-                  <h3
-                    data-testid="admin-explainer-docs-heading"
-                    className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
-                  >
-                    {docsHeading}
-                  </h3>
-                  <ul className="space-y-1">
-                    {sections.docs.map((link, i) => (
-                      <li key={`${link.href}-${i}`}>
-                        <a
-                          data-testid={`admin-explainer-doc-link-${i}`}
-                          href={link.href}
-                          className="inline-flex items-center gap-1.5 text-primary underline-offset-2 hover:underline"
-                        >
-                          {link.label}
-                          <ExternalLink aria-hidden="true" className="h-3 w-3" />
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              ) : null}
+                {sections.docs.length ? (
+                  <section className="space-y-1.5">
+                    <h3
+                      data-testid="admin-explainer-docs-heading"
+                      className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
+                    >
+                      {docsHeading}
+                    </h3>
+                    <ul className="space-y-1.5">
+                      {sections.docs.map((link, i) => (
+                        <li key={`${link.href}-${i}`}>
+                          <a
+                            data-testid={`admin-explainer-doc-link-${i}`}
+                            href={link.href}
+                            // WCAG 1.4.1 (Use of Color) — links inside body
+                            // content need a non-colour indicator at rest,
+                            // not just on hover.
+                            className="inline-flex items-center gap-1.5 text-primary underline decoration-primary/50 underline-offset-2 hover:decoration-primary"
+                          >
+                            {link.label}
+                            <ExternalLink aria-hidden="true" className="h-3 w-3" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ) : null}
+              </div>
             </div>
           </CollapsibleContent>
         </div>
