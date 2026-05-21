@@ -4,6 +4,7 @@ import { Plus, Pencil, Copy, Trash2, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { TrainingEditor } from "@/components/admin/TrainingEditor";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
@@ -83,6 +84,8 @@ function AdminTrainingsPage() {
         actions={
           <Button size="sm" onClick={openCreate} data-testid="admin-trainings-list-new-button">
             <Plus className="mr-2 h-4 w-4" />
+
+            <AdminPageExplainer pageKey="trainings" />
             {t("new_button")}
           </Button>
         }

@@ -4,6 +4,7 @@ import { ExternalLink, Trash2, Search } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Button } from "@/components/ui/button";
@@ -122,6 +123,7 @@ function AdminTestsListPage() {
               data-testid="admin-tests-list-bulk-delete-button"
             >
               <Trash2 className="mr-2 h-3 w-3" />
+              <AdminPageExplainer pageKey="tests" />
               {t("bulk_delete_button")} ({selected.size})
             </Button>
           ) : null

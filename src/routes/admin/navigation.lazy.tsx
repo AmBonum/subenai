@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -114,6 +115,8 @@ function AdminNavigationPage() {
         actions={
           <Button onClick={openCreate} data-testid="cms-nav-add-button">
             <Plus className="mr-2 h-4 w-4" />
+
+            <AdminPageExplainer pageKey="navigation" />
             {t("add_item")}
           </Button>
         }

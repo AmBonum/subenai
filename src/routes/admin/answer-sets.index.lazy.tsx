@@ -4,6 +4,7 @@ import { Plus, Search, Library, Check, X, ArrowRight, MoreHorizontal, Pencil } f
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -98,6 +99,8 @@ function AnswerSetsPage() {
         actions={
           <Button size="sm" data-testid="answer-sets-list-new-button">
             <Plus className="mr-2 h-4 w-4" />
+
+            <AdminPageExplainer pageKey="answer_sets" />
             {t("new_button")}
           </Button>
         }

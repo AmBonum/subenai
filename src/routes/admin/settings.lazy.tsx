@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { ShieldCheck, AlertTriangle, FileWarning, Calendar, ExternalLink } from "lucide-react";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,8 @@ function AdminSettingsPage() {
         description={t("description")}
         testId="admin-settings-page-header"
       />
+
+      <AdminPageExplainer pageKey="settings" />
 
       <Card className="border-warning/40 bg-warning/5" data-testid="admin-settings-readonly-notice">
         <CardContent className="flex items-start gap-3 p-4">

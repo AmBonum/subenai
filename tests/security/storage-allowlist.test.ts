@@ -52,6 +52,11 @@ const LOCALSTORAGE_KEYS: DeclaredStorage[] = [
       "/cookies s2 row `prefs` (E40) — `subenai.profile-banner.dismissed.*` per-user dismissal",
   },
   { key: "subenai.locale", declaredAt: "/cookies s2 row `locale` (E40) — language preference" },
+  {
+    key: "EXPLAINER_STORAGE_PREFIX",
+    declaredAt:
+      "/cookies s2 row `prefs` (E40) — `admin-explainer-<pageKey>` collapsed/expanded state of admin info panels (E47)",
+  },
 ];
 
 /** Keys we know exist in code but are NOT declared. Empty after E40 —

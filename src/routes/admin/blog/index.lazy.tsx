@@ -2,6 +2,7 @@ import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { BlogListTable } from "@/components/admin/blog/BlogListTable";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ function AdminBlogListPage() {
           <Button asChild data-testid="admin-blog-list-new">
             <Link to="/admin/blog/new">
               <Plus className="mr-2 size-4" />
+              <AdminPageExplainer pageKey="blog" />
               Nový článok
             </Link>
           </Button>

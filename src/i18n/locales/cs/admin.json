@@ -168,5 +168,778 @@
     "audit": "Audit log · Admin",
     "respondents": "Respondenti · Admin",
     "reports": "Reporty · Admin"
+  },
+  "explainers": {
+    "dashboard": {
+      "title": "O sekci Přehled",
+      "lead": "Přehledová obrazovka zobrazuje read-only metriky platformy (uživatelé, testy, sezení, otevřené GDPR žádosti) a nejnovější aktivitu z audit logu. Žádná nastavení se zde nemění — dashboard je jen pohled.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde vidíš",
+          "items": [
+            "Agregované metriky platformy (počty účtů, testů, aktivních sezení)",
+            "Otevřené žádosti dotčených osob (DSR) a otevřené DPA žádosti",
+            "Poslední události z audit logu napříč všemi sekcemi"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad",
+          "items": [
+            "Metriky se načítají při otevření stránky; čerstvá data uvidíš po refreshi",
+            "Audit aktivita se objeví během sekund po úspěšné operaci jinde v adminu",
+            "Stránka nemá auto-refresh — pro živé sledování použij reload prohlížeče"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Delta hodnoty na kartách jsou zatím statické (UI placeholder, ne skutečný trend)",
+            "Pro změnu produktových nastavení jdi do sekce Nastavení nebo Zabezpečení"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Přehled admin konzole", "href": "/docs/admin/dashboard" },
+          { "label": "Architektura metrik a audit logu", "href": "/docs/admin/audit" }
+        ]
+      }
+    },
+    "tests": {
+      "title": "O sekci Testy",
+      "lead": "Zde spravuješ všechny testy v platformě — vytváříš, edituješ, archivuješ a mažeš je. Filtry podle stavu, obtížnosti a kategorie ti pomohou najít konkrétní test v rozsáhlé knihovně.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Filtry seznamu: stav (koncept/publikované/archivované), obtížnost, větev (odvětví)",
+            "Vyhledávání podle názvu testu",
+            "Hromadné mazání vybraných testů",
+            "Detail testu se otevírá kliknutím na řádek (úpravy v samostatném editoru)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Mazání (jednotlivé i hromadné): okamžité — seznam se aktualizuje optimisticky",
+            "Hromadné mazání spouští mutace sekvenčně — u velkých výběrů to může chvíli trvat",
+            "Publikované testy se v živé aplikaci zobrazí do 5–60 minut (cache React Query)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Filtr „Vlastník“ je momentálně UI stub — reálně nefiltruje",
+            "Test může patřit do více větví současně (filtr „větev“ matchuje podřetězec)",
+            "Smazání testu smaže i všechny odpovědi respondentů — operace je nevratná"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Životní cyklus testu (draft → publikované → archiv)", "href": "/docs/admin/tests" },
+          { "label": "Editor testu a otázek", "href": "/docs/admin/questions" }
+        ]
+      }
+    },
+    "quick_test": {
+      "title": "O sekci Rychlý test",
+      "lead": "Konfiguruješ šablonu rychlého testu, který se zobrazuje na úvodní stránce. Slouží jako první kontakt nového návštěvníka s platformou — krátký, motivační test pro vybrané publikum.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Viditelnost rychlého testu (zobrazený / skrytý na webu)",
+            "Název a popis testu (texty)",
+            "Odvětví (Obecný / Senior / Mládež / Firma)",
+            "Čas v sekundách, procento pro úspěch, obtížnost",
+            "Seznam zařazených otázek (úprava přes sekci Otázky)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Změna vstupu: optimistická aktualizace cache — UI vidí novou hodnotu okamžitě",
+            "Uložení: serverová mutace běží na pozadí; změna je pro veřejnost aktivní do 5–60 minut",
+            "Bez tlačítka „revert“ — cache se aktualizuje, i když server selže"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Otázky zde jen vidíš, neupravuješ — pro úpravu otázek přejdi do sekce Otázky",
+            "Stage „odvětví“ ovlivňuje větvení scoringu v živé aplikaci",
+            "Cache může držet starou konfiguraci až 60 minut — pro okamžité ověření počítej s force refreshem"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Struktura rychlého testu a scoring", "href": "/docs/admin/quick-test" },
+          { "label": "Odvětví a publika (Senior, Mládež, Firma)", "href": "/docs/admin/categories" }
+        ]
+      }
+    },
+    "share_card": {
+      "title": "O sekci Share karta",
+      "lead": "Nastavuješ Open Graph kartu pro sdílení výsledků testů na sociálních sítích. Karta se zobrazí na Facebooku, LinkedIn, WhatsApp a jinde, když uživatel sdílí odkaz na test nebo svůj výsledek.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "URL OG obrázku (1200×630 px, max 5 MB, JPG/PNG)",
+            "Fallback titulek (povinný — používá se, pokud test nemá vlastní)",
+            "Fallback popis (volitelný — krátká motivační věta)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Náhled v editoru se aktualizuje při psaní (live preview)",
+            "Cache sociální sítě (FB, LinkedIn) drží starou kartu — po změně je třeba scrapenout přes jejich developer tooly",
+            "Konfigurace se do živé aplikace dostane do 5–60 minut"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Titulek je validován jako neprázdný — uložení bez něj selže s toastem",
+            "Náhled obrázku načítá externí URL; rozbitá nebo 404 adresa se projeví jako prázdný box",
+            "Cache Facebook / LinkedIn je třeba manuálně invalidovat přes jejich „debugger“ nástroje"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Open Graph specifikace a rozměry", "href": "/docs/admin/share-card" },
+          { "label": "Invalidace cache na sociálních sítích", "href": "/docs/admin/share-card-cache" }
+        ]
+      }
+    },
+    "questions": {
+      "title": "O sekci Otázky",
+      "lead": "Centrální knihovna všech otázek v platformě. Vytváříš, edituješ, publikuješ nebo archivuješ je hromadně; najdeš zde otázky vytvořené komunitou i redakcí. Podporuje CSV export, filtrování a stránkování.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Vytvoření a editace otázek (modal s textem, odpověďmi, vysvětlením, kategorií)",
+            "Hromadná změna stavu (publikovat / archivovat vybrané)",
+            "Hromadné mazání",
+            "Filtry: stav, větev, autor, počet hlasů (-50 až +200), jen nahlášené",
+            "Export filtrovaného seznamu do CSV (klient-side, bez serverového volání)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Vytvoření / editace / mazání: okamžitá serverová mutace + invalidace cache",
+            "Hromadné operace běží sekvenčně (ne paralelně) — u 100+ záznamů počítej s delším čekáním",
+            "AI generátor se zapíná přes build-time proměnnou VITE_AI_GENERATOR_ENABLED — toggle vyžaduje redeploy"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Při změně filtru se stránkování vždy resetuje na stranu 1",
+            "Autoři bez vyplněného jména (seedované otázky) se nezobrazí v dropdownu autorů",
+            "Negativní hlasy začínají na -50 — pro nižší skóre filtr neexistuje"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Struktura otázky a typů odpovědí", "href": "/docs/admin/questions" },
+          { "label": "AI generátor otázek (feature flag)", "href": "/docs/admin/ai-generator" },
+          { "label": "Hlasování a nahlašování", "href": "/docs/admin/reports" }
+        ]
+      }
+    },
+    "answer_sets": {
+      "title": "O sekci Sady odpovědí",
+      "lead": "Spravuješ znovupoužitelné sady odpovědí — skupiny správných a nesprávných možností, které se připínají k otázkám. Sada existuje jednou, používá se N-krát napříč otázkami; změna sady se projeví v každé otázce, která ji používá.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Vytvoření nové sady (otevře editor)",
+            "Duplikování sady (vytvoří novou kopii včetně všech odpovědí)",
+            "Mazání sady",
+            "Vyhledávání podle názvu sady",
+            "Detail sady (úpravy textu odpovědí, jejich pořadí a označení správnosti)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Vytvoření sady: okamžitá mutace + přesměrování na detail",
+            "Duplikování: vytvoří novou sadu + sekvenčně kopíruje každou odpověď (N+1 mutací, žádný rollback)",
+            "Mazání: okamžité, optimistické odstranění z cache",
+            "Počet použití na kartě je stale, dokud query znovu nestáhne data"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Duplikování není transakční — pokud selže uprostřed, máš novou sadu s neúplnými odpověďmi",
+            "Mazání sady, kterou používá otázka, může rozbít scoring dané otázky (sada → otázka vazba)",
+            "Součet správných/nesprávných se počítá při vykreslení — u velkých sad to může být dočasně stale"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Sady odpovědí a vazba na otázky", "href": "/docs/admin/answer-sets" },
+          { "label": "Best practices pro duplikování a verzování", "href": "/docs/admin/answer-sets-versioning" }
+        ]
+      }
+    },
+    "trainings": {
+      "title": "O sekci Školení",
+      "lead": "Spravuješ vzdělávací školení — krátké kurzy, které platforma nabízí po dokončení testu nebo samostatně. Pro každé školení nastavíš téma, délku, stav publikování a popisný obsah.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Vytvoření nového školení (modal editor)",
+            "Editace existujícího (název, téma, popis, délka, stav)",
+            "Duplikování (kopie s příponou „(kopie)“ a stavem forced na draft)",
+            "Mazání",
+            "Vyhledávání podle názvu"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Vytvoření / editace / mazání: okamžitá serverová mutace + invalidace seznamu",
+            "Publikované školení se v živé aplikaci zobrazí do 5–60 minut (cache React Query)",
+            "Duplikát startuje vždy jako draft — publikuj jej manuálně až po revizi"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Téma se vybírá z fixního seznamu — přidání nového tématu vyžaduje DB migraci",
+            "Délka je informativní (zobrazí se návštěvníkovi) — neovlivňuje technické timeouty",
+            "Při duplikování se kopíruje i popis včetně Markdown formátování"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Struktura školení a témat", "href": "/docs/admin/trainings" },
+          { "label": "Publikační workflow", "href": "/docs/admin/publishing" }
+        ]
+      }
+    },
+    "users": {
+      "title": "O sekci Uživatelé",
+      "lead": "Seznam všech registrovaných účtů s jejich rolí a stavem. Zde vidíš, kdo je admin, uživatel nebo čeká na potvrzení; filtruješ podle role, hledáš podle jména nebo e-mailu a pro každého vidíš počet jeho otázek.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Vyhledávání podle display_name nebo e-mailu (klient-side filtr)",
+            "Filtr podle role: admin / uživatel / čekající",
+            "Tlačítko „Upravit roli“ — připravené, ale serverová mutace zatím není zapojena"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Hledání a filtr: čistě klient-side, žádná síťová režie",
+            "Změna role (až bude zapojena): okamžitá — platí od dalšího API volání dotčeného uživatele",
+            "Degradace z admin → user odepře přístup do /admin a uživatele při dalším kliku odhlásí"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Tlačítko „Upravit roli“ je teď jen UI stub — vypíše toast, ale nemění DB",
+            "Filtr rolí zná jen admin / user / pending — vlastní role se nezobrazí",
+            "Iniciály v avataru berou první 2 znaky display_name — při prázdném jménu jsou prázdné"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Role a oprávnění", "href": "/docs/admin/users" },
+          { "label": "RLS politiky pro user_roles", "href": "/docs/admin/security" }
+        ]
+      }
+    },
+    "categories": {
+      "title": "O sekci Kategorie",
+      "lead": "Dvouúrovňová taxonomie obsahu: větve (top-level) a témata (děti větví). Slug tématu začíná slugem větve (konvence, ne FK), proto je mazání větve s dětmi blokované. Těmito hodnotami se značí otázky, testy a články.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Větve: vytvoření, editace jména/slugu/popisu, mazání (guard při existujících dětech)",
+            "Témata: vytvoření pod vybranou větev, editace, mazání",
+            "Slug se auto-generuje z názvu (lowercase, pomlčky), ale je editovatelný"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Vytvoření / editace / mazání: okamžitá mutace + invalidace obou query (větve + témata)",
+            "Pokus o smazání větve s tématy → guard selže s error toastem",
+            "Změna slugu se přepíše do vazby otázek při jejich dalším uložení (lazy migration)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Mazací guard kontroluje naming konvenci, ne FK — manuální porušení konvence ho obejde",
+            "Barva je hardcoded na #6366f1 (indigo) — color picker zatím nemáme",
+            "Re-parenting tématu do jiné větve není podporováno; je třeba vytvořit novou a starou smazat"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Taxonomie větví a témat", "href": "/docs/admin/categories" },
+          { "label": "Slug konvence a migrace", "href": "/docs/admin/categories-slugs" }
+        ]
+      }
+    },
+    "reports": {
+      "title": "O sekci Reporty",
+      "lead": "Governance queue: uživatelé zde nahlašují otázky, které porušují pravidla (spam, nevhodný obsah, harassment, dezinformace). Admin každý report vyhodnotí — buď ho vyřeší (provede akci s otázkou), nebo zamítne jako neopodstatněný.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Filtr podle stavu (otevřené / v řešení / vyřešené / zamítnuté) a důvodu",
+            "Akce: vyřešit, zamítnout (mutace + invalidace)",
+            "Export filtrovaného seznamu do CSV"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Filtry: okamžité (klient-side na načteném seznamu)",
+            "Vyřešit / zamítnout: okamžitá mutace + toast, query se invaliduje",
+            "Export: čistě klient-side — žádné serverové volání, žádný limit velikosti"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Důvody a stavy jsou fixní enumy — přidání nového důvodu vyžaduje code change",
+            "Žádná manuální priorita ani reordering — fronta je vždy seřazena podle created_at",
+            "Vyřešení reportu nemaže otázku — to musíš v sekci Otázky udělat samostatně"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Reportovací důvody a workflow", "href": "/docs/admin/reports" },
+          { "label": "Eskalace: kdy mazat otázku vs. autora", "href": "/docs/admin/reports-escalation" }
+        ]
+      }
+    },
+    "support": {
+      "title": "O sekci Podpora",
+      "lead": "Konfiguruješ kontaktní údaje support kanálu — e-mail, telefon a otevírací hodiny. Tyto údaje se zobrazují návštěvníkům v patičce, na kontaktní stránce a v automatických odpovědích.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Support e-mail (povinný, regex validace)",
+            "Telefonní číslo (volitelné, validace pokud je vyplněno)",
+            "Otevírací hodiny (volný text, např. „Po–Pá 9:00–17:00“)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Vstup: synchronní aktualizace stavu formuláře",
+            "Uložení: validace + zápis konfigurace + success toast",
+            "Živá aplikace načte novou konfiguraci při dalším initu (krátký bootstrap delay)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Validace je jen klient-side (regex) — server akceptuje jakoukoliv hodnotu, kterou pošleš",
+            "Hodiny nemají formátovou validaci — překlepy se dostanou do živé aplikace",
+            "Aktuálně jde o in-memory config v rámci sezení; perzistence do DB přijde v další iteraci"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Support kanály a SLA", "href": "/docs/admin/support" },
+          { "label": "Eskalační kontakty", "href": "/docs/admin/support-escalation" }
+        ]
+      }
+    },
+    "blog": {
+      "title": "O sekci Blog",
+      "lead": "Spravuješ blogové články — koncepty, publikované i archivované. Vytváříš nové příspěvky, otevíráš editor existujících a mažeš zastaralé. Detailní editor (texty, obrázky, SEO) se otevírá kliknutím na řádek.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Vytvoření nového článku (přesměruje na /admin/blog/new)",
+            "Editaci existujícího (link na /admin/blog/$id)",
+            "Mazání článku (inline akce, mutace)",
+            "Stav článku se nastavuje v detail editoru (draft / publikovaný / archiv)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Vytvoření: serverová mutace při otevření editoru",
+            "Mazání: okamžitá mutace + refetch seznamu",
+            "Publikovaný článek je dostupný na webu okamžitě; build-time RSS a sitemap se generují při nasazení"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Žádné bulk operace — mazání jen po jednom řádku",
+            "Slug článku je povinný a unikátní; chyba slugu selže při uložení",
+            "Publikovaný článek se do sitemap.xml dostane až při dalším nasazení (npm run build)"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Blog editor a SEO pole", "href": "/docs/admin/blog" },
+          { "label": "Workflow publikování", "href": "/docs/admin/publishing" }
+        ]
+      }
+    },
+    "pages": {
+      "title": "O sekci Podstránky",
+      "lead": "Spravuješ statické CMS podstránky webu — pravidla, kontakt, ochrana osobních údajů a podobné. Detailní editor pracuje s bloky (heading, text, obrázek…), které skládáš do výsledné stránky.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Vytvoření nové stránky (po vytvoření přesměrování na detail)",
+            "Editace stránky (název, slug, stav, bloky)",
+            "Publikovat / depublikovat (toggle v detail editoru)",
+            "Mazání stránky",
+            "Stránkové bloky: přidat, mazat, přesunout nahoru/dolů (ChevronUp/Down)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Vstup do bloku: optimistická aktualizace cache + asynchronní mutace",
+            "Publikovat: optimistické nastavení published_at + mutace + invalidace",
+            "Živá aplikace uvidí stránku do 5–60 minut (cache React Query)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Slug musí matchovat /^[a-z0-9-]+$/ — diakritika, mezery a velká písmena jsou zamítnuty",
+            "Re-order bloků je swap-by-index (ne drag & drop) — u 20+ bloků je to neefektivní",
+            "Detail editor čte z listing query — pokud stránka není v cache, zobrazí „nenalezeno“"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "CMS stránky a typy bloků", "href": "/docs/admin/pages" },
+          { "label": "Slug pravidla a redirecty", "href": "/docs/admin/pages-slugs" }
+        ]
+      }
+    },
+    "navigation": {
+      "title": "O sekci Navigace",
+      "lead": "Konfiguruješ hlavní menu webu — položky, jejich pořadí, viditelnost pro přihlášené uživatele a otevření v nové kartě. Toto menu se zobrazuje v hlavičce desktopové i mobilní verze.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Přidání položky (auto-ID, prázdný label/url, pozice = počet + 1)",
+            "Editace v dialogu: label, URL, open_in_new_tab, auth_only",
+            "Mazání položky",
+            "Přesun nahoru / dolů (swap pozic se sousedem)",
+            "Inline toggle viditelnosti a „jen pro přihlášené“"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Každá změna: optimistická aktualizace cache + asynchronní mutace",
+            "Mazání + přesun: invalidace query po úspěchu",
+            "Živá aplikace uvidí menu do 5–60 minut (cache React Query)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "URL musí matchovat /^(\\/[^\\s]*|https:\\/\\/[^\\s]+)$/ — jen lokální cesty nebo https://",
+            "Pozice je číselná — při přeskakování (1, 2, 5) zůstává díra; swap-by-index ji ignoruje",
+            "auth_only je jen UI flag — back-end ho neenforcuje, uživatel vidí položku, pokud zná URL"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Struktura navigace", "href": "/docs/admin/navigation" },
+          { "label": "auth_only vs. server-side guards", "href": "/docs/admin/security" }
+        ]
+      }
+    },
+    "header": {
+      "title": "O sekci Hlavička",
+      "lead": "Nastavuješ globální hlavičku webu — logo, primární CTA tlačítko a label mobilního menu. Tyto hodnoty vidí návštěvník na každé veřejné stránce v horní liště.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "logo_url — URL obrázku loga",
+            "cta_label — text primárního tlačítka (např. „Spustit test“)",
+            "cta_url — kam tlačítko odkazuje",
+            "mobile_trigger_label — text mobilního menu tlačítka (a11y label)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Vstup: optimistická aktualizace cache + asynchronní mutace",
+            "Uložení: success toast (žádná další akce)",
+            "Živá aplikace uvidí novou hlavičku do 5–60 minut (cache React Query)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Logo URL je jen řetězec — 404 nebo nesprávný formát se projeví jako prázdný obrázek",
+            "cta_url nemá URL validaci — neplatná hodnota přesměruje na 404",
+            "Formulář neuzamyká pole při ukládání — rychlé kliky mohou zaspamovat mutace"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Hlavička: logo, CTA, mobile", "href": "/docs/admin/header" },
+          { "label": "Brand guidelines (formáty loga)", "href": "/docs/admin/branding" }
+        ]
+      }
+    },
+    "footer": {
+      "title": "O sekci Patička",
+      "lead": "Spravuješ patičku webu — sloupce s odkazy a sociální sítě. Patičku vidí návštěvník na každé veřejné stránce, slouží i pro SEO interlinking a povinné GDPR/cookie odkazy.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Sloupce: přidat, editovat název, mazat",
+            "Odkazy ve sloupci: přidat, editovat label/url, mazat",
+            "Sociální sítě: přidat platformu + URL, editovat, mazat",
+            "Pořadí sloupců je dáno pořadím vytvoření (drag-reorder zatím není)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Každá změna: optimistický cache update + asynchronní mutace",
+            "Živá aplikace uvidí novou patičku do 5–60 minut (cache React Query)",
+            "Sociální ikony se renderují podle platformy stringu — neznámá platforma → generická ikona"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "URL odkazu / sociálního linku nemá validaci — mohou se dostat i nesprávné hodnoty",
+            "Pro změnu pořadí sloupců je třeba mazat a vytvářet znovu (žádný drag & drop)",
+            "Platforma sociální sítě je volný text — překlep „Insagram“ neobsáhne známé ikony"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Patička: sloupce, sociální sítě", "href": "/docs/admin/footer" },
+          { "label": "GDPR / cookie odkazy v patičce (povinné)", "href": "/docs/admin/legal" }
+        ]
+      }
+    },
+    "dsr": {
+      "title": "O sekci Žádosti GDPR",
+      "lead": "Governance queue pro žádosti dotčených osob podle GDPR (čl. 15–22) — přístup k údajům, oprava, výmaz, přenositelnost. Každá žádost má SLA podle typu a stavu; barevné badge upozorňují na blížící se termín.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Filtr podle stavu (otevřené / v řešení / vyřešené / zamítnuté) a typu (přístup / výmaz / přenositelnost)",
+            "Vyhledávání podle e-mailu žadatele nebo poznámky",
+            "Akce: vyřešit (status → completed) nebo zamítnout (status → rejected)",
+            "Export filtrovaného seznamu do CSV"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Stavová mutace: okamžitá + invalidace query + toast",
+            "SLA se počítá klient-side z created_at + typově specifického deadline (čl. 12(3) = 30 dní)",
+            "„Overdue“ badge se triggeruje při překročení deadline",
+            "Mutace běží jednotlivě — při selhání uprostřed je UI dočasně nekonzistentní"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "GDPR čl. 12(3) určuje 1 měsíc na vyřízení — overdue je porušení zákona",
+            "Vyřešení nepokrývá technické provedení žádosti (např. samotný výmaz) — to musíš udělat mimo tuto frontu",
+            "Vyhledávání je volný text bez AND/OR operátorů — pokrývá e-mail i substring v poznámce"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "GDPR čl. 15–22 a SLA tabulka", "href": "/docs/admin/dsr" },
+          { "label": "Technický runbook výmazu a anonymizace", "href": "/docs/admin/dsr-runbook" }
+        ]
+      }
+    },
+    "dpa_requests": {
+      "title": "O sekci DPA žádosti",
+      "lead": "Governance queue pro žádosti o Data Processing Agreement / NDA. Sleduješ zde životní cyklus žádosti (čeká / doručeno / podepsáno / zrušeno) i stav odeslaného e-mailu. Stažení PDF, opětovné odeslání a anonymizace jsou dostupné per řádek.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Filtr podle stavu žádosti a stavu e-mailu, vyhledávání podle e-mailu žadatele",
+            "Změna stavu (dropdown nebo tlačítko)",
+            "Anonymizace (jednosměrná: PII → ****, status → cancelled)",
+            "Opětovné odeslání e-mailu (re-trigger SMTP send)",
+            "Stažení podepsaného PDF",
+            "Export do CSV"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Změna stavu: okamžitá mutace + invalidace",
+            "Anonymizace: NEVRATNÁ — PII se přepíše, status se forced na cancelled",
+            "Re-send: async SMTP job — email_status se změní z „pending“ na „sent“/„failed“ až po dokončení",
+            "PDF download: serverové volání, prohlížeč stáhne soubor"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Anonymizace je jednosměrná operace — před kliknutím důkladně ověř identitu žadatele",
+            "Stav žádosti a stav e-mailu jsou oddělené — můžeš mít „pending“ žádost se „sent“ e-mailem",
+            "Dashboard počítá otevřené jen podle stavu žádosti, ne podle stavu e-mailu"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "DPA workflow a šablony", "href": "/docs/admin/dpa-requests" },
+          { "label": "Anonymizace: kdy a jak", "href": "/docs/admin/dpa-anonymisation" },
+          { "label": "Retention politika a cron job", "href": "/docs/admin/settings" }
+        ]
+      }
+    },
+    "settings": {
+      "title": "O sekci Nastavení",
+      "lead": "Read-only GDPR / compliance dashboard. Zobrazuje aktuální hodnoty feature flagů (DPA flow on/off, draft watermark, verze DPA šablony) i retention politiku. Změny se dělají přes env proměnné v Cloudflare Pages — vyžaduje redeploy a zanechává audit trail v deploy logu.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde vidíš (read-only)",
+          "items": [
+            "DPA flow: VITE_DPA_FLOW_ENABLED (true/false)",
+            "Draft watermark: VITE_DPA_TEMPLATE_DRAFT_WATERMARK",
+            "Verze DPA šablony: hardcoded v src/lib/dpa/feature-flag.ts",
+            "Retention politika: SQL funkce anonymize_expired_dpa_requests() — běží na cronu",
+            "Seznam subprocesorů (hardcoded konstanta SUB_PROCESSORS)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Změna env flagu: editace v Cloudflare Pages dashboardu + redeploy (cca 3–5 minut)",
+            "Změna verze DPA šablony: code change + PR + merge + redeploy",
+            "Retention cron: běží podle cron expression v Supabase (default jednou denně)",
+            "Update subprocesorů: code change (právně citlivé — vyžaduje review legal teamu)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Stránka je read-only záměrně — env-backed flagy musí zanechat deploy audit trail",
+            "Žádný live toggle: změna bez redeploye nemá efekt",
+            "Watermark se zobrazuje amber barvou, když je ON (varování před prod použitím), green když OFF"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Feature flagy a deploy audit", "href": "/docs/admin/settings" },
+          { "label": "Retention politika a cron", "href": "/docs/admin/retention" },
+          { "label": "Seznam subprocesorů a GDPR článek 28", "href": "/docs/admin/subprocessors" }
+        ]
+      }
+    },
+    "security": {
+      "title": "O sekci Zabezpečení",
+      "lead": "Self-service MFA pro tvůj vlastní admin účet — TOTP autentifikátor (Google Authenticator, 1Password, …) a backup kódy. Žádná globální nastavení zde nejsou; sekce spravuje jen faktory aktuálně přihlášeného admina.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co zde nastavuješ",
+          "items": [
+            "Zaregistrování 2FA (přesměruje na /login/enroll-2fa)",
+            "Reset 2FA (unenroll faktoru, potvrzení, přesměrování na re-enroll)",
+            "Vygenerování nových backup kódů (potvrzení, zobrazení v modalu s copy/download)",
+            "Zobrazení počtu zbývajících backup kódů"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Enroll: redirect na flow, po dokončení se faktor objeví okamžitě po refreshi",
+            "Unenroll: okamžitá mutace, redirect na re-enroll (musíš znovu zaregistrovat!)",
+            "Regenerování kódů: mutace + zobrazení v modalu (server uloží okamžitě)",
+            "Backup kódy < 3 → varování (hardcoded threshold)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Reset 2FA okamžitě přesměruje na re-enroll — musíš znovu zaregistrovat autentifikátor",
+            "Backup kódy se nikde lokálně neukládají; zavření modalu bez uložení = kódy ztracené (server je má, ty ne)",
+            "Systém neblokuje unenroll posledního faktoru — další přihlášení nebude chráněno 2FA"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "MFA enrolment workflow", "href": "/docs/admin/security" },
+          { "label": "Backup kódy: best practices", "href": "/docs/admin/security-backup-codes" },
+          { "label": "AAL2 enforcement pro /admin", "href": "/docs/admin/aal2" }
+        ]
+      }
+    }
   }
 }

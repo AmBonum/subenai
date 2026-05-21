@@ -11,6 +11,7 @@ import { ShieldCheck, KeyRound, AlertTriangle, Info } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -126,6 +127,8 @@ function AdminSecurityPage() {
         description={t("description")}
         testId="admin-security-page-header"
       />
+
+      <AdminPageExplainer pageKey="security" />
 
       <Card className="border-border/60" data-testid="admin-security-factor-card">
         <CardContent className="space-y-4 p-6">

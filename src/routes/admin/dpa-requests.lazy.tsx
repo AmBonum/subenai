@@ -1,6 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { DpaRequestsQueue } from "@/components/admin/DpaRequestsQueue";
 import { useAdminDpaRequests } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/governance";
@@ -20,6 +21,8 @@ function AdminDpaRequestsPage() {
         description={t("description", { open })}
         testId="admin-dpa-requests-page-header"
       />
+
+      <AdminPageExplainer pageKey="dpa_requests" />
       <DpaRequestsQueue />
     </div>
   );

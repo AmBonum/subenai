@@ -5,6 +5,7 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -82,6 +83,8 @@ function AdminCmsPagesPage() {
         actions={
           <Button onClick={onNew} data-testid="cms-pages-list-new-button">
             <Plus className="mr-2 h-4 w-4" />
+
+            <AdminPageExplainer pageKey="pages" />
             {t("new_button")}
           </Button>
         }
