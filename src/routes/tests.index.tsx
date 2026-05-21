@@ -32,7 +32,10 @@ function sortPacks(packs: TestPack[], sort: SortKey): TestPack[] {
   if (sort === "newest") {
     copy.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
   } else if (sort === "questions_desc") {
-    copy.sort((a, b) => b.questionIds.length - a.questionIds.length);
+    copy.sort(
+      (a, b) =>
+        (b.questionCount ?? b.questionIds.length) - (a.questionCount ?? a.questionIds.length),
+    );
   }
   return copy;
 }

@@ -64,7 +64,10 @@ export function TestPackCard({ pack, featured = false }: TestPackCardProps) {
           data-testid={`tests-catalog-card-meta-${pack.slug}`}
           className="mt-1 text-xs text-muted-foreground"
         >
-          {t("pack_card_meta", { n: pack.questionIds.length, threshold: pack.passingThreshold })}
+          {t("pack_card_meta", {
+            n: pack.questionCount ?? pack.questionIds.length,
+            threshold: pack.passingThreshold,
+          })}
         </p>
       </div>
     </Link>
