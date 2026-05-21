@@ -4,6 +4,7 @@ import { toast } from "sonner";
 
 import { SITE_ORIGIN } from "@/config/site";
 import { SupportContactForm } from "@/components/support/SupportContactForm";
+import { TurnstileWidget } from "@/components/common/TurnstileWidget";
 import type {
   SupportContactFormData,
   SupportContactSubmitResult,
@@ -105,19 +106,24 @@ export const Route = createFileRoute("/kontakt/")({
   component: KontaktPage,
 });
 
-function KontaktPage() {
+export function KontaktPage() {
   const [submitted, setSubmitted] = useState<{ ticketId: string; viewToken?: string } | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   async function handleSubmit(data: SupportContactFormData): Promise<SupportContactSubmitResult> {
+    if (!turnstileToken) {
+      throw new Error("Overenie proti spamu sa nedokončilo. Skúste znova.");
+    }
     const res = await fetch("/api/support-ticket-create", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, turnstile_token: turnstileToken }),
     });
 
     if (!res.ok) {
       const errBody = (await res.json().catch(() => ({}))) as { error?: string };
       const message = mapErrorCode(errBody.error);
+      setTurnstileToken(null);
       throw new Error(message);
     }
 
@@ -192,6 +198,7 @@ function KontaktPage() {
           variant="public"
           onSubmit={handleSubmit}
           onAttachmentUpload={handleAttachmentUpload}
+          turnstileSlot={<TurnstileWidget onToken={setTurnstileToken} />}
         />
       )}
     </main>
