@@ -4561,6 +4561,75 @@ END;
 $$;
 
 -- ============================================================================
+-- 20260521250000_e46_6_rectify_user_data.sql (E46.6)
+-- ============================================================================
+-- Admin GDPR Art. 16 rectification. Whitelisted (table, column) pairs only —
+-- currently profiles.display_name. See migration file for whitelist rationale.
+
+CREATE OR REPLACE FUNCTION public.rectify_user_data(
+  p_user_id   uuid,
+  p_table     text,
+  p_column    text,
+  p_new_value text
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_caller    uuid := auth.uid();
+  v_old_value text;
+BEGIN
+  IF v_caller IS NULL THEN
+    RAISE EXCEPTION 'unauthorized' USING ERRCODE = '42501';
+  END IF;
+  IF NOT public.has_role(v_caller, 'admin') THEN
+    RAISE EXCEPTION 'forbidden' USING ERRCODE = '42501';
+  END IF;
+  IF p_user_id IS NULL THEN
+    RAISE EXCEPTION 'p_user_id required' USING ERRCODE = '22023';
+  END IF;
+  IF p_new_value IS NULL THEN
+    RAISE EXCEPTION 'p_new_value cannot be NULL — use erase_user_data() instead'
+      USING ERRCODE = '22023';
+  END IF;
+  IF length(p_new_value) > 200 THEN
+    RAISE EXCEPTION 'p_new_value too long (max 200 chars)' USING ERRCODE = '22001';
+  END IF;
+
+  IF p_table = 'profiles' AND p_column = 'display_name' THEN
+    SELECT display_name INTO v_old_value FROM public.profiles WHERE id = p_user_id;
+    UPDATE public.profiles SET display_name = p_new_value WHERE id = p_user_id;
+    IF NOT FOUND THEN
+      RAISE EXCEPTION 'profile not found for user_id %', p_user_id USING ERRCODE = '02000';
+    END IF;
+  ELSE
+    RAISE EXCEPTION 'rectification not supported for %.%', p_table, p_column
+      USING ERRCODE = '42501';
+  END IF;
+
+  INSERT INTO public.audit_log
+    (actor_id, action, target_type, target_id, pii_access, details)
+  VALUES (
+    v_caller, 'dsr_rectification_applied', 'profile', p_user_id::text, true,
+    format('GDPR Art. 16 rectification: %s.%s changed. Old value: %L. New value: %L.',
+           p_table, p_column, v_old_value, p_new_value)
+  );
+
+  RETURN jsonb_build_object(
+    'table', p_table, 'column', p_column,
+    'old_value', v_old_value, 'new_value', p_new_value,
+    'applied_at', now()
+  );
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.rectify_user_data(uuid, text, text, text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.rectify_user_data(uuid, text, text, text) FROM anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.rectify_user_data(uuid, text, text, text) TO authenticated;
+
+-- ============================================================================
 -- 20260521210000_test_question_order_mode.sql (E45.1)
 -- ============================================================================
 

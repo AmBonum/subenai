@@ -66,7 +66,13 @@
     "toast_hard_delete_enqueued": "Hard delete naplánovaný — vykoná sa o {minutes} min. Môžeš ho zrušiť.",
     "toast_cancel_success": "Vymazanie zrušené.",
     "toast_cancel_too_late": "Okno na zrušenie už uplynulo — vymazanie sa už spustilo.",
-    "toast_action_failed": "Akcia zlyhala"
+    "toast_action_failed": "Akcia zlyhala",
+    "rectify_display_name_button": "Opraviť meno (Art. 16)",
+    "rectify_dialog_title": "Opraviť meno používateľa (GDPR Art. 16)",
+    "rectify_dialog_description": "Zmena sa zapíše do audit logu so starou aj novou hodnotou. Iba meno sa dá opraviť cez tento dialóg — e-mail je len-na-čítanie (zmena by rozbila magic-link autentifikáciu).",
+    "rectify_dialog_input_label": "Nové meno",
+    "rectify_dialog_confirm": "Uložiť opravu",
+    "toast_rectified": "Meno opravené. Záznam v audit logu."
   },
   "dpa_queue": {
     "page_title": "DPA žiadosti · Admin",

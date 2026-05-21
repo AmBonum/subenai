@@ -2077,6 +2077,53 @@ export function useEnqueueHardDelete() {
   });
 }
 
+/**
+ * E46.6 — GDPR Art. 16 rectification. The RPC is whitelisted at the
+ * DB layer: today only `profiles.display_name` works; any other
+ * (table, column) pair raises. The mutation hook intentionally
+ * accepts arbitrary strings for `table` + `column` so the UI driver
+ * stays generic — the DB is the source of truth on what's editable.
+ */
+export interface RectifyUserDataInput {
+  userId: string;
+  table: string;
+  column: string;
+  newValue: string;
+}
+
+export interface RectifyUserDataResult {
+  table: string;
+  column: string;
+  old_value: string | null;
+  new_value: string;
+  applied_at: string;
+}
+
+export function useRectifyUserData() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      userId,
+      table,
+      column,
+      newValue,
+    }: RectifyUserDataInput): Promise<RectifyUserDataResult> => {
+      const { data, error } = await supabase.rpc("rectify_user_data", {
+        p_user_id: userId,
+        p_table: table,
+        p_column: column,
+        p_new_value: newValue,
+      });
+      if (error) throw error;
+      return data as unknown as RectifyUserDataResult;
+    },
+    onSuccess: (_data, vars) => {
+      qc.invalidateQueries({ queryKey: ["admin", "user_dossier", vars.userId] });
+      qc.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+  });
+}
+
 export function useCancelPendingErasure() {
   const qc = useQueryClient();
   return useMutation({
