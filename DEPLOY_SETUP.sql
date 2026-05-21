@@ -7324,6 +7324,80 @@ $migration$;
 
 
 -- ============================================================================
+-- E37 Phase G (subset 1) — pack copy hygiene
+-- (mirror of 20260521290000_e37_pack_copy_hygiene.sql)
+-- ============================================================================
+-- Algorithmic Slovak-copy fixes: drop age qualifiers from pack titles
+-- and sweep English/Czech leakage (scam-y → podvody, vektory → útoky,
+-- Backoffice → Back-office, operatívci → operatíva). Idempotent — each
+-- UPDATE matches on the OLD string so re-paste is a no-op.
+
+UPDATE public.tests
+   SET title = 'Seniori — podvody cielené na starších'
+ WHERE slug = 'seniori'
+   AND title = 'Seniori (55+) — podvody cielené na starších';
+
+UPDATE public.tests
+   SET title = 'Študenti — podvody, na ktoré naletia pri štúdiu'
+ WHERE slug = 'studenti'
+   AND title = 'Študenti (16+) — podvody, na ktoré naletia pri štúdiu';
+
+UPDATE public.tests
+   SET title = 'Žiaci — bezpečnosť na internete'
+ WHERE slug = 'ziaci-do-16'
+   AND title = 'Žiaci (do 16 rokov) — bezpečnosť na internete';
+
+UPDATE public.tests
+   SET title = 'Autoservis — podvody proti dielenskému tímu'
+ WHERE slug = 'autoservis'
+   AND title = 'Autoservis — scam-y proti dielenskému tímu';
+
+UPDATE public.tests
+   SET title = 'IT a softvérový vývoj — pokročilé útoky'
+ WHERE slug = 'it-vyvoj'
+   AND title = 'IT a softvérový vývoj — pokročilé vektory';
+
+UPDATE public.platform_pack_metadata m
+   SET tagline = 'Fake prenájmy izby pred zápisom, phishing univerzitných portálov AIS2, falošné Erasmus+ štipendiá, Discord Nitro a podvody s ponukami práce. 13 otázok.'
+  FROM public.tests t
+ WHERE m.test_id = t.id
+   AND t.slug = 'studenti'
+   AND m.tagline = 'Fake prenájmy izby pred zápisom, phishing univerzitných portálov AIS2, falošné Erasmus+ štipendiá, Discord Nitro a job scam-y. 13 otázok.';
+
+UPDATE public.platform_pack_metadata m
+   SET tagline = 'Podvody v Discorde a hrách, falošné súťaže na TikToku, phishing školských kont, podvody s brigádami. 14 otázok pre mladých používateľov.'
+  FROM public.tests t
+ WHERE m.test_id = t.id
+   AND t.slug = 'ziaci-do-16'
+   AND m.tagline = 'Discord a gaming scam-y, falošné súťaže na TikToku, phishing školských kont, podvody s brigádami. 14 otázok pre mladých používateľov.';
+
+UPDATE public.platform_pack_metadata m
+   SET tagline = '4 najnovšie útoky: AI-personalizovaný phishing s reálnym kontextom z LinkedIn, ChatGPT-poháňané investičné podvody, AI-generované dating profily a voice-clone vydieranie. 30 sekúnd audia stačí.'
+  FROM public.tests t
+ WHERE m.test_id = t.id
+   AND t.slug = 'ai-deepfake'
+   AND m.tagline = '4 najnovšie vektory: AI-personalizovaný phishing s reálnym kontextom z LinkedIn, ChatGPT-poháňané investičné podvody, AI-generované dating profily a voice-clone vydieranie. 30 sekúnd audia stačí.';
+
+UPDATE public.platform_pack_metadata m
+   SET target_persona = 'Back-office, zákaznícka podpora a operatíva e-shopu — kontaktný bod podvodníkov, ktorí zneužívajú objednávkový a reklamačný flow.'
+  FROM public.tests t
+ WHERE m.test_id = t.id
+   AND t.slug = 'eshop'
+   AND m.target_persona = 'Backoffice, customer support a operatívci e-shopu — kontaktný bod scam-erov, ktorí zneužívajú objednávkový a reklamačný flow.';
+
+UPDATE public.platform_pack_metadata m
+   SET sources_jsonb = regexp_replace(
+         sources_jsonb::text,
+         'Europol — gaming a social media scam-y 2024',
+         'Europol — podvody v hrách a na sociálnych sieťach 2024'
+       )::jsonb
+  FROM public.tests t
+ WHERE m.test_id = t.id
+   AND t.slug = 'ziaci-do-16'
+   AND sources_jsonb::text LIKE '%Europol — gaming a social media scam-y 2024%';
+
+
+-- ============================================================================
 -- E37 SEED — verification (run after applying, expect non-zero rows)
 -- ============================================================================
 SELECT
