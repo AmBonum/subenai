@@ -44,7 +44,27 @@ test.describe("E48 security — POST /api/support-ticket-create happy path", () 
   });
 });
 
-test.describe("E48 security — POST /api/support-ticket-reply auth gates", () => {
+test.describe("E48 security — POST /api/support-ticket-reply happy + auth gates", () => {
+  test("TC-02: valid admin AAL2 JWT reaches the reply RPC and returns ok + message_id", async ({
+    request,
+  }) => {
+    test.skip(
+      !LIVE_DB || !process.env.SUPPORT_ADMIN_JWT || !process.env.SUPPORT_SEEDED_TICKET_ID,
+      "needs SUPPORT_LIVE_DB + SUPPORT_ADMIN_JWT (AAL2) + SUPPORT_SEEDED_TICKET_ID",
+    );
+    const r = await request.post(ENDPOINT_REPLY, {
+      headers: { authorization: `Bearer ${process.env.SUPPORT_ADMIN_JWT}` },
+      data: {
+        ticket_id: process.env.SUPPORT_SEEDED_TICKET_ID,
+        body: "Reply body that satisfies length validation.",
+      },
+    });
+    expect(r.status()).toBe(200);
+    const body = await r.json();
+    expect(body.ok).toBe(true);
+    expect(body.message_id).toMatch(/^[0-9a-f-]{36}$/);
+  });
+
   // TC-06: missing Authorization header.
   test("TC-06: reply without Authorization header returns 401 not_authenticated", async ({
     request,
