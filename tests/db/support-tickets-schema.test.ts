@@ -56,7 +56,9 @@ describe("E48.1 — support_tickets schema migration contract", () => {
     });
 
     it("scan_status enum is collapsed to ('clean', 'error') only — C-DB1 / D-1", () => {
-      const m = SQL.match(/CREATE TYPE public\.support_attachment_scan_status AS ENUM \(([\s\S]*?)\)/);
+      const m = SQL.match(
+        /CREATE TYPE public\.support_attachment_scan_status AS ENUM \(([\s\S]*?)\)/,
+      );
       expect(m).not.toBeNull();
       const values = (m![1].match(/'[^']+'/g) ?? []).map((s) => s.replace(/'/g, ""));
       expect(values.sort()).toEqual(["clean", "error"]);
@@ -101,7 +103,9 @@ describe("E48.1 — support_tickets schema migration contract", () => {
     });
 
     it("subject and body are length-bounded on support_tickets", () => {
-      expect(SQL).toMatch(/subject text NOT NULL CHECK \(char_length\(subject\) BETWEEN 1 AND 200\)/);
+      expect(SQL).toMatch(
+        /subject text NOT NULL CHECK \(char_length\(subject\) BETWEEN 1 AND 200\)/,
+      );
       expect(SQL).toMatch(/body text NOT NULL CHECK \(char_length\(body\) BETWEEN 1 AND 5000\)/);
     });
 
@@ -111,7 +115,9 @@ describe("E48.1 — support_tickets schema migration contract", () => {
     });
 
     it("view_token_hash is column-level CHECK-constrained to 64 hex chars (L-DB2)", () => {
-      expect(SQL).toMatch(/view_token_hash text NOT NULL CHECK \(view_token_hash ~ '\^\[0-9a-f\]\{64\}\$'\)/);
+      expect(SQL).toMatch(
+        /view_token_hash text NOT NULL CHECK \(view_token_hash ~ '\^\[0-9a-f\]\{64\}\$'\)/,
+      );
     });
 
     it("view_token_invalidated_at revocation column exists (H-S3)", () => {
@@ -123,15 +129,21 @@ describe("E48.1 — support_tickets schema migration contract", () => {
     });
 
     it("filename allowed-char regex on attachments (M-S1 storage-path safety)", () => {
-      expect(SQL).toMatch(/filename text NOT NULL CHECK \([\s\S]*?filename ~ '\^\[A-Za-z0-9\._\\\-\]\+\$'/);
+      expect(SQL).toMatch(
+        /filename text NOT NULL CHECK \([\s\S]*?filename ~ '\^\[A-Za-z0-9\._\\-\]\+\$'/,
+      );
     });
 
     it("size_bytes capped at 5 MiB", () => {
-      expect(SQL).toMatch(/size_bytes integer NOT NULL CHECK \(size_bytes > 0 AND size_bytes <= 5242880\)/);
+      expect(SQL).toMatch(
+        /size_bytes integer NOT NULL CHECK \(size_bytes > 0 AND size_bytes <= 5242880\)/,
+      );
     });
 
     it("admin_notification_preferences.channels jsonb has CHECK for required keys (M-DB3)", () => {
-      expect(SQL).toMatch(/channels jsonb NOT NULL[\s\S]*?CHECK \(channels \? 'email' AND channels \? 'in_app'\)/);
+      expect(SQL).toMatch(
+        /channels jsonb NOT NULL[\s\S]*?CHECK \(channels \? 'email' AND channels \? 'in_app'\)/,
+      );
     });
 
     it("admin_notification_preferences.per_category jsonb has all seven category keys (M-DB3)", () => {
@@ -167,11 +179,15 @@ describe("E48.1 — support_tickets schema migration contract", () => {
     });
 
     it("admin_notification_preferences is fully closed to anon AND authenticated", () => {
-      expect(SQL).toMatch(/REVOKE ALL ON public\.admin_notification_preferences FROM anon, authenticated/);
+      expect(SQL).toMatch(
+        /REVOKE ALL ON public\.admin_notification_preferences FROM anon, authenticated/,
+      );
     });
 
     it("no anon INSERT policy exists on any support table (C-S1 closure)", () => {
-      expect(SQL).not.toMatch(/POLICY [^ ]+ ON public\.support_tickets[\s\S]*?TO anon[\s\S]*?FOR INSERT/);
+      expect(SQL).not.toMatch(
+        /POLICY [^ ]+ ON public\.support_tickets[\s\S]*?TO anon[\s\S]*?FOR INSERT/,
+      );
     });
 
     it("the eight named RLS policies are all declared", () => {
@@ -244,17 +260,18 @@ describe("E48.1 — support_tickets schema migration contract", () => {
       expect(fnBody).toBeDefined();
       // Sample legal transitions from PLAN
       expect(fnBody!).toMatch(/v_old_status = 'new' AND p_new_status = 'in_progress'/);
-      expect(fnBody!).toMatch(/v_old_status = 'resolved' AND p_new_status IN \('reopened', 'archived'\)/);
+      expect(fnBody!).toMatch(
+        /v_old_status = 'resolved' AND p_new_status IN \('reopened', 'archived'\)/,
+      );
     });
 
-    it.each(rpcs.filter((r) => r.revoked))(
-      "REVOKEs $name from $revoked",
-      ({ name, revoked }) => {
-        expect(SQL).toMatch(
-          new RegExp(`REVOKE EXECUTE ON FUNCTION public\\.${name}\\([\\s\\S]*?\\) FROM[^;]*?${revoked}`),
-        );
-      },
-    );
+    it.each(rpcs.filter((r) => r.revoked))("REVOKEs $name from $revoked", ({ name, revoked }) => {
+      expect(SQL).toMatch(
+        new RegExp(
+          `REVOKE EXECUTE ON FUNCTION public\\.${name}\\([\\s\\S]*?\\) FROM[^;]*?${revoked}`,
+        ),
+      );
+    });
 
     it.each(rpcs)("GRANTs $name EXECUTE to $grants", ({ name, grants }) => {
       const r = new RegExp(`GRANT EXECUTE ON FUNCTION public\\.${name}\\([\\s\\S]*?\\) TO[^;]+`);
@@ -268,11 +285,15 @@ describe("E48.1 — support_tickets schema migration contract", () => {
 
   describe("triggers", () => {
     it("immutability + audit trigger fires BEFORE UPDATE on support_tickets", () => {
-      expect(SQL).toMatch(/BEFORE UPDATE ON public\.support_tickets[\s\S]*?support_tickets_immutability_and_audit/);
+      expect(SQL).toMatch(
+        /BEFORE UPDATE ON public\.support_tickets[\s\S]*?support_tickets_immutability_and_audit/,
+      );
     });
 
     it("notification fan-out trigger fires AFTER INSERT on support_tickets (H-S4)", () => {
-      expect(SQL).toMatch(/AFTER INSERT ON public\.support_tickets[\s\S]*?enqueue_admin_notifications_for_ticket/);
+      expect(SQL).toMatch(
+        /AFTER INSERT ON public\.support_tickets[\s\S]*?enqueue_admin_notifications_for_ticket/,
+      );
     });
 
     it("immutability trigger blocks edits to subject/body/email/name/view_token", () => {
@@ -305,5 +326,68 @@ describe("E48.1 — support_tickets schema migration contract", () => {
       expect(fnBody!).toMatch(/channels ->> 'in_app'/);
       expect(fnBody!).toMatch(/pg_notify\(\s*'support_tickets_admin'/);
     });
+  });
+});
+
+// E48.1 — DEPLOY_SETUP.sql mirror contract. Pattern follows existing E8.1
+// tests/db/test-sets-schema.test.ts: any change to the migration must be
+// reflected in DEPLOY_SETUP.sql so that a from-scratch bootstrap stays in
+// sync with the per-migration history. We check critical-path markers only —
+// not a byte-for-byte diff, because DEPLOY_SETUP may add idempotency wrappers
+// that the migration omits.
+
+const DEPLOY_SETUP_PATH = resolve(__dirname, "../../DEPLOY_SETUP.sql");
+const DEPLOY_SQL = readFileSync(DEPLOY_SETUP_PATH, "utf8");
+
+describe("E48.1 — DEPLOY_SETUP.sql mirror", () => {
+  const markers = [
+    // Enums
+    "CREATE TYPE public.support_ticket_status AS ENUM",
+    "CREATE TYPE public.support_ticket_category AS ENUM",
+    "CREATE TYPE public.support_ticket_source AS ENUM",
+    "CREATE TYPE public.support_attachment_scan_status AS ENUM",
+    // Tables
+    "CREATE TABLE IF NOT EXISTS public.support_tickets",
+    "CREATE TABLE IF NOT EXISTS public.support_ticket_messages",
+    "CREATE TABLE IF NOT EXISTS public.support_ticket_attachments",
+    "CREATE TABLE IF NOT EXISTS public.admin_notification_preferences",
+    // Lockdown
+    "REVOKE ALL ON public.support_tickets FROM anon",
+    "REVOKE ALL ON public.support_ticket_messages FROM anon",
+    "REVOKE ALL ON public.support_ticket_attachments FROM anon",
+    "REVOKE ALL ON public.admin_notification_preferences FROM anon, authenticated",
+    // RLS policies (a representative subset — both files must declare them)
+    "CREATE POLICY support_tickets_admin_all",
+    "CREATE POLICY support_tickets_user_select",
+    "CREATE POLICY admin_notification_preferences_owner_update",
+    // RPCs
+    "CREATE OR REPLACE FUNCTION public.submit_support_ticket",
+    "CREATE OR REPLACE FUNCTION public.get_ticket_thread_for_view_token",
+    "CREATE OR REPLACE FUNCTION public.request_attachment_signed_url",
+    "CREATE OR REPLACE FUNCTION public.transition_ticket_status",
+    // Triggers
+    "CREATE OR REPLACE FUNCTION public.support_tickets_immutability_and_audit",
+    "CREATE OR REPLACE FUNCTION public.enqueue_admin_notifications_for_ticket",
+  ];
+
+  it.each(markers)("%s appears in both migration and DEPLOY_SETUP", (snippet) => {
+    expect(SQL).toContain(snippet);
+    expect(DEPLOY_SQL).toContain(snippet);
+  });
+
+  it("DEPLOY_SETUP does not retain the dropped scan_provider / scan_result columns", () => {
+    const attachmentsTable = DEPLOY_SQL.match(
+      /CREATE TABLE IF NOT EXISTS public\.support_ticket_attachments \(([\s\S]*?)\);/,
+    )?.[1];
+    expect(attachmentsTable).toBeDefined();
+    expect(attachmentsTable!).not.toMatch(/\bscan_provider\b/);
+    expect(attachmentsTable!).not.toMatch(/\bscan_result\b/);
+  });
+
+  it("DEPLOY_SETUP REVOKE-from-anon block appears BEFORE any RLS policy creation", () => {
+    const revokeIdx = DEPLOY_SQL.indexOf("REVOKE ALL ON public.support_tickets FROM anon");
+    const policyIdx = DEPLOY_SQL.indexOf("CREATE POLICY support_tickets_admin_all");
+    expect(revokeIdx).toBeGreaterThan(0);
+    expect(policyIdx).toBeGreaterThan(revokeIdx);
   });
 });
