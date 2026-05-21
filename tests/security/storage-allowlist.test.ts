@@ -57,6 +57,11 @@ const LOCALSTORAGE_KEYS: DeclaredStorage[] = [
     declaredAt:
       "/cookies s2 row `prefs` (E40) — `admin-explainer-<pageKey>` collapsed/expanded state of admin info panels (E47)",
   },
+  {
+    key: "APP_EXPLAINER_STORAGE_PREFIX",
+    declaredAt:
+      "/cookies s2 row `prefs` (E40) — `app-explainer-<pageKey>` collapsed/expanded state of /app info panels (E48)",
+  },
 ];
 
 /** Keys we know exist in code but are NOT declared. Empty after E40 —

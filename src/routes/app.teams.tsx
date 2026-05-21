@@ -22,6 +22,7 @@ import {
 } from "@/lib/platform/queries";
 import type { Role } from "@/lib/platform/types";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { tFor } from "@/i18n/app-shell";
 
 const tRoutes = tFor("route_titles");
@@ -100,6 +101,8 @@ function TeamsPage() {
         subtitle={t("page_header_subtitle")}
         testId="app-teams-page-header"
       />
+
+      <AppPageExplainer pageKey="teams" />
 
       <div className="grid gap-4 md:grid-cols-3" data-testid="app-teams-list">
         {teams.map((team) => (

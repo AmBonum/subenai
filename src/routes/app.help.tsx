@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/app-shell";
 import { getCurrentLocale } from "@/i18n/locale-context";
@@ -120,6 +121,8 @@ function HelpPage() {
         subtitle={t("page_header_subtitle")}
         testId="app-help-page-header"
       />
+
+      <AppPageExplainer pageKey="help" />
 
       {/* Quick links — bridge from the help center to deep docs.
           Replaces the previous island state where the only outbound

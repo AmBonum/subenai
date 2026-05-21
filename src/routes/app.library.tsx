@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 // `useQuestions` reads `Question` (with `type` + `category`). Production
 // `questions` table only has `branch_slug` + `difficulty` (see
 // `useLibraryQuestions` in queries.ts). Keep on mock-store until AH-12 schema
@@ -84,6 +85,7 @@ function LibraryPage() {
         subtitle={t("page_subtitle", { count: questions.length })}
         testId="library-page-header"
       />
+      <AppPageExplainer pageKey="library" />
       <Card>
         <CardContent className="flex flex-wrap items-center gap-2 p-3">
           <div className="relative min-w-[200px] flex-1">

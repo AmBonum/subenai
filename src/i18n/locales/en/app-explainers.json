@@ -1,0 +1,425 @@
+{
+  "explainers": {
+    "dashboard": {
+      "title": "About the Overview section",
+      "lead": "Your home screen after signing in. A summary of activity across your tests, recent respondent activity and quick shortcuts to in-progress drafts. Nothing is configured here — it's a view.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you see here",
+          "items": [
+            "Summary metrics: number of active tests, sessions, respondents and completion rate",
+            "Your latest test with respondent activity over the last 7 days",
+            "In-progress drafts (max 3) with a \"Continue editing\" button",
+            "Optional cards: weekly digest, course recommendations, retest reminders (rolled out gradually)"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "Metrics load when the page opens; refresh for fresh data",
+            "\"Recent activity\" cards update within seconds of a respondent finishing a session",
+            "Weekly summaries are compiled Monday at 00:00 in the account's timezone"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "Some cards are still being rolled out — an empty state isn't an error, it just means the feature has no data yet",
+            "Completion rate is a read-only metric; for detailed analysis go to the History section or open a specific test's detail",
+            "To change profile settings go to the Profile section; no personal data is edited here"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "How to read overview metrics", "href": "/docs/app/dashboard" },
+          { "label": "Weekly digest by email", "href": "/docs/app/digest" }
+        ]
+      }
+    },
+    "tests": {
+      "title": "About the My tests section",
+      "lead": "The library of every test you've created or that's been shared with you. This is where you filter them, open them for editing, share them with respondents and see their status (draft, published, archived).",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Create a new test (\"New test\" button)",
+            "Search by name, filter by status and branch",
+            "Open a test's detail — edit questions, settings, sharing, password protection",
+            "Archive or delete tests you no longer need"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "A new test appears in the list immediately",
+            "A published test is available to respondents via the share link within seconds",
+            "An archived test remains available in the session history (respondent data isn't lost)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "Deleting a test is irreversible and also deletes all respondent answers",
+            "A password protects entry to the test — it doesn't affect the visibility of results you have access to as the author",
+            "You only see tests you own or that have been explicitly shared with you (RLS)"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "How to create and publish a test", "href": "/docs/app/tests-create" },
+          { "label": "Sharing and password protection", "href": "/docs/app/tests-sharing" }
+        ]
+      }
+    },
+    "edu_tests": {
+      "title": "About the Edu tests section",
+      "lead": "Your educational tests created in Edu mode (typically for schools and courses) — without respondent registration. Here you see every edu test you've created anonymously and then linked to your account using the author password.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Link anonymously created edu tests to your account (by entering the author password on the results page)",
+            "Open a linked test's results — score distribution, list of respondents, exports",
+            "Track the respondent count in real time",
+            "Download results as CSV, JSON or PDF"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "Linking a test to your account happens immediately after the correct author password is entered",
+            "New respondent sessions appear after refreshing the results page",
+            "PDF export is generated directly in the browser (~500 KB library on first use)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "Without the author password an anonymous edu test cannot be linked to an account — without it the test remains publicly available only via the original share link",
+            "Linking doesn't change existing permissions — it only makes access from the main app menu easier",
+            "Deleting an edu test also deletes all respondent sessions; the operation is irreversible"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Edu mode: how to create a test without registration", "href": "/docs/app/edu-tests" },
+          { "label": "Linking an anonymous test to your account", "href": "/docs/app/edu-tests-claim" }
+        ]
+      }
+    },
+    "templates": {
+      "title": "About the Templates section",
+      "lead": "Ready-made test templates that get you started in seconds — instead of building from scratch. Open them, take a look, and hit \"Use\" to jump straight into the new-test wizard with pre-filled questions.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Search templates by name",
+            "Filter by GDPR purpose (categories derived from the gdpr_purpose field)",
+            "Click \"Use\" to jump into the new-test wizard with the selected template preloaded"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "Templates are managed centrally (by the admin team); you don't create or edit them",
+            "\"Use template\" opens the wizard instantly; the test itself is created only after the wizard finishes",
+            "If the database has no templates, instead of an empty list you'll see a \"Create a test from scratch\" prompt"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "Template preview is still on hold — you'll only see metadata, not the actual questions, before using it",
+            "Using a template creates a copy — changes to your test in no way affect the original template",
+            "The GDPR purpose filter works on an exact value; templates without a purpose set won't appear in any category"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Working with test templates", "href": "/docs/app/templates" },
+          { "label": "GDPR purposes and template classification", "href": "/docs/app/templates-gdpr" }
+        ]
+      }
+    },
+    "library": {
+      "title": "About the Question library section",
+      "lead": "A shared question library available to your team — search, filter, browse. Questions from here go into tests via the question editor inside a test's detail. This is a view only, not an editor.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Search by question text (substring, case-insensitive)",
+            "Filter by category or difficulty (easy / medium / hard)",
+            "See the question type (single choice, multiple choice, NPS, matrix, …)",
+            "The library is read-only — for edits go to a test's detail or to the admin interface (admin)"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "Filtering and search are instant (client-side)",
+            "The library shows max 60 questions at a time; pagination isn't implemented yet",
+            "New questions added in admin appear after refreshing the page"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "The \"type\" and \"category\" fields display data from the mock-store; in production they may be empty until schema additions land (AH-12)",
+            "The 60-question limit is hardcoded — with a large library you'll only see the first 60",
+            "The library shows questions from every author on your team; not just yours"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Question library and types", "href": "/docs/app/library" },
+          { "label": "How to insert questions from the library into a test", "href": "/docs/app/library-insert" }
+        ]
+      }
+    },
+    "audiences": {
+      "title": "About the Audiences section",
+      "lead": "Named groups of respondents (e.g. \"Q2 Beta testers\", \"School staff\") that make test distribution easier. Here you create groups, rename them, tag them and delete them.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Create a new group (name + optional tags)",
+            "Edit the name and tags of an existing group",
+            "Delete groups you no longer need (with a confirmation dialog)",
+            "See the member count in each group as a badge"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "Creating / editing / deleting a group: immediately after confirmation",
+            "Email import isn't implemented yet — the button is disabled",
+            "Tags are free text without a taxonomy — build your own naming convention"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "You only see groups you created yourself (RLS scoped to owner_id)",
+            "Deleting a group doesn't remove the respondents themselves — it only removes the association",
+            "Email list import will arrive in a later phase; for now you add respondents manually via a test's share link"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Working with respondent groups", "href": "/docs/app/audiences" },
+          { "label": "Tags and organisation", "href": "/docs/app/audiences-tags" }
+        ]
+      }
+    },
+    "history": {
+      "title": "About the History section",
+      "lead": "A reverse-chronological timeline of every event across your tests — respondent sessions, published versions, status changes. It serves as an audit trail and a quick way to orient yourself in activity.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Filter by a specific test (or \"All tests\")",
+            "Filter by event type: Session / Version / Status",
+            "Filter by date range (from / to)",
+            "Clear all filters with a single click"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "The timeline shows max 100 events at a time — older records aren't accessible via pagination",
+            "New respondent sessions appear after refreshing the page",
+            "Filters are instant (client-side); no extra network call"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "You only see events from your tests and tests shared with you (RLS); team events from other authors are not visible",
+            "The 100-row limit is hardcoded; with high activity, export older events manually for now",
+            "Timestamps are rendered in the Slovak locale (sk-SK), regardless of the UI language you've selected"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "History and audit trail", "href": "/docs/app/history" },
+          { "label": "Event types and their sources", "href": "/docs/app/history-events" }
+        ]
+      }
+    },
+    "notifications": {
+      "title": "About the Notifications section",
+      "lead": "System alerts about activity on your tests — new respondents, milestones reached, anomalies, expirations and daily summaries. Here you read them and mark them as read.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Browse all notifications (read and unread) sorted newest first",
+            "Toggle the \"Unread only\" filter",
+            "Mark a single notification as read (click the row)",
+            "Mark all unread as read (button above the list — hidden when count is zero)"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "Notifications are generated by the server (cron or webhook); refresh for fresh notifications",
+            "Marking as read is instant; the unread count badge in the sidebar updates immediately",
+            "Notifications stay in the database permanently — no automatic archival"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "Marking a notification as read is irreversible — it can't be set back to \"unread\"",
+            "Notification types (new respondent, milestone, anomaly, expiration, daily summary) are hardcoded; new types from the server render with a fallback colour until we update the UI",
+            "You only see notifications for your tests and your account (RLS scope)"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Notification types and when you receive them", "href": "/docs/app/notifications" },
+          { "label": "Email notifications and frequency", "href": "/docs/app/notifications-email" }
+        ]
+      }
+    },
+    "teams": {
+      "title": "About the Teams section",
+      "lead": "Invite and manage team members — create collaborative workspaces with role-based access (owner / editor / viewer). Here you see every team you're a member of and manage who's on each one.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Pick the active team from the cards (the first team is auto-selected on load)",
+            "Invite a member: enter an email, pick a role, click \"Invite\"",
+            "Change an existing member's role via the dropdown",
+            "Remove a member with the delete button"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "Invitations, role changes and removals are all instant",
+            "Email invites aren't wired up yet — the \"email\" field is a placeholder for the AH-12 schema for now",
+            "Role changes don't use optimistic UI — the list refetches after success"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "You need a sufficient role (owner) to invite and manage members — the server enforces RLS",
+            "Until email invitations ship (AH-12), invited members have to sign in manually and the backend creates the association",
+            "You can't delete a team from the UI — that's done by the admin team via support"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Teams and roles", "href": "/docs/app/teams" },
+          { "label": "RLS policies for teams", "href": "/docs/app/teams-rls" }
+        ]
+      }
+    },
+    "profile": {
+      "title": "About the Profile section",
+      "lead": "Your personal settings — name, email, avatar initials, profile handle for public sharing. Here you change the identity that other team members and respondents of shared tests see.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Change your display name (2 – 80 characters)",
+            "Change your email (validated, max 255 characters; careful — it can affect sign-in)",
+            "Change your avatar initials (1 – 3 alphanumeric characters, auto-uppercase)",
+            "Add/change your share handle for the public profile (2 – 32 characters, optional)",
+            "Export your personal data (GDPR Art. 15 / 20)",
+            "Shortcuts to Security (password + 2FA) and GDPR requests"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "Profile save: instant server mutation + success toast",
+            "Avatar initials preview: updates as you type (client-side)",
+            "Email change: depends on the auth provider — sometimes requires a verification email at the new address",
+            "Data export: kicks off an async job, you'll receive the result by email (typically within hours)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "Changing your email can break sign-in if the auth provider uses email as the primary identifier — check how yours is set up before saving",
+            "Initials are auto-generated once from your name; further name changes don't update them automatically",
+            "The share handle is publicly visible — don't use your email or any sensitive data"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Profile and public data", "href": "/docs/app/profile" },
+          { "label": "GDPR: your rights as a data subject", "href": "/docs/app/profile-gdpr" },
+          { "label": "Account security and 2FA", "href": "/docs/app/profile-security" }
+        ]
+      }
+    },
+    "help": {
+      "title": "About the Help section",
+      "lead": "Help centre — frequently asked questions (FAQ), quick links to legal documents and a button to contact support. Here you look for answers before reaching out to people.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Search the FAQ by question or answer text",
+            "Expand individual FAQ items (collapsible accordion)",
+            "Click quick links: Privacy, Cookies, Changelog, For schools",
+            "Contact support by email (mailto link to support@subenai.sk)"
+          ]
+        },
+        "time_impact": {
+          "heading": "How quickly changes show up",
+          "items": [
+            "FAQ content is static (i18n bundles, build-time); changes require a deploy",
+            "Search and filter are instant (client-side)",
+            "Support typically replies within 1 business day (excluding weekends and holidays)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "The FAQ doesn't cover every scenario — for a specific question contact support directly",
+            "An empty \"no results\" state means the search found nothing, not that the FAQ is empty",
+            "The mailto link opens your default email client; in a browser that may be Gmail/Outlook web depending on your OS settings"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Frequently asked questions (FAQ)", "href": "/docs/app/help" },
+          { "label": "Contact support", "href": "/docs/app/help-support" }
+        ]
+      }
+    }
+  }
+}

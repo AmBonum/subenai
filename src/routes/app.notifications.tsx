@@ -12,6 +12,7 @@ import {
   useNotifications,
 } from "@/lib/platform/queries";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { tFor } from "@/i18n/app-shell";
 
 const tRoutes = tFor("route_titles");
@@ -92,6 +93,8 @@ function NotificationsPage() {
           </>
         }
       />
+
+      <AppPageExplainer pageKey="notifications" />
 
       <div className="space-y-2" data-testid="app-notifications-list">
         {visible.map((n) => (

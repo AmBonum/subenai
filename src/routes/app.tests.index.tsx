@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { useTests } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
@@ -83,6 +84,8 @@ function TestsList() {
           </Button>
         }
       />
+
+      <AppPageExplainer pageKey="tests" />
 
       <Card>
         <CardContent className="flex flex-wrap items-center gap-2 p-3">
