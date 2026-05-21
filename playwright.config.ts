@@ -35,6 +35,7 @@ import { defineConfig, devices } from "@playwright/test";
  *   BASE_URL=https://subenai.sk npm run e2e
  */
 const BASE_URL = process.env.BASE_URL ?? "http://localhost:8080";
+const PROD_URL = "https://subenai.sk";
 
 export default defineConfig({
   testDir: "./e2e",
@@ -61,7 +62,12 @@ export default defineConfig({
       name: "e2e-chromium",
       testMatch: ["e2e/specs/**/*.spec.ts"],
       // WIP: fixtures podakovanie / stripeCheckout not yet wired into base.ts. Unblock by adding them to e2e/fixtures/base.ts or by deleting this testIgnore once fixtures land.
-      testIgnore: ["e2e/specs/sponsorship/podpora-donate-flow.spec.ts"],
+      testIgnore: [
+        "e2e/specs/sponsorship/podpora-donate-flow.spec.ts",
+        // prod-smoke specs hit https://subenai.sk directly; exclude them
+        // from the local/CI projects so `npm run e2e` never fires them.
+        "e2e/specs/prod-smoke/**",
+      ],
       // Mobile- and tablet-scoped assertions (drawer trigger visible,
       // invite form stacked) only hold at <lg viewports — exclude them
       // here so the desktop project does not try to assert against a
@@ -76,7 +82,7 @@ export default defineConfig({
       // Same WIP carve-out as `e2e-chromium` — the sponsorship spec
       // expects fixtures not yet composed into base.ts and fails at
       // compile time on every project that picks it up.
-      testIgnore: ["e2e/specs/sponsorship/podpora-donate-flow.spec.ts"],
+      testIgnore: ["e2e/specs/sponsorship/podpora-donate-flow.spec.ts", "e2e/specs/prod-smoke/**"],
       // Only run specs that opt-in via the `@mobile` tag (see
       // `e2e/specs/app/{shell,teams,…}.spec.ts` for usage). Default is
       // to skip mobile-viewport for every legacy spec until it's been
@@ -87,9 +93,26 @@ export default defineConfig({
     {
       name: "e2e-tablet-chromium",
       testMatch: ["e2e/specs/**/*.spec.ts"],
-      testIgnore: ["e2e/specs/sponsorship/podpora-donate-flow.spec.ts"],
+      testIgnore: ["e2e/specs/sponsorship/podpora-donate-flow.spec.ts", "e2e/specs/prod-smoke/**"],
       grep: /@tablet/,
       use: { ...devices["iPad Pro 11"] },
+    },
+    {
+      // E48 incident response — prod smoke project.
+      // Hits https://subenai.sk directly; exercises the real CF Function +
+      // Supabase RPC stack. Never run by `npm run e2e` (separate workflow).
+      //
+      // Invoke manually:
+      //   CI_PROD_SMOKE=1 npx playwright test --project=prod-smoke
+      // Or via the scheduled GitHub Actions workflow:
+      //   .github/workflows/prod-smoke.yml (workflow_dispatch + optional cron).
+      name: "prod-smoke",
+      testMatch: ["e2e/specs/prod-smoke/**/*.spec.ts"],
+      retries: 2,
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: PROD_URL,
+      },
     },
     {
       name: "audit-screenshots",

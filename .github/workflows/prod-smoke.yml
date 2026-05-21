@@ -1,0 +1,67 @@
+name: Production smoke
+
+# E48 incident response — end-to-end smoke test against https://subenai.sk.
+#
+# HOW TO ACTIVATE THE DAILY CRON:
+#   Uncomment the `schedule:` block below when you're comfortable with the
+#   test running automatically. The workflow_dispatch trigger is always active
+#   so you can fire it manually any time from the Actions tab.
+#
+# REQUIRED GITHUB SECRETS (set once in repo Settings → Secrets → Actions):
+#   VITE_SUPABASE_URL         — same as in Cloudflare Pages env vars
+#   PROD_INVARIANT_CHECK_KEY  — Supabase service_role key (or a narrow key
+#                               with EXECUTE on public.__test_introspect_function)
+#
+# TURNSTILE:
+#   The prod-smoke spec waits for the Turnstile widget to issue a token
+#   before enabling the submit button. For unattended CI runs the /kontakt
+#   page must be configured to accept Cloudflare's always-pass test site key
+#   (sitekey 1x00000000000000000000AA, secret 1x0000000000000000000000000000000AA)
+#   when CI_PROD_SMOKE=1. Without this the test times out at the submit button.
+#
+# CLEANUP:
+#   Smoke tickets are tagged "[CI-SMOKE]" in subject. Run this query in the
+#   Supabase SQL editor hourly (or wire as a pg_cron job) to purge them:
+#     DELETE FROM public.support_tickets
+#     WHERE subject LIKE '[CI-SMOKE]%'
+#       AND created_at < now() - interval '1 hour';
+#   See tasks/POST-MIGRATION-CHECKLIST.md §smoke for details.
+
+on:
+  # schedule:
+  #   - cron: '0 6 * * *'  # daily 06:00 UTC — uncomment to activate
+  workflow_dispatch: {}
+
+jobs:
+  smoke:
+    name: Prod smoke — /kontakt full pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run prod smoke
+        run: npx playwright test --project=prod-smoke
+        env:
+          CI_PROD_SMOKE: "1"
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-prod-smoke-${{ github.run_id }}
+          path: playwright-report/
+          retention-days: 7

@@ -39,6 +39,17 @@ jobs:
       - name: Build
         run: npm run build
 
+      # E48 incident response — verify RPCs + tables exist in production.
+      # Skipped when secrets are absent (fork PRs, local runs without prod creds).
+      # To activate: add VITE_SUPABASE_URL + PROD_INVARIANT_CHECK_KEY secrets
+      # in repo Settings → Secrets → Actions.  See tasks/POST-MIGRATION-CHECKLIST.md §6.
+      - name: Schema invariants (prod)
+        if: env.VITE_SUPABASE_URL != ''
+        run: npx vitest run tests/db/prod-schema-invariants.test.ts
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          PROD_INVARIANT_CHECK_KEY: ${{ secrets.PROD_INVARIANT_CHECK_KEY }}
+
       # Upload coverage only on main pushes — PRs don't need stored artifacts
       # (the coverage thresholds in vitest already gate the job).
       - name: Upload coverage artifact
