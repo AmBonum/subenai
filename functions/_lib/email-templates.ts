@@ -101,6 +101,100 @@ export function refundAlertEmail(input: {
   return { subject, html, text };
 }
 
+// E45 Phase 3 — Test invite email. Sent from `pozvanky@subenai.sk`
+// to recipient on behalf of the test author. Body always carries the
+// share link; password is included verbatim ONLY if the author opts in
+// via the per-send checkbox (D7 in the epic plan — defaults OFF so the
+// password stays out-of-band).
+//
+// Two subject variants disambiguate filter-classification (Appendix B
+// § 1): "(heslo v tomto e-maile)" suffix tells Gmail/Outlook this is a
+// known transactional onboarding pattern, not credential phishing.
+export function testInviteEmail(input: {
+  testTitle: string;
+  authorName: string;
+  authorEmail: string;
+  shareUrl: string;
+  /** Plaintext password, included verbatim only when the author opted in. */
+  password?: string;
+}): { subject: string; html: string; text: string } {
+  const includesPassword = typeof input.password === "string" && input.password.length > 0;
+
+  const subject = includesPassword
+    ? `Pozvánka na test: ${input.testTitle} (heslo v tomto e-maile)`
+    : `Pozvánka na test: ${input.testTitle}`;
+
+  const passwordBlockHtml = includesPassword
+    ? `
+    <p style="font-size:14px;line-height:1.6;margin-top:16px">
+      <strong>Heslo k testu:</strong>
+      <code style="display:inline-block;background:#f1f5f9;padding:4px 10px;border-radius:6px;margin-left:4px;font-size:14px">${escapeText(input.password!)}</code>
+    </p>
+    <p style="font-size:12px;line-height:1.5;color:#94a3b8;margin-top:4px">
+      Toto heslo zdieľame výnimočne v tomto e-maile na výslovnú žiadosť autora.
+      Pre vyššiu bezpečnosť autori zvyčajne posielajú heslo samostatne (SMS, Signal, ústne).
+    </p>`
+    : `
+    <p style="font-size:13px;line-height:1.6;color:#475569;margin-top:16px">
+      Tento test je chránený heslom. Autor ti ho pošle samostatne (SMS, chat alebo ústne).
+    </p>`;
+
+  const passwordBlockText = includesPassword
+    ? [
+        "",
+        `Heslo k testu: ${input.password}`,
+        "(Autor zdieľal heslo v tomto e-maile výnimočne. Pre vyššiu bezpečnosť",
+        " sa heslo zvyčajne posiela samostatne — SMS, Signal, ústne.)",
+      ].join("\n")
+    : "\nTest je chránený heslom. Autor ti ho pošle samostatne (SMS, chat alebo ústne).";
+
+  const html = wrap(`
+    <p style="font-size:15px;line-height:1.6">
+      Ahoj, <strong>${escapeText(input.authorName)}</strong> ťa cez subenai.sk
+      pozval/a vyplniť test <strong>${escapeText(input.testTitle)}</strong>.
+    </p>
+    <p style="margin:24px 0">
+      <a href="${escapeAttr(input.shareUrl)}"
+         style="display:inline-block;background:linear-gradient(135deg,#bef264,#16a34a);color:#0f172a;text-decoration:none;font-weight:700;padding:12px 24px;border-radius:12px">
+        Otvoriť test
+      </a>
+    </p>
+    <p style="font-size:13px;line-height:1.6;color:#475569">
+      Alebo skopíruj odkaz priamo: <br />
+      <code style="word-break:break-all">${escapeText(input.shareUrl)}</code>
+    </p>
+    ${passwordBlockHtml}
+    <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0" />
+    <p style="font-size:13px;line-height:1.6;color:#475569">
+      Pozvánku poslal/a:
+      <strong>${escapeText(input.authorName)}</strong>
+      &lt;<a href="mailto:${escapeAttr(input.authorEmail)}" style="color:#475569">${escapeText(input.authorEmail)}</a>&gt;.
+      Otázky o teste smeruj naňho/ňu, nie na nás.
+    </p>
+    <p style="font-size:12px;line-height:1.5;color:#94a3b8">
+      Ak si tento e-mail nečakal/a, ignoruj ho — autor zadal tvoju adresu manuálne
+      a nikomu inému tvoju adresu neukazujeme. Žiadne marketing-listy ani opakované
+      e-maily; toto je jednorazová pozvánka.
+    </p>
+  `);
+
+  const text = [
+    `${input.authorName} ťa cez subenai.sk pozval/a vyplniť test "${input.testTitle}".`,
+    "",
+    `Otvor test: ${input.shareUrl}`,
+    passwordBlockText.trim() ? passwordBlockText : "",
+    "",
+    `Pozvánku poslal/a: ${input.authorName} <${input.authorEmail}>.`,
+    "Otázky o teste smeruj naňho/ňu, nie na nás.",
+    "",
+    "Ak si tento e-mail nečakal/a, ignoruj ho. Žiadne ďalšie e-maily neprídu.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return { subject, html, text };
+}
+
 function escapeText(value: string): string {
   return value.replace(/[&<>]/g, (ch) => {
     if (ch === "&") return "&amp;";

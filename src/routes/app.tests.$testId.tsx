@@ -6,6 +6,7 @@ import {
   Archive,
   BarChart3,
   ListTree,
+  Mail,
   Save,
   Send,
   Settings,
@@ -24,6 +25,10 @@ import { ShareDialog } from "@/components/user/ShareDialog";
 import { QuestionsEditor } from "@/components/app/tests/QuestionsEditor";
 import { OrderModeToggle } from "@/components/app/tests/OrderModeToggle";
 import { PasswordCard } from "@/components/app/tests/PasswordCard";
+import { InviteEmailDialog } from "@/components/app/tests/InviteEmailDialog";
+import { ProBadge } from "@/components/billing/ProBadge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { isProFeatureLocked } from "@/lib/billing/pro-features";
 import { toast } from "sonner";
 import {
   useArchiveTest,
@@ -68,6 +73,7 @@ function TestEditorPage() {
   const [title, setTitle] = useState(test?.title ?? "");
   const [description, setDescription] = useState(test?.description ?? "");
   const [shareOpen, setShareOpen] = useState(search.share === "1");
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   const completed = useMemo(() => sessions.filter((s) => s.status === "completed"), [sessions]);
   const avgScore =
@@ -136,6 +142,51 @@ function TestEditorPage() {
               <Share2 className="mr-2 h-3 w-3" />
               {t("share_button")}
             </Button>
+            {test.status === "published" &&
+              (() => {
+                const inviteLocked = isProFeatureLocked("email_invites");
+                const inviteBtn = (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      if (!inviteLocked) setInviteOpen(true);
+                    }}
+                    disabled={inviteLocked}
+                    aria-disabled={inviteLocked}
+                    data-testid="test-editor-invite-button"
+                    data-pro-locked={inviteLocked ? "true" : "false"}
+                    className={inviteLocked ? "opacity-70" : undefined}
+                  >
+                    <Mail className="mr-2 h-3 w-3" />
+                    {t("invite_button")}
+                    {inviteLocked && <ProBadge className="ml-2" />}
+                  </Button>
+                );
+                if (!inviteLocked) return inviteBtn;
+                // Wrapping a disabled <button> in a Tooltip needs a span
+                // because Radix's TooltipTrigger uses pointer events that
+                // disabled buttons swallow. The span keeps the tooltip
+                // reachable for keyboard + mouse users on locked buttons.
+                return (
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span tabIndex={0} data-testid="test-editor-invite-tooltip-trigger">
+                          {inviteBtn}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="bottom"
+                        className="max-w-xs"
+                        data-testid="test-editor-invite-pro-tooltip"
+                      >
+                        {t("invite_pro_tooltip")}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                );
+              })()}
             {test.status !== "archived" && (
               <Button
                 size="sm"
@@ -261,6 +312,12 @@ function TestEditorPage() {
       </Tabs>
 
       <ShareDialog open={shareOpen} onOpenChange={setShareOpen} shareId={test.share_id} />
+      <InviteEmailDialog
+        open={inviteOpen}
+        onClose={() => setInviteOpen(false)}
+        testId={test.id}
+        hasPassword={test.has_password}
+      />
     </div>
   );
 }

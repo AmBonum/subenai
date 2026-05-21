@@ -78,6 +78,29 @@ describe("/app/tests/$testId (AH-5.3 editor)", () => {
     expect(screen.getByTestId("test-editor-order-mode-option-random")).toBeInTheDocument();
   });
 
+  it("renders the Invite button on published tests, gated as PRO-locked", () => {
+    // tst_002 is published in SEED_TESTS, so the invite button is shown.
+    params.testId = "tst_002";
+    render(<Page />);
+    const invite = screen.getByTestId("test-editor-invite-button");
+    expect(invite).toBeInTheDocument();
+    // Today every user is locked out (userHasPro() returns false). The
+    // button must be disabled + carry the data-pro-locked sentinel + render
+    // the PRO badge. Tooltip trigger wraps the button so keyboard focus +
+    // hover both surface the explanatory copy.
+    expect(invite).toBeDisabled();
+    expect(invite.getAttribute("data-pro-locked")).toBe("true");
+    expect(screen.getByTestId("pro-badge")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-invite-tooltip-trigger")).toBeInTheDocument();
+  });
+
+  it("does not render the Invite button on draft / archived tests", () => {
+    // tst_004 is draft per the SEED_TESTS status cycle ([published x3, draft, archived]).
+    params.testId = "tst_004";
+    render(<Page />);
+    expect(screen.queryByTestId("test-editor-invite-button")).not.toBeInTheDocument();
+  });
+
   it("settings tab exposes title input + save button", () => {
     params.testId = "tst_002";
     searchState.tab = "settings";
