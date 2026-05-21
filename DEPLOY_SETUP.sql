@@ -5438,6 +5438,28 @@ REVOKE EXECUTE ON FUNCTION public.transition_ticket_status(uuid, public.support_
 GRANT EXECUTE ON FUNCTION public.transition_ticket_status(uuid, public.support_ticket_status, text) TO authenticated;
 
 -- ============================================================================
+-- E48.2 — Private Storage bucket for support ticket attachments (mirror of
+-- supabase/migrations/20260521270000_e48_2_support_storage_bucket.sql).
+--
+-- public = false. Direct GET = 403. INSERT/DELETE flow exclusively through
+-- service-role from /functions/api/support-attachment-upload.ts (and future
+-- GDPR cleanup cron). Only admin SELECT is policy-permitted, for dashboard
+-- inspection. Absence of INSERT/UPDATE/DELETE policy = deny by default.
+-- ============================================================================
+
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('support-attachments', 'support-attachments', false)
+ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS "support_attachments_admin_select" ON storage.objects;
+
+CREATE POLICY "support_attachments_admin_select"
+  ON storage.objects FOR SELECT TO authenticated
+  USING (
+    bucket_id = 'support-attachments' AND public.has_role(auth.uid(), 'admin')
+  );
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT
