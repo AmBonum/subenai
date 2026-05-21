@@ -10,6 +10,18 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
+- **Odkazy „Zobraziť dokumentáciu →" vo vysvetľujúcich paneloch už
+  nekončia 404.** Vo všetkých paneloch v `/admin` a `/app` linka
+  *Dokumentácia* doteraz smerovala na adresy ako
+  `/docs/admin/dashboard` — ktoré ešte neexistovali a vracali stránku
+  *Nenašli sme to*. Po novom všetky tieto adresy fungujú a zobrazia
+  prechodnú stránku *Pripravujeme* s vysvetlením, že detailná
+  dokumentácia sa dopĺňa a v medziobdobí stačí použiť panel priamo na
+  danej stránke. Stránka obsahuje aj e-mail na nahlásenie chýbajúceho
+  obsahu a odkaz späť. Adresy `/docs/admin/*` sú prístupné len pre
+  adminov (overený 2FA prihlásený admin), `/docs/app/*` pre každého
+  prihláseného používateľa vrátane adminov. Pre vyhľadávače sú obe
+  sekcie skryté (`noindex,nofollow`) — ide o internú dokumentáciu.
 - **Oprava mena používateľa (GDPR Art. 16) jedným klikom v admin paneli (E46.6).**
   Doteraz, keď používateľ poslal GDPR žiadosť o opravu nesprávneho mena
   (napr. preklep v *Meno* poli profilu), operátor musel otvoriť Supabase

@@ -41,6 +41,8 @@ import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
 import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
+import { Route as DocsAppRouteImport } from './routes/docs.app'
+import { Route as DocsAdminRouteImport } from './routes/docs.admin'
 import { Route as CoursesSlugRouteImport } from './routes/courses.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
@@ -85,6 +87,8 @@ import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as AdminAnswerSetsIndexRouteImport } from './routes/admin/answer-sets.index'
 import { Route as TestBuilderIdRouteImport } from './routes/test.builder.$id'
+import { Route as DocsAppSlugRouteImport } from './routes/docs.app.$slug'
+import { Route as DocsAdminSlugRouteImport } from './routes/docs.admin.$slug'
 import { Route as BlogKategoriaSlugRouteImport } from './routes/blog/kategoria/$slug'
 import { Route as BlogAutorSlugRouteImport } from './routes/blog/autor/$slug'
 import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
@@ -263,6 +267,16 @@ const LoginVerify2faRoute = LoginVerify2faRouteImport.update({
 const LoginEnroll2faRoute = LoginEnroll2faRouteImport.update({
   id: '/login_/enroll-2fa',
   path: '/login/enroll-2fa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsAppRoute = DocsAppRouteImport.update({
+  id: '/docs/app',
+  path: '/docs/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsAdminRoute = DocsAdminRouteImport.update({
+  id: '/docs/admin',
+  path: '/docs/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesSlugRoute = CoursesSlugRouteImport.update({
@@ -523,6 +537,16 @@ const TestBuilderIdRoute = TestBuilderIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/test.builder.$id.lazy').then((d) => d.Route),
 )
+const DocsAppSlugRoute = DocsAppSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => DocsAppRoute,
+} as any)
+const DocsAdminSlugRoute = DocsAdminSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => DocsAdminRoute,
+} as any)
 const BlogKategoriaSlugRoute = BlogKategoriaSlugRouteImport.update({
   id: '/blog/kategoria/$slug',
   path: '/blog/kategoria/$slug',
@@ -686,6 +710,8 @@ export interface FileRoutesByFullPath {
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/courses/$slug': typeof CoursesSlugRoute
+  '/docs/admin': typeof DocsAdminRouteWithChildren
+  '/docs/app': typeof DocsAppRouteWithChildren
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
@@ -717,6 +743,8 @@ export interface FileRoutesByFullPath {
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
+  '/docs/admin/$slug': typeof DocsAdminSlugRoute
+  '/docs/app/$slug': typeof DocsAppSlugRoute
   '/test/builder/$id': typeof TestBuilderIdRouteWithChildren
   '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
@@ -775,6 +803,8 @@ export interface FileRoutesByTo {
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/courses/$slug': typeof CoursesSlugRoute
+  '/docs/admin': typeof DocsAdminRouteWithChildren
+  '/docs/app': typeof DocsAppRouteWithChildren
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
@@ -805,6 +835,8 @@ export interface FileRoutesByTo {
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
+  '/docs/admin/$slug': typeof DocsAdminSlugRoute
+  '/docs/app/$slug': typeof DocsAppSlugRoute
   '/admin/answer-sets': typeof AdminAnswerSetsIndexRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/pages': typeof AdminPagesIndexRoute
@@ -869,6 +901,8 @@ export interface FileRoutesById {
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/courses/$slug': typeof CoursesSlugRoute
+  '/docs/admin': typeof DocsAdminRouteWithChildren
+  '/docs/app': typeof DocsAppRouteWithChildren
   '/login_/enroll-2fa': typeof LoginEnroll2faRoute
   '/login_/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
@@ -900,6 +934,8 @@ export interface FileRoutesById {
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
+  '/docs/admin/$slug': typeof DocsAdminSlugRoute
+  '/docs/app/$slug': typeof DocsAppSlugRoute
   '/test/builder/$id': typeof TestBuilderIdRouteWithChildren
   '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
@@ -966,6 +1002,8 @@ export interface FileRouteTypes {
     | '/auth/reset-password'
     | '/blog/$slug'
     | '/courses/$slug'
+    | '/docs/admin'
+    | '/docs/app'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
     | '/r/$shareId'
@@ -997,6 +1035,8 @@ export interface FileRouteTypes {
     | '/app/tests/new'
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
+    | '/docs/admin/$slug'
+    | '/docs/app/$slug'
     | '/test/builder/$id'
     | '/admin/answer-sets/'
     | '/admin/blog/'
@@ -1055,6 +1095,8 @@ export interface FileRouteTypes {
     | '/auth/reset-password'
     | '/blog/$slug'
     | '/courses/$slug'
+    | '/docs/admin'
+    | '/docs/app'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
     | '/r/$shareId'
@@ -1085,6 +1127,8 @@ export interface FileRouteTypes {
     | '/app/tests/new'
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
+    | '/docs/admin/$slug'
+    | '/docs/app/$slug'
     | '/admin/answer-sets'
     | '/admin/blog'
     | '/admin/pages'
@@ -1148,6 +1192,8 @@ export interface FileRouteTypes {
     | '/auth/reset-password'
     | '/blog/$slug'
     | '/courses/$slug'
+    | '/docs/admin'
+    | '/docs/app'
     | '/login_/enroll-2fa'
     | '/login_/verify-2fa'
     | '/r/$shareId'
@@ -1179,6 +1225,8 @@ export interface FileRouteTypes {
     | '/app/tests/new'
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
+    | '/docs/admin/$slug'
+    | '/docs/app/$slug'
     | '/test/builder/$id'
     | '/admin/answer-sets/'
     | '/admin/blog/'
@@ -1212,6 +1260,8 @@ export interface RootRouteChildren {
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CoursesSlugRoute: typeof CoursesSlugRoute
+  DocsAdminRoute: typeof DocsAdminRouteWithChildren
+  DocsAppRoute: typeof DocsAppRouteWithChildren
   LoginEnroll2faRoute: typeof LoginEnroll2faRoute
   LoginVerify2faRoute: typeof LoginVerify2faRoute
   RShareIdRoute: typeof RShareIdRoute
@@ -1453,6 +1503,20 @@ declare module '@tanstack/react-router' {
       path: '/login/enroll-2fa'
       fullPath: '/login/enroll-2fa'
       preLoaderRoute: typeof LoginEnroll2faRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/app': {
+      id: '/docs/app'
+      path: '/docs/app'
+      fullPath: '/docs/app'
+      preLoaderRoute: typeof DocsAppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/admin': {
+      id: '/docs/admin'
+      path: '/docs/admin'
+      fullPath: '/docs/admin'
+      preLoaderRoute: typeof DocsAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/$slug': {
@@ -1763,6 +1827,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestBuilderIdRouteImport
       parentRoute: typeof TestBuilderRoute
     }
+    '/docs/app/$slug': {
+      id: '/docs/app/$slug'
+      path: '/$slug'
+      fullPath: '/docs/app/$slug'
+      preLoaderRoute: typeof DocsAppSlugRouteImport
+      parentRoute: typeof DocsAppRoute
+    }
+    '/docs/admin/$slug': {
+      id: '/docs/admin/$slug'
+      path: '/$slug'
+      fullPath: '/docs/admin/$slug'
+      preLoaderRoute: typeof DocsAdminSlugRouteImport
+      parentRoute: typeof DocsAdminRoute
+    }
     '/blog/kategoria/$slug': {
       id: '/blog/kategoria/$slug'
       path: '/blog/kategoria/$slug'
@@ -2059,6 +2137,29 @@ const SponsorsRouteWithChildren = SponsorsRoute._addFileChildren(
   SponsorsRouteChildren,
 )
 
+interface DocsAdminRouteChildren {
+  DocsAdminSlugRoute: typeof DocsAdminSlugRoute
+}
+
+const DocsAdminRouteChildren: DocsAdminRouteChildren = {
+  DocsAdminSlugRoute: DocsAdminSlugRoute,
+}
+
+const DocsAdminRouteWithChildren = DocsAdminRoute._addFileChildren(
+  DocsAdminRouteChildren,
+)
+
+interface DocsAppRouteChildren {
+  DocsAppSlugRoute: typeof DocsAppSlugRoute
+}
+
+const DocsAppRouteChildren: DocsAppRouteChildren = {
+  DocsAppSlugRoute: DocsAppSlugRoute,
+}
+
+const DocsAppRouteWithChildren =
+  DocsAppRoute._addFileChildren(DocsAppRouteChildren)
+
 interface TestBuilderIdResultsRouteChildren {
   TestBuilderIdResultsAttemptIdRoute: typeof TestBuilderIdResultsAttemptIdRoute
 }
@@ -2118,6 +2219,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   BlogSlugRoute: BlogSlugRoute,
   CoursesSlugRoute: CoursesSlugRoute,
+  DocsAdminRoute: DocsAdminRouteWithChildren,
+  DocsAppRoute: DocsAppRouteWithChildren,
   LoginEnroll2faRoute: LoginEnroll2faRoute,
   LoginVerify2faRoute: LoginVerify2faRoute,
   RShareIdRoute: RShareIdRoute,

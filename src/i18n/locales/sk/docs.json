@@ -1,0 +1,11 @@
+{
+  "stub": {
+    "eyebrow": "Dokumentácia",
+    "coming_soon_title": "Pripravujeme",
+    "coming_soon_body": "Detailná dokumentácia tejto témy sa pripravuje a doplníme ju v ďalšom vydaní. Zatiaľ máš k dispozícii vysvetľujúci panel priamo na danej stránke v admin konzole / aplikácii — obsahuje praktické zhrnutie čo sa nastavuje, časový dopad zmien a typické úskalia.",
+    "back_to_admin": "← Späť do admin konzoly",
+    "back_to_app": "← Späť do aplikácie",
+    "report_missing": "Chýba ti tu niečo dôležité? Napíš nám na",
+    "slug_label": "Identifikátor stránky"
+  }
+}
