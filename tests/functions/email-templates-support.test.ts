@@ -71,6 +71,27 @@ describe("supportTicketReceivedEmail", () => {
     expect(t.html).toContain("&lt;script&gt;alert(1)&lt;/script&gt;");
   });
 
+  // TC-47 (specs/support/E48-security.md): XSS payload in subject reaches
+  // the confirmation email as escaped text (HTML) or plain text (text).
+  // The plain-text body is safe by definition — it carries the raw
+  // characters because MUAs never interpret text/plain as markup.
+  it("TC-47: XSS subject is escaped in html and preserved literally in text fallback", () => {
+    const t = supportTicketReceivedEmail({
+      ticketId: "x",
+      subject: "<script>alert(1)</script>",
+      category: "question",
+      viewUrl: "https://subenai.sk/kontakt/ticket/x?token=y",
+    });
+
+    // HTML side: raw <script> must NOT appear as markup; escaped entity must.
+    expect(t.html).not.toContain("<script>alert(1)</script>");
+    expect(t.html).toContain("&lt;script&gt;alert(1)&lt;/script&gt;");
+
+    // Plain-text side: the literal characters are present — MUAs render
+    // text/plain as glyphs, never as HTML, so this is safe.
+    expect(t.text).toContain("<script>alert(1)</script>");
+  });
+
   it("falls back to the raw category value when the key is unknown", () => {
     const t = supportTicketReceivedEmail({ ...base, category: "wildcard_value" });
     expect(t.html).toContain("wildcard_value");
