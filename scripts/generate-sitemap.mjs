@@ -101,7 +101,50 @@ async function loadSlugs(dirRel) {
 }
 
 const courses = await loadSlugs("src/content/courses");
-const packs = await loadSlugs("src/content/test-packs");
+
+// E37 Phase F (2026-05-21) — test packs read from Supabase via the
+// get_platform_packs() RPC instead of the static src/content/test-packs/
+// directory. The DB carries 15 packs (9 legacy + 6 new) post-Phase B',
+// vs. 9 in the static layer. Falls back to the static loader if the
+// build environment has no Supabase credentials (preserves preview
+// builds + the local-dev sitemap script when DB is unreachable).
+async function loadPublishedPackSlugs() {
+  const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+  const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY;
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    console.warn(
+      "[sitemap] No Supabase creds; falling back to static src/content/test-packs/ for pack slugs",
+    );
+    return null;
+  }
+  const url = `${SUPABASE_URL}/rest/v1/rpc/get_platform_packs`;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: "{}",
+    });
+    if (!res.ok) {
+      console.warn(
+        `[sitemap] get_platform_packs RPC returned ${res.status}; using static fallback`,
+      );
+      return null;
+    }
+    const rows = await res.json();
+    return rows.map((r) => ({ slug: r.slug, lastmod: r.published_at?.slice(0, 10) ?? TODAY }));
+  } catch (err) {
+    console.warn(`[sitemap] get_platform_packs RPC failed: ${err.message}; using static fallback`);
+    return null;
+  }
+}
+
+const dbPacks = await loadPublishedPackSlugs();
+const packs = dbPacks ?? (await loadSlugs("src/content/test-packs"));
 
 // E30 — fetch published CMS slugs from Supabase at build time.
 // Mirror of loadPublishedBlogPosts: env-var-guarded, graceful fallback.

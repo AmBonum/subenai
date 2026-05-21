@@ -3,7 +3,9 @@
 **Owner:** Claude (synthesis) — senior agent, multi-lens audit
 **Date opened:** 2026-05-20
 **Last revised:** 2026-05-21 (Phase A3 — reality reconciliation after PR #111 salvaged the stale branch's content into main as `E37_SEED.sql`)
-**Status:** 🟡 Phase A + A2 + A3 complete. **Phase B' (mega-migration) starting on `feature/E37-tests-catalog`.** Phases F–J unchanged from original plan.
+**Status:** 🟡 Phase A + A2 + A3 + B' complete. **Phase F (read-path refactor) starting on `feature/E37-tests-readpath`.** Phases G–J unchanged from original plan.
+
+Phase B' delivered via [PR #123](https://github.com/AmBonum/subenai/pull/123) — merged 2026-05-21. Migration `20260521280000_e37_platform_packs_unified.sql` lives in main; `platform@subenai.sk` Dashboard user must be created before applying SQL (D9 amendment in the Phase A3 section below).
 **Surfaces in scope:** `/tests` catalog · `/tests/$slug` detail pages · `public.tests` · `public.test_questions` · `public.questions` · `src/content/test-packs/**` (to be deprecated) · `src/lib/quiz/bank/questions.ts` (to be deprecated for new content) · `src/content/blog/**` (frontmatter only)
 
 ## TL;DR
@@ -88,8 +90,8 @@ Original plan (D9): `INSERT INTO auth.users (id, email, role, ...) ... ON CONFLI
 |---|---|---|---|
 | #66 ✅ | Typo hotfix (`univerzitnÿch` → `univerzitných`) | 0 | landed |
 | #111 ✅ | Salvage `E37_SEED.sql` + recovery note into main | 0 | landed |
-| #PR-B' | **Phase B' — mega-migration** (B+C+D+E unified) + types regen + contract test | 1 | ✅ this PR |
-| #PR-F | Phase F — read-path refactor (`/tests` + `/tests/$slug`) | 0 | ❌ blocks on B' |
+| [#123 ✅](https://github.com/AmBonum/subenai/pull/123) | **Phase B' — mega-migration** (B+C+D+E unified) + types regen + contract test | 1 | landed 2026-05-21 |
+| #PR-F | Phase F — read-path refactor (`/tests` + `/tests/$slug`) | 0 | ⏳ in progress |
 | #PR-G | Phase G — copy upgrade + delete static TS packs | 1 | ❌ blocks on F |
 | #PR-H | Phase H — blog frontmatter `related_test_slug` wiring (81 MDX) | 0 | ✅ any time after B' |
 | #PR-I | Phase I — UX P0+P1 (3 + 12 items) | 0 | ❌ blocks on F |
@@ -333,7 +335,7 @@ Note: Phase F migration may shift testids slightly (DB-shape rows render through
 | ~~#PR-C~~ | Phase C (27–32 new questions) — collapsed into B' | 1 | 1 | 30 | — |
 | ~~#PR-D~~ | Phase D (migrate 9 existing packs) — collapsed into B' | 1 | 1 | 9 | — |
 | ~~#PR-E~~ | Phase E (6 new packs) — collapsed into B' | 1 | 1 | 6 | — |
-| #PR-B' | **Phase B' (mega-migration)** | 2 (migration + DEPLOY_SETUP) | 1 | ~15 contract | ✅ |
+| [#123 ✅](https://github.com/AmBonum/subenai/pull/123) | **Phase B' (mega-migration)** | 2 (migration + DEPLOY_SETUP) | 1 | 30 contract | landed 2026-05-21 |
 | #PR-F | Phase F (read-path refactor) | 8 + new hooks | 0 | 15 | ❌ blocks on B' |
 | #PR-G | Phase G (copy upgrade + delete static TS) | 1 migration + delete ~12 files | 1 | 9 | ❌ blocks on F |
 | #PR-H | Phase H (blog frontmatter) | 81 MDX | 0 | 0 | ✅ (any time after B') |
@@ -378,21 +380,28 @@ Note: Phase F migration may shift testids slightly (DB-shape rows render through
 | OQ2 | Should the existing `quick_test_config` table be treated as a "platform pack of slug `quick`" and unified under this schema, or kept as a separate construct? Out-of-scope for E37 either way — flagged for a future cleanup epic. |
 | OQ3 | Three-language pack copy (sk/en/cs) is wired in the schema but not in scope of this epic's authoring. When the EN+CS translation epic ships, the schema already supports it. |
 
-## Next step (revised 2026-05-21)
+## Next step (revised 2026-05-21, post-#123)
 
-Kick off **PR-B' (Phase B' — mega-migration)** on branch `feature/E37-tests-catalog`. The branch is already checked out from the post-#120 main.
+Kick off **PR-F (Phase F — read-path refactor)** on branch `feature/E37-tests-readpath`.
 
-**Pre-merge user action (one-off):**
-1. Supabase Dashboard → Authentication → Users → Add user
-2. Email `platform@subenai.sk`, Auto Confirm ✓, any strong password (no human login flow)
-3. Confirm with `SELECT id FROM auth.users WHERE email = 'platform@subenai.sk';`
+**Operational precondition** (already required by Phase B' merge — not re-stated here): `platform@subenai.sk` exists in `auth.users` and the user has pasted `20260521280000_e37_platform_packs_unified.sql` into the Supabase SQL Editor. Without that, the new RPCs return empty result sets and Phase F's preview deploy will render an empty `/tests` catalog.
 
-**What PR-B' contains:**
-- `supabase/migrations/20260521280000_e37_platform_packs_unified.sql` — adapted verbatim from `E37_SEED.sql` (1,644 lines), Slovak header stripped of "HOW TO APPLY" CTAs (those live in the PR description / runbook). Idempotent throughout. (Timestamp bumped from `…260000` to `…280000` during the 2026-05-21 rebase to avoid collision with E48's two migrations.)
-- `DEPLOY_SETUP.sql` mirror block (between the existing E46.6 and the end-of-file verify section).
-- `src/integrations/supabase/types.ts` — add `platform_pack_metadata` Row/Insert/Update, `sources_jsonb` on `questions`, `get_platform_packs` + `get_pack_with_questions` RPC signatures.
-- `tests/db/e37_platform_packs.test.ts` — regex contract test (table shape, RPCs, RLS, idempotency guards).
+**What PR-F changes:**
+- `src/routes/tests.index.tsx` — replace static `listPublishedPacks()` with `usePlatformPacks()` hook calling `get_platform_packs()` RPC. SSR-safe via TanStack Query.
+- `src/routes/tests.$slug.tsx` — replace static `getPackBySlug()` + `getQuestionById()` with a single `usePackWithQuestions(slug)` hook calling `get_pack_with_questions(slug)` RPC.
+- `src/components/test-packs/TestPackCard.tsx` — accept the DB-row shape (or a normalized type bridging static+DB during transition).
+- `src/components/test-packs/RelatedTestPacks.tsx` — query via RPC.
+- New: `src/lib/platform/pack-queries.ts` — encapsulates the two RPCs as TanStack Query hooks.
+- New (or extend): `src/lib/quiz/from-db.ts` — handle pack-question rows.
+- `src/lib/seo/quiz-jsonld.ts` — `buildPackQuizJsonLd` accepts the new shape.
+- `scripts/generate-sitemap.mjs` — pull `/tests/$slug` URLs from `get_platform_packs()` instead of the static manifest (same pattern E44 Phase D set for `/sablony`).
 
-**PR-B' stops before** any application-code refactor. Phase F (read-path migration in `src/routes/tests.*`) ships as a separate PR so the schema diff can be reviewed independently and the platform-user prerequisite is unambiguously a B'-time concern.
+**Out of scope for Phase F** (defer to Phase G): deleting `src/content/test-packs/*.ts` + the legacy bank file. Phase F keeps the static layer as fallback / source of truth for static fields the DB doesn't carry yet (e.g. `Industry` TS enum referenced by analytics). Phase G removes them after a bake period.
 
-The plan is the contract. PR #66 + #111 have landed; **PR-B' is the next deliverable**.
+**Verification:**
+- All 15 `/tests/{slug}` URLs render via DB read with no static fallback path executed
+- `tsc --noEmit` clean
+- Existing Vitest + Playwright specs pass after locator/query updates
+- Browser preview check: `/tests` catalog + at least 3 detail pages (one legacy, two new)
+
+The plan is the contract. PR #66 + #111 + [#123](https://github.com/AmBonum/subenai/pull/123) have landed; **PR-F is the next deliverable**.

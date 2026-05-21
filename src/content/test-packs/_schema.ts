@@ -24,7 +24,16 @@ export type Industry =
   | "ziaci"
   | "studenti"
   | "seniori"
-  | "vseobecny";
+  | "vseobecny"
+  // E37 Phase F (2026-05-21) — extended for DB-native packs. These four
+  // values exist only on `public.platform_pack_metadata.industry`, never
+  // on static `src/content/test-packs/*.ts` files. They stay in the TS
+  // union for type-safety of INDUSTRY_LABEL lookups + filter chips.
+  // Phase G will deduplicate when the static layer is removed.
+  | "heslo_2fa"
+  | "ai_deepfake"
+  | "socialne_siete"
+  | "rodicia";
 
 /**
  * One industry test pack. Loaded statically as a TS module per
@@ -76,6 +85,10 @@ const industrySchema = z.enum([
   "studenti",
   "seniori",
   "vseobecny",
+  "heslo_2fa",
+  "ai_deepfake",
+  "socialne_siete",
+  "rodicia",
 ]);
 
 export const testPackSchema: z.ZodType<TestPack> = z.object({

@@ -19,10 +19,26 @@ const PACK_FIXTURE: TestPack = {
 // E28 — verify the detail-page hero renders the new gradient zone +
 // pill-style chip meta (instead of the legacy text-7xl emoji).
 //
-// The route uses `createFileRoute(...).useLoaderData()` for the pack
-// data, so we stub the router with a useLoaderData mock returning
-// PACK_FIXTURE — that exercises the component without a real router
-// pass.
+// E37 Phase F (2026-05-21) — useLoaderData now returns the full detail
+// payload (pack + questions + allPacks for RelatedTestPacks). The mock
+// shape mirrors the new contract from `fetchPackWithQuestions` +
+// the parallel `fetchPlatformPacks` call inside the loader.
+const LOADER_DATA = {
+  pack: PACK_FIXTURE,
+  questions: PACK_FIXTURE.questionIds.map((id) => ({
+    id,
+    category: "phishing" as const,
+    difficulty: "medium" as const,
+    prompt: `Prompt ${id}`,
+    options: [
+      { id: "a", label: "A", correct: true, severity: null },
+      { id: "b", label: "B", correct: false, severity: "minor" as const },
+    ],
+    explanation: "",
+  })),
+  allPacks: [PACK_FIXTURE],
+};
+
 vi.mock("@tanstack/react-router", async () => {
   const actual =
     await vi.importActual<typeof import("@tanstack/react-router")>("@tanstack/react-router");
@@ -33,8 +49,8 @@ vi.mock("@tanstack/react-router", async () => {
       <T,>(config: T) => {
         return {
           ...(config as object),
-          useLoaderData: () => PACK_FIXTURE,
-        } as typeof config & { useLoaderData: () => TestPack };
+          useLoaderData: () => LOADER_DATA,
+        } as typeof config & { useLoaderData: () => typeof LOADER_DATA };
       },
     notFound: () => new Error("not-found"),
     Link: ({ to, children, ...rest }: { to: string; children: React.ReactNode }) => (
@@ -44,13 +60,6 @@ vi.mock("@tanstack/react-router", async () => {
     ),
   };
 });
-
-// Stub the questions bank so the detail page can resolve question
-// IDs without booting the real bank.
-vi.mock("@/lib/quiz/bank/questions", () => ({
-  getQuestionById: (id: string) =>
-    ({ id, kind: "phishing", correctVariant: 0 }) as unknown as Record<string, unknown>,
-}));
 
 // TestFlow only renders when `started` is true (CTA click) — stub it
 // so its dependency tree doesn't matter for the hero-render test.

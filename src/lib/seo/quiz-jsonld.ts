@@ -22,6 +22,11 @@ const INDUSTRY_LABEL: Record<TestPack["industry"], string> = {
   studenti: "Študenti (16+)",
   seniori: "Seniori (55+)",
   vseobecny: "Všeobecný test",
+  // E37 Phase F — labels for the 4 DB-only industries
+  heslo_2fa: "Heslá a 2FA",
+  ai_deepfake: "AI a deepfake",
+  socialne_siete: "Sociálne siete",
+  rodicia: "Rodičia",
 };
 
 /**
