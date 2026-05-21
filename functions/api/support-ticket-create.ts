@@ -146,9 +146,15 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
 
   // Rate limit.
   if (isAuth) {
-    // Per-user limit; key off the JWT prefix (sufficient as a per-user
-    // bucket since users can't rotate JWTs faster than the limit window).
-    const userKey = `support:user:${jwt.slice(0, 32)}`;
+    // Per-user limit. The bucket MUST key off the JWT payload `sub`
+    // (= the Supabase user UUID), NOT the JWT itself or any prefix of
+    // it. The first ~30+ chars of a Supabase-minted JWT are the
+    // base64-encoded header (`{"alg":"HS256","typ":"JWT","kid":"…"}`)
+    // which is identical for every user in the same project. Slicing
+    // would collapse everyone into a single shared 10/24h bucket — one
+    // noisy account DoSes everyone else.
+    const sub = decodeJwtSub(jwt);
+    const userKey = `support:user:${sub ?? `unknown:${ip}`}`;
     if (!ipRateLimit.consume(userKey, 10, 86400)) {
       return jsonResponse(429, { error: "rate_limited_user" });
     }
@@ -279,4 +285,25 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     ticket_id: result.ticket_id,
     view_token: result.view_token,
   });
+}
+
+// Local base64url-decode of the JWT payload to extract `sub` for the
+// per-user rate-limit bucket. Mirrors `decodeJwtPayload` in
+// support-ticket-reply.ts. We do NOT verify the signature here — that
+// already happened upstream (auth.getUser() in callers, or via the RPC
+// path on the authenticated branch). The bucket key only needs to be
+// stable per user; a forged JWT either fails the RPC (`auth.uid()` is
+// NULL) or returns 500, never an unauthorised insert.
+function decodeJwtSub(jwt: string): string | null {
+  try {
+    const parts = jwt.split(".");
+    if (parts.length !== 3) return null;
+    const b64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const padding = "=".repeat((4 - (b64.length % 4)) % 4);
+    const json = atob(b64 + padding);
+    const payload = JSON.parse(json) as { sub?: string };
+    return typeof payload.sub === "string" && payload.sub.length > 0 ? payload.sub : null;
+  } catch {
+    return null;
+  }
 }
