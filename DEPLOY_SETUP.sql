@@ -7398,6 +7398,43 @@ UPDATE public.platform_pack_metadata m
 
 
 -- ============================================================================
+-- E37 Phase G3 — get_platform_pack_question_ids() RPC
+-- (mirror of 20260521300000_e37_pack_question_ids_rpc.sql)
+-- ============================================================================
+-- Anon-safe SECURITY DEFINER RPC that returns (slug, question_ids[])
+-- per published platform pack. Required by the composer flow at
+-- /test/builder (anon) — public.test_questions is authenticated-only.
+
+CREATE OR REPLACE FUNCTION public.get_platform_pack_question_ids()
+RETURNS TABLE (
+  slug text,
+  question_ids uuid[]
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+  SELECT
+    t.slug,
+    ARRAY(
+      SELECT tq.question_id
+        FROM public.test_questions tq
+       WHERE tq.test_id = t.id
+       ORDER BY tq.position ASC
+    ) AS question_ids
+    FROM public.tests t
+    JOIN public.platform_pack_metadata m ON m.test_id = t.id
+   WHERE t.status = 'published'
+   ORDER BY t.published_at DESC NULLS LAST, t.created_at DESC;
+$$;
+
+REVOKE ALL ON FUNCTION public.get_platform_pack_question_ids() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_platform_pack_question_ids()
+  TO anon, authenticated;
+
+
+-- ============================================================================
 -- E37 SEED — verification (run after applying, expect non-zero rows)
 -- ============================================================================
 SELECT

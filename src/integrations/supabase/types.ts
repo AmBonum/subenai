@@ -2179,6 +2179,13 @@ export type Database = {
         Args: { p_slug: string };
         Returns: Json;
       };
+      get_platform_pack_question_ids: {
+        Args: Record<string, never>;
+        Returns: {
+          slug: string;
+          question_ids: string[];
+        }[];
+      };
     };
     Enums: {
       app_role: "admin" | "moderator" | "user";
