@@ -20,6 +20,11 @@ import { SponsorsPage } from "../poms/marketing/SponsorsPage";
 import { ManageSupportPage } from "../poms/marketing/ManageSupportPage";
 import { PodporaPage } from "../poms/sponsorship/PodporaPage";
 import { PrivacyPage, CookiesPage, ChangelogPage } from "../poms/marketing/LegalPages";
+import { KontaktPage } from "../poms/support/KontaktPage";
+import { KontaktTicketViewPage } from "../poms/support/KontaktTicketViewPage";
+import { AdminTicketsQueuePage } from "../poms/admin/AdminTicketsQueuePage";
+import { AdminTicketDetailPage } from "../poms/admin/AdminTicketDetailPage";
+import { AdminNotificationPreferencesPage } from "../poms/admin/AdminNotificationPreferencesPage";
 import { TestsDirectoryPage } from "../poms/quiz/TestsDirectoryPage";
 import { NetworkSentinel } from "../poms/security/NetworkSentinel";
 
@@ -92,6 +97,11 @@ type Fixtures = {
   privacy: PrivacyPage;
   cookies: CookiesPage;
   changelog: ChangelogPage;
+  kontakt: KontaktPage;
+  kontaktTicketView: KontaktTicketViewPage;
+  adminTicketsQueue: AdminTicketsQueuePage;
+  adminTicketDetail: AdminTicketDetailPage;
+  adminNotifPrefs: AdminNotificationPreferencesPage;
   sentinel: NetworkSentinel;
 };
 
@@ -161,6 +171,21 @@ export const test = base.extend<Fixtures>({
   },
   changelog: async ({ page }, use) => {
     await use(new ChangelogPage(page));
+  },
+  kontakt: async ({ page }, use) => {
+    await use(new KontaktPage(page));
+  },
+  kontaktTicketView: async ({ page }, use) => {
+    await use(new KontaktTicketViewPage(page));
+  },
+  adminTicketsQueue: async ({ page }, use) => {
+    await use(new AdminTicketsQueuePage(page));
+  },
+  adminTicketDetail: async ({ page }, use) => {
+    await use(new AdminTicketDetailPage(page));
+  },
+  adminNotifPrefs: async ({ page }, use) => {
+    await use(new AdminNotificationPreferencesPage(page));
   },
   sentinel: async ({ page }, use) => {
     // Construct BEFORE the spec's first navigation so the request
