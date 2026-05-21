@@ -7795,3 +7795,29 @@ $$;
 REVOKE ALL ON FUNCTION public.get_platform_pack_question_ids() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.get_platform_pack_question_ids()
   TO anon, authenticated;
+
+-- =============================================================================
+-- supabase/migrations/20260522120000_test_introspect_function.sql
+-- E48 incident response: schema introspection helper for CI invariant tests.
+-- =============================================================================
+
+CREATE OR REPLACE FUNCTION public.__test_introspect_function(p_name text)
+RETURNS TABLE (args text, returns text)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+  SELECT
+    pg_get_function_arguments(p.oid)  AS args,
+    pg_get_function_result(p.oid)     AS returns
+  FROM pg_proc p
+  JOIN pg_namespace n ON n.oid = p.pronamespace
+  WHERE p.proname = p_name
+    AND n.nspname  = 'public';
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.__test_introspect_function(text) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.__test_introspect_function(text) FROM anon;
+REVOKE EXECUTE ON FUNCTION public.__test_introspect_function(text) FROM authenticated;
+GRANT  EXECUTE ON FUNCTION public.__test_introspect_function(text) TO service_role;
