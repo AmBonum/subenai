@@ -89,6 +89,7 @@ import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as AdminAnswerSetsIndexRouteImport } from './routes/admin/answer-sets.index'
 import { Route as TestBuilderIdRouteImport } from './routes/test.builder.$id'
+import { Route as KontaktTicketIdRouteImport } from './routes/kontakt.ticket.$id'
 import { Route as DocsAppSlugRouteImport } from './routes/docs.app.$slug'
 import { Route as DocsAdminSlugRouteImport } from './routes/docs.admin.$slug'
 import { Route as BlogKategoriaSlugRouteImport } from './routes/blog/kategoria/$slug'
@@ -552,6 +553,13 @@ const TestBuilderIdRoute = TestBuilderIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/test.builder.$id.lazy').then((d) => d.Route),
 )
+const KontaktTicketIdRoute = KontaktTicketIdRouteImport.update({
+  id: '/kontakt/ticket/$id',
+  path: '/kontakt/ticket/$id',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/kontakt.ticket.$id.lazy').then((d) => d.Route),
+)
 const DocsAppSlugRoute = DocsAppSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -785,6 +793,7 @@ export interface FileRoutesByFullPath {
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
+  '/kontakt/ticket/$id': typeof KontaktTicketIdRoute
   '/test/builder/$id': typeof TestBuilderIdRouteWithChildren
   '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
@@ -882,6 +891,7 @@ export interface FileRoutesByTo {
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
+  '/kontakt/ticket/$id': typeof KontaktTicketIdRoute
   '/admin/answer-sets': typeof AdminAnswerSetsIndexRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/pages': typeof AdminPagesIndexRoute
@@ -986,6 +996,7 @@ export interface FileRoutesById {
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
+  '/kontakt/ticket/$id': typeof KontaktTicketIdRoute
   '/test/builder/$id': typeof TestBuilderIdRouteWithChildren
   '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
@@ -1092,6 +1103,7 @@ export interface FileRouteTypes {
     | '/blog/kategoria/$slug'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
+    | '/kontakt/ticket/$id'
     | '/test/builder/$id'
     | '/admin/answer-sets/'
     | '/admin/blog/'
@@ -1189,6 +1201,7 @@ export interface FileRouteTypes {
     | '/blog/kategoria/$slug'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
+    | '/kontakt/ticket/$id'
     | '/admin/answer-sets'
     | '/admin/blog'
     | '/admin/pages'
@@ -1292,6 +1305,7 @@ export interface FileRouteTypes {
     | '/blog/kategoria/$slug'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
+    | '/kontakt/ticket/$id'
     | '/test/builder/$id'
     | '/admin/answer-sets/'
     | '/admin/blog/'
@@ -1343,6 +1357,7 @@ export interface RootRouteChildren {
   TestsIndexRoute: typeof TestsIndexRoute
   BlogAutorSlugRoute: typeof BlogAutorSlugRoute
   BlogKategoriaSlugRoute: typeof BlogKategoriaSlugRoute
+  KontaktTicketIdRoute: typeof KontaktTicketIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1907,6 +1922,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestBuilderIdRouteImport
       parentRoute: typeof TestBuilderRoute
     }
+    '/kontakt/ticket/$id': {
+      id: '/kontakt/ticket/$id'
+      path: '/kontakt/ticket/$id'
+      fullPath: '/kontakt/ticket/$id'
+      preLoaderRoute: typeof KontaktTicketIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/docs/app/$slug': {
       id: '/docs/app/$slug'
       path: '/$slug'
@@ -2375,6 +2397,7 @@ const rootRouteChildren: RootRouteChildren = {
   TestsIndexRoute: TestsIndexRoute,
   BlogAutorSlugRoute: BlogAutorSlugRoute,
   BlogKategoriaSlugRoute: BlogKategoriaSlugRoute,
+  KontaktTicketIdRoute: KontaktTicketIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
