@@ -24,7 +24,7 @@ vi.mock("@tanstack/react-router", () => ({
   useSearch: () => useSearchSpy(),
 }));
 
-import { Route as ViewRoute } from "@/routes/kontakt.ticket.$id.lazy";
+import { Route as ViewRoute } from "@/routes/contact-form.ticket.$id.lazy";
 
 const ViewPage = (ViewRoute as unknown as { component: () => JSX.Element }).component;
 

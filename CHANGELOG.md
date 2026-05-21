@@ -9,6 +9,16 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+### Zmenené
+- **Stránka `/contact` zostáva ako rozcestník na kontakt.** Hlavný CTA tlačidlo
+  „Napísať" a všetkých 6 tematických čipov (technika, obsah, sponzorstvo, GDPR,
+  tlač, iné) teraz otvárajú formulár na `/contact-form` namiesto e-mailového
+  odkazu `mailto:`. Formulár umožňuje odoslať správu bez nutnosti otvárať
+  e-mailového klienta.
+- **Formulár na kontaktovanie podpory je teraz dostupný na `/contact-form`.**
+  Pôvodná adresa `/kontakt` presmerúva na novú URL. Odkaz na zobrazenie vlákna
+  v potvrdzovacom e-maile tiež ukazuje na novú adresu.
+
 ### Pridané
 - **Verejná knižnica testov — 6 nových bezpečnostných packov (E37).** Stránka
   `/tests` má po novom 15 test packov namiesto pôvodných 9. Nové

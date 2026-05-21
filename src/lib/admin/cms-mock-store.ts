@@ -95,7 +95,7 @@ export const seedFooter: CmsFooter = {
       title: "Projekt",
       links: [
         { id: newId("lnk"), label: "O projekte", url: "/about" },
-        { id: newId("lnk"), label: "Kontakt", url: "/kontakt" },
+        { id: newId("lnk"), label: "Kontakt", url: "/contact-form" },
       ],
     },
   ],

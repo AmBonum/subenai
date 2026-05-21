@@ -38,7 +38,7 @@ const COLUMN_DEFS: FooterColumnDef[] = [
     testid: "footer-column-projekt",
     links: [
       { to: ROUTES.oProjecte, labelKey: "columns.projekt.links.o_projekte", slug: "o-projekte" },
-      { to: ROUTES.kontakt, labelKey: "columns.projekt.links.kontakt", slug: "kontakt" },
+      { to: ROUTES.contact, labelKey: "columns.projekt.links.kontakt", slug: "kontakt" },
       { to: ROUTES.podpora, labelKey: "columns.projekt.links.podpora", slug: "podpora" },
       { to: ROUTES.sponzori, labelKey: "columns.projekt.links.sponzori", slug: "sponzori" },
       { to: ROUTES.zmeny, labelKey: "columns.projekt.links.zmeny", slug: "zmeny" },
