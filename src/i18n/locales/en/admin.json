@@ -168,5 +168,778 @@
     "audit": "Audit log · Admin",
     "respondents": "Respondents · Admin",
     "reports": "Reports · Admin"
+  },
+  "explainers": {
+    "dashboard": {
+      "title": "About the Overview section",
+      "lead": "The overview screen shows read-only platform metrics (users, tests, sessions, open GDPR requests) and the latest activity from the audit log. Nothing is configured here — the dashboard is read-only.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you see here",
+          "items": [
+            "Aggregated platform metrics (account, test and active session counts)",
+            "Open data subject requests (DSR) and open DPA requests",
+            "Latest events from the audit log across every section"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing",
+          "items": [
+            "Metrics load when the page opens; fresh data appears after a refresh",
+            "Audit activity surfaces within seconds of a successful operation elsewhere in the admin",
+            "There is no auto-refresh — use a browser reload for live monitoring"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "The delta values on the cards are still static (a UI placeholder, not a real trend)",
+            "For product setting changes, go to the Settings or Security sections"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Admin console overview", "href": "/docs/admin/dashboard" },
+          { "label": "Metrics and audit log architecture", "href": "/docs/admin/audit" }
+        ]
+      }
+    },
+    "tests": {
+      "title": "About the Tests section",
+      "lead": "This is where you manage every test on the platform — create, edit, archive and delete them. Filters by status, difficulty and category help you find a specific test in a large library.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "List filters: status (draft/published/archived), difficulty, branch (vertical)",
+            "Search by test title",
+            "Bulk-delete the selected tests",
+            "The test detail opens by clicking a row (edits happen in a separate editor)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Delete (single and bulk): immediate — the list updates optimistically",
+            "Bulk delete runs mutations sequentially — large selections may take a moment",
+            "Published tests appear in the live app within 5–60 minutes (React Query cache)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "The \"Owner\" filter is currently a UI stub — it does not actually filter",
+            "A test can belong to multiple branches at once (the \"branch\" filter matches a substring)",
+            "Deleting a test also deletes every respondent answer — the operation cannot be undone"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Test lifecycle (draft → published → archive)", "href": "/docs/admin/tests" },
+          { "label": "Test and question editor", "href": "/docs/admin/questions" }
+        ]
+      }
+    },
+    "quick_test": {
+      "title": "About the Quick test section",
+      "lead": "You configure the quick-test template shown on the landing page. It is the first contact a new visitor has with the platform — a short, motivating test for a chosen audience.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Quick-test visibility (shown / hidden on the site)",
+            "Test name and description (copy)",
+            "Vertical (General / Senior / Youth / Company)",
+            "Time in seconds, pass percentage, difficulty",
+            "List of included questions (editing happens in the Questions section)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Input change: optimistic cache update — the UI shows the new value immediately",
+            "Save: the server mutation runs in the background; the change is live within 5–60 minutes",
+            "No \"revert\" button — the cache updates even if the server fails"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "You only view questions here, you don't edit them — go to the Questions section for edits",
+            "The \"vertical\" stage influences scoring branching in the live app",
+            "The cache may hold the old configuration for up to 60 minutes — use a force refresh to verify immediately"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Quick-test structure and scoring", "href": "/docs/admin/quick-test" },
+          { "label": "Verticals and audiences (Senior, Youth, Company)", "href": "/docs/admin/categories" }
+        ]
+      }
+    },
+    "share_card": {
+      "title": "About the Share card section",
+      "lead": "You configure the Open Graph card used to share test results on social networks. The card shows up on Facebook, LinkedIn, WhatsApp and elsewhere when a user shares a link to a test or to their result.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "OG image URL (1200×630 px, max 5 MB, JPG/PNG)",
+            "Fallback title (required — used when a test has none of its own)",
+            "Fallback description (optional — a short motivating sentence)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "The editor preview updates as you type (live preview)",
+            "The social-network cache (FB, LinkedIn) holds the old card — after a change you need to re-scrape via their developer tools",
+            "The configuration reaches the live app within 5–60 minutes"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "The title is validated as non-empty — saving without it fails with a toast",
+            "The image preview loads an external URL; a broken or 404 address shows up as an empty box",
+            "The Facebook / LinkedIn cache has to be invalidated manually via their \"debugger\" tools"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Open Graph spec and dimensions", "href": "/docs/admin/share-card" },
+          { "label": "Cache invalidation on social networks", "href": "/docs/admin/share-card-cache" }
+        ]
+      }
+    },
+    "questions": {
+      "title": "About the Questions section",
+      "lead": "The central library of every question on the platform. You create, edit, publish and archive them in bulk; you'll find both community-authored and editorial questions here. CSV export, filtering and pagination are supported.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Question creation and editing (a modal with text, answers, explanation, category)",
+            "Bulk status change (publish / archive the selected items)",
+            "Bulk deletion",
+            "Filters: status, branch, author, vote count (-50 to +200), reported only",
+            "Export the filtered list to CSV (client-side, no server call)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Create / edit / delete: immediate server mutation + cache invalidation",
+            "Bulk operations run sequentially (not in parallel) — expect longer waits for 100+ records",
+            "The AI generator is toggled via the build-time variable VITE_AI_GENERATOR_ENABLED — a toggle requires a redeploy"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "Changing a filter always resets pagination to page 1",
+            "Authors without a name set (seeded questions) do not appear in the author dropdown",
+            "Negative votes start at -50 — there is no filter for lower scores"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Question structure and answer types", "href": "/docs/admin/questions" },
+          { "label": "AI question generator (feature flag)", "href": "/docs/admin/ai-generator" },
+          { "label": "Voting and reporting", "href": "/docs/admin/reports" }
+        ]
+      }
+    },
+    "answer_sets": {
+      "title": "About the Answer sets section",
+      "lead": "You manage reusable answer sets — groups of correct and incorrect options that get attached to questions. A set exists once and is used N times across questions; a change to the set is reflected in every question that uses it.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Create a new set (opens the editor)",
+            "Duplicate a set (creates a new copy including every answer)",
+            "Delete a set",
+            "Search by set name",
+            "Set detail (edit answer text, ordering and correctness flag)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Set creation: immediate mutation + redirect to detail",
+            "Duplication: creates a new set + sequentially copies each answer (N+1 mutations, no rollback)",
+            "Deletion: immediate, optimistic removal from cache",
+            "The usage count on the card is stale until the query refetches"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "Duplication is not transactional — if it fails midway you end up with a new set with incomplete answers",
+            "Deleting a set used by a question can break that question's scoring (set → question link)",
+            "The correct/incorrect totals are computed at render time — for large sets they can be temporarily stale"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Answer sets and the link to questions", "href": "/docs/admin/answer-sets" },
+          { "label": "Best practices for duplication and versioning", "href": "/docs/admin/answer-sets-versioning" }
+        ]
+      }
+    },
+    "trainings": {
+      "title": "About the Trainings section",
+      "lead": "You manage educational trainings — short courses the platform offers after a completed test or as a standalone. For each training you set the topic, length, publish status and descriptive content.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Create a new training (modal editor)",
+            "Edit an existing one (name, topic, description, length, status)",
+            "Duplicate (a copy with the \"(copy)\" suffix and status forced to draft)",
+            "Delete",
+            "Search by name"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Create / edit / delete: immediate server mutation + list invalidation",
+            "A published training appears in the live app within 5–60 minutes (React Query cache)",
+            "A duplicate always starts as a draft — publish it manually after review"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "The topic is picked from a fixed list — adding a new topic requires a DB migration",
+            "Length is informational (shown to the visitor) — it does not affect technical timeouts",
+            "Duplication also copies the description including any Markdown formatting"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Training and topic structure", "href": "/docs/admin/trainings" },
+          { "label": "Publishing workflow", "href": "/docs/admin/publishing" }
+        ]
+      }
+    },
+    "users": {
+      "title": "About the Users section",
+      "lead": "A list of every registered account with its role and status. You see who is an admin, a user or pending confirmation; you filter by role, search by name or email, and see each user's question count.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Search by display_name or email (client-side filter)",
+            "Filter by role: admin / user / pending",
+            "\"Edit role\" button — wired up in the UI, but the server mutation is not yet connected"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Search and filter: purely client-side, no network overhead",
+            "Role change (once wired): immediate — applies from the affected user's next API call",
+            "Demotion from admin → user revokes access to /admin and signs the user out on their next click"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "The \"Edit role\" button is currently a UI stub — it shows a toast but does not change the DB",
+            "The role filter only knows admin / user / pending — custom roles do not show up",
+            "Avatar initials use the first 2 characters of display_name — they are empty when the name is empty"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Roles and permissions", "href": "/docs/admin/users" },
+          { "label": "RLS policies for user_roles", "href": "/docs/admin/security" }
+        ]
+      }
+    },
+    "categories": {
+      "title": "About the Categories section",
+      "lead": "A two-level content taxonomy: branches (top-level) and topics (children of branches). A topic's slug starts with the branch slug (a convention, not an FK), which is why deleting a branch with children is blocked. Questions, tests and articles are tagged with these values.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Branches: create, edit name/slug/description, delete (guarded when children exist)",
+            "Topics: create under a chosen branch, edit, delete",
+            "The slug auto-generates from the name (lowercase, dashes), but is editable"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Create / edit / delete: immediate mutation + invalidation of both queries (branches + topics)",
+            "Attempting to delete a branch that has topics → the guard fails with an error toast",
+            "A slug change is propagated to the question link the next time those questions are saved (lazy migration)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "The delete guard checks the naming convention, not an FK — a manual breach of the convention bypasses it",
+            "The colour is hardcoded to #6366f1 (indigo) — there is no colour picker yet",
+            "Re-parenting a topic into a different branch is not supported; create a new one and delete the old"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Branch and topic taxonomy", "href": "/docs/admin/categories" },
+          { "label": "Slug conventions and migrations", "href": "/docs/admin/categories-slugs" }
+        ]
+      }
+    },
+    "reports": {
+      "title": "About the Reports section",
+      "lead": "Governance queue: users report questions here that violate the rules (spam, inappropriate content, harassment, misinformation). The admin reviews each report — either resolves it (taking action on the question) or dismisses it as unfounded.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Filter by status (open / in progress / resolved / dismissed) and reason",
+            "Actions: resolve, dismiss (mutation + invalidation)",
+            "Export the filtered list to CSV"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Filters: immediate (client-side on the loaded list)",
+            "Resolve / dismiss: immediate mutation + toast, the query is invalidated",
+            "Export: purely client-side — no server call, no size limit"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "Reasons and statuses are fixed enums — adding a new reason requires a code change",
+            "No manual priority or reordering — the queue is always sorted by created_at",
+            "Resolving a report does not delete the question — you have to do that separately in the Questions section"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Report reasons and workflow", "href": "/docs/admin/reports" },
+          { "label": "Escalation: when to delete a question vs. an author", "href": "/docs/admin/reports-escalation" }
+        ]
+      }
+    },
+    "support": {
+      "title": "About the Support section",
+      "lead": "You configure the support channel contact details — email, phone and opening hours. These values are shown to visitors in the footer, on the contact page and in automated replies.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Support email (required, regex-validated)",
+            "Phone number (optional, validated when filled in)",
+            "Opening hours (free text, e.g. \"Mon–Fri 9:00–17:00\")"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Input: synchronous form state update",
+            "Save: validation + config write + success toast",
+            "The live app picks up the new configuration on its next init (short bootstrap delay)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "Validation is client-side only (regex) — the server accepts any value you send",
+            "Hours have no format validation — typos reach the live app",
+            "This is currently an in-memory config scoped to the session; DB persistence is coming in the next iteration"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Support channels and SLA", "href": "/docs/admin/support" },
+          { "label": "Escalation contacts", "href": "/docs/admin/support-escalation" }
+        ]
+      }
+    },
+    "blog": {
+      "title": "About the Blog section",
+      "lead": "You manage blog posts — drafts, published and archived. You create new posts, open the editor for existing ones and delete stale entries. The detailed editor (copy, images, SEO) opens by clicking a row.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Create a new post (redirects to /admin/blog/new)",
+            "Edit an existing one (link to /admin/blog/$id)",
+            "Delete a post (inline action, mutation)",
+            "Post status is set in the detail editor (draft / published / archive)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Create: server mutation when the editor opens",
+            "Delete: immediate mutation + list refetch",
+            "A published post is available on the site immediately; build-time RSS and sitemap are generated at deploy time"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "No bulk operations — deletion is one row at a time",
+            "A post slug is required and unique; a slug error fails the save",
+            "A published post only reaches sitemap.xml on the next deploy (npm run build)"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Blog editor and SEO fields", "href": "/docs/admin/blog" },
+          { "label": "Publishing workflow", "href": "/docs/admin/publishing" }
+        ]
+      }
+    },
+    "pages": {
+      "title": "About the Pages section",
+      "lead": "You manage the static CMS pages of the site — terms, contact, privacy policy and similar. The detail editor works with blocks (heading, text, image…) that you assemble into the final page.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Create a new page (after creation, redirect to detail)",
+            "Edit a page (name, slug, status, blocks)",
+            "Publish / unpublish (toggle in the detail editor)",
+            "Delete a page",
+            "Page blocks: add, delete, move up/down (ChevronUp/Down)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Block input: optimistic cache update + async mutation",
+            "Publish: optimistic published_at + mutation + invalidation",
+            "The live app will see the page within 5–60 minutes (React Query cache)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "The slug must match /^[a-z0-9-]+$/ — diacritics, spaces and uppercase letters are rejected",
+            "Block reordering is swap-by-index (not drag & drop) — it gets inefficient at 20+ blocks",
+            "The detail editor reads from the listing query — if the page isn't cached, it shows \"not found\""
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "CMS pages and block types", "href": "/docs/admin/pages" },
+          { "label": "Slug rules and redirects", "href": "/docs/admin/pages-slugs" }
+        ]
+      }
+    },
+    "navigation": {
+      "title": "About the Navigation section",
+      "lead": "You configure the site's main menu — items, their order, visibility to signed-in users and opening in a new tab. This menu shows up in the header on both desktop and mobile.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Add an item (auto-ID, empty label/url, position = count + 1)",
+            "Edit in a dialog: label, URL, open_in_new_tab, auth_only",
+            "Delete an item",
+            "Move up / down (swap positions with the neighbour)",
+            "Inline toggle for visibility and \"signed-in only\""
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Every change: optimistic cache update + async mutation",
+            "Delete + move: query invalidation after success",
+            "The live app will see the menu within 5–60 minutes (React Query cache)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "URLs must match /^(\\/[^\\s]*|https:\\/\\/[^\\s]+)$/ — only local paths or https:// are accepted",
+            "Position is numeric — skipping (1, 2, 5) leaves a gap; swap-by-index ignores it",
+            "auth_only is just a UI flag — the back-end does not enforce it, a user sees the item if they know the URL"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Navigation structure", "href": "/docs/admin/navigation" },
+          { "label": "auth_only vs. server-side guards", "href": "/docs/admin/security" }
+        ]
+      }
+    },
+    "header": {
+      "title": "About the Header section",
+      "lead": "You configure the site's global header — logo, primary CTA button and the mobile menu label. Visitors see these values in the top bar on every public page.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "logo_url — URL of the logo image",
+            "cta_label — text of the primary button (e.g. \"Start test\")",
+            "cta_url — where the button points to",
+            "mobile_trigger_label — text of the mobile menu trigger (a11y label)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Input: optimistic cache update + async mutation",
+            "Save: success toast (no further action)",
+            "The live app will see the new header within 5–60 minutes (React Query cache)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "Logo URL is just a string — a 404 or wrong format shows up as an empty image",
+            "cta_url has no URL validation — an invalid value redirects to 404",
+            "The form does not lock the fields while saving — fast clicks can spam mutations"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Header: logo, CTA, mobile", "href": "/docs/admin/header" },
+          { "label": "Brand guidelines (logo formats)", "href": "/docs/admin/branding" }
+        ]
+      }
+    },
+    "footer": {
+      "title": "About the Footer section",
+      "lead": "You manage the site footer — columns of links and social networks. Visitors see the footer on every public page; it also serves SEO interlinking and the mandatory GDPR/cookie links.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Columns: add, edit name, delete",
+            "Links in a column: add, edit label/url, delete",
+            "Social networks: add a platform + URL, edit, delete",
+            "Column order is determined by creation order (drag-reorder is not yet available)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Every change: optimistic cache update + async mutation",
+            "The live app will see the new footer within 5–60 minutes (React Query cache)",
+            "Social icons render based on the platform string — an unknown platform → generic icon"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "Link URLs / social URLs have no validation — invalid values can slip through",
+            "To change column order you have to delete and recreate (no drag & drop)",
+            "The social-network platform is free text — a typo like \"Insagram\" will miss the known icons"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Footer: columns, social networks", "href": "/docs/admin/footer" },
+          { "label": "GDPR / cookie links in the footer (mandatory)", "href": "/docs/admin/legal" }
+        ]
+      }
+    },
+    "dsr": {
+      "title": "About the GDPR requests section",
+      "lead": "Governance queue for data subject requests under GDPR (art. 15–22) — access, rectification, erasure, portability. Each request has an SLA based on its type and status; coloured badges call out an upcoming deadline.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Filter by status (open / in progress / resolved / dismissed) and type (access / erasure / portability)",
+            "Search by requester email or note",
+            "Actions: resolve (status → completed) or dismiss (status → rejected)",
+            "Export the filtered list to CSV"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Status mutation: immediate + query invalidation + toast",
+            "The SLA is computed client-side from created_at + a type-specific deadline (art. 12(3) = 30 days)",
+            "The \"Overdue\" badge fires when the deadline is crossed",
+            "Mutations run one at a time — if one fails midway the UI is temporarily inconsistent"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "GDPR art. 12(3) sets 1 month to resolve — overdue is a legal breach",
+            "Resolving does not cover the technical execution of the request (e.g. the actual erasure) — you do that outside this queue",
+            "Search is free text without AND/OR operators — it covers the email and a substring of the note"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "GDPR art. 15–22 and SLA table", "href": "/docs/admin/dsr" },
+          { "label": "Technical runbook for erasure and anonymisation", "href": "/docs/admin/dsr-runbook" }
+        ]
+      }
+    },
+    "dpa_requests": {
+      "title": "About the DPA requests section",
+      "lead": "Governance queue for Data Processing Agreement / NDA requests. You track the request lifecycle (pending / received / signed / cancelled) and the status of the dispatched email. PDF download, re-send and anonymisation are available per row.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Filter by request status and email status, search by requester email",
+            "Change status (dropdown or button)",
+            "Anonymise (one-way: PII → ****, status → cancelled)",
+            "Re-send the email (re-trigger SMTP send)",
+            "Download the signed PDF",
+            "Export to CSV"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Status change: immediate mutation + invalidation",
+            "Anonymisation: IRREVERSIBLE — PII is overwritten, status is forced to cancelled",
+            "Re-send: async SMTP job — email_status flips from \"pending\" to \"sent\"/\"failed\" only after it finishes",
+            "PDF download: server call, the browser downloads the file"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "Anonymisation is a one-way operation — verify the requester's identity carefully before clicking",
+            "Request status and email status are separate — you can have a \"pending\" request with a \"sent\" email",
+            "The dashboard counts open requests by request status only, not by email status"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "DPA workflow and templates", "href": "/docs/admin/dpa-requests" },
+          { "label": "Anonymisation: when and how", "href": "/docs/admin/dpa-anonymisation" },
+          { "label": "Retention policy and cron job", "href": "/docs/admin/settings" }
+        ]
+      }
+    },
+    "settings": {
+      "title": "About the Settings section",
+      "lead": "Read-only GDPR / compliance dashboard. It shows the current values of feature flags (DPA flow on/off, draft watermark, DPA template version) and the retention policy. Changes are made via env variables in Cloudflare Pages — that requires a redeploy and leaves an audit trail in the deploy log.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you see here (read-only)",
+          "items": [
+            "DPA flow: VITE_DPA_FLOW_ENABLED (true/false)",
+            "Draft watermark: VITE_DPA_TEMPLATE_DRAFT_WATERMARK",
+            "DPA template version: hardcoded in src/lib/dpa/feature-flag.ts",
+            "Retention policy: SQL function anonymize_expired_dpa_requests() — runs on cron",
+            "List of subprocessors (hardcoded SUB_PROCESSORS constant)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Env flag change: edit in the Cloudflare Pages dashboard + redeploy (about 3–5 minutes)",
+            "DPA template version change: code change + PR + merge + redeploy",
+            "Retention cron: runs per the cron expression in Supabase (default once a day)",
+            "Subprocessor update: code change (legally sensitive — requires legal team review)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "The page is read-only on purpose — env-backed flags must leave a deploy audit trail",
+            "No live toggle: a change without a redeploy has no effect",
+            "The watermark renders in amber when ON (warning against production use) and green when OFF"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "Feature flags and deploy audit", "href": "/docs/admin/settings" },
+          { "label": "Retention policy and cron", "href": "/docs/admin/retention" },
+          { "label": "Subprocessor list and GDPR article 28", "href": "/docs/admin/subprocessors" }
+        ]
+      }
+    },
+    "security": {
+      "title": "About the Security section",
+      "lead": "Self-service MFA for your own admin account — TOTP authenticator (Google Authenticator, 1Password, …) and backup codes. There are no global settings here; this section only manages factors for the currently signed-in admin.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you configure",
+          "items": [
+            "Enroll 2FA (redirects to /login/enroll-2fa)",
+            "Reset 2FA (unenroll the factor, confirm, redirect to re-enroll)",
+            "Generate new backup codes (confirm, shown in a modal with copy/download)",
+            "Show the count of remaining backup codes"
+          ]
+        },
+        "time_impact": {
+          "heading": "Timing of changes",
+          "items": [
+            "Enroll: redirect into the flow; after completion the factor appears immediately on refresh",
+            "Unenroll: immediate mutation, redirect to re-enroll (you have to enroll again!)",
+            "Code regeneration: mutation + modal (the server saves immediately)",
+            "Backup codes < 3 → warning (hardcoded threshold)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "Reset 2FA redirects to re-enroll immediately — you have to enroll the authenticator again",
+            "Backup codes are not stored locally anywhere; closing the modal without saving = codes lost (the server has them, you don't)",
+            "The system does not block unenrolling the last factor — the next sign-in will not be protected by 2FA"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "MFA enrolment workflow", "href": "/docs/admin/security" },
+          { "label": "Backup codes: best practices", "href": "/docs/admin/security-backup-codes" },
+          { "label": "AAL2 enforcement for /admin", "href": "/docs/admin/aal2" }
+        ]
+      }
+    }
   }
 }

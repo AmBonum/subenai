@@ -1,6 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { DsrQueue } from "@/components/admin/DsrQueue";
 import { useAdminDSRQueue } from "@/lib/admin/queries";
 import { tFor } from "@/i18n/governance";
@@ -20,6 +21,8 @@ function AdminDsrPage() {
         description={t("description", { open })}
         testId="admin-dsr-page-header"
       />
+
+      <AdminPageExplainer pageKey="dsr" />
       <DsrQueue />
     </div>
   );

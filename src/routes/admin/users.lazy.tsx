@@ -4,6 +4,7 @@ import { Pencil } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -69,6 +70,8 @@ function AdminUsersPage() {
         description={t("description")}
         testId="admin-users-page-header"
       />
+
+      <AdminPageExplainer pageKey="users" />
 
       <Card className="border-border/60">
         <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">

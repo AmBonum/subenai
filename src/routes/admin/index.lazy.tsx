@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { Users, ClipboardList, Activity, ShieldAlert, ScrollText } from "lucide-react";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { StatCard } from "@/components/admin/StatCard";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,6 +31,8 @@ function AdminDashboardPage() {
         description={t("description")}
         testId="admin-dashboard-page-header"
       />
+
+      <AdminPageExplainer pageKey="dashboard" />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <StatCard

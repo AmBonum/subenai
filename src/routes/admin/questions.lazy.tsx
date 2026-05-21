@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { QuestionEditor } from "@/components/admin/QuestionEditor";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
@@ -224,6 +225,8 @@ function QuestionsPage() {
               data-testid="admin-questions-export-button"
             >
               <Download className="mr-2 h-4 w-4" />
+
+              <AdminPageExplainer pageKey="questions" />
               {t("export_button")}
             </Button>
             <Button

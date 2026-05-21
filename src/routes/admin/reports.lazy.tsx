@@ -1,6 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { ReportsQueue } from "@/components/admin/ReportsQueue";
 import { tFor } from "@/i18n/governance";
 
@@ -17,6 +18,8 @@ function AdminReportsPage() {
         description={t("description")}
         testId="admin-reports-page-header"
       />
+
+      <AdminPageExplainer pageKey="reports" />
       <ReportsQueue />
     </div>
   );

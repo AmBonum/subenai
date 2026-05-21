@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,8 @@ function AdminHeaderPage() {
   return (
     <div className="space-y-6" data-testid="cms-header-form-root">
       <PageHeader title={t("title")} description={t("description")} />
+
+      <AdminPageExplainer pageKey="header" />
 
       <Card>
         <CardContent className="space-y-4 pt-6">

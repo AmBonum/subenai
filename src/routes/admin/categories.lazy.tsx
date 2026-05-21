@@ -4,6 +4,7 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -142,6 +143,8 @@ function AdminCategoriesPage() {
         description={t("description")}
         testId="admin-categories-page-header"
       />
+
+      <AdminPageExplainer pageKey="categories" />
 
       {deleteError && (
         <Card

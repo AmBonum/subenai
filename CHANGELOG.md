@@ -54,6 +54,15 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   50/deň/test, 50/h/IP — a auditný záznam s PII-stripped recipient hashom).
   Zatiaľ sa nezaväzujeme či pôjde o platenú funkciu alebo bude voľne
   dostupná — to oznámime, keď tlačidlo zaktivnime.
+- **Vysvetľujúce panely v admin konzole.** Na každej z 20 podstránok
+  v `/admin` (Prehľad, Testy, Otázky, Používatelia, GDPR žiadosti,
+  Nastavenia, Bezpečnosť…) je teraz zložiteľný info panel pod hlavičkou
+  stránky. Otvoríš ho jedným klikom a vnútri uvidíš: čo sa na tej
+  podstránke nastavuje, aký časový dopad majú zmeny (okamžité vs. cache
+  5–60 min vs. vyžaduje redeploy), na čo si dávať pozor (RLS, jednosmerné
+  operácie, build-time flagy), a odkazy na pripravovanú dokumentáciu.
+  Stav (rozbalené/zbalené) si panel pamätá per stránka v prehliadači.
+  Obsah je k dispozícii v slovenčine, angličtine aj češtine.
 
 ## [1.14.1] — 2026-05-21
 
