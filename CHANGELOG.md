@@ -9,6 +9,8 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+## [1.14.3] — 2026-05-21
+
 ### Pridané
 - **Oprava mena používateľa (GDPR Art. 16) jedným klikom v admin paneli (E46.6).**
   Doteraz, keď používateľ poslal GDPR žiadosť o opravu nesprávneho mena
