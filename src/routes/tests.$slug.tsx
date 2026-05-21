@@ -1,9 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { ListChecks, Target, Building2 } from "lucide-react";
 
-import { getPackBySlug, type TestPack } from "@/content/test-packs";
-import { getQuestionById, type Question } from "@/lib/quiz/bank/questions";
+import type { TestPack } from "@/content/test-packs";
+import { fetchPackWithQuestions, fetchPlatformPacks } from "@/lib/platform/pack-queries";
 import { TestFlow } from "@/components/quiz/flow/TestFlow";
 import { RelatedTestPackArticleCard } from "@/components/test-packs/RelatedTestPackArticleCard";
 import { RelatedTestPacks } from "@/components/test-packs/RelatedTestPacks";
@@ -15,12 +15,20 @@ import { tFor } from "@/i18n/quiz";
 const COPYRIGHT_HOLDER = "am.bonum s. r. o.";
 
 export const Route = createFileRoute("/tests/$slug")({
-  loader: ({ params }) => {
-    const pack = getPackBySlug(params.slug);
-    if (!pack) throw notFound();
-    return pack;
+  // E37 Phase F — detail RPC + catalog RPC fetched in parallel at SSR.
+  // The catalog list is needed by <RelatedTestPacks /> below the fold;
+  // doing it server-side keeps the detail page render synchronous from
+  // the component's perspective.
+  loader: async ({ params }) => {
+    const [detail, allPacks] = await Promise.all([
+      fetchPackWithQuestions(params.slug),
+      fetchPlatformPacks(),
+    ]);
+    if (!detail) throw notFound();
+    return { ...detail, allPacks };
   },
-  head: ({ loaderData: pack }) => {
+  head: ({ loaderData }) => {
+    const pack = loaderData?.pack;
     if (!pack) return { meta: [] };
     const t = tFor("testy");
     const url = `${SITE_ORIGIN}/tests/${pack.slug}`;
@@ -61,16 +69,11 @@ export const Route = createFileRoute("/tests/$slug")({
 function PackPage() {
   const t = tFor("testy");
   const tCommon = tFor("common");
-  const pack = Route.useLoaderData() as TestPack;
+  const loaderData = Route.useLoaderData();
+  const pack: TestPack = loaderData.pack;
+  const questions = loaderData.questions;
+  const allPacks = loaderData.allPacks;
   const [started, setStarted] = useState(false);
-
-  // Resolve questionIds -> Question[] once. If any id is missing we
-  // gracefully filter (silent during runtime; build-time test catches it).
-  const questions = useMemo<Question[]>(
-    () =>
-      pack.questionIds.map((id) => getQuestionById(id)).filter((q): q is Question => q !== null),
-    [pack.questionIds],
-  );
 
   if (started) {
     return (
@@ -191,7 +194,7 @@ function PackPage() {
 
         <RelatedTestPackArticleCard packSlug={pack.slug} />
 
-        <RelatedTestPacks current={pack} />
+        <RelatedTestPacks current={pack} all={allPacks} />
 
         <p className="mt-10 border-t border-border/60 pt-4 text-center text-xs text-muted-foreground">
           {t("pack_copyright", {

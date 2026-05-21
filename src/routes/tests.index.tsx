@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { listPublishedPacks, type Industry, type TestPack } from "@/content/test-packs";
+import type { Industry, TestPack } from "@/content/test-packs";
+import { fetchPlatformPacks } from "@/lib/platform/pack-queries";
 import { INDUSTRY_LABEL } from "@/lib/seo/quiz-jsonld";
 import { TestPackCard } from "@/components/test-packs/TestPackCard";
 import { TestsValueStrip } from "@/components/tests/TestsValueStrip";
@@ -37,10 +38,16 @@ function sortPacks(packs: TestPack[], sort: SortKey): TestPack[] {
 }
 
 export const Route = createFileRoute("/tests/")({
-  head: () => {
+  // E37 Phase F — catalog list comes from get_platform_packs() RPC at
+  // SSR time. The loader runs before head() and component(), so both
+  // see the same data via Route.useLoaderData(). Same SSR contract as
+  // the old static manifest call; the only difference is one Supabase
+  // round-trip instead of a synchronous TS import.
+  loader: () => fetchPlatformPacks(),
+  head: ({ loaderData }) => {
     const t = tFor("testy");
     const url = `${SITE_ORIGIN}/tests`;
-    const packs = listPublishedPacks();
+    const packs = (loaderData ?? []) as TestPack[];
     return {
       meta: [
         { title: t("meta_title") },
@@ -87,7 +94,7 @@ export const Route = createFileRoute("/tests/")({
 
 function TestsCatalogPage() {
   const t = tFor("testy");
-  const allPacks = listPublishedPacks();
+  const allPacks = Route.useLoaderData() as TestPack[];
   const [activeIndustries, setActiveIndustries] = useState<Set<Industry>>(new Set());
   const [sort, setSort] = useState<SortKey>("newest");
 

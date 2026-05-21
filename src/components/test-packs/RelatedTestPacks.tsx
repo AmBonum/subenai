@@ -1,4 +1,4 @@
-import { listPublishedPacks, type TestPack } from "@/content/test-packs";
+import type { TestPack } from "@/content/test-packs";
 import { TestPackCard } from "./TestPackCard";
 import { tFor } from "@/i18n/quiz";
 
@@ -19,9 +19,14 @@ import { tFor } from "@/i18n/quiz";
 // Reuses TestPackCard — same visual treatment as the catalog grid,
 // so a reader sees the same hero zone + chip language they already
 // recognize. No new card variant needed.
-export function RelatedTestPacks({ current }: { current: TestPack }) {
+//
+// E37 Phase F (2026-05-21) — switched from `listPublishedPacks()` static
+// import to an `all` prop supplied by the route loader (which fetches
+// `get_platform_packs()` server-side). Same selection algorithm; the
+// only change is the input source.
+export function RelatedTestPacks({ current, all }: { current: TestPack; all: TestPack[] }) {
   const t = tFor("testy");
-  const others = listPublishedPacks().filter((p) => p.slug !== current.slug);
+  const others = all.filter((p) => p.slug !== current.slug);
   const sameIndustry = others.filter((p) => p.industry === current.industry);
   const fillers = others.filter((p) => p.industry !== current.industry);
   const picks = [...sameIndustry, ...fillers].slice(0, 3);
