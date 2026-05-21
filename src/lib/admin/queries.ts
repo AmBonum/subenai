@@ -2139,3 +2139,114 @@ export function useCancelPendingErasure() {
     },
   });
 }
+
+// E48.6 — Admin support tickets queries.
+// useAdminSupportTickets reads support_tickets via the admin-all RLS policy
+// (has_role(uid, 'admin') gate). View is client-side filtered + capped at 200
+// rows. The partial admin_working_set_idx keeps the query fast at scale.
+
+export interface SupportTicketsFilters {
+  statuses?: string[];
+  categories?: string[];
+  query?: string;
+  includeArchived?: boolean;
+}
+
+export interface AdminSupportTicketRow {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  status: string;
+  category: string;
+  source: string;
+  subject: string;
+  body: string;
+  submitter_user_id: string | null;
+  submitter_email: string;
+  submitter_name: string | null;
+  assigned_to: string | null;
+  archived_at: string | null;
+  deleted_at: string | null;
+}
+
+export function useAdminSupportTickets(filters: SupportTicketsFilters = {}) {
+  const { statuses, categories, query, includeArchived } = filters;
+  return useQuery({
+    queryKey: ["admin", "support_tickets", statuses, categories, query, includeArchived],
+    queryFn: async (): Promise<AdminSupportTicketRow[]> => {
+      let q = supabase
+        .from("support_tickets")
+        .select(
+          "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, assigned_to, archived_at, deleted_at",
+        )
+        .is("deleted_at", null)
+        .order("created_at", { ascending: false })
+        .limit(200);
+
+      if (!includeArchived) {
+        q = q.is("archived_at", null);
+      }
+      if (statuses && statuses.length > 0) {
+        q = q.in("status", statuses);
+      }
+      if (categories && categories.length > 0) {
+        q = q.in("category", categories);
+      }
+      if (query && query.trim().length >= 2) {
+        const term = `%${query.trim().replace(/[%_]/g, "\\$&")}%`;
+        q = q.or(`subject.ilike.${term},body.ilike.${term},submitter_email.ilike.${term}`);
+      }
+
+      const { data, error } = await q;
+      if (error) throw error;
+      return (data ?? []) as AdminSupportTicketRow[];
+    },
+  });
+}
+
+export function useAdminSupportTicketAttachmentCounts(ticketIds: string[]) {
+  return useQuery({
+    queryKey: ["admin", "support_tickets", "attachment_counts", ...ticketIds],
+    queryFn: async (): Promise<Record<string, number>> => {
+      if (ticketIds.length === 0) return {};
+      const { data, error } = await supabase
+        .from("support_ticket_attachments")
+        .select("ticket_id")
+        .in("ticket_id", ticketIds);
+      if (error) throw error;
+      const counts: Record<string, number> = {};
+      for (const r of (data ?? []) as { ticket_id: string }[]) {
+        counts[r.ticket_id] = (counts[r.ticket_id] ?? 0) + 1;
+      }
+      return counts;
+    },
+    enabled: ticketIds.length > 0,
+  });
+}
+
+export function useTransitionTicketStatus() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      ticketId,
+      newStatus,
+      note,
+    }: {
+      ticketId: string;
+      newStatus: string;
+      note?: string;
+    }) => {
+      const { data, error } = await supabase.rpc("transition_ticket_status", {
+        p_ticket_id: ticketId,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        p_new_status: newStatus as any,
+        p_note: note ?? null,
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "support_tickets"] });
+    },
+  });
+}
