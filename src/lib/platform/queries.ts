@@ -740,6 +740,27 @@ export function usePublicTemplates() {
   });
 }
 
+// E44 Phase D — per-slug fetch for the public /sablony/$slug detail
+// route. Anon-readable via the templates_anon_read_public_published
+// RLS policy. Returns null when no row matches (route renders 404).
+export function usePublicTemplateBySlug(slug: string | undefined) {
+  return useQuery({
+    queryKey: ["public", "templates", "slug", slug],
+    enabled: Boolean(slug),
+    queryFn: async (): Promise<Template | null> => {
+      if (!slug) return null;
+      const { data, error } = await supabase
+        .from("templates")
+        .select(TEMPLATES_COLS)
+        .eq("slug", slug)
+        .or("owner_id.is.null,and(visibility.eq.public,status.eq.published)")
+        .maybeSingle();
+      if (error) throw error;
+      return data ? mapTemplate(data as TemplatesRow) : null;
+    },
+  });
+}
+
 // Only the caller's own rows (any visibility / status). UI: "Moje" tab.
 export function useMyTemplates() {
   return useQuery({

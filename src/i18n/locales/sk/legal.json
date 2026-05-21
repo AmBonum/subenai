@@ -99,6 +99,11 @@
           "purpose": "Žiadosť o DPA (meno, e-mail kontaktu, názov školy)",
           "basis": "Predzmluvné opatrenia / čl. 6 ods. 1 písm. b GDPR",
           "retention": "12 mesiacov, potom automatická anonymizácia mena + e-mailu (názov školy + verzia DPA ostávajú pre štatistiku)"
+        },
+        "templates_public": {
+          "purpose": "Verejná publikácia vlastnej šablóny v knižnici /sablony (zachytený autorský údaj — meno alebo prezývka — z profilu v momente schválenia administrátorom; obsah šablóny: názov, popis, otázky)",
+          "basis": "Súhlas autora pri odoslaní + oprávnený záujem na uvedení autora podľa licencie CC BY 4.0 / čl. 6 ods. 1 písm. a a f GDPR; AI predkontrola obsahu (Claude Haiku 4.5) je sprostredkovateľské spracovanie podľa čl. 28 GDPR — viď sekcia 4",
+          "retention": "Trvanie publikácie + 12 mesiacov po stiahnutí. Schválené šablóny ostávajú verejné kým ich autor alebo administrátor nestiahne; autorský údaj sa drží aj po zmazaní účtu (CC BY 4.0 vyžaduje uvedenie autora pre tých, ktorí si šablónu fork-li). Zamietnuté/withdrawn submissions sa anonymizujú do 12 mesiacov."
         }
       }
     },
@@ -116,6 +121,8 @@
       "stripe_suffix": ".",
       "resend_label": "Resend, Inc.",
       "resend_text": " (USA) — sprostredkovateľ pre transakčné e-maily (potvrdenie podpory, magic link na správu odberu, varovanie pri refunde). SCC pripojenie. Žiadne marketingové e-maily.",
+      "anthropic_label": "Anthropic, PBC",
+      "anthropic_text": " (USA, Claude Haiku 4.5 cez EU endpoint) — sprostredkovateľ pre AI predkontrolu šablón, ktoré autori odosielajú do verejnej knižnice /sablony. Spracovaný je iba odoslaný obsah (názov, popis, zoznam otázok), nie osobné údaje. SCC pripojenie podľa čl. 46 GDPR. Aktivuje sa iba pri kliknutí „Odoslať na zverejnenie\" v /app/templates; pri bežnom používaní platformy sa nezapína.",
       "no_sell": "Údaje neposkytujeme reklamným sieťam, dátovým brokerom ani sociálnym sieťam. Údaje nepredávame.",
       "share_label": "Zdieľanie na sociálnych sieťach:",
       "share_text": " ak klikneš tlačidlo „Zdieľaj na Facebook / Messenger / WhatsApp / X / LinkedIn / Telegram\", otvoríme priamo oficiálnu stránku tej platformy s predvyplneným textom a linkom na výsledok. Žiadny kód tých platforiem (FB Pixel, X widget a podobne) sa do našej stránky nenačítava — share tlačidlá sú obyčajné odkazy. Po kliku odchádzaš na server tej platformy a od toho momentu sa na teba vzťahujú jej vlastné podmienky a privacy policy.",

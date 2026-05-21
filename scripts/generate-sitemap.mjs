@@ -32,6 +32,7 @@ const STATIC_ROUTES = [
   { loc: "/test/builder", priority: "0.7", changefreq: "monthly" },
   { loc: "/schools", priority: "0.7", changefreq: "monthly" },
   { loc: "/blog", priority: "0.8", changefreq: "daily" },
+  { loc: "/sablony", priority: "0.8", changefreq: "weekly" },
 ];
 
 // E16.3 — blog category archive pages. The 15 categories are seeded in
@@ -201,6 +202,45 @@ async function loadPublishedBlogPosts() {
 
 const blogPosts = await loadPublishedBlogPosts();
 
+// E44 Phase D — per-template /sablony/$slug entries. Anon-readable via
+// the templates_anon_read_public_published RLS policy (Phase D
+// migration 20260521170000). Returns slugs of every platform-default
+// (owner_id IS NULL) plus admin-approved community template
+// (visibility=public AND status=published) that has a non-null slug.
+async function loadPublishedTemplateSlugs() {
+  const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+  const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY;
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    console.warn(
+      "[sitemap] Skipping template slugs: VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY not set",
+    );
+    return [];
+  }
+  // PostgREST `or=` syntax: defaults (owner_id IS NULL) OR community-approved.
+  // Slug must be non-null to be linkable.
+  const filter = "or=(owner_id.is.null,and(visibility.eq.public,status.eq.published))";
+  const url = `${SUPABASE_URL}/rest/v1/templates?${filter}&slug=not.is.null&select=slug,updated_at,published_at`;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Accept: "application/json",
+      },
+    });
+    if (!res.ok) {
+      console.warn(`[sitemap] Supabase template fetch returned ${res.status}; skipping.`);
+      return [];
+    }
+    return await res.json();
+  } catch (err) {
+    console.warn(`[sitemap] Supabase template fetch failed: ${err.message}; skipping.`);
+    return [];
+  }
+}
+
+const templates = await loadPublishedTemplateSlugs();
+
 const urls = [
   ...STATIC_ROUTES.map((r) => ({ ...r, lastmod: TODAY })),
   ...courses.map((c) => ({
@@ -233,6 +273,12 @@ const urls = [
     changefreq: "monthly",
     lastmod: (post.updated_at ?? post.published_at ?? TODAY).slice(0, 10),
   })),
+  ...templates.map((tpl) => ({
+    loc: `/sablony/${tpl.slug}`,
+    priority: "0.6",
+    changefreq: "monthly",
+    lastmod: (tpl.updated_at ?? tpl.published_at ?? TODAY).slice(0, 10),
+  })),
 ];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -252,7 +298,7 @@ ${urls
 
 await writeFile(resolve(ROOT, "public/sitemap.xml"), xml, "utf8");
 console.log(
-  `Sitemap written: ${urls.length} URLs (${courses.length} courses, ${packs.length} packs, ${cmsSlugs.length} cms, ${blogPosts.length} blog posts)`,
+  `Sitemap written: ${urls.length} URLs (${courses.length} courses, ${packs.length} packs, ${cmsSlugs.length} cms, ${blogPosts.length} blog posts, ${templates.length} templates)`,
 );
 
 // Allow being invoked via `node scripts/generate-sitemap.mjs` directly
