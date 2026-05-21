@@ -2,7 +2,13 @@
 
 **Owner:** Claude — drives the user-facing editor on `/app/tests/$testId` so authors can manage questions, lock the test with a password, and send invites by email — closing the "create-test" → "share" loop after publish.
 **Date opened:** 2026-05-21
-**Status:** 🟢 **Closed 2026-05-21.** All 20 stories done. Phase 1 (PR #89), Phase 2 (PR #92), Phase 3 (PR #95) + follow-up #97 (Pripravujeme relabel) merged to main. Phase 4 (security review fixes + Playwright e2e + close-out) open as the final PR. Security review report: `tasks/E45-security-review-2026-05-21.md` — 0 HIGH, 2 MEDIUM fixed, 1 LOW fixed, 1 contract-drift documented.
+**Status:** ✅ **DELIVERED 2026-05-21.** All 20 stories done across all 4 phases.
+- Phase 1 — PR [#89](https://github.com/AmBonum/subenai/pull/89) (Questions tab + Random/Fixed order)
+- Phase 2 — PR [#92](https://github.com/AmBonum/subenai/pull/92) (Password protection + verify-password CF function)
+- Phase 3 — PR [#95](https://github.com/AmBonum/subenai/pull/95) (Email invites + Pripravujeme PRO gate) + follow-up PR [#97](https://github.com/AmBonum/subenai/pull/97) (Pripravujeme relabel)
+- Phase 4 — PR [#98](https://github.com/AmBonum/subenai/pull/98) (security review fixes — M1/M2/L1 + Playwright e2e + close-out)
+
+Security review report: `tasks/E45-security-review-2026-05-21.md` — 0 HIGH, 2 MEDIUM fixed, 1 LOW fixed, 1 contract-drift documented.
 **Originating request:** From the test detail page (`/app/tests/$testId?tab=results`), the author should be able to: (1) edit questions — add / remove / reorder — and choose random vs fixed order; (2) set, change, or clear a password that respondents must enter before taking the test; (3) send the test link + password to a list of email addresses, all from the same screen. All four sub-features must hold senior-level UX/UI, full coverage by unit + integration + security + functional tests.
 
 ## TL;DR
