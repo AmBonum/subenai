@@ -2139,3 +2139,117 @@ export function useCancelPendingErasure() {
     },
   });
 }
+
+// ---------------------------------------------------------------------------
+// E44 Phase C — template moderation queue
+// ---------------------------------------------------------------------------
+
+export type TemplateSubmissionStatus = "pending" | "approved" | "rejected" | "withdrawn";
+export type TemplateAgeRating = "all" | "thirteen_plus" | "sixteen_plus" | "eighteen_plus";
+
+export interface AdminTemplateSubmissionRow {
+  id: string;
+  template_id: string;
+  author_id: string;
+  author_display_name: string;
+  age_rating_declared: TemplateAgeRating;
+  license: "cc-by-4.0";
+  status: TemplateSubmissionStatus;
+  precheck: Record<string, unknown> | null;
+  precheck_passed: boolean | null;
+  precheck_at: string | null;
+  rejection_reason: string | null;
+  reviewed_at: string | null;
+  reviewer_id: string | null;
+  submitted_at: string;
+  updated_at: string;
+  template: {
+    title: string;
+    description: string | null;
+    question_ids: string[];
+  } | null;
+}
+
+// Pending queue for `/admin/templates`. Joins the template title so the
+// reviewer doesn't have to chase a second query per row. RLS lets admin
+// read every submission row regardless of author.
+export function useAdminPendingTemplateSubmissions() {
+  return useQuery({
+    queryKey: ["admin", "template_submissions", "pending"],
+    queryFn: async (): Promise<AdminTemplateSubmissionRow[]> => {
+      const { data, error } = await supabase
+        .from("template_submissions")
+        .select(
+          `id, template_id, author_id, author_display_name, age_rating_declared,
+           license, status, precheck, precheck_passed, precheck_at,
+           rejection_reason, reviewed_at, reviewer_id, submitted_at, updated_at,
+           template:templates!template_submissions_template_id_fkey
+             (title, description, question_ids)`,
+        )
+        .eq("status", "pending")
+        .order("submitted_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as unknown as AdminTemplateSubmissionRow[];
+    },
+  });
+}
+
+// Shell badge count: unread admin-kind notifications for the current
+// admin user. Generalises beyond template submissions — any future
+// admin-kind notification (DSR escalation, sponsor alert) shows up here.
+export function useUnreadAdminNotificationsCount() {
+  return useQuery({
+    queryKey: ["admin", "notifications", "admin_unread_count"],
+    queryFn: async (): Promise<number> => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const uid = sessionData.session?.user?.id;
+      if (!uid) return 0;
+      const { count, error } = await supabase
+        .from("notifications")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", uid)
+        .eq("kind", "admin")
+        .is("read_at", null);
+      if (error) throw error;
+      return count ?? 0;
+    },
+    // Poll every 60s so a freshly-submitted template lights up the badge
+    // even if the admin is sitting on a route that doesn't otherwise
+    // invalidate this query.
+    refetchInterval: 60_000,
+  });
+}
+
+export function useApproveTemplateSubmission() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ submissionId }: { submissionId: string }) => {
+      const { data, error } = await supabase.rpc("approve_template_submission", {
+        p_submission_id: submissionId,
+      });
+      if (error) throw error;
+      return data as string; // template_id
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "template_submissions"] });
+      qc.invalidateQueries({ queryKey: ["admin", "notifications"] });
+    },
+  });
+}
+
+export function useRejectTemplateSubmission() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ submissionId, reason }: { submissionId: string; reason: string }) => {
+      const { error } = await supabase.rpc("reject_template_submission", {
+        p_submission_id: submissionId,
+        p_reason: reason,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "template_submissions"] });
+      qc.invalidateQueries({ queryKey: ["admin", "notifications"] });
+    },
+  });
+}

@@ -54,6 +54,8 @@ export const ADMIN_DOCS: Record<string, DocEntry> = {
   subprocessors: STUB,
   support: STUB,
   "support-escalation": STUB,
+  "templates-license": STUB,
+  "templates-precheck": STUB,
   tests: STUB,
   trainings: STUB,
   users: STUB,

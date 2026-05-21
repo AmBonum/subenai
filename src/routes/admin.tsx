@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Toaster } from "@/components/ui/sonner";
 import { requireRole } from "@/integrations/supabase/role-middleware";
 import { tFor } from "@/i18n/admin";
+import { useUnreadAdminNotificationsCount } from "@/lib/admin/queries";
 
 export const Route = createFileRoute("/admin")({
   beforeLoad: async ({ location }) => {
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/admin")({
 
 function AdminLayout() {
   const t = tFor("shell");
+  const unreadCount = useUnreadAdminNotificationsCount().data ?? 0;
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background" data-testid="admin-shell-root">
@@ -48,13 +50,28 @@ function AdminLayout() {
             </div>
             <div className="ml-auto flex items-center gap-2">
               <Button
+                asChild
                 variant="ghost"
                 size="icon"
                 className="relative"
                 data-testid="admin-shell-notifications"
+                aria-label={
+                  unreadCount > 0
+                    ? `${unreadCount} neprečítaných upozornení`
+                    : "Žiadne neprečítané upozornenia"
+                }
               >
-                <Bell className="h-4 w-4" />
-                <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-destructive" />
+                <Link to="/admin/templates">
+                  <Bell className="h-4 w-4" />
+                  {unreadCount > 0 ? (
+                    <span
+                      data-testid="admin-shell-notifications-badge"
+                      className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold leading-none text-destructive-foreground"
+                    >
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  ) : null}
+                </Link>
               </Button>
               <Button asChild variant="outline" size="sm" data-testid="admin-shell-back-to-site">
                 <Link to="/">{t("back_to_site")}</Link>
