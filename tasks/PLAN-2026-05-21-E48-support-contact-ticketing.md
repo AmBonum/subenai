@@ -1,9 +1,18 @@
 # E48 — Support contact form + admin ticketing system
 
 **Created:** 2026-05-21
-**Status:** 🟡 Plan drafted — awaiting product-owner approval
-**Owner:** _to assign_
-**Branch (when work starts):** `feature/E48-support-ticketing`
+**Status:** ✅ **DELIVERED 2026-05-21/22.** All phases shipped to main:
+- Schema + RPCs + public + /app forms + admin console + notification prefs — [PR #121](https://github.com/AmBonum/subenai/pull/121)
+- Playwright smoke test (PR #A of 3) — [PR #125](https://github.com/AmBonum/subenai/pull/125)
+- Attachment pipeline — deterministic sanitisation + upload endpoint + form UI (PR #B of 3) — [PR #129](https://github.com/AmBonum/subenai/pull/129)
+- Security test pyramid — 48 TCs across 9 attack categories (PR #C of 3) — [PR #130](https://github.com/AmBonum/subenai/pull/130)
+- Security hardening — JWT rate-limit collision + PostgREST injection + PDF filter + 5 more — [PR #133](https://github.com/AmBonum/subenai/pull/133)
+- Attachment TOCTOU race fix via BEFORE INSERT trigger — [PR #137](https://github.com/AmBonum/subenai/pull/137)
+
+E48 absorbed E35's security-compliance scope (see `tasks/BACKLOG.md` for E35 closure review).
+
+**Owner:** Claude (multi-agent delivery — A/B/C parallel PRs, then security hardening + TOCTOU follow-ups)
+**Branch (when work started):** `feature/E48-support-ticketing` + sibling feature branches per PR
 **Commit prefix:** `feat(support):`
 **Dependencies:** E11.8 (Resend email infra), E40 (admin queue UI pattern), E46 (audit_log + ConfirmDialog + AAL2 gating), AH-10.4 (the empty `/admin/support` route stub this epic fills)
 **Target:** Ship a production-grade support contact channel (anonymous and authenticated submissions) with file attachments, virus/script scanning, an admin ticketing console, and per-category notification preferences — fully tested across security, integration, and e2e layers.

@@ -2,7 +2,15 @@
 
 **Owner:** Claude — drives ownership/visibility model rebuild on `public.templates`, plus three follow-on phases (AI moderation, admin queue, public gallery).
 **Date opened:** 2026-05-20
-**Status:** 🟡 Phase A + B shipped to main (PR #70, PR #76). Phase C (admin moderation queue) + Phase D (public `/sablony` SEO gallery) open. Q1–Q4 confirmed at plan defaults on 2026-05-21 — see § Open questions below.
+**Status:** ✅ **DELIVERED 2026-05-21.** All four phases shipped:
+- Phase A (ownership/visibility model rebuild) — [PR #70](https://github.com/AmBonum/subenai/pull/70)
+- Phase B (AI precheck via Claude Haiku 4.5) — [PR #76](https://github.com/AmBonum/subenai/pull/76)
+- Phase C (admin moderation queue + `notifications.kind='admin'` fan-out + approve/reject RPCs) — [PR #118](https://github.com/AmBonum/subenai/pull/118)
+- Phase D (public `/sablony` SEO gallery + anon RLS) — [PR #119](https://github.com/AmBonum/subenai/pull/119)
+- Release 1.14.4 + GDPR/Anthropic delta — [PR #120](https://github.com/AmBonum/subenai/pull/120)
+- DEPLOY_SETUP hotfix (pg_policies column polname → policyname) — [PR #122](https://github.com/AmBonum/subenai/pull/122)
+
+Q1–Q4 decisions confirmed at plan defaults via Question Wizard on 2026-05-21 (Anthropic-as-recipient + CC BY 4.0 license + AI precheck JSON admin-only + 24h cooldown + Slovak-only at launch). CONSENT_VERSION bumped to `1.7.0` for the Anthropic recipient + CC BY 4.0 disclosure. See § Open questions below for the closed Q1–Q4 record.
 **Originating request:** `/app/templates` should show **real, useful templates** to every user (defaults visible to all), let users **duplicate / edit / delete their own copies** without affecting anyone else, allow **submission for public listing** behind **AI precheck + admin manual approval with notifications**, and expose a **SEO-indexable public gallery** so the library doubles as marketing surface. All of this must hold senior-level quality on SEO, marketing, copyright, UX/UI, and a11y.
 
 ## TL;DR
