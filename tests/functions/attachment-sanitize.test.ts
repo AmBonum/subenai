@@ -190,6 +190,29 @@ describe("sanitizeFilename", () => {
     expect(sanitizeFilename("Report.PDF")).toBe("Report.PDF");
   });
 
+  // Audit A7 — Windows reserved device names. Rejected outright so the
+  // sanitiser never produces a filename that collides with a device
+  // file when an operator exports attachments to a Windows host.
+  it("rejects Windows reserved name CON.pdf", () => {
+    expect(sanitizeFilename("CON.pdf")).toBeNull();
+  });
+
+  it("rejects Windows reserved name NUL.png", () => {
+    expect(sanitizeFilename("NUL.png")).toBeNull();
+  });
+
+  it("rejects Windows reserved name COM1.jpg", () => {
+    expect(sanitizeFilename("COM1.jpg")).toBeNull();
+  });
+
+  it("rejects Windows reserved name LPT9.png", () => {
+    expect(sanitizeFilename("LPT9.png")).toBeNull();
+  });
+
+  it("rejects lowercase prn.pdf (case-insensitive match)", () => {
+    expect(sanitizeFilename("prn.pdf")).toBeNull();
+  });
+
   it("strips disallowed chars inside the extension", () => {
     expect(sanitizeFilename("file.p$df")).toBe("file.pdf");
   });

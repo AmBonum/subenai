@@ -185,6 +185,16 @@ export function sanitizeFilename(input: string): string | null {
 
   if (!cleanStem) return null;
 
+  // Audit A7 — Windows reserved device-name reject. CF Workers + Linux
+  // don't care, but operators occasionally export attachments to a
+  // Windows file system (legal forensics, support dumps); a stem like
+  // CON / PRN / NUL / COM1-9 / LPT1-9 collides with a device file
+  // there and either errors or returns the device contents. Reject
+  // these stems entirely so the upload pipeline never produces one.
+  if (/^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$/i.test(cleanStem)) {
+    return null;
+  }
+
   let assembled = cleanExt ? `${cleanStem}.${cleanExt}` : cleanStem;
   if (assembled.length > MAX_FILENAME_LENGTH) {
     const keep = MAX_FILENAME_LENGTH - (cleanExt ? cleanExt.length + 1 : 0);
