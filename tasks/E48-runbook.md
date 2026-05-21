@@ -72,6 +72,43 @@ sanitisation. If a future incident justifies adding it, see §5.
 
 ---
 
+## §2b — Attachment pipeline (D-1 deterministic sanitisation, v1)
+
+E48.2 ships the upload endpoint at `POST /api/support-attachment-upload`.
+The pipeline (`functions/_lib/attachment-sanitize.ts`) is intentionally
+**lighter than full image re-encoding**:
+
+| Layer | What it does | Cost |
+|---|---|---|
+| Size cap | Rejects > 5 MB (matches DB CHECK) | ~free |
+| MIME whitelist | Only `image/png`, `image/jpeg`, `application/pdf` | ~free |
+| Magic byte verify | First 3-8 bytes must match declared MIME — blocks polyglots, spoofed `Content-Type` | ~free |
+| Filename sanitiser | Reduces to `[A-Za-z0-9._\-]+`, max 200 chars; strips `../` traversal | ~free |
+| **PDF script strip** | `pdf-lib` parses object tree, removes `/JS`, `/JavaScript`, `/AA`, `/OpenAction`, `/URI`, `/Launch`, `/SubmitForm`, AcroForm, EmbeddedFiles, RichMedia | ~ms |
+| SHA-256 checksum | Audit trail + dedup | ~ms |
+
+**What v1 does NOT do (deferred to v2):**
+
+- Image re-encoding (would strip EXIF + ICC + foreign trailing bytes).
+  Adding it requires a WASM image codec (`@jsquash/jpeg` +
+  `@jsquash/png`, ~400 KB compressed) which is borderline for the CF
+  Pages worker bundle budget. Today image bytes pass through unchanged
+  after magic verify. Mitigations in place: the bucket is private +
+  RLS-gated, files served via signed URLs only to ticket participants,
+  and the magic-byte gate catches the most common attack class
+  (polyglots / spoofed Content-Type).
+- Image bomb caps (e.g. 25 MP after decode). Same reason — requires a
+  WASM decoder.
+- VirusTotal lookup. PLAN D-1 explicitly rules out third-party AV.
+
+When (not if) you want to add image re-encoding, the work is:
+1. Add `@jsquash/jpeg` + `@jsquash/png` deps (verify CF Pages bundle
+   size budget — currently ~3 MB compressed, hard limit 25 MB on Free).
+2. Extend `sanitizeAttachment()` to branch on `mime === "image/*"` and
+   call the decoder → re-encoder pipeline.
+3. Add test cases for: EXIF GPS strip, ICC profile strip, embedded
+   thumbnail strip, polyglot trailing bytes strip.
+
 ## §3 — Threat model (deterministic-only attachment sanitisation)
 
 E48.2 sanitisation does these structural transforms:

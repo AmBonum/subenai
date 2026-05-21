@@ -81,6 +81,33 @@ function AppHelpContactPage() {
     return { ticketId: json.ticket_id, viewToken: json.view_token };
   }
 
+  // E48.2 — Attachment upload for authenticated submitters. The CF
+  // function accepts the JWT instead of the view_token; the user must
+  // own the ticket (enforced server-side).
+  async function handleAttachmentUpload(
+    file: File,
+    submitResult: SupportContactSubmitResult,
+  ): Promise<{ ok: boolean; error?: string }> {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
+    if (!token) return { ok: false, error: "Relácia vypršala." };
+
+    const form = new FormData();
+    form.append("file", file);
+    form.append("ticket_id", submitResult.ticketId);
+
+    const res = await fetch("/api/support-attachment-upload", {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}` },
+      body: form,
+    });
+    if (!res.ok) {
+      const errBody = (await res.json().catch(() => ({}))) as { error?: string };
+      return { ok: false, error: errBody.error ?? "Nahranie zlyhalo." };
+    }
+    return { ok: true };
+  }
+
   return (
     <div className="space-y-6" data-testid="app-help-contact-root">
       <div className="flex items-center justify-between gap-2">
@@ -131,6 +158,7 @@ function AppHelpContactPage() {
               name: me?.display_name ?? "",
             }}
             onSubmit={handleSubmit}
+            onAttachmentUpload={handleAttachmentUpload}
           />
         </div>
       )}

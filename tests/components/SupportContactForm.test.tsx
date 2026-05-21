@@ -178,3 +178,151 @@ describe("SupportContactForm — authenticated variant", () => {
     expect(screen.getByTestId("kontakt-form-turnstile-slot")).toBeInTheDocument();
   });
 });
+
+describe("SupportContactForm — E48.2 attachment picker", () => {
+  function setupWithAttachments() {
+    const onAttachmentUpload = vi.fn().mockResolvedValue({ ok: true });
+    const onSubmit = vi.fn().mockResolvedValue({ ticketId: "tkt-123", viewToken: "a".repeat(64) });
+    const utils = render(
+      <SupportContactForm
+        variant="public"
+        onSubmit={onSubmit}
+        onAttachmentUpload={onAttachmentUpload}
+      />,
+    );
+    return { onSubmit, onAttachmentUpload, ...utils };
+  }
+
+  it("does not render the file picker when onAttachmentUpload is omitted", () => {
+    setup();
+    expect(screen.queryByTestId("kontakt-form-attachments")).toBeNull();
+  });
+
+  it("renders the file picker when onAttachmentUpload is provided", () => {
+    setupWithAttachments();
+    expect(screen.getByTestId("kontakt-form-attachments")).toBeInTheDocument();
+    expect(screen.getByTestId("kontakt-form-attachments-input")).toBeInTheDocument();
+  });
+
+  it("lists a picked file and lets the user remove it", async () => {
+    const user = userEvent.setup();
+    setupWithAttachments();
+    const input = screen.getByTestId("kontakt-form-attachments-input") as HTMLInputElement;
+    const file = new File(["png-bytes"], "photo.png", { type: "image/png" });
+    await user.upload(input, file);
+
+    expect(screen.getByTestId("kontakt-form-attachment-0")).toBeInTheDocument();
+    expect(screen.getByText("photo.png")).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("kontakt-form-attachment-0-remove"));
+    expect(screen.queryByTestId("kontakt-form-attachment-0")).toBeNull();
+  });
+
+  it("rejects files larger than 5 MB with a friendly error", async () => {
+    const user = userEvent.setup();
+    setupWithAttachments();
+    const input = screen.getByTestId("kontakt-form-attachments-input") as HTMLInputElement;
+    // Construct a 6 MB blob — Node's File supports large sizes.
+    const big = new File([new Uint8Array(6 * 1024 * 1024)], "huge.png", { type: "image/png" });
+    await user.upload(input, big);
+
+    expect(screen.getByTestId("kontakt-form-attachments-error")).toHaveTextContent(/5 MB/);
+    expect(screen.queryByTestId("kontakt-form-attachment-0")).toBeNull();
+  });
+
+  it("rejects files with unsupported MIME (GIF) before any upload", async () => {
+    const user = userEvent.setup();
+    setupWithAttachments();
+    const input = screen.getByTestId("kontakt-form-attachments-input") as HTMLInputElement;
+    const gif = new File(["gif"], "anim.gif", { type: "image/gif" });
+    // user.upload v14+ respects accept attribute and silently filters
+    // non-matching files at the input layer — verify the file never
+    // makes it into the list. That's defence-in-depth: the browser
+    // file dialog already filters via `accept`, and the server-side
+    // sanitiser rejects MIME mismatches as well.
+    await user.upload(input, gif);
+    expect(screen.queryByTestId("kontakt-form-attachment-0")).toBeNull();
+  });
+
+  it("caps the picker at 3 files", async () => {
+    const user = userEvent.setup();
+    setupWithAttachments();
+    const input = screen.getByTestId("kontakt-form-attachments-input") as HTMLInputElement;
+    const f1 = new File(["a"], "a.png", { type: "image/png" });
+    const f2 = new File(["b"], "b.png", { type: "image/png" });
+    const f3 = new File(["c"], "c.png", { type: "image/png" });
+    const f4 = new File(["d"], "d.png", { type: "image/png" });
+    await user.upload(input, [f1, f2, f3, f4]);
+
+    // First 3 are accepted; 4th triggers the cap error.
+    expect(screen.getByTestId("kontakt-form-attachment-0")).toBeInTheDocument();
+    expect(screen.getByTestId("kontakt-form-attachment-1")).toBeInTheDocument();
+    expect(screen.getByTestId("kontakt-form-attachment-2")).toBeInTheDocument();
+    expect(screen.queryByTestId("kontakt-form-attachment-3")).toBeNull();
+    expect(screen.getByTestId("kontakt-form-attachments-error")).toHaveTextContent(/Maximum/);
+  });
+
+  it("calls onAttachmentUpload once per selected file after submit", async () => {
+    const user = userEvent.setup();
+    const { onAttachmentUpload } = setupWithAttachments();
+
+    // Fill form
+    await user.type(screen.getByTestId("kontakt-form-subject-input"), validData.subject);
+    await user.click(screen.getByTestId("kontakt-form-category-select"));
+    await user.click(await screen.findByTestId("kontakt-form-category-option-question"));
+    await user.type(screen.getByTestId("kontakt-form-body-textarea"), validData.body);
+    await user.type(screen.getByTestId("kontakt-form-email-input"), validData.email);
+    await user.type(screen.getByTestId("kontakt-form-name-input"), validData.name);
+
+    // Pick 2 attachments
+    const input = screen.getByTestId("kontakt-form-attachments-input") as HTMLInputElement;
+    const f1 = new File(["png1"], "one.png", { type: "image/png" });
+    const f2 = new File(["pdf1"], "two.pdf", { type: "application/pdf" });
+    await user.upload(input, [f1, f2]);
+
+    // Submit
+    await user.click(screen.getByTestId("kontakt-form-submit-button"));
+
+    await waitFor(() => expect(onAttachmentUpload).toHaveBeenCalledTimes(2));
+    expect(onAttachmentUpload.mock.calls[0][0].name).toBe("one.png");
+    expect(onAttachmentUpload.mock.calls[1][0].name).toBe("two.pdf");
+    // Second arg is the ticket result.
+    expect(onAttachmentUpload.mock.calls[0][1]).toMatchObject({
+      ticketId: "tkt-123",
+      viewToken: expect.any(String),
+    });
+  });
+
+  it("renders per-file error inline when onAttachmentUpload reports failure", async () => {
+    const user = userEvent.setup();
+    const onAttachmentUpload = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: false, error: "Súbor je príliš veľký" });
+    const onSubmit = vi.fn().mockResolvedValue({ ticketId: "tkt-fail", viewToken: "b".repeat(64) });
+    render(
+      <SupportContactForm
+        variant="public"
+        onSubmit={onSubmit}
+        onAttachmentUpload={onAttachmentUpload}
+      />,
+    );
+
+    await user.type(screen.getByTestId("kontakt-form-subject-input"), validData.subject);
+    await user.click(screen.getByTestId("kontakt-form-category-select"));
+    await user.click(await screen.findByTestId("kontakt-form-category-option-question"));
+    await user.type(screen.getByTestId("kontakt-form-body-textarea"), validData.body);
+    await user.type(screen.getByTestId("kontakt-form-email-input"), validData.email);
+    await user.type(screen.getByTestId("kontakt-form-name-input"), validData.name);
+
+    const input = screen.getByTestId("kontakt-form-attachments-input") as HTMLInputElement;
+    await user.upload(input, new File(["x"], "fail.png", { type: "image/png" }));
+
+    await user.click(screen.getByTestId("kontakt-form-submit-button"));
+
+    await waitFor(() =>
+      expect(screen.getByTestId("kontakt-form-attachment-0-error")).toHaveTextContent(
+        /príliš veľký/i,
+      ),
+    );
+  });
+});

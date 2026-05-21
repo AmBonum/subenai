@@ -40,6 +40,30 @@ const contactJsonLd = {
   },
 };
 
+function mapAttachmentErrorCode(code: string | undefined): string {
+  switch (code) {
+    case "attachment_too_large":
+    case "attachment_size_too_large":
+      return "Príloha presahuje 5 MB.";
+    case "attachment_size_zero":
+      return "Príloha je prázdna.";
+    case "attachment_mime_not_allowed":
+      return "Nepodporovaný formát (povolené: PNG, JPEG, PDF).";
+    case "attachment_magic_mismatch":
+      return "Súbor sa nezhoduje s deklarovaným typom.";
+    case "attachment_filename_invalid":
+      return "Nepovolený názov súboru.";
+    case "attachment_pdf_parse_failed":
+      return "PDF sa nepodarilo spracovať.";
+    case "attachment_limit_reached":
+      return "Maximum 3 prílohy na žiadosť.";
+    case "storage_upload_failed":
+      return "Úložisko zlyhalo. Skúste neskôr.";
+    default:
+      return code ?? "Nahranie prílohy zlyhalo.";
+  }
+}
+
 function mapErrorCode(code: string | undefined): string {
   switch (code) {
     case "rate_limited_ip":
@@ -108,6 +132,28 @@ function KontaktPage() {
     return { ticketId: json.ticket_id, viewToken: json.view_token };
   }
 
+  // E48.2 — upload one attachment after the parent ticket exists.
+  // Returns { ok, error? } so the form can surface per-file status.
+  async function handleAttachmentUpload(
+    file: File,
+    submitResult: SupportContactSubmitResult,
+  ): Promise<{ ok: boolean; error?: string }> {
+    const form = new FormData();
+    form.append("file", file);
+    form.append("ticket_id", submitResult.ticketId);
+    if (submitResult.viewToken) form.append("view_token", submitResult.viewToken);
+
+    const res = await fetch("/api/support-attachment-upload", {
+      method: "POST",
+      body: form,
+    });
+    if (!res.ok) {
+      const errBody = (await res.json().catch(() => ({}))) as { error?: string };
+      return { ok: false, error: mapAttachmentErrorCode(errBody.error) };
+    }
+    return { ok: true };
+  }
+
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-12 sm:py-16" data-testid="kontakt-page-root">
       <header className="space-y-3 pb-8">
@@ -142,7 +188,11 @@ function KontaktPage() {
           )}
         </section>
       ) : (
-        <SupportContactForm variant="public" onSubmit={handleSubmit} />
+        <SupportContactForm
+          variant="public"
+          onSubmit={handleSubmit}
+          onAttachmentUpload={handleAttachmentUpload}
+        />
       )}
     </main>
   );
