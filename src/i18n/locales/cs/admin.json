@@ -26,6 +26,7 @@
       "blog": "Blog",
       "dsr": "Žádosti GDPR",
       "dpa_requests": "DPA žádosti",
+      "templates_moderation": "Šablony — schvalování",
       "settings": "Nastavení",
       "security": "Zabezpečení"
     },
@@ -939,6 +940,46 @@
           { "label": "MFA enrolment workflow", "href": "/docs/admin/security" },
           { "label": "Backup kódy: best practices", "href": "/docs/admin/security-backup-codes" },
           { "label": "AAL2 enforcement pro /admin", "href": "/docs/admin/aal2" }
+        ]
+      }
+    },
+    "templates_moderation": {
+      "title": "O sekci Schvalování šablon",
+      "lead": "Moderation queue pro šablony odeslané uživateli k veřejnému zařazení. Každý řádek prošel AI prechekem (Claude Haiku 4.5) — schvaluješ nebo zamítáš ručně s odůvodněním. Schválení šablonu zveřejní pod CC BY 4.0 a zapíše audit_log; zamítnutí nepublikuje nic, autor vidí důvod a má 24h cooldown před opětovným podáním.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláš",
+          "items": [
+            "Schválení odeslané šablony → přesune ji do veřejné knihovny (visibility=public, status=published)",
+            "Zamítnutí odeslané šablony → status=rejected + krátký důvod (3+ znaků), autor uvidí",
+            "Náhled AI precheck JSON-u (safety, profanity, age_rating, copyright_red_flags)",
+            "Zobrazení autora, data odeslání, věkové kategorie, licence"
+          ]
+        },
+        "time_impact": {
+          "heading": "Časový dopad změn",
+          "items": [
+            "Schválení / zamítnutí: atomicky přes RPC — submission, template, audit_log v jedné transakci",
+            "Schválená šablona se okamžitě zobrazí v /sablony (Phase D) i na kartě Veřejné v /app/templates",
+            "Audit log entry se zapíše synchronně s každou akcí",
+            "Notifikace v admin shellu se označí přečtená pro tebe; ostatní admini ji dál vidí"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Schválení připne author_display_name + age_rating ze submission stejně jako když autor kliknul Odeslat — pozdější změna autorova profilu se nepřenese",
+            "AI precheck je jen doporučení — vlastní úsudek má přednost",
+            "Schválení je reverzibilní jen přes přímý DB zásah (downgrade visibility) — v UI není tlačítko Stáhnout veřejné",
+            "Zamítnutí zapíše důvod do audit_log v plném znění — autorovi se pošle jen krátké shrnutí"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "AI precheck rubrika (Claude Haiku 4.5)", "href": "/docs/admin/templates-precheck" },
+          { "label": "CC BY 4.0 a autorská práva", "href": "/docs/admin/templates-license" }
         ]
       }
     }

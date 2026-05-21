@@ -5475,3 +5475,261 @@ SELECT
 --     generate_mfa_backup_codes, consume_mfa_backup_code, handle_new_user, ...)
 --   policies ≈ 70+
 --   seeded_questions = 238
+
+
+-- ============================================================================
+-- E44.11 — Admin-kind notifications + template-submission fan-out
+-- (mirror of 20260521160000_template_admin_notifications.sql)
+-- ============================================================================
+
+ALTER TABLE public.notifications
+  ADD COLUMN IF NOT EXISTS kind text NOT NULL DEFAULT 'user';
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'notifications_kind_check'
+      AND conrelid = 'public.notifications'::regclass
+  ) THEN
+    ALTER TABLE public.notifications
+      ADD CONSTRAINT notifications_kind_check
+      CHECK (kind IN ('user', 'admin')) NOT VALID;
+    ALTER TABLE public.notifications
+      VALIDATE CONSTRAINT notifications_kind_check;
+  END IF;
+END $$;
+
+CREATE INDEX IF NOT EXISTS notifications_admin_unread_idx
+  ON public.notifications (user_id, created_at DESC)
+  WHERE kind = 'admin' AND read_at IS NULL;
+
+CREATE OR REPLACE FUNCTION public.notify_admins(
+  p_event_type text,
+  p_title text,
+  p_body text DEFAULT NULL,
+  p_test_id uuid DEFAULT NULL
+)
+RETURNS integer
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_count integer := 0;
+BEGIN
+  INSERT INTO public.notifications (user_id, event_type, title, body, test_id, kind)
+  SELECT ur.user_id, p_event_type, p_title, p_body, p_test_id, 'admin'
+  FROM public.user_roles ur
+  WHERE ur.role = 'admin'::public.app_role;
+  GET DIAGNOSTICS v_count = ROW_COUNT;
+  RETURN v_count;
+END;
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.notify_admins(text, text, text, uuid) FROM PUBLIC;
+GRANT  EXECUTE ON FUNCTION public.notify_admins(text, text, text, uuid)
+  TO authenticated, service_role;
+
+CREATE OR REPLACE FUNCTION public.notify_admins_on_template_submission()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_tpl_title text;
+  v_body text;
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    IF NEW.status <> 'pending' THEN
+      RETURN NEW;
+    END IF;
+  END IF;
+  IF TG_OP = 'UPDATE' THEN
+    IF NEW.status <> 'pending' THEN
+      RETURN NEW;
+    END IF;
+    IF OLD.status = 'pending' THEN
+      RETURN NEW;
+    END IF;
+  END IF;
+
+  SELECT title INTO v_tpl_title
+  FROM public.templates
+  WHERE id = NEW.template_id;
+
+  v_body := coalesce(v_tpl_title, '(bez názvu)')
+            || ' — autor ' || NEW.author_display_name;
+
+  PERFORM public.notify_admins(
+    'template_submission_pending',
+    'Nová šablóna čaká na schválenie',
+    v_body,
+    NULL
+  );
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS template_submissions_notify_admins
+  ON public.template_submissions;
+CREATE TRIGGER template_submissions_notify_admins
+  AFTER INSERT OR UPDATE OF status ON public.template_submissions
+  FOR EACH ROW EXECUTE FUNCTION public.notify_admins_on_template_submission();
+
+-- E44.10 — admin moderation RPCs
+
+CREATE OR REPLACE FUNCTION public.approve_template_submission(
+  p_submission_id uuid
+)
+RETURNS uuid
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_submission public.template_submissions;
+  v_now timestamptz := now();
+  v_admin uuid := auth.uid();
+BEGIN
+  IF NOT public.has_role(v_admin, 'admin'::public.app_role) THEN
+    RAISE EXCEPTION 'forbidden: admin role required';
+  END IF;
+
+  SELECT * INTO v_submission
+  FROM public.template_submissions
+  WHERE id = p_submission_id
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'submission_not_found: %', p_submission_id;
+  END IF;
+  IF v_submission.status <> 'pending' THEN
+    RAISE EXCEPTION 'illegal_state: submission is %, expected pending', v_submission.status;
+  END IF;
+
+  UPDATE public.template_submissions
+  SET status = 'approved',
+      reviewed_at = v_now,
+      reviewer_id = v_admin
+  WHERE id = p_submission_id;
+
+  UPDATE public.templates
+  SET visibility = 'public',
+      status = 'published',
+      published_at = coalesce(published_at, v_now),
+      updated_at = v_now,
+      author_display_name = v_submission.author_display_name,
+      age_rating = v_submission.age_rating_declared,
+      license = v_submission.license
+  WHERE id = v_submission.template_id;
+
+  INSERT INTO public.audit_log (actor_id, action, target_type, target_id, pii_access, details)
+  VALUES (
+    v_admin,
+    'template_submission.approved',
+    'template_submission',
+    p_submission_id::text,
+    false,
+    jsonb_build_object(
+      'template_id', v_submission.template_id,
+      'age_rating', v_submission.age_rating_declared,
+      'author_display_name', v_submission.author_display_name
+    )
+  );
+
+  RETURN v_submission.template_id;
+END;
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.approve_template_submission(uuid) FROM PUBLIC;
+GRANT  EXECUTE ON FUNCTION public.approve_template_submission(uuid) TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.reject_template_submission(
+  p_submission_id uuid,
+  p_reason text
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_submission public.template_submissions;
+  v_now timestamptz := now();
+  v_admin uuid := auth.uid();
+BEGIN
+  IF NOT public.has_role(v_admin, 'admin'::public.app_role) THEN
+    RAISE EXCEPTION 'forbidden: admin role required';
+  END IF;
+  IF p_reason IS NULL OR length(btrim(p_reason)) < 3 THEN
+    RAISE EXCEPTION 'reason_required: rejection must include a reason (min 3 chars)';
+  END IF;
+
+  SELECT * INTO v_submission
+  FROM public.template_submissions
+  WHERE id = p_submission_id
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'submission_not_found: %', p_submission_id;
+  END IF;
+  IF v_submission.status <> 'pending' THEN
+    RAISE EXCEPTION 'illegal_state: submission is %, expected pending', v_submission.status;
+  END IF;
+
+  UPDATE public.template_submissions
+  SET status = 'rejected',
+      rejection_reason = btrim(p_reason),
+      reviewed_at = v_now,
+      reviewer_id = v_admin
+  WHERE id = p_submission_id;
+
+  INSERT INTO public.audit_log (actor_id, action, target_type, target_id, pii_access, details)
+  VALUES (
+    v_admin,
+    'template_submission.rejected',
+    'template_submission',
+    p_submission_id::text,
+    false,
+    jsonb_build_object(
+      'template_id', v_submission.template_id,
+      'reason', btrim(p_reason)
+    )
+  );
+END;
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.reject_template_submission(uuid, text) FROM PUBLIC;
+GRANT  EXECUTE ON FUNCTION public.reject_template_submission(uuid, text) TO authenticated;
+
+-- ============================================================================
+-- E44 Phase D — anon read for /sablony public gallery
+-- (mirror of 20260521170000_templates_anon_public_read.sql)
+-- ============================================================================
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'templates' AND polname = 'templates_anon_read_defaults'
+  ) THEN
+    EXECUTE 'CREATE POLICY templates_anon_read_defaults ON public.templates
+      FOR SELECT TO anon
+      USING (owner_id IS NULL)';
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'templates' AND polname = 'templates_anon_read_public_published'
+  ) THEN
+    EXECUTE $POLICY$CREATE POLICY templates_anon_read_public_published ON public.templates
+      FOR SELECT TO anon
+      USING (visibility = 'public' AND status = 'published')$POLICY$;
+  END IF;
+END $$;
+

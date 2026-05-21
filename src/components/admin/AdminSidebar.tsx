@@ -25,6 +25,7 @@ import {
   ShieldCheck,
   ScrollText,
   UserCog,
+  LayoutTemplate,
 } from "lucide-react";
 
 import {
@@ -162,6 +163,12 @@ const systemItems: NavItem[] = [
     url: "/admin/dpa-requests",
     icon: ScrollText,
     testid: "admin-shell-sidebar-link-dpa-requests",
+  },
+  {
+    key: "templates_moderation",
+    url: "/admin/templates",
+    icon: LayoutTemplate,
+    testid: "admin-shell-sidebar-link-templates-moderation",
   },
   {
     key: "settings",

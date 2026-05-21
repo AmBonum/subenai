@@ -24,6 +24,7 @@ const EXPECTED_KEYS = [
   "footer",
   "dsr",
   "dpa_requests",
+  "templates_moderation",
   "settings",
   "security",
 ] as const;
@@ -59,7 +60,7 @@ const enExplainers = (enAdmin as unknown as { explainers?: Json }).explainers;
 const csExplainers = (csAdmin as unknown as { explainers?: Json }).explainers;
 
 describe("admin explainers — i18n shape (SK)", () => {
-  it("has the full set of 20 expected pageKeys (no missing, no extra)", () => {
+  it("has the full set of 21 expected pageKeys (no missing, no extra)", () => {
     expect(skExplainers, "explainers subtree missing from sk/admin.json").toBeDefined();
     const actual = Object.keys(skExplainers as Record<string, unknown>).sort();
     const expected = [...EXPECTED_KEYS].sort();

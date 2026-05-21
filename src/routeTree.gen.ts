@@ -27,6 +27,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
 import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
+import { Route as SablonyIndexRouteImport } from './routes/sablony.index'
 import { Route as KontaktIndexRouteImport } from './routes/kontakt.index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
@@ -38,6 +39,7 @@ import { Route as TestBuilderRouteImport } from './routes/test.builder'
 import { Route as TShareIdRouteImport } from './routes/t.$shareId'
 import { Route as SponsorsAllRouteImport } from './routes/sponsors.all'
 import { Route as SchoolsDpaRouteImport } from './routes/schools_.dpa'
+import { Route as SablonySlugRouteImport } from './routes/sablony.$slug'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
@@ -64,6 +66,7 @@ import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminTrainingsRouteImport } from './routes/admin/trainings'
 import { Route as AdminTicketsRouteImport } from './routes/admin/tickets'
 import { Route as AdminTestsRouteImport } from './routes/admin/tests'
+import { Route as AdminTemplatesRouteImport } from './routes/admin/templates'
 import { Route as AdminSupportRouteImport } from './routes/admin/support'
 import { Route as AdminShareCardRouteImport } from './routes/admin/share-card'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
@@ -203,6 +206,11 @@ const SponsorsIndexRoute = SponsorsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => SponsorsRoute,
 } as any)
+const SablonyIndexRoute = SablonyIndexRouteImport.update({
+  id: '/sablony/',
+  path: '/sablony/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/sablony.index.lazy').then((d) => d.Route))
 const KontaktIndexRoute = KontaktIndexRouteImport.update({
   id: '/kontakt/',
   path: '/kontakt/',
@@ -260,6 +268,11 @@ const SchoolsDpaRoute = SchoolsDpaRouteImport.update({
   path: '/schools/dpa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SablonySlugRoute = SablonySlugRouteImport.update({
+  id: '/sablony/$slug',
+  path: '/sablony/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/sablony.$slug.lazy').then((d) => d.Route))
 const SSlugRoute = SSlugRouteImport.update({
   id: '/s/$slug',
   path: '/s/$slug',
@@ -396,6 +409,13 @@ const AdminTestsRoute = AdminTestsRouteImport.update({
   path: '/tests',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/templates.lazy').then((d) => d.Route),
+)
 const AdminSupportRoute = AdminSupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -734,6 +754,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
   '/admin/tickets': typeof AdminTicketsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
@@ -760,6 +781,7 @@ export interface FileRoutesByFullPath {
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/sablony/$slug': typeof SablonySlugRoute
   '/schools/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
@@ -771,6 +793,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/kontakt/': typeof KontaktIndexRoute
+  '/sablony/': typeof SablonyIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
@@ -834,6 +857,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/admin/tickets': typeof AdminTicketsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
@@ -859,6 +883,7 @@ export interface FileRoutesByTo {
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/sablony/$slug': typeof SablonySlugRoute
   '/schools/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
@@ -869,6 +894,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/courses': typeof CoursesIndexRoute
   '/kontakt': typeof KontaktIndexRoute
+  '/sablony': typeof SablonyIndexRoute
   '/sponsors': typeof SponsorsIndexRoute
   '/test': typeof TestIndexRoute
   '/tests': typeof TestsIndexRoute
@@ -937,6 +963,7 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
   '/admin/tickets': typeof AdminTicketsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
@@ -963,6 +990,7 @@ export interface FileRoutesById {
   '/login_/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/sablony/$slug': typeof SablonySlugRoute
   '/schools_/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
@@ -974,6 +1002,7 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/kontakt/': typeof KontaktIndexRoute
+  '/sablony/': typeof SablonyIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
@@ -1044,6 +1073,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/share-card'
     | '/admin/support'
+    | '/admin/templates'
     | '/admin/tests'
     | '/admin/tickets'
     | '/admin/trainings'
@@ -1070,6 +1100,7 @@ export interface FileRouteTypes {
     | '/login/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/sablony/$slug'
     | '/schools/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
@@ -1081,6 +1112,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/courses/'
     | '/kontakt/'
+    | '/sablony/'
     | '/sponsors/'
     | '/test/'
     | '/tests/'
@@ -1144,6 +1176,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/share-card'
     | '/admin/support'
+    | '/admin/templates'
     | '/admin/tickets'
     | '/admin/trainings'
     | '/admin/users'
@@ -1169,6 +1202,7 @@ export interface FileRouteTypes {
     | '/login/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/sablony/$slug'
     | '/schools/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
@@ -1179,6 +1213,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/courses'
     | '/kontakt'
+    | '/sablony'
     | '/sponsors'
     | '/test'
     | '/tests'
@@ -1246,6 +1281,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/share-card'
     | '/admin/support'
+    | '/admin/templates'
     | '/admin/tests'
     | '/admin/tickets'
     | '/admin/trainings'
@@ -1272,6 +1308,7 @@ export interface FileRouteTypes {
     | '/login_/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/sablony/$slug'
     | '/schools_/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
@@ -1283,6 +1320,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/courses/'
     | '/kontakt/'
+    | '/sablony/'
     | '/sponsors/'
     | '/test/'
     | '/tests/'
@@ -1345,6 +1383,7 @@ export interface RootRouteChildren {
   LoginVerify2faRoute: typeof LoginVerify2faRoute
   RShareIdRoute: typeof RShareIdRoute
   SSlugRoute: typeof SSlugRoute
+  SablonySlugRoute: typeof SablonySlugRoute
   SchoolsDpaRoute: typeof SchoolsDpaRoute
   TShareIdRoute: typeof TShareIdRoute
   TestBuilderRoute: typeof TestBuilderRouteWithChildren
@@ -1353,6 +1392,7 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
   KontaktIndexRoute: typeof KontaktIndexRoute
+  SablonyIndexRoute: typeof SablonyIndexRoute
   TestIndexRoute: typeof TestIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
   BlogAutorSlugRoute: typeof BlogAutorSlugRoute
@@ -1488,6 +1528,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SponsorsIndexRouteImport
       parentRoute: typeof SponsorsRoute
     }
+    '/sablony/': {
+      id: '/sablony/'
+      path: '/sablony'
+      fullPath: '/sablony/'
+      preLoaderRoute: typeof SablonyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kontakt/': {
       id: '/kontakt/'
       path: '/kontakt'
@@ -1563,6 +1610,13 @@ declare module '@tanstack/react-router' {
       path: '/schools/dpa'
       fullPath: '/schools/dpa'
       preLoaderRoute: typeof SchoolsDpaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sablony/$slug': {
+      id: '/sablony/$slug'
+      path: '/sablony/$slug'
+      fullPath: '/sablony/$slug'
+      preLoaderRoute: typeof SablonySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/s/$slug': {
@@ -1745,6 +1799,13 @@ declare module '@tanstack/react-router' {
       path: '/tests'
       fullPath: '/admin/tests'
       preLoaderRoute: typeof AdminTestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/templates': {
+      id: '/admin/templates'
+      path: '/templates'
+      fullPath: '/admin/templates'
+      preLoaderRoute: typeof AdminTemplatesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/support': {
@@ -2182,6 +2243,7 @@ interface AdminRouteChildren {
   AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
   AdminShareCardRoute: typeof AdminShareCardRoute
   AdminSupportRoute: typeof AdminSupportRoute
+  AdminTemplatesRoute: typeof AdminTemplatesRoute
   AdminTestsRoute: typeof AdminTestsRouteWithChildren
   AdminTicketsRoute: typeof AdminTicketsRouteWithChildren
   AdminTrainingsRoute: typeof AdminTrainingsRoute
@@ -2210,6 +2272,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSettingsRoute: AdminSettingsRouteWithChildren,
   AdminShareCardRoute: AdminShareCardRoute,
   AdminSupportRoute: AdminSupportRoute,
+  AdminTemplatesRoute: AdminTemplatesRoute,
   AdminTestsRoute: AdminTestsRouteWithChildren,
   AdminTicketsRoute: AdminTicketsRouteWithChildren,
   AdminTrainingsRoute: AdminTrainingsRoute,
@@ -2385,6 +2448,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginVerify2faRoute: LoginVerify2faRoute,
   RShareIdRoute: RShareIdRoute,
   SSlugRoute: SSlugRoute,
+  SablonySlugRoute: SablonySlugRoute,
   SchoolsDpaRoute: SchoolsDpaRoute,
   TShareIdRoute: TShareIdRoute,
   TestBuilderRoute: TestBuilderRouteWithChildren,
@@ -2393,6 +2457,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
   KontaktIndexRoute: KontaktIndexRoute,
+  SablonyIndexRoute: SablonyIndexRoute,
   TestIndexRoute: TestIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
   BlogAutorSlugRoute: BlogAutorSlugRoute,

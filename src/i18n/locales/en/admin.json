@@ -26,6 +26,7 @@
       "blog": "Blog",
       "dsr": "GDPR requests",
       "dpa_requests": "DPA requests",
+      "templates_moderation": "Templates — moderation",
       "settings": "Settings",
       "security": "Security"
     },
@@ -939,6 +940,46 @@
           { "label": "MFA enrolment workflow", "href": "/docs/admin/security" },
           { "label": "Backup codes: best practices", "href": "/docs/admin/security-backup-codes" },
           { "label": "AAL2 enforcement for /admin", "href": "/docs/admin/aal2" }
+        ]
+      }
+    },
+    "templates_moderation": {
+      "title": "About the Templates moderation section",
+      "lead": "Moderation queue for templates submitted by users for public listing. Each row has been pre-screened by Claude Haiku 4.5 — you approve or reject manually with a reason. Approval publishes the template under CC BY 4.0 and writes an audit_log entry; rejection publishes nothing and the author sees the reason with a 24h cooldown before re-submitting.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you do here",
+          "items": [
+            "Approve a submission → moves the template to the public library (visibility=public, status=published)",
+            "Reject a submission → status=rejected + short reason (3+ chars), visible to the author",
+            "Inspect the AI precheck JSON (safety, profanity, age_rating, copyright_red_flags)",
+            "View author, submission date, age rating, license"
+          ]
+        },
+        "time_impact": {
+          "heading": "Time impact of changes",
+          "items": [
+            "Approve / reject: atomic via RPC — submission, template, audit_log in one transaction",
+            "An approved template appears immediately on /sablony (Phase D) and in the Public tab on /app/templates",
+            "Audit log entry is written synchronously with each action",
+            "The notification in the admin shell is marked read for you only; other admins still see it"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Watch out for",
+          "items": [
+            "Approval pins author_display_name + age_rating from the submission as captured at submit time — later author profile renames do NOT propagate",
+            "The AI precheck is advisory — your own judgment overrides it",
+            "Approval is reversible only via direct DB intervention (downgrade visibility) — there is no Unpublish button in the UI",
+            "Rejection writes the full reason to audit_log — the author receives only a short summary"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          { "label": "AI precheck rubric (Claude Haiku 4.5)", "href": "/docs/admin/templates-precheck" },
+          { "label": "CC BY 4.0 and authorship", "href": "/docs/admin/templates-license" }
         ]
       }
     }

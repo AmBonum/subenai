@@ -811,6 +811,7 @@ export type Database = {
           body: string | null;
           read_at: string | null;
           created_at: string;
+          kind: "user" | "admin";
         };
         Insert: {
           id?: string;
@@ -821,6 +822,7 @@ export type Database = {
           body?: string | null;
           read_at?: string | null;
           created_at?: string;
+          kind?: "user" | "admin";
         };
         Update: {
           id?: string;
@@ -831,6 +833,7 @@ export type Database = {
           body?: string | null;
           read_at?: string | null;
           created_at?: string;
+          kind?: "user" | "admin";
         };
         Relationships: [];
       };

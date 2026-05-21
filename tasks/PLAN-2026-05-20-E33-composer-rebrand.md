@@ -2,7 +2,7 @@
 
 **Owner:** Claude (synthesis) — senior agent, multi-lens audit
 **Date opened:** 2026-05-20
-**Status:** 🟡 PLAN DRAFTED — awaiting project-owner decisions D1–D9 before implementation phases start
+**Status:** ✅ DELIVERED 2026-05-20 — all 3 phases shipped to main. Phase 0 (URL rename `/test/zostav` → `/test/builder`, 301 redirects) via PR #46, Phase 1 (UX collapse, senior copy, JSON-LD WebApplication) via PR #47, Phase 2 (e2e contract: round-trip, SEO, build-ux) via PR #48. Hotfixes PR #49 (`/test/builder/$id` rendering) and PR #75 (step-2 picker overflow on 320px) followed. D1–D9 resolved at senior defaults in flight; plan retained as historical record.
 **Surfaces in scope:**
 - `/test/zostav` (composer build page) → rename + UX overhaul
 - `/test/zostava/$id` + `/test/zostava/$id/vysledky` (shared / results) → rename for consistency

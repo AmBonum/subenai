@@ -8,6 +8,18 @@ vi.mock("@tanstack/react-router", async () => {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
     createLazyFileRoute: () => (config: unknown) => config,
+    Link: ({
+      to,
+      children,
+      ...rest
+    }: {
+      to?: string;
+      children?: React.ReactNode;
+    } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+      <a href={to} {...rest}>
+        {children}
+      </a>
+    ),
   };
 });
 

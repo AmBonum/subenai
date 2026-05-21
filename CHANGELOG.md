@@ -26,6 +26,43 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   platia iba pre váš účet — nikto vrátane adminov ich nemôže meniť za
   vás.
 
+## [1.14.4] — 2026-05-21
+
+### Pridané
+- **Schvaľovanie odoslaných šablón administrátorom (záverečný kus E44).**
+  Keď používateľ klikne „Odoslať na zverejnenie" na svojej šablóne,
+  jeho podanie sa teraz dostane do nového admin panelu
+  `/admin/templates`. Administrátor vidí AI predkontrolu od Claude
+  Haiku 4.5, môže si pozrieť všetky otázky a buď šablónu schváli
+  (publikuje sa pod CC BY 4.0) alebo zamietne s krátkym dôvodom
+  (autor uvidí dôvod a po 24 hodinách môže podať opravenú verziu).
+  Pri každom schválení a zamietnutí sa zapíše záznam do audit logu.
+  V admin shell sa upozorňovacia ikona v hornom paneli rozsvieti
+  neprečítaným počtom — keď príde nová šablóna na schválenie, admin
+  ju nestratí. Pre samotných používateľov nič zatiaľ nie je viditeľné —
+  zatiaľ čo schvaľovací tok beží na pozadí, samotná verejná knižnica
+  prichádza v nasledujúcom bode.
+- **Verejná knižnica šablón na `/sablony`.** Hľadáš pripravený kvíz,
+  ktorý môžeš pustiť kolegom v práci, žiakom v triede alebo rodičom
+  doma — bez toho, aby si musel písať otázky od nuly? Po novom máme
+  verejnú knižnicu šablón na adrese **subenai.sk/sablony**, ktorá je
+  indexovaná Googlom a prístupná aj bez prihlásenia. Každú šablónu si
+  vieš pozrieť, použiť priamo v buildri alebo si ju duplikovať a
+  upraviť. Všetky šablóny sú v slovenčine, zadarmo a pod licenciou
+  **Creative Commons BY 4.0** — môžeš ich teda zdieľať aj upravovať,
+  stačí ponechať uvedenie autora. Komunitné šablóny od používateľov
+  prechádzajú manuálnym schvaľovaním administrátorom (predtým ich
+  predfiltruje AI), aby sa v knižnici neobjavili zavádzajúce alebo
+  necitlivé otázky.
+- **Sekcia GDPR rozšírená o verejnú publikáciu šablón.** V
+  `/privacy` pribudol nový riadok v zozname spracovania ("Verejná
+  publikácia vlastnej šablóny"), nový sprostredkovateľ **Anthropic, PBC**
+  (Claude Haiku 4.5 pre AI predkontrolu obsahu šablón pred zverejnením)
+  a explicitná zmienka o licencii CC BY 4.0 a zachovaní autorského
+  údaja po zmazaní účtu. Z dôvodu zmeny účelov spracovania a rozšírenia
+  zoznamu sprostredkovateľov sa cookie banner zobrazí znova
+  (CONSENT_VERSION 1.6.0 → 1.7.0).
+
 ## [1.14.3] — 2026-05-21
 
 ### Pridané
