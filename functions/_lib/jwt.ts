@@ -185,6 +185,97 @@ export async function verifyEduAuthorToken(
 
 export const EDU_AUTHOR_COOKIE_NAME = "subenai_edu_author";
 
+// ----- Respondent password tokens (E45 Phase 2) -----------------------
+//
+// Mints when a respondent successfully verifies a test password at
+// /api/tests/verify-password. The cookie gates entry to /t/<share_id>
+// until expiry (30 min). Carries `pv` (password_hash_version) so that
+// rotating the password invalidates outstanding cookies — Appendix A §2.5.
+//
+// Role separation from EduAuthorClaims is enforced via the `role` claim
+// (T13). A respondent token never grants access to author endpoints, and
+// vice-versa.
+
+export interface RespondentPwdClaims {
+  sub: string; // share_id
+  role: "respondent";
+  pv: number; // password_hash_version
+  iat: number;
+  exp: number;
+  iss: "subenai.sk";
+}
+
+const RESPONDENT_PWD_ISSUER = "subenai.sk";
+
+export async function signRespondentPwdToken(
+  shareId: string,
+  pv: number,
+  secret: string,
+  ttlSeconds = 30 * 60,
+): Promise<string> {
+  const now = Math.floor(Date.now() / 1000);
+  const payload: RespondentPwdClaims = {
+    sub: shareId,
+    role: "respondent",
+    pv,
+    iat: now,
+    exp: now + ttlSeconds,
+    iss: RESPONDENT_PWD_ISSUER,
+  };
+  const payloadB64 = base64UrlEncode(new TextEncoder().encode(JSON.stringify(payload)));
+  const signing = `${HEADER_B64}.${payloadB64}`;
+  const signature = await sign(secret, signing);
+  return `${signing}.${signature}`;
+}
+
+export type VerifyRespondentPwdResult =
+  | { ok: true; claims: RespondentPwdClaims }
+  | {
+      ok: false;
+      reason: "malformed" | "bad_signature" | "expired" | "wrong_role" | "wrong_issuer";
+    };
+
+export async function verifyRespondentPwdToken(
+  token: string,
+  secret: string,
+): Promise<VerifyRespondentPwdResult> {
+  const parts = token.split(".");
+  if (parts.length !== 3) return { ok: false, reason: "malformed" };
+  const [header, payload, signature] = parts;
+  if (header !== HEADER_B64) return { ok: false, reason: "malformed" };
+  const valid = await verify(secret, `${header}.${payload}`, signature);
+  if (!valid) return { ok: false, reason: "bad_signature" };
+  let claims: RespondentPwdClaims;
+  try {
+    const json = new TextDecoder().decode(base64UrlDecode(payload));
+    claims = JSON.parse(json) as RespondentPwdClaims;
+  } catch {
+    return { ok: false, reason: "malformed" };
+  }
+  if (
+    typeof claims.sub !== "string" ||
+    typeof claims.pv !== "number" ||
+    typeof claims.iat !== "number" ||
+    typeof claims.exp !== "number"
+  ) {
+    return { ok: false, reason: "malformed" };
+  }
+  if (claims.role !== "respondent") {
+    return { ok: false, reason: "wrong_role" };
+  }
+  // T1 defense-in-depth — reject if issuer mismatches even if HMAC ever
+  // weakens. Comparing a fixed string is leak-free.
+  if (claims.iss !== RESPONDENT_PWD_ISSUER) {
+    return { ok: false, reason: "wrong_issuer" };
+  }
+  if (Math.floor(Date.now() / 1000) >= claims.exp) {
+    return { ok: false, reason: "expired" };
+  }
+  return { ok: true, claims };
+}
+
+export const RESPONDENT_PWD_COOKIE_NAME = "subenai_respondent_pwd";
+
 export const __test__ = {
   base64UrlEncode,
   base64UrlDecode,

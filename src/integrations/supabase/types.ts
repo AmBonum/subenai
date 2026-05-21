@@ -1404,6 +1404,7 @@ export type Database = {
           published_at: string | null;
           question_order_mode: Database["public"]["Enums"]["test_question_order_mode"];
           source_template_id: string | null;
+          password_hash_version: number;
           created_at: string;
           updated_at: string;
         };
@@ -1429,6 +1430,7 @@ export type Database = {
           published_at?: string | null;
           question_order_mode?: Database["public"]["Enums"]["test_question_order_mode"];
           source_template_id?: string | null;
+          password_hash_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -1454,6 +1456,7 @@ export type Database = {
           published_at?: string | null;
           question_order_mode?: Database["public"]["Enums"]["test_question_order_mode"];
           source_template_id?: string | null;
+          password_hash_version?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -1733,6 +1736,18 @@ export type Database = {
       verify_test_set_password: {
         Args: { set_id: string; password: string };
         Returns: boolean;
+      };
+      hash_test_password: {
+        Args: { test_id: string; password: string };
+        Returns: number;
+      };
+      clear_test_password: {
+        Args: { test_id: string };
+        Returns: number;
+      };
+      verify_test_password: {
+        Args: { p_share_id: string; p_password: string };
+        Returns: Array<{ verified: boolean; current_pv: number }>;
       };
       claim_test_set: {
         Args: { set_id: string; password: string };

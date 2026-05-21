@@ -63,6 +63,7 @@ type TestsRow = {
   published_at: string | null;
   question_order_mode: string | null;
   source_template_id: string | null;
+  password_hash_version: number | null;
   created_at: string;
   updated_at: string;
 };
@@ -77,8 +78,11 @@ const mapTest = (row: TestsRow, question_ids: string[] = []): Test => ({
   description: row.description ?? "",
   status: (row.status as TestStatus) ?? "draft",
   version: row.version,
-  // TODO: derive when AH-12 schema enrichment lands (separate password column)
-  password: row.password_hash,
+  // E45 Phase 2 — `password` kept for back-compat; new code reads `has_password`.
+  // We DO NOT expose the hash on the client even to the owner — defense in depth.
+  password: row.password_hash ? "" : null,
+  has_password: row.password_hash !== null,
+  password_hash_version: row.password_hash_version ?? 0,
   segmentation: row.segmentation ?? [],
   gdpr_purpose: row.gdpr_purpose as Test["gdpr_purpose"],
   intake_fields: (row.intake_fields as Test["intake_fields"]) ?? [],
@@ -265,7 +269,7 @@ const mapLibraryQuestion = (row: QuestionsRow): LibraryQuestion => ({
 // ---------------------------------------------------------------------------
 
 const TESTS_COLS =
-  "id, slug, share_id, owner_id, team_id, title, description, status, version, password_hash, segmentation, gdpr_purpose, intake_fields, branches, notif_config, anonymize_after_days, allow_behavioral_tracking, expires_at, published_at, question_order_mode, source_template_id, created_at, updated_at";
+  "id, slug, share_id, owner_id, team_id, title, description, status, version, password_hash, segmentation, gdpr_purpose, intake_fields, branches, notif_config, anonymize_after_days, allow_behavioral_tracking, expires_at, published_at, question_order_mode, source_template_id, password_hash_version, created_at, updated_at";
 
 export function useTests() {
   return useQuery({
@@ -435,6 +439,44 @@ export function useUpdateTestQuestionOrder(testId: string) {
       if (insErr) throw insErr;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests", testId] }),
+  });
+}
+
+export function useSetTestPassword(testId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (password: string) => {
+      // Returns the new password_hash_version. Caller doesn't usually need it
+      // (the next useTest refetch picks it up via cache invalidation), but
+      // we propagate it for tests / debug.
+      const { data, error } = await supabase.rpc("hash_test_password", {
+        test_id: testId,
+        password,
+      });
+      if (error) throw error;
+      return data as number;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "tests", testId] });
+      qc.invalidateQueries({ queryKey: ["user", "tests"] });
+    },
+  });
+}
+
+export function useClearTestPassword(testId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.rpc("clear_test_password", {
+        test_id: testId,
+      });
+      if (error) throw error;
+      return data as number;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["user", "tests", testId] });
+      qc.invalidateQueries({ queryKey: ["user", "tests"] });
+    },
   });
 }
 

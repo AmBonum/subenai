@@ -23,6 +23,7 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ShareDialog } from "@/components/user/ShareDialog";
 import { QuestionsEditor } from "@/components/app/tests/QuestionsEditor";
 import { OrderModeToggle } from "@/components/app/tests/OrderModeToggle";
+import { PasswordCard } from "@/components/app/tests/PasswordCard";
 import { toast } from "sonner";
 import {
   useArchiveTest,
@@ -241,6 +242,9 @@ function TestEditorPage() {
                 />
               </div>
               <OrderModeToggle testId={test.id} value={test.question_order_mode} />
+              <div className="border-t pt-6">
+                <PasswordCard testId={test.id} hasPassword={test.has_password} />
+              </div>
               <div className="flex justify-end">
                 <Button
                   onClick={onSave}

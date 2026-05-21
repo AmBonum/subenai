@@ -109,7 +109,9 @@ export interface Test {
   description: string;
   status: TestStatus;
   version: number;
-  password: string | null; // mock; v reále hash (Argon2id)
+  password: string | null; // mock; v reále hash (Argon2id). DEPRECATED — use has_password.
+  has_password: boolean; // E45 Phase 2 — derived: row.password_hash !== null. Canonical UI flag.
+  password_hash_version: number; // E45 Phase 2 — bumped on every set/change/clear; embedded as `pv` in respondent_pwd_jwt.
   segmentation: string[]; // free tags
   gdpr_purpose: GdprPurpose;
   intake_fields: IntakeField[];
