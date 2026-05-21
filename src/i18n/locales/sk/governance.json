@@ -238,6 +238,8 @@
     "action_reject": "Zamietnuť",
     "action_pick_up": "Vybavujem",
     "action_export_csv": "Export CSV",
+    "action_open_dossier": "Otvoriť GDPR dossier",
+    "action_open_dossier_disabled": "Žiadateľ nie je registrovaný používateľ — dossier nie je k dispozícii.",
     "csv_id": "ID",
     "csv_created": "Vytvorené",
     "csv_requester": "E-mail žiadateľa",

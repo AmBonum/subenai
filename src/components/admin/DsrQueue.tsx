@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Check, X, Clock, FileDown } from "lucide-react";
+import { Check, X, Clock, FileDown, FileText } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAdminDSRQueue, useUpdateDSRStatus } from "@/lib/admin/queries";
+import { useAdminDSRQueue, useUpdateDSRStatus, useUsersByEmails } from "@/lib/admin/queries";
 import type { DSRRequest, DSRType } from "@/lib/platform/types";
 import { classifyDsrSla, daysRemaining, type DsrSlaVariant } from "@/lib/admin/dsr-sla";
 import { exportToCSV } from "@/lib/admin/export";
@@ -64,6 +65,17 @@ export function DsrQueue() {
       return true;
     });
   }, [dsr, status, type, search]);
+
+  // E46.4: resolve requester_email → user_id so we can deep-link each
+  // DSR row to the unified /admin/users/<id> dossier. The lookup runs
+  // against the filtered set (cheaper + only what's on screen needs
+  // a link). DSRs from non-users (e.g. parent of a minor) won't have
+  // a matching profile — the icon stays disabled with a tooltip.
+  const requesterEmails = useMemo(
+    () => filtered.map((d) => d.requester_email).filter((e): e is string => Boolean(e)),
+    [filtered],
+  );
+  const emailToUserId = useUsersByEmails(requesterEmails).data ?? {};
 
   const now = new Date();
 
@@ -219,31 +231,68 @@ export function DsrQueue() {
                         {new Date(d.created_at).toLocaleDateString("sk-SK")}
                       </TableCell>
                       <TableCell className="text-right">
-                        {d.status !== "completed" && d.status !== "rejected" && (
-                          <div className="inline-flex gap-1">
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="outline"
-                              data-testid={`dsr-queue-row-resolve-button-${d.id}`}
-                              onClick={() => onResolve(d.id)}
-                            >
-                              <Check className="mr-1 h-4 w-4" />
-                              {t("action_resolve")}
-                            </Button>
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="ghost"
-                              className="text-muted-foreground"
-                              data-testid={`dsr-queue-row-reject-button-${d.id}`}
-                              onClick={() => onReject(d.id)}
-                            >
-                              <X className="mr-1 h-4 w-4" />
-                              {t("action_reject")}
-                            </Button>
-                          </div>
-                        )}
+                        <div className="inline-flex items-center gap-1">
+                          {(() => {
+                            const linkedUserId = emailToUserId[d.requester_email.toLowerCase()];
+                            return linkedUserId ? (
+                              <Button
+                                asChild
+                                type="button"
+                                size="sm"
+                                variant="ghost"
+                                className="px-2 text-muted-foreground hover:text-foreground"
+                                data-testid={`dsr-queue-row-dossier-link-${d.id}`}
+                                title={t("action_open_dossier")}
+                              >
+                                <Link
+                                  to="/admin/users/$userId"
+                                  params={{ userId: linkedUserId }}
+                                  aria-label={t("action_open_dossier")}
+                                >
+                                  <FileText className="h-4 w-4" />
+                                </Link>
+                              </Button>
+                            ) : (
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="ghost"
+                                className="px-2 text-muted-foreground/40"
+                                data-testid={`dsr-queue-row-dossier-link-${d.id}`}
+                                disabled
+                                title={t("action_open_dossier_disabled")}
+                                aria-label={t("action_open_dossier_disabled")}
+                              >
+                                <FileText className="h-4 w-4" />
+                              </Button>
+                            );
+                          })()}
+                          {d.status !== "completed" && d.status !== "rejected" && (
+                            <>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                data-testid={`dsr-queue-row-resolve-button-${d.id}`}
+                                onClick={() => onResolve(d.id)}
+                              >
+                                <Check className="mr-1 h-4 w-4" />
+                                {t("action_resolve")}
+                              </Button>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="ghost"
+                                className="text-muted-foreground"
+                                data-testid={`dsr-queue-row-reject-button-${d.id}`}
+                                onClick={() => onReject(d.id)}
+                              >
+                                <X className="mr-1 h-4 w-4" />
+                                {t("action_reject")}
+                              </Button>
+                            </>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   );

@@ -31,6 +31,16 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   pozornosť pri pravidelnom audite.
 
 ### Pridané
+- **Z DSR queue jedným klikom do GDPR dossier-u (E46.4).** Na každom
+  riadku `/admin/dsr` pribudla ikona *Otvoriť GDPR dossier* (ikona
+  dokumentu). Ak je e-mail žiadateľa registrovaný používateľ, ikona
+  funguje ako odkaz na `/admin/users/<id>` — admin tak vidí všetky
+  GDPR-relevantné údaje o žiadateľovi (identita + role + DSR / DPA
+  história) priamo počas vybavovania žiadosti. Ak e-mail žiadateľa
+  nepatrí žiadnemu používateľovi (typicky: žiadosť od nezaregistrovanej
+  osoby — rodič maloletého, fyzická osoba bez účtu), ikona je
+  neaktívna a po nadídení tooltip vysvetľuje *„Žiadateľ nie je
+  registrovaný používateľ — dossier nie je k dispozícii."*
 - **Jednotný dizajn potvrdzovacích dialógov v admin paneli.** Doteraz
   niektoré nezvratné akcie (napr. *Anonymizovať DPA žiadosť*) používali
   default browserový `confirm()` — sivý systémový popup bez ikony,
