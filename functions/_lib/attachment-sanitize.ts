@@ -36,7 +36,7 @@
 //   - Image bomb caps (e.g. 25 MP decoded). Same reason as above.
 //   - VirusTotal lookup. PLAN D-1 says no third-party AV.
 
-import { PDFDocument, PDFDict, PDFName, PDFArray } from "pdf-lib";
+import { PDFDocument, PDFDict, PDFName, PDFArray, PDFStream } from "pdf-lib";
 
 export const MAX_ATTACHMENT_BYTES = 5_242_880; // 5 MB — matches DB CHECK
 export const MAX_FILENAME_LENGTH = 200;
@@ -60,7 +60,8 @@ export type SanitizeError =
   | "mime_not_allowed"
   | "magic_mismatch"
   | "filename_invalid"
-  | "pdf_parse_failed";
+  | "pdf_parse_failed"
+  | "pdf_risky_filter";
 
 export interface SanitizeResult {
   ok: boolean;
@@ -127,10 +128,10 @@ export async function sanitizeAttachment(input: {
   let cleanBytes = bytes;
   if (mime === "application/pdf") {
     const stripped = await stripPdfRiskyFeatures(bytes);
-    if (!stripped) {
-      return { ok: false, error: "pdf_parse_failed" };
+    if (stripped.ok === false) {
+      return { ok: false, error: stripped.error };
     }
-    cleanBytes = stripped;
+    cleanBytes = stripped.bytes;
   }
   // For images: v1 passes bytes through unchanged after magic verify.
 
@@ -199,10 +200,45 @@ export function sanitizeFilename(input: string): string | null {
 
 /**
  * pdf-lib strip pass — load PDF, remove JS / forms / auto-actions,
- * re-serialise. Returns the sanitised bytes or null if parsing fails
- * (malformed PDF, encrypted PDF we can't unlock, etc.).
+ * re-serialise. Returns the sanitised bytes, or an error object:
+ *
+ *   - `pdf_parse_failed` — pdf-lib couldn't load the document
+ *     (malformed PDF, encrypted PDF we can't unlock, etc.)
+ *   - `pdf_risky_filter` — the PDF declares a stream `/Filter` we
+ *     refuse to forward. Specifically JBIG2Decode and JPXDecode
+ *     (JPEG 2000), both of which have a long history of decoder CVEs
+ *     in Adobe Reader / poppler / mupdf. The strip pass cannot
+ *     defang the stream content without rasterising, which we don't
+ *     do for PDFs; the safe move is to reject the upload.
  */
-export async function stripPdfRiskyFeatures(bytes: Uint8Array): Promise<Uint8Array | null> {
+export type PdfStripResult =
+  | { ok: true; bytes: Uint8Array }
+  | { ok: false; error: "pdf_parse_failed" | "pdf_risky_filter" };
+
+const RISKY_PDF_FILTERS = new Set(["JBIG2Decode", "JPXDecode"]);
+
+function streamUsesRiskyFilter(stream: PDFStream): boolean {
+  const filter = stream.dict.lookup(PDFName.of("Filter"));
+  if (filter instanceof PDFName) {
+    // pdf-lib's PDFName encodes a leading `/` in some serialisations
+    // but `decodeText()` returns the raw name without it. Either form
+    // is normalised here.
+    const name = filter.decodeText().replace(/^\//, "");
+    return RISKY_PDF_FILTERS.has(name);
+  }
+  if (filter instanceof PDFArray) {
+    for (let i = 0; i < filter.size(); i++) {
+      const item = filter.lookup(i);
+      if (item instanceof PDFName) {
+        const name = item.decodeText().replace(/^\//, "");
+        if (RISKY_PDF_FILTERS.has(name)) return true;
+      }
+    }
+  }
+  return false;
+}
+
+export async function stripPdfRiskyFeatures(bytes: Uint8Array): Promise<PdfStripResult> {
   let doc: PDFDocument;
   try {
     doc = await PDFDocument.load(bytes, {
@@ -210,7 +246,7 @@ export async function stripPdfRiskyFeatures(bytes: Uint8Array): Promise<Uint8Arr
       throwOnInvalidObject: false,
     });
   } catch {
-    return null;
+    return { ok: false, error: "pdf_parse_failed" };
   }
 
   const catalog = doc.catalog;
@@ -253,9 +289,24 @@ export async function stripPdfRiskyFeatures(bytes: Uint8Array): Promise<Uint8Arr
   // Walk every indirect object in the document and strip risky names
   // from any dict we encounter. This is O(objects * RISKY) which is
   // bounded by PDF size, fine for ≤5 MB inputs.
+  //
+  // Same loop also enforces the JBIG2Decode / JPXDecode filter rejection
+  // (audit A6). Both decoders have a long history of memory-corruption
+  // CVEs in Adobe Reader / poppler / mupdf. We can't defang the stream
+  // content without rasterising the PDF (we don't), so the only safe
+  // move is to refuse the upload entirely.
   const indirectObjects = doc.context.enumerateIndirectObjects();
   for (const [, obj] of indirectObjects) {
-    if (obj instanceof PDFDict) {
+    if (obj instanceof PDFStream) {
+      if (streamUsesRiskyFilter(obj)) {
+        return { ok: false, error: "pdf_risky_filter" };
+      }
+      // Streams also carry a dict — fall through to the dict scrub
+      // below for risky action keys on the stream dict.
+      for (const name of RISKY_NAMES) {
+        obj.dict.delete(PDFName.of(name));
+      }
+    } else if (obj instanceof PDFDict) {
       for (const name of RISKY_NAMES) {
         obj.delete(PDFName.of(name));
       }
@@ -268,7 +319,7 @@ export async function stripPdfRiskyFeatures(bytes: Uint8Array): Promise<Uint8Arr
   // Re-serialise. updateMetadata=false keeps producer/creator stable
   // for forensics.
   const out = await doc.save({ updateFieldAppearances: false });
-  return out;
+  return { ok: true, bytes: out };
 }
 
 /**
