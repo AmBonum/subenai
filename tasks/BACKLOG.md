@@ -34,19 +34,6 @@ That mapping is NOT in the repo — it lived in the agent's output buffer.
   without per-post cross-links; this is a SEO-internal-linking win, not
   a user-blocking gap).
 
-### 8 deferred should-have Playwright TCs (test/E37-playwright-should-have-pt2)
-
-⚪ **Deferred** — needs cross-epic shared infrastructure not yet built.
-
-Already shipped: 19 must-have ([#138](https://github.com/AmBonum/subenai/pull/138)) + 10 mechanical should-have ([#139](https://github.com/AmBonum/subenai/pull/139)) = 29 / 29 plan scenarios covered.
-
-Still deferred:
-- TC-18/19/20 (graceful empty/error handling) — needs `page.route()` interception of Supabase RPCs (could be a shared `mocks/api/platform-packs.ts` helper)
-- TC-22-25 (composer pack chip flows) — needs `ComposerPage` POM extension for chip toggle + URL-config decoder
-- TC-28 (XSS payload) — better grouped with the E48 security TC pyramid in its own follow-up
-
-**Outcome that closes this:** ship a `test/E37-playwright-should-have-pt2` PR after one of the cross-epic helpers above is available. Low priority — the must-have set + the 10 mechanical should-have already covers the highest-value scenarios.
-
 ---
 
 ## Plans archived 2026-05-22 (no status, no owner, indefinitely deferred)
@@ -63,19 +50,6 @@ with a real status (open / in flight / delivered).
 | `archive/PLAN-2026-05-19-blog-content-engine.md` | Blog content engine | Never owned; blog work continues ad-hoc per post |
 
 To resurrect any of these, `git mv` it back to `tasks/` and add a Status line.
-
----
-
-## Plans in flight / awaiting approval
-
-### E38 — Results evolution
-
-🟡 **Plan draft.** `tasks/PLAN-2026-05-20-E38-results-evolution.md` says
-"awaiting approval before implementation". Distinct from
-`PLAN-2026-05-20-E38-retention-crons.md` (✅ shipped) — two plans share
-the E38 prefix, which is a numbering collision worth resolving.
-
-**Outcome that closes this:** product-owner read-through + go/no-go + (if go) start a branch and flip status to 🟢.
 
 ---
 

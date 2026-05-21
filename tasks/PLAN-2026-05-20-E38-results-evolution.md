@@ -1,8 +1,11 @@
 # E38 — Results page evolution (export, account linking, charts, filters, drill-down sub-route)
 
-**Status:** 🟡 Plan draft — awaiting approval before implementation.
-**Owner:** Claude Code session, branch `claude/sad-faraday-915d3d`.
-**Last updated:** 2026-05-20.
+**Status:** ✅ **DELIVERED 2026-05-20.** Phases A, C, D, E, F, G all ✅. Phase B (drill-down sub-route) also delivered — file `src/routes/test.builder.$id.results.$attemptId.tsx` exists in the codebase and replaces the legacy modal.
+- Single landing PR — [#73](https://github.com/AmBonum/subenai/pull/73): _E38 — Results page evolution (schema + claim flow + drill-down + filters + charts + PDF + /app/edu-tests)_
+- Earlier stale-sweep — PR [#117](https://github.com/AmBonum/subenai/pull/117) (chore(plans): sweep stale statuses for E33, E38, E44 (Phase A+B)) flipped most phase rows but not the top-line Status. This commit closes that paperwork gap.
+
+**Owner:** Claude Code session, branch `claude/sad-faraday-915d3d` (merged).
+**Last updated:** 2026-05-22 (status flip — implementation already shipped 2026-05-20).
 **Related epics:** E34 (edu dashboard MVP — the modal + CSV export we're replacing), E20 (account / `/app` shell), E31 (existing auth + Supabase RLS).
 
 ---
