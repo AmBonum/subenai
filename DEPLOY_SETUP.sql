@@ -7547,6 +7547,7 @@ GRANT EXECUTE ON FUNCTION public.get_platform_pack_question_ids()
   TO anon, authenticated;
 
 
+
 -- ============================================================================
 -- E37 architect-P1 — protect platform@subenai.sk from accidental deletion
 -- (mirror of 20260521320000_e37_protect_platform_user.sql)
@@ -7626,3 +7627,171 @@ DROP TRIGGER IF EXISTS enforce_attachment_cap_per_ticket_trg
 CREATE TRIGGER enforce_attachment_cap_per_ticket_trg
   BEFORE INSERT ON public.support_ticket_attachments
   FOR EACH ROW EXECUTE FUNCTION public.enforce_attachment_cap_per_ticket();
+
+-- E37 architect-P1 — share the published-pack predicate across the 3 RPCs
+-- (mirror of 20260521330000_e37_rpc_shared_predicate.sql)
+-- ============================================================================
+-- Rewrites all three E37 RPCs (get_platform_packs, get_pack_with_questions,
+-- get_platform_pack_question_ids) so each uses a named `visible_platform_packs`
+-- CTE for the pack-level visibility predicate. Behavior IDENTICAL to
+-- pre-refactor — this is a forward-evolvability win, not a behavior change.
+
+CREATE OR REPLACE FUNCTION public.get_platform_packs()
+RETURNS TABLE (
+  id uuid,
+  slug text,
+  title text,
+  tagline text,
+  industry text,
+  industry_emoji text,
+  passing_threshold int,
+  question_count int,
+  published_at timestamptz
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+  WITH visible_platform_packs AS (
+    SELECT t.id, t.slug, t.title, t.published_at, t.created_at,
+           m.tagline, m.industry, m.industry_emoji, m.passing_threshold
+      FROM public.tests t
+      JOIN public.platform_pack_metadata m ON m.test_id = t.id
+     WHERE t.status = 'published'
+  )
+  SELECT
+    p.id,
+    p.slug,
+    p.title,
+    p.tagline,
+    p.industry,
+    p.industry_emoji,
+    p.passing_threshold,
+    (
+      SELECT COUNT(*)::int
+        FROM public.test_questions tq
+       WHERE tq.test_id = p.id
+    ) AS question_count,
+    p.published_at
+  FROM visible_platform_packs p
+  ORDER BY p.published_at DESC NULLS LAST, p.created_at DESC;
+$$;
+
+REVOKE ALL ON FUNCTION public.get_platform_packs() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_platform_packs()
+CREATE OR REPLACE FUNCTION public.get_pack_with_questions(p_slug text)
+RETURNS jsonb
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_pack_id uuid;
+  v_pack jsonb;
+  v_questions jsonb;
+BEGIN
+  -- Use the same named predicate to look up the pack — same visibility
+  -- rule as the catalog RPC, so any future change to one propagates
+  -- here at the CTE definition.
+  WITH visible_platform_packs AS (
+    SELECT t.id, t.slug, t.title, t.published_at,
+           m.tagline, m.industry, m.industry_emoji,
+           m.target_persona, m.sources_jsonb, m.passing_threshold
+      FROM public.tests t
+      JOIN public.platform_pack_metadata m ON m.test_id = t.id
+     WHERE t.status = 'published'
+  )
+  SELECT p.id INTO v_pack_id
+    FROM visible_platform_packs p
+   WHERE p.slug = p_slug
+   LIMIT 1;
+
+  IF v_pack_id IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  WITH visible_platform_packs AS (
+    SELECT t.id, t.slug, t.title, t.published_at,
+           m.tagline, m.industry, m.industry_emoji,
+           m.target_persona, m.sources_jsonb, m.passing_threshold
+      FROM public.tests t
+      JOIN public.platform_pack_metadata m ON m.test_id = t.id
+     WHERE t.status = 'published'
+  )
+  SELECT jsonb_build_object(
+    'id', p.id,
+    'slug', p.slug,
+    'title', p.title,
+    'tagline', p.tagline,
+    'industry', p.industry,
+    'industry_emoji', p.industry_emoji,
+    'target_persona', p.target_persona,
+    'sources', p.sources_jsonb,
+    'passing_threshold', p.passing_threshold,
+    'published_at', p.published_at
+  ) INTO v_pack
+    FROM visible_platform_packs p
+   WHERE p.id = v_pack_id;
+
+  SELECT COALESCE(
+    jsonb_agg(
+      jsonb_build_object(
+        'id', q.id,
+        'type', q.type,
+        'prompt', q.prompt,
+        'options', q.options,
+        'correct', q.correct,
+        'branch_slug', q.branch_slug,
+        'difficulty', q.difficulty,
+        'visual', q.visual,
+        'position', tq.position
+      )
+      ORDER BY tq.position ASC
+    ),
+    '[]'::jsonb
+  ) INTO v_questions
+    FROM public.test_questions tq
+    JOIN public.questions q ON q.id = tq.question_id
+   WHERE tq.test_id = v_pack_id AND q.status = 'published';
+
+  RETURN jsonb_build_object('pack', v_pack, 'questions', v_questions);
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.get_pack_with_questions(text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_pack_with_questions(text)
+CREATE OR REPLACE FUNCTION public.get_platform_pack_question_ids()
+RETURNS TABLE (
+  slug text,
+  question_ids uuid[]
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+  WITH visible_platform_packs AS (
+    SELECT t.id, t.slug, t.published_at, t.created_at
+      FROM public.tests t
+      JOIN public.platform_pack_metadata m ON m.test_id = t.id
+     WHERE t.status = 'published'
+  )
+  SELECT
+    p.slug,
+    ARRAY(
+      SELECT tq.question_id
+        FROM public.test_questions tq
+        JOIN public.questions q ON q.id = tq.question_id
+       WHERE tq.test_id = p.id
+         AND q.status = 'published'
+       ORDER BY tq.position ASC
+    ) AS question_ids
+  FROM visible_platform_packs p
+  ORDER BY p.published_at DESC NULLS LAST, p.created_at DESC;
+$$;
+
+REVOKE ALL ON FUNCTION public.get_platform_pack_question_ids() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_platform_pack_question_ids()
+  TO anon, authenticated;
