@@ -1,5 +1,19 @@
 [
   {
+    "version": "1.14.4",
+    "date": "2026-05-21",
+    "added": [
+      "**Schvaľovanie odoslaných šablón administrátorom (záverečný kus E44).**",
+      "**Verejná knižnica šablón na `/sablony`.** Hľadáš pripravený kvíz,",
+      "**Sekcia GDPR rozšírená o verejnú publikáciu šablón.** V"
+    ],
+    "changed": [],
+    "fixed": [],
+    "removed": [],
+    "deprecated": [],
+    "security": []
+  },
+  {
     "version": "1.14.3",
     "date": "2026-05-21",
     "added": [
