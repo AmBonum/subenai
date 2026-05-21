@@ -3,7 +3,7 @@
 **Owner:** Claude (synthesis) — senior agent, multi-lens audit
 **Date opened:** 2026-05-20
 **Last revised:** 2026-05-21 (Phase A3 — reality reconciliation after PR #111 salvaged the stale branch's content into main as `E37_SEED.sql`)
-**Status:** 🟡 Phase A + A2 + A3 + B' complete. **Phase F (read-path refactor) starting on `feature/E37-tests-readpath`.** Phases G–J unchanged from original plan.
+**Status:** ✅ **DELIVERED 2026-05-21.** Epic shipped via PRs [#66](https://github.com/AmBonum/subenai/pull/66), [#111](https://github.com/AmBonum/subenai/pull/111), [#123](https://github.com/AmBonum/subenai/pull/123), [#124](https://github.com/AmBonum/subenai/pull/124), [#126](https://github.com/AmBonum/subenai/pull/126), [#127](https://github.com/AmBonum/subenai/pull/127), [#128](https://github.com/AmBonum/subenai/pull/128), [#131](https://github.com/AmBonum/subenai/pull/131), [#132](https://github.com/AmBonum/subenai/pull/132). Phase H (blog `related_test_slug` mapping) deferred — needs SEO writer input. Architect P1 follow-ups (shared CTE refactor + `tests.owner_id` FK audit) tracked as post-shipment backlog. Multi-lens senior review completed: fresh-context CR (caught 2 P0 bugs fixed in #132), architecture audit (3 P1 follow-ups), 29-scenario Playwright plan.
 
 Phase B' delivered via [PR #123](https://github.com/AmBonum/subenai/pull/123) — merged 2026-05-21. Migration `20260521280000_e37_platform_packs_unified.sql` lives in main; `platform@subenai.sk` Dashboard user must be created before applying SQL (D9 amendment in the Phase A3 section below).
 **Surfaces in scope:** `/tests` catalog · `/tests/$slug` detail pages · `public.tests` · `public.test_questions` · `public.questions` · `src/content/test-packs/**` (to be deprecated) · `src/lib/quiz/bank/questions.ts` (to be deprecated for new content) · `src/content/blog/**` (frontmatter only)
@@ -91,11 +91,14 @@ Original plan (D9): `INSERT INTO auth.users (id, email, role, ...) ... ON CONFLI
 | #66 ✅ | Typo hotfix (`univerzitnÿch` → `univerzitných`) | 0 | landed |
 | #111 ✅ | Salvage `E37_SEED.sql` + recovery note into main | 0 | landed |
 | [#123 ✅](https://github.com/AmBonum/subenai/pull/123) | **Phase B' — mega-migration** (B+C+D+E unified) + types regen + contract test | 1 | landed 2026-05-21 |
-| #PR-F | Phase F — read-path refactor (`/tests` + `/tests/$slug`) | 0 | ⏳ in progress |
-| #PR-G | Phase G — copy upgrade + delete static TS packs | 1 | ❌ blocks on F |
-| #PR-H | Phase H — blog frontmatter `related_test_slug` wiring (81 MDX) | 0 | ✅ any time after B' |
-| #PR-I | Phase I — UX P0+P1 (3 + 12 items) | 0 | ❌ blocks on F |
-| #PR-J | Phase J — tests / lint / build / CHANGELOG / closeout | 0 | ❌ last |
+| [#124 ✅](https://github.com/AmBonum/subenai/pull/124) | Phase F — read-path refactor (`/tests` + `/tests/$slug`) | 0 | landed 2026-05-21 |
+| [#126 ✅](https://github.com/AmBonum/subenai/pull/126) | Phase F hygiene — pack-queries unit tests | 0 | landed 2026-05-21 |
+| [#127 ✅](https://github.com/AmBonum/subenai/pull/127) | Phase I — UX P0+P1 (touch targets, focus rings, sr-only h2) | 0 | landed 2026-05-21 |
+| [#128 ✅](https://github.com/AmBonum/subenai/pull/128) | Phase G1 — algorithmic copy hygiene | 1 | landed 2026-05-21 |
+| [#131 ✅](https://github.com/AmBonum/subenai/pull/131) | Phase G3 — DB-backed composer + 9 static-manifest deletes + Playwright plan | 1 | landed 2026-05-21 |
+| [#132 ✅](https://github.com/AmBonum/subenai/pull/132) | CR follow-up — NaN copyright + draft-question filter + questionCount field | 1 | landed 2026-05-21 |
+| Phase H | Blog frontmatter `related_test_slug` wiring (81 MDX) | 0 | 🟡 deferred — needs SEO mapping data |
+| #PR-J | Phase J — plan markers + CHANGELOG entry | 0 | ✅ this PR |
 
 ### Operational prerequisite, captured here so it cannot be missed
 
@@ -336,11 +339,14 @@ Note: Phase F migration may shift testids slightly (DB-shape rows render through
 | ~~#PR-D~~ | Phase D (migrate 9 existing packs) — collapsed into B' | 1 | 1 | 9 | — |
 | ~~#PR-E~~ | Phase E (6 new packs) — collapsed into B' | 1 | 1 | 6 | — |
 | [#123 ✅](https://github.com/AmBonum/subenai/pull/123) | **Phase B' (mega-migration)** | 2 (migration + DEPLOY_SETUP) | 1 | 30 contract | landed 2026-05-21 |
-| #PR-F | Phase F (read-path refactor) | 8 + new hooks | 0 | 15 | ❌ blocks on B' |
-| #PR-G | Phase G (copy upgrade + delete static TS) | 1 migration + delete ~12 files | 1 | 9 | ❌ blocks on F |
-| #PR-H | Phase H (blog frontmatter) | 81 MDX | 0 | 0 | ✅ (any time after B') |
-| #PR-I | Phase I (UX P0+P1) | ~7 + i18n | 0 | 10 | ❌ blocks on F |
-| #PR-J | Phase J (closeout) | CHANGELOG + stories | 0 | full suite | ❌ last |
+| [#124 ✅](https://github.com/AmBonum/subenai/pull/124) | Phase F (read-path refactor) | 10 + new hooks | 0 | 15+ | landed 2026-05-21 |
+| [#126 ✅](https://github.com/AmBonum/subenai/pull/126) | Phase F hygiene — pack-queries unit tests | 1 | 0 | 11 | landed 2026-05-21 |
+| [#127 ✅](https://github.com/AmBonum/subenai/pull/127) | Phase I (UX P0+P1) | 5 (route + i18n × 3 + test) | 0 | 10+ | landed 2026-05-21 |
+| [#128 ✅](https://github.com/AmBonum/subenai/pull/128) | Phase G1 (algorithmic copy hygiene) | 3 (migration + DEPLOY + test) | 1 | 17 | landed 2026-05-21 |
+| [#131 ✅](https://github.com/AmBonum/subenai/pull/131) | Phase G3 (DB-backed composer + static deletion) | ~15 (migration + composer + 9 deletes + tests + plan) | 1 | 40+ | landed 2026-05-21 |
+| [#132 ✅](https://github.com/AmBonum/subenai/pull/132) | CR follow-up (NaN copyright + published filter + questionCount + comment fix) | 8 | 1 | 60+ | landed 2026-05-21 |
+| Phase H | Phase H (blog frontmatter) | 81 MDX | 0 | 0 | 🟡 deferred |
+| this PR | Phase J — plan markers + CHANGELOG entry | 2 (plan + CHANGELOG) | 0 | 0 | ✅ closing |
 
 **Total:** 6 PRs after #66 + #111. ~30 files of new/changed application code, ~2 SQL migrations (mega-B' + Phase-G copy upgrade), ~80 MDX content edits, ~85 new tests.
 
