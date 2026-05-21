@@ -1,7 +1,7 @@
 import { useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, Loader2, Send } from "lucide-react";
+import { AlertCircle, Loader2, Paperclip, Send, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,6 +56,35 @@ interface SupportContactFormProps {
    * place for it above the submit button.
    */
   turnstileSlot?: React.ReactNode;
+  /**
+   * E48.2 — Optional attachment upload callback. When provided, the
+   * form renders a file picker (PNG / JPEG / PDF, max 3 files, 5 MB
+   * each) and, after a successful `onSubmit`, iterates through the
+   * selected files and invokes this callback once per file. The
+   * caller is responsible for the actual POST to
+   * `/api/support-attachment-upload` (so the form stays presentational).
+   *
+   * Per-file failures are surfaced inline but never block the success
+   * state of the parent submission — the ticket is created either
+   * way. Mirrors the production guarantee that ticket creation is
+   * atomic, attachments are best-effort.
+   */
+  onAttachmentUpload?: (
+    file: File,
+    submitResult: SupportContactSubmitResult,
+  ) => Promise<{ ok: boolean; error?: string }>;
+}
+
+const MAX_ATTACHMENTS = 3;
+const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
+const ATTACHMENT_ACCEPT = "image/png,image/jpeg,application/pdf";
+
+type AttachmentStatus = "pending" | "uploading" | "ok" | "error";
+
+interface AttachmentState {
+  file: File;
+  status: AttachmentStatus;
+  errorCode?: string;
 }
 
 export function SupportContactForm({
@@ -63,10 +92,46 @@ export function SupportContactForm({
   prefill,
   onSubmit,
   turnstileSlot,
+  onAttachmentUpload,
 }: SupportContactFormProps) {
   const formId = useId();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<AttachmentState[]>([]);
+  const [attachmentError, setAttachmentError] = useState<string | null>(null);
   const isAuthenticated = variant === "authenticated";
+  const attachmentsEnabled = typeof onAttachmentUpload === "function";
+
+  function handleAttachmentPick(input: HTMLInputElement) {
+    setAttachmentError(null);
+    const incoming = Array.from(input.files ?? []);
+    input.value = ""; // allow re-selecting the same file later
+    if (incoming.length === 0) return;
+
+    const next: AttachmentState[] = [...attachments];
+    for (const file of incoming) {
+      if (next.length >= MAX_ATTACHMENTS) {
+        setAttachmentError(`Maximum je ${MAX_ATTACHMENTS} prílohy.`);
+        break;
+      }
+      if (file.size > MAX_ATTACHMENT_BYTES) {
+        setAttachmentError(`Príloha "${file.name}" je väčšia ako 5 MB.`);
+        continue;
+      }
+      if (!ATTACHMENT_ACCEPT.split(",").includes(file.type)) {
+        setAttachmentError(
+          `Príloha "${file.name}" má nepodporovaný formát. Povolené: PNG, JPEG, PDF.`,
+        );
+        continue;
+      }
+      next.push({ file, status: "pending" });
+    }
+    setAttachments(next);
+  }
+
+  function removeAttachment(index: number) {
+    setAttachments((prev) => prev.filter((_, i) => i !== index));
+    setAttachmentError(null);
+  }
 
   const form = useForm<SupportContactFormData>({
     resolver: zodResolver(supportContactSchema),
@@ -95,8 +160,34 @@ export function SupportContactForm({
 
   const submit = handleSubmit(async (data) => {
     setSubmitError(null);
+    setAttachmentError(null);
     try {
-      await onSubmit(data);
+      const result = await onSubmit(data);
+
+      // After the ticket is created, sequentially upload each
+      // selected attachment. We do it serially (not Promise.all) so
+      // the user sees deterministic progress; with a 5 MB cap and a
+      // 3-file ceiling the total time is bounded.
+      if (attachmentsEnabled && attachments.length > 0 && result) {
+        for (let i = 0; i < attachments.length; i++) {
+          setAttachments((prev) =>
+            prev.map((a, idx) => (idx === i ? { ...a, status: "uploading" } : a)),
+          );
+          const r = await onAttachmentUpload!(attachments[i].file, result).catch(
+            (err: unknown): { ok: boolean; error?: string } => ({
+              ok: false,
+              error: err instanceof Error ? err.message : "upload_failed",
+            }),
+          );
+          setAttachments((prev) =>
+            prev.map((a, idx) =>
+              idx === i
+                ? { ...a, status: r.ok ? "ok" : "error", errorCode: r.ok ? undefined : r.error }
+                : a,
+            ),
+          );
+        }
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : "Nepodarilo sa odoslať. Skúste neskôr.";
       setSubmitError(message);
@@ -278,6 +369,84 @@ export function SupportContactForm({
           </p>
         )}
       </div>
+
+      {/* E48.2 attachment picker — only when caller provides an upload
+          callback. Stays hidden on the /app variant if the caller chose
+          not to wire uploads there. */}
+      {attachmentsEnabled && (
+        <div className="space-y-2" data-testid="kontakt-form-attachments">
+          <Label htmlFor={`${formId}-files`} className="flex items-center gap-2 text-sm">
+            <Paperclip className="size-4" aria-hidden="true" />
+            Prílohy (PNG, JPEG, PDF; max {MAX_ATTACHMENTS} súbory po 5 MB)
+          </Label>
+          <input
+            id={`${formId}-files`}
+            type="file"
+            multiple
+            accept={ATTACHMENT_ACCEPT}
+            disabled={isSubmitting || attachments.length >= MAX_ATTACHMENTS}
+            onChange={(e) => handleAttachmentPick(e.target)}
+            data-testid="kontakt-form-attachments-input"
+            className="block w-full text-sm file:mr-3 file:rounded-md file:border file:border-input file:bg-background file:px-3 file:py-1.5 file:text-sm file:font-medium hover:file:bg-accent"
+          />
+          {attachments.length > 0 && (
+            <ul className="space-y-1.5" data-testid="kontakt-form-attachments-list">
+              {attachments.map((a, idx) => (
+                <li
+                  key={`${a.file.name}-${idx}`}
+                  className="flex items-center justify-between gap-2 rounded-md border border-border bg-card/40 px-3 py-1.5 text-xs"
+                  data-testid={`kontakt-form-attachment-${idx}`}
+                >
+                  <div className="flex min-w-0 flex-1 items-center gap-2">
+                    {a.status === "uploading" && (
+                      <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden="true" />
+                    )}
+                    {a.status === "ok" && (
+                      <span className="shrink-0 text-emerald-600" aria-hidden="true">
+                        ✓
+                      </span>
+                    )}
+                    {a.status === "error" && (
+                      <span className="shrink-0 text-destructive" aria-hidden="true">
+                        ⚠
+                      </span>
+                    )}
+                    <span className="truncate font-medium text-foreground">{a.file.name}</span>
+                    <span className="shrink-0 text-muted-foreground">
+                      ({Math.round(a.file.size / 1024)} kB)
+                    </span>
+                    {a.status === "error" && a.errorCode && (
+                      <span
+                        className="ml-2 truncate text-destructive"
+                        data-testid={`kontakt-form-attachment-${idx}-error`}
+                      >
+                        {a.errorCode}
+                      </span>
+                    )}
+                  </div>
+                  {a.status !== "uploading" && a.status !== "ok" && (
+                    <button
+                      type="button"
+                      onClick={() => removeAttachment(idx)}
+                      disabled={isSubmitting}
+                      aria-label={`Odstrániť ${a.file.name}`}
+                      data-testid={`kontakt-form-attachment-${idx}-remove`}
+                      className="shrink-0 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                    >
+                      <X className="size-3" aria-hidden="true" />
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+          {attachmentError && (
+            <p className="text-xs text-destructive" data-testid="kontakt-form-attachments-error">
+              {attachmentError}
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Honeypot — visually + a11y hidden; real users never fill it.
           Server-side rejects non-empty submissions. */}
