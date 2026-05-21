@@ -10,6 +10,28 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
+- **Verejná knižnica testov — 6 nových bezpečnostných packov (E37).** Stránka
+  `/tests` má po novom 15 test packov namiesto pôvodných 9. Nové
+  pribudli: **Heslá a 2FA**, **AI a deepfake**, **Sociálne siete**,
+  **Rodičia**, **Školy**, **Zdravotníctvo**. Celkovo 30 nových otázok
+  pokrývajúcich aktuálne hrozby — od kompromitovaných FB účtov a
+  Discord podvodov cez AI-personalizovaný phishing až po falošné
+  EduPage prihlasovanie a e-recept podvody. Každý pack je zadarmo,
+  bez registrácie, výsledok hneď.
+- **Vyhľadávač a katalóg `/tests` má nové UX vylepšenia (E37 Phase I).**
+  Filtračné chip-y a triediaca rolovacia ponuka majú väčšiu plochu
+  pre dotyk (≥44 px) — koniec s mis-tap-mi na mobile. Klávesnicová
+  navigácia má viditeľný focus ring. Pribudol počet zobrazených
+  testov vedľa triedenia (`"X testov"`) a sr-only nadpis pre čítače
+  obrazovky. Ak filter zúži zoznam na nulu, priamo v empty state je
+  tlačidlo *„Vyčistiť filter"* — netreba scrollovať hore.
+- **Slovenský copy hygiene na `/tests` packoch (E37 Phase G1).** Z titulov
+  a popisov packov sme odstránili zostávajúce anglické a české slová
+  (`scam-y`, `vektory`, `Backoffice`, `operatívci`) a z titulov pre
+  vekové cieľové skupiny zmizli zátvorky (*Seniori (55+)* →
+  *Seniori*, *Študenti (16+)* → *Študenti*, *Žiaci (do 16 rokov)* →
+  *Žiaci*). Texty znejú prirodzenejšie a v SERP-e zaberajú menej
+  miesta.
 - **Kontaktný formulár a centrum žiadostí o podporu (E48).** Na stránke
   `/kontakt` môžu po novom napísať aj neprihlásení návštevníci — stačí
   e-mail, predmet a krátky popis. Prihlásení používatelia majú v `/app`
