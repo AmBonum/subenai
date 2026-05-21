@@ -1,31 +1,5 @@
 [
   {
-    "version": "1.14.0",
-    "date": "2026-05-21",
-    "added": [
-      "**`/admin/settings` ukazuje skutočný stav GDPR konfigurácie.** Doteraz",
-      "**Export CSV pre žiadosti GDPR (DSR) aj DPA žiadosti + vyhľadávanie",
-      "**DPA žiadosti v admin paneli a v prehľade.** Žiadosti o spracovateľskú",
-      "**Úprava otázok a náhodné poradie v detaile testu — `/app/tests/<id>`.**",
-      "**Automatizovaný DPA tok pre školy — `/schools/dpa`.** Doteraz „Napíš",
-      "**Pripoj si edu testy k svojmu účtu — nová sekcia *Moje edu testy*",
-      "**PDF export výsledkov tvojho edu testu.** Vedľa tlačidla *Stiahnuť",
-      "**Grafy na stránke výsledkov tvojho edu testu.** Tabuľka respondentov",
-      "**Filtre na stránke výsledkov tvojho edu testu.** Tabuľka respondentov",
-      "**Šablóny v `/app/templates`: pribudla tvoja vlastná knižnica.** Predvolené",
-      "**Odoslať vlastnú šablónu na zverejnenie (Creative Commons CC BY 4.0).** Na",
-      "**Stiahnutie tvojich údajov (GDPR čl. 15 / čl. 20).** Na stránke",
-      "**Transparentnostný register.** Verejný JSON registrík transferov"
-    ],
-    "changed": [],
-    "fixed": [
-      "**Zdieľanie výsledku po custom teste už neukazuje „Výsledok neexistuje\".**"
-    ],
-    "removed": [],
-    "deprecated": [],
-    "security": []
-  },
-  {
     "version": "1.13.0",
     "date": "2026-05-20",
     "added": [],
