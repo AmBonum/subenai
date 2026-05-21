@@ -140,6 +140,31 @@ E48.2 sanitisation does these structural transforms:
    IPs can still pile up storage — mitigation is a GDPR-cleanup cron
    that purges archived tickets >36 months old (E48.10 scope).
 
+   **Required KV binding (audit A3, 2026-05-21).** The rate-limit
+   counters in `functions/_lib/security.ts` switched from per-isolate
+   `Map` storage to Cloudflare KV. Without a bound namespace, every
+   isolate keeps its own counter — the "3/24h" cap reads more like
+   "3/24h per isolate", which is many times the intended budget on a
+   busy region. Steps to bind:
+
+   1. Cloudflare dashboard → **Workers & Pages** → **KV** → **Create
+      namespace** named `support_rate_limit` (use the same name across
+      prod + preview).
+   2. The project's **Pages** dashboard → Settings → **Functions** →
+      **KV namespace bindings** → Add binding with **Variable name**
+      `SUPPORT_RATE_LIMIT_KV` and select the `support_rate_limit`
+      namespace.
+   3. Save + redeploy. The handler logs no errors when unbound — it
+      silently falls back to in-memory state — so verify the binding
+      is live by checking the CF Pages deployment env in the
+      "Functions / Bindings" tab.
+   4. Same binding must exist on both **Production** and **Preview**
+      environments for branch deploys to enforce limits.
+
+   The KV reads cost ~1 µs each from the same region; the put cost
+   is amortised over the rate-limit window. No measurable latency
+   impact on `/api/support-ticket-create`.
+
 If any production sample slips through these defences, escalate to §5
 and consider adding VirusTotal or a ClamAV sidecar as defence-in-depth.
 

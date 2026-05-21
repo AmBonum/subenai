@@ -112,6 +112,31 @@ async function buildPdfWithJavaScript(): Promise<Uint8Array> {
   return doc.save();
 }
 
+/**
+ * Build a PDF containing a stream that declares a /Filter naming
+ * JBIG2Decode or JPXDecode (or any other name). Used to verify the
+ * audit A6 rejection logic in stripPdfRiskyFeatures.
+ *
+ * Accepts a single filter name (encoded as `/Filter /Name`) or an
+ * array of names (encoded as `/Filter [/Name1 /Name2]`).
+ */
+async function buildPdfWithStreamFilter(filter: string | string[]): Promise<Uint8Array> {
+  const doc = await PDFDocument.create();
+  doc.addPage();
+  const ctx = doc.context;
+  // ctx.stream() preserves the `Filter` entry we pass; ctx.flateStream
+  // would overwrite it with `FlateDecode`. We never decode the stream
+  // body — the strip pass only inspects the filter dict entry.
+  const filterEntry: unknown = Array.isArray(filter)
+    ? filter.map((n) => PDFName.of(n))
+    : PDFName.of(filter);
+  const stream = ctx.stream(new Uint8Array([0x00, 0x01, 0x02]), {
+    Filter: filterEntry,
+  });
+  ctx.register(stream);
+  return doc.save();
+}
+
 // Re-export PDFName so the malicious-PDF builder above compiles.
 import { PDFName } from "pdf-lib";
 
@@ -165,6 +190,29 @@ describe("sanitizeFilename", () => {
     expect(sanitizeFilename("Report.PDF")).toBe("Report.PDF");
   });
 
+  // Audit A7 — Windows reserved device names. Rejected outright so the
+  // sanitiser never produces a filename that collides with a device
+  // file when an operator exports attachments to a Windows host.
+  it("rejects Windows reserved name CON.pdf", () => {
+    expect(sanitizeFilename("CON.pdf")).toBeNull();
+  });
+
+  it("rejects Windows reserved name NUL.png", () => {
+    expect(sanitizeFilename("NUL.png")).toBeNull();
+  });
+
+  it("rejects Windows reserved name COM1.jpg", () => {
+    expect(sanitizeFilename("COM1.jpg")).toBeNull();
+  });
+
+  it("rejects Windows reserved name LPT9.png", () => {
+    expect(sanitizeFilename("LPT9.png")).toBeNull();
+  });
+
+  it("rejects lowercase prn.pdf (case-insensitive match)", () => {
+    expect(sanitizeFilename("prn.pdf")).toBeNull();
+  });
+
   it("strips disallowed chars inside the extension", () => {
     expect(sanitizeFilename("file.p$df")).toBe("file.pdf");
   });
@@ -187,16 +235,18 @@ describe("stripPdfRiskyFeatures", () => {
   it("re-serialises a clean PDF without errors", async () => {
     const clean = await buildMinimalPdf();
     const stripped = await stripPdfRiskyFeatures(clean);
-    expect(stripped).not.toBeNull();
-    expect(stripped!.byteLength).toBeGreaterThan(0);
-    // Re-parsing the output should succeed.
-    const reparsed = await PDFDocument.load(stripped!);
-    expect(reparsed.getPageCount()).toBe(1);
+    expect(stripped.ok).toBe(true);
+    if (stripped.ok) {
+      expect(stripped.bytes.byteLength).toBeGreaterThan(0);
+      // Re-parsing the output should succeed.
+      const reparsed = await PDFDocument.load(stripped.bytes);
+      expect(reparsed.getPageCount()).toBe(1);
+    }
   });
 
-  it("returns null for non-PDF bytes", async () => {
+  it("returns pdf_parse_failed for non-PDF bytes", async () => {
     const result = await stripPdfRiskyFeatures(new TextEncoder().encode("not a pdf"));
-    expect(result).toBeNull();
+    expect(result).toEqual({ ok: false, error: "pdf_parse_failed" });
   });
 
   it("removes embedded JavaScript OpenAction from the catalog", async () => {
@@ -206,9 +256,10 @@ describe("stripPdfRiskyFeatures", () => {
     expect(dirtyParsed.catalog.lookup(PDFName.of("OpenAction"))).not.toBeUndefined();
 
     const stripped = await stripPdfRiskyFeatures(dirty);
-    expect(stripped).not.toBeNull();
+    expect(stripped.ok).toBe(true);
+    if (!stripped.ok) throw new Error("expected ok");
 
-    const cleanParsed = await PDFDocument.load(stripped!);
+    const cleanParsed = await PDFDocument.load(stripped.bytes);
     // OpenAction should now be gone.
     expect(cleanParsed.catalog.lookup(PDFName.of("OpenAction"))).toBeUndefined();
     // Document visual content (page count) preserved.
@@ -225,8 +276,24 @@ describe("stripPdfRiskyFeatures", () => {
 
     const bytes = await doc.save();
     const stripped = await stripPdfRiskyFeatures(bytes);
-    const reparsed = await PDFDocument.load(stripped!);
+    expect(stripped.ok).toBe(true);
+    if (!stripped.ok) throw new Error("expected ok");
+    const reparsed = await PDFDocument.load(stripped.bytes);
     expect(reparsed.catalog.lookup(PDFName.of("AcroForm"))).toBeUndefined();
+  });
+
+  // Audit A6 — JBIG2Decode + JPXDecode reject. Both decoders have a
+  // long CVE history in Adobe Reader / poppler / mupdf.
+  it("rejects PDF with a stream /Filter /JBIG2Decode (pdf_risky_filter)", async () => {
+    const bytes = await buildPdfWithStreamFilter("JBIG2Decode");
+    const result = await stripPdfRiskyFeatures(bytes);
+    expect(result).toEqual({ ok: false, error: "pdf_risky_filter" });
+  });
+
+  it("rejects PDF with a stream /Filter [/JPXDecode /FlateDecode]", async () => {
+    const bytes = await buildPdfWithStreamFilter(["JPXDecode", "FlateDecode"]);
+    const result = await stripPdfRiskyFeatures(bytes);
+    expect(result).toEqual({ ok: false, error: "pdf_risky_filter" });
   });
 });
 
@@ -403,6 +470,17 @@ describe("sanitizeAttachment — rejection paths", () => {
     });
     expect(r.ok).toBe(false);
     expect(r.error).toBe("pdf_parse_failed");
+  });
+
+  it("surfaces pdf_risky_filter end-to-end via sanitizeAttachment (audit A6)", async () => {
+    const bytes = await buildPdfWithStreamFilter("JBIG2Decode");
+    const r = await sanitizeAttachment({
+      bytes,
+      declaredMime: "application/pdf",
+      declaredFilename: "exploit.pdf",
+    });
+    expect(r.ok).toBe(false);
+    expect(r.error).toBe("pdf_risky_filter");
   });
 });
 

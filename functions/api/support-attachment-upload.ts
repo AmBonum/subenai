@@ -131,7 +131,12 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     .maybeSingle();
 
   if (ticketErr || !ticketRow) {
-    return jsonResponse(404, { error: "ticket_not_found" });
+    // Audit A8 — uniform 403 response. The earlier 404 leaked whether
+    // a ticket UUID existed (auth check ran AFTER), letting an
+    // unauthenticated attacker enumerate valid IDs by probing. Match
+    // the no-auth-token failure response exactly: same status, same
+    // body. We still bail out early to save the auth round-trip.
+    return jsonResponse(403, { error: "not_authorized" });
   }
 
   let authorised = false;

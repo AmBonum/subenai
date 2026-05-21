@@ -17,6 +17,25 @@ interface MockState {
   rpcStatus?: number;
 }
 
+/**
+ * Build a JWT-shaped string carrying a `sub` claim so the
+ * support-ticket-create handler's `decodeJwtSub()` resolves a stable
+ * per-user rate-limit bucket. Header/payload/signature are not signed
+ * or verified anywhere in the unit tests — the handler only base64-
+ * decodes the payload.
+ */
+function fakeJwt(sub: string): string {
+  const header = btoa(JSON.stringify({ alg: "HS256", typ: "JWT", kid: "abc" }))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+  const payload = btoa(JSON.stringify({ sub, aal: "aal1" }))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+  return `${header}.${payload}.sig`;
+}
+
 function buildRequest(
   body: unknown,
   opts: { ip?: string; auth?: string; userAgent?: string; ipCountry?: string } = {},
@@ -258,7 +277,10 @@ describe("POST /api/support-ticket-create — email dispatch (E48.5)", () => {
   it("dispatches an email WITHOUT the view link for authenticated submissions", async () => {
     const fetchSpy = mockFetch({ turnstileOk: true });
     const res = await onRequestPost({
-      request: buildRequest({ ...validBody, user_id: "u-auth-abc" }, { auth: "jwt-stub" }),
+      request: buildRequest(
+        { ...validBody, user_id: "u-auth-abc" },
+        { auth: fakeJwt("u-auth-abc") },
+      ),
       env: envWithEmail,
     });
     expect(res.status).toBe(200);
@@ -311,8 +333,9 @@ describe("POST /api/support-ticket-create — email dispatch (E48.5)", () => {
 describe("POST /api/support-ticket-create — auth path", () => {
   it("forwards the JWT and skips Turnstile", async () => {
     const fetchSpy = mockFetch({ turnstileOk: false });
+    const jwt = fakeJwt("u-auth-abc");
     const res = await onRequestPost({
-      request: buildRequest({ ...validBody, user_id: "u-auth-abc" }, { auth: "jwt-stub" }),
+      request: buildRequest({ ...validBody, user_id: "u-auth-abc" }, { auth: jwt }),
       env,
     });
     expect(res.status).toBe(200);
@@ -329,17 +352,20 @@ describe("POST /api/support-ticket-create — auth path", () => {
     expect(rpcCall).toBeDefined();
     const rpcInit = rpcCall![1] as RequestInit | undefined;
     const sentAuth = new Headers(rpcInit?.headers).get("authorization");
-    expect(sentAuth).toBe("Bearer jwt-stub");
+    expect(sentAuth).toBe(`Bearer ${jwt}`);
   });
 
   it("rate-limits per user (not per IP) on the auth path", async () => {
     mockFetch({ turnstileOk: true });
-    // 10 submissions allowed; 11th rejected.
+    // Single user (`sub=u-auth-abc`) — the bucket is keyed on the JWT
+    // `sub` claim, NOT the JWT bytes or the client IP. Varying IPs across
+    // these 11 calls must NOT widen the bucket.
+    const jwt = fakeJwt("u-auth-abc");
     for (let i = 0; i < 10; i++) {
       const res = await onRequestPost({
         request: buildRequest(
           { ...validBody, user_id: "u-auth-abc" },
-          { auth: "jwt-stub", ip: `203.0.113.${i}` },
+          { auth: jwt, ip: `203.0.113.${i}` },
         ),
         env,
       });
@@ -348,11 +374,50 @@ describe("POST /api/support-ticket-create — auth path", () => {
     const res = await onRequestPost({
       request: buildRequest(
         { ...validBody, user_id: "u-auth-abc" },
-        { auth: "jwt-stub", ip: "203.0.113.99" },
+        { auth: jwt, ip: "203.0.113.99" },
       ),
       env,
     });
     expect(res.status).toBe(429);
     expect((await res.json()).error).toBe("rate_limited_user");
+  });
+
+  it("isolates per-user buckets by JWT `sub` (audit A2 regression)", async () => {
+    // Two distinct Supabase users sharing the same JWT header (alg/typ/kid
+    // prefix) — keying on `jwt.slice(0,32)` would collapse them into one
+    // shared bucket. Keying on `sub` keeps them separate.
+    mockFetch({ turnstileOk: true });
+    const jwtA = fakeJwt("user-aaaa-1111");
+    const jwtB = fakeJwt("user-bbbb-2222");
+    expect(jwtA.slice(0, 32)).toBe(jwtB.slice(0, 32)); // same header prefix
+    // Burn user A's quota (10).
+    for (let i = 0; i < 10; i++) {
+      const res = await onRequestPost({
+        request: buildRequest(
+          { ...validBody, user_id: "user-aaaa-1111" },
+          { auth: jwtA, ip: `198.51.100.${i}` },
+        ),
+        env,
+      });
+      expect(res.status).toBe(200);
+    }
+    // 11th from user A → rate-limited.
+    const denied = await onRequestPost({
+      request: buildRequest(
+        { ...validBody, user_id: "user-aaaa-1111" },
+        { auth: jwtA, ip: "198.51.100.50" },
+      ),
+      env,
+    });
+    expect(denied.status).toBe(429);
+    // But user B can still submit — separate bucket.
+    const ok = await onRequestPost({
+      request: buildRequest(
+        { ...validBody, user_id: "user-bbbb-2222" },
+        { auth: jwtB, ip: "198.51.100.51" },
+      ),
+      env,
+    });
+    expect(ok.status).toBe(200);
   });
 });

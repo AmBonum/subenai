@@ -2145,6 +2145,31 @@ export function useCancelPendingErasure() {
 // (has_role(uid, 'admin') gate). View is client-side filtered + capped at 200
 // rows. The partial admin_working_set_idx keeps the query fast at scale.
 
+/**
+ * Escape a user-supplied substring for use inside a PostgreSQL
+ * LIKE/ILIKE pattern. Backslash MUST be escaped first.
+ *
+ * Exported for unit testing — see `tests/lib/admin/support-ticket-search.test.ts`.
+ */
+export function ilikePatternEscape(input: string): string {
+  return input.replace(/\\/g, "\\\\").replace(/[%_]/g, "\\$&");
+}
+
+/**
+ * Escape a value being embedded into a PostgREST `or(...)` filter
+ * expression. PostgREST's tokeniser treats `,`, `(`, `)` as structural
+ * separators; URL-encoding them yields literal matches after PostgREST
+ * decodes the request, while keeping the tokeniser from seeing them.
+ *
+ * Caller is responsible for first applying `ilikePatternEscape` if the
+ * value goes into an ILIKE pattern.
+ *
+ * Exported for unit testing.
+ */
+export function postgrestOrEscape(input: string): string {
+  return input.replace(/,/g, "%2C").replace(/\(/g, "%28").replace(/\)/g, "%29");
+}
+
 export interface SupportTicketsFilters {
   statuses?: string[];
   categories?: string[];
@@ -2193,13 +2218,22 @@ export function useAdminSupportTickets(filters: SupportTicketsFilters = {}) {
         q = q.in("category", categories);
       }
       if (query && query.trim().length >= 2) {
-        // PostgreSQL LIKE/ILIKE pattern escaping. The three special chars
-        // are \, %, _. Backslash must be escaped FIRST — if we escaped %
-        // and _ first, the new backslashes they emit would get doubled
-        // again on a second pass, mangling the pattern. CodeQL caught the
-        // original 2-char-only escape as incomplete string encoding.
-        const escaped = query.trim().replace(/\\/g, "\\\\").replace(/[%_]/g, "\\$&");
-        const term = `%${escaped}%`;
+        // Two layers of escape are necessary on a `q.or(...)` ILIKE call:
+        //
+        //   1. PostgreSQL LIKE/ILIKE pattern escape — the three special
+        //      chars are `\`, `%`, `_`. Backslash must be escaped FIRST
+        //      (if we escaped `%`/`_` first, the new backslashes they
+        //      emit would get doubled again on a second pass). CodeQL
+        //      flagged the original 2-char-only escape as incomplete.
+        //
+        //   2. PostgREST `or()` parser escape (audit A4) — the parser
+        //      uses `,`, `(`, `)` as structural separators. A search
+        //      term containing them (e.g. `foo),id.eq.<uuid>`) would
+        //      inject extra filter clauses. URL-encode them after the
+        //      ILIKE escape: PostgREST decodes them back to literals,
+        //      but the `or()` tokeniser doesn't.
+        const ilikeEscaped = ilikePatternEscape(query.trim());
+        const term = `%${postgrestOrEscape(ilikeEscaped)}%`;
         q = q.or(`subject.ilike.${term},body.ilike.${term},submitter_email.ilike.${term}`);
       }
 

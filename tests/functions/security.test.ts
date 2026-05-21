@@ -1,13 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import {
+  consumeCooldown,
   consumeDailyQuota,
+  consumeRateLimit,
   emailCooldown,
   ipRateLimit,
   parsePositiveInt,
   readClientIp,
   verifyTurnstile,
   __test__,
+  type SupportRateLimitKV,
 } from "../../functions/_lib/security";
 
 beforeEach(() => {
@@ -119,6 +122,69 @@ describe("readClientIp", () => {
 
   it("returns 'unknown' when no headers are present", () => {
     expect(readClientIp(new Request("https://example.com"))).toBe("unknown");
+  });
+});
+
+describe("consumeRateLimit (KV-backed, audit A3)", () => {
+  function fakeKV(): SupportRateLimitKV & { store: Map<string, string> } {
+    const store = new Map<string, string>();
+    return {
+      store,
+      async get(key) {
+        return store.get(key) ?? null;
+      },
+      async put(key, value) {
+        store.set(key, value);
+      },
+      async delete(key) {
+        store.delete(key);
+      },
+    };
+  }
+
+  it("allows up to the limit then rejects when KV is bound", async () => {
+    const kv = fakeKV();
+    for (let i = 0; i < 3; i++) {
+      const ok = await consumeRateLimit(kv, "support:ip", "1.2.3.4", 3, 86400);
+      expect(ok).toBe(true);
+    }
+    const denied = await consumeRateLimit(kv, "support:ip", "1.2.3.4", 3, 86400);
+    expect(denied).toBe(false);
+  });
+
+  it("isolates buckets per identity", async () => {
+    const kv = fakeKV();
+    for (let i = 0; i < 3; i++) {
+      expect(await consumeRateLimit(kv, "support:ip", "A", 3, 86400)).toBe(true);
+    }
+    // identity B still has full budget.
+    expect(await consumeRateLimit(kv, "support:ip", "B", 3, 86400)).toBe(true);
+  });
+
+  it("falls back to per-isolate Map when KV binding is absent", async () => {
+    for (let i = 0; i < 3; i++) {
+      expect(await consumeRateLimit(undefined, "support:ip", "X", 3, 86400)).toBe(true);
+    }
+    expect(await consumeRateLimit(undefined, "support:ip", "X", 3, 86400)).toBe(false);
+  });
+});
+
+describe("consumeCooldown (KV-backed)", () => {
+  it("blocks a second consume within the TTL window", async () => {
+    const store = new Map<string, string>();
+    const kv: SupportRateLimitKV = {
+      async get(k) {
+        return store.get(k) ?? null;
+      },
+      async put(k, v) {
+        store.set(k, v);
+      },
+      async delete(k) {
+        store.delete(k);
+      },
+    };
+    expect(await consumeCooldown(kv, "support:email", "a@b.cz", 600)).toBe(true);
+    expect(await consumeCooldown(kv, "support:email", "a@b.cz", 600)).toBe(false);
   });
 });
 

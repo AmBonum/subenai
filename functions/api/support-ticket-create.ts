@@ -27,11 +27,12 @@ import { createClient } from "@supabase/supabase-js";
 import { sendEmail } from "../_lib/email";
 import { supportTicketReceivedEmail } from "../_lib/email-templates";
 import {
-  emailCooldown,
-  ipRateLimit,
+  consumeCooldown,
+  consumeRateLimit,
   parsePositiveInt,
   readClientIp,
   verifyTurnstile,
+  type SupportRateLimitKV,
 } from "../_lib/security";
 import { PROD_SUPABASE_URL } from "../_lib/supabase-url";
 
@@ -42,6 +43,12 @@ interface Env {
   TURNSTILE_SECRET_KEY?: string;
   SUPPORT_PER_IP_PER_DAY?: string;
   SUPPORT_EMAIL_COOLDOWN_SECONDS?: string;
+  // KV namespace for rate-limit + cooldown state (audit A3).
+  // When unbound (local dev), the security helpers fall back to a
+  // per-isolate Map — the operator MUST bind this in production via
+  // CF Pages Settings → Functions → KV namespace bindings.
+  // See tasks/E48-runbook.md §3.
+  SUPPORT_RATE_LIMIT_KV?: SupportRateLimitKV;
   // Email infra (E11.8). Optional on the type so unit tests can omit them
   // without ts-error noise; CF Pages production always has them.
   RESEND_API_KEY?: string;
@@ -145,16 +152,23 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   const ip = readClientIp(request);
 
   // Rate limit.
+  const kv = env.SUPPORT_RATE_LIMIT_KV;
   if (isAuth) {
-    // Per-user limit; key off the JWT prefix (sufficient as a per-user
-    // bucket since users can't rotate JWTs faster than the limit window).
-    const userKey = `support:user:${jwt.slice(0, 32)}`;
-    if (!ipRateLimit.consume(userKey, 10, 86400)) {
+    // Per-user limit. The bucket MUST key off the JWT payload `sub`
+    // (= the Supabase user UUID), NOT the JWT itself or any prefix of
+    // it. The first ~30+ chars of a Supabase-minted JWT are the
+    // base64-encoded header (`{"alg":"HS256","typ":"JWT","kid":"…"}`)
+    // which is identical for every user in the same project. Slicing
+    // would collapse everyone into a single shared 10/24h bucket — one
+    // noisy account DoSes everyone else.
+    const sub = decodeJwtSub(jwt);
+    const identity = sub ?? `unknown:${ip}`;
+    if (!(await consumeRateLimit(kv, "support:user", identity, 10, 86400))) {
       return jsonResponse(429, { error: "rate_limited_user" });
     }
   } else {
     const perIp = parsePositiveInt(env.SUPPORT_PER_IP_PER_DAY, 3);
-    if (!ipRateLimit.consume(`support:ip:${ip}`, perIp, 86400)) {
+    if (!(await consumeRateLimit(kv, "support:ip", ip, perIp, 86400))) {
       return jsonResponse(429, { error: "rate_limited_ip" });
     }
 
@@ -177,7 +191,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   // limit is tighter).
   if (!isAuth) {
     const cooldown = parsePositiveInt(env.SUPPORT_EMAIL_COOLDOWN_SECONDS, 600);
-    if (!emailCooldown.consume(`support:email:${email}`, cooldown)) {
+    if (!(await consumeCooldown(kv, "support:email", email, cooldown))) {
       return jsonResponse(429, { error: "email_cooldown" });
     }
   }
@@ -279,4 +293,25 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     ticket_id: result.ticket_id,
     view_token: result.view_token,
   });
+}
+
+// Local base64url-decode of the JWT payload to extract `sub` for the
+// per-user rate-limit bucket. Mirrors `decodeJwtPayload` in
+// support-ticket-reply.ts. We do NOT verify the signature here — that
+// already happened upstream (auth.getUser() in callers, or via the RPC
+// path on the authenticated branch). The bucket key only needs to be
+// stable per user; a forged JWT either fails the RPC (`auth.uid()` is
+// NULL) or returns 500, never an unauthorised insert.
+function decodeJwtSub(jwt: string): string | null {
+  try {
+    const parts = jwt.split(".");
+    if (parts.length !== 3) return null;
+    const b64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const padding = "=".repeat((4 - (b64.length % 4)) % 4);
+    const json = atob(b64 + padding);
+    const payload = JSON.parse(json) as { sub?: string };
+    return typeof payload.sub === "string" && payload.sub.length > 0 ? payload.sub : null;
+  } catch {
+    return null;
+  }
 }
