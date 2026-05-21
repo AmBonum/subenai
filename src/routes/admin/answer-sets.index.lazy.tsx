@@ -99,12 +99,12 @@ function AnswerSetsPage() {
         actions={
           <Button size="sm" data-testid="answer-sets-list-new-button">
             <Plus className="mr-2 h-4 w-4" />
-
-            <AdminPageExplainer pageKey="answer_sets" />
             {t("new_button")}
           </Button>
         }
       />
+
+      <AdminPageExplainer pageKey="answer_sets" />
 
       <Card className="border-border/60 shadow-[var(--shadow-card)]">
         <CardContent className="p-4">

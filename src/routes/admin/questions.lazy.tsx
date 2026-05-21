@@ -225,8 +225,6 @@ function QuestionsPage() {
               data-testid="admin-questions-export-button"
             >
               <Download className="mr-2 h-4 w-4" />
-
-              <AdminPageExplainer pageKey="questions" />
               {t("export_button")}
             </Button>
             <Button
@@ -243,6 +241,8 @@ function QuestionsPage() {
           </>
         }
       />
+
+      <AdminPageExplainer pageKey="questions" />
 
       <Card className="border-border/60 shadow-[var(--shadow-card)]">
         <CardContent className="space-y-4 p-4">

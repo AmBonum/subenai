@@ -84,12 +84,12 @@ function AdminTrainingsPage() {
         actions={
           <Button size="sm" onClick={openCreate} data-testid="admin-trainings-list-new-button">
             <Plus className="mr-2 h-4 w-4" />
-
-            <AdminPageExplainer pageKey="trainings" />
             {t("new_button")}
           </Button>
         }
       />
+
+      <AdminPageExplainer pageKey="trainings" />
 
       <Card className="border-border/60">
         <CardContent className="space-y-4 p-4">
