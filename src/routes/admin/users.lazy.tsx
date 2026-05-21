@@ -1,6 +1,6 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, ScrollText } from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/admin/PageHeader";
@@ -152,16 +152,30 @@ function AdminUsersPage() {
                       {u.questions_count}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        aria-label={t("edit_role")}
-                        data-testid={`admin-users-edit-role-${u.id}`}
-                        onClick={() => toast.info(t("edit_role"))}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
+                      <div className="flex justify-end gap-1">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          aria-label={t("open_dossier")}
+                          data-testid={`admin-users-open-dossier-${u.id}`}
+                          asChild
+                        >
+                          <Link to="/admin/users/$userId" params={{ userId: u.id }}>
+                            <ScrollText className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          aria-label={t("edit_role")}
+                          data-testid={`admin-users-edit-role-${u.id}`}
+                          onClick={() => toast.info(t("edit_role"))}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

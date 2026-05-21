@@ -93,6 +93,7 @@ import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
 import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
+import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users.$userId'
 import { Route as AdminTestsTestIdRouteImport } from './routes/admin/tests.$testId'
 import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$pageId'
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
@@ -566,6 +567,13 @@ const AppAccountProfileRoute = AppAccountProfileRouteImport.update({
   path: '/account/profile',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
+  id: '/$userId',
+  path: '/$userId',
+  getParentRoute: () => AdminUsersRoute,
+} as any).lazy(() =>
+  import('./routes/admin/users.$userId.lazy').then((d) => d.Route),
+)
 const AdminTestsTestIdRoute = AdminTestsTestIdRouteImport.update({
   id: '/$testId',
   path: '/$testId',
@@ -661,7 +669,7 @@ export interface FileRoutesByFullPath {
   '/admin/support': typeof AdminSupportRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
   '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRoute
@@ -700,6 +708,7 @@ export interface FileRoutesByFullPath {
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
+  '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
@@ -749,7 +758,7 @@ export interface FileRoutesByTo {
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/trainings': typeof AdminTrainingsRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
   '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRoute
@@ -787,6 +796,7 @@ export interface FileRoutesByTo {
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
+  '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
@@ -842,7 +852,7 @@ export interface FileRoutesById {
   '/admin/support': typeof AdminSupportRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
-  '/admin/users': typeof AdminUsersRoute
+  '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
   '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRoute
@@ -881,6 +891,7 @@ export interface FileRoutesById {
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
+  '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
@@ -977,6 +988,7 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
+    | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
     | '/app/legal/dsr'
@@ -1064,6 +1076,7 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
+    | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
     | '/app/legal/dsr'
@@ -1157,6 +1170,7 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
+    | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
     | '/app/legal/dsr'
@@ -1805,6 +1819,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAccountProfileRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/users/$userId': {
+      id: '/admin/users/$userId'
+      path: '/$userId'
+      fullPath: '/admin/users/$userId'
+      preLoaderRoute: typeof AdminUsersUserIdRouteImport
+      parentRoute: typeof AdminUsersRoute
+    }
     '/admin/tests/$testId': {
       id: '/admin/tests/$testId'
       path: '/$testId'
@@ -1906,6 +1927,18 @@ const AdminTestsRouteWithChildren = AdminTestsRoute._addFileChildren(
   AdminTestsRouteChildren,
 )
 
+interface AdminUsersRouteChildren {
+  AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
+}
+
+const AdminUsersRouteChildren: AdminUsersRouteChildren = {
+  AdminUsersUserIdRoute: AdminUsersUserIdRoute,
+}
+
+const AdminUsersRouteWithChildren = AdminUsersRoute._addFileChildren(
+  AdminUsersRouteChildren,
+)
+
 interface AdminRouteChildren {
   AdminAnswerSetsRoute: typeof AdminAnswerSetsRouteWithChildren
   AdminAuditRoute: typeof AdminAuditRoute
@@ -1926,7 +1959,7 @@ interface AdminRouteChildren {
   AdminSupportRoute: typeof AdminSupportRoute
   AdminTestsRoute: typeof AdminTestsRouteWithChildren
   AdminTrainingsRoute: typeof AdminTrainingsRoute
-  AdminUsersRoute: typeof AdminUsersRoute
+  AdminUsersRoute: typeof AdminUsersRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
   AdminBlogIdRoute: typeof AdminBlogIdRoute
   AdminBlogNewRoute: typeof AdminBlogNewRoute
@@ -1953,7 +1986,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSupportRoute: AdminSupportRoute,
   AdminTestsRoute: AdminTestsRouteWithChildren,
   AdminTrainingsRoute: AdminTrainingsRoute,
-  AdminUsersRoute: AdminUsersRoute,
+  AdminUsersRoute: AdminUsersRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
   AdminBlogIdRoute: AdminBlogIdRoute,
   AdminBlogNewRoute: AdminBlogNewRoute,

@@ -54,6 +54,7 @@
     "role_user": "Uživatel",
     "role_pending": "Čekající",
     "edit_role": "Upravit roli",
+    "open_dossier": "Otevřít GDPR dossier",
     "empty_state_title": "Žádní uživatelé",
     "empty_state_description": "Pro zadané filtry jsme nenašli žádný záznam.",
     "table_header_user": "Uživatel",
