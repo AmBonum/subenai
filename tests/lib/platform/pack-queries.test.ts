@@ -51,6 +51,7 @@ describe("fetchPlatformPacks — catalog list mapping", () => {
       industry: "heslo_2fa",
       industryEmoji: "🔐",
       passingThreshold: 75,
+      questionCount: 7,
       publishedAt: "2026-05-15T00:00:00Z",
       updatedAt: "2026-05-15T00:00:00Z",
     });
@@ -175,6 +176,7 @@ describe("fetchPackWithQuestions — detail payload mapping", () => {
       industryEmoji: "🤖",
       targetPersona: "persona",
       passingThreshold: 70,
+      questionCount: 1,
     });
     expect(result!.pack.sources).toEqual([{ label: "SK-CERT", url: "https://www.sk-cert.sk/" }]);
     // Phase F contract: questionIds is a synthetic array sized to the

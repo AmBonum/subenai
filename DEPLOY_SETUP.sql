@@ -7458,3 +7458,83 @@ SELECT
 -- (Note: the global Verification SELECT lives earlier in this file — see
 -- the "Verification — run after the script completes" banner around the
 -- middle of DEPLOY_SETUP. Don't duplicate it here.)
+
+
+-- ============================================================================
+-- E37 Phase G3 — get_platform_pack_question_ids() RPC
+-- ============================================================================
+-- Mirror of supabase/migrations/20260521300000_e37_pack_question_ids_rpc.sql.
+-- Returns (slug, question_ids[]) for every published platform pack — the
+-- composer at /test/builder uses it to expand a selected pack into its
+-- pre-loaded question pool. Idempotent via CREATE OR REPLACE.
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION public.get_platform_pack_question_ids()
+RETURNS TABLE (
+  slug text,
+  question_ids uuid[]
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+  SELECT
+    t.slug,
+    ARRAY(
+      SELECT tq.question_id
+        FROM public.test_questions tq
+       WHERE tq.test_id = t.id
+       ORDER BY tq.position ASC
+    ) AS question_ids
+    FROM public.tests t
+    JOIN public.platform_pack_metadata m ON m.test_id = t.id
+   WHERE t.status = 'published'
+   ORDER BY t.published_at DESC NULLS LAST, t.created_at DESC;
+$$;
+
+REVOKE ALL ON FUNCTION public.get_platform_pack_question_ids() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_platform_pack_question_ids()
+  TO anon, authenticated;
+
+
+-- ============================================================================
+-- E37 Phase G3a hotfix — filter draft question IDs out of
+-- get_platform_pack_question_ids()
+-- ============================================================================
+-- Mirror of supabase/migrations/20260521310000_e37_pack_question_ids_published_filter.sql.
+-- Re-declares the function with `q.status = 'published'` filtering on the
+-- inner subquery so draft questions linked to a published pack no longer
+-- leak into the returned ID array. Matches the visibility rule already
+-- enforced by get_pack_with_questions (Phase B').
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION public.get_platform_pack_question_ids()
+RETURNS TABLE (
+  slug text,
+  question_ids uuid[]
+)
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+  SELECT
+    t.slug,
+    ARRAY(
+      SELECT tq.question_id
+        FROM public.test_questions tq
+        JOIN public.questions q ON q.id = tq.question_id
+       WHERE tq.test_id = t.id
+         AND q.status = 'published'
+       ORDER BY tq.position ASC
+    ) AS question_ids
+    FROM public.tests t
+    JOIN public.platform_pack_metadata m ON m.test_id = t.id
+   WHERE t.status = 'published'
+   ORDER BY t.published_at DESC NULLS LAST, t.created_at DESC;
+$$;
+
+REVOKE ALL ON FUNCTION public.get_platform_pack_question_ids() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_platform_pack_question_ids()
+  TO anon, authenticated;

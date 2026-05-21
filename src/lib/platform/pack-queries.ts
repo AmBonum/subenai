@@ -62,6 +62,7 @@ function toTestPackSummary(row: PlatformPackRpcRow): TestPack {
     // Catalog list doesn't carry persona/sources; detail RPC does.
     targetPersona: "",
     questionIds: Array.from({ length: row.question_count }, () => ""),
+    questionCount: row.question_count,
     passingThreshold: row.passing_threshold,
     publishedAt: row.published_at ?? "",
     updatedAt: row.published_at ?? "",
@@ -130,6 +131,7 @@ export async function fetchPackWithQuestions(
     industryEmoji: payload.pack.industry_emoji,
     targetPersona: payload.pack.target_persona,
     questionIds: Array.from({ length: payload.questions.length }, () => ""),
+    questionCount: payload.questions.length,
     passingThreshold: payload.pack.passing_threshold,
     publishedAt: payload.pack.published_at ?? "",
     updatedAt: payload.pack.published_at ?? "",

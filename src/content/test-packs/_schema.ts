@@ -53,6 +53,11 @@ export interface TestPack {
   targetPersona: string;
   /** Hand-curated question IDs from the bank (8–25 items). */
   questionIds: string[];
+  /** E37 architect P2 — parallel field that decouples future callers
+   *  from the `questionIds.length` shim. New code reads this; old code
+   *  keeps reading `questionIds.length` until Phase G fully removes the
+   *  static layer. Optional for back-compat with existing fixtures. */
+  questionCount?: number;
   /** Optional 0..1 — share of legit/honeypot questions if author wants higher. */
   honeypotRatio?: number;
   /** 0..100, default 70. DEFAULT SUGGESTION; composer can override. */
@@ -102,6 +107,7 @@ export const testPackSchema: z.ZodType<TestPack> = z.object({
     .array(z.string().min(1))
     .min(8, "pack must have at least 8 questions")
     .max(25, "pack manifest is capped at 25 questions"),
+  questionCount: z.number().int().min(0).optional(),
   honeypotRatio: z.number().min(0).max(1).optional(),
   passingThreshold: z.number().int().min(0).max(100),
   publishedAt: z.string().regex(ISO_DATE_RE),
