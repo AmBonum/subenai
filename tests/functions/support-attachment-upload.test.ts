@@ -50,6 +50,7 @@ interface MockState {
   attachmentCount?: number;
   uploadOk?: boolean;
   insertOk?: boolean;
+  insertErrorMessage?: string;
   submitterUserId?: string | null;
   getUserId?: string | null;
 }
@@ -128,7 +129,12 @@ function mockFetch(state: MockState) {
       const method = init?.method ?? "GET";
       if (method === "POST") {
         if (state.insertOk === false) {
-          return new Response(JSON.stringify({ code: "23505", message: "unique violation" }), {
+          const message = state.insertErrorMessage ?? "unique violation";
+          // PostgREST returns errors as JSON with code/message; the
+          // supabase-js client surfaces .code and .message identically
+          // regardless of the HTTP status.
+          const code = message.includes("attachment_limit_reached") ? "check_violation" : "23505";
+          return new Response(JSON.stringify({ code, message }), {
             status: 500,
             headers: { "content-type": "application/json" },
           });
@@ -384,5 +390,43 @@ describe("POST /api/support-attachment-upload — sanitization integration", () 
     });
     expect(res.status).toBe(500);
     expect((await res.json()).error).toBe("storage_upload_failed");
+  });
+
+  // The BEFORE INSERT trigger enforce_attachment_cap_per_ticket_trg
+  // closes the TOCTOU race between the pre-count check (count < 3) and
+  // the INSERT — concurrent uploads that all pass the pre-check race
+  // into INSERT, the trigger fires for the 4th and raises
+  // attachment_limit_reached. The CF function recognises that specific
+  // message and maps it back to the same 400 response the pre-check
+  // returns, instead of the generic 500 attachment_insert_failed.
+  it("returns 400 attachment_limit_reached when trigger blocks the insert (race lost)", async () => {
+    mockFetch({ insertOk: false, insertErrorMessage: "attachment_limit_reached" });
+    const res = await onRequestPost({
+      request: buildRequest({
+        file: { content: MINIMAL_PNG, type: "image/png", name: "racer.png" },
+        ticketId: TICKET_ID,
+        viewToken: VIEW_TOKEN,
+      }),
+      env,
+    });
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toBe("attachment_limit_reached");
+  });
+
+  it("returns 500 attachment_insert_failed for generic INSERT errors (e.g. unique violation)", async () => {
+    mockFetch({
+      insertOk: false,
+      insertErrorMessage: "duplicate key value violates unique constraint",
+    });
+    const res = await onRequestPost({
+      request: buildRequest({
+        file: { content: MINIMAL_PNG, type: "image/png", name: "dup.png" },
+        ticketId: TICKET_ID,
+        viewToken: VIEW_TOKEN,
+      }),
+      env,
+    });
+    expect(res.status).toBe(500);
+    expect((await res.json()).error).toBe("attachment_insert_failed");
   });
 });
