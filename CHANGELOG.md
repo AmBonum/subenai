@@ -64,6 +64,23 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   Stav (rozbalené/zbalené) si panel pamätá per stránka v prehliadači.
   Obsah je k dispozícii v slovenčine, angličtine aj češtine.
 
+### Opravené
+- **Responzívnosť admin vysvetľujúcich panelov.** Po prvom nasadení sme
+  zachytili niekoľko UX a layout problémov na rôznych obrazovkách:
+  na malých telefónoch sa dlhé technické názvy (`VITE_DPA_TEMPLATE_DRAFT_WATERMARK`,
+  cesty k súborom) ostrihli pri pravom okraji panelu — teraz sa zalomia.
+  Na veľkých monitoroch (1920 px+) bol text panelu roztiahnutý cez celú
+  šírku obrazovky a čítal sa zle — teraz je konštantne ~65 znakov na
+  riadok. Titulok panelu bol vizuálne slabší než pomocné podnadpisy —
+  premapovali sme hierarchiu (väčší titulok, jemnejšie podnadpisy).
+  Odkazy v sekcii „Dokumentácia" mali farebný indikátor len pri hovere
+  — teraz sú podčiarknuté aj pri pokoji (WCAG 1.4.1). Pri kotvovom
+  prelinkovaní panelu (`#nazov`) skákala stránka tesne pod sticky
+  hlavičku a tlačidlo na rozbalenie sa schovalo — pridali sme 80-pixelový
+  scroll offset. Vizuálne odlíšenie panelu od okolitých kariet je
+  viditeľnejšie. Animácia šípky reaguje na operačný systém respektíva
+  preferenciu „znížený pohyb" cez CSS bez prvého snímkového záblesku.
+
 ## [1.14.1] — 2026-05-21
 
 Drobný patch release zameraný na produkčný incident s `/schools/dpa`
