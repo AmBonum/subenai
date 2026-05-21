@@ -27,6 +27,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
 import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
+import { Route as KontaktIndexRouteImport } from './routes/kontakt.index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
@@ -196,6 +197,11 @@ const SponsorsIndexRoute = SponsorsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => SponsorsRoute,
+} as any)
+const KontaktIndexRoute = KontaktIndexRouteImport.update({
+  id: '/kontakt/',
+  path: '/kontakt/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
@@ -726,6 +732,7 @@ export interface FileRoutesByFullPath {
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/kontakt/': typeof KontaktIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
@@ -818,6 +825,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppIndexRoute
   '/blog': typeof BlogIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/kontakt': typeof KontaktIndexRoute
   '/sponsors': typeof SponsorsIndexRoute
   '/test': typeof TestIndexRoute
   '/tests': typeof TestsIndexRoute
@@ -917,6 +925,7 @@ export interface FileRoutesById {
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/kontakt/': typeof KontaktIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
@@ -1018,6 +1027,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/blog/'
     | '/courses/'
+    | '/kontakt/'
     | '/sponsors/'
     | '/test/'
     | '/tests/'
@@ -1110,6 +1120,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/blog'
     | '/courses'
+    | '/kontakt'
     | '/sponsors'
     | '/test'
     | '/tests'
@@ -1208,6 +1219,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/blog/'
     | '/courses/'
+    | '/kontakt/'
     | '/sponsors/'
     | '/test/'
     | '/tests/'
@@ -1273,6 +1285,7 @@ export interface RootRouteChildren {
   ThankYouSessionIdRoute: typeof ThankYouSessionIdRoute
   BlogIndexRoute: typeof BlogIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  KontaktIndexRoute: typeof KontaktIndexRoute
   TestIndexRoute: typeof TestIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
   BlogAutorSlugRoute: typeof BlogAutorSlugRoute
@@ -1406,6 +1419,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sponsors/'
       preLoaderRoute: typeof SponsorsIndexRouteImport
       parentRoute: typeof SponsorsRoute
+    }
+    '/kontakt/': {
+      id: '/kontakt/'
+      path: '/kontakt'
+      fullPath: '/kontakt/'
+      preLoaderRoute: typeof KontaktIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/courses/': {
       id: '/courses/'
@@ -2232,6 +2252,7 @@ const rootRouteChildren: RootRouteChildren = {
   ThankYouSessionIdRoute: ThankYouSessionIdRoute,
   BlogIndexRoute: BlogIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  KontaktIndexRoute: KontaktIndexRoute,
   TestIndexRoute: TestIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
   BlogAutorSlugRoute: BlogAutorSlugRoute,
