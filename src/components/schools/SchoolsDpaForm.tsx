@@ -1,32 +1,8 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 
 import { CONTACT_EMAIL } from "@/config/site";
 import { tFor } from "@/i18n/marketing";
-
-const TURNSTILE_SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "";
-
-interface TurnstileApi {
-  render(
-    container: HTMLElement,
-    options: {
-      sitekey: string;
-      callback: (token: string) => void;
-      "error-callback"?: () => void;
-      "expired-callback"?: () => void;
-      "timeout-callback"?: () => void;
-      theme?: "light" | "dark" | "auto";
-    },
-  ): string;
-  reset(widgetId?: string): void;
-  remove(widgetId: string): void;
-}
-
-declare global {
-  interface Window {
-    turnstile?: TurnstileApi;
-  }
-}
+import { TurnstileWidget } from "@/components/common/TurnstileWidget";
 
 interface SuccessState {
   requestId: string;
@@ -118,8 +94,7 @@ export function SchoolsDpaForm() {
   const [schoolName, setSchoolName] = useState("");
   const [consent, setConsent] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const turnstileContainerRef = useRef<HTMLDivElement | null>(null);
-  const widgetIdRef = useRef<string | null>(null);
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState<SuccessState | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -127,72 +102,13 @@ export function SchoolsDpaForm() {
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail);
   const nameValid = contactName.trim().length >= 2;
   const schoolValid = schoolName.trim().length >= 2;
-  const turnstileReady = !TURNSTILE_SITE_KEY || Boolean(turnstileToken);
+  const turnstileReady = Boolean(turnstileToken);
   const canSubmit =
     nameValid && emailValid && schoolValid && consent && turnstileReady && !submitting;
 
-  useEffect(() => {
-    if (success) return;
-    if (!TURNSTILE_SITE_KEY) {
-      setTurnstileToken("disabled");
-      return;
-    }
-    let cancelled = false;
-    let scriptEl: HTMLScriptElement | null = null;
-
-    function ensureScript(): Promise<void> {
-      if (window.turnstile) return Promise.resolve();
-      const existing = document.querySelector<HTMLScriptElement>(
-        `script[src="${TURNSTILE_SCRIPT_SRC}"]`,
-      );
-      if (existing) {
-        return new Promise((resolve) =>
-          existing.addEventListener("load", () => resolve(), { once: true }),
-        );
-      }
-      return new Promise((resolve, reject) => {
-        scriptEl = document.createElement("script");
-        scriptEl.src = TURNSTILE_SCRIPT_SRC;
-        scriptEl.async = true;
-        scriptEl.defer = true;
-        scriptEl.addEventListener("load", () => resolve());
-        scriptEl.addEventListener("error", () => reject(new Error("turnstile_script_failed")));
-        document.head.appendChild(scriptEl);
-      });
-    }
-
-    ensureScript()
-      .then(() => {
-        if (cancelled || !window.turnstile || !turnstileContainerRef.current) return;
-        widgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
-          sitekey: TURNSTILE_SITE_KEY,
-          theme: "dark",
-          callback: (token) => setTurnstileToken(token),
-          "expired-callback": () => setTurnstileToken(null),
-          "timeout-callback": () => setTurnstileToken(null),
-          "error-callback": () => setTurnstileToken(null),
-        });
-      })
-      .catch(() => {
-        if (!cancelled) setError("turnstile_load_failed");
-      });
-
-    return () => {
-      cancelled = true;
-      if (widgetIdRef.current && window.turnstile) {
-        try {
-          window.turnstile.remove(widgetIdRef.current);
-        } catch {
-          // widget may already be gone
-        }
-        widgetIdRef.current = null;
-      }
-    };
-  }, [success]);
-
   function resetTurnstile() {
-    if (widgetIdRef.current && window.turnstile) window.turnstile.reset(widgetIdRef.current);
     setTurnstileToken(null);
+    setTurnstileResetKey((k) => k + 1);
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -464,11 +380,12 @@ export function SchoolsDpaForm() {
       </label>
 
       <div
-        ref={turnstileContainerRef}
         aria-label={t("skoly_dpa.turnstile_aria")}
         data-testid="schools-dpa-form-turnstile"
         className="min-h-[65px]"
-      />
+      >
+        {!success && <TurnstileWidget key={turnstileResetKey} onToken={setTurnstileToken} />}
+      </div>
 
       {error ? (
         <div
