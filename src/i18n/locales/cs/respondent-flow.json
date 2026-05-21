@@ -31,5 +31,21 @@
     "rate_limited": "Příliš mnoho pokusů z této IP. Zkuste to později.",
     "back_home": "Zpět na úvod",
     "submit_failed": "Nepodařilo se odeslat odpověď. Zkuste to znovu."
+  },
+  "password_gate": {
+    "title": "Test je chráněn heslem",
+    "subtitle": "Autor uzamkl tento test heslem. Pro pokračování zadejte heslo, které vám autor sdílel.",
+    "input_label": "Heslo",
+    "submit": "Pokračovat",
+    "submitting": "Ověřuji…",
+    "hint_expired": "Vaše relace vypršela. Zadejte heslo znovu.",
+    "hint_password_changed": "Autor mezitím změnil heslo. Zadejte nové.",
+    "hint_session_invalid": "Předchozí relace již není platná. Zadejte heslo znovu.",
+    "err_wrong_password": "Nesprávné heslo. Zkus to znovu.",
+    "err_rate_limited": "Příliš mnoho pokusů. Zkuste to později.",
+    "err_rate_limited_retry": "Příliš mnoho pokusů. Zkuste to znovu za {minutes} minut.",
+    "err_share_locked": "Tento test je dnes uzamčen kvůli příliš mnoha neúspěšným pokusům. Zkuste to opět zítra.",
+    "err_submit_failed": "Něco se pokazilo. Zkontrolujte připojení a zkuste to znovu.",
+    "err_missing_password": "Zadejte heslo."
   }
 }

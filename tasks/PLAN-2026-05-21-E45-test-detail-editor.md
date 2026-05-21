@@ -2,7 +2,7 @@
 
 **Owner:** Claude — drives the user-facing editor on `/app/tests/$testId` so authors can manage questions, lock the test with a password, and send invites by email — closing the "create-test" → "share" loop after publish.
 **Date opened:** 2026-05-21
-**Status:** 🟢 Phase 1 done (questions + order mode merged on `feature/E45-phase-1-questions-order`) — Phases 2-4 still pending.
+**Status:** 🟢 Phase 1 + Phase 2 done (questions + order + password merged / pending merge on `feature/E45-phase-2-password`) — Phases 3-4 still pending.
 **Originating request:** From the test detail page (`/app/tests/$testId?tab=results`), the author should be able to: (1) edit questions — add / remove / reorder — and choose random vs fixed order; (2) set, change, or clear a password that respondents must enter before taking the test; (3) send the test link + password to a list of email addresses, all from the same screen. All four sub-features must hold senior-level UX/UI, full coverage by unit + integration + security + functional tests.
 
 ## TL;DR
@@ -75,12 +75,12 @@ The schema already supports most of it: `tests.password_hash` exists; `test_ques
 
 | ID | Title | Effort | Priority | Status |
 |---|---|---|---|---|
-| E45.7 | Migration: new RPCs `hash_test_password` + `verify_test_password` (SECURITY DEFINER pattern mirroring E12) | `S` | `P1` | ⏳ Blocks on PR-1 |
-| E45.8 | Queries: `useSetTestPassword`, `useClearTestPassword`, `useTestPasswordStatus` (boolean — has hash or not, no leak) | `S` | `P1` | ⏳ Blocks on PR-1 |
-| E45.9 | CF Function `functions/api/tests/verify-password.ts` — rate-limited (per-IP, per-share_id), returns 30-min HttpOnly `respondent_pwd_jwt` cookie | `M` | `P1` | ⏳ Blocks on PR-1 |
-| E45.10 | UI: Settings tab gains Password card (set / change / clear) — uses zxcvbn-lite for client-side strength meter; respondent route gates entry behind a password input | `M` | `P1` | ⏳ Blocks on PR-1 |
-| E45.11 | Tests: brute-force protection (rate-limit boundary), JWT roundtrip, owner-only set/clear, RPC SECURITY DEFINER scope | `M` | `P1` | ⏳ Blocks on PR-1 |
-| E45.12 | Docs + security review + CHANGELOG | `S` | `P2` | ⏳ Blocks on PR-1 |
+| ~~E45.7 Migration: new RPCs `hash_test_password` + `verify_test_password` + `clear_test_password` (SECURITY DEFINER + body owner check + audit) + `password_hash_version` column~~ | (closed) | `S` | `P1` | ✅ Done |
+| ~~E45.8 Queries: `useSetTestPassword`, `useClearTestPassword`; `Test.has_password` + `Test.password_hash_version` exposed (raw hash never on client)~~ | (closed) | `S` | `P1` | ✅ Done |
+| ~~E45.9 CF Function `functions/api/tests/verify-password.ts` (3-layer rate limits + 100ms jitter + audit row per attempt) + preflight `check-password.ts` + `signRespondentPwdToken`/`verifyRespondentPwdToken` in `_lib/jwt.ts`~~ | (closed) | `M` | `P1` | ✅ Done |
+| ~~E45.10 UI: `PasswordCard` in Settings tab + `RespondentPasswordGate` at `/t/$shareId` (preflight on mount, gate iff `has_password && gated`) + i18n sk/en/cs. **zxcvbn-lite deferred to Phase 4 polish.**~~ | (closed) | `M` | `P1` | ✅ Done |
+| ~~E45.11 Tests: 8 JWT roundtrip, 9 verify-password CF (rate-limit boundary, T2 oracle, cookie scope, log-bomb), 6 PasswordCard, 5 RespondentPasswordGate, 4 t-shareId route adapted~~ | (closed) | `M` | `P1` | ✅ Done |
+| ~~E45.12 Docs: 4 stories E45.7-10 + CHANGELOG + PLAN flip~~ | (closed) | `S` | `P2` | ✅ Done |
 
 ### Phase 3 — Email invites (PR-3)
 

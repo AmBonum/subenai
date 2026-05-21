@@ -4303,6 +4303,177 @@ CREATE INDEX IF NOT EXISTS tests_source_template_id_idx
   WHERE source_template_id IS NOT NULL;
 
 -- ============================================================================
+-- 20260521220000_test_password_v2.sql (E45 Phase 2 — password gate)
+-- ============================================================================
+
+ALTER TABLE public.tests
+  ADD COLUMN IF NOT EXISTS password_hash_version INT NOT NULL DEFAULT 0;
+
+UPDATE public.tests
+  SET password_hash_version = 1
+  WHERE password_hash IS NOT NULL
+    AND password_hash_version = 0;
+
+DROP FUNCTION IF EXISTS public.hash_test_password(UUID, TEXT);
+
+CREATE FUNCTION public.hash_test_password(test_id UUID, password TEXT)
+RETURNS INT
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+DECLARE
+  _owner UUID;
+  _old_hash TEXT;
+  _new_hash TEXT;
+  _new_pv INT;
+  _op TEXT;
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'unauthenticated';
+  END IF;
+  IF test_id IS NULL OR password IS NULL THEN
+    RAISE EXCEPTION 'invalid_args';
+  END IF;
+  IF length(password) < 8 THEN
+    RAISE EXCEPTION 'password_too_short';
+  END IF;
+  IF length(password) > 256 THEN
+    RAISE EXCEPTION 'password_too_long';
+  END IF;
+
+  SELECT owner_id, password_hash INTO _owner, _old_hash
+    FROM public.tests
+    WHERE id = test_id;
+  IF _owner IS NULL THEN
+    RAISE EXCEPTION 'test_not_found';
+  END IF;
+  IF _owner <> auth.uid() AND NOT public.has_role(auth.uid(), 'admin') THEN
+    RAISE EXCEPTION 'not_owner';
+  END IF;
+
+  _new_hash := crypt(password, gen_salt('bf', 10));
+  IF substr(_new_hash, 1, 4) NOT IN ('$2a$', '$2b$', '$2y$') THEN
+    RAISE EXCEPTION 'unexpected_hash_prefix';
+  END IF;
+
+  UPDATE public.tests
+    SET password_hash = _new_hash,
+        password_hash_version = password_hash_version + 1,
+        updated_at = now()
+    WHERE id = test_id
+    RETURNING password_hash_version INTO _new_pv;
+
+  _op := CASE WHEN _old_hash IS NULL THEN 'set' ELSE 'change' END;
+
+  INSERT INTO public.audit_log
+    (actor_id, action, target_type, target_id, pii_access, details)
+    VALUES (
+      auth.uid(),
+      'template_password_set',
+      'test',
+      test_id::text,
+      false,
+      jsonb_build_object('op', _op, 'pv', _new_pv)
+    );
+
+  RETURN _new_pv;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.hash_test_password(UUID, TEXT) FROM PUBLIC, anon, authenticated;
+
+DROP FUNCTION IF EXISTS public.clear_test_password(UUID);
+
+CREATE FUNCTION public.clear_test_password(test_id UUID)
+RETURNS INT
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+DECLARE
+  _owner UUID;
+  _new_pv INT;
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'unauthenticated';
+  END IF;
+  IF test_id IS NULL THEN
+    RAISE EXCEPTION 'invalid_args';
+  END IF;
+
+  SELECT owner_id INTO _owner
+    FROM public.tests
+    WHERE id = test_id;
+  IF _owner IS NULL THEN
+    RAISE EXCEPTION 'test_not_found';
+  END IF;
+  IF _owner <> auth.uid() AND NOT public.has_role(auth.uid(), 'admin') THEN
+    RAISE EXCEPTION 'not_owner';
+  END IF;
+
+  UPDATE public.tests
+    SET password_hash = NULL,
+        password_hash_version = password_hash_version + 1,
+        updated_at = now()
+    WHERE id = test_id
+    RETURNING password_hash_version INTO _new_pv;
+
+  INSERT INTO public.audit_log
+    (actor_id, action, target_type, target_id, pii_access, details)
+    VALUES (
+      auth.uid(),
+      'template_password_set',
+      'test',
+      test_id::text,
+      false,
+      jsonb_build_object('op', 'clear', 'pv', _new_pv)
+    );
+
+  RETURN _new_pv;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.clear_test_password(UUID) FROM PUBLIC, anon, authenticated;
+
+DROP FUNCTION IF EXISTS public.verify_test_password(TEXT, TEXT);
+
+CREATE FUNCTION public.verify_test_password(p_share_id TEXT, p_password TEXT)
+RETURNS TABLE (verified BOOLEAN, current_pv INT)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+DECLARE
+  _hash TEXT;
+  _pv INT;
+BEGIN
+  IF p_share_id IS NULL OR p_password IS NULL THEN
+    RETURN QUERY SELECT false, 0;
+    RETURN;
+  END IF;
+  IF length(p_password) > 256 THEN
+    RETURN QUERY SELECT false, 0;
+    RETURN;
+  END IF;
+
+  SELECT password_hash, password_hash_version
+    INTO _hash, _pv
+    FROM public.tests
+    WHERE share_id = p_share_id;
+
+  IF _hash IS NULL THEN
+    RETURN QUERY SELECT false, COALESCE(_pv, 0);
+    RETURN;
+  END IF;
+
+  RETURN QUERY SELECT crypt(p_password, _hash) = _hash, _pv;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.verify_test_password(TEXT, TEXT) TO anon, authenticated;
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT

@@ -1,7 +1,26 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, renderHook } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, fireEvent, renderHook, waitFor } from "@testing-library/react";
 
 let currentShareId = "abcdefgh";
+
+// E45 Phase 2 — the route now preflight-fetches /api/tests/check-password
+// before rendering the intake/gate. Stub fetch to resolve as "open" (no
+// password) so the existing flow assertions still find the intake.
+const fetchMock = vi.fn();
+const originalFetch = globalThis.fetch;
+beforeEach(() => {
+  fetchMock.mockReset();
+  fetchMock.mockResolvedValue(
+    new Response(JSON.stringify({ has_password: false }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    }),
+  );
+  globalThis.fetch = fetchMock as unknown as typeof globalThis.fetch;
+});
+afterEach(() => {
+  globalThis.fetch = originalFetch;
+});
 
 vi.mock("@tanstack/react-router", async () => {
   const actual =
@@ -45,18 +64,20 @@ describe("/t/$shareId — public respondent flow", () => {
     expect(screen.getByTestId("respondent-flow-error-not-found")).toBeInTheDocument();
   });
 
-  it("renders the flow root + intake stage for a valid published shareId", () => {
+  it("renders the flow root + intake stage for a valid published shareId", async () => {
     currentShareId = firstPublishedShareId();
     render(<Page />);
-    expect(screen.getByTestId("respondent-flow-root")).toBeInTheDocument();
+    // Preflight resolves asynchronously to "open" → intake then renders.
+    await waitFor(() => expect(screen.getByTestId("respondent-flow-root")).toBeInTheDocument());
     expect(screen.getByTestId("respondent-flow-intake-consent-checkbox")).toBeInTheDocument();
     expect(screen.getByTestId("respondent-flow-intake-submit-button")).toBeInTheDocument();
   });
 
-  it("blocks intake submission when consent is missing", () => {
+  it("blocks intake submission when consent is missing", async () => {
     currentShareId = firstPublishedShareId();
     render(<Page />);
-    fireEvent.click(screen.getByTestId("respondent-flow-intake-submit-button"));
+    const submit = await screen.findByTestId("respondent-flow-intake-submit-button");
+    fireEvent.click(submit);
     expect(screen.getByTestId("respondent-flow-intake-error")).toBeInTheDocument();
   });
 });

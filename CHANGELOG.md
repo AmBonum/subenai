@@ -10,6 +10,21 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
+- **Heslo pre tvoj test — chráň ho pred zvedavými očami.** Na detaile
+  testu (`/app/tests/<id>` → Nastavenia) je nová karta *Heslo pre
+  respondentov*. Klikneš *Nastaviť heslo*, zadáš ho dvakrát (min. 8
+  znakov) a každý, kto otvorí share link, musí ho najprv zadať, aby
+  mohol test vyplniť. Existujúce relácie sa po zmene hesla zneplatnia
+  (autor zmenil heslo → respondent dostane výzvu zadať nové). Heslo
+  kedykoľvek zmeníš alebo zrušíš (vtedy je test opäť otvorený cez link
+  ako predtým). Po prekročení 5 nesprávnych pokusov z jednej IP počas
+  15 minút sa pokusy zablokujú; v deň po 200 nesprávnych pokusoch
+  spolu sa test uzamkne pre celý zvyšok dňa — chráni pred slovníkovými
+  útokmi aj pri slabšom hesle. Heslo nikdy neopustí databázu —
+  ukladáme len bcrypt hash, hash nedostáva ani autor späť na klient.
+  Každý úspešný aj neúspešný pokus zaznamenávame do auditového logu
+  bez ukladania samotného hesla (len hash IP) — DPO nájde údaje aj
+  pri prípadnej inquiry.
 - **`/admin/settings` ukazuje skutočný stav GDPR konfigurácie.** Doteraz
   to bol placeholder formulár so žltým upozornením „backend dorobíme
   v ďalšej iterácii". Teraz tam admin vidí: či je DPA tok zapnutý alebo

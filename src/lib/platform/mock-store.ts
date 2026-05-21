@@ -247,6 +247,8 @@ export const createTest = (input: Partial<Test> & { title: string }) => {
     status: "draft",
     version: 1,
     password: input.password ?? null,
+    has_password: (input.password ?? null) !== null,
+    password_hash_version: (input.password ?? null) !== null ? 1 : 0,
     segmentation: input.segmentation ?? [],
     gdpr_purpose: input.gdpr_purpose ?? "internal_training",
     intake_fields: input.intake_fields ?? [

@@ -31,5 +31,21 @@
     "rate_limited": "Too many attempts from this IP. Please try again later.",
     "back_home": "Back to home",
     "submit_failed": "Could not submit the answer. Please try again."
+  },
+  "password_gate": {
+    "title": "This test is password-protected",
+    "subtitle": "The author locked this test with a password. Enter the password they shared with you to continue.",
+    "input_label": "Password",
+    "submit": "Continue",
+    "submitting": "Verifying…",
+    "hint_expired": "Your session expired. Please enter the password again.",
+    "hint_password_changed": "The author changed the password. Please enter the new one.",
+    "hint_session_invalid": "Your previous session is no longer valid. Please enter the password again.",
+    "err_wrong_password": "Wrong password. Try again.",
+    "err_rate_limited": "Too many attempts. Try again later.",
+    "err_rate_limited_retry": "Too many attempts. Try again in {minutes} minutes.",
+    "err_share_locked": "This test is locked for today due to too many failed attempts. Try again tomorrow.",
+    "err_submit_failed": "Something went wrong. Check your connection and try again.",
+    "err_missing_password": "Enter a password."
   }
 }

@@ -116,6 +116,32 @@
       "random_body": "Each respondent gets their own order. Scores are unaffected — display-only anti-cheat.",
       "update_success": "Order updated.",
       "update_failed": "Order update failed."
+    },
+    "password": {
+      "label": "Respondent password",
+      "status_set": "Password is set. Respondents must enter it before taking the test.",
+      "status_unset": "Test is publicly accessible via share link — no password required.",
+      "input_label": "New password",
+      "placeholder_set": "New password (min. 8 chars)",
+      "placeholder_change": "New password (replaces the current one)",
+      "placeholder_confirm": "Repeat password",
+      "hint_min_length": "At least 8 characters. For stronger protection use 10+ characters and a mix of letters, digits, and symbols.",
+      "err_too_short": "Password must be at least 8 characters.",
+      "err_mismatch": "Passwords don't match.",
+      "err_password_too_short": "Password must be at least 8 characters.",
+      "err_password_too_long": "Password is too long (max 256 characters).",
+      "err_not_owner": "You don't have permission to change this test's password.",
+      "err_test_not_found": "Test not found.",
+      "err_unauthenticated": "You must be signed in.",
+      "err_unexpected_hash_prefix": "Internal error encrypting password. Try again or report the issue.",
+      "set_button": "Set password",
+      "change_button": "Change password",
+      "clear_button": "Clear password",
+      "set_success": "Password set. Respondents must enter it before taking the test.",
+      "change_success": "Password changed. Existing respondent sessions are invalidated.",
+      "clear_success": "Password cleared. The test is open via share link again.",
+      "set_failed": "Setting the password failed.",
+      "clear_failed": "Clearing the password failed."
     }
   },
   "share_dialog": {

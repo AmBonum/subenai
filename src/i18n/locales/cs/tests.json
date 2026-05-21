@@ -116,6 +116,32 @@
       "random_body": "Každý respondent dostane vlastní pořadí. Skóre není ovlivněno — pouze anti-cheat zobrazení.",
       "update_success": "Pořadí aktualizováno.",
       "update_failed": "Změna pořadí selhala."
+    },
+    "password": {
+      "label": "Heslo pro respondenty",
+      "status_set": "Heslo je nastaveno. Respondenti ho musí zadat před vyplněním testu.",
+      "status_unset": "Test je veřejně dostupný přes odkaz — bez hesla.",
+      "input_label": "Nové heslo",
+      "placeholder_set": "Nové heslo (min. 8 znaků)",
+      "placeholder_change": "Nové heslo (nahradí existující)",
+      "placeholder_confirm": "Zopakuj heslo",
+      "hint_min_length": "Minimálně 8 znaků. Pro silnější ochranu použij 10+ znaků a kombinaci písmen, číslic a symbolů.",
+      "err_too_short": "Heslo musí mít alespoň 8 znaků.",
+      "err_mismatch": "Hesla se neshodují.",
+      "err_password_too_short": "Heslo musí mít alespoň 8 znaků.",
+      "err_password_too_long": "Heslo je příliš dlouhé (max 256 znaků).",
+      "err_not_owner": "Nemáš oprávnění měnit heslo tohoto testu.",
+      "err_test_not_found": "Test nenalezen.",
+      "err_unauthenticated": "Musíš být přihlášen/a.",
+      "err_unexpected_hash_prefix": "Vnitřní chyba při šifrování hesla. Zkus to znovu nebo nahlas chybu.",
+      "set_button": "Nastavit heslo",
+      "change_button": "Změnit heslo",
+      "clear_button": "Zrušit heslo",
+      "set_success": "Heslo nastaveno. Respondenti ho musí zadat před vyplněním.",
+      "change_success": "Heslo změněno. Existující relace respondentů se zneplatní.",
+      "clear_success": "Heslo zrušeno. Test je opět otevřený přes share link.",
+      "set_failed": "Nastavení hesla selhalo.",
+      "clear_failed": "Zrušení hesla selhalo."
     }
   },
   "share_dialog": {
