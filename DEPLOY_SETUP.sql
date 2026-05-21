@@ -7588,3 +7588,41 @@ CREATE TRIGGER forbid_platform_user_delete
   FOR EACH ROW EXECUTE FUNCTION public.forbid_platform_user_delete();
 
 REVOKE EXECUTE ON FUNCTION public.forbid_platform_user_delete() FROM PUBLIC;
+
+-- E48.2 — Per-ticket attachment cap trigger (mirror of
+-- supabase/migrations/20260522100000_e48_2_attachment_cap_trigger.sql).
+--
+-- Closes the TOCTOU race between the CF function's SELECT count(*) and
+-- INSERT by enforcing the 3-per-ticket cap atomically at the DB layer.
+-- The SELECT ... FOR UPDATE row-locks every existing attachment row for
+-- the ticket so concurrent INSERTs on the same ticket_id serialise.
+-- ERRCODE 'check_violation' lets the CF function map the exception back
+-- to the friendly 400 attachment_limit_reached response.
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION public.enforce_attachment_cap_per_ticket()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_count integer;
+BEGIN
+  SELECT count(*) INTO v_count
+    FROM public.support_ticket_attachments
+    WHERE ticket_id = NEW.ticket_id
+    FOR UPDATE;
+  IF v_count >= 3 THEN
+    RAISE EXCEPTION 'attachment_limit_reached' USING ERRCODE = 'check_violation';
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS enforce_attachment_cap_per_ticket_trg
+  ON public.support_ticket_attachments;
+
+CREATE TRIGGER enforce_attachment_cap_per_ticket_trg
+  BEFORE INSERT ON public.support_ticket_attachments
+  FOR EACH ROW EXECUTE FUNCTION public.enforce_attachment_cap_per_ticket();
