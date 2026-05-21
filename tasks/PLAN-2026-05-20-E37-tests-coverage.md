@@ -2,7 +2,8 @@
 
 **Owner:** Claude (synthesis) — senior agent, multi-lens audit
 **Date opened:** 2026-05-20
-**Status:** 🟡 Phase A complete (discovery via 4 parallel agents). Phase A2 (architecture pivot, this revision) complete. Phases B–J awaiting kickoff.
+**Last revised:** 2026-05-21 (Phase A3 — reality reconciliation after PR #111 salvaged the stale branch's content into main as `E37_SEED.sql`)
+**Status:** 🟡 Phase A + A2 + A3 complete. **Phase B' (mega-migration) starting on `feature/E37-tests-catalog`.** Phases F–J unchanged from original plan.
 **Surfaces in scope:** `/tests` catalog · `/tests/$slug` detail pages · `public.tests` · `public.test_questions` · `public.questions` · `src/content/test-packs/**` (to be deprecated) · `src/lib/quiz/bank/questions.ts` (to be deprecated for new content) · `src/content/blog/**` (frontmatter only)
 
 ## TL;DR
@@ -45,10 +46,71 @@ Project owner correction: questions live in DB and tests should pull/save from D
 | D8 | Static TS pack files (`src/content/test-packs/*.ts`) | **Deleted in Phase G** after DB read path lands and is verified. Kept for the bake period (Phases B–F) as the only source of truth for industry-emoji/tagline/persona, then removed. |
 | D9 | Platform owner_id | New `auth.users` row (or service-role UUID) — Phase B picks the safest pattern; recommendation: dedicated `platform@subenai.sk` system user, created idempotently in the migration. |
 
-## Phase B — Schema groundwork
+## Phase A3 — Reality reconciliation (2026-05-21)
 
-**Branch:** `feature/E37-tests-coverage`
-**Migration:** `supabase/migrations/20260521200000_e37_platform_packs_schema.sql` + `DEPLOY_SETUP.sql` mirror.
+Between the original plan (2026-05-20) and today, three things happened:
+
+1. **PR #111** salvaged the stale `feature/E37-tests-coverage` branch by landing `E37_SEED.sql` (1,644 lines) + `tasks/E37-RECOVERY-NOTE.md` directly into `main`. The seed file is a paste-once consolidated blob of the 9 original Phase B–E migrations, with **idempotency guards on every statement** (`IF NOT EXISTS` / `OR REPLACE` / `ON CONFLICT DO NOTHING`). The recovery note explicitly says: "Decide whether E37 is still worth shipping".
+2. **Timestamp slot collisions.** The original plan reserved `20260521200000`..`20260521600000`, but main has since used those for unrelated migrations (`20260521200000_dpa_requests.sql`, `20260521210000_test_question_order_mode.sql`, `20260521220000_test_password_v2.sql`, `20260521230000_admin_user_data_rpcs.sql`, `20260521230000_test_question_modified_audit.sql`, `20260521240000_e46_5_pending_erasure_cron.sql`, `20260521250000_e46_6_rectify_user_data.sql`). The next free slot is `20260521260000`.
+3. **E44 Phase D** (`20260521170000_templates_anon_public_read.sql`) established the precedent of using `owner_id IS NULL` for platform-owned content. E37 will **not** adopt that pattern (see D9 amendment below) — packs need a real `created_by` audit trail and the recovery note recommends a Dashboard-created system user.
+
+### Decisions confirmed via Question Wizard (2026-05-21)
+
+| # | Question | Answer |
+|---|---|---|
+| OQ1 | Is E37 still worth shipping in its current form? | **Yes — ship as planned.** |
+| — | How should the salvaged `E37_SEED.sql` content be packaged? | **Single mega-migration (Phase B').** |
+| D9 (amended) | Platform owner user creation strategy | **Manual Dashboard creation, NOT `INSERT INTO auth.users`.** |
+
+### Why a single mega-migration
+
+The seed file is already a paste-tested, idempotent blob that encodes B + C + D + E phases. Splitting it back into 5 timestamped migrations would mean:
+
+- Re-deriving boundaries we lost when the original 11 commits were squashed into the seed.
+- 5× the review surface area for code we know is consistent (the seed was salvaged precisely because the original phases composed cleanly).
+- Risk of partial application if user runs only some of the 5 migrations.
+
+Mega-migration is the smallest reviewable diff vs. reality. **One file, one paste, one verify.**
+
+### D9 amendment — Dashboard-created platform user
+
+Original plan (D9): `INSERT INTO auth.users (id, email, role, ...) ... ON CONFLICT DO NOTHING` inside the migration. Recovery note's recommendation (and now the confirmed answer): create `platform@subenai.sk` manually via Supabase Dashboard → Authentication → Users → Add user (auto-confirm), then reference it by email lookup in the migration. Why:
+
+- `auth.users` is a Supabase-managed schema. Inserting raw rows requires guessing the exact column list (which Supabase versions silently); the `auth.identities` + `auth.flow_state` companion rows are easy to miss; password hashing scheme is implementation-defined.
+- The Dashboard path produces a guaranteed-correct row + the migration's `RAISE NOTICE` fallback (already in the seed at lines 1163-1166) lets Phases B + C apply even if the user forgot step 1 — Phases D + E then NO-OP and the user re-runs after creating the user.
+- Aligns with the operational pattern the team has already used for the **audit test user** (CLAUDE.md): "do NOT sign up a new one — production Supabase enforces email confirmation". One-off humans-only step at Dashboard, then the migration is purely SQL.
+
+### Revised phasing
+
+**Phase B' replaces original B + C + D + E** (one PR, one migration, one DEPLOY_SETUP mirror). Phases F, G, H, I, J unchanged. The new shipping order is **6 PRs after #66/#111**, not 9:
+
+| PR | Scope | Migrations | Independent? |
+|---|---|---|---|
+| #66 ✅ | Typo hotfix (`univerzitnÿch` → `univerzitných`) | 0 | landed |
+| #111 ✅ | Salvage `E37_SEED.sql` + recovery note into main | 0 | landed |
+| #PR-B' | **Phase B' — mega-migration** (B+C+D+E unified) + types regen + contract test | 1 | ✅ this PR |
+| #PR-F | Phase F — read-path refactor (`/tests` + `/tests/$slug`) | 0 | ❌ blocks on B' |
+| #PR-G | Phase G — copy upgrade + delete static TS packs | 1 | ❌ blocks on F |
+| #PR-H | Phase H — blog frontmatter `related_test_slug` wiring (81 MDX) | 0 | ✅ any time after B' |
+| #PR-I | Phase I — UX P0+P1 (3 + 12 items) | 0 | ❌ blocks on F |
+| #PR-J | Phase J — tests / lint / build / CHANGELOG / closeout | 0 | ❌ last |
+
+### Operational prerequisite, captured here so it cannot be missed
+
+Before merging PR-B', the user must:
+
+1. Supabase Dashboard → Authentication → Users → **Add user**
+2. Email: `platform@subenai.sk` · Auto Confirm: ✓ · Password: any strong value (no human login flow)
+3. Verify creation via SQL Editor: `SELECT id FROM auth.users WHERE email = 'platform@subenai.sk';`
+
+Phases B + C of the mega-migration apply regardless; Phases D + E NO-OP with `RAISE NOTICE` until the user exists. After step 1–3 the migration's D + E blocks run on the next paste-once-then-done apply.
+
+## Phase B — Schema groundwork (HISTORICAL — superseded by Phase B')
+
+> **Note (2026-05-21):** This section is preserved for traceability. The actual schema work ships as **Phase B' — mega-migration** (see Phase A3 above). The schema definitions in this section match what's in `E37_SEED.sql` lines 45-460; the seed is the canonical source.
+
+**Branch:** `feature/E37-tests-catalog`
+**Migration:** `supabase/migrations/20260521260000_e37_platform_packs_unified.sql` (Phase B' — combined B+C+D+E) + `DEPLOY_SETUP.sql` mirror.
 
 ### Tables / columns / RPCs to add
 ```sql
@@ -256,22 +318,27 @@ Note: Phase F migration may shift testids slightly (DB-shape rows render through
 - `CHANGELOG.md` Slovak entry
 - `tasks/stories/E37.*.md` per-story closeout
 
-## Phasing / shipping order
+## Phasing / shipping order — HISTORICAL
+
+> **Note (2026-05-21):** Superseded by the revised table in Phase A3. The
+> original 9-PR breakdown is preserved here for traceability; the new
+> shipping path is 6 PRs (B+C+D+E collapsed into Phase B' mega-migration).
 
 | PR | Scope | Files (est.) | Migrations | Tests | Independent? |
 |---|---|---|---|---|---|
 | #66 ✅ | Typo hotfix | 1 | 0 | 0 | ✅ landed |
-| #PR-B | Phase B (schema groundwork) | 2 (migration + DEPLOY_SETUP) | 1 | 5 | ✅ |
-| #PR-C | Phase C (27–32 new questions) | 1 migration | 1 | 30 | ❌ blocks on B |
-| #PR-D | Phase D (migrate 9 existing packs to DB) | 1 migration | 1 | 9 | ❌ blocks on B+C |
-| #PR-E | Phase E (6 new packs to DB) | 1 migration | 1 | 6 | ❌ blocks on B+C |
-| #PR-F | Phase F (read-path refactor) | 8 + new hooks | 0 | 15 | ❌ blocks on D+E |
+| ~~#PR-B~~ | Phase B (schema groundwork) — collapsed into B' | 2 | 1 | 5 | — |
+| ~~#PR-C~~ | Phase C (27–32 new questions) — collapsed into B' | 1 | 1 | 30 | — |
+| ~~#PR-D~~ | Phase D (migrate 9 existing packs) — collapsed into B' | 1 | 1 | 9 | — |
+| ~~#PR-E~~ | Phase E (6 new packs) — collapsed into B' | 1 | 1 | 6 | — |
+| #PR-B' | **Phase B' (mega-migration)** | 2 (migration + DEPLOY_SETUP) | 1 | ~15 contract | ✅ |
+| #PR-F | Phase F (read-path refactor) | 8 + new hooks | 0 | 15 | ❌ blocks on B' |
 | #PR-G | Phase G (copy upgrade + delete static TS) | 1 migration + delete ~12 files | 1 | 9 | ❌ blocks on F |
-| #PR-H | Phase H (blog frontmatter) | 81 MDX | 0 | 0 | ✅ (any time after C) |
+| #PR-H | Phase H (blog frontmatter) | 81 MDX | 0 | 0 | ✅ (any time after B') |
 | #PR-I | Phase I (UX P0+P1) | ~7 + i18n | 0 | 10 | ❌ blocks on F |
 | #PR-J | Phase J (closeout) | CHANGELOG + stories | 0 | full suite | ❌ last |
 
-**Total:** 9 PRs after the hotfix. ~30 files of new/changed application code, ~6 SQL migrations, ~80 MDX content edits, ~85 new tests.
+**Total:** 6 PRs after #66 + #111. ~30 files of new/changed application code, ~2 SQL migrations (mega-B' + Phase-G copy upgrade), ~80 MDX content edits, ~85 new tests.
 
 ## Risk register
 
@@ -299,7 +366,7 @@ Note: Phase F migration may shift testids slightly (DB-shape rows render through
 | D6 | Pack storage architecture | DB-native (`public.tests` + `public.platform_pack_metadata`) |
 | D7 | Question authoring path | SQL migration INSERT into `public.questions` |
 | D8 | Static TS pack files | Deleted in Phase G after read path lands |
-| D9 | Platform owner_id strategy | Dedicated `platform@subenai.sk` system user, idempotent INSERT in Phase B |
+| D9 | Platform owner_id strategy | ~~Dedicated `platform@subenai.sk` system user, idempotent INSERT in Phase B~~ → **Amended 2026-05-21 (Phase A3): created manually via Supabase Dashboard before applying Phase B' migration.** The migration looks up the user by email; D + E blocks NO-OP with `RAISE NOTICE` if absent, so paste-now-create-later is a recoverable mistake. |
 
 ## Open questions for project owner (low-priority, surface at PR-B time)
 
@@ -309,8 +376,21 @@ Note: Phase F migration may shift testids slightly (DB-shape rows render through
 | OQ2 | Should the existing `quick_test_config` table be treated as a "platform pack of slug `quick`" and unified under this schema, or kept as a separate construct? Out-of-scope for E37 either way — flagged for a future cleanup epic. |
 | OQ3 | Three-language pack copy (sk/en/cs) is wired in the schema but not in scope of this epic's authoring. When the EN+CS translation epic ships, the schema already supports it. |
 
-## Next step
+## Next step (revised 2026-05-21)
 
-Kick off **PR-B (Phase B — schema groundwork)** on branch `feature/E37-tests-coverage`. Migration is the contract — once it lands and the platform user exists, every downstream PR is a series of INSERT/UPDATE statements + application-code refactors. Stops before PR-C to let the user code-review the schema and platform-owner pattern before any content authoring.
+Kick off **PR-B' (Phase B' — mega-migration)** on branch `feature/E37-tests-catalog`. The branch is already checked out from the post-#120 main.
 
-The plan is the contract. PR #66 has landed; PR-B starts when the user confirms kickoff.
+**Pre-merge user action (one-off):**
+1. Supabase Dashboard → Authentication → Users → Add user
+2. Email `platform@subenai.sk`, Auto Confirm ✓, any strong password (no human login flow)
+3. Confirm with `SELECT id FROM auth.users WHERE email = 'platform@subenai.sk';`
+
+**What PR-B' contains:**
+- `supabase/migrations/20260521260000_e37_platform_packs_unified.sql` — adapted verbatim from `E37_SEED.sql` (1,644 lines), Slovak header stripped of "HOW TO APPLY" CTAs (those live in the PR description / runbook). Idempotent throughout.
+- `DEPLOY_SETUP.sql` mirror block (between the existing E46.6 and the end-of-file verify section).
+- `src/integrations/supabase/types.ts` — add `platform_pack_metadata` Row/Insert/Update, `sources_jsonb` on `questions`, `get_platform_packs` + `get_pack_with_questions` RPC signatures.
+- `tests/db/e37_platform_packs.test.ts` — regex contract test (table shape, RPCs, RLS, idempotency guards).
+
+**PR-B' stops before** any application-code refactor. Phase F (read-path migration in `src/routes/tests.*`) ships as a separate PR so the schema diff can be reviewed independently and the platform-user prerequisite is unambiguously a B'-time concern.
+
+The plan is the contract. PR #66 + #111 have landed; **PR-B' is the next deliverable**.
