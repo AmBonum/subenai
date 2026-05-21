@@ -4477,6 +4477,90 @@ REVOKE ALL ON FUNCTION public.cancel_pending_erasure(uuid) FROM anon, authentica
 GRANT EXECUTE ON FUNCTION public.cancel_pending_erasure(uuid) TO authenticated;
 
 -- ============================================================================
+-- 20260521240000_e46_5_pending_erasure_cron.sql (E46.5)
+-- ============================================================================
+-- Adds the worker that actually performs hard-deletes queued by E46.1.
+-- Without this, pending_erasures rows sit indefinitely after the 5-min
+-- grace window. See migration file for full rationale.
+
+ALTER TABLE public.pending_erasures
+  ADD COLUMN IF NOT EXISTS processed_at timestamptz;
+
+CREATE INDEX IF NOT EXISTS pending_erasures_unprocessed_idx
+  ON public.pending_erasures (execute_at)
+  WHERE processed_at IS NULL;
+
+CREATE OR REPLACE FUNCTION public.execute_pending_erasures()
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp, auth
+AS $$
+DECLARE
+  v_row     public.pending_erasures%ROWTYPE;
+  v_done    integer := 0;
+  v_failed  integer := 0;
+BEGIN
+  FOR v_row IN
+    SELECT * FROM public.pending_erasures
+     WHERE execute_at <= now()
+       AND processed_at IS NULL
+       AND strategy = 'hard_delete'
+     ORDER BY execute_at ASC
+     LIMIT 50
+     FOR UPDATE SKIP LOCKED
+  LOOP
+    BEGIN
+      DELETE FROM auth.users WHERE id = v_row.user_id;
+      UPDATE public.pending_erasures
+         SET processed_at = now()
+       WHERE user_id = v_row.user_id;
+      INSERT INTO public.audit_log
+        (actor_id, actor_name, action, target_type, target_id, pii_access, details)
+      VALUES (
+        v_row.initiated_by, '(system: pending_erasures cron)',
+        'dsr_hard_delete_executed', 'user', v_row.user_id::text, true,
+        format('Hard delete executed after grace window. Enqueued by %s at %s, executed at %s.',
+               v_row.initiated_by, v_row.created_at, now())
+      );
+      v_done := v_done + 1;
+    EXCEPTION WHEN OTHERS THEN
+      UPDATE public.pending_erasures
+         SET processed_at = now()
+       WHERE user_id = v_row.user_id;
+      INSERT INTO public.audit_log
+        (actor_id, actor_name, action, target_type, target_id, pii_access, details)
+      VALUES (
+        v_row.initiated_by, '(system: pending_erasures cron)',
+        'dsr_hard_delete_failed', 'user', v_row.user_id::text, true,
+        format('Hard delete FAILED with SQLSTATE %s: %s. Row marked processed to avoid retry loop.',
+               SQLSTATE, SQLERRM)
+      );
+      v_failed := v_failed + 1;
+    END;
+  END LOOP;
+  RETURN jsonb_build_object('ran_at', now(), 'rows_deleted', v_done, 'rows_failed', v_failed);
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.execute_pending_erasures() FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.execute_pending_erasures() FROM anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.execute_pending_erasures() TO postgres;
+
+DO $$
+BEGIN
+  BEGIN
+    PERFORM cron.unschedule('pending-erasures-flush');
+  EXCEPTION WHEN OTHERS THEN NULL;
+  END;
+  PERFORM cron.schedule(
+    'pending-erasures-flush', '* * * * *',
+    $cron$SELECT public.execute_pending_erasures();$cron$
+  );
+END;
+$$;
+
+-- ============================================================================
 -- 20260521210000_test_question_order_mode.sql (E45.1)
 -- ============================================================================
 

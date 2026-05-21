@@ -3,7 +3,7 @@
 **Created:** 2026-05-21
 **Audience:** SubenAI admin / DPO / on-call operator
 **Scope:** Procedures for handling every GDPR Art. 15–22 request that reaches us via `/admin/dsr`, e-mail, or paper letter.
-**State of tooling (v1.14.2):** Art. 15 export + Art. 17 anonymise are end-to-end via `/admin/users/<id>`. Hard-delete uses a 5-minute grace window but the auto-execute cron is **not yet shipped** (E46.5 deferred) — see *Emergency hard-delete* at the bottom.
+**State of tooling (v1.14.3):** Art. 15 export + Art. 16 (manual SQL until E46.6) + Art. 17 anonymise + Art. 17 hard-delete are all end-to-end via `/admin/users/<id>`. Hard-delete uses a 5-minute grace window then auto-executes via pg_cron (`pending-erasures-flush`, runs every minute). The *Emergency hard-delete* path at the bottom retracts to regulator-order use only.
 
 This runbook complements `/privacy` section 5 (the public-facing disclosure) — that document tells the data subject *what we do*; this one tells the operator *how to do it*.
 
@@ -90,8 +90,9 @@ Use only when the requester explicitly asks for full deletion (rare — typicall
 2. The destructive `ConfirmDialog` shows a typed-confirm input. **Type the user's e-mail exactly** — one typo and the button stays disabled. This is deliberate; a slip can wipe the wrong account.
 3. On confirm, the user enters a 5-minute *Čaká sa na vymazanie* (pending erasure) state. The dossier shows a red banner with a *Zrušiť* button.
 4. If you realise you confirmed the wrong user, click *Zrušiť* before the 5 minutes elapse. The `cancel_pending_erasure` RPC removes the queued operation cleanly.
-5. After 5 minutes — **as of v1.14.2 the auto-execute cron is not yet shipped**. The pending row will sit in `pending_erasures` indefinitely. To complete the operation, use *Emergency hard-delete* below.
-6. Once the delete completes, the user's `auth.users` row + all `ON DELETE CASCADE` rows are gone. Mark the DSR `completed`. The `audit_log` retains a forensic record of the operation (actor, timestamp, pre-delete snapshot stored in `pending_erasures.pre_delete_snapshot`).
+5. After 5 minutes elapse, the pg_cron job `pending-erasures-flush` (runs every minute) picks up the row and executes the delete. Total worst-case latency from typed-confirm to row-gone: ≤6 minutes.
+6. Once the cron completes, the user's `auth.users` row + all `ON DELETE CASCADE` rows are gone. `pending_erasures.processed_at` is stamped; the `pre_delete_snapshot` jsonb is preserved for forensic / Art. 5(2) accountability. The `audit_log` records both the enqueue (`dsr_hard_delete_enqueued`) and the execute (`dsr_hard_delete_executed`). Mark the DSR `completed`.
+7. If the cron logs `dsr_hard_delete_failed` instead — manual intervention is required. Check `audit_log.details` for the SQLSTATE + message, fix the underlying issue, and use *Emergency hard-delete* below to retry.
 
 **Sponsorship guard:** Hard delete refuses to proceed if the user has an active Stripe sponsorship subscription. Cancel the subscription in Stripe dashboard first, then retry. This prevents orphan subscriptions billing a non-existent account.
 
@@ -154,9 +155,9 @@ Procedure:
 ## Emergency hard-delete (bypass the 5-minute grace window)
 
 **Use only when:**
-- The auto-execute cron (E46.5) is not yet deployed AND a queued hard-delete must complete now
-- A regulator order demands immediate execution
-- The 5-minute window has elapsed and the pending row needs to be processed manually
+- A regulator order demands immediate execution (no grace window)
+- The pg_cron job is paused / broken AND a delete must complete now
+- A previous cron tick logged `dsr_hard_delete_failed` and the underlying issue is now fixed (manual retry)
 
 Procedure:
 1. Confirm the `pending_erasures` row exists and is not cancelled:
