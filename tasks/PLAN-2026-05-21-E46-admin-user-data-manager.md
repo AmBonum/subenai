@@ -1,7 +1,7 @@
 # E46 — Admin user-data manager (GDPR fulfilment engine)
 
 **Created:** 2026-05-21
-**Status:** 🟡 PARTIAL CLOSEOUT — 5/7 phases shipped in v1.14.2 (2026-05-21); E46.5 + E46.6 deferred to next minor. See [Closeout note](#closeout-note-2026-05-21) below.
+**Status:** 🟢 NEAR-CLOSEOUT — 6/7 phases shipped (5 in v1.14.2 + E46.5 cron in v1.14.3); E46.6 (rectification UI) deferred. See [Closeout note](#closeout-note-2026-05-21) below.
 **Owner:** _to assign_
 **Dependencies:** E37 (DSR queue), E40 (DPA queue), E42 (`export_my_data()` self-service)
 **Target:** Make every GDPR Art. 15–22 request actually fulfillable by a single admin click, with full audit trail.
@@ -34,7 +34,7 @@ Done definition: a DSR Art. 17 (right to erasure) request from start to finish i
 | ~~E46.2~~ | ~~`/admin/users` index route — searchable list with pagination + role filter~~ | S | P0 | ✅ Done (PR #106 — last-GDPR-event column + open-DSR filter) |
 | ~~E46.3~~ | ~~`/admin/users/<user_id>` dossier — 8 sections grouped by domain, each section is collapsible + has its own row count + action buttons~~ | L | P0 | ✅ Done (MVP — PR #101). 2 of 8 sections shipped (identity, governance) + action toolbar. Remaining 6 sections moved out of E46 — see Closeout note. |
 | ~~E46.4~~ | ~~DSR queue integration: *Otvoriť dossier* link on each row + auto-resolve when fulfillment action completes~~ | S | P0 | ✅ Done (PR #105 — open-dossier link). Auto-resolve-on-action moved to E46.5. |
-| E46.5 | Audit log surface: typed-confirm dialog, two-step deletion (soft-mark then hard-delete after N minutes for rollback), audit_log row for every change | M | P1 | ⏸ Deferred — typed-confirm + audit_log row shipped in E46.1 + E46.3. The **pending_erasures auto-execute cron** is the remaining piece (today rows sit indefinitely after the 5-min grace window). See Closeout note for resume plan. |
+| ~~E46.5~~ | ~~Audit log surface: typed-confirm dialog, two-step deletion (soft-mark then hard-delete after N minutes for rollback), audit_log row for every change~~ | M | P1 | ✅ Done — typed-confirm + audit_log row shipped in E46.1 + E46.3 (v1.14.2). **pending_erasures auto-execute cron** shipped via migration `20260521240000_e46_5_pending_erasure_cron.sql` — pg_cron job `pending-erasures-flush` runs every minute, processes rows past their 5-min grace window via `execute_pending_erasures()`. Per-row failures isolated; full forensic record preserved in `pending_erasures.pre_delete_snapshot` + `audit_log`. |
 | E46.6 | Per-row rectification UI for the 5 most-requested tables (`profiles`, `profile_preferences`, `respondents`, `dsr_requests`, `notifications`) | M | P1 | ⏸ Deferred — Art. 16 fulfilment today goes through manual Supabase SQL by operator. No production volume yet to justify the inline-edit UX. See Closeout note. |
 | ~~E46.7~~ | ~~Tests + privacy/cookies copy update + CHANGELOG + runbook entry~~ | S | P0 | ✅ Done (PR #109 — Playwright `dossier-flow.spec.ts` + `/privacy` s5 disclosure). Runbook landed separately in `tasks/E46-runbook.md`. |
 
@@ -159,7 +159,7 @@ When admin uses the dossier action to fulfill a request, the DSR row is auto-mar
 | ~~E46.2~~ | ~~`/admin/users` index extensions~~ | S | P0 | ✅ Done (PR #106) | Open-dossier column, last-GDPR-event lookup, new filter |
 | ~~E46.3~~ | ~~`/admin/users/<user_id>` dossier route + 8 sections~~ | L | P0 | ✅ Done MVP (PR #101) | 2 of 8 sections shipped (identity + governance). Remaining 6 sections moved out of E46. |
 | ~~E46.4~~ | ~~DSR queue ↔ dossier link~~ | S | P0 | ✅ Done (PR #105) | Lookup hook + button. Auto-resolve-on-action moved to E46.5 (deferred). |
-| E46.5 | Typed-confirm dialog + 5-min pending-erasure cron | M | P1 | ⏸ Deferred | Typed-confirm shipped in E46.3. Cron is the remaining piece — needs infra wizard (Supabase pg_cron vs CF Worker). |
+| ~~E46.5~~ | ~~Typed-confirm dialog + 5-min pending-erasure cron~~ | M | P1 | ✅ Done | Typed-confirm in E46.3 (v1.14.2). Cron via pg_cron in migration `20260521240000_e46_5_pending_erasure_cron.sql` — every minute, `execute_pending_erasures()` worker, FOR UPDATE SKIP LOCKED for concurrency, per-row failure isolation. |
 | E46.6 | Per-row rectification edit (5 tables) | M | P1 | ⏸ Deferred | Inline drawer with form validation per table. No production volume yet to justify. |
 | ~~E46.7~~ | ~~Tests + docs + CHANGELOG + runbook + privacy s5/s6 update~~ | S | P0 | ✅ Done (PR #109) | Playwright + `/privacy` s5 disclosure. Runbook at `tasks/E46-runbook.md`. |
 
@@ -198,10 +198,10 @@ Breakdown:
 
 Partial-closeout state as of v1.14.2 (2026-05-21). Items marked ✅ have shipped; items marked ⏸ are explicitly deferred and tracked in the [Closeout note](#closeout-note-2026-05-21).
 
-- ⏸ All 7 stories — **5/7 done** (E46.1, E46.2, E46.3 MVP, E46.4, E46.7). E46.5 + E46.6 deferred.
+- 🟢 All 7 stories — **6/7 done** (E46.1, E46.2, E46.3 MVP, E46.4, E46.5, E46.7). E46.6 (rectification UI) deferred.
 - ✅ `npm run lint` 0/0, `npm test` 100% pass, `npm run build` ✓ (every shipped PR)
 - ✅ DB migrations applied on production Supabase post-merge (E46.1 migration applied via Supabase dashboard SQL editor)
-- ⏸ Full Art. 17 erasure flow demoed end-to-end against the audit-bot user — **not demoed**: the cron piece (E46.5) is missing, so a hard-delete sits in `pending_erasures` indefinitely after the 5-min grace window unless the admin manually re-invokes. Anonymise path works end-to-end.
+- ✅ Full Art. 17 erasure flow now end-to-end: submit DSR → admin opens dossier → typed-confirm hard delete → 5-min grace window → pg_cron auto-execute → user gone from `auth.users` (cascade) → `audit_log` records both enqueue + execute. Anonymise path still works synchronously as before.
 - ✅ E2E spec in `e2e/specs/admin/dossier-flow.spec.ts` covers /admin/users column + filter (E46.2), /admin/dsr deep-link (E46.4), and dossier-route smoke (E46.3)
 - ✅ `/privacy` s5 updated to disclose the dossier admin surface + audit log (PR #109)
 - ✅ `tasks/E46-runbook.md` written — 5-step procedure for fulfilling each GDPR right
@@ -212,20 +212,20 @@ Partial-closeout state as of v1.14.2 (2026-05-21). Items marked ✅ have shipped
 
 Five of seven E46 phases shipped in **v1.14.2** (deployed to subenai.sk via CF Pages on merge of #107). Two phases are explicitly deferred:
 
-### E46.5 — `pending_erasures` auto-execute cron — DEFERRED
+### E46.5 — `pending_erasures` auto-execute cron — ✅ SHIPPED (v1.14.3)
 
-**What ships today:** The admin opens a dossier, clicks *Vymazať natvrdo*, types the user's e-mail to confirm. A row lands in `pending_erasures` with a 5-minute grace window. During the window a red *Čaká sa na vymazanie* banner offers *Zrušiť* (cancel) which removes the pending row.
+Migration `20260521240000_e46_5_pending_erasure_cron.sql` ships the worker piece. The admin-side UX is unchanged (still typed-confirm → 5-min grace banner → cancel option). What's new:
 
-**What's missing:** No cron actually flips the pending row's `hard_deleted_at` after the 5 minutes elapse. The grace-window UI stops showing the banner after the window passes, but the underlying delete never fires — the row sits in `pending_erasures` indefinitely until someone runs the operation manually.
+- `pending_erasures.processed_at timestamptz` column — marks rows the cron has handled
+- `execute_pending_erasures()` SECURITY DEFINER function — finds rows where `execute_at <= now() AND processed_at IS NULL AND strategy = 'hard_delete'`, processes up to 50 per tick with `FOR UPDATE SKIP LOCKED`, deletes from `auth.users` (cascades to all FK-referencing tables), stamps `processed_at`, writes an `audit_log` entry (`dsr_hard_delete_executed` or `dsr_hard_delete_failed`)
+- pg_cron schedule `pending-erasures-flush` — every minute (`* * * * *`)
+- Failure isolation: a single bad row marks itself processed with a failed-audit entry so it can't block the rest of the queue indefinitely
 
-**Real-world impact:** If a Slovak DPA inspection happened today and the inspector asked "show me the hard-deletes that completed in the last 30 days", we'd have to explain that the queue holds the *intent* but the *execution* is manual. That's a real Art. 17 gap.
+**Why pg_cron (decided per the resume-plan wizard):** Keeps destructive logic inside Postgres / SECURITY DEFINER. No additional secret-bearing host. pg_cron already enabled via E38 retention jobs. Same observability surface as other admin RPCs.
 
-**Resume plan for E46.5:**
-1. Decide cron host: **Supabase pg_cron** (extension already enabled per E38) **vs** **CF Worker cron trigger** (would need a new function in `functions/cron/`).
-2. Lean: **pg_cron** — keeps the destructive operation inside Postgres with `SECURITY DEFINER`, so we don't have to manage another secret-bearing host. Runs every 1 min, picks the oldest `pending_erasures` row where `created_at < now() - interval '5 minutes'` AND `cancelled_at IS NULL` AND `hard_deleted_at IS NULL`, then calls a new RPC `execute_pending_erasure(p_id uuid)` that does the actual `auth.users.delete()` cascade and stamps `hard_deleted_at`.
-3. Migration: add the cron schedule + the `execute_pending_erasure` RPC.
-4. Test: same pattern as E46.1 — seed a user, queue a pending erasure with `created_at = now() - interval '10 minutes'`, manually invoke the cron logic, assert the user is gone + `hard_deleted_at` is set.
-5. Privacy doc: no change needed — `/privacy` s5 already discloses the grace window + audit log.
+**Privacy doc:** No change — `/privacy` s5 already discloses the grace window + audit log; the change is internal mechanics.
+
+**Real-world impact:** Hard delete is now genuinely end-to-end. Worst case latency: 5-min grace + ≤1 min cron tick = ≤6 min from admin click to `auth.users` row gone.
 
 ### E46.6 — Per-row rectification UI — DEFERRED
 

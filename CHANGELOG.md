@@ -9,6 +9,34 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+### Pridané
+- **Žiadosti o vymazanie (Art. 17) sa po novom dokončia automaticky (E46.5).**
+  Doteraz admin v GDPR dossier-i klikol *Vymazať natvrdo*, napísal e-mail
+  používateľa na potvrdenie, a žiadosť šla do 5-minútovej „grace" fronty
+  s možnosťou zrušiť. Po uplynutí okna sa **doteraz nič nestávalo** — riadok
+  zostal v queue, kým niekto manuálne nedotiahol vymazanie cez SQL. Od dnes
+  beží Postgres cron `pending-erasures-flush` každú minútu — vypichne všetky
+  riadky po grace window-e, vykoná `DELETE FROM auth.users` (cascade cez
+  všetky súvisiace tabuľky), označí riadok ako spracovaný a zapíše forenzný
+  audit log záznam. Maximálne 6 minút od potvrdenia po skutočné vymazanie.
+  Snapshot pred vymazaním ostáva uložený natrvalo (GDPR Art. 5 ods. 2 —
+  povinnosť rekonštruovateľnosti). Pre používateľa žiadna viditeľná zmena;
+  pre operátora významné zlepšenie SLA spoľahlivosti.
+
+### Zmenené
+- **Stránka *Súkromie* po novom presne popisuje, ako vybavujeme GDPR
+  žiadosti (E46.7).** Pod existujúcim 30-dňovým SLA odsekom v sekcii
+  *Tvoje práva* pribudol nový odstavec *Ako vybavujeme žiadosti*, ktorý
+  vysvetlí celý interný tok: po overení identity (e-mail + jednorazový
+  kód) operátor otvorí dossier daného účtu a vykoná požadovanú akciu —
+  export Art. 15 JSON, opravu, anonymizáciu alebo vymazanie. Pri
+  nezvratnom vymazaní je 5-minútové „grace" okno na zrušenie pri
+  preklepe. Každá akcia sa automaticky zapíše do interného audit
+  logu (kto, kedy, ktorý účet, aká operácia) — slúži ako forenzný
+  záznam pre prípadnú kontrolu Úradu na ochranu osobných údajov SR.
+  Transparency-by-design per čl. 12 GDPR — používateľ má právo vedieť
+  nielen *aké práva má*, ale aj *ako sa žiadosť reálne vybavuje*.
+
 ### Opravené
 - **Vysvetľujúce panely v `/app` boli prístupnejšie pre čítače obrazovky a
   na malých displejoch.** Po nedávnom multi-agent review sme našli a
@@ -24,20 +52,6 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   dopadu, sekcia šablón sa už nepopisuje ako „pozastavená" (interná
   ticket ID „AH-12" v užívateľskom texte nahradená neutrálnym
   „v ďalšom vydaní").
-
-### Zmenené
-- **Stránka *Súkromie* po novom presne popisuje, ako vybavujeme GDPR
-  žiadosti (E46.7).** Pod existujúcim 30-dňovým SLA odsekom v sekcii
-  *Tvoje práva* pribudol nový odstavec *Ako vybavujeme žiadosti*, ktorý
-  vysvetlí celý interný tok: po overení identity (e-mail + jednorazový
-  kód) operátor otvorí dossier daného účtu a vykoná požadovanú akciu —
-  export Art. 15 JSON, opravu, anonymizáciu alebo vymazanie. Pri
-  nezvratnom vymazaní je 5-minútové „grace" okno na zrušenie pri
-  preklepe. Každá akcia sa automaticky zapíše do interného audit
-  logu (kto, kedy, ktorý účet, aká operácia) — slúži ako forenzný
-  záznam pre prípadnú kontrolu Úradu na ochranu osobných údajov SR.
-  Transparency-by-design per čl. 12 GDPR — používateľ má právo vedieť
-  nielen *aké práva má*, ale aj *ako sa žiadosť reálne vybavuje*.
 
 ## [1.14.2] — 2026-05-21
 
