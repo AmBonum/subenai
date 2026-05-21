@@ -3,7 +3,7 @@
 **Owner:** Claude (synthesis) — senior agent, multi-lens audit
 **Date opened:** 2026-05-20
 **Last revised:** 2026-05-21 (Phase A3 — reality reconciliation after PR #111 salvaged the stale branch's content into main as `E37_SEED.sql`)
-**Status:** ✅ **DELIVERED 2026-05-21.** Epic shipped via PRs [#66](https://github.com/AmBonum/subenai/pull/66), [#111](https://github.com/AmBonum/subenai/pull/111), [#123](https://github.com/AmBonum/subenai/pull/123), [#124](https://github.com/AmBonum/subenai/pull/124), [#126](https://github.com/AmBonum/subenai/pull/126), [#127](https://github.com/AmBonum/subenai/pull/127), [#128](https://github.com/AmBonum/subenai/pull/128), [#131](https://github.com/AmBonum/subenai/pull/131), [#132](https://github.com/AmBonum/subenai/pull/132). Phase H (blog `related_test_slug` mapping) deferred — needs SEO writer input. Architect P1 follow-ups (shared CTE refactor + `tests.owner_id` FK audit) tracked as post-shipment backlog. Multi-lens senior review completed: fresh-context CR (caught 2 P0 bugs fixed in #132), architecture audit (3 P1 follow-ups), 29-scenario Playwright plan.
+**Status:** ✅ **DELIVERED 2026-05-21.** Epic shipped via PRs [#66](https://github.com/AmBonum/subenai/pull/66), [#111](https://github.com/AmBonum/subenai/pull/111), [#123](https://github.com/AmBonum/subenai/pull/123), [#124](https://github.com/AmBonum/subenai/pull/124), [#126](https://github.com/AmBonum/subenai/pull/126), [#127](https://github.com/AmBonum/subenai/pull/127), [#128](https://github.com/AmBonum/subenai/pull/128), [#131](https://github.com/AmBonum/subenai/pull/131), [#132](https://github.com/AmBonum/subenai/pull/132). Phase H (blog `related_test_slug` mapping) **explicitly dropped 2026-05-22** — see Phase H section below. Architect P1 follow-ups (shared CTE refactor + `tests.owner_id` FK audit) tracked as post-shipment backlog. Multi-lens senior review completed: fresh-context CR (caught 2 P0 bugs fixed in #132), architecture audit (3 P1 follow-ups), 29-scenario Playwright plan.
 
 Phase B' delivered via [PR #123](https://github.com/AmBonum/subenai/pull/123) — merged 2026-05-21. Migration `20260521280000_e37_platform_packs_unified.sql` lives in main; `platform@subenai.sk` Dashboard user must be created before applying SQL (D9 amendment in the Phase A3 section below).
 **Surfaces in scope:** `/tests` catalog · `/tests/$slug` detail pages · `public.tests` · `public.test_questions` · `public.questions` · `src/content/test-packs/**` (to be deprecated) · `src/lib/quiz/bank/questions.ts` (to be deprecated for new content) · `src/content/blog/**` (frontmatter only)
@@ -97,7 +97,7 @@ Original plan (D9): `INSERT INTO auth.users (id, email, role, ...) ... ON CONFLI
 | [#128 ✅](https://github.com/AmBonum/subenai/pull/128) | Phase G1 — algorithmic copy hygiene | 1 | landed 2026-05-21 |
 | [#131 ✅](https://github.com/AmBonum/subenai/pull/131) | Phase G3 — DB-backed composer + 9 static-manifest deletes + Playwright plan | 1 | landed 2026-05-21 |
 | [#132 ✅](https://github.com/AmBonum/subenai/pull/132) | CR follow-up — NaN copyright + draft-question filter + questionCount field | 1 | landed 2026-05-21 |
-| Phase H | Blog frontmatter `related_test_slug` wiring (81 MDX) | 0 | 🟡 deferred — needs SEO mapping data |
+| Phase H | Blog frontmatter `related_test_slug` wiring (81 MDX) | 0 | ❌ **dropped 2026-05-22** — product decision (see Phase H section) |
 | #PR-J | Phase J — plan markers + CHANGELOG entry | 0 | ✅ this PR |
 
 ### Operational prerequisite, captured here so it cannot be missed
@@ -303,9 +303,38 @@ UPDATE statements on `public.tests` (title) and `public.platform_pack_metadata` 
 
 **Phase G also deletes** `src/content/test-packs/*.ts` (all 9 manifest files + `_schema.ts` + `_template.ts` + `index.ts`) and updates `src/i18n/quiz.ts` references. The static layer becomes unreachable from production code.
 
-## Phase H — Wire `related_test_slug` on 81 blog MDX
+## Phase H — Wire `related_test_slug` on 81 blog MDX — ❌ DROPPED 2026-05-22
 
-Unchanged from original plan. Apply primary `related_test_slug` per Phase A's mapping table. Content-only edit of `src/content/blog/*.mdx` frontmatter. 75 of 81 wired; 6 multi-pack candidates resolved to primary.
+**Decision:** explicitly dropped by product owner on 2026-05-22.
+
+**Rationale:**
+- The catalog UX is already complete without per-post cross-links. This phase
+  was a SEO-internal-linking optimisation, not a user-blocking gap.
+- The Phase A audit produced a primary-pack mapping per post (`vseobecny 29 ·
+  eshop 8 · socialne-siete 8 · heslo-2fa 7 · rodicia 7 · …`) but that mapping
+  lives only in the closed agent's output buffer — re-running it autonomously
+  would require heuristic content classification per post, which would
+  ship guesses as ground truth and likely degrade the user experience worse
+  than the missing cross-link does.
+- Implementing this properly would require SEO writer judgement per blog post
+  (read the post, choose the right pack, spot-check the rendered card). That
+  bar is high enough to make the ROI poor relative to other backlog items.
+
+**What this means in practice:**
+- The blog→pack cross-link cards already render via `related_test_slug`
+  frontmatter where it IS present today (we're not removing the feature —
+  just not back-filling the missing 81 posts).
+- The components `src/components/blog/RelatedTestPackArticleCard.tsx` and
+  `src/components/tests/TestsLearningStrip.tsx` continue to work as designed
+  on posts where editors choose to add the slug going forward.
+- New blog posts CAN add `related_test_slug` in their frontmatter as a
+  per-post authoring choice; this dropped phase only declines the bulk
+  back-fill.
+
+**If we ever change our mind:** the original plan + Phase A audit numbers
+above are the starting point. A future PR would (a) re-run the blog→pack
+mapping heuristic, (b) human spot-check the CSV output, (c) apply the
+frontmatter edits as a single content-only PR.
 
 ## Phase I — UX/UI fixes (3 P0 + 12 P1)
 
@@ -345,7 +374,7 @@ Note: Phase F migration may shift testids slightly (DB-shape rows render through
 | [#128 ✅](https://github.com/AmBonum/subenai/pull/128) | Phase G1 (algorithmic copy hygiene) | 3 (migration + DEPLOY + test) | 1 | 17 | landed 2026-05-21 |
 | [#131 ✅](https://github.com/AmBonum/subenai/pull/131) | Phase G3 (DB-backed composer + static deletion) | ~15 (migration + composer + 9 deletes + tests + plan) | 1 | 40+ | landed 2026-05-21 |
 | [#132 ✅](https://github.com/AmBonum/subenai/pull/132) | CR follow-up (NaN copyright + published filter + questionCount + comment fix) | 8 | 1 | 60+ | landed 2026-05-21 |
-| Phase H | Phase H (blog frontmatter) | 81 MDX | 0 | 0 | 🟡 deferred |
+| Phase H | Phase H (blog frontmatter) | 0 | 0 | 0 | ❌ dropped 2026-05-22 |
 | this PR | Phase J — plan markers + CHANGELOG entry | 2 (plan + CHANGELOG) | 0 | 0 | ✅ closing |
 
 **Total:** 6 PRs after #66 + #111. ~30 files of new/changed application code, ~2 SQL migrations (mega-B' + Phase-G copy upgrade), ~80 MDX content edits, ~85 new tests.

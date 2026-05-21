@@ -11,28 +11,7 @@ larger than ~3 paragraphs belongs in its own `PLAN-*.md`.
 - When something here gets a real plan, move it to a `PLAN-*.md` and link from this file.
 - When something here ships, delete the entry (the git log keeps the history).
 
-**Last reviewed:** 2026-05-22 (post-E37 + post-E35/E45 closure sweep + plan-archive pass).
-
----
-
-## E37 follow-ups (the only items still labelled "deferred" in the closed E37 plan)
-
-### Phase H — blog frontmatter `related_test_slug` wiring (81 MDX files)
-
-🟡 **Needs decision** — requires SEO writer judgement per blog post.
-
-The Phase A audit (2026-05-20) produced a primary-pack mapping per post:
-`vseobecny 29 · eshop 8 · socialne-siete 8 · heslo-2fa 7 · rodicia 7 · …`
-That mapping is NOT in the repo — it lived in the agent's output buffer.
-
-**Outcome that closes this:**
-- Either someone re-runs the blog→pack mapping pass (heuristic by
-  category + tags + body keywords, then human spot-check) and produces
-  a CSV of (mdx_slug, target_pack_slug, confidence) → then a follow-up
-  PR applies it as MDX frontmatter edits.
-- OR explicitly drop the feature (the catalog UX is already complete
-  without per-post cross-links; this is a SEO-internal-linking win, not
-  a user-blocking gap).
+**Last reviewed:** 2026-05-22 (post-E37 + post-E35/E45 closure sweep + plan-archive pass + Phase H drop).
 
 ---
 
