@@ -110,6 +110,16 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   operácie, build-time flagy), a odkazy na pripravovanú dokumentáciu.
   Stav (rozbalené/zbalené) si panel pamätá per stránka v prehliadači.
   Obsah je k dispozícii v slovenčine, angličtine aj češtine.
+- **Vysvetľujúce panely aj v sekcii `/app` pre prihlásených používateľov.**
+  To isté pre tvoju aplikačnú časť — všetkých 11 podstránok v menu
+  (Prehľad, Moje testy, Edu testy, Šablóny, Knižnica otázok, Publiká,
+  História, Notifikácie, Tímy, Profil, Pomoc) má zložiteľný panel pod
+  hlavičkou. Vysvetľuje čo na danej stránke robíš (filter, vytvorenie,
+  zdieľanie, mazanie), ako rýchlo sa zmeny prejavia respondentom
+  (okamžite / po refreshi / v ďalšom týždennom súhrne) a na čo si dať
+  pozor (nevratné akcie, viditeľnosť dát, čakajúce funkcie). Stav si
+  panel pamätá samostatne pre admin a app sekciu — kolapsovanie v jednej
+  neovplyvní druhú. Plne dostupné v SK / EN / CZ.
 
 ### Opravené
 - **Responzívnosť admin vysvetľujúcich panelov.** Po prvom nasadení sme

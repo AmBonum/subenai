@@ -5,6 +5,7 @@ import { ExternalLink, Lock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { tFor } from "@/i18n/quiz";
@@ -126,6 +127,7 @@ export function EduTestsList() {
   return (
     <div className="space-y-6">
       <PageHeader title={t("heading")} description={t("description")} />
+      <AppPageExplainer pageKey="edu_tests" />
       <ul data-testid="edu-tests-list" className="space-y-3">
         {sets.map((s) => (
           <li key={s.id}>

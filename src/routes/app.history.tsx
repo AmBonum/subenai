@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { useTestVersions, useTests, useUserSessions } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
 import { tFor as tAppShell } from "@/i18n/app-shell";
@@ -125,6 +126,8 @@ function HistoryPage() {
         icon={HistoryIcon}
         subtitle={t("page_subtitle")}
       />
+
+      <AppPageExplainer pageKey="history" />
 
       <Card>
         <CardContent className="flex flex-wrap items-end gap-3 p-3">

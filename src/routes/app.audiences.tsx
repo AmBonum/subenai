@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { toast } from "sonner";
 import {
@@ -130,6 +131,8 @@ function AudiencesPage() {
           </Button>
         }
       />
+
+      <AppPageExplainer pageKey="audiences" />
 
       <Card>
         <CardContent className="flex flex-wrap items-center gap-2 p-3">

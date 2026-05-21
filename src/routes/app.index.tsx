@@ -13,6 +13,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { StatCard } from "@/components/admin/StatCard";
 import { ProfileCompletionBanner } from "@/components/auth/ProfileCompletionBanner";
 import { DigestDashboardCard } from "@/components/user/DigestDashboardCard";
@@ -139,6 +140,8 @@ function AppDashboardPage() {
         subtitle={t("page_header_subtitle")}
         testId="app-dashboard-page-header"
       />
+
+      <AppPageExplainer pageKey="dashboard" />
 
       {isEmpty ? (
         <Card data-testid="app-dashboard-empty-state">

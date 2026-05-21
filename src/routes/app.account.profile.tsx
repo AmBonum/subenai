@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCurrentProfile, useUpdateProfile } from "@/lib/platform/queries";
 import { useShareHandle, useUpdateShareHandle } from "@/lib/platform/retention-queries";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { AccountTabs } from "@/components/user/AccountTabs";
 import { DataExportCard } from "@/components/user/DataExportCard";
 import { tFor } from "@/i18n/app-shell";
@@ -126,6 +127,8 @@ function ProfilePage() {
           </>
         }
       />
+
+      <AppPageExplainer pageKey="profile" />
 
       <Card>
         <CardHeader>

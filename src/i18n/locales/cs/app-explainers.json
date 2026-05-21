@@ -1,0 +1,425 @@
+{
+  "explainers": {
+    "dashboard": {
+      "title": "O sekci Přehled",
+      "lead": "Vaše domovská obrazovka po přihlášení. Souhrn aktivity z vašich testů, poslední aktivita respondentů a rychlé zkratky na rozpracované koncepty. Nic se zde nenastavuje — je to pohled.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu vidíte",
+          "items": [
+            "Souhrnné metriky: počet aktivních testů, sezení, respondentů a míra úspěšnosti",
+            "Poslední test s aktivitou respondentů za uplynulých 7 dní",
+            "Rozpracované koncepty (max 3) s tlačítkem „Pokračovat v úpravě“",
+            "Volitelné karty: týdenní souhrn, doporučení kurzů, připomínky retestů (postupně přibývají)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "Metriky se načítají při otevření stránky; pro čerstvá data udělejte refresh",
+            "Karty „poslední aktivita“ se aktualizují do několika sekund poté, co respondent dokončí sezení",
+            "Týdenní souhrny se kompilují v pondělí 00:00 podle časového pásma účtu"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Některé karty se zatím postupně zavádějí — prázdný stav neznamená chybu, jen že funkce ještě nemá data",
+            "Míra úspěšnosti je read-only metrika; pro detailní analýzu jděte do sekce Historie nebo do detailu konkrétního testu",
+            "Pro změnu profilových nastavení jděte do sekce Profil; tady se žádné osobní údaje neupravují"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Jak číst metriky na přehledu", "href": "/docs/app/dashboard" },
+          { "label": "Týdenní souhrn e-mailem", "href": "/docs/app/digest" }
+        ]
+      }
+    },
+    "tests": {
+      "title": "O sekci Moje testy",
+      "lead": "Knihovna všech testů, které jste vytvořili nebo které byly s vámi sdíleny. Tady je filtrujete, otevíráte k úpravě, sdílíte respondentům a vidíte jejich stav (koncept, publikovaný, archivovaný).",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláte",
+          "items": [
+            "Vytváříte nový test (tlačítko „Nový test“)",
+            "Vyhledáváte podle názvu, filtrujete podle stavu a větve",
+            "Otevíráte detail testu — úprava otázek, nastavení, sdílení, ochrana heslem",
+            "Archivujete nebo mažete testy, které už nepotřebujete"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "Nový test se objeví v seznamu okamžitě",
+            "Publikovaný test je respondentům dostupný přes share link do několika sekund",
+            "Archivovaný test zůstává dostupný v historii sezení (data respondentů se neztratí)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Mazání testu je nevratné a zmaže i všechny odpovědi respondentů",
+            "Heslo chrání vstup na test — neovlivňuje viditelnost výsledků, ke kterým máte jako autor přístup",
+            "Vidíte jen testy, které vlastníte nebo které s vámi byly explicitně sdíleny (RLS)"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Jak vytvořit a publikovat test", "href": "/docs/app/tests-create" },
+          { "label": "Sdílení a ochrana heslem", "href": "/docs/app/tests-sharing" }
+        ]
+      }
+    },
+    "edu_tests": {
+      "title": "O sekci Edu testy",
+      "lead": "Vaše vzdělávací testy vytvořené v Edu módu (typicky pro školy a kurzy) — bez registrace respondentů. Tady vidíte všechny edu testy, které jste vytvořili anonymně a následně připojili ke svému účtu pomocí autorského hesla.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláte",
+          "items": [
+            "Připojujete anonymně vytvořené edu testy ke svému účtu (zadáním autorského hesla na stránce výsledků)",
+            "Otevíráte výsledky připojeného testu — distribuce skóre, seznam respondentů, exporty",
+            "Sledujete počet respondentů v reálném čase",
+            "Stahujete výsledky ve formátech CSV, JSON, PDF"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "Připojení testu k účtu proběhne okamžitě po zadání správného autorského hesla",
+            "Nová sezení respondentů se objeví po refreshi stránky výsledků",
+            "PDF export se generuje přímo v prohlížeči (~500 KB knihovna při prvním použití)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Bez autorského hesla nelze anonymní edu test připojit k účtu — bez něj zůstane veřejně dostupný jen přes původní share link",
+            "Připojení nemění existující práva — jen usnadňuje přístup z menu hlavní aplikace",
+            "Mazání edu testu zmaže i všechna sezení respondentů; operace je nevratná"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Edu mód: jak vytvořit test bez registrace", "href": "/docs/app/edu-tests" },
+          { "label": "Připojení anonymního testu k účtu", "href": "/docs/app/edu-tests-claim" }
+        ]
+      }
+    },
+    "templates": {
+      "title": "O sekci Šablony",
+      "lead": "Připravené šablony testů, které vás odstartují v sekundách — místo stavění od nuly. Otevřete si je, prohlédněte, a tlačítkem „Použít“ skočte rovnou do průvodce vytvářením s předvyplněnými otázkami.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláte",
+          "items": [
+            "Vyhledáváte šablony podle názvu",
+            "Filtrujete podle GDPR účelu (kategorie odvozené z políčka gdpr_purpose)",
+            "Kliknete „Použít“ pro přechod do průvodce nového testu s předvolenou šablonou"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "Šablony jsou spravované centrálně (admin tým); vy je nevytváříte ani neupravujete",
+            "„Použít šablonu“ otevře průvodce okamžitě; samotný test vznikne až po dokončení průvodce",
+            "Pokud databáze nemá žádné šablony, místo prázdného seznamu uvidíte výzvu „Vytvořit test od nuly“"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Náhled šablony je zatím zastavený — uvidíte jen metadata, ne konkrétní otázky před použitím",
+            "Použití šablony vytvoří kopii — změny ve vašem testu nijak neovlivní původní šablonu",
+            "Filtr GDPR účelu pracuje s přesnou hodnotou; šablony bez nastaveného účelu se nezobrazí v žádné kategorii"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Práce se šablonami testů", "href": "/docs/app/templates" },
+          { "label": "GDPR účely a klasifikace šablon", "href": "/docs/app/templates-gdpr" }
+        ]
+      }
+    },
+    "library": {
+      "title": "O sekci Knihovna otázek",
+      "lead": "Společná knihovna otázek dostupná pro váš tým — vyhledávejte, filtrujte, prohlížejte. Otázky odtud vkládáte do testů přes editor otázek v detailu testu. Tady je jen pohled, ne editor.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláte",
+          "items": [
+            "Vyhledáváte podle textu otázky (substring, case-insensitive)",
+            "Filtrujete podle kategorie nebo obtížnosti (lehké / střední / těžké)",
+            "Vidíte typ otázky (single choice, multiple choice, NPS, matrix, …)",
+            "Knihovna je read-only — pro úpravy jděte do detailu testu nebo do administrátorského rozhraní (admin)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "Filtr a hledání jsou okamžité (klient-side)",
+            "Knihovna zobrazuje max 60 otázek najednou; pagination zatím není implementovaná",
+            "Nové otázky přidané v adminu se zobrazí po refreshi stránky"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Pole „typ“ a „kategorie“ zobrazují data z mock-store; v produkci mohou být prázdná, dokud nepřijdou schémové doplňky (AH-12)",
+            "Limit 60 otázek je hardcoded — při velké knihovně uvidíte jen prvních 60",
+            "Knihovna zobrazuje otázky všech autorů ve vašem týmu; ne jen vaše"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Knihovna otázek a typy", "href": "/docs/app/library" },
+          { "label": "Jak vkládat otázky z knihovny do testu", "href": "/docs/app/library-insert" }
+        ]
+      }
+    },
+    "audiences": {
+      "title": "O sekci Skupiny",
+      "lead": "Pojmenované skupiny respondentů (např. „Q2 Beta testeři“, „Personál školy“), které vám usnadní distribuci testů. Tady skupiny vytváříte, přejmenováváte, tagujete a mažete.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláte",
+          "items": [
+            "Vytváříte novou skupinu (název + volitelné tagy)",
+            "Upravujete název a tagy existující skupiny",
+            "Mažete skupiny, které už nepotřebujete (s potvrzovacím dialogem)",
+            "Vidíte počet členů v každé skupině jako badge"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "Vytvoření / úprava / mazání skupiny: okamžitě po potvrzení",
+            "Import e-mailů ještě není implementovaný — tlačítko je vypnuté",
+            "Tagy jsou volný text bez taxonomie — vytvořte si vlastní konvenci pojmenování"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Vidíte jen skupiny, které jste sami vytvořili (RLS scoped k owner_id)",
+            "Mazání skupiny neodstraní respondenty samotné — jen odstraní vazbu",
+            "Import seznamu e-mailů přibude v další fázi; zatím přidáváte respondenty manuálně přes share link testu"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Práce se skupinami respondentů", "href": "/docs/app/audiences" },
+          { "label": "Tagy a organizace", "href": "/docs/app/audiences-tags" }
+        ]
+      }
+    },
+    "history": {
+      "title": "O sekci Historie",
+      "lead": "Reverzní chronologická časová osa všech událostí napříč vašimi testy — sezení respondentů, publikované verze, změny stavu. Slouží jako audit trail a rychlá orientace v aktivitě.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláte",
+          "items": [
+            "Filtrujete podle konkrétního testu (nebo „Všechny testy“)",
+            "Filtrujete podle typu události: Sezení / Verze / Stav",
+            "Filtrujete podle časového rozsahu (od / do)",
+            "Vymažete všechny filtry jedním kliknutím"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "Časová osa zobrazuje max 100 událostí najednou — starší záznamy nejsou dostupné přes pagination",
+            "Nová sezení respondentů se objeví po refreshi stránky",
+            "Filtry jsou okamžité (klient-side); žádné síťové volání navíc"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Vidíte jen události svých testů a testů sdílených s vámi (RLS); týmové události jiných autorů nevidíte",
+            "Limit 100 řádků je hardcoded; při vysoké aktivitě si staré události exportujte zatím manuálně",
+            "Časová razítka jsou ve slovenském locale (sk-SK), bez ohledu na nastavený jazyk UI"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Historie a audit trail", "href": "/docs/app/history" },
+          { "label": "Typy událostí a jejich zdroje", "href": "/docs/app/history-events" }
+        ]
+      }
+    },
+    "notifications": {
+      "title": "O sekci Notifikace",
+      "lead": "Systémová upozornění o aktivitě vašich testů — noví respondenti, dosažené milníky, anomálie, expirace a denní souhrny. Tady je čtete a označujete jako přečtené.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláte",
+          "items": [
+            "Prohlížíte všechny notifikace (přečtené i nepřečtené) seřazené od nejnovějších",
+            "Přepínáte filtr „Pouze nepřečtené“",
+            "Označujete jednotlivou notifikaci jako přečtenou (klik na řádek)",
+            "Označujete všechny nepřečtené jako přečtené (tlačítko nad seznamem — skryté při nule)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "Notifikace generuje server (cron nebo webhook); pro čerstvé notifikace udělejte refresh",
+            "Označení jako přečtené je okamžité; badge počtu na bočním panelu se aktualizuje hned",
+            "Notifikace zůstávají v databázi natrvalo — bez automatické archivace"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Označení notifikace jako přečtené je nevratné — nelze ji vrátit zpět na „nepřečtenou“",
+            "Typy notifikací (nový respondent, milník, anomálie, expirace, denní souhrn) jsou hardcoded; nové typy ze serveru se renderují s fallback barvou, dokud neaktualizujeme UI",
+            "Vidíte jen notifikace pro své testy a účet (RLS scope)"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Typy notifikací a kdy je dostáváte", "href": "/docs/app/notifications" },
+          { "label": "E-mail notifikace a frekvence", "href": "/docs/app/notifications-email" }
+        ]
+      }
+    },
+    "teams": {
+      "title": "O sekci Týmy",
+      "lead": "Zvete a spravujete členy týmu — vytváříte spolupracovnické workspaces s rolovým přístupem (vlastník / editor / divák). Tady vidíte všechny týmy, kterých jste členem, a spravujete jejich obsazení.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláte",
+          "items": [
+            "Vybíráte aktivní tým z karet (první tým se autoselectne při načtení)",
+            "Zvete člena: zadáte e-mail, vyberete roli, kliknete „Pozvat“",
+            "Měníte roli existujícího člena přes dropdown",
+            "Odebíráte člena tlačítkem delete"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "Pozvánka, změna role i odebrání jsou okamžité",
+            "E-mail invite ještě není zapojený — pole „e-mail“ slouží zatím jako placeholder pro AH-12 schéma",
+            "Změna role nedává optimistické UI — po úspěchu se seznam refetchne"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Musíte mít dostatečnou roli (vlastník) na zvaní a správu členů — server enforce-uje RLS",
+            "Až do dodání e-mail invitací (AH-12) se pozvaní členové musí přihlásit manuálně a vazbu vytvoří backend",
+            "Tým nemůžete odstranit z UI — to dělá admin tým přes podporu"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Týmy a role", "href": "/docs/app/teams" },
+          { "label": "RLS politiky pro týmy", "href": "/docs/app/teams-rls" }
+        ]
+      }
+    },
+    "profile": {
+      "title": "O sekci Profil",
+      "lead": "Vaše osobní nastavení — jméno, e-mail, iniciály avataru, profilový handle pro veřejné sdílení. Tady měníte identitu, kterou vidí ostatní členové týmu a respondenti sdílených testů.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláte",
+          "items": [
+            "Měníte zobrazované jméno (2 – 80 znaků)",
+            "Měníte e-mail (validovaný, max 255 znaků; pozor — může ovlivnit přihlášení)",
+            "Měníte iniciály avataru (1 – 3 alfanumerické znaky, auto-uppercase)",
+            "Přidáváte/měníte share handle pro veřejný profil (2 – 32 znaků, volitelné)",
+            "Exportujete svoje osobní data (GDPR čl. 15 / 20)",
+            "Zkratky na Zabezpečení (heslo + 2FA) a GDPR žádosti"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "Uložení profilu: okamžitá serverová mutace + úspěšný toast",
+            "Náhled iniciál avataru: aktualizuje se při psaní (klient-side)",
+            "Změna e-mailu: záleží na auth providerovi — někdy vyžaduje ověřovací e-mail na nové adrese",
+            "Export dat: spustí asynchronní job, výsledek dostanete e-mailem (typicky do hodin)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "Změna e-mailu může rozbít přihlášení, pokud auth provider používá e-mail jako primární identifikátor — ověřte si, jak to máte nastavené, před uložením",
+            "Iniciály se jednou auto-vygenerují ze jména; další změny jména je neaktualizují automaticky",
+            "Share handle je veřejně viditelný — nepoužívejte e-mail ani citlivé údaje"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Profil a veřejné údaje", "href": "/docs/app/profile" },
+          { "label": "GDPR: vaše práva jako subjektu údajů", "href": "/docs/app/profile-gdpr" },
+          { "label": "Zabezpečení účtu a 2FA", "href": "/docs/app/profile-security" }
+        ]
+      }
+    },
+    "help": {
+      "title": "O sekci Nápověda",
+      "lead": "Centrum nápovědy — nejčastější otázky (FAQ), rychlé odkazy na právní dokumenty a tlačítko pro kontakt podpory. Tady hledáte odpovědi dříve, než kontaktujete lidi.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Co tu děláte",
+          "items": [
+            "Vyhledáváte FAQ podle textu otázky nebo odpovědi",
+            "Rozbalíte jednotlivé FAQ položky (collapsible accordion)",
+            "Klikáte na rychlé odkazy: Soukromí, Cookies, Seznam změn, Pro školy",
+            "Kontaktujete podporu e-mailem (mailto link na support@subenai.sk)"
+          ]
+        },
+        "time_impact": {
+          "heading": "Jak rychle se změny projeví",
+          "items": [
+            "FAQ obsah je statický (i18n bundles, build-time); změny vyžadují nasazení",
+            "Hledání a filtr jsou okamžité (klient-side)",
+            "Podpora odpovídá obvykle do 1 pracovního dne (mimo víkendů a svátků)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na co si dávat pozor",
+          "items": [
+            "FAQ nepokrývá všechny scénáře — pro specifickou otázku rovnou kontaktujte podporu",
+            "Prázdný stav „žádné výsledky“ znamená, že hledání nic nenašlo, ne že FAQ je prázdné",
+            "Mailto link otevře váš výchozí e-mailový klient; v prohlížeči to může být Gmail/Outlook web podle nastavení OS"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentace",
+        "links": [
+          { "label": "Časté otázky (FAQ)", "href": "/docs/app/help" },
+          { "label": "Kontakt na podporu", "href": "/docs/app/help-support" }
+        ]
+      }
+    }
+  }
+}

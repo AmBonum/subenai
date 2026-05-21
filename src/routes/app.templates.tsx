@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/app/page-header";
+import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { TemplateCard } from "@/components/app/templates/TemplateCard";
 import { TemplatesTabs, type TemplatesTab } from "@/components/app/templates/TemplatesTabs";
 import { TemplateEditDialog } from "@/components/app/templates/TemplateEditDialog";
@@ -195,6 +196,8 @@ function TemplatesPage() {
         subtitle={t("page_subtitle")}
         testId="templates-page-header"
       />
+
+      <AppPageExplainer pageKey="templates" />
 
       <Card>
         <CardContent className="flex flex-wrap items-center gap-2 p-3">

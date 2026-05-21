@@ -32,7 +32,7 @@ interface WiredRoute {
   pageKey: string;
 }
 
-const WIRED_ROUTES: WiredRoute[] = [
+const WIRED_ROUTES_ADMIN: WiredRoute[] = [
   { file: "src/routes/admin/index.lazy.tsx", pageKey: "dashboard" },
   { file: "src/routes/admin/tests.index.lazy.tsx", pageKey: "tests" },
   { file: "src/routes/admin/quick-test.lazy.tsx", pageKey: "quick_test" },
@@ -55,6 +55,20 @@ const WIRED_ROUTES: WiredRoute[] = [
   { file: "src/routes/admin/security.lazy.tsx", pageKey: "security" },
 ];
 
+const WIRED_ROUTES_APP: WiredRoute[] = [
+  { file: "src/routes/app.index.tsx", pageKey: "dashboard" },
+  { file: "src/routes/app.tests.index.tsx", pageKey: "tests" },
+  { file: "src/routes/app.edu-tests.index.lazy.tsx", pageKey: "edu_tests" },
+  { file: "src/routes/app.templates.tsx", pageKey: "templates" },
+  { file: "src/routes/app.library.tsx", pageKey: "library" },
+  { file: "src/routes/app.audiences.tsx", pageKey: "audiences" },
+  { file: "src/routes/app.history.tsx", pageKey: "history" },
+  { file: "src/routes/app.notifications.tsx", pageKey: "notifications" },
+  { file: "src/routes/app.teams.tsx", pageKey: "teams" },
+  { file: "src/routes/app.help.tsx", pageKey: "help" },
+  { file: "src/routes/app.account.profile.tsx", pageKey: "profile" },
+];
+
 /**
  * Walk `actions={` and return the index of the matching closing `}`,
  * accounting for nested braces inside JSX expressions. Returns -1 if
@@ -75,14 +89,14 @@ function findActionsClose(src: string, openIdx: number): number {
 }
 
 describe("AdminPageExplainer wiring — every menu route", () => {
-  it.each(WIRED_ROUTES)("$file imports AdminPageExplainer", ({ file }) => {
+  it.each(WIRED_ROUTES_ADMIN)("$file imports AdminPageExplainer", ({ file }) => {
     const src = readFileSync(resolve(process.cwd(), file), "utf8");
     expect(src).toMatch(
       /import\s*\{\s*AdminPageExplainer\s*\}\s*from\s*["']@\/components\/admin\/AdminPageExplainer["']/,
     );
   });
 
-  it.each(WIRED_ROUTES)(
+  it.each(WIRED_ROUTES_ADMIN)(
     '$file instantiates <AdminPageExplainer pageKey="$pageKey" /> exactly once',
     ({ file, pageKey }) => {
       const src = readFileSync(resolve(process.cwd(), file), "utf8");
@@ -92,7 +106,7 @@ describe("AdminPageExplainer wiring — every menu route", () => {
     },
   );
 
-  it.each(WIRED_ROUTES)(
+  it.each(WIRED_ROUTES_ADMIN)(
     "$file places <AdminPageExplainer> OUTSIDE PageHeader actions={...} (regression guard for PR #100 bug)",
     ({ file }) => {
       const src = readFileSync(resolve(process.cwd(), file), "utf8");
@@ -120,7 +134,7 @@ describe("AdminPageExplainer wiring — every menu route", () => {
     },
   );
 
-  it.each(WIRED_ROUTES)(
+  it.each(WIRED_ROUTES_ADMIN)(
     "$file places <AdminPageExplainer> AFTER the <PageHeader> closing line (sibling order)",
     ({ file }) => {
       const src = readFileSync(resolve(process.cwd(), file), "utf8");
@@ -166,6 +180,91 @@ describe("AdminPageExplainer wiring — every menu route", () => {
       expect(
         explainerLine > pageHeaderCloseLine,
         `<AdminPageExplainer> at line ${explainerLine + 1} but <PageHeader ... /> closes at ` +
+          `line ${pageHeaderCloseLine + 1}. The explainer must render AFTER the page header, ` +
+          `not before or within it.`,
+      ).toBe(true);
+    },
+  );
+});
+
+describe("AppPageExplainer wiring — every menu route", () => {
+  it.each(WIRED_ROUTES_APP)("$file imports AppPageExplainer", ({ file }) => {
+    const src = readFileSync(resolve(process.cwd(), file), "utf8");
+    expect(src).toMatch(
+      /import\s*\{\s*AppPageExplainer\s*\}\s*from\s*["']@\/components\/user\/AppPageExplainer["']/,
+    );
+  });
+
+  it.each(WIRED_ROUTES_APP)(
+    '$file instantiates <AppPageExplainer pageKey="$pageKey" /> exactly once',
+    ({ file, pageKey }) => {
+      const src = readFileSync(resolve(process.cwd(), file), "utf8");
+      const pattern = new RegExp(`<AppPageExplainer\\s+pageKey=["']${pageKey}["']\\s*/>`, "g");
+      const matches = src.match(pattern) ?? [];
+      expect(matches.length).toBe(1);
+    },
+  );
+
+  it.each(WIRED_ROUTES_APP)(
+    "$file places <AppPageExplainer> OUTSIDE PageHeader actions={...} (regression guard for PR #100 bug)",
+    ({ file }) => {
+      const src = readFileSync(resolve(process.cwd(), file), "utf8");
+      const explainerIdx = src.indexOf("<AppPageExplainer pageKey=");
+      expect(explainerIdx, "explainer instantiation not found").toBeGreaterThan(-1);
+
+      let cursor = 0;
+      while (true) {
+        const actionsIdx = src.indexOf("actions={", cursor);
+        if (actionsIdx === -1) break;
+        const closeIdx = findActionsClose(src, actionsIdx);
+        if (closeIdx === -1) {
+          throw new Error(`Unbalanced actions={...} starting at ${file}:${actionsIdx}`);
+        }
+        const insideActions = explainerIdx > actionsIdx && explainerIdx < closeIdx;
+        expect(
+          insideActions,
+          `<AppPageExplainer> is nested INSIDE an actions={...} prop of <PageHeader> ` +
+            `at ${file} char ${explainerIdx}. It must be a sibling, not a child.`,
+        ).toBe(false);
+        cursor = closeIdx + 1;
+      }
+    },
+  );
+
+  it.each(WIRED_ROUTES_APP)(
+    "$file places <AppPageExplainer> AFTER the <PageHeader> closing line (sibling order)",
+    ({ file }) => {
+      const src = readFileSync(resolve(process.cwd(), file), "utf8");
+      const lines = src.split("\n");
+
+      const pageHeaderOpenLine = lines.findIndex((l) => /<PageHeader\b/.test(l));
+      expect(pageHeaderOpenLine, "no <PageHeader in file").toBeGreaterThan(-1);
+
+      let pageHeaderCloseLine = -1;
+      const inlineSelfClose = lines[pageHeaderOpenLine].match(/<PageHeader[^>]*\/>\s*$/);
+      if (inlineSelfClose) {
+        pageHeaderCloseLine = pageHeaderOpenLine;
+      } else {
+        let braceDepth = 0;
+        for (let i = pageHeaderOpenLine + 1; i < lines.length; i++) {
+          const line = lines[i];
+          for (const ch of line) {
+            if (ch === "{") braceDepth++;
+            else if (ch === "}") braceDepth--;
+          }
+          if (braceDepth === 0 && /^\s*\/>\s*$/.test(line)) {
+            pageHeaderCloseLine = i;
+            break;
+          }
+        }
+      }
+      expect(pageHeaderCloseLine, "could not locate PageHeader closing />").toBeGreaterThan(-1);
+
+      const explainerLine = lines.findIndex((l) => /<AppPageExplainer\s+pageKey=/.test(l));
+      expect(explainerLine, "no <AppPageExplainer found").toBeGreaterThan(-1);
+      expect(
+        explainerLine > pageHeaderCloseLine,
+        `<AppPageExplainer> at line ${explainerLine + 1} but <PageHeader ... /> closes at ` +
           `line ${pageHeaderCloseLine + 1}. The explainer must render AFTER the page header, ` +
           `not before or within it.`,
       ).toBe(true);
