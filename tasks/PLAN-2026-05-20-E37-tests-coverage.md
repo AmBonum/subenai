@@ -110,7 +110,9 @@ Phases B + C of the mega-migration apply regardless; Phases D + E NO-OP with `RA
 > **Note (2026-05-21):** This section is preserved for traceability. The actual schema work ships as **Phase B' — mega-migration** (see Phase A3 above). The schema definitions in this section match what's in `E37_SEED.sql` lines 45-460; the seed is the canonical source.
 
 **Branch:** `feature/E37-tests-catalog`
-**Migration:** `supabase/migrations/20260521260000_e37_platform_packs_unified.sql` (Phase B' — combined B+C+D+E) + `DEPLOY_SETUP.sql` mirror.
+**Migration:** `supabase/migrations/20260521280000_e37_platform_packs_unified.sql` (Phase B' — combined B+C+D+E) + `DEPLOY_SETUP.sql` mirror.
+
+> **2026-05-21 timestamp bump:** Originally cut at `20260521260000`. PR #121 (E48 support tickets) and #121 follow-up E48.2 took `20260521260000` and `20260521270000` in parallel while this branch was open. Rebased to `20260521280000` to keep migration apply order deterministic. The contents are unchanged.
 
 ### Tables / columns / RPCs to add
 ```sql
@@ -386,7 +388,7 @@ Kick off **PR-B' (Phase B' — mega-migration)** on branch `feature/E37-tests-ca
 3. Confirm with `SELECT id FROM auth.users WHERE email = 'platform@subenai.sk';`
 
 **What PR-B' contains:**
-- `supabase/migrations/20260521260000_e37_platform_packs_unified.sql` — adapted verbatim from `E37_SEED.sql` (1,644 lines), Slovak header stripped of "HOW TO APPLY" CTAs (those live in the PR description / runbook). Idempotent throughout.
+- `supabase/migrations/20260521280000_e37_platform_packs_unified.sql` — adapted verbatim from `E37_SEED.sql` (1,644 lines), Slovak header stripped of "HOW TO APPLY" CTAs (those live in the PR description / runbook). Idempotent throughout. (Timestamp bumped from `…260000` to `…280000` during the 2026-05-21 rebase to avoid collision with E48's two migrations.)
 - `DEPLOY_SETUP.sql` mirror block (between the existing E46.6 and the end-of-file verify section).
 - `src/integrations/supabase/types.ts` — add `platform_pack_metadata` Row/Insert/Update, `sources_jsonb` on `questions`, `get_platform_packs` + `get_pack_with_questions` RPC signatures.
 - `tests/db/e37_platform_packs.test.ts` — regex contract test (table shape, RPCs, RLS, idempotency guards).

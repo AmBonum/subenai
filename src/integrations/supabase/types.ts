@@ -920,6 +920,7 @@ export type Database = {
           options_cs: Json | null;
           visual_en: Json | null;
           visual_cs: Json | null;
+          sources_jsonb: Json;
         };
         Insert: {
           id?: string;
@@ -943,6 +944,7 @@ export type Database = {
           options_cs?: Json | null;
           visual_en?: Json | null;
           visual_cs?: Json | null;
+          sources_jsonb?: Json;
         };
         Update: {
           id?: string;
@@ -966,8 +968,65 @@ export type Database = {
           options_cs?: Json | null;
           visual_en?: Json | null;
           visual_cs?: Json | null;
+          sources_jsonb?: Json;
         };
         Relationships: [];
+      };
+      platform_pack_metadata: {
+        Row: {
+          test_id: string;
+          industry: string;
+          industry_emoji: string;
+          tagline: string;
+          target_persona: string;
+          sources_jsonb: Json;
+          passing_threshold: number;
+          tagline_en: string | null;
+          tagline_cs: string | null;
+          target_persona_en: string | null;
+          target_persona_cs: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          test_id: string;
+          industry: string;
+          industry_emoji: string;
+          tagline: string;
+          target_persona: string;
+          sources_jsonb?: Json;
+          passing_threshold?: number;
+          tagline_en?: string | null;
+          tagline_cs?: string | null;
+          target_persona_en?: string | null;
+          target_persona_cs?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          test_id?: string;
+          industry?: string;
+          industry_emoji?: string;
+          tagline?: string;
+          target_persona?: string;
+          sources_jsonb?: Json;
+          passing_threshold?: number;
+          tagline_en?: string | null;
+          tagline_cs?: string | null;
+          target_persona_en?: string | null;
+          target_persona_cs?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "platform_pack_metadata_test_id_fkey";
+            columns: ["test_id"];
+            isOneToOne: true;
+            referencedRelation: "tests";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       quick_test_config: {
         Row: { id: number; config: Json; updated_at: string };
@@ -2100,6 +2159,24 @@ export type Database = {
           p_new_status: Database["public"]["Enums"]["support_ticket_status"];
           p_note?: string | null;
         };
+        Returns: Json;
+      };
+      get_platform_packs: {
+        Args: Record<string, never>;
+        Returns: {
+          id: string;
+          slug: string;
+          title: string;
+          tagline: string;
+          industry: string;
+          industry_emoji: string;
+          passing_threshold: number;
+          question_count: number;
+          published_at: string | null;
+        }[];
+      };
+      get_pack_with_questions: {
+        Args: { p_slug: string };
         Returns: Json;
       };
     };
