@@ -5284,6 +5284,10 @@ BEGIN
     AND view_token_invalidated_at IS NULL
     AND deleted_at IS NULL;
 
+  -- Security gate (E48 audit A5). The audit_log INSERT below MUST stay
+  -- behind this guard. Anon has GRANT EXECUTE on this RPC; logging
+  -- every probe would let unauthenticated callers pollute the audit
+  -- trail by spraying random tokens.
   IF NOT FOUND THEN
     RETURN NULL;
   END IF;
@@ -5320,6 +5324,9 @@ $$;
 
 REVOKE EXECUTE ON FUNCTION public.get_ticket_thread_for_view_token(uuid, text, text) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.get_ticket_thread_for_view_token(uuid, text, text) TO anon, authenticated;
+
+COMMENT ON FUNCTION public.get_ticket_thread_for_view_token(uuid, text, text) IS
+'E48 anonymous ticket thread reader. SECURITY DEFINER, gated by SHA-256 view-token compare. audit_log INSERT must remain AFTER the IF NOT FOUND guard — otherwise anon callers can pollute the audit trail by spraying random tokens (E48 security audit, finding A5).';
 
 CREATE OR REPLACE FUNCTION public.request_attachment_signed_url(p_attachment_id uuid)
 RETURNS jsonb
