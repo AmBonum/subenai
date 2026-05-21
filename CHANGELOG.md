@@ -31,6 +31,18 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   pozornosť pri pravidelnom audite.
 
 ### Pridané
+- **Interná infraštruktúra pre admin GDPR fulfilment (E46.1).** Pribudli
+  tri databázové funkcie, ktoré pripravia pôdu pre nový dossier
+  `/admin/users/<id>` (príde v ďalších fázach E46.2–E46.7):
+  `export_user_data_admin` (admin variant Art. 15 exportu, vráti JSON
+  o cieľovom userovi), `erase_user_data` (Art. 17 fulfilment so
+  stratégiou *anonymizovať* alebo *zmazať natvrdo* — druhé čaká 5
+  minút v queue cez novú tabuľku `pending_erasures` aby sa stihol
+  cancel pri preklepe), `cancel_pending_erasure` (rollback počas
+  toho 5-minútového okna). Hard delete najprv overí, či používateľ
+  nemá aktívnu sponzorskú Stripe subscription (vtedy zlyhá s jasnou
+  hláškou — operátor najprv musí zrušiť v Stripe dashboard). Žiadne
+  UI v tejto verzii — tieto sú interné stavebné kamene.
 - **Pozvánky cez e-mail z platformy — pripravujeme.** Na detaile testu
   (`/app/tests/<id>` → tlačidlo *Pozvánky e-mailom*) sa od dnes zobrazuje
   nová akcia s odznakom *Pripravujeme*. Tlačidlo je zatiaľ neaktívne; po

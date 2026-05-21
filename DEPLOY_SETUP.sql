@@ -4280,6 +4280,203 @@ REVOKE ALL ON FUNCTION public.anonymize_expired_dpa_requests() FROM anon, authen
 GRANT EXECUTE ON FUNCTION public.anonymize_expired_dpa_requests() TO service_role;
 
 -- ============================================================================
+-- 20260521230000_admin_user_data_rpcs.sql (E46.1)
+-- ============================================================================
+-- pending_erasures + 4 RPCs (export_user_data_admin, erase_user_data,
+-- cancel_pending_erasure, assert_no_active_sponsorship). Admin GDPR
+-- fulfilment engine. See tasks/PLAN-2026-05-21-E46-admin-user-data-manager.md.
+
+CREATE TABLE IF NOT EXISTS public.pending_erasures (
+  user_id        uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  strategy       text NOT NULL CHECK (strategy IN ('hard_delete')),
+  execute_at     timestamptz NOT NULL,
+  initiated_by   uuid NOT NULL REFERENCES auth.users(id) ON DELETE SET NULL,
+  audit_log_id   uuid,
+  pre_delete_snapshot jsonb,
+  created_at     timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.pending_erasures ENABLE ROW LEVEL SECURITY;
+
+CREATE INDEX IF NOT EXISTS pending_erasures_execute_at_idx
+  ON public.pending_erasures (execute_at);
+
+DROP POLICY IF EXISTS pending_erasures_admin_read ON public.pending_erasures;
+CREATE POLICY pending_erasures_admin_read ON public.pending_erasures
+  FOR SELECT
+  TO authenticated
+  USING (public.has_role(auth.uid(), 'admin'));
+
+CREATE OR REPLACE FUNCTION public.export_user_data_admin(p_user_id uuid)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_caller   uuid := auth.uid();
+  v_email    text;
+  v_payload  jsonb;
+BEGIN
+  IF v_caller IS NULL THEN
+    RAISE EXCEPTION 'unauthorized' USING ERRCODE = '42501';
+  END IF;
+  IF NOT public.has_role(v_caller, 'admin') THEN
+    RAISE EXCEPTION 'forbidden' USING ERRCODE = '42501';
+  END IF;
+  IF p_user_id IS NULL THEN
+    RAISE EXCEPTION 'p_user_id required' USING ERRCODE = '22023';
+  END IF;
+  SELECT email INTO v_email FROM public.profiles WHERE id = p_user_id;
+  v_payload := jsonb_build_object(
+    'generated_at', now(),
+    'generated_by', v_caller,
+    'subject', jsonb_build_object('user_id', p_user_id, 'email', v_email),
+    'rights', jsonb_build_object(
+      'access', 'GDPR Art. 15',
+      'portability', 'GDPR Art. 20',
+      'erasure', 'GDPR Art. 17',
+      'rectification', 'GDPR Art. 16'
+    ),
+    'records', jsonb_build_object(
+      'profile', COALESCE((SELECT to_jsonb(p) FROM public.profiles p WHERE p.id = p_user_id), 'null'::jsonb),
+      'profile_preferences', COALESCE((SELECT to_jsonb(pp) FROM public.profile_preferences pp WHERE pp.user_id = p_user_id), 'null'::jsonb),
+      'user_roles', COALESCE((SELECT jsonb_agg(to_jsonb(ur) ORDER BY ur.role) FROM public.user_roles ur WHERE ur.user_id = p_user_id), '[]'::jsonb),
+      'dsr_requests', COALESCE((SELECT jsonb_agg(to_jsonb(d) ORDER BY d.created_at DESC) FROM public.dsr_requests d WHERE v_email IS NOT NULL AND d.requester_email = v_email), '[]'::jsonb),
+      'dpa_requests', COALESCE((SELECT jsonb_agg(to_jsonb(d) ORDER BY d.created_at DESC) FROM public.dpa_requests d WHERE v_email IS NOT NULL AND d.contact_email = v_email), '[]'::jsonb),
+      'pending_erasure', COALESCE((SELECT to_jsonb(pe) FROM public.pending_erasures pe WHERE pe.user_id = p_user_id), 'null'::jsonb)
+    )
+  );
+  RETURN v_payload;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.export_user_data_admin(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.export_user_data_admin(uuid) FROM anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.export_user_data_admin(uuid) TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.assert_no_active_sponsorship(p_user_id uuid)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_email text;
+  v_count integer;
+BEGIN
+  SELECT email INTO v_email FROM public.profiles WHERE id = p_user_id;
+  IF v_email IS NULL THEN RETURN; END IF;
+  SELECT count(*) INTO v_count
+    FROM public.subscriptions s
+    JOIN public.sponsors sp ON sp.id = s.sponsor_id
+    WHERE s.cancelled_at IS NULL
+      AND s.status = 'active'
+      AND (sp.display_name = v_email OR sp.display_message ILIKE '%' || v_email || '%');
+  IF v_count > 0 THEN
+    RAISE EXCEPTION 'stripe_subscription_active: % active sponsorship(s) found', v_count
+      USING ERRCODE = 'P0001';
+  END IF;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.assert_no_active_sponsorship(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.assert_no_active_sponsorship(uuid) FROM anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.assert_no_active_sponsorship(uuid) TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.erase_user_data(p_user_id uuid, p_strategy text)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_caller        uuid := auth.uid();
+  v_target_email  text;
+  v_execute_at    timestamptz;
+  v_snapshot      jsonb;
+  v_n_profiles    integer := 0;
+  v_n_dsr         integer := 0;
+  v_n_dpa         integer := 0;
+  v_n_attempts    integer := 0;
+  v_n_respondents integer := 0;
+BEGIN
+  IF v_caller IS NULL THEN RAISE EXCEPTION 'unauthorized' USING ERRCODE = '42501'; END IF;
+  IF NOT public.has_role(v_caller, 'admin') THEN RAISE EXCEPTION 'forbidden' USING ERRCODE = '42501'; END IF;
+  IF p_user_id IS NULL THEN RAISE EXCEPTION 'p_user_id required' USING ERRCODE = '22023'; END IF;
+  IF p_strategy NOT IN ('anonymize', 'hard_delete') THEN
+    RAISE EXCEPTION 'invalid_strategy: %', p_strategy USING ERRCODE = '22023';
+  END IF;
+  IF p_user_id = v_caller THEN
+    RAISE EXCEPTION 'cannot_target_self' USING ERRCODE = 'P0001';
+  END IF;
+  PERFORM public.assert_no_active_sponsorship(p_user_id);
+  SELECT email INTO v_target_email FROM public.profiles WHERE id = p_user_id;
+  IF p_strategy = 'anonymize' THEN
+    UPDATE public.profiles SET email = NULL, display_name = NULL, avatar_initials = NULL WHERE id = p_user_id;
+    GET DIAGNOSTICS v_n_profiles = ROW_COUNT;
+    IF v_target_email IS NOT NULL THEN
+      UPDATE public.dsr_requests SET requester_email = NULL, note = NULL WHERE requester_email = v_target_email;
+      GET DIAGNOSTICS v_n_dsr = ROW_COUNT;
+      UPDATE public.dpa_requests SET contact_email = NULL, contact_name = NULL, anonymized_at = COALESCE(anonymized_at, now()) WHERE contact_email = v_target_email;
+      GET DIAGNOSTICS v_n_dpa = ROW_COUNT;
+    END IF;
+    UPDATE public.attempts SET respondent_email = NULL, respondent_name = NULL
+      WHERE respondent_email = v_target_email
+         OR (respondent_name IS NOT NULL AND v_target_email IS NOT NULL AND respondent_email IS NULL);
+    GET DIAGNOSTICS v_n_attempts = ROW_COUNT;
+    UPDATE public.respondents SET email = NULL, display_name = NULL WHERE email = v_target_email;
+    GET DIAGNOSTICS v_n_respondents = ROW_COUNT;
+    RETURN jsonb_build_object(
+      'strategy', 'anonymize',
+      'executed_at', now(),
+      'rows_affected', jsonb_build_object(
+        'profiles', v_n_profiles, 'dsr_requests', v_n_dsr,
+        'dpa_requests', v_n_dpa, 'attempts', v_n_attempts, 'respondents', v_n_respondents
+      )
+    );
+  END IF;
+  v_snapshot := public.export_user_data_admin(p_user_id);
+  v_execute_at := now() + interval '5 minutes';
+  INSERT INTO public.pending_erasures (user_id, strategy, execute_at, initiated_by, pre_delete_snapshot)
+  VALUES (p_user_id, 'hard_delete', v_execute_at, v_caller, v_snapshot)
+  ON CONFLICT (user_id) DO UPDATE
+    SET execute_at = EXCLUDED.execute_at, initiated_by = EXCLUDED.initiated_by,
+        pre_delete_snapshot = EXCLUDED.pre_delete_snapshot, created_at = now();
+  RETURN jsonb_build_object(
+    'strategy', 'hard_delete', 'enqueued_at', now(),
+    'execute_at', v_execute_at, 'grace_window_minutes', 5
+  );
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.erase_user_data(uuid, text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.erase_user_data(uuid, text) FROM anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.erase_user_data(uuid, text) TO authenticated;
+
+CREATE OR REPLACE FUNCTION public.cancel_pending_erasure(p_user_id uuid)
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_caller uuid := auth.uid();
+  v_deleted integer;
+BEGIN
+  IF v_caller IS NULL THEN RAISE EXCEPTION 'unauthorized' USING ERRCODE = '42501'; END IF;
+  IF NOT public.has_role(v_caller, 'admin') THEN RAISE EXCEPTION 'forbidden' USING ERRCODE = '42501'; END IF;
+  DELETE FROM public.pending_erasures WHERE user_id = p_user_id AND execute_at > now();
+  GET DIAGNOSTICS v_deleted = ROW_COUNT;
+  RETURN v_deleted > 0;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.cancel_pending_erasure(uuid) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.cancel_pending_erasure(uuid) FROM anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.cancel_pending_erasure(uuid) TO authenticated;
+
+-- ============================================================================
 -- 20260521210000_test_question_order_mode.sql (E45.1)
 -- ============================================================================
 

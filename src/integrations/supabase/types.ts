@@ -666,6 +666,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      pending_erasures: {
+        Row: {
+          user_id: string;
+          strategy: "hard_delete";
+          execute_at: string;
+          initiated_by: string;
+          audit_log_id: string | null;
+          pre_delete_snapshot: Json | null;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          strategy?: "hard_delete";
+          execute_at: string;
+          initiated_by: string;
+          audit_log_id?: string | null;
+          pre_delete_snapshot?: Json | null;
+          created_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          strategy?: "hard_delete";
+          execute_at?: string;
+          initiated_by?: string;
+          audit_log_id?: string | null;
+          pre_delete_snapshot?: Json | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       dpa_requests: {
         Row: {
           id: string;
@@ -1773,6 +1803,22 @@ export type Database = {
       anonymize_expired_dpa_requests: {
         Args: Record<string, never>;
         Returns: number;
+      };
+      export_user_data_admin: {
+        Args: { p_user_id: string };
+        Returns: Json;
+      };
+      erase_user_data: {
+        Args: { p_user_id: string; p_strategy: "anonymize" | "hard_delete" };
+        Returns: Json;
+      };
+      cancel_pending_erasure: {
+        Args: { p_user_id: string };
+        Returns: boolean;
+      };
+      assert_no_active_sponsorship: {
+        Args: { p_user_id: string };
+        Returns: undefined;
       };
       has_role: {
         Args: { _user_id: string; _role: Database["public"]["Enums"]["app_role"] };
