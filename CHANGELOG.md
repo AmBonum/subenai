@@ -10,6 +10,18 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
+- **`/admin/settings` ukazuje skutočný stav GDPR konfigurácie.** Doteraz
+  to bol placeholder formulár so žltým upozornením „backend dorobíme
+  v ďalšej iterácii". Teraz tam admin vidí: či je DPA tok zapnutý alebo
+  vypnutý, či sa PDF generuje s draft vodoznakom (a *prečo* je dôležité
+  ho nechať zapnutý kým právnik neodklepne v1.0), aktuálnu verziu
+  šablóny, retenciu kontaktných údajov (12 mesiacov) a celý zoznam
+  sub-procesorov podľa čl. 28(3)(g) GDPR. Pri každom riadku je presná
+  cesta k env premennej alebo SQL migrácii, ktorá ho riadi — žiadne
+  hádanie kde sa to dá zmeniť. Tlačidlo *Otvoriť E40 runbook* otvára
+  presný postup zmeny na GitHube. Hodnoty sú vedome read-only:
+  flipnutie vodoznaku alebo verzie šablóny musí prejsť cez deploy
+  log (audit trail), nie cez kliknutie v admin paneli.
 - **Export CSV pre žiadosti GDPR (DSR) aj DPA žiadosti + vyhľadávanie
   v DSR fronte.** V admin paneli na `/admin/dsr` aj `/admin/dpa-requests`
   pribudlo tlačidlo *Export CSV* — vyexportuje aktuálne odfiltrovanú
