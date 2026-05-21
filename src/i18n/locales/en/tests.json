@@ -88,6 +88,7 @@
     "share_button": "Share",
     "invite_button": "Email invites",
     "invite_pro_tooltip": "Sending invitations by email from the platform will be available in the PRO plan. For now, share the link with respondents manually — it works the same way.",
+    "invite_coming_soon_tooltip": "We're still building this — it'll be available soon. For now, share the link with respondents manually — it works the same way.",
     "not_found_title": "Test not found",
     "not_found_body": "This test either doesn't exist or doesn't belong to you.",
     "back_to_list": "Back to list",
