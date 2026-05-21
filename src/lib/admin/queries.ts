@@ -2323,3 +2323,118 @@ export function useTransitionTicketStatus() {
     },
   });
 }
+
+// E48.9 — admin notification preferences (per-user row in
+// admin_notification_preferences). RLS limits SELECT/UPDATE to the
+// owner only (auth.uid() = user_id) — admins cannot see or edit
+// another admin's prefs.
+
+export type SupportCategoryKey =
+  | "bug"
+  | "question"
+  | "feature_request"
+  | "abuse_report"
+  | "billing"
+  | "gdpr"
+  | "other";
+
+export type DigestCadence = "instant" | "hourly" | "daily" | "off";
+
+export interface AdminNotificationPreferences {
+  enabled: boolean;
+  channels: { email: boolean; in_app: boolean };
+  per_category: Record<SupportCategoryKey, boolean>;
+  digest_cadence: DigestCadence;
+}
+
+const NOTIFICATION_PREFERENCES_DEFAULTS: AdminNotificationPreferences = {
+  enabled: true,
+  channels: { email: true, in_app: true },
+  per_category: {
+    bug: true,
+    question: true,
+    feature_request: true,
+    abuse_report: true,
+    billing: true,
+    gdpr: true,
+    other: true,
+  },
+  digest_cadence: "instant",
+};
+
+export function getDefaultAdminNotificationPreferences(): AdminNotificationPreferences {
+  return {
+    ...NOTIFICATION_PREFERENCES_DEFAULTS,
+    channels: { ...NOTIFICATION_PREFERENCES_DEFAULTS.channels },
+    per_category: { ...NOTIFICATION_PREFERENCES_DEFAULTS.per_category },
+  };
+}
+
+export function useAdminNotificationPreferences() {
+  return useQuery({
+    queryKey: ["admin", "notification_preferences"],
+    queryFn: async (): Promise<AdminNotificationPreferences> => {
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData.user?.id;
+      if (!userId) throw new Error("not_authenticated");
+
+      const { data, error } = await supabase
+        .from("admin_notification_preferences")
+        .select("enabled, channels, per_category, digest_cadence")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) return getDefaultAdminNotificationPreferences();
+
+      const channelsRaw = (data.channels ?? {}) as Record<string, unknown>;
+      const perCategoryRaw = (data.per_category ?? {}) as Record<string, unknown>;
+      const defaults = getDefaultAdminNotificationPreferences();
+      return {
+        enabled: data.enabled,
+        channels: {
+          email: Boolean(channelsRaw.email ?? defaults.channels.email),
+          in_app: Boolean(channelsRaw.in_app ?? defaults.channels.in_app),
+        },
+        per_category: {
+          bug: Boolean(perCategoryRaw.bug ?? defaults.per_category.bug),
+          question: Boolean(perCategoryRaw.question ?? defaults.per_category.question),
+          feature_request: Boolean(
+            perCategoryRaw.feature_request ?? defaults.per_category.feature_request,
+          ),
+          abuse_report: Boolean(perCategoryRaw.abuse_report ?? defaults.per_category.abuse_report),
+          billing: Boolean(perCategoryRaw.billing ?? defaults.per_category.billing),
+          gdpr: Boolean(perCategoryRaw.gdpr ?? defaults.per_category.gdpr),
+          other: Boolean(perCategoryRaw.other ?? defaults.per_category.other),
+        },
+        digest_cadence: (data.digest_cadence as DigestCadence) ?? defaults.digest_cadence,
+      };
+    },
+  });
+}
+
+export function useUpdateAdminNotificationPreferences() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (prefs: AdminNotificationPreferences) => {
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData.user?.id;
+      if (!userId) throw new Error("not_authenticated");
+
+      const { error } = await supabase.from("admin_notification_preferences").upsert(
+        {
+          user_id: userId,
+          enabled: prefs.enabled,
+          channels: prefs.channels,
+          per_category: prefs.per_category,
+          digest_cadence: prefs.digest_cadence,
+        },
+        { onConflict: "user_id" },
+      );
+      if (error) throw error;
+      return prefs;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "notification_preferences"] });
+    },
+  });
+}

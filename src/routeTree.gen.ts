@@ -103,6 +103,7 @@ import { Route as AppAccountProfileRouteImport } from './routes/app.account.prof
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users.$userId'
 import { Route as AdminTicketsTicketIdRouteImport } from './routes/admin/tickets.$ticketId'
 import { Route as AdminTestsTestIdRouteImport } from './routes/admin/tests.$testId'
+import { Route as AdminSettingsNotificationsRouteImport } from './routes/admin/settings.notifications'
 import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$pageId'
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
 import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
@@ -631,6 +632,14 @@ const AdminTestsTestIdRoute = AdminTestsTestIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/tests.$testId.lazy').then((d) => d.Route),
 )
+const AdminSettingsNotificationsRoute =
+  AdminSettingsNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AdminSettingsRoute,
+  } as any).lazy(() =>
+    import('./routes/admin/settings.notifications.lazy').then((d) => d.Route),
+  )
 const AdminPagesPageIdRoute = AdminPagesPageIdRouteImport.update({
   id: '/$pageId',
   path: '/$pageId',
@@ -714,7 +723,7 @@ export interface FileRoutesByFullPath {
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/security': typeof AdminSecurityRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
@@ -761,6 +770,7 @@ export interface FileRoutesByFullPath {
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
+  '/admin/settings/notifications': typeof AdminSettingsNotificationsRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/admin/tickets/$ticketId': typeof AdminTicketsTicketIdRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
@@ -812,7 +822,7 @@ export interface FileRoutesByTo {
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/security': typeof AdminSecurityRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/tickets': typeof AdminTicketsRouteWithChildren
@@ -857,6 +867,7 @@ export interface FileRoutesByTo {
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
+  '/admin/settings/notifications': typeof AdminSettingsNotificationsRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/admin/tickets/$ticketId': typeof AdminTicketsTicketIdRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
@@ -913,7 +924,7 @@ export interface FileRoutesById {
   '/admin/reports': typeof AdminReportsRoute
   '/admin/respondents': typeof AdminRespondentsRoute
   '/admin/security': typeof AdminSecurityRoute
-  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/settings': typeof AdminSettingsRouteWithChildren
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
@@ -960,6 +971,7 @@ export interface FileRoutesById {
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
+  '/admin/settings/notifications': typeof AdminSettingsNotificationsRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
   '/admin/tickets/$ticketId': typeof AdminTicketsTicketIdRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
@@ -1065,6 +1077,7 @@ export interface FileRouteTypes {
     | '/admin/blog/$id'
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
+    | '/admin/settings/notifications'
     | '/admin/tests/$testId'
     | '/admin/tickets/$ticketId'
     | '/admin/users/$userId'
@@ -1161,6 +1174,7 @@ export interface FileRouteTypes {
     | '/admin/blog/$id'
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
+    | '/admin/settings/notifications'
     | '/admin/tests/$testId'
     | '/admin/tickets/$ticketId'
     | '/admin/users/$userId'
@@ -1263,6 +1277,7 @@ export interface FileRouteTypes {
     | '/admin/blog/$id'
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
+    | '/admin/settings/notifications'
     | '/admin/tests/$testId'
     | '/admin/tickets/$ticketId'
     | '/admin/users/$userId'
@@ -1990,6 +2005,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTestsTestIdRouteImport
       parentRoute: typeof AdminTestsRoute
     }
+    '/admin/settings/notifications': {
+      id: '/admin/settings/notifications'
+      path: '/notifications'
+      fullPath: '/admin/settings/notifications'
+      preLoaderRoute: typeof AdminSettingsNotificationsRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
     '/admin/pages/$pageId': {
       id: '/admin/pages/$pageId'
       path: '/$pageId'
@@ -2070,6 +2092,18 @@ const AdminPagesRouteWithChildren = AdminPagesRoute._addFileChildren(
   AdminPagesRouteChildren,
 )
 
+interface AdminSettingsRouteChildren {
+  AdminSettingsNotificationsRoute: typeof AdminSettingsNotificationsRoute
+}
+
+const AdminSettingsRouteChildren: AdminSettingsRouteChildren = {
+  AdminSettingsNotificationsRoute: AdminSettingsNotificationsRoute,
+}
+
+const AdminSettingsRouteWithChildren = AdminSettingsRoute._addFileChildren(
+  AdminSettingsRouteChildren,
+)
+
 interface AdminTestsRouteChildren {
   AdminTestsTestIdRoute: typeof AdminTestsTestIdRoute
   AdminTestsIndexRoute: typeof AdminTestsIndexRoute
@@ -2123,7 +2157,7 @@ interface AdminRouteChildren {
   AdminReportsRoute: typeof AdminReportsRoute
   AdminRespondentsRoute: typeof AdminRespondentsRoute
   AdminSecurityRoute: typeof AdminSecurityRoute
-  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
   AdminShareCardRoute: typeof AdminShareCardRoute
   AdminSupportRoute: typeof AdminSupportRoute
   AdminTestsRoute: typeof AdminTestsRouteWithChildren
@@ -2151,7 +2185,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminReportsRoute: AdminReportsRoute,
   AdminRespondentsRoute: AdminRespondentsRoute,
   AdminSecurityRoute: AdminSecurityRoute,
-  AdminSettingsRoute: AdminSettingsRoute,
+  AdminSettingsRoute: AdminSettingsRouteWithChildren,
   AdminShareCardRoute: AdminShareCardRoute,
   AdminSupportRoute: AdminSupportRoute,
   AdminTestsRoute: AdminTestsRouteWithChildren,
