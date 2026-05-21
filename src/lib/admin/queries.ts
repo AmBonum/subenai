@@ -1827,3 +1827,140 @@ export function useResendDpaEmail() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "dpa_requests"] }),
   });
 }
+
+// ---------------------------------------------------------------------------
+// E46 — Admin user-data dossier (/admin/users/<user_id>)
+// ---------------------------------------------------------------------------
+
+export interface UserDossier {
+  profile: {
+    id: string;
+    email: string | null;
+    display_name: string | null;
+    avatar_initials: string | null;
+    created_at: string;
+  } | null;
+  profile_preferences: Record<string, unknown> | null;
+  user_roles: Array<{ user_id: string; role: string; assigned_by: string | null }>;
+  dsr_requests: Array<Record<string, unknown>>;
+  dpa_requests: Array<Record<string, unknown>>;
+  pending_erasure: {
+    user_id: string;
+    strategy: string;
+    execute_at: string;
+    initiated_by: string;
+    created_at: string;
+  } | null;
+  generated_at: string;
+  subject: { user_id: string; email: string | null };
+}
+
+interface AdminDossierResponse {
+  generated_at: string;
+  subject: { user_id: string; email: string | null };
+  records: {
+    profile: UserDossier["profile"];
+    profile_preferences: UserDossier["profile_preferences"];
+    user_roles: UserDossier["user_roles"];
+    dsr_requests: UserDossier["dsr_requests"];
+    dpa_requests: UserDossier["dpa_requests"];
+    pending_erasure: UserDossier["pending_erasure"];
+  };
+}
+
+/**
+ * Fetches the full GDPR-relevant snapshot of a user via the
+ * `export_user_data_admin` RPC (E46.1). Mirrors the JSON the RPC
+ * builds — the same payload is also archived as the pre-delete
+ * snapshot inside `pending_erasures.pre_delete_snapshot`, so the
+ * dossier UI and the recovery surface stay in sync by construction.
+ */
+export function useUserDossier(userId: string | undefined) {
+  return useQuery({
+    queryKey: ["admin", "user_dossier", userId],
+    enabled: Boolean(userId),
+    queryFn: async (): Promise<UserDossier> => {
+      const { data, error } = await supabase.rpc("export_user_data_admin", {
+        p_user_id: userId!,
+      });
+      if (error) throw error;
+      const payload = data as unknown as AdminDossierResponse;
+      return {
+        ...payload.records,
+        generated_at: payload.generated_at,
+        subject: payload.subject,
+      };
+    },
+  });
+}
+
+/**
+ * Anonymize the user's PII in-place (D-1: NULL identity columns, keep
+ * statistical rows). Synchronous — returns rows_affected JSON.
+ */
+export function useAnonymizeUser() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ userId }: { userId: string }) => {
+      const { data, error } = await supabase.rpc("erase_user_data", {
+        p_user_id: userId,
+        p_strategy: "anonymize",
+      });
+      if (error) throw error;
+      return data as unknown as {
+        strategy: "anonymize";
+        executed_at: string;
+        rows_affected: Record<string, number>;
+      };
+    },
+    onSuccess: (_data, vars) => {
+      qc.invalidateQueries({ queryKey: ["admin", "user_dossier", vars.userId] });
+      qc.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+  });
+}
+
+/**
+ * Enqueue a hard-delete with the 5-minute grace window (D-3). Returns
+ * `execute_at` so the UI can show a countdown. The actual auth.users
+ * deletion happens via the E46.5 cron + Supabase Admin API; until then
+ * the row sits in `pending_erasures` and the admin can cancel via
+ * `useCancelPendingErasure`.
+ */
+export function useEnqueueHardDelete() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ userId }: { userId: string }) => {
+      const { data, error } = await supabase.rpc("erase_user_data", {
+        p_user_id: userId,
+        p_strategy: "hard_delete",
+      });
+      if (error) throw error;
+      return data as unknown as {
+        strategy: "hard_delete";
+        enqueued_at: string;
+        execute_at: string;
+        grace_window_minutes: number;
+      };
+    },
+    onSuccess: (_data, vars) => {
+      qc.invalidateQueries({ queryKey: ["admin", "user_dossier", vars.userId] });
+    },
+  });
+}
+
+export function useCancelPendingErasure() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ userId }: { userId: string }) => {
+      const { data, error } = await supabase.rpc("cancel_pending_erasure", {
+        p_user_id: userId,
+      });
+      if (error) throw error;
+      return data as boolean;
+    },
+    onSuccess: (_data, vars) => {
+      qc.invalidateQueries({ queryKey: ["admin", "user_dossier", vars.userId] });
+    },
+  });
+}

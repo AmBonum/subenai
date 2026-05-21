@@ -54,6 +54,7 @@
     "role_user": "Používateľ",
     "role_pending": "Čakajúci",
     "edit_role": "Upraviť rolu",
+    "open_dossier": "Otvoriť GDPR dossier",
     "empty_state_title": "Žiadni používatelia",
     "empty_state_description": "Pre zadané filtre sme nenašli žiadny záznam.",
     "table_header_user": "Používateľ",

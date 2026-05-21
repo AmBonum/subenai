@@ -31,6 +31,27 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   pozornosť pri pravidelnom audite.
 
 ### Pridané
+- **Nový admin dossier `/admin/users/<id>` — splní Art. 15 / 17 GDPR jedným klikom (E46.3 MVP).**
+  V admin paneli na `/admin/users` pribudla na každom riadku ikona
+  *Otvoriť GDPR dossier* (ikona zvitku). Klikom otvoríš stránku
+  s kompletným prehľadom všetkých GDPR-relevantných údajov o danom
+  používateľovi: identita + role (z `profiles` + `profile_preferences`
+  + `user_roles`) a história GDPR (DSR + DPA žiadosti). Action toolbar
+  ponúka tri akcie: *Stiahnuť Art. 15 JSON* (okamžitý JSON snapshot
+  pre právo na prístup), *Anonymizovať PII* (NULL-ne meno + e-mail
+  + kontaktné údaje, štatistické riadky ostávajú — pre splnenie
+  Art. 17 ods. 3 písm. b GDPR), *Vymazať natvrdo* (úplne odstráni
+  používateľa cez `auth.users` CASCADE). Tlačidlo *Vymazať natvrdo*
+  vyžaduje typed-confirm — admin musí napísať e-mail používateľa
+  presne, inak je tlačidlo neaktívne. Po potvrdení sa vymazanie
+  zaradí do 5-minútovej fronty — počas tohto okna sa zobrazí
+  červený banner *Čaká sa na vymazanie* s tlačidlom *Zrušiť*,
+  ktoré rollne operáciu späť. Hard delete navyše overí, či
+  používateľ nemá aktívnu sponzorskú Stripe subscription
+  (vtedy zlyhá s jasnou hláškou — operátor musí najprv zrušiť
+  v Stripe). Toto je MVP — ďalšie sekcie dossier-a (quiz activity,
+  engagement, financial, audit timeline) prídu vo follow-up fázach
+  E46.4–E46.7.
 - **Interná infraštruktúra pre admin GDPR fulfilment (E46.1).** Pribudli
   tri databázové funkcie, ktoré pripravia pôdu pre nový dossier
   `/admin/users/<id>` (príde v ďalších fázach E46.2–E46.7):

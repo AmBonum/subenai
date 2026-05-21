@@ -54,6 +54,7 @@
     "role_user": "User",
     "role_pending": "Pending",
     "edit_role": "Edit role",
+    "open_dossier": "Open GDPR dossier",
     "empty_state_title": "No users",
     "empty_state_description": "No records found for the selected filters.",
     "table_header_user": "User",
