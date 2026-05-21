@@ -12,6 +12,7 @@
 // defaults marked `TODO: derive when AH-12 schema enrichment lands`. They
 // allow the admin UI to render against real data without a migration.
 
+import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -939,6 +940,45 @@ export function useAdminDSRQueue() {
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as DsrRequestsRow[];
+    },
+  });
+}
+
+/**
+ * Bulk-resolve `profiles.email -> profiles.id` for a list of e-mails.
+ *
+ * Used by the DSR queue to render an *Open dossier* icon on rows whose
+ * requester e-mail matches a real `auth.users` account. E-mails are
+ * compared case-insensitively (profiles stores lowercased e-mails;
+ * DSR requester_email is whatever the form submitted — we lowercase
+ * both sides before matching). Returns a `Record<lowercased_email, user_id>`.
+ *
+ * Empty input → empty map, no query fires (saves a roundtrip on the
+ * first render before DSR data lands).
+ */
+export function useUsersByEmails(emails: string[]) {
+  // De-dupe + lowercase for a stable cache key and a single `.in(...)` query.
+  const normalised = useMemo(() => {
+    const set = new Set<string>();
+    for (const e of emails) {
+      if (e) set.add(e.trim().toLowerCase());
+    }
+    return Array.from(set).sort();
+  }, [emails]);
+  return useQuery({
+    queryKey: ["admin", "users_by_emails", normalised],
+    enabled: normalised.length > 0,
+    queryFn: async (): Promise<Record<string, string>> => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, email")
+        .in("email", normalised);
+      if (error) throw error;
+      const map: Record<string, string> = {};
+      for (const row of (data ?? []) as Array<{ id: string; email: string | null }>) {
+        if (row.email) map[row.email.toLowerCase()] = row.id;
+      }
+      return map;
     },
   });
 }
