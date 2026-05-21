@@ -9,6 +9,18 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+## [1.14.2] — 2026-05-21
+
+Minor release postavený okolo dvoch tém: **GDPR fulfilment v admin paneli**
+(nový dossier `/admin/users/<id>`, prepojenie DSR queue ↔ dossier, stĺpec
+*Posledná GDPR udalosť* na zozname používateľov, infraštruktúra pre
+anonymize / hard-delete s 5-min grace window) a **dôslednejšie admin UX**
+(jednotný `ConfirmDialog` so štyrmi úrovňami závažnosti, ban default
+browserových modálov, zložiteľné vysvetľujúce panely na 20 podstránkach
+`/admin`, responzívne dolaďovanie panelov). Pribudli aj dva bezpečnostné
+fixy: forenzný audit log pre úpravy otázok v testoch (Postgres trigger) a
+upresnené rozlišovanie podozrení v cookie auth toku (T1 fix).
+
 ### Bezpečnosť
 - **Forenzný záznam zmien v otázkach testu sa už ukladá automaticky.**
   Po nedávnom security audite sme zistili, že keď autor v detaile testu
