@@ -204,7 +204,7 @@
           ]
         },
         "time_impact": {
-          "heading": "Časový dopad",
+          "heading": "Časový dopad zmien",
           "items": [
             "Metriky sa načítavajú pri otvorení stránky; čerstvé dáta uvidíš po refresh-i",
             "Audit aktivita sa objaví do sekúnd po úspešnej operácii inde v admine",

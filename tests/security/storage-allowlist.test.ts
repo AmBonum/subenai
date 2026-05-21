@@ -53,7 +53,7 @@ const LOCALSTORAGE_KEYS: DeclaredStorage[] = [
   },
   { key: "subenai.locale", declaredAt: "/cookies s2 row `locale` (E40) — language preference" },
   {
-    key: "EXPLAINER_STORAGE_PREFIX",
+    key: "ADMIN_EXPLAINER_STORAGE_PREFIX",
     declaredAt:
       "/cookies s2 row `prefs` (E40) — `admin-explainer-<pageKey>` collapsed/expanded state of admin info panels (E47)",
   },
@@ -114,8 +114,20 @@ function findWrites(pattern: RegExp): StorageWrite[] {
   return out;
 }
 
+/**
+ * Match an allowlist key against a captured storage expression. Uses
+ * word-boundary matching, NOT substring `includes`, so an undeclared
+ * `EXPLAINER_STORAGE_PREFIX_OLD` won't silently inherit the declared
+ * `EXPLAINER_STORAGE_PREFIX` row (E48 ultrareview tightening — prior
+ * substring match risked a regulatory miss because the storage-allowlist
+ * test is the only CI gate for ePrivacy declarations).
+ */
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function isOnAllowlist(keyExpr: string, allowlist: DeclaredStorage[]): boolean {
-  return allowlist.some(({ key }) => keyExpr.includes(key));
+  return allowlist.some(({ key }) => new RegExp(`\\b${escapeRegex(key)}\\b`).test(keyExpr));
 }
 
 describe("storage allowlist — document.cookie writes in src/", () => {

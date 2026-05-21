@@ -83,6 +83,12 @@ function pickSection(root: Json, section: string): Json {
   // `"account.profile" in root` check, returned root unchanged, and
   // every key in /app/account/* surfaced as the raw key in production
   // (2026-05-19: card_personal_title, label_display_name, badge_dirty…).
+  //
+  // FALL-BACK-TO-ROOT is load-bearing — namespaces like `marketing`
+  // intentionally call `tFor("marketing")` and lookup keys nested at
+  // root level (e.g. `header.logo_aria`). E48 ultrareview attempted to
+  // change this to return null on missing section and broke /about,
+  // /contact, /schools, home FAQ, etc. Keep the original behaviour.
   if (typeof root !== "object" || root === null) return root;
   let cur: Json = root;
   for (const part of section.split(".")) {
@@ -92,8 +98,8 @@ function pickSection(root: Json, section: string): Json {
   return cur;
 }
 
-type TFor = (key: string, vars?: Record<string, string | number>) => string;
-type TForObject = <T extends JsonNode = JsonNode>(key: string) => T | null;
+export type TFor = (key: string, vars?: Record<string, string | number>) => string;
+export type TForObject = <T extends JsonNode = JsonNode>(key: string) => T | null;
 type TForFactory = ((section: string) => TFor) & {
   object: (section: string) => TForObject;
 };
@@ -188,9 +194,10 @@ export function createResolver(opts: { sk: Json; loaders: LazyLoaders }): TForFa
     return fn;
   };
 
-  const factory = tFor as unknown as TForFactory;
-  factory.object = objectFor;
-  return factory;
+  // Object.assign produces the intersection type naturally — no `as unknown as`
+  // cast needed. The resulting factory has the call signature of `tFor` AND
+  // the `.object` static method.
+  return Object.assign(tFor, { object: objectFor }) as TForFactory;
 }
 
 // Fan-out preload across every namespace. Called by LocaleProvider before

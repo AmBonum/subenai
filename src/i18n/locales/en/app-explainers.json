@@ -137,7 +137,7 @@
         "pitfalls": {
           "heading": "What to watch out for",
           "items": [
-            "Template preview is still on hold — you'll only see metadata, not the actual questions, before using it",
+            "Template preview isn't available yet — you'll only see metadata, not the actual questions, before using it",
             "Using a template creates a copy — changes to your test in no way affect the original template",
             "The GDPR purpose filter works on an exact value; templates without a purpose set won't appear in any category"
           ]
@@ -175,7 +175,7 @@
         "pitfalls": {
           "heading": "What to watch out for",
           "items": [
-            "The \"type\" and \"category\" fields display data from the mock-store; in production they may be empty until schema additions land (AH-12)",
+            "The \"type\" and \"category\" fields display data from the mock-store; in production they may be empty until schema additions land in an upcoming release",
             "The 60-question limit is hardcoded — with a large library you'll only see the first 60",
             "The library shows questions from every author on your team; not just yours"
           ]
@@ -320,7 +320,7 @@
           "heading": "How quickly changes show up",
           "items": [
             "Invitations, role changes and removals are all instant",
-            "Email invites aren't wired up yet — the \"email\" field is a placeholder for the AH-12 schema for now",
+            "Email invites aren't wired up yet — the \"email\" field is a placeholder until the feature ships",
             "Role changes don't use optimistic UI — the list refetches after success"
           ]
         },
@@ -328,7 +328,7 @@
           "heading": "What to watch out for",
           "items": [
             "You need a sufficient role (owner) to invite and manage members — the server enforces RLS",
-            "Until email invitations ship (AH-12), invited members have to sign in manually and the backend creates the association",
+            "Until email invitations ship, invited members have to sign in manually and the backend creates the association",
             "You can't delete a team from the UI — that's done by the admin team via support"
           ]
         }

@@ -1,7 +1,8 @@
 import { useId } from "react";
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import type { TFor, TForObject } from "@/i18n/_create-resolver";
 import { cn } from "@/lib/utils";
 
 // E47 / E48 — shared, namespace-agnostic collapsible info panel.
@@ -30,18 +31,12 @@ interface ExplainerDocLink {
   href: string;
 }
 
-// Loose record type for the array/object leaves returned by `tFor.object`.
-// Matches the `JsonNode` shape from `src/i18n/_create-resolver.ts` without
-// pulling the import (kept loose to stay namespace-agnostic).
-type TForFn = (key: string, vars?: Record<string, string | number>) => string;
-type TForObjectFn = <T>(key: string) => T | null;
-
 export interface PageExplainerProps {
   pageKey: string;
   /** Section-scoped string resolver (output of `tFor("explainers")`). */
-  t: TForFn;
+  t: TFor;
   /** Section-scoped raw-node resolver (output of `tFor.object("explainers")`). */
-  tObj: TForObjectFn;
+  tObj: TForObject;
   /** Test-id prefix: `admin-explainer` or `app-explainer`. */
   testIdPrefix: string;
   /** Controlled open state — wrapper owns persistence. */
@@ -49,6 +44,13 @@ export interface PageExplainerProps {
   onOpenChange: (open: boolean) => void;
   /** True when the OS reports `prefers-reduced-motion: reduce`. */
   reducedMotion?: boolean;
+  /**
+   * Scroll offset (in tailwind `mt-N` units) for deep-link / focus jumps,
+   * so the panel doesn't land under the shell's sticky header. Default 0.
+   * Admin wrapper passes 20 (clears the 56-px sticky admin header);
+   * app wrapper passes 0 (app shell has no sticky header).
+   */
+  scrollMarginTop?: 0 | 20;
 }
 
 export function PageExplainer({
@@ -59,8 +61,10 @@ export function PageExplainer({
   open,
   onOpenChange,
   reducedMotion = false,
+  scrollMarginTop = 0,
 }: PageExplainerProps) {
   const bodyId = useId();
+  const titleId = useId();
 
   const title = t(`${pageKey}.title`);
   const lead = t(`${pageKey}.lead`);
@@ -75,9 +79,10 @@ export function PageExplainer({
   const docs = tObj<ExplainerDocLink[]>(`${pageKey}.docs.links`) ?? [];
 
   return (
-    // scroll-mt-20 keeps deep-link / focus jumps from landing under
-    // the shell's sticky 56-px header (z-20, semi-transparent).
-    <div data-testid={`${testIdPrefix}-root`} className="w-full scroll-mt-20">
+    <div
+      data-testid={`${testIdPrefix}-root`}
+      className={cn("w-full", scrollMarginTop === 20 && "scroll-mt-20")}
+    >
       <Collapsible open={open} onOpenChange={onOpenChange}>
         <div
           className={cn(
@@ -86,9 +91,13 @@ export function PageExplainer({
           )}
           data-reduced-motion={reducedMotion ? "true" : "false"}
         >
+          {/* h2 lives OUTSIDE the trigger (was nested previously — invalid
+              HTML + broke SR heading rotor navigation). The trigger is a
+              real <button> labelled by the heading via aria-labelledby. */}
           <CollapsibleTrigger
             data-testid={`${testIdPrefix}-toggle`}
             aria-controls={bodyId}
+            aria-labelledby={titleId}
             className={cn(
               "group flex w-full items-center justify-between gap-3 rounded-lg px-4 py-3 text-left",
               "hover:bg-muted/80 focus-visible:outline-none focus-visible:ring-2",
@@ -96,6 +105,7 @@ export function PageExplainer({
             )}
           >
             <h2
+              id={titleId}
               data-testid={`${testIdPrefix}-title`}
               className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground sm:text-base"
             >
@@ -123,62 +133,24 @@ export function PageExplainer({
                   {lead}
                 </p>
 
-                {configure?.items?.length ? (
-                  <section
-                    data-testid={`${testIdPrefix}-section-configure`}
-                    className="space-y-1.5"
-                  >
-                    <h3
-                      data-testid={`${testIdPrefix}-section-configure-heading`}
-                      className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
-                    >
-                      {configureHeading}
-                    </h3>
-                    <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
-                      {configure.items.map((item, i) => (
-                        <li key={i} data-testid={`${testIdPrefix}-configure-item-${i}`}>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                ) : null}
-
-                {time?.items?.length ? (
-                  <section data-testid={`${testIdPrefix}-section-time`} className="space-y-1.5">
-                    <h3
-                      data-testid={`${testIdPrefix}-section-time-heading`}
-                      className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
-                    >
-                      {timeHeading}
-                    </h3>
-                    <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
-                      {time.items.map((item, i) => (
-                        <li key={i} data-testid={`${testIdPrefix}-time-item-${i}`}>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                ) : null}
-
-                {pitfalls?.items?.length ? (
-                  <section data-testid={`${testIdPrefix}-section-pitfalls`} className="space-y-1.5">
-                    <h3
-                      data-testid={`${testIdPrefix}-section-pitfalls-heading`}
-                      className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
-                    >
-                      {pitfallsHeading}
-                    </h3>
-                    <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
-                      {pitfalls.items.map((item, i) => (
-                        <li key={i} data-testid={`${testIdPrefix}-pitfalls-item-${i}`}>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                ) : null}
+                <ExplainerListSection
+                  name="configure"
+                  heading={configureHeading}
+                  items={configure?.items}
+                  testIdPrefix={testIdPrefix}
+                />
+                <ExplainerListSection
+                  name="time"
+                  heading={timeHeading}
+                  items={time?.items}
+                  testIdPrefix={testIdPrefix}
+                />
+                <ExplainerListSection
+                  name="pitfalls"
+                  heading={pitfallsHeading}
+                  items={pitfalls?.items}
+                  testIdPrefix={testIdPrefix}
+                />
 
                 {docs.length ? (
                   <section className="space-y-1.5">
@@ -200,7 +172,12 @@ export function PageExplainer({
                             className="inline-flex items-center gap-1.5 text-primary underline decoration-primary/50 underline-offset-2 hover:decoration-primary"
                           >
                             {link.label}
-                            <ExternalLink aria-hidden="true" className="h-3 w-3" />
+                            {/* Neutral indicator icon — links are same-origin
+                                (/docs/admin/* and /docs/app/*) so the previous
+                                ExternalLink glyph mis-signalled "opens in new
+                                tab". ArrowUpRight reads as a "go to" hint
+                                without the external-site implication. */}
+                            <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
                           </a>
                         </li>
                       ))}
@@ -213,5 +190,41 @@ export function PageExplainer({
         </div>
       </Collapsible>
     </div>
+  );
+}
+
+/**
+ * Internal — renders one bullet-list explainer section (configure / time /
+ * pitfalls). Hides itself if `items` is missing or empty, so a future locale
+ * that drops a section just collapses gracefully.
+ */
+function ExplainerListSection({
+  name,
+  heading,
+  items,
+  testIdPrefix,
+}: {
+  name: "configure" | "time" | "pitfalls";
+  heading: string;
+  items: string[] | undefined;
+  testIdPrefix: string;
+}) {
+  if (!items?.length) return null;
+  return (
+    <section data-testid={`${testIdPrefix}-section-${name}`} className="space-y-1.5">
+      <h3
+        data-testid={`${testIdPrefix}-section-${name}-heading`}
+        className="text-xs font-semibold uppercase tracking-wide text-foreground/80"
+      >
+        {heading}
+      </h3>
+      <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
+        {items.map((item, i) => (
+          <li key={i} data-testid={`${testIdPrefix}-${name}-item-${i}`}>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

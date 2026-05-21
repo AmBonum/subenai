@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { PageExplainer } from "@/components/shared/PageExplainer";
 import { tFor } from "@/i18n/admin";
@@ -16,8 +16,8 @@ import { tFor } from "@/i18n/admin";
 //
 // E48 — JSX, a11y, and Radix wiring extracted to <PageExplainer>; this
 // file is now the admin-shell wrapper that owns the i18n namespace and
-// the localStorage key. Keeping the named EXPLAINER_STORAGE_PREFIX in
-// THIS file (not the shared component) lets the storage-allowlist
+// the localStorage key. Keeping the named ADMIN_EXPLAINER_STORAGE_PREFIX
+// in THIS file (not the shared component) lets the storage-allowlist
 // scanner attribute every write to a clearly-named owner.
 
 export interface AdminPageExplainerProps {
@@ -31,12 +31,14 @@ export interface AdminPageExplainerProps {
 }
 
 // E47 — declared on /cookies under the `prefs` category (E40 row).
-const EXPLAINER_STORAGE_PREFIX = "admin-explainer-";
+// E48 ultrareview — renamed from EXPLAINER_STORAGE_PREFIX for symmetry
+// with the app variant's APP_EXPLAINER_STORAGE_PREFIX.
+const ADMIN_EXPLAINER_STORAGE_PREFIX = "admin-explainer-";
 
 function readPersisted(pageKey: string): boolean {
   if (typeof window === "undefined") return false;
   try {
-    return window.localStorage.getItem(EXPLAINER_STORAGE_PREFIX + pageKey) === "1";
+    return window.localStorage.getItem(ADMIN_EXPLAINER_STORAGE_PREFIX + pageKey) === "1";
   } catch {
     return false;
   }
@@ -45,7 +47,7 @@ function readPersisted(pageKey: string): boolean {
 function writePersisted(pageKey: string, open: boolean): void {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(EXPLAINER_STORAGE_PREFIX + pageKey, open ? "1" : "0");
+    window.localStorage.setItem(ADMIN_EXPLAINER_STORAGE_PREFIX + pageKey, open ? "1" : "0");
   } catch {
     // Quota exceeded / disabled storage — silently degrade.
   }
@@ -69,6 +71,14 @@ export function AdminPageExplainer({ pageKey }: AdminPageExplainerProps) {
   const [open, setOpen] = useState<boolean>(() => readPersisted(pageKey));
   const [reducedMotion] = useState<boolean>(() => readReducedMotion());
 
+  // E48 ultrareview — reset `open` when pageKey prop changes. Today every
+  // call site passes a literal but a future shared layout that reuses the
+  // same component instance across routes (e.g. tabbed admin shell) would
+  // otherwise display a stale state from the original pageKey.
+  useEffect(() => {
+    setOpen(readPersisted(pageKey));
+  }, [pageKey]);
+
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
     writePersisted(pageKey, next);
@@ -83,6 +93,8 @@ export function AdminPageExplainer({ pageKey }: AdminPageExplainerProps) {
       open={open}
       onOpenChange={handleOpenChange}
       reducedMotion={reducedMotion}
+      // Admin shell has a sticky 56-px header; clear it on deep-link / focus.
+      scrollMarginTop={20}
     />
   );
 }
