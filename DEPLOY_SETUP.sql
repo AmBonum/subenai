@@ -5713,7 +5713,7 @@ DO $$
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_policies
-    WHERE tablename = 'templates' AND polname = 'templates_anon_read_defaults'
+    WHERE tablename = 'templates' AND policyname = 'templates_anon_read_defaults'
   ) THEN
     EXECUTE 'CREATE POLICY templates_anon_read_defaults ON public.templates
       FOR SELECT TO anon
@@ -5725,7 +5725,7 @@ DO $$
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_policies
-    WHERE tablename = 'templates' AND polname = 'templates_anon_read_public_published'
+    WHERE tablename = 'templates' AND policyname = 'templates_anon_read_public_published'
   ) THEN
     EXECUTE $POLICY$CREATE POLICY templates_anon_read_public_published ON public.templates
       FOR SELECT TO anon
