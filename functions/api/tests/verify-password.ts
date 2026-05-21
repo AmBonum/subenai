@@ -72,6 +72,20 @@ async function hashIp(ip: string): Promise<string> {
   return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "").slice(0, 12);
 }
 
+async function hashShareId(shareId: string): Promise<string> {
+  // SHA-256 → base64url → 12 chars. Used as the `target_id` fingerprint
+  // for audit rows when the share_id was unknown or the test_id isn't
+  // resolved yet (rate-limited / share_locked paths). Per Appendix A
+  // §5.2: never log the attacker-controlled raw share_id string —
+  // hash it to a stable identifier so forensic correlation across
+  // attempts stays intact without exposing the probe surface.
+  const bytes = new TextEncoder().encode(shareId);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  let binary = "";
+  for (const b of new Uint8Array(digest)) binary += String.fromCharCode(b);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "").slice(0, 12);
+}
+
 function jsonResponse(status: number, body: VerifyResponse, cookie?: string): Response {
   const headers: HeadersInit = {
     "content-type": "application/json",
@@ -106,12 +120,19 @@ async function writeAuditRow(
 ): Promise<void> {
   // Append-only via forbid_audit_log_update_trg. We absorb errors so audit
   // failures don't 500 the user-facing response — but log them for ops.
+  //
+  // Appendix A § 5.2: when testId is unknown (rate-limited / share_locked /
+  // unknown_share paths), target_id uses sha256(share_id)[0:12] as
+  // `unknown:<hash>` so forensic correlation across attempts targeting the
+  // SAME (unknown) share_id stays intact, without logging the raw
+  // attacker-controlled string.
+  const targetId = testId ?? `unknown:${await hashShareId(shareId)}`;
   const { error } = await supabase.from("audit_log").insert({
     actor_id: null,
     actor_name: `respondent:${ipHash}`,
     action: "respondent_password_verified",
     target_type: "test",
-    target_id: testId ?? `unknown:${ipHash}`,
+    target_id: targetId,
     pii_access: false,
     details: { outcome, share_id: shareId, pv },
   });
@@ -271,4 +292,5 @@ export const __test__ = {
   MAX_PASSWORD_BYTES,
   buildCookie,
   hashIp,
+  hashShareId,
 };

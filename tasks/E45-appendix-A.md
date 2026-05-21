@@ -172,6 +172,17 @@ correctness.
 Three layers, all keyed independently so a single bypass doesn't lift
 the others.
 
+> **Implementation note (post-review §L2, 2026-05-21):** the actual
+> evaluation order in `verify-password.ts` is **L3 → L2 → L1** (daily
+> cap checked first, per-IP last). Security properties are equivalent
+> — all three layers must pass before the bcrypt RPC is reached. The
+> swap was deliberate so a tripped daily cap denies even before the
+> per-IP attempt is consumed; this gives the share owner a cleaner
+> "share locked for the day" signal regardless of attack distribution.
+> Response-semantics table in §3.2 was authored assuming L1→L2→L3 order
+> — in practice an L3-only block returns `share_locked`, not the
+> "L1 only / L1+L2" response shape listed there.
+
 | Layer | Limit | Window | Key | Primitive | Justification |
 |-------|-------|--------|-----|-----------|---------------|
 | L1 — Per IP / share | **5 attempts** | **15 min** | `verify-pwd:<ip>:<share_id>` | `ipRateLimit.consume` (`_lib/security.ts` L86–101) | At 5/15min an attacker against an 8-char alphanumeric password (62⁸ ≈ 2.18×10¹⁴) needs 2.18×10¹⁴ ÷ 5 × 15 min ≈ 6.2 billion years. Reduced to "instant" against a 4-char weak password (62⁴ ≈ 1.5×10⁷ → 87 years). The L1 layer protects strong passwords; weak passwords are protected by the L3 daily cap (see below). |

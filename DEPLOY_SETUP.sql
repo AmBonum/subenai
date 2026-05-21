@@ -4474,6 +4474,63 @@ $$;
 GRANT EXECUTE ON FUNCTION public.verify_test_password(TEXT, TEXT) TO anon, authenticated;
 
 -- ============================================================================
+-- 20260521230000_test_question_modified_audit.sql (E45 security review §L1)
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION public.log_test_question_modified()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+DECLARE
+  _op TEXT;
+  _question_id UUID;
+  _test_id UUID;
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    _op := 'add';
+    _question_id := NEW.question_id;
+    _test_id := NEW.test_id;
+  ELSIF TG_OP = 'DELETE' THEN
+    _op := 'remove';
+    _question_id := OLD.question_id;
+    _test_id := OLD.test_id;
+  ELSE
+    _op := 'update';
+    _question_id := NEW.question_id;
+    _test_id := NEW.test_id;
+  END IF;
+
+  INSERT INTO public.audit_log
+    (actor_id, action, target_type, target_id, pii_access, details)
+    VALUES (
+      auth.uid(),
+      'test_question_modified',
+      'test',
+      _test_id::text,
+      false,
+      jsonb_build_object('op', _op, 'question_id', _question_id::text)
+    );
+
+  IF TG_OP = 'DELETE' THEN
+    RETURN OLD;
+  ELSE
+    RETURN NEW;
+  END IF;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.log_test_question_modified() FROM PUBLIC, anon, authenticated;
+
+DROP TRIGGER IF EXISTS test_questions_modified_audit ON public.test_questions;
+CREATE TRIGGER test_questions_modified_audit
+  AFTER INSERT OR DELETE OR UPDATE
+  ON public.test_questions
+  FOR EACH ROW
+  EXECUTE FUNCTION public.log_test_question_modified();
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT

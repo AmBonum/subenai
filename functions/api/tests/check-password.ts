@@ -115,10 +115,15 @@ export async function onRequestGet(ctx: RequestContext): Promise<Response> {
 
   const verified = await verifyRespondentPwdToken(token, env.JWT_SECRET);
   if (!verified.ok) {
+    // E45 security review §M2: `wrong_issuer` is a T1 forged-token signal —
+    // surface it as `bad_signature` so ops can see "tampered cookies" in
+    // the audit / metrics flow rather than swallow it as "first visit".
     const reason: GateReason =
       verified.reason === "expired"
         ? "expired"
-        : verified.reason === "bad_signature" || verified.reason === "wrong_role"
+        : verified.reason === "bad_signature" ||
+            verified.reason === "wrong_role" ||
+            verified.reason === "wrong_issuer"
           ? "bad_signature"
           : "no_cookie";
     return json(200, { has_password: true, gated: true, reason });
