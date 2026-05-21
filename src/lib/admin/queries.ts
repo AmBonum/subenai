@@ -983,6 +983,94 @@ export function useUsersByEmails(emails: string[]) {
   });
 }
 
+/**
+ * Per-user GDPR activity summary, keyed by lowercased e-mail.
+ *
+ * For each e-mail in the input, returns the newest GDPR-relevant event we
+ * can attribute via e-mail join (DSR `requester_email` + DPA `contact_email`)
+ * plus a flag for "currently has at least one open / in-progress DSR".
+ * Used by /admin/users to show a *Posledná GDPR udalosť* column and a
+ * *Iba s otvorenou DSR* filter without N+1 queries.
+ *
+ * Two parallel SELECTs (one per table) keyed on lowercased e-mail; the
+ * results are reduced into `Record<email, GdprActivity>`. E-mails with
+ * zero events get a `{ last_event_at: null, last_event_kind: null,
+ * has_open_dsr: false }` entry so callers can do a single lookup without
+ * a fallback branch.
+ *
+ * Empty input → no queries fire.
+ */
+export type GdprEventKind = "dsr" | "dpa";
+
+export interface GdprActivity {
+  last_event_at: string | null;
+  last_event_kind: GdprEventKind | null;
+  has_open_dsr: boolean;
+}
+
+export function useUsersGdprActivity(emails: string[]) {
+  const normalised = useMemo(() => {
+    const set = new Set<string>();
+    for (const e of emails) {
+      if (e) set.add(e.trim().toLowerCase());
+    }
+    return Array.from(set).sort();
+  }, [emails]);
+  return useQuery({
+    queryKey: ["admin", "users_gdpr_activity", normalised],
+    enabled: normalised.length > 0,
+    queryFn: async (): Promise<Record<string, GdprActivity>> => {
+      const [dsrRes, dpaRes] = await Promise.all([
+        supabase
+          .from("dsr_requests")
+          .select("requester_email, status, created_at")
+          .in("requester_email", normalised),
+        supabase
+          .from("dpa_requests")
+          .select("contact_email, created_at")
+          .in("contact_email", normalised),
+      ]);
+      if (dsrRes.error) throw dsrRes.error;
+      if (dpaRes.error) throw dpaRes.error;
+      // Seed every requested e-mail so the caller can do a plain lookup.
+      const map: Record<string, GdprActivity> = {};
+      for (const e of normalised) {
+        map[e] = { last_event_at: null, last_event_kind: null, has_open_dsr: false };
+      }
+      for (const row of (dsrRes.data ?? []) as Array<{
+        requester_email: string;
+        status: string;
+        created_at: string;
+      }>) {
+        const key = row.requester_email.toLowerCase();
+        const entry = map[key];
+        if (!entry) continue;
+        if (!entry.last_event_at || row.created_at > entry.last_event_at) {
+          entry.last_event_at = row.created_at;
+          entry.last_event_kind = "dsr";
+        }
+        if (row.status === "open" || row.status === "in_progress") {
+          entry.has_open_dsr = true;
+        }
+      }
+      for (const row of (dpaRes.data ?? []) as Array<{
+        contact_email: string | null;
+        created_at: string;
+      }>) {
+        if (!row.contact_email) continue;
+        const key = row.contact_email.toLowerCase();
+        const entry = map[key];
+        if (!entry) continue;
+        if (!entry.last_event_at || row.created_at > entry.last_event_at) {
+          entry.last_event_at = row.created_at;
+          entry.last_event_kind = "dpa";
+        }
+      }
+      return map;
+    },
+  });
+}
+
 export function useUpdateDSRStatus() {
   const qc = useQueryClient();
   return useMutation({

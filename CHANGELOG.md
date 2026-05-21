@@ -31,6 +31,18 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   pozornosť pri pravidelnom audite.
 
 ### Pridané
+- **Nový stĺpec *Posledná GDPR udalosť* na `/admin/users` (E46.2).**
+  V zozname používateľov pribudol stĺpec, ktorý pre každého používateľa
+  zobrazí najnovšiu GDPR udalosť — buď podanie DSR žiadosti (z `/admin/dsr`)
+  alebo DPA žiadosť (z `/admin/dpa-requests`), spárovanú podľa e-mailu.
+  Stĺpec ukazuje *odznak* (DSR / DPA) a *dátum* poslednej udalosti.
+  Ak má používateľ otvorenú DSR žiadosť (status *open* alebo *in_progress*),
+  vedľa odznaku svieti jantárový bod — operátor tak na jedno trasenie
+  vidí, kto ešte čaká na vybavenie SLA. Pribudol aj nový filter
+  *Iba s otvorenou DSR*, ktorý skryje všetkých, ktorí nemajú aktívnu
+  žiadosť. Implementácia robí dva paralelné dopyty (jeden cez
+  `dsr_requests`, druhý cez `dpa_requests`) bulk-keyed cez zoznam
+  e-mailov — žiadne N+1 a žiadne zbytočné roundtripy.
 - **Z DSR queue jedným klikom do GDPR dossier-u (E46.4).** Na každom
   riadku `/admin/dsr` pribudla ikona *Otvoriť GDPR dossier* (ikona
   dokumentu). Ak je e-mail žiadateľa registrovaný používateľ, ikona
