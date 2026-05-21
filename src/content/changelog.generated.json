@@ -1,5 +1,28 @@
 [
   {
+    "version": "1.14.2",
+    "date": "2026-05-21",
+    "added": [
+      "**Nový stĺpec *Posledná GDPR udalosť* na `/admin/users` (E46.2).**",
+      "**Z DSR queue jedným klikom do GDPR dossier-u (E46.4).** Na každom",
+      "**Jednotný dizajn potvrdzovacích dialógov v admin paneli.** Doteraz",
+      "**Nový admin dossier `/admin/users/<id>` — splní Art. 15 / 17 GDPR jedným klikom (E46.3 MVP).**",
+      "**Interná infraštruktúra pre admin GDPR fulfilment (E46.1).** Pribudli",
+      "**Pozvánky cez e-mail z platformy — pripravujeme.** Na detaile testu",
+      "**Vysvetľujúce panely v admin konzole.** Na každej z 20 podstránok"
+    ],
+    "changed": [],
+    "fixed": [
+      "**Responzívnosť admin vysvetľujúcich panelov.** Po prvom nasadení sme"
+    ],
+    "removed": [],
+    "deprecated": [],
+    "security": [
+      "**Forenzný záznam zmien v otázkach testu sa už ukladá automaticky.**",
+      "**Interný observability fix:** nesprávne podpísané respondentské"
+    ]
+  },
+  {
     "version": "1.14.1",
     "date": "2026-05-21",
     "added": [],
