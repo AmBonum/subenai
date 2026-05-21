@@ -7,7 +7,7 @@ import { ComposerSettings } from "@/components/composer/build/ComposerSettings";
 import { EduSettings, EDU_PASSWORD_MIN_LEN } from "@/components/composer/edu/intake/EduSettings";
 import { EduSuccessDialog } from "@/components/composer/edu/intake/EduSuccessDialog";
 import { TestFlow } from "@/components/quiz/flow/TestFlow";
-import { listPublishedPacks, getPackBySlug } from "@/content/test-packs";
+import { usePlatformPacks, usePlatformPackQuestionIds } from "@/lib/platform/pack-queries";
 import { QUESTIONS, getQuestionById } from "@/lib/quiz/bank/questions";
 import {
   COMPOSER_LIMITS,
@@ -97,7 +97,8 @@ export function ComposerPage() {
   // (smaller selections are cheap to redo, no prompt warranted).
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
 
-  const packs = useMemo(() => listPublishedPacks(), []);
+  const { data: packs, isLoading: packsLoading } = usePlatformPacks();
+  const { data: packQuestionIds, isLoading: questionIdsLoading } = usePlatformPackQuestionIds();
   const honeypotRatio = useMemo(() => computeHoneypotRatio(Array.from(selectedIds)), [selectedIds]);
 
   // Surface a transient share-toast for ~3s, then auto-dismiss.
@@ -118,8 +119,10 @@ export function ComposerPage() {
 
   const togglePack = useCallback(
     (slug: string) => {
-      const pack = getPackBySlug(slug);
-      if (!pack) return;
+      if (!packs || !packQuestionIds) return;
+      const pack = packs.find((p) => p.slug === slug);
+      const packIds = packQuestionIds.get(slug);
+      if (!pack || !packIds) return;
       setStaleNotice(null);
       setSelectedPackSlugs((prev) => {
         const next = new Set(prev);
@@ -131,10 +134,9 @@ export function ComposerPage() {
           setSelectedIds((prevIds) => {
             const stillReferenced = new Set<string>();
             for (const otherSlug of next) {
-              const other = getPackBySlug(otherSlug);
-              other?.questionIds.forEach((id) => stillReferenced.add(id));
+              packQuestionIds.get(otherSlug)?.forEach((id) => stillReferenced.add(id));
             }
-            const removed = new Set(pack.questionIds);
+            const removed = new Set(packIds);
             const result = new Set<string>();
             for (const id of prevIds) {
               if (!removed.has(id) || stillReferenced.has(id)) result.add(id);
@@ -143,14 +145,14 @@ export function ComposerPage() {
           });
         } else {
           next.add(slug);
-          // Adding pack: count drift (IDs from manifest no longer in bank)
+          // Adding pack: count drift (IDs from DB no longer in the bank)
           // and enforce the 50-cap. Anything we couldn't fit due to cap
           // is surfaced separately so the user understands why.
           let drifted = 0;
           let capped = 0;
           setSelectedIds((prevIds) => {
             const result = new Set(prevIds);
-            for (const id of pack.questionIds) {
+            for (const id of packIds) {
               if (!getQuestionById(id)) {
                 drifted += 1;
                 continue;
@@ -188,7 +190,7 @@ export function ComposerPage() {
         return next;
       });
     },
-    [t],
+    [packs, packQuestionIds, t],
   );
 
   const toggleQuestion = useCallback((id: string) => {
@@ -314,6 +316,18 @@ export function ComposerPage() {
       setError("network_error");
       setSubmitting(false);
     }
+  }
+
+  if (packsLoading || questionIdsLoading || !packs || !packQuestionIds) {
+    return (
+      <div className="min-h-screen bg-background">
+        <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+          <p data-testid="composer-loading" className="text-sm text-muted-foreground">
+            {t("loading_packs")}
+          </p>
+        </main>
+      </div>
+    );
   }
 
   // Inline self-run mode (AC-12): the user clicked "Spustiť pre seba".

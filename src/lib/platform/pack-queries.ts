@@ -179,3 +179,30 @@ export function usePackWithQuestions(slug: string | undefined) {
     refetchOnWindowFocus: false,
   });
 }
+
+// ---------------------------------------------------------------------------
+// Pack → question IDs map — public.get_platform_pack_question_ids()
+// ---------------------------------------------------------------------------
+// Used by the composer at /test/builder to expand a selected pack into
+// its question IDs without loading the full question rows.
+
+export interface PackQuestionIdsRow {
+  slug: string;
+  question_ids: string[];
+}
+
+export async function fetchPlatformPackQuestionIds(): Promise<Map<string, string[]>> {
+  const { data, error } = await supabase.rpc("get_platform_pack_question_ids");
+  if (error) throw error;
+  const rows = (data ?? []) as unknown as PackQuestionIdsRow[];
+  return new Map(rows.map((r) => [r.slug, r.question_ids]));
+}
+
+export function usePlatformPackQuestionIds() {
+  return useQuery<Map<string, string[]>>({
+    queryKey: ["platform", "pack-question-ids"],
+    queryFn: fetchPlatformPackQuestionIds,
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
+}
