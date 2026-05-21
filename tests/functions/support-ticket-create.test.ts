@@ -62,6 +62,12 @@ function mockFetch(state: MockState) {
         headers: { "content-type": "application/json" },
       });
     }
+    if (url.includes("api.resend.com/emails")) {
+      return new Response(JSON.stringify({ id: "email_stub_id" }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    }
     return new Response("not stubbed", { status: 500 });
   });
 }
@@ -202,6 +208,91 @@ describe("POST /api/support-ticket-create — anon path", () => {
     const json = (await res.json()) as { error: string; reason: string };
     expect(json.error).toBe("insert_failed");
     expect(json.reason).toBe("23505");
+  });
+});
+
+describe("POST /api/support-ticket-create — email dispatch (E48.5)", () => {
+  const envWithEmail = {
+    ...env,
+    RESEND_API_KEY: "resend_stub",
+    EMAIL_FROM: "support@subenai.sk",
+    EMAIL_REPLY_TO: "support@subenai.sk",
+    SITE_ORIGIN: "https://subenai.sk",
+  };
+
+  it("dispatches a Resend email with the view link for anonymous submissions", async () => {
+    const fetchSpy = mockFetch({ turnstileOk: true });
+    const res = await onRequestPost({ request: buildRequest(validBody), env: envWithEmail });
+    expect(res.status).toBe(200);
+
+    const emailCall = fetchSpy.mock.calls.find((c) => {
+      const u = typeof c[0] === "string" ? c[0] : (c[0] as Request).url;
+      return u.includes("api.resend.com/emails");
+    });
+    expect(emailCall).toBeDefined();
+    const init = emailCall![1] as RequestInit | undefined;
+    const body = JSON.parse(init?.body as string) as {
+      to: string[];
+      subject: string;
+      html: string;
+      text: string;
+    };
+    expect(body.to).toEqual(["user@example.com"]);
+    expect(body.subject).toContain("tkt-test-abc");
+    expect(body.html).toContain("https://subenai.sk/kontakt/ticket/tkt-test-abc?token=");
+    expect(body.text).toContain("Chyba alebo problém");
+  });
+
+  it("dispatches an email WITHOUT the view link for authenticated submissions", async () => {
+    const fetchSpy = mockFetch({ turnstileOk: true });
+    const res = await onRequestPost({
+      request: buildRequest({ ...validBody, user_id: "u-auth-abc" }, { auth: "jwt-stub" }),
+      env: envWithEmail,
+    });
+    expect(res.status).toBe(200);
+    const emailCall = fetchSpy.mock.calls.find((c) => {
+      const u = typeof c[0] === "string" ? c[0] : (c[0] as Request).url;
+      return u.includes("api.resend.com/emails");
+    });
+    expect(emailCall).toBeDefined();
+    const body = JSON.parse((emailCall![1] as RequestInit).body as string) as { html: string };
+    expect(body.html).not.toContain("Zobraziť vlákno");
+    expect(body.html).toContain("Moje žiadosti");
+  });
+
+  it("does not block the response when email dispatch fails", async () => {
+    // Resend returns 500; ticket should still respond 200.
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+      const url = typeof input === "string" ? input : (input as Request).url;
+      if (url.includes("turnstile/v0/siteverify")) {
+        return new Response(JSON.stringify({ success: true }), { status: 200 });
+      }
+      if (url.includes("/rest/v1/rpc/submit_support_ticket")) {
+        return new Response(
+          JSON.stringify({ ticket_id: "tkt-test-abc", view_token: "b".repeat(64) }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        );
+      }
+      if (url.includes("api.resend.com")) {
+        return new Response("upstream down", { status: 500 });
+      }
+      return new Response("not stubbed", { status: 500 });
+    });
+    const res = await onRequestPost({ request: buildRequest(validBody), env: envWithEmail });
+    expect(res.status).toBe(200);
+    const json = (await res.json()) as { ok: boolean };
+    expect(json.ok).toBe(true);
+  });
+
+  it("skips email entirely when Resend env vars are absent (dev mode)", async () => {
+    const fetchSpy = mockFetch({ turnstileOk: true });
+    const res = await onRequestPost({ request: buildRequest(validBody), env });
+    expect(res.status).toBe(200);
+    const emailCall = fetchSpy.mock.calls.find((c) => {
+      const u = typeof c[0] === "string" ? c[0] : (c[0] as Request).url;
+      return u.includes("api.resend.com");
+    });
+    expect(emailCall).toBeUndefined();
   });
 });
 

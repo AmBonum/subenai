@@ -24,6 +24,8 @@
 
 import { createClient } from "@supabase/supabase-js";
 
+import { sendEmail } from "../_lib/email";
+import { supportTicketReceivedEmail } from "../_lib/email-templates";
 import {
   emailCooldown,
   ipRateLimit,
@@ -40,7 +42,15 @@ interface Env {
   TURNSTILE_SECRET_KEY?: string;
   SUPPORT_PER_IP_PER_DAY?: string;
   SUPPORT_EMAIL_COOLDOWN_SECONDS?: string;
+  // Email infra (E11.8). Optional on the type so unit tests can omit them
+  // without ts-error noise; CF Pages production always has them.
+  RESEND_API_KEY?: string;
+  EMAIL_FROM?: string;
+  EMAIL_REPLY_TO?: string;
+  SITE_ORIGIN?: string;
 }
+
+const DEFAULT_SITE_ORIGIN = "https://subenai.sk";
 
 interface RequestContext {
   request: Request;
@@ -224,6 +234,44 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   const result = data as { ticket_id?: string; view_token?: string };
   if (!result.ticket_id || !result.view_token) {
     return jsonResponse(500, { error: "insert_failed", reason: "missing_fields" });
+  }
+
+  // E48.5 — confirmation e-mail. Anonymous submitters get the view link;
+  // authenticated submitters do not (they have /app/help/tickets).
+  // Email failure is non-fatal: the ticket is already persisted, the user
+  // sees the success state, ops sees the error in CF logs. Mirrors the
+  // dpa-email-attach.ts non-blocking pattern.
+  if (env.RESEND_API_KEY && env.EMAIL_FROM && env.EMAIL_REPLY_TO) {
+    const origin = env.SITE_ORIGIN || DEFAULT_SITE_ORIGIN;
+    const viewUrl = !isAuth
+      ? `${origin}/kontakt/ticket/${encodeURIComponent(result.ticket_id)}?token=${encodeURIComponent(result.view_token)}`
+      : undefined;
+    const template = supportTicketReceivedEmail({
+      ticketId: result.ticket_id,
+      subject,
+      category,
+      viewUrl,
+    });
+    const mailResult = await sendEmail(
+      {
+        RESEND_API_KEY: env.RESEND_API_KEY,
+        EMAIL_FROM: env.EMAIL_FROM,
+        EMAIL_REPLY_TO: env.EMAIL_REPLY_TO,
+      },
+      {
+        to: email,
+        subject: template.subject,
+        html: template.html,
+        text: template.text,
+        idempotencyKey: `support-ticket-received-${result.ticket_id}`,
+      },
+    );
+    if (!mailResult.ok) {
+      console.warn("support-ticket-create email failed (ticket already saved)", {
+        ticket_id: result.ticket_id,
+        error: mailResult.error,
+      });
+    }
   }
 
   return jsonResponse(200, {
