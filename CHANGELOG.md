@@ -9,7 +9,22 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+## [1.14.4] — 2026-05-21
+
 ### Pridané
+- **Schvaľovanie odoslaných šablón administrátorom (záverečný kus E44).**
+  Keď používateľ klikne „Odoslať na zverejnenie" na svojej šablóne,
+  jeho podanie sa teraz dostane do nového admin panelu
+  `/admin/templates`. Administrátor vidí AI predkontrolu od Claude
+  Haiku 4.5, môže si pozrieť všetky otázky a buď šablónu schváli
+  (publikuje sa pod CC BY 4.0) alebo zamietne s krátkym dôvodom
+  (autor uvidí dôvod a po 24 hodinách môže podať opravenú verziu).
+  Pri každom schválení a zamietnutí sa zapíše záznam do audit logu.
+  V admin shell sa upozorňovacia ikona v hornom paneli rozsvieti
+  neprečítaným počtom — keď príde nová šablóna na schválenie, admin
+  ju nestratí. Pre samotných používateľov nič zatiaľ nie je viditeľné —
+  zatiaľ čo schvaľovací tok beží na pozadí, samotná verejná knižnica
+  prichádza v nasledujúcom bode.
 - **Verejná knižnica šablón na `/sablony`.** Hľadáš pripravený kvíz,
   ktorý môžeš pustiť kolegom v práci, žiakom v triede alebo rodičom
   doma — bez toho, aby si musel písať otázky od nuly? Po novom máme
