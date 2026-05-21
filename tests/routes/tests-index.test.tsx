@@ -141,3 +141,38 @@ describe("/tests page — E25 Phase 1 layout", () => {
     expect(screen.getByTestId("tests-catalog-grid")).toBeInTheDocument();
   });
 });
+
+describe("/tests page — E37 Phase I UX P0+P1", () => {
+  it("renders a result-count badge with the filtered pack count", () => {
+    const Page = cfg.options.component;
+    render(<Page />);
+    const badge = screen.getByTestId("tests-catalog-result-count");
+    // 2 fixture packs → "2 testov" (Slovak, sk default locale).
+    expect(badge.textContent).toMatch(/2 testov/);
+    expect(badge).toHaveAttribute("aria-live", "polite");
+  });
+
+  it("renders an sr-only h2 above the grid for assistive-tech jump points", () => {
+    const Page = cfg.options.component;
+    render(<Page />);
+    const heading = screen.getByTestId("tests-catalog-grid-heading");
+    expect(heading.tagName).toBe("H2");
+    expect(heading.className).toMatch(/sr-only/);
+  });
+
+  it("renders the grid as a <ul role=list> for VoiceOver list announcement", () => {
+    const Page = cfg.options.component;
+    render(<Page />);
+    const grid = screen.getByTestId("tests-catalog-grid");
+    expect(grid.tagName).toBe("UL");
+    expect(grid).toHaveAttribute("role", "list");
+  });
+
+  it("touch-target chips on the sort dropdown clear ≥44px (WCAG 2.5.5 AAA)", () => {
+    const Page = cfg.options.component;
+    render(<Page />);
+    const select = screen.getByTestId("tests-catalog-sort");
+    // min-h-11 in Tailwind = 2.75rem = 44px.
+    expect(select.className).toMatch(/min-h-11/);
+  });
+});

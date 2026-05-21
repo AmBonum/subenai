@@ -156,17 +156,20 @@ function TestsCatalogPage() {
             >
               {t("filter_industry")}
             </h2>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {availableIndustries.map((i) => {
                 const active = activeIndustries.has(i);
                 return (
+                  // E37 Phase I — touch target ≥ 44px (WCAG 2.5.5 AAA + iOS HIG).
+                  // Was py-1.5 ≈ 32px tall; now min-h-11 = 44px. Same visual
+                  // weight on desktop, finger-friendly on mobile.
                   <button
                     key={i}
                     type="button"
                     onClick={() => toggleIndustry(i)}
                     aria-pressed={active}
                     data-testid={`tests-catalog-filter-${i}`}
-                    className={`rounded-full border px-3 py-1.5 text-sm transition ${
+                    className={`inline-flex min-h-11 items-center rounded-full border px-4 text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                       active
                         ? "border-primary bg-primary/15 text-primary"
                         : "border-border/60 bg-background/40 text-muted-foreground hover:border-primary/40 hover:text-foreground"
@@ -181,7 +184,7 @@ function TestsCatalogPage() {
                   type="button"
                   onClick={() => setActiveIndustries(new Set())}
                   data-testid="tests-catalog-filter-clear"
-                  className="ml-auto text-xs text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+                  className="ml-auto inline-flex min-h-11 items-center px-2 text-xs text-muted-foreground underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary hover:text-foreground hover:underline"
                 >
                   {t("clear_filter", { n: activeIndustries.size })}
                 </button>
@@ -190,48 +193,92 @@ function TestsCatalogPage() {
           </section>
         )}
 
-        <div className="mb-4 flex flex-wrap items-center justify-end gap-2 text-sm">
-          <label
-            htmlFor="tests-catalog-sort"
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-sm">
+          {/* E37 Phase I — result-count badge (P1). Anchors the user's
+              filtered-set size before the grid renders; especially useful
+              for screen-reader users + when the grid is below the fold. */}
+          <p
+            data-testid="tests-catalog-result-count"
             className="text-xs font-medium text-muted-foreground"
-            data-testid="tests-catalog-sort-label"
+            aria-live="polite"
           >
-            {t("sort_label")}
-          </label>
-          <select
-            id="tests-catalog-sort"
-            value={sort}
-            onChange={(e) => setSort(e.target.value as SortKey)}
-            data-testid="tests-catalog-sort"
-            className="rounded-md border border-border/60 bg-background/60 px-2 py-1 text-sm text-foreground"
-          >
-            <option value="newest">{t("sort_newest")}</option>
-            <option value="questions_desc">{t("sort_questions_desc")}</option>
-          </select>
+            {t("result_count", { n: filtered.length })}
+          </p>
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="tests-catalog-sort"
+              className="text-xs font-medium text-muted-foreground"
+              data-testid="tests-catalog-sort-label"
+            >
+              {t("sort_label")}
+            </label>
+            {/* E37 Phase I — touch target ≥ 44px on the select. */}
+            <select
+              id="tests-catalog-sort"
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+              data-testid="tests-catalog-sort"
+              className="min-h-11 rounded-md border border-border/60 bg-background/60 px-3 text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <option value="newest">{t("sort_newest")}</option>
+              <option value="questions_desc">{t("sort_questions_desc")}</option>
+            </select>
+          </div>
         </div>
 
+        {/* E37 Phase I — SR-only landmark heading for the catalog grid.
+            Lets assistive-tech users jump to the list via the headings
+            outline (was previously a bare <div>). */}
+        <h2 data-testid="tests-catalog-grid-heading" className="sr-only">
+          {t("grid_aria")}
+        </h2>
+
         {filtered.length === 0 ? (
-          <p
+          // E37 Phase I — empty state now offers a one-click recovery.
+          // Previously the user had to scroll up to clear filters; now
+          // the action is co-located with the explanation. Falls back
+          // gracefully (no button) when no filter is active — that means
+          // the platform genuinely has 0 packs (only reachable on a fresh
+          // DB without the Phase B' migration applied).
+          <div
             role="status"
             data-testid="tests-catalog-empty"
             className="rounded-2xl border border-border/60 bg-card/30 p-8 text-center text-muted-foreground"
           >
-            {t("empty")}
-          </p>
+            <p>{t("empty")}</p>
+            {activeIndustries.size > 0 && (
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-4"
+                data-testid="tests-catalog-empty-clear"
+                onClick={() => setActiveIndustries(new Set())}
+              >
+                {t("clear_filter_action")}
+              </Button>
+            )}
+          </div>
         ) : (
-          <div
+          // E37 Phase I — semantic <ul> + role="list" for screen readers.
+          // Forces Safari/VoiceOver to announce the list size (it strips
+          // list-role from <ul list-none> by design, so we re-apply via
+          // role attribute).
+          <ul
             data-testid="tests-catalog-grid"
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            role="list"
+            className="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3"
           >
             {featured && (
-              <div className="sm:col-span-2 lg:col-span-3">
+              <li className="sm:col-span-2 lg:col-span-3">
                 <TestPackCard pack={featured} featured />
-              </div>
+              </li>
             )}
             {rest.map((p) => (
-              <TestPackCard key={p.slug} pack={p} />
+              <li key={p.slug}>
+                <TestPackCard pack={p} />
+              </li>
             ))}
-          </div>
+          </ul>
         )}
 
         <TestsLearningStrip />
