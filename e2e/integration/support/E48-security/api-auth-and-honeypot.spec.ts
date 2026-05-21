@@ -32,7 +32,9 @@ const validCreatePayload = {
 test.describe("E48 security — POST /api/support-ticket-create happy path", () => {
   test.skip(!LIVE_DB, "TC-01 needs live Supabase (set SUPPORT_LIVE_DB=1)");
 
-  test("TC-01: valid anon POST returns 200 + ticket_id + 64-hex view_token", async ({ request }) => {
+  test("TC-01: valid anon POST returns 200 + ticket_id + 64-hex view_token", async ({
+    request,
+  }) => {
     const r = await request.post(ENDPOINT_CREATE, {
       data: { ...validCreatePayload, email: `tc01-${Date.now()}@test.example` },
     });

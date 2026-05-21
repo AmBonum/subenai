@@ -140,7 +140,10 @@ test.describe("E48 security — PDF JavaScript stripping", () => {
       // be generated at test-setup time.
       const fakePdf = Buffer.concat([
         PDF_MAGIC,
-        Buffer.from("\n%öäü\n1 0 obj\n<< /Type /Catalog /OpenAction << /JS (app.alert('pwned')) >> >>\nendobj\n", "utf8"),
+        Buffer.from(
+          "\n%öäü\n1 0 obj\n<< /Type /Catalog /OpenAction << /JS (app.alert('pwned')) >> >>\nendobj\n",
+          "utf8",
+        ),
         Buffer.from("trailer\n<< /Root 1 0 R >>\n%%EOF\n", "utf8"),
       ]);
       const r = await request.post(ENDPOINT, {
@@ -157,7 +160,9 @@ test.describe("E48 security — PDF JavaScript stripping", () => {
       // the file via signed-URL and re-parses with pdf-lib to confirm
       // /JS, /JavaScript, /OpenAction, /AA keys are absent from the
       // indirect-object tree.
-      throw new Error("TC-28 stored-bytes verification depends on PR #129 trigger; xfail until then");
+      throw new Error(
+        "TC-28 stored-bytes verification depends on PR #129 trigger; xfail until then",
+      );
     },
   );
 });

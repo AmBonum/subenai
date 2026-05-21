@@ -90,7 +90,11 @@ test.describe("E48 security — filename sanitisation", () => {
     const rtlName = `image‮gnp.jpg`;
     const r = await request.post(ENDPOINT, {
       multipart: {
-        file: { name: rtlName, mimeType: "image/jpeg", buffer: Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(1024)]) },
+        file: {
+          name: rtlName,
+          mimeType: "image/jpeg",
+          buffer: Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(1024)]),
+        },
         ticket_id: TICKET_ID,
         view_token: VIEW_TOKEN,
       },

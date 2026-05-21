@@ -66,9 +66,7 @@ test.describe("E48 security — stored XSS rendering (public /kontakt/ticket vie
     await expect(kontaktTicketView.subject).toHaveText(XSS_SUBJECT);
 
     // No injected <script> made it onto the page as actual markup.
-    const scriptCount = await kontaktTicketView.root
-      .locator("script:has-text('alert(1)')")
-      .count();
+    const scriptCount = await kontaktTicketView.root.locator("script:has-text('alert(1)')").count();
     expect(scriptCount).toBe(0);
 
     expect(dialogFired).toBe(false);
