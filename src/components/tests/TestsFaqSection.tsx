@@ -56,7 +56,7 @@ export function TestsFaqSection() {
         },
         {
           label: t("faq_footer_cta_contact"),
-          href: ROUTES.kontakt,
+          href: ROUTES.contact,
           testid: "tests-faq-footer-cta-contact",
         },
       ]}

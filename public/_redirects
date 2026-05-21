@@ -10,7 +10,8 @@
 /sponzori/vsetci /sponsors/all 301
 /spravovat-podporu /manage-support 301
 /zmeny /changelog 301
-/kontakt /contact 301
+/kontakt /contact-form 301
+/kontakt/ticket/:id /contact-form/ticket/:id 301
 /skoly /schools 301
 /o-projekte /about 301
 /skolenia /courses 301

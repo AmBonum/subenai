@@ -10,14 +10,14 @@ import type {
   SupportContactSubmitResult,
 } from "@/components/support/support-form-config";
 
-// E48.3 — Public /kontakt route. Posts to /api/support-ticket-create
+// E48.3 — Public /contact-form route. Posts to /api/support-ticket-create
 // (CF Pages Function) which handles Turnstile + honeypot + rate limit
 // + the submit_support_ticket() SECURITY DEFINER RPC.
 // The view_token returned here is the plain server-generated token
 // that lets the anonymous submitter open the read-only thread page
 // for 90 days.
 
-const PAGE_URL = `${SITE_ORIGIN}/kontakt`;
+const PAGE_URL = `${SITE_ORIGIN}/contact-form`;
 const PAGE_TITLE = "Kontakt | subenai";
 const PAGE_DESCRIPTION =
   "Napíšte nám. Odpovieme do dvoch pracovných dní. Pre nahlásenie problému, otázku, alebo žiadosť o úpravu údajov použite tento formulár.";
@@ -85,7 +85,7 @@ function mapErrorCode(code: string | undefined): string {
   }
 }
 
-export const Route = createFileRoute("/kontakt/")({
+export const Route = createFileRoute("/contact-form/")({
   head: () => ({
     meta: [
       { title: PAGE_TITLE },

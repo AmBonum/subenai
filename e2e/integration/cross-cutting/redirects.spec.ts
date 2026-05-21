@@ -133,13 +133,13 @@ test.describe("SK→EN URL redirects (public/_redirects)", () => {
     expect(r.headers()["location"]).toBe("/about");
   });
 
-  // TC-15: /kontakt and /skoly redirect to their English equivalents
-  test("TC-15: /kontakt redirects to /contact and /skoly redirects to /schools", async ({
+  // TC-15: /kontakt redirects to /contact-form (E48 rename) and /skoly to /schools
+  test("TC-15: /kontakt redirects to /contact-form and /skoly redirects to /schools", async ({
     request,
   }) => {
     const rKontakt = await request.fetch("/kontakt", { maxRedirects: 0 });
     expect(rKontakt.status()).toBe(301);
-    expect(rKontakt.headers()["location"]).toBe("/contact");
+    expect(rKontakt.headers()["location"]).toBe("/contact-form");
 
     const rSkoly = await request.fetch("/skoly", { maxRedirects: 0 });
     expect(rSkoly.status()).toBe(301);

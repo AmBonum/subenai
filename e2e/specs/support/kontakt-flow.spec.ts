@@ -121,7 +121,7 @@ test.describe("E48 smoke — public anon flow", () => {
     });
 
     // Trigger fresh navigation so the new route handlers register first.
-    await page.goto("/kontakt");
+    await page.goto("/contact-form");
 
     await kontakt.fillAndSubmit({
       subject: "Smoke rate limit",

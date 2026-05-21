@@ -73,10 +73,10 @@ describe("TestsFaqSection — E26 senior upgrade", () => {
     expect(toggle).toHaveTextContent("Rozbaliť všetko");
   });
 
-  it("renders rescue footer with /blog + /kontakt CTAs", () => {
+  it("renders rescue footer with /blog + /contact CTAs", () => {
     render(<TestsFaqSection />);
     expect(screen.getByTestId("tests-faq-footer")).toHaveTextContent(/Nenašiel si odpoveď/);
     expect(screen.getByTestId("tests-faq-footer-cta-blog")).toHaveAttribute("href", "/blog");
-    expect(screen.getByTestId("tests-faq-footer-cta-contact")).toHaveAttribute("href", "/kontakt");
+    expect(screen.getByTestId("tests-faq-footer-cta-contact")).toHaveAttribute("href", "/contact");
   });
 });

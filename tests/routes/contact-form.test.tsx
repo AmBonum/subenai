@@ -23,7 +23,7 @@ vi.mock("@/components/common/TurnstileWidget", () => ({
 }));
 
 // Import after the mock so the mock takes effect.
-import { KontaktPage } from "@/routes/kontakt.index";
+import { KontaktPage } from "@/routes/contact-form.index";
 
 describe("KontaktPage — Turnstile integration", () => {
   beforeEach(() => {

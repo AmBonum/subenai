@@ -6,12 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export const Route = createLazyFileRoute("/kontakt/ticket/$id")({
+export const Route = createLazyFileRoute("/contact-form/ticket/$id")({
   component: KontaktTicketViewPage,
 });
 
 // E48 — Anonymous read-only thread view. The submitter clicks the link
-// from the confirmation/reply e-mail (`/kontakt/ticket/{id}?token=<64-hex>`)
+// from the confirmation/reply e-mail (`/contact-form/ticket/{id}?token=<64-hex>`)
 // and lands here. The page calls `get_ticket_thread_for_view_token`
 // (SECURITY DEFINER) which validates the token hash + expiry + revocation
 // and returns the ticket + messages + attachment metadata WITHOUT exposing
@@ -71,8 +71,8 @@ interface ThreadPayload {
 }
 
 function KontaktTicketViewPage() {
-  const { id } = useParams({ from: "/kontakt/ticket/$id" });
-  const { token } = useSearch({ from: "/kontakt/ticket/$id" });
+  const { id } = useParams({ from: "/contact-form/ticket/$id" });
+  const { token } = useSearch({ from: "/contact-form/ticket/$id" });
 
   const threadQ = useQuery({
     queryKey: ["kontakt", "ticket-view", id, token],
@@ -234,7 +234,7 @@ function ViewShell({ children }: { children: React.ReactNode }) {
       data-testid="kontakt-ticket-view-root"
     >
       <Button asChild variant="ghost" size="sm" data-testid="kontakt-ticket-view-back">
-        <Link to="/kontakt">
+        <Link to="/contact-form">
           <ArrowLeft className="mr-1 size-4" aria-hidden="true" /> Späť na kontakt
         </Link>
       </Button>
@@ -252,7 +252,7 @@ function NotFoundCard({ title, body }: { title: string; body: string }) {
       <h1 className="text-lg font-semibold text-amber-900 dark:text-amber-100">{title}</h1>
       <p className="text-sm text-amber-900/80 dark:text-amber-100/80">{body}</p>
       <Button asChild variant="outline" size="sm" className="mt-2">
-        <Link to="/kontakt">Otvoriť kontaktný formulár</Link>
+        <Link to="/contact-form">Otvoriť kontaktný formulár</Link>
       </Button>
     </section>
   );
