@@ -115,12 +115,12 @@ function AdminNavigationPage() {
         actions={
           <Button onClick={openCreate} data-testid="cms-nav-add-button">
             <Plus className="mr-2 h-4 w-4" />
-
-            <AdminPageExplainer pageKey="navigation" />
             {t("add_item")}
           </Button>
         }
       />
+
+      <AdminPageExplainer pageKey="navigation" />
 
       <Card>
         <CardContent className="p-0">

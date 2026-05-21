@@ -123,12 +123,13 @@ function AdminTestsListPage() {
               data-testid="admin-tests-list-bulk-delete-button"
             >
               <Trash2 className="mr-2 h-3 w-3" />
-              <AdminPageExplainer pageKey="tests" />
               {t("bulk_delete_button")} ({selected.size})
             </Button>
           ) : null
         }
       />
+
+      <AdminPageExplainer pageKey="tests" />
 
       <Card className="border-border/60">
         <CardContent className="space-y-4 p-4">

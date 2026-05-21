@@ -30,12 +30,13 @@ function AdminBlogListPage() {
           <Button asChild data-testid="admin-blog-list-new">
             <Link to="/admin/blog/new">
               <Plus className="mr-2 size-4" />
-              <AdminPageExplainer pageKey="blog" />
               Nový článok
             </Link>
           </Button>
         }
       />
+
+      <AdminPageExplainer pageKey="blog" />
 
       {query.isLoading && <AdminListLoading testId="admin-blog-list-loading" />}
 
