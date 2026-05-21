@@ -2,7 +2,7 @@
 
 **Owner:** Claude — drives the follow-up on E35.1 matrix rows P-4 / P-6 / P-7 / P-20
 **Date opened:** 2026-05-20
-**Status:** 🟡 Planned — branch `feature/E38-retention-crons` ready
+**Status:** ✅ DELIVERED 2026-05-21 — all 6 stories shipped via PR #57. Migrations `20260521120000_anticheat_anonymise.sql` + `20260521130000_edu_anonymise.sql` applied; GitHub Actions workflow `.github/workflows/retention-cron.yml` runs daily at 03:00 UTC; matrix rows P-4/P-6/P-7/P-20 flipped to ✅.
 
 ## TL;DR
 

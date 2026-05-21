@@ -2,7 +2,7 @@
 
 **Owner:** Claude — drives ownership/visibility model rebuild on `public.templates`, plus three follow-on phases (AI moderation, admin queue, public gallery).
 **Date opened:** 2026-05-20
-**Status:** 🟡 Planned — branch `claude/practical-jackson-f9b411` (rename to `feature/E44-template-marketplace` before pushing PR-A; see § Branch).
+**Status:** 🟡 Phase A + B shipped to main (PR #70, PR #76). Phase C (admin moderation queue) + Phase D (public `/sablony` SEO gallery) open. Q1–Q4 confirmed at plan defaults on 2026-05-21 — see § Open questions below.
 **Originating request:** `/app/templates` should show **real, useful templates** to every user (defaults visible to all), let users **duplicate / edit / delete their own copies** without affecting anyone else, allow **submission for public listing** behind **AI precheck + admin manual approval with notifications**, and expose a **SEO-indexable public gallery** so the library doubles as marketing surface. All of this must hold senior-level quality on SEO, marketing, copyright, UX/UI, and a11y.
 
 ## TL;DR
@@ -75,11 +75,11 @@ The submission flow lives on a **new table** `public.template_submissions` (Phas
 
 | ID    | Title                                                                                                                | Effort | Priority | Status |
 |-------|----------------------------------------------------------------------------------------------------------------------|--------|----------|--------|
-| E44.1 | Migration `templates_v2_ownership.sql` — 9 new columns, slug index, 6 RLS policies, 15 default-template inserts, supabase types sync | `M` | `P1` | 🟡 Ready |
-| E44.2 | Queries layer rewrite: `useMyTemplates`, `usePublicTemplates`, `useDuplicateTemplate`, `useEditOwnTemplate`, `useDeleteOwnTemplate` + `Template` type extension | `S` | `P1` | 🟡 Ready |
-| E44.3 | `/app/templates` UI rebuild: Tabs ("Verejné" / "Moje"), row actions, Edit + Duplicate dialogs, Slovak i18n strings | `M` | `P1` | 🟡 Ready |
-| E44.4 | Unit + RLS contract tests (Vitest: query unit tests; integration `tests/db/templates_rls.test.ts` against migration SQL string + a minimal RLS smoke against a stub) | `M` | `P1` | 🟡 Ready |
-| E44.5 | Phase-A docs: story files, CHANGELOG `[Unreleased]` entry, PR description with post-merge migration SQL | `XS` | `P2` | 🟡 Ready |
+| E44.1 | Migration `templates_v2_ownership.sql` — 9 new columns, slug index, 6 RLS policies, 15 default-template inserts, supabase types sync | `M` | `P1` | ✅ Done (2026-05-20, PR #70) |
+| E44.2 | Queries layer rewrite: `useMyTemplates`, `usePublicTemplates`, `useDuplicateTemplate`, `useEditOwnTemplate`, `useDeleteOwnTemplate` + `Template` type extension | `S` | `P1` | ✅ Done (2026-05-20, PR #70) |
+| E44.3 | `/app/templates` UI rebuild: Tabs ("Verejné" / "Moje"), row actions, Edit + Duplicate dialogs, Slovak i18n strings | `M` | `P1` | ✅ Done (2026-05-20, PR #70) |
+| E44.4 | Unit + RLS contract tests (Vitest: query unit tests; integration `tests/db/templates_rls.test.ts` against migration SQL string + a minimal RLS smoke against a stub) | `M` | `P1` | ✅ Done (2026-05-20, PR #70) |
+| E44.5 | Phase-A docs: story files, CHANGELOG `[Unreleased]` entry, PR description with post-merge migration SQL | `XS` | `P2` | ✅ Done (2026-05-20, PR #70) |
 
 **Phase A acceptance:** every authenticated user sees the 15 default templates on the "Verejné" tab; can duplicate any default into their own; can edit / delete their own copies; cannot mutate anyone else's; cannot mutate `owner_id IS NULL` rows; admin retains full write access via existing role check. No AI, no submission, no admin queue, no public gallery yet.
 
@@ -284,14 +284,16 @@ UI/UX upgrades over the current implementation (from § A.UX appendix, output of
 - `tasks/stories/README.md` row added for E44 with 5/16 stories Ready.
 - PR-A description template: see § "PR-A description" at bottom.
 
-## Open questions (deferred to phase owner)
+## Open questions — RESOLVED at plan defaults (2026-05-21)
 
-| ID | Question | Phase | Default if not answered |
-|----|----------|-------|--------------------------|
-| Q1 | Does a user-published template's CC BY 4.0 attribution need to render on `/sablony/$slug` AND on the card in `/app/templates`? | D | Yes on both. |
-| Q2 | Should the AI precheck JSON be visible to the submitting user (transparency) or admin-only? | C | Show user a summarised verdict (`accepted` / `held_for_review` / `rejected_for_reason`) but not the raw JSON. Admin sees full JSON. |
-| Q3 | Re-submission cooldown? E.g. if rejected, user can re-submit after edit; how often? | B | 24h cooldown after rejection on the same template id. |
-| Q4 | Mirror `/sablony` in CZ/EN i18n at launch or post-launch? | D | Post-launch — Slovak-only for Phase D. |
+Owner confirmed all four defaults; binding for the remaining phase work.
+
+| ID | Question | Phase | **Resolution (2026-05-21)** |
+|----|----------|-------|------------------------------|
+| Q1 | Does a user-published template's CC BY 4.0 attribution need to render on `/sablony/$slug` AND on the card in `/app/templates`? | D | **Yes on both.** Card shows `author_display_name` + license badge; `/sablony/$slug` shows full attribution block + CC BY 4.0 link. |
+| Q2 | Should the AI precheck JSON be visible to the submitting user (transparency) or admin-only? | C | **Summarised verdict to user, full JSON admin-only.** User sees one of `accepted` / `held_for_review` / `rejected_for_reason` + the human-readable summary string from the rubric. Raw `safety` / `profanity` / `copyright_red_flags` JSON stays admin-only. |
+| Q3 | Re-submission cooldown after rejection? | B | **24h cooldown per `template.id`.** Tracked via `template_submissions.created_at` on the most recent `rejected` row; UI blocks re-submit with a Slovak inline note until cooldown elapses. |
+| Q4 | Mirror `/sablony` in CZ/EN i18n at launch? | D | **Slovak-only at launch.** Post-launch i18n is a separate epic — Phase D ships `/sablony` SK-only with `<link rel="alternate" hreflang>` deliberately omitted (no alternates exist yet). |
 
 ## Risks
 
