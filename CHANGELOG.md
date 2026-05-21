@@ -10,19 +10,17 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
-- **Pozvánky cez e-mail z platformy — vizuálna ukážka funkcie pre
-  budúci PRO plán.** Na detaile testu (`/app/tests/<id>` → tlačidlo
-  *Pozvánky e-mailom*) sa od dnes zobrazuje nová akcia s odznakom *PRO*.
-  Tlačidlo je zatiaľ neaktívne; po nabehnutí myšky alebo focusom uvidíš
-  tooltip *„Posielanie pozvánok e-mailom z platformy bude dostupné v
-  pláne PRO. Zatiaľ pošli respondentom share link manuálne — funguje to
-  úplne rovnako."* Funkcionalita je hotová na strane infraštruktúry
-  (templát e-mailu z `pozvanky@subenai.sk`, server endpoint s 3-vrstvovou
-  rate-limit ochranou — 50 pozvánok/deň/autor, 50/deň/test, 50/h/IP — a
-  auditný záznam s PII-stripped recipient hashom). Akonáhle spustíme
-  platený plán PRO, odznak zmizne a tlačidlo sa aktivuje pre používateľov
-  s aktívnym predplatným. Nik z teba nezbiera platobné údaje vopred —
-  pred prvým spustením PRO plánu ťa o tom upozorníme samostatne.
+- **Pozvánky cez e-mail z platformy — pripravujeme.** Na detaile testu
+  (`/app/tests/<id>` → tlačidlo *Pozvánky e-mailom*) sa od dnes zobrazuje
+  nová akcia s odznakom *Pripravujeme*. Tlačidlo je zatiaľ neaktívne; po
+  nabehnutí myšky alebo focusom uvidíš tooltip *„Túto funkciu práve
+  pripravujeme — bude dostupná čoskoro. Zatiaľ pošli respondentom share
+  link manuálne — funguje to úplne rovnako."* Funkcionalita je hotová
+  na strane infraštruktúry (templát e-mailu z `pozvanky@subenai.sk`,
+  server endpoint s 3-vrstvovou rate-limit ochranou — 50 pozvánok/deň/autor,
+  50/deň/test, 50/h/IP — a auditný záznam s PII-stripped recipient hashom).
+  Zatiaľ sa nezaväzujeme či pôjde o platenú funkciu alebo bude voľne
+  dostupná — to oznámime, keď tlačidlo zaktivnime.
 
 ## [1.14.1] — 2026-05-21
 

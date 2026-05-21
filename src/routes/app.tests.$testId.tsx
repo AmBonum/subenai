@@ -26,9 +26,10 @@ import { QuestionsEditor } from "@/components/app/tests/QuestionsEditor";
 import { OrderModeToggle } from "@/components/app/tests/OrderModeToggle";
 import { PasswordCard } from "@/components/app/tests/PasswordCard";
 import { InviteEmailDialog } from "@/components/app/tests/InviteEmailDialog";
-import { ProBadge } from "@/components/billing/ProBadge";
+import { ComingSoonBadge } from "@/components/feature-gates/ComingSoonBadge";
+import { ProBadge } from "@/components/feature-gates/ProBadge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { isProFeatureLocked } from "@/lib/billing/pro-features";
+import { getFeatureGate } from "@/lib/feature-gates";
 import { toast } from "sonner";
 import {
   useArchiveTest,
@@ -144,7 +145,12 @@ function TestEditorPage() {
             </Button>
             {test.status === "published" &&
               (() => {
-                const inviteLocked = isProFeatureLocked("email_invites");
+                const inviteGate = getFeatureGate("email_invites");
+                const inviteLocked = inviteGate !== null;
+                // Tooltip + badge copy depend on the gate type — copy is
+                // chosen once here so the JSX below stays branch-free.
+                const tooltipKey =
+                  inviteGate === "pro" ? "invite_pro_tooltip" : "invite_coming_soon_tooltip";
                 const inviteBtn = (
                   <Button
                     size="sm"
@@ -155,12 +161,13 @@ function TestEditorPage() {
                     disabled={inviteLocked}
                     aria-disabled={inviteLocked}
                     data-testid="test-editor-invite-button"
-                    data-pro-locked={inviteLocked ? "true" : "false"}
+                    data-gate={inviteGate ?? "open"}
                     className={inviteLocked ? "opacity-70" : undefined}
                   >
                     <Mail className="mr-2 h-3 w-3" />
                     {t("invite_button")}
-                    {inviteLocked && <ProBadge className="ml-2" />}
+                    {inviteGate === "coming_soon" && <ComingSoonBadge className="ml-2" />}
+                    {inviteGate === "pro" && <ProBadge className="ml-2" />}
                   </Button>
                 );
                 if (!inviteLocked) return inviteBtn;
@@ -179,9 +186,9 @@ function TestEditorPage() {
                       <TooltipContent
                         side="bottom"
                         className="max-w-xs"
-                        data-testid="test-editor-invite-pro-tooltip"
+                        data-testid="test-editor-invite-gate-tooltip"
                       >
-                        {t("invite_pro_tooltip")}
+                        {t(tooltipKey as never)}
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>

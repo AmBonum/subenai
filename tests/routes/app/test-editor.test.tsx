@@ -78,19 +78,21 @@ describe("/app/tests/$testId (AH-5.3 editor)", () => {
     expect(screen.getByTestId("test-editor-order-mode-option-random")).toBeInTheDocument();
   });
 
-  it("renders the Invite button on published tests, gated as PRO-locked", () => {
+  it("renders the Invite button on published tests, gated as coming-soon", () => {
     // tst_002 is published in SEED_TESTS, so the invite button is shown.
     params.testId = "tst_002";
     render(<Page />);
     const invite = screen.getByTestId("test-editor-invite-button");
     expect(invite).toBeInTheDocument();
-    // Today every user is locked out (userHasPro() returns false). The
-    // button must be disabled + carry the data-pro-locked sentinel + render
-    // the PRO badge. Tooltip trigger wraps the button so keyboard focus +
-    // hover both surface the explanatory copy.
+    // Today email_invites is gated as "coming_soon" in FEATURE_GATES.
+    // The button must be disabled + carry the gate sentinel + render
+    // the ComingSoon badge (NOT the PRO badge). Tooltip trigger wraps
+    // the button so keyboard focus + hover both surface the
+    // explanatory copy.
     expect(invite).toBeDisabled();
-    expect(invite.getAttribute("data-pro-locked")).toBe("true");
-    expect(screen.getByTestId("pro-badge")).toBeInTheDocument();
+    expect(invite.getAttribute("data-gate")).toBe("coming_soon");
+    expect(screen.getByTestId("coming-soon-badge")).toBeInTheDocument();
+    expect(screen.queryByTestId("pro-badge")).not.toBeInTheDocument();
     expect(screen.getByTestId("test-editor-invite-tooltip-trigger")).toBeInTheDocument();
   });
 

@@ -88,6 +88,7 @@
     "share_button": "Zdieľať",
     "invite_button": "Pozvánky e-mailom",
     "invite_pro_tooltip": "Posielanie pozvánok e-mailom z platformy bude dostupné v plánne PRO. Zatiaľ pošli respondentom share link manuálne — funguje to úplne rovnako.",
+    "invite_coming_soon_tooltip": "Túto funkciu práve pripravujeme — bude dostupná čoskoro. Zatiaľ pošli respondentom share link manuálne — funguje to úplne rovnako.",
     "not_found_title": "Test sa nenašiel",
     "not_found_body": "Tento test buď neexistuje, alebo ti nepatrí.",
     "back_to_list": "Späť na zoznam",
