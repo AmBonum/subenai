@@ -2193,7 +2193,13 @@ export function useAdminSupportTickets(filters: SupportTicketsFilters = {}) {
         q = q.in("category", categories);
       }
       if (query && query.trim().length >= 2) {
-        const term = `%${query.trim().replace(/[%_]/g, "\\$&")}%`;
+        // PostgreSQL LIKE/ILIKE pattern escaping. The three special chars
+        // are \, %, _. Backslash must be escaped FIRST — if we escaped %
+        // and _ first, the new backslashes they emit would get doubled
+        // again on a second pass, mangling the pattern. CodeQL caught the
+        // original 2-char-only escape as incomplete string encoding.
+        const escaped = query.trim().replace(/\\/g, "\\\\").replace(/[%_]/g, "\\$&");
+        const term = `%${escaped}%`;
         q = q.or(`subject.ilike.${term},body.ilike.${term},submitter_email.ilike.${term}`);
       }
 

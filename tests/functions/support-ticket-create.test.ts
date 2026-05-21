@@ -35,6 +35,18 @@ function buildRequest(
   });
 }
 
+// Hostname-equality URL match. `string.includes("api.resend.com")` would
+// also match `evil.com/api.resend.com/...` — CodeQL's "incomplete URL
+// substring sanitization" rule flags that. Parsing the URL separates
+// hostname from path/query so the assertion can't be spoofed.
+function isResendUrl(url: string): boolean {
+  try {
+    return new URL(url).hostname === "api.resend.com";
+  } catch {
+    return false;
+  }
+}
+
 function mockFetch(state: MockState) {
   return vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
     const url = typeof input === "string" ? input : (input as Request).url;
@@ -62,7 +74,7 @@ function mockFetch(state: MockState) {
         headers: { "content-type": "application/json" },
       });
     }
-    if (url.includes("api.resend.com/emails")) {
+    if (isResendUrl(url)) {
       return new Response(JSON.stringify({ id: "email_stub_id" }), {
         status: 200,
         headers: { "content-type": "application/json" },
@@ -227,7 +239,7 @@ describe("POST /api/support-ticket-create — email dispatch (E48.5)", () => {
 
     const emailCall = fetchSpy.mock.calls.find((c) => {
       const u = typeof c[0] === "string" ? c[0] : (c[0] as Request).url;
-      return u.includes("api.resend.com/emails");
+      return isResendUrl(u);
     });
     expect(emailCall).toBeDefined();
     const init = emailCall![1] as RequestInit | undefined;
@@ -252,7 +264,7 @@ describe("POST /api/support-ticket-create — email dispatch (E48.5)", () => {
     expect(res.status).toBe(200);
     const emailCall = fetchSpy.mock.calls.find((c) => {
       const u = typeof c[0] === "string" ? c[0] : (c[0] as Request).url;
-      return u.includes("api.resend.com/emails");
+      return isResendUrl(u);
     });
     expect(emailCall).toBeDefined();
     const body = JSON.parse((emailCall![1] as RequestInit).body as string) as { html: string };
@@ -273,7 +285,7 @@ describe("POST /api/support-ticket-create — email dispatch (E48.5)", () => {
           { status: 200, headers: { "content-type": "application/json" } },
         );
       }
-      if (url.includes("api.resend.com")) {
+      if (isResendUrl(url)) {
         return new Response("upstream down", { status: 500 });
       }
       return new Response("not stubbed", { status: 500 });
@@ -290,7 +302,7 @@ describe("POST /api/support-ticket-create — email dispatch (E48.5)", () => {
     expect(res.status).toBe(200);
     const emailCall = fetchSpy.mock.calls.find((c) => {
       const u = typeof c[0] === "string" ? c[0] : (c[0] as Request).url;
-      return u.includes("api.resend.com");
+      return isResendUrl(u);
     });
     expect(emailCall).toBeUndefined();
   });
