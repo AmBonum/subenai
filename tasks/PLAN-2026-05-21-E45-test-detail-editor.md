@@ -2,7 +2,7 @@
 
 **Owner:** Claude — drives the user-facing editor on `/app/tests/$testId` so authors can manage questions, lock the test with a password, and send invites by email — closing the "create-test" → "share" loop after publish.
 **Date opened:** 2026-05-21
-**Status:** 🟢 Phase 1 + Phase 2 done (questions + order + password merged / pending merge on `feature/E45-phase-2-password`) — Phases 3-4 still pending.
+**Status:** 🟢 Phase 1 + Phase 2 done + merged to main. Phase 3 done (infrastructure complete, UI entry point **PRO-gated** per user decision 2026-05-21). Phase 4 pending.
 **Originating request:** From the test detail page (`/app/tests/$testId?tab=results`), the author should be able to: (1) edit questions — add / remove / reorder — and choose random vs fixed order; (2) set, change, or clear a password that respondents must enter before taking the test; (3) send the test link + password to a list of email addresses, all from the same screen. All four sub-features must hold senior-level UX/UI, full coverage by unit + integration + security + functional tests.
 
 ## TL;DR
@@ -86,11 +86,11 @@ The schema already supports most of it: `tests.password_hash` exists; `test_ques
 
 | ID | Title | Effort | Priority | Status |
 |---|---|---|---|---|
-| E45.13 | Email template `tests-invite-email` in `functions/_lib/email-templates.ts` (Slovak) | `S` | `P1` | ⏳ Blocks on PR-2 |
-| E45.14 | CF Function `functions/api/tests/send-invites.ts` — per-author + per-test + per-IP rate limits; audit log per recipient | `M` | `P1` | ⏳ Blocks on PR-2 |
-| E45.15 | UI: Invite dialog on test detail — recipients composer, audience group selector, "include password" opt-in checkbox | `M` | `P1` | ⏳ Blocks on PR-2 |
-| E45.16 | Tests: integration tests for invite endpoint, audit assertion, rate-limit, "include password" path branches | `M` | `P2` | ⏳ Blocks on PR-2 |
-| E45.17 | Docs + ops runbook (Resend env vars, deliverability monitoring) + CHANGELOG | `S` | `P2` | ⏳ Blocks on PR-2 |
+| ~~E45.13 Email template `testInviteEmail` (Slovak, two subject variants per D7)~~ | (closed) | `S` | `P1` | ✅ Done |
+| ~~E45.14 CF Function `/api/tests/send-invites` — 4-tier rate limits (free tier B2: 50/author/day, 50/test/day, 50/IP/h, 500/h global) + audit per recipient + Resend idempotency~~ | (closed) | `M` | `P1` | ✅ Done |
+| ~~E45.15 UI: `InviteEmailDialog` + `<ProBadge />` + Tooltip-gated entry point + `lib/billing/pro-features.ts` feature-flag (user decision 2026-05-21: gate behind future PRO plan; infra ready, UI locked)~~ | (closed) | `M` | `P1` | ✅ Done |
+| ~~E45.16 Tests: 8 template, 15 send-invites endpoint (auth/owner/rate/audit/partial), 8 InviteEmailDialog, 5 pro-features gating, 2 route tests for locked button~~ | (closed) | `M` | `P2` | ✅ Done |
+| ~~E45.17 Docs: 3 story files E45.13-15 + CHANGELOG entry + PLAN flip~~ | (closed) | `S` | `P2` | ✅ Done |
 
 ### Phase 4 — E2E + polish (PR-4)
 
