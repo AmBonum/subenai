@@ -34,6 +34,7 @@ export const ROUTES = {
   cookies: "/cookies",
   oProjecte: "/about",
   zmeny: "/changelog",
-  kontakt: "/kontakt",
+  contact: "/contact",
+  contactForm: "/contact-form",
   blog: "/blog",
 } as const;

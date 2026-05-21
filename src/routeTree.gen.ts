@@ -28,8 +28,8 @@ import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
 import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
 import { Route as SablonyIndexRouteImport } from './routes/sablony.index'
-import { Route as KontaktIndexRouteImport } from './routes/kontakt.index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
+import { Route as ContactFormIndexRouteImport } from './routes/contact-form.index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -92,9 +92,9 @@ import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as AdminAnswerSetsIndexRouteImport } from './routes/admin/answer-sets.index'
 import { Route as TestBuilderIdRouteImport } from './routes/test.builder.$id'
-import { Route as KontaktTicketIdRouteImport } from './routes/kontakt.ticket.$id'
 import { Route as DocsAppSlugRouteImport } from './routes/docs.app.$slug'
 import { Route as DocsAdminSlugRouteImport } from './routes/docs.admin.$slug'
+import { Route as ContactFormTicketIdRouteImport } from './routes/contact-form.ticket.$id'
 import { Route as BlogKategoriaSlugRouteImport } from './routes/blog/kategoria/$slug'
 import { Route as BlogAutorSlugRouteImport } from './routes/blog/autor/$slug'
 import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
@@ -211,14 +211,14 @@ const SablonyIndexRoute = SablonyIndexRouteImport.update({
   path: '/sablony/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/sablony.index.lazy').then((d) => d.Route))
-const KontaktIndexRoute = KontaktIndexRouteImport.update({
-  id: '/kontakt/',
-  path: '/kontakt/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactFormIndexRoute = ContactFormIndexRouteImport.update({
+  id: '/contact-form/',
+  path: '/contact-form/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
@@ -573,13 +573,6 @@ const TestBuilderIdRoute = TestBuilderIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/test.builder.$id.lazy').then((d) => d.Route),
 )
-const KontaktTicketIdRoute = KontaktTicketIdRouteImport.update({
-  id: '/kontakt/ticket/$id',
-  path: '/kontakt/ticket/$id',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/kontakt.ticket.$id.lazy').then((d) => d.Route),
-)
 const DocsAppSlugRoute = DocsAppSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -590,6 +583,13 @@ const DocsAdminSlugRoute = DocsAdminSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => DocsAdminRoute,
 } as any)
+const ContactFormTicketIdRoute = ContactFormTicketIdRouteImport.update({
+  id: '/contact-form/ticket/$id',
+  path: '/contact-form/ticket/$id',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/contact-form.ticket.$id.lazy').then((d) => d.Route),
+)
 const BlogKategoriaSlugRoute = BlogKategoriaSlugRouteImport.update({
   id: '/blog/kategoria/$slug',
   path: '/blog/kategoria/$slug',
@@ -791,8 +791,8 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/contact-form/': typeof ContactFormIndexRoute
   '/courses/': typeof CoursesIndexRoute
-  '/kontakt/': typeof KontaktIndexRoute
   '/sablony/': typeof SablonyIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
@@ -814,9 +814,9 @@ export interface FileRoutesByFullPath {
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
+  '/contact-form/ticket/$id': typeof ContactFormTicketIdRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
-  '/kontakt/ticket/$id': typeof KontaktTicketIdRoute
   '/test/builder/$id': typeof TestBuilderIdRouteWithChildren
   '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
@@ -892,8 +892,8 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/contact-form': typeof ContactFormIndexRoute
   '/courses': typeof CoursesIndexRoute
-  '/kontakt': typeof KontaktIndexRoute
   '/sablony': typeof SablonyIndexRoute
   '/sponsors': typeof SponsorsIndexRoute
   '/test': typeof TestIndexRoute
@@ -915,9 +915,9 @@ export interface FileRoutesByTo {
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
+  '/contact-form/ticket/$id': typeof ContactFormTicketIdRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
-  '/kontakt/ticket/$id': typeof KontaktTicketIdRoute
   '/admin/answer-sets': typeof AdminAnswerSetsIndexRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/pages': typeof AdminPagesIndexRoute
@@ -1000,8 +1000,8 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/contact-form/': typeof ContactFormIndexRoute
   '/courses/': typeof CoursesIndexRoute
-  '/kontakt/': typeof KontaktIndexRoute
   '/sablony/': typeof SablonyIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
@@ -1023,9 +1023,9 @@ export interface FileRoutesById {
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
+  '/contact-form/ticket/$id': typeof ContactFormTicketIdRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
-  '/kontakt/ticket/$id': typeof KontaktTicketIdRoute
   '/test/builder/$id': typeof TestBuilderIdRouteWithChildren
   '/admin/answer-sets/': typeof AdminAnswerSetsIndexRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
@@ -1110,8 +1110,8 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/app/'
     | '/blog/'
+    | '/contact-form/'
     | '/courses/'
-    | '/kontakt/'
     | '/sablony/'
     | '/sponsors/'
     | '/test/'
@@ -1133,9 +1133,9 @@ export interface FileRouteTypes {
     | '/app/tests/new'
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
+    | '/contact-form/ticket/$id'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
-    | '/kontakt/ticket/$id'
     | '/test/builder/$id'
     | '/admin/answer-sets/'
     | '/admin/blog/'
@@ -1211,8 +1211,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/app'
     | '/blog'
+    | '/contact-form'
     | '/courses'
-    | '/kontakt'
     | '/sablony'
     | '/sponsors'
     | '/test'
@@ -1234,9 +1234,9 @@ export interface FileRouteTypes {
     | '/app/tests/new'
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
+    | '/contact-form/ticket/$id'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
-    | '/kontakt/ticket/$id'
     | '/admin/answer-sets'
     | '/admin/blog'
     | '/admin/pages'
@@ -1318,8 +1318,8 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/app/'
     | '/blog/'
+    | '/contact-form/'
     | '/courses/'
-    | '/kontakt/'
     | '/sablony/'
     | '/sponsors/'
     | '/test/'
@@ -1341,9 +1341,9 @@ export interface FileRouteTypes {
     | '/app/tests/new'
     | '/blog/autor/$slug'
     | '/blog/kategoria/$slug'
+    | '/contact-form/ticket/$id'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
-    | '/kontakt/ticket/$id'
     | '/test/builder/$id'
     | '/admin/answer-sets/'
     | '/admin/blog/'
@@ -1390,14 +1390,14 @@ export interface RootRouteChildren {
   TestsSlugRoute: typeof TestsSlugRoute
   ThankYouSessionIdRoute: typeof ThankYouSessionIdRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  ContactFormIndexRoute: typeof ContactFormIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
-  KontaktIndexRoute: typeof KontaktIndexRoute
   SablonyIndexRoute: typeof SablonyIndexRoute
   TestIndexRoute: typeof TestIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
   BlogAutorSlugRoute: typeof BlogAutorSlugRoute
   BlogKategoriaSlugRoute: typeof BlogKategoriaSlugRoute
-  KontaktTicketIdRoute: typeof KontaktTicketIdRoute
+  ContactFormTicketIdRoute: typeof ContactFormTicketIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1535,18 +1535,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SablonyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/kontakt/': {
-      id: '/kontakt/'
-      path: '/kontakt'
-      fullPath: '/kontakt/'
-      preLoaderRoute: typeof KontaktIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/courses/': {
       id: '/courses/'
       path: '/courses'
       fullPath: '/courses/'
       preLoaderRoute: typeof CoursesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact-form/': {
+      id: '/contact-form/'
+      path: '/contact-form'
+      fullPath: '/contact-form/'
+      preLoaderRoute: typeof ContactFormIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/': {
@@ -1983,13 +1983,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestBuilderIdRouteImport
       parentRoute: typeof TestBuilderRoute
     }
-    '/kontakt/ticket/$id': {
-      id: '/kontakt/ticket/$id'
-      path: '/kontakt/ticket/$id'
-      fullPath: '/kontakt/ticket/$id'
-      preLoaderRoute: typeof KontaktTicketIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/docs/app/$slug': {
       id: '/docs/app/$slug'
       path: '/$slug'
@@ -2003,6 +1996,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/docs/admin/$slug'
       preLoaderRoute: typeof DocsAdminSlugRouteImport
       parentRoute: typeof DocsAdminRoute
+    }
+    '/contact-form/ticket/$id': {
+      id: '/contact-form/ticket/$id'
+      path: '/contact-form/ticket/$id'
+      fullPath: '/contact-form/ticket/$id'
+      preLoaderRoute: typeof ContactFormTicketIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/blog/kategoria/$slug': {
       id: '/blog/kategoria/$slug'
@@ -2455,14 +2455,14 @@ const rootRouteChildren: RootRouteChildren = {
   TestsSlugRoute: TestsSlugRoute,
   ThankYouSessionIdRoute: ThankYouSessionIdRoute,
   BlogIndexRoute: BlogIndexRoute,
+  ContactFormIndexRoute: ContactFormIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
-  KontaktIndexRoute: KontaktIndexRoute,
   SablonyIndexRoute: SablonyIndexRoute,
   TestIndexRoute: TestIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
   BlogAutorSlugRoute: BlogAutorSlugRoute,
   BlogKategoriaSlugRoute: BlogKategoriaSlugRoute,
-  KontaktTicketIdRoute: KontaktTicketIdRoute,
+  ContactFormTicketIdRoute: ContactFormTicketIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -258,7 +258,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   if (env.RESEND_API_KEY && env.EMAIL_FROM && env.EMAIL_REPLY_TO) {
     const origin = env.SITE_ORIGIN || DEFAULT_SITE_ORIGIN;
     const viewUrl = !isAuth
-      ? `${origin}/kontakt/ticket/${encodeURIComponent(result.ticket_id)}?token=${encodeURIComponent(result.view_token)}`
+      ? `${origin}/contact-form/ticket/${encodeURIComponent(result.ticket_id)}?token=${encodeURIComponent(result.view_token)}`
       : undefined;
     const template = supportTicketReceivedEmail({
       ticketId: result.ticket_id,

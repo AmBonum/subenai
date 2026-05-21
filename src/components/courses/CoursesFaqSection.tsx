@@ -68,7 +68,7 @@ export function CoursesFaqSection() {
         },
         {
           label: t("faq_footer_cta_contact"),
-          href: ROUTES.kontakt,
+          href: ROUTES.contact,
           testid: "courses-faq-footer-cta-contact",
         },
       ]}

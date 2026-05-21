@@ -199,7 +199,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     const invalidated = ticketRow.view_token_invalidated_at as string | null;
     const tokenIsValid = !invalidated && expires && new Date(expires).getTime() > Date.now();
     const viewUrl = tokenIsValid
-      ? `${origin}/kontakt/ticket/${encodeURIComponent(ticketId)}`
+      ? `${origin}/contact-form/ticket/${encodeURIComponent(ticketId)}`
       : undefined;
 
     const template = supportTicketReplyEmail({

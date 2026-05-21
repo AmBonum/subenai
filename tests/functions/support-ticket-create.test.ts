@@ -270,7 +270,7 @@ describe("POST /api/support-ticket-create — email dispatch (E48.5)", () => {
     };
     expect(body.to).toEqual(["user@example.com"]);
     expect(body.subject).toContain("tkt-test-abc");
-    expect(body.html).toContain("https://subenai.sk/kontakt/ticket/tkt-test-abc?token=");
+    expect(body.html).toContain("https://subenai.sk/contact-form/ticket/tkt-test-abc?token=");
     expect(body.text).toContain("Chyba alebo problém");
   });
 

@@ -10,7 +10,7 @@ interface SearchParams {
   token?: string;
 }
 
-export const Route = createFileRoute("/kontakt/ticket/$id")({
+export const Route = createFileRoute("/contact-form/ticket/$id")({
   validateSearch: (search): SearchParams => ({
     token: typeof search.token === "string" ? search.token : undefined,
   }),
@@ -20,6 +20,6 @@ export const Route = createFileRoute("/kontakt/ticket/$id")({
       { name: "description", content: PAGE_DESCRIPTION },
       { name: "robots", content: "noindex,nofollow" },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/kontakt` }],
+    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/contact-form` }],
   }),
 });

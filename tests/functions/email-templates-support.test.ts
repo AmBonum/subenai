@@ -32,9 +32,11 @@ describe("supportTicketReceivedEmail", () => {
   it("renders the view link when viewUrl is provided", () => {
     const t = supportTicketReceivedEmail({
       ...base,
-      viewUrl: "https://subenai.sk/kontakt/ticket/tkt-abc-123?token=aaaa",
+      viewUrl: "https://subenai.sk/contact-form/ticket/tkt-abc-123?token=aaaa",
     });
-    expect(t.html).toContain('href="https://subenai.sk/kontakt/ticket/tkt-abc-123?token=aaaa"');
+    expect(t.html).toContain(
+      'href="https://subenai.sk/contact-form/ticket/tkt-abc-123?token=aaaa"',
+    );
     expect(t.html).toContain("Zobraziť vlákno");
     expect(t.html).toContain("90 dní");
   });
@@ -48,12 +50,12 @@ describe("supportTicketReceivedEmail", () => {
   it("plain-text fallback includes ticketId + subject + category label", () => {
     const t = supportTicketReceivedEmail({
       ...base,
-      viewUrl: "https://subenai.sk/kontakt/ticket/x?token=y",
+      viewUrl: "https://subenai.sk/contact-form/ticket/x?token=y",
     });
     expect(t.text).toContain("tkt-abc-123");
     expect(t.text).toContain("Test sa nedá spustiť");
     expect(t.text).toContain("Chyba alebo problém");
-    expect(t.text).toContain("https://subenai.sk/kontakt/ticket/x?token=y");
+    expect(t.text).toContain("https://subenai.sk/contact-form/ticket/x?token=y");
   });
 
   it("HTML carries the canonical company footer", () => {
@@ -80,7 +82,7 @@ describe("supportTicketReceivedEmail", () => {
       ticketId: "x",
       subject: "<script>alert(1)</script>",
       category: "question",
-      viewUrl: "https://subenai.sk/kontakt/ticket/x?token=y",
+      viewUrl: "https://subenai.sk/contact-form/ticket/x?token=y",
     });
 
     // HTML side: raw <script> must NOT appear as markup; escaped entity must.
@@ -122,10 +124,10 @@ describe("supportTicketReplyEmail", () => {
       ticketId: "x",
       adminName: "Anna Admin",
       body: "Reply.",
-      viewUrl: "https://subenai.sk/kontakt/ticket/x?token=y",
+      viewUrl: "https://subenai.sk/contact-form/ticket/x?token=y",
     });
     expect(t.html).toContain("Anna Admin");
-    expect(t.html).toContain("https://subenai.sk/kontakt/ticket/x?token=y");
+    expect(t.html).toContain("https://subenai.sk/contact-form/ticket/x?token=y");
     expect(t.html).toContain("Otvoriť celé vlákno");
   });
 
