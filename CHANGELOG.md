@@ -24,6 +24,11 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   s aktívnym predplatným. Nik z teba nezbiera platobné údaje vopred —
   pred prvým spustením PRO plánu ťa o tom upozorníme samostatne.
 
+## [1.14.1] — 2026-05-21
+
+Drobný patch release zameraný na produkčný incident s `/schools/dpa`
+formulárom počas deploy-ov.
+
 ### Opravené
 - **Formulár na `/schools/dpa` už nepovie „zlyhalo", keď žiadosť reálne
   prešla.** Ak si na stránku prišiel/a ešte pred posledným deployom a

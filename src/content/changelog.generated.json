@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.14.1",
+    "date": "2026-05-21",
+    "added": [],
+    "changed": [],
+    "fixed": [
+      "**Formulár na `/schools/dpa` už nepovie „zlyhalo\", keď žiadosť reálne"
+    ],
+    "removed": [],
+    "deprecated": [],
+    "security": []
+  },
+  {
     "version": "1.14.0",
     "date": "2026-05-21",
     "added": [
