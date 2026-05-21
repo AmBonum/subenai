@@ -9,6 +9,14 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+## [1.14.0] — 2026-05-21
+
+Veľký GDPR/governance release. Doteraz boli dve veci, ktoré sme robili
+ručne cez e-mail alebo SQL — žiadosť o spracovateľskú zmluvu (DPA) zo
+školy a interný audit GDPR žiadostí — teraz fungujú samé od seba.
+Plus séria menších vylepšení pre tých, čo si robia vlastné edu testy
+(grafy, filtre, PDF export, stiahnutie tvojich údajov).
+
 ### Pridané
 - **Heslo pre tvoj test — chráň ho pred zvedavými očami.** Na detaile
   testu (`/app/tests/<id>` → Nastavenia) je nová karta *Heslo pre
