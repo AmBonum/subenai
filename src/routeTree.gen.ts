@@ -101,6 +101,7 @@ import { Route as AppHelpContactRouteImport } from './routes/app.help.contact'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
 import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users.$userId'
+import { Route as AdminTicketsTicketIdRouteImport } from './routes/admin/tickets.$ticketId'
 import { Route as AdminTestsTestIdRouteImport } from './routes/admin/tests.$testId'
 import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$pageId'
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
@@ -616,6 +617,13 @@ const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/users.$userId.lazy').then((d) => d.Route),
 )
+const AdminTicketsTicketIdRoute = AdminTicketsTicketIdRouteImport.update({
+  id: '/$ticketId',
+  path: '/$ticketId',
+  getParentRoute: () => AdminTicketsRoute,
+} as any).lazy(() =>
+  import('./routes/admin/tickets.$ticketId.lazy').then((d) => d.Route),
+)
 const AdminTestsTestIdRoute = AdminTestsTestIdRouteImport.update({
   id: '/$testId',
   path: '/$testId',
@@ -710,7 +718,7 @@ export interface FileRoutesByFullPath {
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
-  '/admin/tickets': typeof AdminTicketsRoute
+  '/admin/tickets': typeof AdminTicketsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
@@ -754,6 +762,7 @@ export interface FileRoutesByFullPath {
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
+  '/admin/tickets/$ticketId': typeof AdminTicketsTicketIdRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
@@ -806,7 +815,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
-  '/admin/tickets': typeof AdminTicketsRoute
+  '/admin/tickets': typeof AdminTicketsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
@@ -849,6 +858,7 @@ export interface FileRoutesByTo {
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
+  '/admin/tickets/$ticketId': typeof AdminTicketsTicketIdRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
@@ -907,7 +917,7 @@ export interface FileRoutesById {
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
-  '/admin/tickets': typeof AdminTicketsRoute
+  '/admin/tickets': typeof AdminTicketsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
@@ -951,6 +961,7 @@ export interface FileRoutesById {
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/pages/$pageId': typeof AdminPagesPageIdRoute
   '/admin/tests/$testId': typeof AdminTestsTestIdRoute
+  '/admin/tickets/$ticketId': typeof AdminTicketsTicketIdRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/app/account/profile': typeof AppAccountProfileRoute
   '/app/account/security': typeof AppAccountSecurityRoute
@@ -1055,6 +1066,7 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
+    | '/admin/tickets/$ticketId'
     | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
@@ -1150,6 +1162,7 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
+    | '/admin/tickets/$ticketId'
     | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
@@ -1251,6 +1264,7 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/pages/$pageId'
     | '/admin/tests/$testId'
+    | '/admin/tickets/$ticketId'
     | '/admin/users/$userId'
     | '/app/account/profile'
     | '/app/account/security'
@@ -1962,6 +1976,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersUserIdRouteImport
       parentRoute: typeof AdminUsersRoute
     }
+    '/admin/tickets/$ticketId': {
+      id: '/admin/tickets/$ticketId'
+      path: '/$ticketId'
+      fullPath: '/admin/tickets/$ticketId'
+      preLoaderRoute: typeof AdminTicketsTicketIdRouteImport
+      parentRoute: typeof AdminTicketsRoute
+    }
     '/admin/tests/$testId': {
       id: '/admin/tests/$testId'
       path: '/$testId'
@@ -2063,6 +2084,18 @@ const AdminTestsRouteWithChildren = AdminTestsRoute._addFileChildren(
   AdminTestsRouteChildren,
 )
 
+interface AdminTicketsRouteChildren {
+  AdminTicketsTicketIdRoute: typeof AdminTicketsTicketIdRoute
+}
+
+const AdminTicketsRouteChildren: AdminTicketsRouteChildren = {
+  AdminTicketsTicketIdRoute: AdminTicketsTicketIdRoute,
+}
+
+const AdminTicketsRouteWithChildren = AdminTicketsRoute._addFileChildren(
+  AdminTicketsRouteChildren,
+)
+
 interface AdminUsersRouteChildren {
   AdminUsersUserIdRoute: typeof AdminUsersUserIdRoute
 }
@@ -2094,7 +2127,7 @@ interface AdminRouteChildren {
   AdminShareCardRoute: typeof AdminShareCardRoute
   AdminSupportRoute: typeof AdminSupportRoute
   AdminTestsRoute: typeof AdminTestsRouteWithChildren
-  AdminTicketsRoute: typeof AdminTicketsRoute
+  AdminTicketsRoute: typeof AdminTicketsRouteWithChildren
   AdminTrainingsRoute: typeof AdminTrainingsRoute
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
@@ -2122,7 +2155,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminShareCardRoute: AdminShareCardRoute,
   AdminSupportRoute: AdminSupportRoute,
   AdminTestsRoute: AdminTestsRouteWithChildren,
-  AdminTicketsRoute: AdminTicketsRoute,
+  AdminTicketsRoute: AdminTicketsRouteWithChildren,
   AdminTrainingsRoute: AdminTrainingsRoute,
   AdminUsersRoute: AdminUsersRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,

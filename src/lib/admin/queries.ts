@@ -2224,6 +2224,79 @@ export function useAdminSupportTicketAttachmentCounts(ticketIds: string[]) {
   });
 }
 
+export function useAdminSupportTicket(ticketId: string) {
+  return useQuery({
+    queryKey: ["admin", "support_ticket", ticketId],
+    queryFn: async (): Promise<AdminSupportTicketRow | null> => {
+      const { data, error } = await supabase
+        .from("support_tickets")
+        .select(
+          "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, assigned_to, archived_at, deleted_at",
+        )
+        .eq("id", ticketId)
+        .maybeSingle();
+      if (error) throw error;
+      return (data ?? null) as AdminSupportTicketRow | null;
+    },
+    enabled: !!ticketId,
+  });
+}
+
+export interface AdminSupportTicketMessage {
+  id: string;
+  ticket_id: string;
+  created_at: string;
+  author_kind: string;
+  author_user_id: string | null;
+  author_name: string;
+  body: string;
+}
+
+export function useAdminSupportTicketMessages(ticketId: string) {
+  return useQuery({
+    queryKey: ["admin", "support_ticket_messages", ticketId],
+    queryFn: async (): Promise<AdminSupportTicketMessage[]> => {
+      const { data, error } = await supabase
+        .from("support_ticket_messages")
+        .select("id, ticket_id, created_at, author_kind, author_user_id, author_name, body")
+        .eq("ticket_id", ticketId)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as AdminSupportTicketMessage[];
+    },
+    enabled: !!ticketId,
+  });
+}
+
+export interface AdminSupportTicketAttachment {
+  id: string;
+  ticket_id: string;
+  message_id: string | null;
+  filename: string;
+  mime_type: string;
+  size_bytes: number;
+  scan_status: string;
+  created_at: string;
+}
+
+export function useAdminSupportTicketAttachments(ticketId: string) {
+  return useQuery({
+    queryKey: ["admin", "support_ticket_attachments", ticketId],
+    queryFn: async (): Promise<AdminSupportTicketAttachment[]> => {
+      const { data, error } = await supabase
+        .from("support_ticket_attachments")
+        .select(
+          "id, ticket_id, message_id, filename, mime_type, size_bytes, scan_status, created_at",
+        )
+        .eq("ticket_id", ticketId)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as AdminSupportTicketAttachment[];
+    },
+    enabled: !!ticketId,
+  });
+}
+
 export function useTransitionTicketStatus() {
   const qc = useQueryClient();
   return useMutation({
