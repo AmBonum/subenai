@@ -1,38 +1,49 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Info } from "lucide-react";
-import { toast } from "sonner";
+import { ShieldCheck, AlertTriangle, FileWarning, Calendar, ExternalLink } from "lucide-react";
 
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import {
+  IS_DPA_FLOW_ENABLED,
+  IS_DPA_DRAFT_WATERMARK_ENABLED,
+  DEFAULT_DPA_TEMPLATE_VERSION,
+  DPA_RETENTION_MONTHS,
+} from "@/lib/dpa/feature-flag";
+import { SUB_PROCESSORS } from "@/lib/dpa/sub-processors";
 import { tFor } from "@/i18n/admin";
 
 export const Route = createLazyFileRoute("/admin/settings")({
   component: AdminSettingsPage,
 });
 
-const FEATURE_FLAGS = [
-  { key: "ai_generator", default: true },
-  { key: "audit_exports", default: false },
-  { key: "trap_popup", default: true },
-] as const;
-
+// E40 close-out — the previous /admin/settings was a placeholder form
+// that did nothing (a stub from AH-10 with a "deferred_notice" yellow
+// card). Replaced with a real read-only GDPR/compliance dashboard.
+//
+// Why read-only and not a DB-backed config table:
+//   The values surfaced here come from Vite build-time env vars
+//   (`VITE_DPA_FLOW_ENABLED`, `VITE_DPA_TEMPLATE_DRAFT_WATERMARK`) plus
+//   the migration that defines `anonymize_expired_dpa_requests()`.
+//   Moving them to a DB table would let admins toggle without redeploy,
+//   BUT the trade-off is real: env vars get audited as part of the
+//   Cloudflare Pages deploy log, DB rows don't (the existing
+//   `cms_audit_events` table covers CMS singletons but not platform
+//   config). For the legal-sensitive watermark flag in particular,
+//   the deploy-time audit trail is a feature, not a bug — flipping
+//   it accidentally via a misclicked admin toggle would publish
+//   unwatermarked draft DPAs.
+//
+// The page documents the current state + the runbook procedure for
+// changing it (CF Pages env → redeploy). When a future iteration adds
+// runtime toggles, swap the Badge for a Switch component and wire
+// each row to its own mutation hook.
 function AdminSettingsPage() {
   const t = tFor("settings");
-  const [flags, setFlags] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(FEATURE_FLAGS.map((f) => [f.key, f.default])),
-  );
-  const [retention, setRetention] = useState(180);
-  const [primaryColor, setPrimaryColor] = useState("#5b53f5");
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.info(t("submit_info"), { id: "admin-settings-toast-info" });
-  };
+  const flowState = IS_DPA_FLOW_ENABLED ? "enabled" : "disabled";
+  const watermarkState = IS_DPA_DRAFT_WATERMARK_ENABLED ? "on" : "off";
 
   return (
     <div className="space-y-6" data-testid="admin-settings-root">
@@ -42,70 +53,165 @@ function AdminSettingsPage() {
         testId="admin-settings-page-header"
       />
 
-      <Card className="border-warning/40 bg-warning/5" data-testid="admin-settings-deferred-notice">
+      <Card className="border-warning/40 bg-warning/5" data-testid="admin-settings-readonly-notice">
         <CardContent className="flex items-start gap-3 p-4">
-          <Info className="mt-0.5 h-4 w-4 text-warning" />
-          <p className="text-sm text-warning-foreground">{t("deferred_notice")}</p>
+          <AlertTriangle className="mt-0.5 h-4 w-4 text-warning" aria-hidden="true" />
+          <p className="text-sm text-warning-foreground">{t("readonly_notice")}</p>
         </CardContent>
       </Card>
 
-      <Card className="border-border/60">
-        <CardContent className="p-6">
-          <form
-            className="space-y-6"
-            onSubmit={onSubmit}
-            data-testid="admin-settings-form"
-            noValidate
-          >
-            <section className="space-y-3">
-              <h2 className="text-sm font-semibold text-foreground">{t("feature_flags_title")}</h2>
-              {FEATURE_FLAGS.map((f) => (
-                <label key={f.key} className="flex items-center justify-between gap-3">
-                  <span className="text-sm text-foreground">{f.key}</span>
-                  <Switch
-                    checked={flags[f.key]}
-                    onCheckedChange={(v) => setFlags({ ...flags, [f.key]: v })}
-                    data-testid={`admin-settings-feature-flag-${f.key}`}
-                  />
-                </label>
-              ))}
-            </section>
+      <Card className="border-border/60" data-testid="admin-settings-dpa-section">
+        <CardContent className="space-y-5 p-6">
+          <header className="flex items-center gap-2">
+            <ShieldCheck className="h-4 w-4 text-primary" aria-hidden="true" />
+            <h2 className="text-sm font-semibold text-foreground">{t("dpa_section_title")}</h2>
+          </header>
 
-            <section className="space-y-2">
-              <h2 className="text-sm font-semibold text-foreground">{t("retention_title")}</h2>
-              <Label htmlFor="settings-retention">{t("retention_label")}</Label>
-              <Input
-                id="settings-retention"
-                type="number"
-                min={1}
-                value={retention}
-                onChange={(e) => setRetention(Number(e.target.value))}
-                data-testid="admin-settings-retention-default-input"
-                className="max-w-[160px]"
-              />
-            </section>
+          <dl className="space-y-4">
+            <SettingRow
+              testId="admin-settings-dpa-flow"
+              label={t("dpa_flow_label")}
+              hint={t("dpa_flow_hint")}
+              value={
+                <Badge
+                  variant="outline"
+                  data-state={flowState}
+                  className={
+                    IS_DPA_FLOW_ENABLED
+                      ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700"
+                      : "border-muted/40 bg-muted/10 text-muted-foreground"
+                  }
+                >
+                  {t(`dpa_flow_state_${flowState}`)}
+                </Badge>
+              }
+              envVar="VITE_DPA_FLOW_ENABLED"
+            />
 
-            <section className="space-y-2">
-              <h2 className="text-sm font-semibold text-foreground">{t("branding_title")}</h2>
-              <Label htmlFor="settings-primary-color">{t("primary_color_label")}</Label>
-              <Input
-                id="settings-primary-color"
-                type="color"
-                value={primaryColor}
-                onChange={(e) => setPrimaryColor(e.target.value)}
-                data-testid="admin-settings-branding-primary-color"
-                className="h-10 w-[120px] p-1"
-              />
-            </section>
+            <SettingRow
+              testId="admin-settings-dpa-watermark"
+              label={t("dpa_watermark_label")}
+              hint={
+                IS_DPA_DRAFT_WATERMARK_ENABLED
+                  ? t("dpa_watermark_hint_on")
+                  : t("dpa_watermark_hint_off")
+              }
+              value={
+                <Badge
+                  variant="outline"
+                  data-state={watermarkState}
+                  className={
+                    IS_DPA_DRAFT_WATERMARK_ENABLED
+                      ? "border-amber-500/40 bg-amber-500/10 text-amber-700"
+                      : "border-emerald-500/40 bg-emerald-500/10 text-emerald-700"
+                  }
+                >
+                  {t(`dpa_watermark_state_${watermarkState}`)}
+                </Badge>
+              }
+              envVar="VITE_DPA_TEMPLATE_DRAFT_WATERMARK"
+              warn={!IS_DPA_DRAFT_WATERMARK_ENABLED}
+            />
 
-            <div>
-              <Button type="submit" data-testid="admin-settings-submit">
-                {t("submit")}
-              </Button>
-            </div>
-          </form>
+            <SettingRow
+              testId="admin-settings-dpa-version"
+              label={t("dpa_version_label")}
+              hint={t("dpa_version_hint")}
+              value={
+                <Badge variant="outline" className="font-mono">
+                  {DEFAULT_DPA_TEMPLATE_VERSION}
+                </Badge>
+              }
+              envVar="src/lib/dpa/feature-flag.ts → DEFAULT_DPA_TEMPLATE_VERSION"
+            />
+
+            <SettingRow
+              testId="admin-settings-dpa-retention"
+              label={t("dpa_retention_label")}
+              hint={t("dpa_retention_hint")}
+              value={
+                <Badge variant="outline" className="gap-1">
+                  <Calendar className="h-3 w-3" aria-hidden="true" />
+                  {t("dpa_retention_value", { months: DPA_RETENTION_MONTHS })}
+                </Badge>
+              }
+              envVar="supabase/migrations/…_dpa_requests.sql → anonymize_expired_dpa_requests()"
+            />
+          </dl>
         </CardContent>
       </Card>
+
+      <Card className="border-border/60" data-testid="admin-settings-subprocessors-section">
+        <CardContent className="space-y-4 p-6">
+          <header className="flex items-center gap-2">
+            <FileWarning className="h-4 w-4 text-primary" aria-hidden="true" />
+            <h2 className="text-sm font-semibold text-foreground">
+              {t("subprocessors_section_title")}
+            </h2>
+          </header>
+          <p className="text-sm text-muted-foreground">{t("subprocessors_section_description")}</p>
+          <ul className="space-y-3" data-testid="admin-settings-subprocessors-list">
+            {SUB_PROCESSORS.map((sp) => (
+              <li
+                key={sp.name}
+                className="rounded-md border border-border/60 bg-card/40 p-3 text-sm"
+                data-testid={`admin-settings-subprocessor-${sp.name
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, "-")
+                  .replace(/^-+|-+$/g, "")}`}
+              >
+                <p className="font-semibold text-foreground">{sp.name}</p>
+                <p className="text-muted-foreground">{sp.purpose}</p>
+                <p className="text-xs text-muted-foreground">{sp.location}</p>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Card className="border-border/60" data-testid="admin-settings-runbook-section">
+        <CardContent className="space-y-3 p-6">
+          <h2 className="text-sm font-semibold text-foreground">{t("runbook_section_title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("runbook_section_description")}</p>
+          <Button variant="outline" size="sm" asChild data-testid="admin-settings-runbook-link">
+            <a
+              href="https://github.com/AmBonum/subenai/blob/main/tasks/E40-runbook.md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExternalLink className="mr-1.5 size-4" aria-hidden="true" />
+              {t("runbook_link_label")}
+            </a>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+interface SettingRowProps {
+  testId: string;
+  label: string;
+  hint: string;
+  value: React.ReactNode;
+  envVar: string;
+  warn?: boolean;
+}
+
+function SettingRow({ testId, label, hint, value, envVar, warn }: SettingRowProps) {
+  return (
+    <div
+      className="grid gap-2 border-b border-border/40 pb-4 last:border-0 last:pb-0 sm:grid-cols-[1fr_auto] sm:items-center"
+      data-testid={testId}
+    >
+      <div className="space-y-1">
+        <dt className="text-sm font-medium text-foreground">{label}</dt>
+        <dd className={`text-xs ${warn ? "text-destructive" : "text-muted-foreground"}`}>{hint}</dd>
+        <code className="block break-all text-[10px] font-mono text-muted-foreground/70">
+          {envVar}
+        </code>
+      </div>
+      <div className="justify-self-start sm:justify-self-end">{value}</div>
     </div>
   );
 }

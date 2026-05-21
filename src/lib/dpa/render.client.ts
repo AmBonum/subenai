@@ -13,9 +13,9 @@
  */
 
 import type { DpaTemplateProps } from "./dpa-template";
+import { IS_DPA_DRAFT_WATERMARK_ENABLED } from "./feature-flag";
 
-const DRAFT_WATERMARK_DEFAULT =
-  (import.meta.env.VITE_DPA_TEMPLATE_DRAFT_WATERMARK ?? "true") !== "false";
+const DRAFT_WATERMARK_DEFAULT = IS_DPA_DRAFT_WATERMARK_ENABLED;
 
 export interface RenderDpaArgs {
   schoolName: string;
