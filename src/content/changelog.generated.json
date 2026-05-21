@@ -3,6 +3,7 @@
     "version": "1.14.3",
     "date": "2026-05-21",
     "added": [
+      "**Odkazy „Zobraziť dokumentáciu →\" vo vysvetľujúcich paneloch už",
       "**Oprava mena používateľa (GDPR Art. 16) jedným klikom v admin paneli (E46.6).**",
       "**Žiadosti o vymazanie (Art. 17) sa po novom dokončia automaticky (E46.5).**"
     ],

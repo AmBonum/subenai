@@ -57,6 +57,7 @@ const WIRED_ROUTES_ADMIN: WiredRoute[] = [
   { file: "src/routes/admin/footer.lazy.tsx", pageKey: "footer" },
   { file: "src/routes/admin/dsr.lazy.tsx", pageKey: "dsr" },
   { file: "src/routes/admin/dpa-requests.lazy.tsx", pageKey: "dpa_requests" },
+  { file: "src/routes/admin/templates.lazy.tsx", pageKey: "templates_moderation" },
   { file: "src/routes/admin/settings.lazy.tsx", pageKey: "settings" },
   { file: "src/routes/admin/security.lazy.tsx", pageKey: "security" },
 ];

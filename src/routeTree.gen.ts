@@ -62,6 +62,7 @@ import { Route as AppAudiencesRouteImport } from './routes/app.audiences'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminTrainingsRouteImport } from './routes/admin/trainings'
 import { Route as AdminTestsRouteImport } from './routes/admin/tests'
+import { Route as AdminTemplatesRouteImport } from './routes/admin/templates'
 import { Route as AdminSupportRouteImport } from './routes/admin/support'
 import { Route as AdminShareCardRouteImport } from './routes/admin/share-card'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
@@ -380,6 +381,13 @@ const AdminTestsRoute = AdminTestsRouteImport.update({
   path: '/tests',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/templates.lazy').then((d) => d.Route),
+)
 const AdminSupportRoute = AdminSupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -691,6 +699,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
@@ -785,6 +794,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
@@ -882,6 +892,7 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/share-card': typeof AdminShareCardRoute
   '/admin/support': typeof AdminSupportRoute
+  '/admin/templates': typeof AdminTemplatesRoute
   '/admin/tests': typeof AdminTestsRouteWithChildren
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
@@ -983,6 +994,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/share-card'
     | '/admin/support'
+    | '/admin/templates'
     | '/admin/tests'
     | '/admin/trainings'
     | '/admin/users'
@@ -1077,6 +1089,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/share-card'
     | '/admin/support'
+    | '/admin/templates'
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
@@ -1173,6 +1186,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/share-card'
     | '/admin/support'
+    | '/admin/templates'
     | '/admin/tests'
     | '/admin/trainings'
     | '/admin/users'
@@ -1652,6 +1666,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTestsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/templates': {
+      id: '/admin/templates'
+      path: '/templates'
+      fullPath: '/admin/templates'
+      preLoaderRoute: typeof AdminTemplatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/support': {
       id: '/admin/support'
       path: '/support'
@@ -2035,6 +2056,7 @@ interface AdminRouteChildren {
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminShareCardRoute: typeof AdminShareCardRoute
   AdminSupportRoute: typeof AdminSupportRoute
+  AdminTemplatesRoute: typeof AdminTemplatesRoute
   AdminTestsRoute: typeof AdminTestsRouteWithChildren
   AdminTrainingsRoute: typeof AdminTrainingsRoute
   AdminUsersRoute: typeof AdminUsersRouteWithChildren
@@ -2062,6 +2084,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSettingsRoute: AdminSettingsRoute,
   AdminShareCardRoute: AdminShareCardRoute,
   AdminSupportRoute: AdminSupportRoute,
+  AdminTemplatesRoute: AdminTemplatesRoute,
   AdminTestsRoute: AdminTestsRouteWithChildren,
   AdminTrainingsRoute: AdminTrainingsRoute,
   AdminUsersRoute: AdminUsersRouteWithChildren,
