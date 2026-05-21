@@ -25,7 +25,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAdminUsers } from "@/lib/admin/queries";
+import { useAdminUsers, useUsersGdprActivity } from "@/lib/admin/queries";
+import { Badge } from "@/components/ui/badge";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
 import { tFor } from "@/i18n/admin";
 
@@ -47,6 +48,20 @@ function AdminUsersPage() {
   const users = useMemo(() => usersQuery.data ?? [], [usersQuery.data]);
   const [query, setQuery] = useState("");
   const [role, setRole] = useState<string>("all");
+  const [gdprFilter, setGdprFilter] = useState<string>("all");
+
+  // E46.2: bulk-resolve per-user GDPR activity (newest DSR or DPA event +
+  // "has open DSR" flag) keyed by e-mail. Run against the FULL user list,
+  // not the filtered one — so the *Iba s otvorenou DSR* filter can use the
+  // resolved data BEFORE row filtering happens.
+  const userEmails = useMemo(
+    () => users.map((u) => u.email).filter((e): e is string => Boolean(e)),
+    [users],
+  );
+  const gdprActivityQuery = useUsersGdprActivity(userEmails);
+  // Stabilise the ?? {} fallback so the useMemo below doesn't re-fire on
+  // every render while the query is still loading.
+  const gdprActivity = useMemo(() => gdprActivityQuery.data ?? {}, [gdprActivityQuery.data]);
 
   const filtered = useMemo(
     () =>
@@ -58,9 +73,13 @@ function AdminUsersPage() {
           !u.email.toLowerCase().includes(query.toLowerCase())
         )
           return false;
+        if (gdprFilter === "open_dsr") {
+          const activity = gdprActivity[u.email.toLowerCase()];
+          if (!activity?.has_open_dsr) return false;
+        }
         return true;
       }),
-    [users, query, role],
+    [users, query, role, gdprFilter, gdprActivity],
   );
 
   return (
@@ -97,6 +116,19 @@ function AdminUsersPage() {
               <SelectItem value="pending">{t("role_pending")}</SelectItem>
             </SelectContent>
           </Select>
+          <Select value={gdprFilter} onValueChange={setGdprFilter}>
+            <SelectTrigger
+              className="w-full sm:w-[220px]"
+              aria-label={t("gdpr_filter_label")}
+              data-testid="admin-users-gdpr-filter"
+            >
+              <SelectValue placeholder={t("gdpr_filter_label")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t("gdpr_filter_all")}</SelectItem>
+              <SelectItem value="open_dsr">{t("gdpr_filter_open_dsr")}</SelectItem>
+            </SelectContent>
+          </Select>
         </CardContent>
       </Card>
 
@@ -121,6 +153,7 @@ function AdminUsersPage() {
                   <TableHead className="w-[140px]">{t("table_header_role")}</TableHead>
                   <TableHead className="w-[120px]">{t("table_header_status")}</TableHead>
                   <TableHead className="w-[100px]">{t("table_header_questions")}</TableHead>
+                  <TableHead className="w-[200px]">{t("table_header_gdpr")}</TableHead>
                   <TableHead className="w-[80px]" />
                 </TableRow>
               </TableHeader>
@@ -150,6 +183,40 @@ function AdminUsersPage() {
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {u.questions_count}
+                    </TableCell>
+                    <TableCell
+                      className="text-sm text-muted-foreground"
+                      data-testid={`admin-users-gdpr-cell-${u.id}`}
+                    >
+                      {(() => {
+                        const activity = gdprActivity[u.email.toLowerCase()];
+                        if (!activity?.last_event_at || !activity.last_event_kind) {
+                          return (
+                            <span aria-label={t("gdpr_event_none")}>{t("gdpr_event_none")}</span>
+                          );
+                        }
+                        return (
+                          <div
+                            className="flex items-center gap-2"
+                            data-testid={`admin-users-gdpr-event-${u.id}`}
+                            data-event-kind={activity.last_event_kind}
+                          >
+                            <Badge variant="outline" className="text-xs">
+                              {t(`gdpr_event_${activity.last_event_kind}`)}
+                            </Badge>
+                            <span className="text-xs">
+                              {new Date(activity.last_event_at).toLocaleDateString("sk-SK")}
+                            </span>
+                            {activity.has_open_dsr && (
+                              <span
+                                className="inline-flex h-1.5 w-1.5 rounded-full bg-amber-500"
+                                aria-label={t("gdpr_filter_open_dsr")}
+                                data-testid={`admin-users-gdpr-open-dot-${u.id}`}
+                              />
+                            )}
+                          </div>
+                        );
+                      })()}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">

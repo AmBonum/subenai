@@ -60,7 +60,14 @@
     "table_header_user": "Používateľ",
     "table_header_role": "Rola",
     "table_header_status": "Stav",
-    "table_header_questions": "Otázky"
+    "table_header_questions": "Otázky",
+    "table_header_gdpr": "Posledná GDPR udalosť",
+    "gdpr_filter_label": "GDPR",
+    "gdpr_filter_all": "Všetci",
+    "gdpr_filter_open_dsr": "Iba s otvorenou DSR",
+    "gdpr_event_dsr": "DSR",
+    "gdpr_event_dpa": "DPA",
+    "gdpr_event_none": "—"
   },
   "support": {
     "title": "Podpora",
