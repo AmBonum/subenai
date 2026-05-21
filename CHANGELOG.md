@@ -9,6 +9,28 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+### Pridané
+- **Verejná knižnica šablón na `/sablony`.** Hľadáš pripravený kvíz,
+  ktorý môžeš pustiť kolegom v práci, žiakom v triede alebo rodičom
+  doma — bez toho, aby si musel písať otázky od nuly? Po novom máme
+  verejnú knižnicu šablón na adrese **subenai.sk/sablony**, ktorá je
+  indexovaná Googlom a prístupná aj bez prihlásenia. Každú šablónu si
+  vieš pozrieť, použiť priamo v buildri alebo si ju duplikovať a
+  upraviť. Všetky šablóny sú v slovenčine, zadarmo a pod licenciou
+  **Creative Commons BY 4.0** — môžeš ich teda zdieľať aj upravovať,
+  stačí ponechať uvedenie autora. Komunitné šablóny od používateľov
+  prechádzajú manuálnym schvaľovaním administrátorom (predtým ich
+  predfiltruje AI), aby sa v knižnici neobjavili zavádzajúce alebo
+  necitlivé otázky.
+- **Sekcia GDPR rozšírená o verejnú publikáciu šablón.** V
+  `/privacy` pribudol nový riadok v zozname spracovania ("Verejná
+  publikácia vlastnej šablóny"), nový sprostredkovateľ **Anthropic, PBC**
+  (Claude Haiku 4.5 pre AI predkontrolu obsahu šablón pred zverejnením)
+  a explicitná zmienka o licencii CC BY 4.0 a zachovaní autorského
+  údaja po zmazaní účtu. Z dôvodu zmeny účelov spracovania a rozšírenia
+  zoznamu sprostredkovateľov sa cookie banner zobrazí znova
+  (CONSENT_VERSION 1.6.0 → 1.7.0).
+
 ## [1.14.3] — 2026-05-21
 
 ### Pridané

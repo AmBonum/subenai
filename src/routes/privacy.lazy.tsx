@@ -18,6 +18,7 @@ const PROCESSING_ROW_KEYS = [
   "consent_record",
   "sponsorship",
   "dpa",
+  "templates_public",
 ] as const;
 
 // E21.3 — section IDs are the contract for the on-page TOC + deep
@@ -241,6 +242,10 @@ function PrivacyPage() {
                 <li>
                   <strong>{t("s4.resend_label")}</strong>
                   {t("s4.resend_text")}
+                </li>
+                <li>
+                  <strong>{t("s4.anthropic_label")}</strong>
+                  {t("s4.anthropic_text")}
                 </li>
               </ul>
               <p className="text-sm leading-relaxed text-muted-foreground">{t("s4.no_sell")}</p>

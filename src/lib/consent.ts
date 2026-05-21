@@ -16,7 +16,17 @@
 // (sidebar_state cookie + 3 localStorage keys for blog pillars, app
 // intro, and profile-banner dismiss). The banner re-shows so existing
 // users get to re-decide with full information.
-export const CONSENT_VERSION = "1.6.0";
+//
+// E44 Phase D — bumped 1.6.0 → 1.7.0 when /privacy gained a new
+// processing-purpose section: voluntary public publication of user-
+// owned templates under CC BY 4.0. New processing rationale (consent
+// + legitimate interest of attribution), new data exposed publicly
+// (author_display_name snapshot + template content), new third-party
+// recipient (Anthropic Claude Haiku 4.5 for AI precheck — already
+// disclosed implicitly in Phase B but formalised here). Existing
+// users must re-decide because (a) the categories disclosure changed
+// and (b) the controller→processor map widened.
+export const CONSENT_VERSION = "1.7.0";
 export const CONSENT_STORAGE_KEY = "iiq_consent";
 
 export type ConsentCategory = "necessary" | "preferences" | "analytics" | "marketing";

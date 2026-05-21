@@ -5108,6 +5108,35 @@ REVOKE EXECUTE ON FUNCTION public.reject_template_submission(uuid, text) FROM PU
 GRANT  EXECUTE ON FUNCTION public.reject_template_submission(uuid, text) TO authenticated;
 
 -- ============================================================================
+-- E44 Phase D — anon read for /sablony public gallery
+-- (mirror of 20260521170000_templates_anon_public_read.sql)
+-- ============================================================================
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'templates' AND polname = 'templates_anon_read_defaults'
+  ) THEN
+    EXECUTE 'CREATE POLICY templates_anon_read_defaults ON public.templates
+      FOR SELECT TO anon
+      USING (owner_id IS NULL)';
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE tablename = 'templates' AND polname = 'templates_anon_read_public_published'
+  ) THEN
+    EXECUTE $POLICY$CREATE POLICY templates_anon_read_public_published ON public.templates
+      FOR SELECT TO anon
+      USING (visibility = 'public' AND status = 'published')$POLICY$;
+  END IF;
+END $$;
+
+-- ============================================================================
 -- Verification — run after the script completes
 -- ============================================================================
 SELECT

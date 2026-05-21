@@ -113,7 +113,7 @@ describe("RespondentIntakeForm", () => {
     window.localStorage.setItem(
       "iiq_consent",
       JSON.stringify({
-        version: "1.6.0",
+        version: "1.7.0",
         timestamp: new Date().toISOString(),
         categories: { necessary: true, preferences: true, analytics: false, marketing: false },
       }),
@@ -156,7 +156,7 @@ describe("RespondentIntakeForm", () => {
     window.localStorage.setItem(
       "iiq_consent",
       JSON.stringify({
-        version: "1.6.0",
+        version: "1.7.0",
         timestamp: new Date().toISOString(),
         categories: { necessary: true, preferences: true, analytics: false, marketing: false },
       }),
@@ -174,7 +174,7 @@ describe("RespondentIntakeForm", () => {
     window.localStorage.setItem(
       "iiq_consent",
       JSON.stringify({
-        version: "1.6.0",
+        version: "1.7.0",
         timestamp: new Date().toISOString(),
         categories: { necessary: true, preferences: true, analytics: false, marketing: false },
       }),

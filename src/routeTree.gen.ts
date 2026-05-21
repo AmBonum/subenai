@@ -27,6 +27,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
 import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
+import { Route as SablonyIndexRouteImport } from './routes/sablony.index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
@@ -37,6 +38,7 @@ import { Route as TestBuilderRouteImport } from './routes/test.builder'
 import { Route as TShareIdRouteImport } from './routes/t.$shareId'
 import { Route as SponsorsAllRouteImport } from './routes/sponsors.all'
 import { Route as SchoolsDpaRouteImport } from './routes/schools_.dpa'
+import { Route as SablonySlugRouteImport } from './routes/sablony.$slug'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
 import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
@@ -198,6 +200,11 @@ const SponsorsIndexRoute = SponsorsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => SponsorsRoute,
 } as any)
+const SablonyIndexRoute = SablonyIndexRouteImport.update({
+  id: '/sablony/',
+  path: '/sablony/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/sablony.index.lazy').then((d) => d.Route))
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
@@ -250,6 +257,11 @@ const SchoolsDpaRoute = SchoolsDpaRouteImport.update({
   path: '/schools/dpa',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SablonySlugRoute = SablonySlugRouteImport.update({
+  id: '/sablony/$slug',
+  path: '/sablony/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/sablony.$slug.lazy').then((d) => d.Route))
 const SSlugRoute = SSlugRouteImport.update({
   id: '/s/$slug',
   path: '/s/$slug',
@@ -725,6 +737,7 @@ export interface FileRoutesByFullPath {
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/sablony/$slug': typeof SablonySlugRoute
   '/schools/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
@@ -735,6 +748,7 @@ export interface FileRoutesByFullPath {
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/sablony/': typeof SablonyIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
@@ -819,6 +833,7 @@ export interface FileRoutesByTo {
   '/login/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/sablony/$slug': typeof SablonySlugRoute
   '/schools/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
@@ -828,6 +843,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppIndexRoute
   '/blog': typeof BlogIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/sablony': typeof SablonyIndexRoute
   '/sponsors': typeof SponsorsIndexRoute
   '/test': typeof TestIndexRoute
   '/tests': typeof TestsIndexRoute
@@ -918,6 +934,7 @@ export interface FileRoutesById {
   '/login_/verify-2fa': typeof LoginVerify2faRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
+  '/sablony/$slug': typeof SablonySlugRoute
   '/schools_/dpa': typeof SchoolsDpaRoute
   '/sponsors/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
@@ -928,6 +945,7 @@ export interface FileRoutesById {
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/sablony/': typeof SablonyIndexRoute
   '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
@@ -1020,6 +1038,7 @@ export interface FileRouteTypes {
     | '/login/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/sablony/$slug'
     | '/schools/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
@@ -1030,6 +1049,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/blog/'
     | '/courses/'
+    | '/sablony/'
     | '/sponsors/'
     | '/test/'
     | '/tests/'
@@ -1114,6 +1134,7 @@ export interface FileRouteTypes {
     | '/login/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/sablony/$slug'
     | '/schools/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
@@ -1123,6 +1144,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/blog'
     | '/courses'
+    | '/sablony'
     | '/sponsors'
     | '/test'
     | '/tests'
@@ -1212,6 +1234,7 @@ export interface FileRouteTypes {
     | '/login_/verify-2fa'
     | '/r/$shareId'
     | '/s/$slug'
+    | '/sablony/$slug'
     | '/schools_/dpa'
     | '/sponsors/all'
     | '/t/$shareId'
@@ -1222,6 +1245,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/blog/'
     | '/courses/'
+    | '/sablony/'
     | '/sponsors/'
     | '/test/'
     | '/tests/'
@@ -1280,6 +1304,7 @@ export interface RootRouteChildren {
   LoginVerify2faRoute: typeof LoginVerify2faRoute
   RShareIdRoute: typeof RShareIdRoute
   SSlugRoute: typeof SSlugRoute
+  SablonySlugRoute: typeof SablonySlugRoute
   SchoolsDpaRoute: typeof SchoolsDpaRoute
   TShareIdRoute: typeof TShareIdRoute
   TestBuilderRoute: typeof TestBuilderRouteWithChildren
@@ -1287,6 +1312,7 @@ export interface RootRouteChildren {
   ThankYouSessionIdRoute: typeof ThankYouSessionIdRoute
   BlogIndexRoute: typeof BlogIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  SablonyIndexRoute: typeof SablonyIndexRoute
   TestIndexRoute: typeof TestIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
   BlogAutorSlugRoute: typeof BlogAutorSlugRoute
@@ -1421,6 +1447,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SponsorsIndexRouteImport
       parentRoute: typeof SponsorsRoute
     }
+    '/sablony/': {
+      id: '/sablony/'
+      path: '/sablony'
+      fullPath: '/sablony/'
+      preLoaderRoute: typeof SablonyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/courses/': {
       id: '/courses/'
       path: '/courses'
@@ -1489,6 +1522,13 @@ declare module '@tanstack/react-router' {
       path: '/schools/dpa'
       fullPath: '/schools/dpa'
       preLoaderRoute: typeof SchoolsDpaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sablony/$slug': {
+      id: '/sablony/$slug'
+      path: '/sablony/$slug'
+      fullPath: '/sablony/$slug'
+      preLoaderRoute: typeof SablonySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/s/$slug': {
@@ -2248,6 +2288,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginVerify2faRoute: LoginVerify2faRoute,
   RShareIdRoute: RShareIdRoute,
   SSlugRoute: SSlugRoute,
+  SablonySlugRoute: SablonySlugRoute,
   SchoolsDpaRoute: SchoolsDpaRoute,
   TShareIdRoute: TShareIdRoute,
   TestBuilderRoute: TestBuilderRouteWithChildren,
@@ -2255,6 +2296,7 @@ const rootRouteChildren: RootRouteChildren = {
   ThankYouSessionIdRoute: ThankYouSessionIdRoute,
   BlogIndexRoute: BlogIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  SablonyIndexRoute: SablonyIndexRoute,
   TestIndexRoute: TestIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
   BlogAutorSlugRoute: BlogAutorSlugRoute,
