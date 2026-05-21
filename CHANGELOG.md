@@ -9,6 +9,27 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+### Bezpečnosť
+- **Forenzný záznam zmien v otázkach testu sa už ukladá automaticky.**
+  Po nedávnom security audite sme zistili, že keď autor v detaile testu
+  pridá, odoberie alebo zmení poradie otázok, do nášho interného
+  auditového logu (`/admin/audit`) sa síce ukladalo „autor publikoval
+  test" alebo „autor zmenil heslo" — ale **nie** jednotlivé zmeny
+  v zozname otázok. To si všíma iba operátor pri formálnej GDPR / DPO
+  inquiry, no audit log má povinnosť byť úplný. Pridali sme Postgres
+  trigger, ktorý každé pridanie / odobranie / zmenu otázky v teste
+  zapíše ako samostatný auditový riadok (kto, kedy, ktorá otázka, aká
+  operácia) — bez akejkoľvek zmeny kódu na strane klienta. Trigger beží
+  pod identitou autora, takže ak by sa niekedy frontend nedal nahradil,
+  záznam tak či tak prejde.
+- **Interný observability fix:** nesprávne podpísané respondentské
+  cookie sa už nezamieňa s prvonávštevou (T1 v threat-model audite).
+  Funkčne pre používateľa nič nemení — keď cookie je sfalšovaný,
+  systém ho odmietne ako predtým a ukáže výzvu zadať heslo. Iba sa
+  v audit-log toku odlišujú dve podozrenia: „nikdy nezadal heslo"
+  vs „cookie bol sfalšovaný" — druhá kategória teraz vyvolá ops
+  pozornosť pri pravidelnom audite.
+
 ### Pridané
 - **Pozvánky cez e-mail z platformy — pripravujeme.** Na detaile testu
   (`/app/tests/<id>` → tlačidlo *Pozvánky e-mailom*) sa od dnes zobrazuje

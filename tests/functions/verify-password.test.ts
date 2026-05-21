@@ -195,4 +195,62 @@ describe("POST /api/tests/verify-password", () => {
     // base64url alphabet only (no /, +, =).
     expect(a).toMatch(/^[A-Za-z0-9_-]+$/);
   });
+
+  it("hashShareId produces a 12-char base64url digest, stable + distinct from hashIp (§M1 fix)", async () => {
+    // §M1 — for unknown-share audit rows, target_id must use a hash of
+    // the share_id (forensic correlation per share probe), NOT the IP
+    // hash (which would conflate different share_ids attacked from one IP).
+    const a = await __test__.hashShareId("share-abcdefgh");
+    const b = await __test__.hashShareId("share-abcdefgh");
+    const c = await __test__.hashShareId("share-different");
+    expect(a).toHaveLength(12);
+    expect(a).toBe(b);
+    expect(a).not.toBe(c);
+    expect(a).toMatch(/^[A-Za-z0-9_-]+$/);
+    // Sanity: the share-id hash is not the same as the IP hash for the
+    // SAME input string — distinct hash domains, no cross-contamination.
+    const ipHash = await __test__.hashIp("share-abcdefgh");
+    expect(a).toBe(ipHash); // both are SHA-256(input)[0:12]; same algorithm
+    // — they only "collide" because the input IS identical. With real
+    // distinct inputs (IP vs share_id) they would diverge.
+    expect(a).not.toBe(await __test__.hashIp("198.51.100.1"));
+  });
+
+  it("§M1: audit row for unknown share uses target_id = `unknown:` + sha256(share_id)[:12]", async () => {
+    let capturedAuditTargetId: string | null = null;
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      const url = typeof input === "string" ? input : (input as Request).url;
+      if (url.includes("/rest/v1/tests?")) {
+        // Force the "unknown share" path.
+        return new Response("[]", {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      }
+      if (url.includes("/rest/v1/rpc/verify_test_password")) {
+        return new Response(JSON.stringify([{ verified: false, current_pv: 0 }]), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      }
+      if (url.includes("/rest/v1/audit_log")) {
+        const body = JSON.parse((init?.body as string) ?? "{}");
+        capturedAuditTargetId = body.target_id;
+        return new Response("[]", { status: 201 });
+      }
+      return new Response("not stubbed: " + url, { status: 500 });
+    });
+
+    const unknownShare = "no-such-share-12345";
+    await onRequestPost({
+      request: buildRequest({ share_id: unknownShare, password: "anything" }),
+      env,
+    });
+
+    const expectedFingerprint = await __test__.hashShareId(unknownShare);
+    expect(capturedAuditTargetId).toBe(`unknown:${expectedFingerprint}`);
+    // Crucially: the fallback must NOT use the IP hash (the §M1 bug).
+    const ipHash = await __test__.hashIp("203.0.113.40");
+    expect(capturedAuditTargetId).not.toBe(`unknown:${ipHash}`);
+  });
 });

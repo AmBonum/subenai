@@ -2,7 +2,7 @@
 
 **Owner:** Claude — drives the user-facing editor on `/app/tests/$testId` so authors can manage questions, lock the test with a password, and send invites by email — closing the "create-test" → "share" loop after publish.
 **Date opened:** 2026-05-21
-**Status:** 🟢 Phase 1 + Phase 2 done + merged to main. Phase 3 done (infrastructure complete, UI entry point **PRO-gated** per user decision 2026-05-21). Phase 4 pending.
+**Status:** 🟢 **Closed 2026-05-21.** All 20 stories done. Phase 1 (PR #89), Phase 2 (PR #92), Phase 3 (PR #95) + follow-up #97 (Pripravujeme relabel) merged to main. Phase 4 (security review fixes + Playwright e2e + close-out) open as the final PR. Security review report: `tasks/E45-security-review-2026-05-21.md` — 0 HIGH, 2 MEDIUM fixed, 1 LOW fixed, 1 contract-drift documented.
 **Originating request:** From the test detail page (`/app/tests/$testId?tab=results`), the author should be able to: (1) edit questions — add / remove / reorder — and choose random vs fixed order; (2) set, change, or clear a password that respondents must enter before taking the test; (3) send the test link + password to a list of email addresses, all from the same screen. All four sub-features must hold senior-level UX/UI, full coverage by unit + integration + security + functional tests.
 
 ## TL;DR
@@ -96,9 +96,9 @@ The schema already supports most of it: `tests.password_hash` exists; `test_ques
 
 | ID | Title | Effort | Priority | Status |
 |---|---|---|---|---|
-| E45.18 | Playwright e2e: author edit → set password → invite → respondent password-gate → take in random order | `L` | `P2` | ⏳ Blocks on PR-3 |
-| E45.19 | Security review fresh-context (RLS, JWT, rate-limits, audit) + privacy delta (invite-emails as processor data flow) | `M` | `P1` | ⏳ Blocks on PR-3 |
-| E45.20 | Final CHANGELOG epic line + epic close-out in PLAN file | `XS` | `P2` | ⏳ Blocks on PR-3 |
+| ~~E45.18 Playwright e2e: 6 new TC (TC-06 — TC-11) covering Questions tab, Order Mode toggle, Password card (set + locked), Invite Pripravujeme gate + draft-test hidden — extended `e2e/specs/app/test-editor.spec.ts` + POM~~ | (closed) | `L`/`M` | `P2` | ✅ Done |
+| ~~E45.19 Fresh-context security review by `feature-dev:code-reviewer` subagent — 0 HIGH, 2 MEDIUM fixed (M1: audit `target_id` fingerprint, M2: `wrong_issuer` observability), 1 LOW fixed (L1: `test_question_modified` trigger), 1 contract drift documented (L2 rate-limit order)~~ | (closed) | `M` | `P1` | ✅ Done |
+| ~~E45.20 CHANGELOG Bezpečnosť bullet + 3 story files (E45.18-20) + PLAN close + security review archived for future audits~~ | (closed) | `XS` | `P2` | ✅ Done |
 
 ## Open questions
 

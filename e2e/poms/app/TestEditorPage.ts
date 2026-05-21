@@ -70,6 +70,94 @@ export class TestEditorPage extends BasePage {
     return this.page.getByTestId("test-editor-description-input");
   }
 
+  // E45 Phase 1 — Questions tab + Order Mode toggle in Settings.
+  get tabQuestions() {
+    return this.page.getByTestId("test-editor-tabs-questions");
+  }
+
+  get questionsPanel() {
+    return this.page.getByTestId("test-editor-questions-panel");
+  }
+
+  get questionsRoot() {
+    return this.page.getByTestId("test-editor-questions-root");
+  }
+
+  get questionsCount() {
+    return this.page.getByTestId("test-editor-questions-count");
+  }
+
+  get questionsAddButton() {
+    return this.page.getByTestId("test-editor-questions-add-button");
+  }
+
+  get questionsEmptyState() {
+    return this.page.getByTestId("test-editor-questions-empty-state");
+  }
+
+  get orderModeRoot() {
+    return this.page.getByTestId("test-editor-order-mode-root");
+  }
+
+  get orderModeFixed() {
+    return this.page.getByTestId("test-editor-order-mode-option-fixed");
+  }
+
+  get orderModeRandom() {
+    return this.page.getByTestId("test-editor-order-mode-option-random");
+  }
+
+  get orderModeRadioFixed() {
+    return this.page.getByTestId("test-editor-order-mode-radio-fixed");
+  }
+
+  get orderModeRadioRandom() {
+    return this.page.getByTestId("test-editor-order-mode-radio-random");
+  }
+
+  // E45 Phase 2 — Password card in Settings.
+  get passwordCardRoot() {
+    return this.page.getByTestId("test-editor-password-root");
+  }
+
+  get passwordStatus() {
+    return this.page.getByTestId("test-editor-password-status");
+  }
+
+  get passwordInput() {
+    return this.page.getByTestId("test-editor-password-input");
+  }
+
+  get passwordConfirm() {
+    return this.page.getByTestId("test-editor-password-confirm");
+  }
+
+  get passwordSubmit() {
+    return this.page.getByTestId("test-editor-password-submit-button");
+  }
+
+  get passwordClear() {
+    return this.page.getByTestId("test-editor-password-clear-button");
+  }
+
+  // E45 Phase 3 — Invite button (currently "Pripravujeme" gated; see also
+  // src/lib/feature-gates.ts).
+  get inviteButton() {
+    return this.page.getByTestId("test-editor-invite-button");
+  }
+
+  get inviteTooltipTrigger() {
+    return this.page.getByTestId("test-editor-invite-tooltip-trigger");
+  }
+
+  get inviteGateTooltip() {
+    return this.page.getByTestId("test-editor-invite-gate-tooltip");
+  }
+
+  get inviteComingSoonBadge() {
+    return this.page.getByTestId("coming-soon-badge");
+  }
+
   shareDialog(): ShareDialogPom {
     return new ShareDialogPom(this.page);
   }
