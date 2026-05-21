@@ -20,15 +20,27 @@ const MIGRATION_PATH = resolve(
 );
 const DEPLOY_PATH = resolve(__dirname, "../../DEPLOY_SETUP.sql");
 const SEED_PATH = resolve(__dirname, "../../E37_SEED.sql");
+const G3_PATH = resolve(
+  __dirname,
+  "../../supabase/migrations/20260521300000_e37_pack_question_ids_rpc.sql",
+);
+const G3A_PATH = resolve(
+  __dirname,
+  "../../supabase/migrations/20260521310000_e37_pack_question_ids_published_filter.sql",
+);
 
 let MIGRATION = "";
 let DEPLOY = "";
 let SEED = "";
+let G3 = "";
+let G3A = "";
 
 beforeAll(() => {
   MIGRATION = readFileSync(MIGRATION_PATH, "utf8");
   DEPLOY = readFileSync(DEPLOY_PATH, "utf8");
   SEED = readFileSync(SEED_PATH, "utf8");
+  G3 = readFileSync(G3_PATH, "utf8");
+  G3A = readFileSync(G3A_PATH, "utf8");
 });
 
 describe("E37 Phase B' — questions.sources_jsonb column", () => {
@@ -141,6 +153,17 @@ describe("E37 Phase B' — get_pack_with_questions RPC", () => {
     expect(MIGRATION).toMatch(
       /GRANT EXECUTE ON FUNCTION public\.get_pack_with_questions\(text\)[\s\S]*?TO anon, authenticated/,
     );
+  });
+
+  // CR follow-up — the TS bridge in pack-queries.ts maps the RPC's
+  // jsonb payload onto `TestPack.sources` (string key `sources`), but
+  // the DB column on platform_pack_metadata is `sources_jsonb`. The
+  // RPC body MUST alias one as the other in the same SELECT entry so
+  // the mapping never silently drops the field. Encoding the contract
+  // here keeps a future rename of the metadata column from breaking
+  // the read path without a compile-time signal.
+  it("aliases m.sources_jsonb as 'sources' in the SELECT (TS bridge key match)", () => {
+    expect(MIGRATION).toMatch(/'sources',\s*m\.sources_jsonb/);
   });
 });
 
@@ -271,5 +294,87 @@ describe("E37 — seed file is structurally consistent with the migration", () =
     const seedBody = SEED.split("\n").slice(44).join("\n");
     const migrationBody = MIGRATION.split("\n").slice(45).join("\n");
     expect(migrationBody).toBe(seedBody);
+  });
+});
+
+// ----------------------------------------------------------------------------
+// CR follow-up — get_platform_pack_question_ids() draft-question leak
+// ----------------------------------------------------------------------------
+// The Phase G3 RPC (20260521300000) selected test_questions.question_id
+// without joining on public.questions, so draft-status questions linked
+// to a published pack still showed up in the returned ID array. The G3a
+// hotfix migration (20260521310000) re-defines the function with the
+// `q.status = 'published'` filter. Both files are pinned here so neither
+// drifts unnoticed: the original encodes history, the hotfix encodes
+// the fix.
+describe("E37 Phase G3 — original get_platform_pack_question_ids() RPC", () => {
+  it("declares the function with the catalog row shape", () => {
+    expect(G3).toMatch(
+      /CREATE OR REPLACE FUNCTION public\.get_platform_pack_question_ids\(\)\s+RETURNS TABLE/,
+    );
+    expect(G3).toMatch(/slug text/);
+    expect(G3).toMatch(/question_ids uuid\[\]/);
+  });
+
+  it("is SECURITY DEFINER STABLE with locked search_path", () => {
+    expect(G3).toMatch(/SECURITY DEFINER/);
+    expect(G3).toMatch(/STABLE/);
+    expect(G3).toMatch(/SET search_path = public, pg_temp/);
+  });
+
+  it("revokes from PUBLIC and grants to anon + authenticated", () => {
+    expect(G3).toMatch(
+      /REVOKE ALL ON FUNCTION public\.get_platform_pack_question_ids\(\) FROM PUBLIC/,
+    );
+    expect(G3).toMatch(
+      /GRANT EXECUTE ON FUNCTION public\.get_platform_pack_question_ids\(\)[\s\S]*?TO anon, authenticated/,
+    );
+  });
+
+  it("does NOT carry the published-only filter (historical body — G3a applies the fix)", () => {
+    // Guards against someone retroactively editing the original to add
+    // the filter. The fix lives in 310000, not by mutating 300000.
+    expect(G3).not.toMatch(/q\.status\s*=\s*'published'/);
+    expect(G3).not.toMatch(/JOIN public\.questions/);
+  });
+});
+
+describe("E37 Phase G3a hotfix — get_platform_pack_question_ids() filters draft questions", () => {
+  it("re-defines the function via CREATE OR REPLACE (same signature)", () => {
+    expect(G3A).toMatch(
+      /CREATE OR REPLACE FUNCTION public\.get_platform_pack_question_ids\(\)\s+RETURNS TABLE/,
+    );
+    expect(G3A).toMatch(/slug text/);
+    expect(G3A).toMatch(/question_ids uuid\[\]/);
+  });
+
+  it("joins on public.questions and filters q.status = 'published'", () => {
+    expect(G3A).toMatch(/JOIN public\.questions q ON q\.id = tq\.question_id/);
+    expect(G3A).toMatch(/q\.status\s*=\s*'published'/);
+  });
+
+  it("preserves SECURITY DEFINER + STABLE + locked search_path", () => {
+    expect(G3A).toMatch(/SECURITY DEFINER/);
+    expect(G3A).toMatch(/STABLE/);
+    expect(G3A).toMatch(/SET search_path = public, pg_temp/);
+  });
+
+  it("re-applies REVOKE from PUBLIC and GRANT to anon + authenticated", () => {
+    expect(G3A).toMatch(
+      /REVOKE ALL ON FUNCTION public\.get_platform_pack_question_ids\(\) FROM PUBLIC/,
+    );
+    expect(G3A).toMatch(
+      /GRANT EXECUTE ON FUNCTION public\.get_platform_pack_question_ids\(\)[\s\S]*?TO anon, authenticated/,
+    );
+  });
+
+  it("is mirrored in DEPLOY_SETUP.sql with the published-only filter intact", () => {
+    // Match the function declaration + the filter clause in the same
+    // expression. If someone mirrors only the original body (without the
+    // hotfix), this regex fails because there'd be no `q.status =
+    // 'published'` near the declaration.
+    expect(DEPLOY).toMatch(
+      /CREATE OR REPLACE FUNCTION public\.get_platform_pack_question_ids[\s\S]*?q\.status\s*=\s*'published'/,
+    );
   });
 });
