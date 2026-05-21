@@ -31,6 +31,22 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   pozornosť pri pravidelnom audite.
 
 ### Pridané
+- **Jednotný dizajn potvrdzovacích dialógov v admin paneli.** Doteraz
+  niektoré nezvratné akcie (napr. *Anonymizovať DPA žiadosť*) používali
+  default browserový `confirm()` — sivý systémový popup bez ikony,
+  bez farby podľa závažnosti a s neutralným tlačidlom. Od dnes každý
+  potvrdzovací dialóg v `/admin` prechádza cez vlastný `ConfirmDialog`
+  so štyrmi úrovňami závažnosti: *info* (modrá), *warning* (oranžová),
+  *destructive* (červená — pre nezvratné akcie ako anonymizovať /
+  vymazať / zmazať) a *success* (zelená — pre potvrdenie / vyriešenie).
+  Každá úroveň má vlastnú ikonu a farbu potvrdzovacieho tlačidla, aby
+  admin na prvý pohľad videl, či ide o sanity-check alebo o nezvratnú
+  operáciu. Pre kritické PII akcie (napr. hard-delete používateľa)
+  navyše musí admin pred potvrdením doslovne napísať e-mail cieľového
+  používateľa — jeden preklep nestačí na nezvratnú akciu na inom
+  účte. Pridali sme aj CI kontrolu, ktorá zabráni regresii: žiadny
+  nový kód v `/admin` nesmie použiť `window.confirm` / `alert` /
+  `prompt`.
 - **Nový admin dossier `/admin/users/<id>` — splní Art. 15 / 17 GDPR jedným klikom (E46.3 MVP).**
   V admin paneli na `/admin/users` pribudla na každom riadku ikona
   *Otvoriť GDPR dossier* (ikona zvitku). Klikom otvoríš stránku
