@@ -27,11 +27,12 @@ import { createClient } from "@supabase/supabase-js";
 import { sendEmail } from "../_lib/email";
 import { supportTicketReceivedEmail } from "../_lib/email-templates";
 import {
-  emailCooldown,
-  ipRateLimit,
+  consumeCooldown,
+  consumeRateLimit,
   parsePositiveInt,
   readClientIp,
   verifyTurnstile,
+  type SupportRateLimitKV,
 } from "../_lib/security";
 import { PROD_SUPABASE_URL } from "../_lib/supabase-url";
 
@@ -42,6 +43,12 @@ interface Env {
   TURNSTILE_SECRET_KEY?: string;
   SUPPORT_PER_IP_PER_DAY?: string;
   SUPPORT_EMAIL_COOLDOWN_SECONDS?: string;
+  // KV namespace for rate-limit + cooldown state (audit A3).
+  // When unbound (local dev), the security helpers fall back to a
+  // per-isolate Map — the operator MUST bind this in production via
+  // CF Pages Settings → Functions → KV namespace bindings.
+  // See tasks/E48-runbook.md §3.
+  SUPPORT_RATE_LIMIT_KV?: SupportRateLimitKV;
   // Email infra (E11.8). Optional on the type so unit tests can omit them
   // without ts-error noise; CF Pages production always has them.
   RESEND_API_KEY?: string;
@@ -145,6 +152,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   const ip = readClientIp(request);
 
   // Rate limit.
+  const kv = env.SUPPORT_RATE_LIMIT_KV;
   if (isAuth) {
     // Per-user limit. The bucket MUST key off the JWT payload `sub`
     // (= the Supabase user UUID), NOT the JWT itself or any prefix of
@@ -154,13 +162,13 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     // would collapse everyone into a single shared 10/24h bucket — one
     // noisy account DoSes everyone else.
     const sub = decodeJwtSub(jwt);
-    const userKey = `support:user:${sub ?? `unknown:${ip}`}`;
-    if (!ipRateLimit.consume(userKey, 10, 86400)) {
+    const identity = sub ?? `unknown:${ip}`;
+    if (!(await consumeRateLimit(kv, "support:user", identity, 10, 86400))) {
       return jsonResponse(429, { error: "rate_limited_user" });
     }
   } else {
     const perIp = parsePositiveInt(env.SUPPORT_PER_IP_PER_DAY, 3);
-    if (!ipRateLimit.consume(`support:ip:${ip}`, perIp, 86400)) {
+    if (!(await consumeRateLimit(kv, "support:ip", ip, perIp, 86400))) {
       return jsonResponse(429, { error: "rate_limited_ip" });
     }
 
@@ -183,7 +191,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   // limit is tighter).
   if (!isAuth) {
     const cooldown = parsePositiveInt(env.SUPPORT_EMAIL_COOLDOWN_SECONDS, 600);
-    if (!emailCooldown.consume(`support:email:${email}`, cooldown)) {
+    if (!(await consumeCooldown(kv, "support:email", email, cooldown))) {
       return jsonResponse(429, { error: "email_cooldown" });
     }
   }

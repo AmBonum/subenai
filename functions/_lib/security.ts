@@ -6,13 +6,32 @@
 //   3. Per-IP rate limit — single IP can't enumerate via volume
 //   4. Global daily cap — protects Resend quota even if 1+2+3 fail
 //
-// State is held in module-level Maps inside the Worker isolate. Two implications:
-//   - State resets on isolate cold-start (acceptable: limits are soft)
-//   - Different isolates have independent state (a busy IP could still slip
-//     through if requests load-balance across isolates — acceptable for the
-//     amounts of traffic we expect; upgrade to KV when scaling)
+// State storage (audit A3 — was per-isolate, now KV-backed when bound):
+//
+//   - When the caller supplies a `SUPPORT_RATE_LIMIT_KV` namespace
+//     binding (see tasks/E48-runbook.md §3 for the bind step), counters
+//     live in Cloudflare KV. State survives isolate cold-starts and is
+//     shared across the region — limits actually limit.
+//
+//   - When the binding is absent (local dev, tests, or production
+//     before the operator wires the KV namespace), the in-memory Map
+//     fallback below kicks in. It's per-isolate so the cap is soft —
+//     acceptable for dev, NOT acceptable for prod long-term.
+//
+// Read-then-write is OK for an anti-spam rate limit: even a slightly
+// off counter is a 100x improvement over per-isolate semantics. We
+// don't need exactly-once.
 //
 // Time arithmetic uses Date.now() throughout.
+
+// Minimal KV interface (subset of @cloudflare/workers-types KVNamespace)
+// — declared inline so this file can compile without the workers-types
+// dev dependency wired into vitest.
+export interface SupportRateLimitKV {
+  get(key: string): Promise<string | null>;
+  put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void>;
+  delete(key: string): Promise<void>;
+}
 
 const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -138,6 +157,70 @@ export function parsePositiveInt(value: string | undefined, fallback: number): n
   if (!value) return fallback;
   const n = Number.parseInt(value, 10);
   return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
+// ---------- KV-backed variants (audit A3) ------------------------------
+//
+// `consumeRateLimit` / `consumeCooldown` prefer KV when a binding is
+// provided, otherwise fall through to the in-memory bucket above. Use
+// these from new code; the legacy `ipRateLimit.consume` / `emailCooldown
+// .consume` stay for hot-path code paths we haven't migrated yet.
+
+function todayKey(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+/**
+ * Consume one slot from a daily rate-limit bucket. Returns true if the
+ * caller is allowed, false if the cap is hit.
+ *
+ * `limit` is the per-day cap and `windowSeconds` is the TTL on the KV
+ * entry (typically 86400). The KV key embeds the day stamp so old
+ * entries expire naturally without us walking the namespace.
+ */
+export async function consumeRateLimit(
+  kv: SupportRateLimitKV | undefined,
+  scope: string,
+  identity: string,
+  limit: number,
+  windowSeconds: number,
+): Promise<boolean> {
+  if (!kv) {
+    // Fallback to per-isolate Map — better than nothing in dev, but the
+    // production deploy MUST bind a KV namespace (runbook §3).
+    return ipRateLimit.consume(`${scope}:${identity}`, limit, windowSeconds);
+  }
+  const key = `rl:${scope}:${identity}:${todayKey()}`;
+  const raw = await kv.get(key);
+  const current = raw ? Number.parseInt(raw, 10) : 0;
+  if (Number.isFinite(current) && current >= limit) return false;
+  // Best-effort read-then-write. Two concurrent calls can both see
+  // `current = 9` and both write `10` — the worst-case overshoot is
+  // (isolates × 1) per window. For a 10/24h anti-spam cap this is a
+  // rounding error compared to per-isolate state. If we ever need exact
+  // counting (e.g. paid quota) swap in Durable Objects.
+  await kv.put(key, String(current + 1), { expirationTtl: windowSeconds });
+  return true;
+}
+
+/**
+ * Same shape as `emailCooldown.consume` but KV-backed. `ttlSeconds` is
+ * both the cooldown duration and the KV TTL.
+ */
+export async function consumeCooldown(
+  kv: SupportRateLimitKV | undefined,
+  scope: string,
+  identity: string,
+  ttlSeconds: number,
+): Promise<boolean> {
+  if (!kv) {
+    return emailCooldown.consume(`${scope}:${identity}`, ttlSeconds);
+  }
+  const key = `cd:${scope}:${identity}`;
+  const raw = await kv.get(key);
+  if (raw) return false; // still in cooldown
+  await kv.put(key, "1", { expirationTtl: ttlSeconds });
+  return true;
 }
 
 // Test-only helpers — the Maps are module-level so tests need to reset them
