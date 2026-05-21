@@ -115,11 +115,23 @@ export class AdminDsrPage extends BasePage {
 
   rowByPrefix() {
     // Match only the row container, not the per-row sub-elements
-    // (sla-badge, resolve-button, reject-button) that share the
-    // `dsr-queue-row-` prefix.
+    // (sla-badge, resolve-button, reject-button, dossier-link) that
+    // share the `dsr-queue-row-` prefix. E46.4 added the dossier-link
+    // testid — exclude it here so this locator stays the "rows only"
+    // count.
     return this.page.locator(
-      "[data-testid^='dsr-queue-row-']:not([data-testid*='-sla-badge']):not([data-testid*='-resolve-button']):not([data-testid*='-reject-button'])",
+      "[data-testid^='dsr-queue-row-']:not([data-testid*='-sla-badge']):not([data-testid*='-resolve-button']):not([data-testid*='-reject-button']):not([data-testid*='-dossier-link-'])",
     );
+  }
+
+  /**
+   * The *Otvoriť GDPR dossier* icon button on a DSR row. Resolves to
+   * an `<a>` when the requester e-mail maps to a registered user
+   * (active state, `<Button asChild>` from shadcn) — or to a disabled
+   * `<button>` when no profile matches (E46.4).
+   */
+  dossierLink(id: string) {
+    return this.page.getByTestId(`dsr-queue-row-dossier-link-${id}`);
   }
 
   rowById(id: string) {

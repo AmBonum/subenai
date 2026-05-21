@@ -44,12 +44,40 @@ export class AdminUsersPage extends BasePage {
     return this.page.getByTestId(`admin-users-edit-role-${userId}`);
   }
 
+  // E46.3 — the *Otvoriť GDPR dossier* (scroll icon) anchor in the
+  // per-row action group.
+  openDossierLink(userId: string) {
+    return this.page.getByTestId(`admin-users-open-dossier-${userId}`);
+  }
+
+  // E46.2 — last-GDPR-event column + filter.
+  get gdprFilter() {
+    return this.page.getByTestId("admin-users-gdpr-filter");
+  }
+
+  gdprCell(userId: string) {
+    return this.page.getByTestId(`admin-users-gdpr-cell-${userId}`);
+  }
+
+  gdprEvent(userId: string) {
+    return this.page.getByTestId(`admin-users-gdpr-event-${userId}`);
+  }
+
+  gdprOpenDot(userId: string) {
+    return this.page.getByTestId(`admin-users-gdpr-open-dot-${userId}`);
+  }
+
   /**
    * Open the Radix Select trigger then click the option matching `label`.
    * The SelectContent is portalled so we locate the option via the page root.
    */
   async selectRoleFilter(label: string) {
     await this.roleFilter.click();
+    await this.page.getByRole("option", { name: label }).click();
+  }
+
+  async selectGdprFilter(label: string) {
+    await this.gdprFilter.click();
     await this.page.getByRole("option", { name: label }).click();
   }
 }
