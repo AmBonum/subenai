@@ -184,7 +184,7 @@
           ]
         },
         "time_impact": {
-          "heading": "Timing",
+          "heading": "Timing of changes",
           "items": [
             "Metrics load when the page opens; fresh data appears after a refresh",
             "Audit activity surfaces within seconds of a successful operation elsewhere in the admin",

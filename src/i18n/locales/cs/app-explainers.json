@@ -137,7 +137,7 @@
         "pitfalls": {
           "heading": "Na co si dávat pozor",
           "items": [
-            "Náhled šablony je zatím zastavený — uvidíte jen metadata, ne konkrétní otázky před použitím",
+            "Náhled šablony zatím není k dispozici — uvidíte jen metadata, ne konkrétní otázky před použitím",
             "Použití šablony vytvoří kopii — změny ve vašem testu nijak neovlivní původní šablonu",
             "Filtr GDPR účelu pracuje s přesnou hodnotou; šablony bez nastaveného účelu se nezobrazí v žádné kategorii"
           ]
@@ -175,7 +175,7 @@
         "pitfalls": {
           "heading": "Na co si dávat pozor",
           "items": [
-            "Pole „typ“ a „kategorie“ zobrazují data z mock-store; v produkci mohou být prázdná, dokud nepřijdou schémové doplňky (AH-12)",
+            "Pole „typ“ a „kategorie“ zobrazují data z mock-store; v produkci mohou být prázdná, dokud nepřibudou v dalším vydání",
             "Limit 60 otázek je hardcoded — při velké knihovně uvidíte jen prvních 60",
             "Knihovna zobrazuje otázky všech autorů ve vašem týmu; ne jen vaše"
           ]
@@ -320,7 +320,7 @@
           "heading": "Jak rychle se změny projeví",
           "items": [
             "Pozvánka, změna role i odebrání jsou okamžité",
-            "E-mail invite ještě není zapojený — pole „e-mail“ slouží zatím jako placeholder pro AH-12 schéma",
+            "E-mail invite ještě není zapojený — pole „e-mail“ slouží zatím jako placeholder před nasazením této funkce",
             "Změna role nedává optimistické UI — po úspěchu se seznam refetchne"
           ]
         },
@@ -328,7 +328,7 @@
           "heading": "Na co si dávat pozor",
           "items": [
             "Musíte mít dostatečnou roli (vlastník) na zvaní a správu členů — server enforce-uje RLS",
-            "Až do dodání e-mail invitací (AH-12) se pozvaní členové musí přihlásit manuálně a vazbu vytvoří backend",
+            "Až do dodání e-mail invitací se pozvaní členové musí přihlásit manuálně a vazbu vytvoří backend",
             "Tým nemůžete odstranit z UI — to dělá admin tým přes podporu"
           ]
         }

@@ -137,7 +137,7 @@
         "pitfalls": {
           "heading": "Na čo si dávať pozor",
           "items": [
-            "Náhľad šablóny je zatiaľ zastavený — uvidíš len metadata, nie konkrétne otázky pred použitím",
+            "Náhľad šablóny zatiaľ nie je k dispozícii — uvidíš len metadata, nie konkrétne otázky pred použitím",
             "Použitie šablóny vytvorí kópiu — zmeny v tvojom teste nijako neovplyvnia pôvodnú šablónu",
             "Filter GDPR účelu pracuje s presnou hodnotou; šablóny bez nastaveného účelu sa nezobrazia v žiadnej kategórii"
           ]
@@ -175,7 +175,7 @@
         "pitfalls": {
           "heading": "Na čo si dávať pozor",
           "items": [
-            "Polia „typ“ a „kategória“ zobrazujú dáta z mock-store; v produkcii môžu byť prázdne, kým neprídu schémové dopĺňky (AH-12)",
+            "Polia „typ“ a „kategória“ zobrazujú dáta z mock-store; v produkcii môžu byť prázdne, kým nepribudnú v ďalšom vydaní",
             "Limit 60 otázok je hardcoded — pri veľkej knižnici uvidíš len prvých 60",
             "Knižnica zobrazuje otázky všetkých autorov v tvojom tíme; nie len tvoje"
           ]
@@ -320,7 +320,7 @@
           "heading": "Ako rýchlo sa zmeny prejavia",
           "items": [
             "Pozvánka, zmena roly aj odstránenie sú okamžité",
-            "E-mail invite ešte nie je zapojený — pole „e-mail“ slúži zatiaľ ako placeholder pre AH-12 schému",
+            "E-mail invite ešte nie je zapojený — pole „e-mail“ slúži zatiaľ ako placeholder pred nasadením tejto funkcie",
             "Zmena roly nedáva optimistické UI — po úspechu sa zoznam refetchne"
           ]
         },
@@ -328,7 +328,7 @@
           "heading": "Na čo si dávať pozor",
           "items": [
             "Musíš mať dostatočnú rolu (vlastník) na pozývanie a manažment členov — server enforce-uje RLS",
-            "Až do dodania e-mail invitácií (AH-12) sa pozvaní členovia musia prihlásiť manuálne a väzbu vytvorí backend",
+            "Až do dodania e-mail invitácií sa pozvaní členovia musia prihlásiť manuálne a väzbu vytvorí backend",
             "Tím nemôžeš odstrániť z UI — to robí admin tím cez podporu"
           ]
         }

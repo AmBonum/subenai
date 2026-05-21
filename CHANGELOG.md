@@ -9,6 +9,22 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+### Opravené
+- **Vysvetľujúce panely v `/app` boli prístupnejšie pre čítače obrazovky a
+  na malých displejoch.** Po nedávnom multi-agent review sme našli a
+  opravili niekoľko detailov, ktoré boli technicky správne, ale
+  zhoršovali zážitok pre používateľov asistenčných technológií aj na
+  mobile: titulok panelu už nie je vnorený vnútri tlačidla (validnejší
+  HTML + funguje navigácia podľa nadpisov v screen readeroch), 80-pixelový
+  scroll offset platí len v admin sekcii (kde má lišta sticky správanie)
+  a v `/app` ho už nehľadáš pod prázdnym miestom. Linky v sekcii
+  *Dokumentácia* majú teraz neutrálnu ikonu (predtým ikonu „otvorí
+  v novej karte", ktorá zavádzala — všetky linky idú na rovnaký web).
+  Pribudli aj copy fixy: dashboard má konzistentný nadpis časového
+  dopadu, sekcia šablón sa už nepopisuje ako „pozastavená" (interná
+  ticket ID „AH-12" v užívateľskom texte nahradená neutrálnym
+  „v ďalšom vydaní").
+
 ### Zmenené
 - **Stránka *Súkromie* po novom presne popisuje, ako vybavujeme GDPR
   žiadosti (E46.7).** Pod existujúcim 30-dňovým SLA odsekom v sekcii

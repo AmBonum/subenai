@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { PageExplainer } from "@/components/shared/PageExplainer";
 import { tFor } from "@/i18n/app-explainers";
@@ -63,6 +63,12 @@ export function AppPageExplainer({ pageKey }: AppPageExplainerProps) {
   const [open, setOpen] = useState<boolean>(() => readPersisted(pageKey));
   const [reducedMotion] = useState<boolean>(() => readReducedMotion());
 
+  // E48 ultrareview — reset on pageKey change. See AdminPageExplainer for
+  // the full rationale.
+  useEffect(() => {
+    setOpen(readPersisted(pageKey));
+  }, [pageKey]);
+
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
     writePersisted(pageKey, next);
@@ -77,6 +83,8 @@ export function AppPageExplainer({ pageKey }: AppPageExplainerProps) {
       open={open}
       onOpenChange={handleOpenChange}
       reducedMotion={reducedMotion}
+      // App shell has no sticky header — leave scroll position alone.
+      scrollMarginTop={0}
     />
   );
 }

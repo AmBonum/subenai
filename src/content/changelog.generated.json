@@ -9,7 +9,8 @@
       "**Nový admin dossier `/admin/users/<id>` — splní Art. 15 / 17 GDPR jedným klikom (E46.3 MVP).**",
       "**Interná infraštruktúra pre admin GDPR fulfilment (E46.1).** Pribudli",
       "**Pozvánky cez e-mail z platformy — pripravujeme.** Na detaile testu",
-      "**Vysvetľujúce panely v admin konzole.** Na každej z 20 podstránok"
+      "**Vysvetľujúce panely v admin konzole.** Na každej z 20 podstránok",
+      "**Vysvetľujúce panely aj v sekcii `/app` pre prihlásených používateľov.**"
     ],
     "changed": [],
     "fixed": [
