@@ -59,13 +59,16 @@ const EXPECTED_TABLES = [
   "admin_notification_preferences",
 ];
 
-describe.skipIf(!url || !key)("prod schema invariants (E48 incident response)", () => {
-  const sb = createClient(url!, key!, { auth: { persistSession: false } });
+function getClient() {
+  return createClient(url!, key!, { auth: { persistSession: false } });
+}
 
+describe.skipIf(!url || !key)("prod schema invariants (E48 incident response)", () => {
   describe("RPCs — existence + signature (catches partial-migration apply)", () => {
     it.each(EXPECTED_RPCS)(
       "RPC %s exists with correct argument signature",
       async (name, expectedArgs) => {
+        const sb = getClient();
         const { data, error } = await sb.rpc("__test_introspect_function", {
           p_name: name,
         });
@@ -87,6 +90,7 @@ describe.skipIf(!url || !key)("prod schema invariants (E48 incident response)", 
     it.each(EXPECTED_TABLES)(
       "table %s is reachable via PostgREST (returns no error on count query)",
       async (table) => {
+        const sb = getClient();
         const { error } = await sb.from(table).select("count").limit(0);
         expect(
           error,
@@ -98,6 +102,7 @@ describe.skipIf(!url || !key)("prod schema invariants (E48 incident response)", 
 
   describe("PostgREST schema cache (catches stale cache after migration)", () => {
     it("submit_support_ticket is callable without 42883 (undefined_function) error", async () => {
+      const sb = getClient();
       // We intentionally call with a payload that should fail validation,
       // NOT a missing-function error. 42883 = undefined_function (the incident).
       // Any non-42883 error (e.g. validation, permission) proves the function exists.
