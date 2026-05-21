@@ -7545,3 +7545,46 @@ $$;
 REVOKE ALL ON FUNCTION public.get_platform_pack_question_ids() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.get_platform_pack_question_ids()
   TO anon, authenticated;
+
+
+-- ============================================================================
+-- E37 architect-P1 — protect platform@subenai.sk from accidental deletion
+-- (mirror of 20260521320000_e37_protect_platform_user.sql)
+-- ============================================================================
+-- BEFORE DELETE trigger on auth.users that raises a typed exception when
+-- something attempts to delete the platform-system user. Without this, an
+-- Auth-dashboard "delete inactive users" sweep would CASCADE-delete all 15
+-- platform pack rows in public.tests.
+
+CREATE OR REPLACE FUNCTION public.forbid_platform_user_delete()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_pack_count int;
+BEGIN
+  IF OLD.email = 'platform@subenai.sk' THEN
+    SELECT COUNT(*) INTO v_pack_count
+      FROM public.tests t
+      JOIN public.platform_pack_metadata m ON m.test_id = t.id
+     WHERE t.owner_id = OLD.id;
+
+    RAISE EXCEPTION
+      'forbid_platform_user_delete: cannot delete platform@subenai.sk — % platform pack(s) depend on this owner_id. Reassign or archive the packs before deleting the system user.',
+      v_pack_count
+      USING ERRCODE = 'foreign_key_violation';
+  END IF;
+
+  RETURN OLD;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS forbid_platform_user_delete ON auth.users;
+
+CREATE TRIGGER forbid_platform_user_delete
+  BEFORE DELETE ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.forbid_platform_user_delete();
+
+REVOKE EXECUTE ON FUNCTION public.forbid_platform_user_delete() FROM PUBLIC;
