@@ -9,10 +9,12 @@ import type {
   SupportContactSubmitResult,
 } from "@/components/support/support-form-config";
 
-// E48.3 — Public /kontakt route. Stub submit while E48.2 (CF function +
-// Turnstile wiring) is still in flight. Once the CF function ships, the
-// onSubmit handler will POST to /api/support-ticket-create with the
-// Turnstile token, then redirect to /kontakt/odoslane on success.
+// E48.3 — Public /kontakt route. Posts to /api/support-ticket-create
+// (CF Pages Function) which handles Turnstile + honeypot + rate limit
+// + the submit_support_ticket() SECURITY DEFINER RPC.
+// The view_token returned here is the plain server-generated token
+// that lets the anonymous submitter open the read-only thread page
+// for 90 days.
 
 const PAGE_URL = `${SITE_ORIGIN}/kontakt`;
 const PAGE_TITLE = "Kontakt | subenai";
@@ -38,6 +40,26 @@ const contactJsonLd = {
   },
 };
 
+function mapErrorCode(code: string | undefined): string {
+  switch (code) {
+    case "rate_limited_ip":
+    case "rate_limited_user":
+      return "Z tejto IP adresy ste odoslali príliš veľa žiadostí. Skúste neskôr.";
+    case "email_cooldown":
+      return "Z tejto e-mailovej adresy ste pred chvíľou odoslali žiadosť. Skúste o pár minút.";
+    case "turnstile_failed":
+      return "Overenie proti spamu zlyhalo. Obnovte stránku a skúste znova.";
+    case "subject_invalid":
+    case "body_invalid":
+    case "email_invalid":
+    case "name_invalid":
+    case "category_invalid":
+      return "Skontrolujte vyplnené polia.";
+    default:
+      return "Nepodarilo sa odoslať. Skúste neskôr alebo nás kontaktujte iným spôsobom.";
+  }
+}
+
 export const Route = createFileRoute("/kontakt/")({
   head: () => ({
     meta: [
@@ -60,19 +82,30 @@ export const Route = createFileRoute("/kontakt/")({
 });
 
 function KontaktPage() {
-  const [submitted, setSubmitted] = useState<{ ticketId: string } | null>(null);
+  const [submitted, setSubmitted] = useState<{ ticketId: string; viewToken?: string } | null>(null);
 
-  // Stub submit — replaced by real CF call in E48.3 implementation.
-  // Logs to console + shows a toast so the form is end-to-end testable
-  // in the browser during Phase A.
   async function handleSubmit(data: SupportContactFormData): Promise<SupportContactSubmitResult> {
-    await new Promise((resolve) => setTimeout(resolve, 600));
+    const res = await fetch("/api/support-ticket-create", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-    console.info("[kontakt] stub submission", data);
-    const fakeId = `stub-${Date.now()}`;
-    setSubmitted({ ticketId: fakeId });
-    toast.success("Žiadosť bola prijatá (demo). Pripojenie k backendu pribudne v E48.3.");
-    return { ticketId: fakeId };
+    if (!res.ok) {
+      const errBody = (await res.json().catch(() => ({}))) as { error?: string };
+      const message = mapErrorCode(errBody.error);
+      throw new Error(message);
+    }
+
+    const json = (await res.json()) as {
+      ok: boolean;
+      ticket_id: string;
+      view_token: string;
+    };
+
+    setSubmitted({ ticketId: json.ticket_id, viewToken: json.view_token });
+    toast.success("Vašu žiadosť sme prijali. Odpovieme do dvoch pracovných dní.");
+    return { ticketId: json.ticket_id, viewToken: json.view_token };
   }
 
   return (
@@ -102,6 +135,11 @@ function KontaktPage() {
             Odpovieme čo najskôr, najneskôr do dvoch pracovných dní. Skontrolujte si e-mail —
             pošleme vám potvrdenie spolu s odkazom na zobrazenie vlákna.
           </p>
+          {submitted.viewToken && (
+            <p className="mt-3 text-xs text-emerald-700 dark:text-emerald-300">
+              Tip: na zobrazenie vlákna použite odkaz z e-mailu. Token má 90 dní platnosti.
+            </p>
+          )}
         </section>
       ) : (
         <SupportContactForm variant="public" onSubmit={handleSubmit} />
