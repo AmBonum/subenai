@@ -161,9 +161,7 @@ describe("UserDossier", () => {
     const user = userEvent.setup();
     render(<UserDossier userId="user-1" />);
     await user.click(screen.getByTestId("admin-user-dossier-rectify-display-name"));
-    const confirm = screen.getByTestId(
-      "admin-user-dossier-rectify-confirm",
-    ) as HTMLButtonElement;
+    const confirm = screen.getByTestId("admin-user-dossier-rectify-confirm") as HTMLButtonElement;
     // Pre-filled with current value → unchanged → disabled.
     expect(confirm.disabled).toBe(true);
     const input = screen.getByTestId("admin-user-dossier-rectify-input") as HTMLInputElement;
