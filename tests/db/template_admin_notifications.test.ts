@@ -207,4 +207,23 @@ describe("DEPLOY_SETUP.sql mirrors both Phase C and Phase D", () => {
     expect(DEPLOY).toMatch(/templates_anon_read_public_published/);
     expect(DEPLOY).toMatch(/FOR SELECT TO anon/);
   });
+
+  // Lesson encoded for the next person who writes a policy-existence guard:
+  // pg_policies (the user-facing VIEW) uses column `policyname`.
+  // pg_policy (the low-level system TABLE) uses column `polname`.
+  // They are NOT interchangeable. The original Phase D DEPLOY_SETUP mirror
+  // landed with `polname` on `pg_policies` and would have aborted any
+  // fresh-DB bootstrap with `column "polname" does not exist`.
+  it("uses pg_policies.policyname (NOT polname) in the Phase D existence guards", () => {
+    // Both DO blocks must reference policyname.
+    const guards = DEPLOY.match(
+      /SELECT 1 FROM pg_policies[\s\S]*?templates_anon_read_(?:defaults|public_published)/g,
+    );
+    expect(guards).not.toBeNull();
+    expect(guards!.length).toBe(2);
+    for (const guard of guards!) {
+      expect(guard).toMatch(/policyname\s*=/);
+      expect(guard).not.toMatch(/\bpolname\s*=/);
+    }
+  });
 });
