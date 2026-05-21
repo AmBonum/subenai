@@ -186,6 +186,36 @@ on `/login` will then show a one-click sign-in button.
   `page.goto`, `page.evaluate(window.scrollTo)`) stay in the spec —
   those are environment, not elements.
 
+## Modals + confirmations (senior UX rule)
+- **No default browser modals in app code.** `window.confirm`,
+  `window.alert`, `window.prompt` are **forbidden** anywhere in
+  `src/**`. They look unprofessional, can't be styled, can't carry
+  context (which row? what severity?), and break on mobile + screen
+  readers. Every confirmation, destructive prompt, and informational
+  dialog goes through a designed shadcn `AlertDialog` /  `Dialog`.
+- **Use `ConfirmDialog` (`src/components/admin/ConfirmDialog.tsx`)
+  for binary confirm / cancel flows.** It accepts a `severity` prop
+  that drives the icon + button colour:
+  - `severity="info"` → blue Info icon, neutral confirm (reversible
+    sanity checks)
+  - `severity="warning"` → amber AlertTriangle, amber confirm
+    (reversible but loud — e.g. *publish to public*)
+  - `severity="destructive"` → red ShieldAlert + destructive confirm
+    (irreversible: delete / anonymise / wipe)
+  - `severity="success"` → green CheckCircle2 + emerald confirm
+    (positive terminal: approve / mark-resolved)
+- **For irreversible PII actions add `typedConfirm={{ expected: "<exact value>", label: "…" }}`.**
+  The confirm button stays disabled until the user types the exact
+  value (typically the target user's e-mail). One typo away from
+  wiping the wrong user = unacceptable.
+- **Free-form prompts (input/textarea inside the modal)** go through
+  `Dialog` (not `AlertDialog`), with the same severity discipline —
+  destructive actions get the red confirm button, irreversible ones
+  carry a typed-confirm field.
+- **A linter / CI grep** (`grep -rn "window\.\(confirm\|alert\|prompt\)" src/`)
+  must return zero matches. If you find an existing offender while
+  doing other work, fix it in the same PR — don't leave it for "later".
+
 ## Non-negotiables
 - Never `git push` without an explicit ask in the current turn.
 - **Always `git fetch origin <branch>` before pushing** and compare

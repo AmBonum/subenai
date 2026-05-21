@@ -32,6 +32,7 @@ import {
   type DpaEmailStatus,
 } from "@/lib/admin/queries";
 import { exportToCSV } from "@/lib/admin/export";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { tFor } from "@/i18n/governance";
 
 const STATUSES: DpaRequestStatus[] = ["pending", "delivered", "signed", "cancelled"];
@@ -70,6 +71,7 @@ export function DpaRequestsQueue() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [emailFilter, setEmailFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const [anonymiseTarget, setAnonymiseTarget] = useState<AdminDpaRequest | null>(null);
 
   const filtered = useMemo(() => {
     const needle = search.trim().toLowerCase();
@@ -96,7 +98,13 @@ export function DpaRequestsQueue() {
   };
 
   const onAnonymise = (row: AdminDpaRequest) => {
-    if (!window.confirm(t("anonymise_confirm"))) return;
+    // Senior modal rule (CLAUDE.md): NO window.confirm/alert/prompt.
+    // We open the severity-aware ConfirmDialog and wait for the user
+    // to click the destructive-styled confirm button.
+    setAnonymiseTarget(row);
+  };
+
+  const runAnonymise = (row: AdminDpaRequest) => {
     anonymise.mutate(
       { id: row.id },
       {
@@ -334,6 +342,28 @@ export function DpaRequestsQueue() {
           </Table>
         </CardContent>
       </Card>
+
+      <ConfirmDialog
+        open={anonymiseTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setAnonymiseTarget(null);
+        }}
+        severity="destructive"
+        title={t("anonymise_dialog_title")}
+        description={
+          anonymiseTarget
+            ? t("anonymise_dialog_body", {
+                school: anonymiseTarget.school_name,
+                email: anonymiseTarget.contact_email ?? "—",
+              })
+            : t("anonymise_confirm")
+        }
+        confirmLabel={t("action_anonymise")}
+        onConfirm={() => {
+          if (anonymiseTarget) runAnonymise(anonymiseTarget);
+          setAnonymiseTarget(null);
+        }}
+      />
     </div>
   );
 }

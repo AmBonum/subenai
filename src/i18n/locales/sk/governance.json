@@ -106,6 +106,8 @@
     "csv_email_error": "E-mail chyba",
     "csv_anonymized_at": "Anonymizované",
     "anonymise_confirm": "Naozaj anonymizovať túto žiadosť? Meno a e-mail budú nenávratne vymazané, ostane iba názov školy.",
+    "anonymise_dialog_title": "Anonymizovať túto DPA žiadosť?",
+    "anonymise_dialog_body": "Meno kontaktu a e-mail ({email}) budú trvalo NULL-nuté. Názov školy ({school}) a verzia DPA ostávajú pre štatistiku. Akcia je nezvratná.",
     "toast_status_updated": "Status aktualizovaný.",
     "toast_downloaded": "PDF pripravené na stiahnutie.",
     "toast_download_failed": "Stiahnutie PDF zlyhalo.",

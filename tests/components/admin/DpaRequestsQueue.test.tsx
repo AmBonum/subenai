@@ -94,22 +94,28 @@ describe("DpaRequestsQueue", () => {
     expect(callArg.row.id).toBe("row-1");
   });
 
-  it("anonymise button requires confirm + fires the mutation", async () => {
-    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(true);
+  it("anonymise button opens the destructive ConfirmDialog and fires the mutation on confirm", async () => {
     const user = userEvent.setup();
     render(<DpaRequestsQueue />);
     await user.click(screen.getByTestId("dpa-queue-anonymise-row-1"));
-    expect(confirmSpy).toHaveBeenCalled();
+    // Senior modal rule (CLAUDE.md): NO window.confirm — the
+    // severity-aware AlertDialog opens with `data-severity="destructive"`.
+    const dialog = await screen.findByTestId("app-shell-confirm-dialog-root");
+    expect(dialog).toBeInTheDocument();
+    expect(dialog.getAttribute("data-severity")).toBe("destructive");
+    expect(screen.getByTestId("app-shell-confirm-dialog-icon-destructive")).toBeInTheDocument();
+    await user.click(screen.getByTestId("app-shell-confirm-dialog-confirm"));
     expect(mutateAnonymise).toHaveBeenCalledTimes(1);
     const callArg = mutateAnonymise.mock.calls[0][0] as { id: string };
     expect(callArg.id).toBe("row-1");
   });
 
-  it("anonymise button does NOT fire mutation when user cancels", async () => {
-    vi.spyOn(window, "confirm").mockReturnValue(false);
+  it("anonymise dialog Cancel button closes without firing the mutation", async () => {
     const user = userEvent.setup();
     render(<DpaRequestsQueue />);
     await user.click(screen.getByTestId("dpa-queue-anonymise-row-1"));
+    await screen.findByTestId("app-shell-confirm-dialog-root");
+    await user.click(screen.getByTestId("app-shell-confirm-dialog-cancel"));
     expect(mutateAnonymise).not.toHaveBeenCalled();
   });
 
