@@ -87,6 +87,19 @@ The pipeline (`functions/_lib/attachment-sanitize.ts`) is intentionally
 | **PDF script strip** | `pdf-lib` parses object tree, removes `/JS`, `/JavaScript`, `/AA`, `/OpenAction`, `/URI`, `/Launch`, `/SubmitForm`, AcroForm, EmbeddedFiles, RichMedia | ~ms |
 | SHA-256 checksum | Audit trail + dedup | ~ms |
 
+**TOCTOU race on the 3-per-ticket cap (closed 2026-05-22).** The CF
+function pre-checks the existing attachment count via SELECT count(*)
+before INSERT — three concurrent multipart POSTs against the same
+`ticket_id` would each see count=0, all pass the `>= 3` guard, all
+three insert. Migration `20260522100000_e48_2_attachment_cap_trigger.sql`
+adds a BEFORE INSERT trigger (`enforce_attachment_cap_per_ticket_trg`)
+that re-counts inside the transaction with `SELECT ... FOR UPDATE`,
+serialising concurrent inserts on the same ticket_id; the 4th raises
+`attachment_limit_reached` with ERRCODE `check_violation`, which the
+CF function maps to the same friendly 400 response as the pre-check.
+TC-40 in `specs/support/E48-security.md` covers the parallel-upload
+case.
+
 **What v1 does NOT do (deferred to v2):**
 
 - Image re-encoding (would strip EXIF + ICC + foreign trailing bytes).

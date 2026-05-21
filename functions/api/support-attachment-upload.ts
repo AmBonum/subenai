@@ -245,6 +245,13 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
       code: insertErr.code,
       message: insertErr.message,
     });
+    // The BEFORE INSERT trigger enforce_attachment_cap_per_ticket_trg
+    // closes the TOCTOU race between the pre-check above and this
+    // INSERT — concurrent uploads that all pass the pre-check still
+    // get serialised and the 4th hits this branch.
+    if (insertErr.message?.includes("attachment_limit_reached")) {
+      return jsonResponse(400, { error: "attachment_limit_reached" });
+    }
     return jsonResponse(500, { error: "attachment_insert_failed" });
   }
 
