@@ -71,6 +71,34 @@ export interface AdminSupportTicketRow {
   deleted_at: string | null;
 }
 
+// E48-v3 PR-ASSIGN-DETAIL — multi-assignee shape returned by the
+// `support_tickets_with_assignees` security_invoker view. The detail
+// page reads this; the queue still reads the flat `support_tickets`
+// table during the staged migration (Wave 2 will switch the queue).
+export interface SupportTicketAssignee {
+  user_id: string;
+  email: string;
+  display_name: string | null;
+  assigned_at: string;
+}
+
+export interface AdminSupportTicketDetailRow {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  status: string;
+  category: string;
+  source: string;
+  subject: string;
+  body: string;
+  submitter_user_id: string | null;
+  submitter_email: string;
+  submitter_name: string | null;
+  archived_at: string | null;
+  deleted_at: string | null;
+  assignees: SupportTicketAssignee[];
+}
+
 export interface AdminSupportTicketMessage {
   id: string;
   ticket_id: string;
@@ -232,16 +260,25 @@ export function useAdminSupportTicketAttachmentCounts(ticketIds: string[]) {
 export function useAdminSupportTicket(ticketId: string) {
   return useQuery({
     queryKey: ["admin", "support_ticket", ticketId],
-    queryFn: async (): Promise<AdminSupportTicketRow | null> => {
+    queryFn: async (): Promise<AdminSupportTicketDetailRow | null> => {
+      // E48-v3 PR-ASSIGN-DETAIL — read from the security_invoker view so
+      // the row carries `assignees: SupportTicketAssignee[]` populated by
+      // the junction table. `assigned_to` no longer exists; multi-assign
+      // replaces it. The view is created by the matching SQL migration —
+      // until that ships to prod, this query fails and the detail page
+      // surfaces the "not found" branch (acceptable for Wave 2 cutover).
       const { data, error } = await supabase
-        .from("support_tickets")
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .from("support_tickets_with_assignees" as any)
         .select(
-          "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, assigned_to, archived_at, deleted_at",
+          "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, archived_at, deleted_at, assignees",
         )
         .eq("id", ticketId)
         .maybeSingle();
       if (error) throw error;
-      return (data ?? null) as AdminSupportTicketRow | null;
+      if (!data) return null;
+      const row = data as unknown as AdminSupportTicketDetailRow;
+      return { ...row, assignees: row.assignees ?? [] };
     },
     enabled: !!ticketId,
   });
@@ -408,6 +445,54 @@ export function useBulkResolve() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "support_tickets"] });
+    },
+  });
+}
+
+// E48-v3 PR-ASSIGN-DETAIL — multi-assignment mutations. Both wrap the
+// admin+AAL2-gated RPCs introduced by the matching SQL migration.
+// `assign_admin_to_ticket` is idempotent on (ticket_id, user_id) via
+// ON CONFLICT, and `unassign_admin_from_ticket` returns `removed: false`
+// when the row didn't exist — UI surfaces neither as errors.
+
+export function useAssignAdminToTicket() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ ticketId, userId }: { ticketId: string; userId: string }) => {
+      const { data, error } = await supabase.rpc(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        "assign_admin_to_ticket" as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        { p_ticket_id: ticketId, p_user_id: userId } as any,
+      );
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "support_ticket"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "support_tickets"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "audit_log"] });
+    },
+  });
+}
+
+export function useUnassignAdminFromTicket() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ ticketId, userId }: { ticketId: string; userId: string }) => {
+      const { data, error } = await supabase.rpc(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        "unassign_admin_from_ticket" as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        { p_ticket_id: ticketId, p_user_id: userId } as any,
+      );
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "support_ticket"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "support_tickets"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "audit_log"] });
     },
   });
 }
