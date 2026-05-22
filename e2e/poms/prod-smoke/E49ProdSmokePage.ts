@@ -82,8 +82,25 @@ export class E49ProdSmokePage extends BasePage {
     return this.page.getByTestId("app-shell-sidebar-link-tests");
   }
 
-  get headerLogout() {
-    return this.page.getByTestId("app-shell-header-logout");
+  /** DropdownMenu trigger that exposes the sign-out menu item. */
+  get headerUserMenuTrigger() {
+    return this.page.getByTestId("header-user-menu-trigger");
+  }
+
+  /** Sign-out menu item — only rendered after the user menu is opened. */
+  get headerUserMenuSignOut() {
+    return this.page.getByTestId("header-user-menu-signout");
+  }
+
+  /**
+   * Two-step sign-out: open the dropdown then click the sign-out item.
+   * The previous single-getter `headerLogout` targeted a testid that
+   * doesn't exist (`app-shell-header-logout`) and bypassed the menu
+   * entirely; both issues are resolved here.
+   */
+  async signOutViaHeader() {
+    await this.headerUserMenuTrigger.click();
+    await this.headerUserMenuSignOut.click();
   }
 
   // ----------------------------------------------------------- Tests listing
