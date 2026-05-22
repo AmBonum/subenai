@@ -7610,10 +7610,21 @@ AS $$
 DECLARE
   v_count integer;
 BEGIN
+  -- Acquire row lock on the parent ticket. PERFORM doesn't run an
+  -- aggregate, so FOR UPDATE is legal here (PostgreSQL 0A000 forbids
+  -- FOR UPDATE with aggregate functions). Concurrent attachment inserts
+  -- for the same ticket_id will serialise on this row lock, ensuring
+  -- the count check below is authoritative and the cap is enforced.
+  PERFORM 1 FROM public.support_tickets
+    WHERE id = NEW.ticket_id
+    FOR UPDATE;
+
+  -- Now safely count existing attachments — no conflict between
+  -- lock + aggregate.
   SELECT count(*) INTO v_count
     FROM public.support_ticket_attachments
-    WHERE ticket_id = NEW.ticket_id
-    FOR UPDATE;
+    WHERE ticket_id = NEW.ticket_id;
+
   IF v_count >= 3 THEN
     RAISE EXCEPTION 'attachment_limit_reached' USING ERRCODE = 'check_violation';
   END IF;
