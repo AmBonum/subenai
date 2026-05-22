@@ -2150,7 +2150,7 @@ export type Database = {
         Returns: Json;
       };
       request_attachment_signed_url: {
-        Args: { p_attachment_id: string };
+        Args: { p_attachment_id: string; p_inline?: boolean };
         Returns: Json;
       };
       transition_ticket_status: {

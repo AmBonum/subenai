@@ -2,13 +2,11 @@ import { Badge } from "@/components/ui/badge";
 import type {
   AdminSupportTicketDetailRow,
   AdminSupportTicketMessage,
-  AdminSupportTicketAttachment,
 } from "@/lib/admin/queries-tickets";
 
 interface TicketThreadProps {
   ticket: AdminSupportTicketDetailRow;
   messages: AdminSupportTicketMessage[];
-  attachments: AdminSupportTicketAttachment[];
 }
 
 // PR-DETAIL contrast fix: drop the washed-out `bg-emerald-50/60` tint
@@ -16,7 +14,7 @@ interface TicketThreadProps {
 // now sit on solid `bg-accent` with a left primary accent rail; user
 // messages on `bg-card`. Both render body text as `text-foreground`
 // which is near-white in dark, near-black in light → well above AA.
-export function TicketThread({ ticket, messages, attachments }: TicketThreadProps) {
+export function TicketThread({ ticket, messages }: TicketThreadProps) {
   return (
     <div className="space-y-4" data-testid="admin-ticket-detail-thread">
       {/* Initial body — treated as the first user message. */}
@@ -97,28 +95,6 @@ export function TicketThread({ ticket, messages, attachments }: TicketThreadProp
           </article>
         );
       })}
-
-      {attachments.length > 0 && (
-        <div
-          className="rounded-md border border-border bg-card p-4"
-          data-testid="admin-ticket-detail-attachments"
-        >
-          <div className="text-xs uppercase tracking-wide text-muted-foreground">Prílohy</div>
-          <ul className="mt-2 space-y-1">
-            {attachments.map((a) => (
-              <li key={a.id} className="flex items-center gap-2 text-xs">
-                <Badge variant="outline" className="text-[10px]">
-                  {a.scan_status === "clean" ? "✓ clean" : "⚠ chyba"}
-                </Badge>
-                <span className="text-foreground">{a.filename}</span>
-                <span className="text-muted-foreground">
-                  ({Math.round(a.size_bytes / 1024)} kB)
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
