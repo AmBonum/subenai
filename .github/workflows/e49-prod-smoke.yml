@@ -90,7 +90,7 @@ jobs:
           # URL + service-role key. The pooler endpoint pattern matches what
           # `supabase db push` uses.
           PROJECT_HOST="$(echo "${PGCONN}" | sed -E 's#https?://([^./]+)\.supabase\.co.*#\1#')"
-          PGURI="postgresql://postgres.${PROJECT_HOST}:${SERVICE_ROLE_KEY}@aws-0-eu-central-1.pooler.supabase.com:6543/postgres"
+          PGURI="postgresql://postgres.${PROJECT_HOST}:${SERVICE_ROLE_KEY}@aws-0-eu-west-1.pooler.supabase.com:6543/postgres"
           psql "${PGURI}" -v ON_ERROR_STOP=1 <<'SQL'
           BEGIN;
           DELETE FROM public.session_answers
