@@ -19,6 +19,9 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ### Refactor (interné)
 - Hooky súvisiace s ticketmi podpory v admin paneli sa presunuli z `src/lib/admin/queries.ts` do `src/lib/admin/queries-tickets.ts`. Pôvodný import path naďalej funguje cez deprecation shim — refactor je transparentný pre existujúci kód.
 
+### Pridané (interné)
+- Test infraštruktúra pre E48-v2: SQL seed helper s worker-isolation prefixom, security regression suite (XSS + CSV injection battery).
+
 ### Opravené
 - **Opravený admin reply email — odkaz na vlákno teraz obsahuje view_token (rotácia tokenu pri každej odpovedi pre vyššiu bezpečnosť).** (2026-05-22)
 - **Opravený TOCTOU trigger pre prílohy v podporných žiadostiach.** Produkčné nahrávanie súborov zlyhalo s chybou 500 kvôli neplatnej kombinácii `aggregate + FOR UPDATE` v PostgreSQL. Trigger teraz zamyká radok rodičovskej podpornej žiadosti namiesto súboru, čím sa serializujú konkurentné nahrávania a cap je korektne vynútený.
