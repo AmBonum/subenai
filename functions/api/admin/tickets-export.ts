@@ -364,7 +364,10 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     }
 
     if (filters.q && filters.q.trim().length > 0) {
-      const escaped = filters.q.trim().replace(/[%_]/g, "\\$&");
+      // Backslash MUST be in the char class so a malicious search like
+      // `\%` doesn't pass `\\%` through to PostgREST — where the leading
+      // backslash would itself escape the wildcard escape (CodeQL #17).
+      const escaped = filters.q.trim().replace(/[\\%_]/g, "\\$&");
       query = query.or(`subject.ilike.%${escaped}%,body.ilike.%${escaped}%`);
     }
   }
