@@ -35,6 +35,9 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - Príloh viewer pripravený na inline render (image/PDF) cez nový p_inline parameter v signed URL RPC.
 - TODO: po aplikácii migrácie 20260522170000 v Supabase doplniť späť schema-invariants assertions pre support_ticket_assignees + 3 nové RPCs + p_inline parameter v request_attachment_signed_url. Sledujte follow-up PR.
 
+### Pridané (bezpečnosť)
+- E48-v3 security regression suite: XSS battery proti admin display_name (5 payloadov), picker search (5), attachment filename (5), signed URL injection. RLS verification proti junction table + 3 nové RPCs.
+
 ### Opravené (interné)
 - Test infra: pridaný `pdf-lib` do `node_modules` (balík bol v `dependencies` v package.json, ale chýbal v node_modules), čím Vitest mohol importovať `functions/_lib/attachment-sanitize.ts` (predtým zlyhával počas test-collect fázy — ~2 testy v každom PR).
 
