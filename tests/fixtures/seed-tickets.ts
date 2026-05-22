@@ -125,7 +125,15 @@ export async function cleanupSeeds(workerIndex: number): Promise<{ deleted: numb
 }
 
 export async function cleanupAllSeeds(): Promise<{ deleted: number }> {
-  const { client, url } = getClient();
+  const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL ?? "";
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+
+  if (!url || !key) {
+    console.log("[E48 seed cleanup] Skipping — env vars not set (expected in CI without Supabase)");
+    return { deleted: 0 };
+  }
+
+  const { client } = getClient();
   guardProduction(url);
 
   const prefix = `${SEED_PREFIX}%]%`;
