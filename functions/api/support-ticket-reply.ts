@@ -190,16 +190,26 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     }
   }
 
+  // Regenerate the view token so the email link carries a fresh ?token= param.
+  // The RPC mints a new plaintext token, updates the hash in DB, and returns
+  // the plaintext.  Non-fatal: if regen fails the reply is already persisted
+  // and the email still sends — just without the view link.
+  const { data: freshToken, error: tokenErr } = await adminClient.rpc(
+    "regenerate_support_ticket_view_token",
+    { p_ticket_id: ticketId },
+  );
+  if (tokenErr) {
+    console.warn("support-ticket-reply view_token regen failed (non-fatal)", {
+      ticket_id: ticketId,
+      error: (tokenErr as { message?: string }).message ?? String(tokenErr),
+    });
+  }
+
   // Send email (non-fatal).
   if (env.RESEND_API_KEY && env.EMAIL_FROM && env.EMAIL_REPLY_TO) {
     const origin = env.SITE_ORIGIN || DEFAULT_SITE_ORIGIN;
-    // Anonymous submitter (view_token still valid) gets the view link;
-    // authenticated submitter (no token, or invalidated) does not.
-    const expires = ticketRow.view_token_expires_at as string | null;
-    const invalidated = ticketRow.view_token_invalidated_at as string | null;
-    const tokenIsValid = !invalidated && expires && new Date(expires).getTime() > Date.now();
-    const viewUrl = tokenIsValid
-      ? `${origin}/contact-form/ticket/${encodeURIComponent(ticketId)}`
+    const viewUrl = freshToken
+      ? `${origin}/contact-form/ticket/${encodeURIComponent(ticketId)}?token=${encodeURIComponent(freshToken as string)}`
       : undefined;
 
     const template = supportTicketReplyEmail({

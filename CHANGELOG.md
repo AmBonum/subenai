@@ -10,6 +10,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Opravené
+- **Opravený admin reply email — odkaz na vlákno teraz obsahuje view_token (rotácia tokenu pri každej odpovedi pre vyššiu bezpečnosť).** (2026-05-22)
 - **Opravený TOCTOU trigger pre prílohy v podporných žiadostiach.** Produkčné nahrávanie súborov zlyhalo s chybou 500 kvôli neplatnej kombinácii `aggregate + FOR UPDATE` v PostgreSQL. Trigger teraz zamyká radok rodičovskej podpornej žiadosti namiesto súboru, čím sa serializujú konkurentné nahrávania a cap je korektne vynútený.
 
 ### Zmenené
