@@ -8176,6 +8176,9 @@ REVOKE EXECUTE ON FUNCTION public.request_attachment_signed_url(uuid, boolean) F
 GRANT  EXECUTE ON FUNCTION public.request_attachment_signed_url(uuid, boolean) TO authenticated;
 
 -- View — support_tickets_with_assignees (security_invoker = true; admin RLS applies via underlying table)
+-- E48-v4 hotfix: joins via public.profiles only (admin-readable). The
+-- previous version joined auth.users which authenticated callers cannot
+-- SELECT, breaking the view with 403 Forbidden under security_invoker.
 CREATE OR REPLACE VIEW public.support_tickets_with_assignees
 WITH (security_invoker = true)
 AS
@@ -8188,13 +8191,12 @@ SELECT
       SELECT jsonb_agg(
         jsonb_build_object(
           'user_id',      a.user_id,
-          'email',        u.email,
-          'display_name', COALESCE(p.display_name, u.raw_user_meta_data ->> 'display_name', u.email),
+          'email',        p.email,
+          'display_name', COALESCE(p.display_name, p.email),
           'assigned_at',  a.assigned_at
         ) ORDER BY a.assigned_at
       )
       FROM public.support_ticket_assignees a
-      LEFT JOIN auth.users u ON u.id = a.user_id
       LEFT JOIN public.profiles p ON p.id = a.user_id
       WHERE a.ticket_id = t.id
     ),
@@ -8202,9 +8204,8 @@ SELECT
   ) AS assignees,
   EXISTS (SELECT 1 FROM public.support_ticket_assignees a WHERE a.ticket_id = t.id) AS is_assigned,
   (
-    SELECT COALESCE(p.display_name, u.raw_user_meta_data ->> 'display_name', u.email)
+    SELECT COALESCE(p.display_name, p.email)
     FROM public.support_ticket_assignees a
-    LEFT JOIN auth.users u ON u.id = a.user_id
     LEFT JOIN public.profiles p ON p.id = a.user_id
     WHERE a.ticket_id = t.id
     ORDER BY a.assigned_at
