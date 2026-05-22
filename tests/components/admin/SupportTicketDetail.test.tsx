@@ -70,11 +70,15 @@ function installSupabaseMock() {
         return Promise.resolve({ data: null, error: null });
       },
       from: (table: string) => {
-        if (table === "support_tickets") {
+        if (table === "support_tickets" || table === "support_tickets_with_assignees") {
           // First call (detail) returns the full ticket row; the metadata
           // panel re-queries with select("user_agent, ip_country") and
           // gets the same data — the chain returns the full row, the
           // panel reads only the meta cols. Updates also go through here.
+          // E48-v3 — the detail hook now reads from the
+          // support_tickets_with_assignees view; the same ticket fixture
+          // satisfies both paths because the test never inspects the
+          // assignees column.
           return makeChain({ data: state.ticket, error: null });
         }
         if (table === "support_tickets_with_assignees") {

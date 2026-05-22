@@ -51,6 +51,7 @@ function makeChain() {
     "gte",
     "lte",
     "match",
+    "contains",
   ];
   for (const m of methods) {
     chain[m] = (...args: unknown[]) => {
@@ -94,9 +95,10 @@ const TICKET_A = {
   submitter_user_id: null,
   submitter_email: "alice@example.com",
   submitter_name: "Alice",
-  assigned_to: null,
   archived_at: null,
   deleted_at: null,
+  assignees: [],
+  first_assignee_display_name: null,
 };
 
 const TICKET_B = {
@@ -111,9 +113,10 @@ const TICKET_B = {
   submitter_user_id: "u-2",
   submitter_email: "bob@example.com",
   submitter_name: "Bob",
-  assigned_to: null,
   archived_at: null,
   deleted_at: null,
+  assignees: [{ user_id: "admin-1", email: "admin@example.com", display_name: "Admin One" }],
+  first_assignee_display_name: "Admin One",
 };
 
 async function loadComponent() {
@@ -377,10 +380,98 @@ describe("SupportTicketsQueue (E48-v2 PR-D)", () => {
     expect(screen.getByTestId("admin-tickets-header-count")).toBeInTheDocument();
   });
 
-  it("renders the sort dropdown", async () => {
+  it("renders sortable column headers (E48-v3 replacement for sort dropdown)", async () => {
     const SupportTicketsQueue = await loadComponent();
     renderQueue(<SupportTicketsQueue />);
     await flushQueries();
-    expect(screen.getByTestId("admin-tickets-sort-dropdown")).toBeInTheDocument();
+    // Per-column sort headers, one per sortable column.
+    expect(screen.getByTestId("admin-tickets-sort-created_at")).toBeInTheDocument();
+    expect(screen.getByTestId("admin-tickets-sort-status")).toBeInTheDocument();
+    expect(screen.getByTestId("admin-tickets-sort-assigned")).toBeInTheDocument();
+    // Legacy dropdown should be gone.
+    expect(screen.queryByTestId("admin-tickets-sort-dropdown")).not.toBeInTheDocument();
+  });
+
+  // E48-v3 PR-QUEUE-EXTEND — per-column sort wiring + URL sync.
+
+  it("clicking a sort header dispatches navigate with ?sort=col:asc", async () => {
+    const SupportTicketsQueue = await loadComponent();
+    renderQueue(<SupportTicketsQueue />);
+    await flushQueries();
+    navigateMock.mockReset();
+    fireEvent.click(screen.getByTestId("admin-tickets-sort-status"));
+    expect(navigateMock).toHaveBeenCalled();
+    const call = navigateMock.mock.calls[0][0] as {
+      search: (prev: Record<string, unknown>) => Record<string, unknown>;
+    };
+    const next = call.search({});
+    expect(next.sort).toBe("status:asc");
+  });
+
+  it("3-cycle sort: asc → desc → none → asc on repeated clicks", async () => {
+    mockSearch = { sort: "status:asc" };
+    const SupportTicketsQueue = await loadComponent();
+    renderQueue(<SupportTicketsQueue />);
+    await flushQueries();
+    navigateMock.mockReset();
+    fireEvent.click(screen.getByTestId("admin-tickets-sort-status"));
+    const call = navigateMock.mock.calls[0][0] as {
+      search: (prev: Record<string, unknown>) => Record<string, unknown>;
+    };
+    const next = call.search({ sort: "status:asc" });
+    expect(next.sort).toBe("status:desc");
+  });
+
+  it("clicking the active DESC header clears the sort (3-cycle → none)", async () => {
+    mockSearch = { sort: "status:desc" };
+    const SupportTicketsQueue = await loadComponent();
+    renderQueue(<SupportTicketsQueue />);
+    await flushQueries();
+    navigateMock.mockReset();
+    fireEvent.click(screen.getByTestId("admin-tickets-sort-status"));
+    const call = navigateMock.mock.calls[0][0] as {
+      search: (prev: Record<string, unknown>) => Record<string, unknown>;
+    };
+    const next = call.search({ sort: "status:desc" });
+    expect(next.sort).toBeUndefined();
+  });
+
+  it("reload preserves sort from URL (?sort=created_at:asc shows asc indicator)", async () => {
+    mockSearch = { sort: "created_at:asc" };
+    const SupportTicketsQueue = await loadComponent();
+    renderQueue(<SupportTicketsQueue />);
+    await flushQueries();
+    const indicator = screen.getByTestId("admin-tickets-sort-indicator-created_at");
+    expect(indicator.getAttribute("data-direction")).toBe("asc");
+  });
+
+  it("clicking column A then B clears A and activates B", async () => {
+    mockSearch = { sort: "status:asc" };
+    const SupportTicketsQueue = await loadComponent();
+    renderQueue(<SupportTicketsQueue />);
+    await flushQueries();
+    navigateMock.mockReset();
+    fireEvent.click(screen.getByTestId("admin-tickets-sort-subject"));
+    const call = navigateMock.mock.calls[0][0] as {
+      search: (prev: Record<string, unknown>) => Record<string, unknown>;
+    };
+    const next = call.search({ sort: "status:asc" });
+    expect(next.sort).toBe("subject:asc");
+  });
+
+  it("legacy ?sortDropdown=recency-desc is translated to ?sort=created_at:desc on mount", async () => {
+    mockSearch = { sortDropdown: "recency-desc" };
+    const SupportTicketsQueue = await loadComponent();
+    renderQueue(<SupportTicketsQueue />);
+    await flushQueries();
+    const translation = navigateMock.mock.calls.find((c) => {
+      const arg = c[0] as { search?: unknown };
+      if (typeof arg.search !== "function") return false;
+      const next = (arg.search as (p: Record<string, unknown>) => Record<string, unknown>)({
+        sortDropdown: "recency-desc",
+      });
+      return next.sort === "created_at:desc";
+    });
+    expect(translation).toBeTruthy();
   });
 });

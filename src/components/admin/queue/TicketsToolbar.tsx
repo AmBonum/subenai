@@ -37,16 +37,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { SUPPORT_TICKET_CATEGORIES } from "@/components/support/support-form-config";
-import {
-  useAssignToMe,
-  useBulkArchive,
-  useBulkResolve,
-  type SupportTicketSortKey,
-} from "@/lib/admin/queries-tickets";
+import { useAssignToMe, useBulkArchive, useBulkResolve } from "@/lib/admin/queries-tickets";
 import { cn } from "@/lib/utils";
 
 // E48-v2 PR-D — sticky 3-row toolbar:
-//   1. status filter chips + sort dropdown
+//   1. status filter chips (sort dropdown removed in E48-v3; sorting
+//      is now per-column on each table header)
 //   2. category multi-select, assignee, date-range, search
 //   3. bulk actions row (only when ≥1 row selected)
 
@@ -59,13 +55,6 @@ const STATUS_FILTERS = [
   { value: "archived", label: "Archivované" },
 ] as const;
 
-const SORT_OPTIONS: Array<{ value: SupportTicketSortKey; label: string }> = [
-  { value: "recency-desc", label: "Najnovšie" },
-  { value: "recency-asc", label: "Najstaršie" },
-  { value: "status", label: "Podľa stavu" },
-  { value: "category", label: "Podľa kategórie" },
-];
-
 export interface ToolbarFilterState {
   statuses: string[];
   categories: string[];
@@ -73,7 +62,6 @@ export interface ToolbarFilterState {
   dateFrom: string | undefined;
   dateTo: string | undefined;
   q: string;
-  sort: SupportTicketSortKey;
 }
 
 interface Props {
@@ -160,7 +148,7 @@ export const TicketsToolbar = forwardRef<HTMLInputElement, Props>(function Ticke
       className="sticky top-0 z-10 -mx-1 space-y-3 rounded-md border border-border bg-card/95 px-3 py-3 backdrop-blur supports-[backdrop-filter]:bg-card/80"
       data-testid="admin-tickets-toolbar"
     >
-      {/* Row 1 — status chips + sort */}
+      {/* Row 1 — status chips (sort moved to per-column table headers in E48-v3) */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="flex flex-wrap gap-1.5" data-testid="admin-tickets-filters">
           {STATUS_FILTERS.map((f) => {
@@ -183,31 +171,6 @@ export const TicketsToolbar = forwardRef<HTMLInputElement, Props>(function Ticke
               </button>
             );
           })}
-        </div>
-        <div className="ml-auto flex items-center gap-2">
-          <Select
-            value={filters.sort}
-            onValueChange={(v) => onChange({ sort: v as SupportTicketSortKey })}
-          >
-            <SelectTrigger
-              className="h-8 w-44 text-xs"
-              data-testid="admin-tickets-sort-dropdown"
-              aria-label="Zoradiť"
-            >
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {SORT_OPTIONS.map((o) => (
-                <SelectItem
-                  key={o.value}
-                  value={o.value}
-                  data-testid={`admin-tickets-sort-option-${o.value}`}
-                >
-                  {o.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
       </div>
 

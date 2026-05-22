@@ -41,7 +41,40 @@ export function postgrestOrEscape(input: string): string {
 
 export type SupportTicketCategory = (typeof SUPPORT_TICKET_CATEGORIES)[number]["value"];
 
+// E48-v3 PR-QUEUE-EXTEND — per-column sort key, replacing the legacy
+// dropdown-based `SupportTicketSortKey`. URL shape is `?sort=col:dir`,
+// parsed back into a `TicketSortState` by the route. Legacy values
+// (`recency-desc`, etc.) are still accepted for backward compatibility
+// — see `parseLegacySortKey` below — so shared/bookmarked URLs keep
+// working through one release cycle.
+export const SORT_COLUMNS = [
+  "status",
+  "category",
+  "subject",
+  "submitter",
+  "assigned",
+  "created_at",
+] as const;
+export type SortColumn = (typeof SORT_COLUMNS)[number];
+export type SortDirection = "asc" | "desc";
+
+export interface TicketSortState {
+  column: SortColumn;
+  direction: SortDirection;
+}
+
+// Legacy sort key — kept for back-compat with already-shared URLs and
+// existing toolbar dropdown tests. New code should use TicketSortState.
 export type SupportTicketSortKey = "recency-desc" | "recency-asc" | "status" | "category";
+
+// E48-v3 PR-ASSIGN-DETAIL — multi-assignee shape returned by the
+// `support_tickets_with_assignees` security_invoker view.
+export interface SupportTicketAssignee {
+  user_id: string;
+  email: string;
+  display_name: string | null;
+  assigned_at: string;
+}
 
 export interface SupportTicketsFilters {
   statuses?: string[];
@@ -51,7 +84,10 @@ export interface SupportTicketsFilters {
   assignedTo?: string | "me" | "unassigned" | null;
   dateFrom?: string;
   dateTo?: string;
+  /** Legacy single-key sort (kept for back-compat). */
   sortKey?: SupportTicketSortKey;
+  /** Preferred — per-column sort state used by the new sortable headers. */
+  sort?: TicketSortState | null;
 }
 
 export interface AdminSupportTicketRow {
@@ -66,20 +102,20 @@ export interface AdminSupportTicketRow {
   submitter_user_id: string | null;
   submitter_email: string;
   submitter_name: string | null;
+  /**
+   * @deprecated — replaced by `assignees[]`. The DB column was dropped
+   * by the E48-v3 multi-assignment migration; the field stays in the
+   * type for code that still references it elsewhere in the codebase
+   * (admin detail page, action menu) but is always `null` from the
+   * queue query because the view doesn't surface it.
+   */
   assigned_to: string | null;
   archived_at: string | null;
   deleted_at: string | null;
-}
-
-// E48-v3 PR-ASSIGN-DETAIL — multi-assignee shape returned by the
-// `support_tickets_with_assignees` security_invoker view. The detail
-// page reads this; the queue still reads the flat `support_tickets`
-// table during the staged migration (Wave 2 will switch the queue).
-export interface SupportTicketAssignee {
-  user_id: string;
-  email: string;
-  display_name: string | null;
-  assigned_at: string;
+  /** Multi-assignee list (E48-v3). Empty array when nobody is assigned. */
+  assignees: SupportTicketAssignee[];
+  /** First assignee's display name (view-computed, used for sort). */
+  first_assignee_display_name: string | null;
 }
 
 export interface AdminSupportTicketDetailRow {
@@ -139,6 +175,41 @@ const CATEGORY_LABEL: Record<string, string> = Object.fromEntries(
 // Hooks (moved from queries.ts — behaviour unchanged)
 // ---------------------------------------------------------------------------
 
+// Map the new TicketSortState onto the underlying view columns. PostgREST
+// cannot express CASE-based ordering (status triage funnel, Slovak label
+// ordering), so those two columns fall through to a client-side sort
+// applied after the rows arrive. All other columns map 1:1 to a view
+// column the DB can sort.
+function resolveServerSort(sort: TicketSortState | null | undefined): {
+  serverColumn: string | null;
+  ascending: boolean;
+  clientSort: TicketSortState | null;
+} {
+  if (!sort) {
+    return { serverColumn: "created_at", ascending: false, clientSort: null };
+  }
+  const ascending = sort.direction === "asc";
+  switch (sort.column) {
+    case "created_at":
+      return { serverColumn: "created_at", ascending, clientSort: null };
+    case "subject":
+      return { serverColumn: "subject", ascending, clientSort: null };
+    case "submitter":
+      // Sort by display name fallback to email — view exposes both.
+      return { serverColumn: "submitter_email", ascending, clientSort: null };
+    case "assigned":
+      return {
+        serverColumn: "first_assignee_display_name",
+        ascending,
+        clientSort: null,
+      };
+    case "status":
+    case "category":
+      // Fetch newest-first, sort in JS by Slovak label / triage order.
+      return { serverColumn: "created_at", ascending: false, clientSort: sort };
+  }
+}
+
 export function useAdminSupportTickets(filters: SupportTicketsFilters = {}) {
   const {
     statuses,
@@ -148,8 +219,27 @@ export function useAdminSupportTickets(filters: SupportTicketsFilters = {}) {
     assignedTo,
     dateFrom,
     dateTo,
-    sortKey = "recency-desc",
+    sortKey,
+    sort,
   } = filters;
+
+  // Reconcile the two sort inputs: explicit `sort` (E48-v3) wins; if
+  // only the legacy `sortKey` was provided, translate it into the new
+  // shape. Default = newest first.
+  const effectiveSort: TicketSortState | null = sort
+    ? sort
+    : sortKey === "recency-asc"
+      ? { column: "created_at", direction: "asc" }
+      : sortKey === "status"
+        ? { column: "status", direction: "asc" }
+        : sortKey === "category"
+          ? { column: "category", direction: "asc" }
+          : sortKey === "recency-desc"
+            ? { column: "created_at", direction: "desc" }
+            : null;
+
+  const { serverColumn, ascending, clientSort } = resolveServerSort(effectiveSort);
+
   return useQuery({
     queryKey: [
       "admin",
@@ -161,36 +251,48 @@ export function useAdminSupportTickets(filters: SupportTicketsFilters = {}) {
       assignedTo,
       dateFrom,
       dateTo,
-      sortKey,
+      effectiveSort,
     ],
     queryFn: async (): Promise<AdminSupportTicketRow[]> => {
+      // E48-v3: read from the view that joins assignees as JSONB so the
+      // queue renders the multi-assignment column without a per-row
+      // round-trip. The view is security_invoker — admin RLS on the
+      // underlying table applies.
       let q = supabase
-        .from("support_tickets")
+        .from("support_tickets_with_assignees")
         .select(
-          "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, assigned_to, archived_at, deleted_at",
+          "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, archived_at, deleted_at, assignees, first_assignee_display_name",
         )
         .is("deleted_at", null)
-        .order("created_at", { ascending: sortKey === "recency-asc" })
+        .order(serverColumn ?? "created_at", { ascending, nullsFirst: false })
         .limit(200);
 
       if (!includeArchived) {
         q = q.is("archived_at", null);
       }
       if (statuses && statuses.length > 0) {
-        q = q.in("status", statuses);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        q = q.in("status", statuses as any);
       }
       if (categories && categories.length > 0) {
-        q = q.in("category", categories as string[]);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        q = q.in("category", categories as any);
       }
       if (assignedTo === "me") {
         const {
           data: { user },
         } = await supabase.auth.getUser();
-        if (user) q = q.eq("assigned_to", user.id);
+        if (user) {
+          // The view doesn't expose `assigned_to` (single column dropped
+          // in the multi-assignment migration). Filter by membership in
+          // the assignees JSONB array via PostgREST's `cs` (contains)
+          // operator instead.
+          q = q.contains("assignees", [{ user_id: user.id }]);
+        }
       } else if (assignedTo === "unassigned") {
-        q = q.is("assigned_to", null);
+        q = q.eq("is_assigned", false);
       } else if (typeof assignedTo === "string" && assignedTo) {
-        q = q.eq("assigned_to", assignedTo);
+        q = q.contains("assignees", [{ user_id: assignedTo }]);
       }
       if (dateFrom) q = q.gte("created_at", dateFrom);
       if (dateTo) q = q.lte("created_at", dateTo);
@@ -216,19 +318,29 @@ export function useAdminSupportTickets(filters: SupportTicketsFilters = {}) {
 
       const { data, error } = await q;
       if (error) throw error;
-      let rows = (data ?? []) as AdminSupportTicketRow[];
+      let rows = ((data ?? []) as unknown[]).map((r) => {
+        const row = r as Partial<AdminSupportTicketRow> & {
+          assignees?: SupportTicketAssignee[] | null;
+        };
+        return {
+          ...row,
+          assigned_to: null,
+          assignees: row.assignees ?? [],
+        } as AdminSupportTicketRow;
+      });
 
-      // Client-side sort for non-recency keys — PostgREST cannot express
-      // CASE-based ordering, so we fetch newest-first and re-sort in JS.
-      if (sortKey === "status") {
+      // Client-side sort for columns the DB can't express directly.
+      if (clientSort?.column === "status") {
+        const dir = clientSort.direction === "asc" ? 1 : -1;
         rows = [...rows].sort(
-          (a, b) => (STATUS_ORDER[a.status] ?? 99) - (STATUS_ORDER[b.status] ?? 99),
+          (a, b) => ((STATUS_ORDER[a.status] ?? 99) - (STATUS_ORDER[b.status] ?? 99)) * dir,
         );
-      } else if (sortKey === "category") {
+      } else if (clientSort?.column === "category") {
+        const dir = clientSort.direction === "asc" ? 1 : -1;
         rows = [...rows].sort((a, b) => {
           const la = CATEGORY_LABEL[a.category] ?? a.category;
           const lb = CATEGORY_LABEL[b.category] ?? b.category;
-          return la.localeCompare(lb, "sk");
+          return la.localeCompare(lb, "sk") * dir;
         });
       }
 
@@ -268,8 +380,7 @@ export function useAdminSupportTicket(ticketId: string) {
       // until that ships to prod, this query fails and the detail page
       // surfaces the "not found" branch (acceptable for Wave 2 cutover).
       const { data, error } = await supabase
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .from("support_tickets_with_assignees" as any)
+        .from("support_tickets_with_assignees")
         .select(
           "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, archived_at, deleted_at, assignees",
         )

@@ -1993,6 +1993,28 @@ export type Database = {
         };
         Relationships: [];
       };
+      support_tickets_with_assignees: {
+        Row: {
+          id: string;
+          created_at: string;
+          updated_at: string;
+          status: Database["public"]["Enums"]["support_ticket_status"];
+          category: Database["public"]["Enums"]["support_ticket_category"];
+          source: Database["public"]["Enums"]["support_ticket_source"];
+          subject: string;
+          body: string;
+          submitter_user_id: string | null;
+          submitter_email: string;
+          submitter_name: string | null;
+          archived_at: string | null;
+          deleted_at: string | null;
+          resolved_at: string | null;
+          assignees: Json;
+          is_assigned: boolean;
+          first_assignee_display_name: string | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       hash_test_set_password: {

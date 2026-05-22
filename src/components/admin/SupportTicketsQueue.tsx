@@ -6,7 +6,9 @@ import { Loader2 } from "lucide-react";
 import {
   useAdminSupportTickets,
   useAdminSupportTicketAttachmentCounts,
-  type SupportTicketSortKey,
+  type TicketSortState,
+  type SortColumn,
+  type SortDirection,
 } from "@/lib/admin/queries-tickets";
 import { ticketCountLabel } from "@/lib/admin/format-time";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,6 +28,23 @@ import { KeyboardShortcutsFooter, KeyboardShortcutsHint } from "./queue/Keyboard
 const DEFAULT_STATUSES = ["new", "in_progress", "waiting_user", "reopened"] as const;
 const DEBOUNCE_MS = 300;
 
+// Map the legacy dropdown values to the new per-column sort shape. Used
+// to translate a `?sortDropdown=…` URL once at mount so old bookmarks
+// keep working through one release cycle.
+const LEGACY_SORT_MAP: Record<string, TicketSortState> = {
+  "recency-desc": { column: "created_at", direction: "desc" },
+  "recency-asc": { column: "created_at", direction: "asc" },
+  status: { column: "status", direction: "asc" },
+  category: { column: "category", direction: "asc" },
+};
+
+function parseSortParam(raw: unknown): TicketSortState | null {
+  if (typeof raw !== "string") return null;
+  const m = raw.match(/^([a-z_]+):(asc|desc)$/);
+  if (!m) return null;
+  return { column: m[1] as SortColumn, direction: m[2] as SortDirection };
+}
+
 export function SupportTicketsQueue() {
   const search = useSearch({ from: "/admin/tickets" });
   const navigate = useNavigate({ from: "/admin/tickets" });
@@ -39,9 +58,16 @@ export function SupportTicketsQueue() {
       dateFrom: search.dateFrom,
       dateTo: search.dateTo,
       q: search.q ?? "",
-      sort: (search.sort ?? "recency-desc") as SupportTicketSortKey,
     }),
     [search],
+  );
+
+  // E48-v3 — per-column sort sourced from `?sort=col:dir`. When the URL
+  // has a legacy `?sortDropdown=…` (but no `?sort`), the back-compat
+  // redirect effect below translates it to the new shape on first paint.
+  const currentSort = useMemo<TicketSortState | null>(
+    () => parseSortParam(search.sort),
+    [search.sort],
   );
 
   // Search input is debounced (300ms) — typing should NOT thrash the
@@ -72,7 +98,7 @@ export function SupportTicketsQueue() {
     dateTo: filters.dateTo,
     query: filters.q,
     includeArchived,
-    sortKey: filters.sort,
+    sort: currentSort,
   });
   const tickets = useMemo(() => ticketsQ.data ?? [], [ticketsQ.data]);
   const ticketIds = useMemo(() => tickets.map((t) => t.id), [tickets]);
@@ -124,9 +150,28 @@ export function SupportTicketsQueue() {
       setSearchDraft(next.q);
       return;
     }
-    if (next.sort !== undefined) mapped.sort = next.sort;
     updateUrl(mapped);
   }
+
+  function handleSortChange(next: TicketSortState | null) {
+    updateUrl({ sort: next ? `${next.column}:${next.direction}` : undefined });
+  }
+
+  // E48-v3 back-compat — translate `?sortDropdown=recency-desc` to
+  // `?sort=created_at:desc` once on mount. Runs only when the legacy
+  // param is present AND the new param isn't, so the new shape always
+  // wins on a fresh URL.
+  useEffect(() => {
+    const legacy = (search as { sortDropdown?: string }).sortDropdown;
+    if (!legacy || search.sort) return;
+    const translated = LEGACY_SORT_MAP[legacy];
+    if (!translated) return;
+    updateUrl({
+      sort: `${translated.column}:${translated.direction}`,
+      sortDropdown: undefined,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function toggleRow(id: string) {
     setSelectedIds((curr) => {
@@ -216,7 +261,7 @@ export function SupportTicketsQueue() {
   async function handleExport(scope: "selected" | "filter" | "all") {
     const body = {
       filters,
-      sort: filters.sort,
+      sort: currentSort ? `${currentSort.column}:${currentSort.direction}` : "created_at:desc",
       scope,
       selectedIds: scope === "selected" ? Array.from(selectedIds) : undefined,
       includeArchived,
@@ -304,6 +349,8 @@ export function SupportTicketsQueue() {
           onToggleAll={toggleAll}
           isLoading
           focusedRowIndex={null}
+          currentSort={currentSort}
+          onSortChange={handleSortChange}
         />
       ) : tickets.length === 0 ? (
         <TicketsEmptyState
@@ -322,6 +369,8 @@ export function SupportTicketsQueue() {
             onToggleAll={toggleAll}
             isLoading={false}
             focusedRowIndex={focusedRow}
+            currentSort={currentSort}
+            onSortChange={handleSortChange}
           />
           <div
             className="flex items-center justify-between text-xs text-muted-foreground"
