@@ -17,6 +17,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { TicketDetailHeader } from "./detail/TicketDetailHeader";
 import { TicketThread } from "./detail/TicketThread";
 import { TicketActionsSidebar } from "./detail/TicketActionsSidebar";
+import { AttachmentViewer } from "./detail/AttachmentViewer";
+import type { AttachmentItemAttachment } from "./detail/AttachmentItem";
 import { FSM_TRANSITIONS, STATUS_LABEL_SK, type TicketStatus } from "./detail/ticket-labels";
 
 // E48-v2 PR-DETAIL — thin orchestrator. Reads the ticket / messages /
@@ -63,7 +65,7 @@ export function SupportTicketDetail({ ticketId }: SupportTicketDetailProps) {
 
   const ticket = ticketQ.data;
   const messages = messagesQ.data ?? [];
-  const attachments = attachmentsQ.data ?? [];
+  const attachments = (attachmentsQ.data ?? []) as unknown as AttachmentItemAttachment[];
   const status = ticket.status as TicketStatus;
   const isClosed = status === "archived";
 
@@ -119,7 +121,9 @@ export function SupportTicketDetail({ ticketId }: SupportTicketDetailProps) {
 
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
         <div className="min-w-0 space-y-4">
-          <TicketThread ticket={ticket} messages={messages} attachments={attachments} />
+          <TicketThread ticket={ticket} messages={messages} />
+
+          <AttachmentViewer attachments={attachments} />
 
           {!isClosed && (
             <div
