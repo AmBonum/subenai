@@ -196,10 +196,18 @@ function KontaktTicketViewPage() {
           data-testid="kontakt-ticket-view-attachments"
         >
           <h2 className="text-sm font-semibold text-foreground">Prílohy</h2>
-          <ul className="mt-2 space-y-1">
+          <ul className="mt-2 space-y-1" data-testid="kontakt-ticket-view-attachment-list">
             {attachments.map((a) => (
-              <li key={a.id} className="flex items-center gap-2 text-xs">
-                <Badge variant="outline" className="text-[10px]">
+              <li
+                key={a.id}
+                className="flex items-center gap-2 text-xs"
+                data-testid={`kontakt-ticket-view-attachment-${a.id}`}
+              >
+                <Badge
+                  variant="outline"
+                  className="text-[10px]"
+                  data-testid={`kontakt-ticket-view-attachment-scan-${a.id}`}
+                >
                   {a.scan_status === "clean" ? "✓ overené" : "⚠ chyba"}
                 </Badge>
                 <span className="text-foreground">{a.filename}</span>

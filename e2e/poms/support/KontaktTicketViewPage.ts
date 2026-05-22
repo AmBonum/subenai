@@ -40,6 +40,19 @@ export class KontaktTicketViewPage extends BasePage {
     return this.page.getByTestId("kontakt-ticket-view-back");
   }
 
+  // Attachment list (view-token page) -----------------------------------
+  get attachmentList(): Locator {
+    return this.page.getByTestId("kontakt-ticket-view-attachment-list");
+  }
+
+  attachmentItem(id: string): Locator {
+    return this.page.getByTestId(`kontakt-ticket-view-attachment-${id}`);
+  }
+
+  attachmentScanBadge(id: string): Locator {
+    return this.page.getByTestId(`kontakt-ticket-view-attachment-scan-${id}`);
+  }
+
   // Actions -------------------------------------------------------------
   async openWithToken(ticketId: string, token: string): Promise<void> {
     await this.goto(

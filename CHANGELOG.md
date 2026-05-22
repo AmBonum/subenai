@@ -39,6 +39,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ### Pridané (bezpečnosť)
 - E48-v3 security regression suite: XSS battery proti admin display_name (5 payloadov), picker search (5), attachment filename (5), signed URL injection. RLS verification proti junction table + 3 nové RPCs.
+- E48-v4 Wave 4 public-flow test suite: nové Playwright specs (`public-submission`, `kontakt-view-token-thread`) + rozšírený `ticket-create` integration o boundary scenáre (subject 201, body 5001, body whitespace). POMs `KontaktPage` + `KontaktTicketViewPage` doplnené o attachment getters a fix pre Radix Select interaction.
 - E48-v4 Wave 4 test suite: RLS + concurrency + notifications + a11y + performance smoke. Nové integračné testy pre súbežné priradenie adminov (idempotentný PK), rotáciu view tokenu, autorizáciu pre anon/AAL1/user na nových RLS-chránených tabuľkách a pohľadoch (support_ticket_assignees, support_tickets_with_assignees, list_admin_users, storage bucket). Testy dostupnosti (keyboard nav, aria-label, role=dialog, RTL overflow, mobile 375 px). Výkonnostný smoke (queue 50 ticketov &lt; 2 s, detail 20 správ + 10 príloh &lt; 3 s, lazy loading). Emailové kontrakty pre confirmation, reply a resolved notifikáciu.
 
 ### Opravené (interné)
