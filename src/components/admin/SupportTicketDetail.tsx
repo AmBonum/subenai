@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Loader2, Send } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -9,36 +10,20 @@ import {
   useAdminSupportTicketMessages,
   useAdminSupportTicketAttachments,
   useTransitionTicketStatus,
-} from "@/lib/admin/queries";
+} from "@/lib/admin/queries-tickets";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { useQueryClient } from "@tanstack/react-query";
 
-// E48.7 — Admin ticket detail. Sticky header + scrollable thread +
-// reply composer. Status transitions go through transition_ticket_status
-// RPC (admin + AAL2 enforced server-side). Reply submission posts to
-// /api/support-ticket-reply (E48.8 CF function) — that handler INSERTs
-// the message, flips status to waiting_user, sends the user email.
+import { TicketDetailHeader } from "./detail/TicketDetailHeader";
+import { TicketThread } from "./detail/TicketThread";
+import { TicketActionsSidebar } from "./detail/TicketActionsSidebar";
+import { FSM_TRANSITIONS, STATUS_LABEL_SK, type TicketStatus } from "./detail/ticket-labels";
 
-const STATUS_LABEL_SK: Record<string, string> = {
-  new: "Nové",
-  in_progress: "Riešim",
-  waiting_user: "Čaká na používateľa",
-  resolved: "Vyriešené",
-  reopened: "Znovu otvorené",
-  archived: "Archivované",
-};
-
-const CATEGORY_LABEL_SK: Record<string, string> = {
-  bug: "Chyba",
-  question: "Otázka",
-  feature_request: "Návrh",
-  abuse_report: "Nevhodný obsah",
-  billing: "Platby",
-  gdpr: "GDPR",
-  other: "Iné",
-};
+// E48-v2 PR-DETAIL — thin orchestrator. Reads the ticket / messages /
+// attachments queries, hands them to display components, and owns the
+// reply composer (it stays here because the auth-token flow and POST
+// to /api/support-ticket-reply are tightly coupled to the page-level
+// loading state).
 
 interface SupportTicketDetailProps {
   ticketId: string;
@@ -79,14 +64,18 @@ export function SupportTicketDetail({ ticketId }: SupportTicketDetailProps) {
   const ticket = ticketQ.data;
   const messages = messagesQ.data ?? [];
   const attachments = attachmentsQ.data ?? [];
+  const status = ticket.status as TicketStatus;
+  const isClosed = status === "archived";
 
-  async function handleTransition(newStatus: string) {
+  async function handlePrimaryAction() {
+    const transitions = FSM_TRANSITIONS[status] ?? [];
+    const primary = transitions.find((t) => t.severity === "success") ?? transitions[0];
+    if (!primary) return;
     try {
-      await transition.mutateAsync({ ticketId, newStatus });
-      toast.success(`Stav prepnutý: ${STATUS_LABEL_SK[newStatus] ?? newStatus}`);
+      await transition.mutateAsync({ ticketId, newStatus: primary.to });
+      toast.success(`Stav prepnutý: ${STATUS_LABEL_SK[primary.to] ?? primary.to}`);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Prechod stavu zlyhal.";
-      toast.error(msg);
+      toast.error(err instanceof Error ? err.message : "Prechod stavu zlyhal.");
     }
   }
 
@@ -124,193 +113,59 @@ export function SupportTicketDetail({ ticketId }: SupportTicketDetailProps) {
     }
   }
 
-  const status = ticket.status;
-  const canStart = status === "new";
-  const canResolve = status === "in_progress" || status === "waiting_user";
-  const canReopen = status === "resolved" || status === "archived";
-  const canArchive = status === "resolved";
-  const isClosed = status === "archived";
-
   return (
     <div className="space-y-6" data-testid="admin-ticket-detail-root">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <Button asChild variant="ghost" size="sm" data-testid="admin-ticket-detail-back">
-            <Link to="/admin/tickets">
-              <ArrowLeft className="mr-1 size-4" aria-hidden="true" /> Späť na zoznam
-            </Link>
-          </Button>
-          <h1
-            className="mt-2 text-2xl font-bold tracking-tight"
-            data-testid="admin-ticket-detail-subject"
-          >
-            {ticket.subject}
-          </h1>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
-            <Badge variant="outline" data-testid="admin-ticket-detail-status-badge">
-              {STATUS_LABEL_SK[status] ?? status}
-            </Badge>
-            <Badge variant="outline" className="text-xs">
-              {CATEGORY_LABEL_SK[ticket.category] ?? ticket.category}
-            </Badge>
-            <span className="text-xs text-muted-foreground">
-              {ticket.submitter_name ? `${ticket.submitter_name} · ` : ""}
-              {ticket.submitter_email}
-            </span>
-          </div>
-        </div>
+      <TicketDetailHeader ticket={ticket} onPrimaryAction={handlePrimaryAction} />
 
-        <div className="flex flex-wrap gap-2" data-testid="admin-ticket-detail-actions">
-          {canStart && (
-            <Button
-              size="sm"
-              onClick={() => handleTransition("in_progress")}
-              data-testid="admin-ticket-action-start"
-            >
-              Začať riešiť
-            </Button>
-          )}
-          {canResolve && (
-            <Button
-              size="sm"
-              variant="default"
-              onClick={() => handleTransition("resolved")}
-              data-testid="admin-ticket-action-resolve"
-            >
-              Označiť ako vyriešené
-            </Button>
-          )}
-          {canReopen && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => handleTransition(status === "archived" ? "reopened" : "reopened")}
-              data-testid="admin-ticket-action-reopen"
-            >
-              Znovu otvoriť
-            </Button>
-          )}
-          {canArchive && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => handleTransition("archived")}
-              data-testid="admin-ticket-action-archive"
-            >
-              Archivovať
-            </Button>
-          )}
-        </div>
-      </div>
+      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="min-w-0 space-y-4">
+          <TicketThread ticket={ticket} messages={messages} attachments={attachments} />
 
-      {/* Thread */}
-      <div
-        className="space-y-3 rounded-md border border-border bg-card p-4"
-        data-testid="admin-ticket-detail-thread"
-      >
-        {/* Initial body (treated as the first user message) */}
-        <article className="space-y-1">
-          <div className="text-xs uppercase tracking-wide text-muted-foreground">
-            {ticket.submitter_name ?? ticket.submitter_email}
-            <span className="ml-2 text-muted-foreground/60">
-              {new Date(ticket.created_at).toLocaleString("sk-SK")}
-            </span>
-          </div>
-          <p className="whitespace-pre-wrap text-sm">{ticket.body}</p>
-        </article>
-
-        {messages.map((m) => (
-          <article
-            key={m.id}
-            className={
-              m.author_kind === "admin"
-                ? "ml-8 rounded-md border-l-2 border-emerald-500 bg-emerald-50/60 p-3 dark:bg-emerald-950/30"
-                : "rounded-md border-l-2 border-muted p-3"
-            }
-            data-testid={`admin-ticket-detail-message-${m.id}`}
-          >
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">
-              {m.author_name}
-              <span className="ml-2 text-muted-foreground/60">
-                {new Date(m.created_at).toLocaleString("sk-SK")}
-              </span>
-              <Badge variant="outline" className="ml-2 text-[10px]">
-                {m.author_kind === "admin"
-                  ? "admin"
-                  : m.author_kind === "system"
-                    ? "systém"
-                    : "používateľ"}
-              </Badge>
+          {!isClosed && (
+            <div
+              className="space-y-2 rounded-md border border-border bg-card p-4"
+              data-testid="admin-ticket-detail-composer"
+            >
+              <label htmlFor="admin-ticket-reply" className="text-sm font-semibold text-foreground">
+                Vaša odpoveď
+              </label>
+              <Textarea
+                id="admin-ticket-reply"
+                rows={6}
+                value={replyBody}
+                onChange={(e) => setReplyBody(e.target.value)}
+                placeholder="Napíšte odpoveď používateľovi…"
+                data-testid="admin-ticket-detail-reply-textarea"
+                disabled={sending}
+              />
+              <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-xs text-muted-foreground">
+                  Odoslaním sa stav žiadosti zmení na <strong>Čaká na používateľa</strong> a
+                  používateľ dostane e-mail s vašou odpoveďou.
+                </p>
+                <Button
+                  type="button"
+                  onClick={handleSendReply}
+                  disabled={sending || replyBody.trim().length === 0}
+                  data-testid="admin-ticket-detail-reply-send"
+                >
+                  {sending ? (
+                    <>
+                      <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" /> Odosielam…
+                    </>
+                  ) : (
+                    <>
+                      <Send className="mr-2 size-4" aria-hidden="true" /> Odoslať odpoveď
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
-            <p className="mt-1 whitespace-pre-wrap text-sm">{m.body}</p>
-          </article>
-        ))}
-
-        {attachments.length > 0 && (
-          <div
-            className="mt-2 border-t border-border pt-3"
-            data-testid="admin-ticket-detail-attachments"
-          >
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">Prílohy</div>
-            <ul className="mt-2 space-y-1">
-              {attachments.map((a) => (
-                <li key={a.id} className="flex items-center gap-2 text-xs">
-                  <Badge variant="outline" className="text-[10px]">
-                    {a.scan_status === "clean" ? "✓ clean" : "⚠ chyba"}
-                  </Badge>
-                  <span className="text-foreground">{a.filename}</span>
-                  <span className="text-muted-foreground">
-                    ({Math.round(a.size_bytes / 1024)} kB)
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-
-      {/* Reply composer */}
-      {!isClosed && (
-        <div
-          className="space-y-2 rounded-md border border-border bg-card p-4"
-          data-testid="admin-ticket-detail-composer"
-        >
-          <label htmlFor="admin-ticket-reply" className="text-sm font-semibold text-foreground">
-            Vaša odpoveď
-          </label>
-          <Textarea
-            id="admin-ticket-reply"
-            rows={6}
-            value={replyBody}
-            onChange={(e) => setReplyBody(e.target.value)}
-            placeholder="Napíšte odpoveď používateľovi…"
-            data-testid="admin-ticket-detail-reply-textarea"
-            disabled={sending}
-          />
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-xs text-muted-foreground">
-              Odoslaním sa stav žiadosti zmení na <strong>Čaká na používateľa</strong> a používateľ
-              dostane e-mail s vašou odpoveďou.
-            </p>
-            <Button
-              type="button"
-              onClick={handleSendReply}
-              disabled={sending || replyBody.trim().length === 0}
-              data-testid="admin-ticket-detail-reply-send"
-            >
-              {sending ? (
-                <>
-                  <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" /> Odosielam…
-                </>
-              ) : (
-                <>
-                  <Send className="mr-2 size-4" aria-hidden="true" /> Odoslať odpoveď
-                </>
-              )}
-            </Button>
-          </div>
+          )}
         </div>
-      )}
+
+        <TicketActionsSidebar ticket={ticket} />
+      </div>
     </div>
   );
 }
