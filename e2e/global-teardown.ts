@@ -3,6 +3,7 @@ import {
   cleanupAllSeedAdminUsers,
   cleanupAllSeedAttachmentFiles,
 } from "../tests/fixtures/seed-tickets";
+import { cleanupE49 } from "./seed/teardown-e49";
 
 export default async function globalTeardown() {
   if (process.env.CI_SKIP_SEED_CLEANUP === "1") return;
@@ -17,5 +18,8 @@ export default async function globalTeardown() {
   });
   await cleanupAllSeedAttachmentFiles().catch((err) => {
     console.warn("[E48 seed cleanup] attachment files failed", err);
+  });
+  await cleanupE49().catch((err) => {
+    console.warn("[E49 seed cleanup] failed", err);
   });
 }

@@ -28,6 +28,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - Admin môže exportovať žiadosti podpory ako CSV súbor — server-side endpoint s ochranou pred CSV injection a rate-limit 1/min.
 
 ### Pridané (interné)
+- Test infraštruktúra pre E49 Phase 1c-1: deterministickí test-useri (TU-A/B/Resp/Admin), idempotentný SQL seed pre 9 testov + ~75 sessions + ~50 session_answers, CLI runner (`--apply` / `--cleanup` / `--verify`), TS fixture konstanty a global teardown integrácia. Bez nových scenárov — pure infra pre 1c-2/1c-3/1c-4.
 - Test infraštruktúra pre E48-v2: SQL seed helper s worker-isolation prefixom, security regression suite (XSS + CSV injection battery).
 - Reusable `AdminPicker` komponent pre výber adminov v dropdowne (search + listbox). Pripravený na použitie v PR-DETAIL a budúcich admin features.
 - Test infra pre E48-v3: seed helper pre admin users + ticket assignments + attachment fixtures; XSS payload battery pre display_name a filename.
