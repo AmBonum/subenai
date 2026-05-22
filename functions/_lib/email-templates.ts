@@ -226,8 +226,6 @@ function formatBytes(bytes: number): string {
   return `${(kb / 1024).toLocaleString("sk-SK", { maximumFractionDigits: 1 })} MB`;
 }
 
-export const __internal = { formatBytes };
-
 export function supportTicketReceivedEmail(input: {
   ticketId: string;
   subject: string;
@@ -425,4 +423,4 @@ function sanitizeUrl(value: string): string {
   return escapeAttr(trimmed);
 }
 
-export const __internal = { sanitizeUrl };
+export const __internal = { formatBytes, sanitizeUrl };
