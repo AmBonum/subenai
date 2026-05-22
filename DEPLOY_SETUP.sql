@@ -4951,6 +4951,12 @@ CREATE TABLE IF NOT EXISTS public.support_ticket_messages (
   email_message_id text
 );
 
+-- E48-v4 internal note flag — admin-only thread comments hidden from
+-- the anon view-token reader and skipped by the reply CF function's
+-- Resend dispatch.
+ALTER TABLE public.support_ticket_messages
+  ADD COLUMN IF NOT EXISTS is_internal boolean NOT NULL DEFAULT false;
+
 CREATE TABLE IF NOT EXISTS public.support_ticket_attachments (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   ticket_id uuid NOT NULL REFERENCES public.support_tickets(id) ON DELETE CASCADE,
@@ -5308,7 +5314,8 @@ BEGIN
         'id', m.id, 'created_at', m.created_at, 'author_kind', m.author_kind,
         'author_name', m.author_name, 'body', m.body
       ) ORDER BY m.created_at), '[]'::jsonb)
-      FROM public.support_ticket_messages m WHERE m.ticket_id = v_ticket.id
+      FROM public.support_ticket_messages m
+      WHERE m.ticket_id = v_ticket.id AND m.is_internal = false
     ),
     'attachments', (
       SELECT COALESCE(jsonb_agg(jsonb_build_object(

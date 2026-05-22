@@ -40,6 +40,13 @@ interface RequestContext {
 interface Payload {
   ticket_id?: string;
   body?: string;
+  /**
+   * E48-v4 internal-note flag. When true, the row is inserted with
+   * `is_internal = true`, the Resend dispatch is skipped, and the
+   * view-token rotation is skipped (no point minting a fresh token if
+   * the submitter will never see this message). Audit trail unchanged.
+   */
+  is_internal?: boolean;
 }
 
 const DEFAULT_SITE_ORIGIN = "https://subenai.sk";
@@ -75,6 +82,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
 
   const ticketId = (payload.ticket_id ?? "").trim();
   const body = (payload.body ?? "").trim();
+  const isInternal = payload.is_internal === true;
   if (!/^[0-9a-fA-F-]{36}$/.test(ticketId)) {
     return jsonResponse(400, { error: "ticket_id_invalid" });
   }
@@ -152,6 +160,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
       author_user_id: adminId,
       author_name: adminName,
       body,
+      is_internal: isInternal,
     })
     .select("id")
     .single();
@@ -161,6 +170,27 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     const code = (insertErr as { code?: string } | null)?.code ?? "";
     console.error("support-ticket-reply insert failed", { code, message });
     return jsonResponse(500, { error: "insert_failed", reason: code || "opaque" });
+  }
+
+  // E48-v4 internal notes never flip ticket status or rotate the
+  // view-token: the submitter has no visibility into them, so there's
+  // nothing to "wait" on and no link to refresh in an email that will
+  // never be sent. Audit trail (`support_ticket.replied` via the
+  // INSERT trigger) still fires — internal vs public is captured by
+  // the row's `is_internal` flag.
+  if (isInternal) {
+    console.log(
+      "support-ticket-reply internal note — skipping status transition + token regen + email",
+      {
+        ticket_id: ticketId,
+        message_id: messageRow.id,
+      },
+    );
+    return jsonResponse(200, {
+      ok: true,
+      message_id: messageRow.id,
+      is_internal: true,
+    });
   }
 
   // Flip status to waiting_user when current status allows it.

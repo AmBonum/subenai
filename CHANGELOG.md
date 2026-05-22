@@ -26,6 +26,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ### Pridané (admin)
 - Admin môže exportovať žiadosti podpory ako CSV súbor — server-side endpoint s ochranou pred CSV injection a rate-limit 1/min.
+- **Interné poznámky vo vlákne podpornej žiadosti.** Admin môže pri písaní odpovede zaškrtnúť „Interná poznámka (nepošle sa zákazníkovi)" — správa sa uloží do vlákna len pre tím podpory, zákazník ju v e-maile ani vo svojom prehľade vlákna nikdy neuvidí, žiadny e-mail sa neodošle a stav žiadosti sa nemení. V admin paneli sú interné poznámky vizuálne odlíšené žltohnedým pozadím a štítkom „Interná poznámka". (2026-05-22)
 
 ### Pridané (interné)
 - Test infraštruktúra pre E48-v2: SQL seed helper s worker-isolation prefixom, security regression suite (XSS + CSV injection battery).

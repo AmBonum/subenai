@@ -22,10 +22,12 @@ import { mockSupportApi, type MockSupportApiCaptures } from "../../mocks/api/sup
 //   This discrepancy is reported in the PR description.
 //
 // NOTE ON D-07 (internal note):
-//   The live SupportTicketDetail.tsx does not yet expose an
-//   `is_internal` checkbox or internal-note badge in the composer.
-//   The test is written as `test.fixme` with explanation so it does
-//   not block CI but is tracked. Flag as plan/component discrepancy.
+//   Resolved in E48-v4. SupportTicketDetail composer now exposes an
+//   `admin-ticket-detail-reply-internal-toggle` checkbox; checked rows
+//   are inserted with `is_internal=true`, skip the Resend dispatch, and
+//   render with an amber `Interná poznámka` badge in the thread.
+//   View-token RPC filters internal rows so the submitter never sees
+//   them.
 
 const TICKET_ID = "11111111-1111-4111-8111-111111111111";
 const MSG_ID = "msg-001";
@@ -193,12 +195,60 @@ test.describe("Admin ticket detail — render, reply, transitions", () => {
     });
   });
 
-  // D-07: internal note — FLAGGED as plan/component discrepancy
-  // The live SupportTicketDetail composer does not yet expose an
-  // is_internal checkbox or render an internal-note badge.
-  test.fixme("D-07: internal note submitted; renders with internal badge; not included in email", async () => {
-    // TODO: implement when is_internal checkbox ships in the composer.
-    // Plan references admin-ticket-detail-internal-note-checkbox testid.
+  // D-07 (E48-v4): admin checks Interná poznámka toggle, sends; CF
+  // function receives is_internal=true. Existing internal message in the
+  // seed renders with the Interná poznámka badge.
+  test("D-07: internal-note toggle sends is_internal=true; thread badge renders for internal messages", async ({
+    adminTicketDetail,
+    page,
+  }) => {
+    // Override the seed for this test: include one existing internal
+    // admin note so we can assert the badge rendering path.
+    await page.unrouteAll();
+    captures = await mockSupportApi(page.context(), {
+      ticketReplyResponse: { message_id: "msg-internal-new" },
+    });
+    await setupAppShell(page.context(), page, {
+      session: ADMIN_SESSION,
+      extras: {
+        tables: {
+          support_tickets: [buildTicketRow()],
+          support_ticket_messages: [
+            buildMessageRow({ id: "msg-internal-seed", is_internal: true }),
+          ],
+          support_ticket_attachments: [],
+          audit_log: [],
+        },
+        rpcs: {
+          has_role: true,
+          transition_ticket_status: null,
+          get_ticket_thread_for_view_token: null,
+        },
+      },
+    });
+
+    await test.step("Open the ticket detail page", async () => {
+      await adminTicketDetail.open(TICKET_ID);
+    });
+
+    await test.step("Verify the seeded internal note carries the Interná poznámka badge", async () => {
+      await expect(adminTicketDetail.messageInternalBadge("msg-internal-seed")).toContainText(
+        "Interná poznámka",
+      );
+    });
+
+    await test.step("Fill body, check the internal-note toggle, send", async () => {
+      await adminTicketDetail.replyTextarea.fill("Interná poznámka pre tím.");
+      await adminTicketDetail.replyInternalToggle.click();
+      await adminTicketDetail.replySendButton.click();
+    });
+
+    await test.step("Verify the CF function received is_internal=true", async () => {
+      await expect.poll(() => captures.ticketReplyRequests.length, { timeout: 5000 }).toBe(1);
+      const body = captures.ticketReplyRequests[0].body as Record<string, unknown>;
+      expect(body.is_internal).toBe(true);
+      expect(body.body).toBe("Interná poznámka pre tím.");
+    });
   });
 
   // D-08: status 'new' shows 'Začať riešiť'; 'Uzavrieť' is hidden in the sidebar

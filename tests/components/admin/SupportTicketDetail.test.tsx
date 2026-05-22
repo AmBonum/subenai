@@ -334,6 +334,78 @@ describe("SupportTicketDetail (E48-v2 PR-DETAIL)", () => {
     expect(screen.getByTestId("admin-ticket-metadata-updated-at")).toBeInTheDocument();
   });
 
+  it("E48-v4: internal note checkbox toggles button label + helper text and clears after send", async () => {
+    state.ticket = baseTicket({ status: "in_progress" });
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ ok: true, message_id: "msg-internal-1", is_internal: true }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+    try {
+      const SupportTicketDetail = await loadComponent();
+      renderAdmin(<SupportTicketDetail ticketId={state.ticket!.id as string} />);
+      await flushQueries();
+
+      // Default state: public reply.
+      const sendBtn = await screen.findByTestId("admin-ticket-detail-reply-send");
+      expect(sendBtn.textContent).toContain("Odoslať odpoveď");
+
+      // Type a body, then check the internal toggle.
+      const textarea = screen.getByTestId("admin-ticket-detail-reply-textarea");
+      fireEvent.change(textarea, { target: { value: "Interná poznámka o tomto tickete." } });
+      const toggle = screen.getByTestId("admin-ticket-detail-reply-internal-toggle");
+      fireEvent.click(toggle);
+
+      // Button label flips to "Uložiť poznámku".
+      await waitFor(() => expect(sendBtn.textContent).toContain("Uložiť poznámku"));
+      // Helper text shifts to the internal-note variant (verbatim Slovak).
+      expect(screen.getByTestId("admin-ticket-detail-composer").textContent).toContain(
+        "Zákazník ju neuvidí",
+      );
+
+      // Click send — fetch must carry is_internal: true.
+      fireEvent.click(sendBtn);
+      await waitFor(() => expect(fetchSpy).toHaveBeenCalled());
+      const [, init] = fetchSpy.mock.calls[0];
+      const sentBody = JSON.parse((init as RequestInit).body as string) as Record<string, unknown>;
+      expect(sentBody.is_internal).toBe(true);
+      expect(sentBody.body).toBe("Interná poznámka o tomto tickete.");
+
+      // After successful send, the toggle resets and the button label
+      // returns to "Odoslať odpoveď".
+      await waitFor(() => expect(sendBtn.textContent).toContain("Odoslať odpoveď"));
+    } finally {
+      fetchSpy.mockRestore();
+    }
+  });
+
+  it("E48-v4: thread renders Interná poznámka badge for is_internal=true messages", async () => {
+    state.messages = [
+      {
+        id: "msg-internal-7",
+        ticket_id: state.ticket!.id,
+        created_at: "2026-05-20T11:00:00.000Z",
+        author_kind: "admin",
+        author_user_id: "admin-uuid",
+        author_name: "Admin Bot",
+        body: "Toto si zákazník nikdy nepozrie.",
+        is_internal: true,
+      },
+    ];
+    const SupportTicketDetail = await loadComponent();
+    renderAdmin(<SupportTicketDetail ticketId={state.ticket!.id as string} />);
+    await flushQueries();
+    const badge = await screen.findByTestId(
+      "admin-ticket-detail-message-internal-badge-msg-internal-7",
+    );
+    expect(badge.textContent).toContain("Interná poznámka");
+    const bubble = screen.getByTestId("admin-ticket-detail-message-msg-internal-7");
+    expect(bubble.getAttribute("data-is-internal")).toBe("true");
+    // Amber palette signals private — not the regular bg-accent.
+    expect(bubble.className).toContain("bg-amber-50");
+  });
+
   it("renders not-found state when ticket is missing", async () => {
     state.ticket = null;
     const SupportTicketDetail = await loadComponent();
