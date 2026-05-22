@@ -35,8 +35,11 @@ interface MockState {
   insertOk?: boolean;
   tokenInvalidated?: boolean;
   tokenExpired?: boolean;
+  regenTokenResult?: string | null;
+  regenTokenCalls?: string[];
   transitionCalls?: string[];
   emailCalled?: { value: boolean };
+  lastEmailBody?: { value: string };
 }
 
 function buildRequest(body: unknown, opts: { auth?: string } = {}) {
@@ -53,7 +56,9 @@ function buildRequest(body: unknown, opts: { auth?: string } = {}) {
 
 function mockFetch(state: MockState) {
   state.transitionCalls = state.transitionCalls ?? [];
+  state.regenTokenCalls = state.regenTokenCalls ?? [];
   state.emailCalled = state.emailCalled ?? { value: false };
+  state.lastEmailBody = state.lastEmailBody ?? { value: "" };
   return vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
     const url = typeof input === "string" ? input : (input as Request).url;
 
@@ -71,6 +76,28 @@ function mockFetch(state: MockState) {
     // has_role RPC
     if (url.endsWith("/rest/v1/rpc/has_role")) {
       return new Response(JSON.stringify(state.hasRoleResult ?? true), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    }
+
+    // regenerate_support_ticket_view_token RPC
+    if (url.endsWith("/rest/v1/rpc/regenerate_support_ticket_view_token")) {
+      const bodyStr = (init?.body as string) ?? "";
+      try {
+        const parsed = JSON.parse(bodyStr) as { p_ticket_id?: string };
+        if (parsed.p_ticket_id) state.regenTokenCalls!.push(parsed.p_ticket_id);
+      } catch {
+        /* ignore */
+      }
+      if (state.regenTokenResult === null) {
+        return new Response(JSON.stringify({ code: "PGRST", message: "regen_failed" }), {
+          status: 500,
+          headers: { "content-type": "application/json" },
+        });
+      }
+      const token = state.regenTokenResult ?? "fresh-token-abc123";
+      return new Response(JSON.stringify(token), {
         status: 200,
         headers: { "content-type": "application/json" },
       });
@@ -141,6 +168,7 @@ function mockFetch(state: MockState) {
     // Resend
     if (url.includes("api.resend.com/emails")) {
       state.emailCalled!.value = true;
+      state.lastEmailBody!.value = (init?.body as string) ?? "";
       return new Response(JSON.stringify({ id: "email-stub" }), {
         status: 200,
         headers: { "content-type": "application/json" },
@@ -314,5 +342,57 @@ describe("POST /api/support-ticket-reply — happy path + state machine", () => 
       env: envNoMail,
     });
     expect(state.emailCalled!.value).toBe(false);
+  });
+});
+
+describe("POST /api/support-ticket-reply — view_token rotation", () => {
+  it("calls regenerate_support_ticket_view_token with the correct p_ticket_id", async () => {
+    const state: MockState = { hasRoleResult: true, ticketStatus: "in_progress" };
+    mockFetch(state);
+    const res = await onRequestPost({
+      request: buildRequest(validBody, { auth: makeJwt("aal2") }),
+      env,
+    });
+    expect(res.status).toBe(200);
+    expect(state.regenTokenCalls).toContain(ticketId);
+  });
+
+  it("constructs viewUrl with ?token= param from the freshly minted plaintext", async () => {
+    const state: MockState = {
+      hasRoleResult: true,
+      ticketStatus: "in_progress",
+      regenTokenResult: "deadbeefcafe1234",
+    };
+    mockFetch(state);
+    await onRequestPost({
+      request: buildRequest(validBody, { auth: makeJwt("aal2") }),
+      env,
+    });
+    expect(state.emailCalled!.value).toBe(true);
+    const emailPayload = JSON.parse(state.lastEmailBody!.value) as { html?: string; text?: string };
+    const needle = `?token=${encodeURIComponent("deadbeefcafe1234")}`;
+    expect(emailPayload.html ?? "").toContain(needle);
+    expect(emailPayload.text ?? "").toContain(needle);
+  });
+
+  it("still sends email and persists reply when token regen fails", async () => {
+    const state: MockState = {
+      hasRoleResult: true,
+      ticketStatus: "in_progress",
+      regenTokenResult: null,
+    };
+    mockFetch(state);
+    const res = await onRequestPost({
+      request: buildRequest(validBody, { auth: makeJwt("aal2") }),
+      env,
+    });
+    expect(res.status).toBe(200);
+    const json = (await res.json()) as { ok: boolean; message_id: string };
+    expect(json.ok).toBe(true);
+    expect(json.message_id).toBe("msg-001");
+    expect(state.emailCalled!.value).toBe(true);
+    const emailPayload = JSON.parse(state.lastEmailBody!.value) as { html?: string; text?: string };
+    expect(emailPayload.html ?? "").not.toContain("?token=");
+    expect(emailPayload.text ?? "").not.toContain("?token=");
   });
 });
