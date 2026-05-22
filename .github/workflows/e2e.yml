@@ -112,6 +112,9 @@ jobs:
               - 'src/components/admin/**'
               - 'src/lib/admin/**'
               - 'src/lib/blog/admin-queries*'
+              - 'e2e/specs/admin/detail-*.spec.ts'
+              - 'e2e/specs/admin/queue-*.spec.ts'
+              - 'e2e/integration/admin/**'
             app:
               - 'src/routes/app*'
               - 'src/lib/platform/**'

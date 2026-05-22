@@ -25,6 +25,7 @@ import { KontaktTicketViewPage } from "../poms/support/KontaktTicketViewPage";
 import { AdminTicketsQueuePage } from "../poms/admin/AdminTicketsQueuePage";
 import { AdminTicketDetailPage } from "../poms/admin/AdminTicketDetailPage";
 import { AdminNotificationPreferencesPage } from "../poms/admin/AdminNotificationPreferencesPage";
+import { AdminPickerPopover } from "../poms/admin/AdminPickerPopover";
 import { TestsDirectoryPage } from "../poms/quiz/TestsDirectoryPage";
 import { NetworkSentinel } from "../poms/security/NetworkSentinel";
 
@@ -102,6 +103,7 @@ type Fixtures = {
   adminTicketsQueue: AdminTicketsQueuePage;
   adminTicketDetail: AdminTicketDetailPage;
   adminNotifPrefs: AdminNotificationPreferencesPage;
+  adminPickerPopover: AdminPickerPopover;
   sentinel: NetworkSentinel;
 };
 
@@ -186,6 +188,9 @@ export const test = base.extend<Fixtures>({
   },
   adminNotifPrefs: async ({ page }, use) => {
     await use(new AdminNotificationPreferencesPage(page));
+  },
+  adminPickerPopover: async ({ page }, use) => {
+    await use(new AdminPickerPopover(page));
   },
   sentinel: async ({ page }, use) => {
     // Construct BEFORE the spec's first navigation so the request

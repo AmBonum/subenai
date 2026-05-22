@@ -81,6 +81,56 @@ export class AdminTicketDetailPage extends BasePage {
     return this.page.getByTestId(`admin-ticket-detail-message-${messageId}`);
   }
 
+  // Attachment viewer ---------------------------------------------------
+  get attachmentViewerRoot(): Locator {
+    return this.page.getByTestId("admin-ticket-detail-attachment-viewer");
+  }
+
+  attachmentItem(attachmentId: string): Locator {
+    return this.page.getByTestId(`admin-ticket-attachment-item-${attachmentId}`);
+  }
+
+  attachmentImage(attachmentId: string): Locator {
+    return this.page.getByTestId(`admin-ticket-attachment-image-${attachmentId}`);
+  }
+
+  attachmentPdfEmbed(attachmentId: string): Locator {
+    return this.page.getByTestId(`admin-ticket-attachment-pdf-${attachmentId}`);
+  }
+
+  attachmentFilename(attachmentId: string): Locator {
+    return this.page.getByTestId(`admin-ticket-attachment-filename-${attachmentId}`);
+  }
+
+  attachmentDownloadButton(attachmentId: string): Locator {
+    return this.page.getByTestId(`admin-ticket-attachment-download-${attachmentId}`);
+  }
+
+  get attachmentLightboxRoot(): Locator {
+    return this.page.getByTestId("admin-ticket-attachment-lightbox");
+  }
+
+  get attachmentLightboxCloseButton(): Locator {
+    return this.page.getByTestId("admin-ticket-attachment-lightbox-close");
+  }
+
+  // Assignees -----------------------------------------------------------
+  get assigneesRoot(): Locator {
+    return this.page.getByTestId("admin-ticket-detail-assignees");
+  }
+
+  assigneeChip(userId: string): Locator {
+    return this.page.getByTestId(`admin-ticket-assignee-chip-${userId}`);
+  }
+
+  assigneeRemoveButton(userId: string): Locator {
+    return this.page.getByTestId(`admin-ticket-assignee-remove-${userId}`);
+  }
+
+  get addAssigneeButton(): Locator {
+    return this.page.getByTestId("admin-ticket-assignee-add-button");
+  }
+
   // Actions -------------------------------------------------------------
   async open(ticketId: string): Promise<void> {
     await this.goto(`${AdminTicketDetailPage.PATH_PREFIX}/${encodeURIComponent(ticketId)}`);

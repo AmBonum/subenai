@@ -59,6 +59,34 @@ export class AdminTicketsQueuePage extends BasePage {
     return this.page.getByTestId(`admin-tickets-filter-status-${status}`);
   }
 
+  get assignedColumnHeader(): Locator {
+    return this.page.getByTestId("admin-tickets-col-assigned");
+  }
+
+  rowAssignedAvatars(ticketId: string): Locator {
+    return this.page.getByTestId(`admin-tickets-row-assigned-${ticketId}`);
+  }
+
+  rowAssignedOverflowChip(ticketId: string): Locator {
+    return this.page.getByTestId(`admin-tickets-row-assigned-overflow-${ticketId}`);
+  }
+
+  rowStatusTrigger(ticketId: string): Locator {
+    return this.page.getByTestId(`admin-tickets-row-status-trigger-${ticketId}`);
+  }
+
+  rowStatusOption(ticketId: string, status: string): Locator {
+    return this.page.getByTestId(`admin-tickets-row-status-option-${ticketId}-${status}`);
+  }
+
+  columnSortButton(column: string): Locator {
+    return this.page.getByTestId(`admin-tickets-sort-${column}`);
+  }
+
+  columnSortIndicator(column: string): Locator {
+    return this.page.getByTestId(`admin-tickets-sort-indicator-${column}`);
+  }
+
   async open(): Promise<void> {
     await this.goto(AdminTicketsQueuePage.PATH);
     await this.root.waitFor({ state: "visible" });
