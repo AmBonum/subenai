@@ -31,6 +31,8 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - Test infraštruktúra pre E48-v2: SQL seed helper s worker-isolation prefixom, security regression suite (XSS + CSV injection battery).
 - Reusable `AdminPicker` komponent pre výber adminov v dropdowne (search + listbox). Pripravený na použitie v PR-DETAIL a budúcich admin features.
 - Test infra pre E48-v3: seed helper pre admin users + ticket assignments + attachment fixtures; XSS payload battery pre display_name a filename.
+- Podpora viacerých priradených adminov na ticket (junction table + RPC). Predtým len jeden admin per ticket; teraz neobmedzene.
+- Príloh viewer pripravený na inline render (image/PDF) cez nový p_inline parameter v signed URL RPC.
 
 ### Opravené (interné)
 - Test infra: pridaný `pdf-lib` do `node_modules` (balík bol v `dependencies` v package.json, ale chýbal v node_modules), čím Vitest mohol importovať `functions/_lib/attachment-sanitize.ts` (predtým zlyhával počas test-collect fázy — ~2 testy v každom PR).
