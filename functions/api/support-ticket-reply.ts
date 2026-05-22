@@ -69,10 +69,10 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     return jsonResponse(401, { error: "not_authenticated" });
   }
 
-  if (!env.SUPABASE_SERVICE_ROLE_KEY || !env.SUPABASE_ANON_KEY) {
-    return jsonResponse(500, { error: "supabase_not_configured" });
-  }
-
+  // Validate client input BEFORE checking server configuration. A
+  // malformed request is a client error (4xx) regardless of whether
+  // the runtime has Supabase keys; surfacing a 500 in that case would
+  // both mislead the caller and mask the real issue.
   let payload: Payload;
   try {
     payload = (await request.json()) as Payload;
@@ -88,6 +88,10 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   }
   if (body.length < 1 || body.length > 10000) {
     return jsonResponse(400, { error: "body_invalid" });
+  }
+
+  if (!env.SUPABASE_SERVICE_ROLE_KEY || !env.SUPABASE_ANON_KEY) {
+    return jsonResponse(500, { error: "supabase_not_configured" });
   }
 
   // User-bound client — auth.uid() resolves to the admin so has_role()
