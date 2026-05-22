@@ -2,6 +2,7 @@ import type { Page, Request as PlaywrightRequest, Route } from "@playwright/test
 
 import {
   applyParsedQuery,
+  applyParsedQueryWithTotal,
   buildPostgrestArrayResponse,
   buildPostgrestSingleResponse,
   buildSupabaseErrorResponse,
@@ -19,6 +20,7 @@ export type {
 } from "./envelope";
 export {
   applyParsedQuery,
+  applyParsedQueryWithTotal,
   buildPostgrestArrayResponse,
   buildPostgrestSingleResponse,
   buildSupabaseErrorResponse,
@@ -196,7 +198,7 @@ export async function mockSupabase(page: Page, config: MockSupabaseConfig): Prom
     const rows = tables[table];
 
     if (method === "GET" || method === "HEAD") {
-      const filtered = applyParsedQuery(rows, parsed);
+      const { rows: filtered, total } = applyParsedQueryWithTotal(rows, parsed);
       if (isSingleRowRequested(request)) {
         await fulfillRoute(
           route,
@@ -207,7 +209,7 @@ export async function mockSupabase(page: Page, config: MockSupabaseConfig): Prom
       const withCount = isCountRequested(request);
       const response = buildPostgrestArrayResponse(method === "HEAD" ? [] : filtered, {
         withCount,
-        total: filtered.length,
+        total,
         offset: parsed.offset ?? 0,
       });
       // HEAD must return no body.

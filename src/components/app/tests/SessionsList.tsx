@@ -209,8 +209,14 @@ export function SessionsList({ testId }: Props) {
                     className="border-t hover:bg-muted/20"
                     data-testid={`test-sessions-list-row-${s.id}`}
                   >
-                    <td className="px-3 py-2">
-                      <span className="font-medium text-foreground">{label}</span>
+                    <td className="px-3 py-2 max-w-[260px]">
+                      <span
+                        className="block truncate font-medium text-foreground"
+                        title={label}
+                        data-testid={`test-sessions-list-row-${s.id}-label`}
+                      >
+                        {label}
+                      </span>
                     </td>
                     <td className="px-3 py-2">
                       <StatusBadge status={s.status} />

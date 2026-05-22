@@ -94,7 +94,12 @@ function AnswerRow({
   const isWrong = answer.is_correct === false;
   const isCorrect = answer.is_correct === true;
   const valueClass = isWrong ? "text-destructive" : isCorrect ? "text-success" : "text-foreground";
-  const prompt = answer.question?.prompt ?? answer.question_id;
+  const hasQuestion = answer.question != null;
+  // Stale-question fallback: the originating question row may have been
+  // deleted after the respondent answered. Render a friendly placeholder
+  // instead of the bare UUID so the side-sheet doesn't crash and the
+  // author sees the answer survived the deletion.
+  const prompt = hasQuestion ? (answer.question?.prompt ?? answer.question_id) : "—";
   // The `questions.correct` column is jsonb — stringify defensively so any
   // shape (array of indices, single string, etc.) renders safely.
   const expectedRaw = answer.question?.correct;
@@ -108,10 +113,20 @@ function AnswerRow({
     <li
       className="rounded-lg border p-3"
       data-testid={`session-detail-answer-row-${answer.question_id}`}
+      data-stale-question={hasQuestion ? "false" : "true"}
     >
       <div className="flex items-start justify-between gap-3">
         <p className="text-sm font-medium text-foreground">
-          {index + 1}. {prompt}
+          {index + 1}.{" "}
+          <span
+            data-testid={
+              hasQuestion
+                ? `session-detail-answer-row-${answer.question_id}-prompt`
+                : `session-detail-stale-question`
+            }
+          >
+            {prompt}
+          </span>
         </p>
         <span
           className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground"
@@ -187,7 +202,7 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
       >
         <SheetHeader>
           <SheetTitle data-testid="session-detail-title">{t("title")}</SheetTitle>
-          {session && (
+          {session && !isMissing && (
             <SheetDescription data-testid="session-detail-respondent-identity">
               {respondentLabel(session, t("anonymous"))}
             </SheetDescription>
@@ -219,14 +234,12 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
               <span data-testid="session-detail-status-badge">
                 <StatusBadge status={session.status} />
               </span>
-              {session.score != null && (
-                <span
-                  className="text-sm font-medium tabular-nums"
-                  data-testid="session-detail-score"
-                >
-                  {t("score")}: {session.score}%
+              <span className="text-sm font-medium tabular-nums" data-testid="session-detail-score">
+                {t("score")}:{" "}
+                <span data-testid="session-detail-score-formatted">
+                  {session.score == null ? "—" : `${session.score}%`}
                 </span>
-              )}
+              </span>
             </div>
             <dl className="grid grid-cols-2 gap-3 rounded-lg border bg-muted/20 p-3 text-xs">
               <div>

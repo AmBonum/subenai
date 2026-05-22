@@ -145,6 +145,30 @@ export class TestSessionsDetailPage extends BasePage {
     return this.page.getByTestId("session-detail-score");
   }
 
+  /** Inner formatted score span — renders "—" for null, "{n}%" otherwise. */
+  get scoreFormatted() {
+    return this.page.getByTestId("session-detail-score-formatted");
+  }
+
+  /** Placeholder span rendered when an answer row's question_id is stale. */
+  get staleQuestion() {
+    return this.page.getByTestId("session-detail-stale-question");
+  }
+
+  rowLabel(sessionId: string) {
+    return this.page.getByTestId(`test-sessions-list-row-${sessionId}-label`);
+  }
+
+  /** Editor tab triggers (Výsledky / Analytika / Otázky / Nastavenia). */
+  tabTrigger(tab: "results" | "analytics" | "questions" | "settings") {
+    return this.page.getByTestId(`test-editor-tabs-${tab}`);
+  }
+
+  /** Row open link locator — alias of `rowOpenLink` for clarity. */
+  rowOpen(sessionId: string) {
+    return this.rowOpenLink(sessionId);
+  }
+
   get startedAt() {
     return this.page.getByTestId("session-detail-started-at");
   }

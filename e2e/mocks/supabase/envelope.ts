@@ -158,6 +158,27 @@ export function parsePostgrestFilters(queryString: string): ParsedQuery {
       result.order = { column: col, ascending: dir !== "desc" };
       continue;
     }
+    if (key === "or") {
+      // `or=(col1.op.val,col2.op.val,...)` — disjunction of leaf
+      // predicates. PostgREST also supports nested `and()`; we only
+      // need flat ORs for E49 sessions search.
+      const inner = value.startsWith("(") && value.endsWith(")") ? value.slice(1, -1) : value;
+      const leaves = splitTopLevel(inner, ",");
+      const leafPreds: Predicate[] = [];
+      for (const leaf of leaves) {
+        const first = leaf.indexOf(".");
+        if (first < 0) continue;
+        const col = leaf.slice(0, first);
+        const rest = leaf.slice(first + 1);
+        const m = /^(eq|neq|gt|gte|lt|lte|in|is|like|ilike)\.(.*)$/.exec(rest);
+        if (!m) continue;
+        leafPreds.push(makePredicate(col, m[1], m[2]));
+      }
+      if (leafPreds.length > 0) {
+        result.predicates.push((row) => leafPreds.some((p) => p(row)));
+      }
+      continue;
+    }
     const opMatch = /^(eq|neq|gt|gte|lt|lte|in|is|like|ilike)\.(.*)$/.exec(value);
     if (!opMatch) continue;
     const [, op, raw] = opMatch;
@@ -166,35 +187,73 @@ export function parsePostgrestFilters(queryString: string): ParsedQuery {
   return result;
 }
 
+function splitTopLevel(input: string, sep: string): string[] {
+  const out: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < input.length; i += 1) {
+    const ch = input[i];
+    if (ch === "(") depth += 1;
+    else if (ch === ")") depth -= 1;
+    else if (ch === sep && depth === 0) {
+      out.push(input.slice(start, i));
+      start = i + 1;
+    }
+  }
+  out.push(input.slice(start));
+  return out;
+}
+
+/**
+ * Resolve `intake_data->>name` style accessors against a row. Supports
+ * `col->>key` (text) and the plain `col` form. Used by E49's sessions
+ * search which queries `intake_data->>name.ilike.%foo%`.
+ */
+function readColumn(row: Record<string, unknown>, accessor: string): unknown {
+  const arrow = accessor.indexOf("->>");
+  if (arrow < 0) return row[accessor];
+  const base = accessor.slice(0, arrow);
+  const key = accessor.slice(arrow + 3);
+  const obj = row[base];
+  if (obj && typeof obj === "object") {
+    return (obj as Record<string, unknown>)[key];
+  }
+  return undefined;
+}
+
 function makePredicate(column: string, op: string, raw: string): Predicate {
   switch (op) {
     case "eq":
-      return (row) => String(row[column]) === raw;
+      return (row) => String(readColumn(row, column)) === raw;
     case "neq":
-      return (row) => String(row[column]) !== raw;
+      return (row) => String(readColumn(row, column)) !== raw;
     case "gt":
-      return (row) => Number(row[column]) > Number(raw);
+      return (row) => Number(readColumn(row, column)) > Number(raw);
     case "gte":
-      return (row) => Number(row[column]) >= Number(raw);
+      return (row) => Number(readColumn(row, column)) >= Number(raw);
     case "lt":
-      return (row) => Number(row[column]) < Number(raw);
+      return (row) => Number(readColumn(row, column)) < Number(raw);
     case "lte":
-      return (row) => Number(row[column]) <= Number(raw);
+      return (row) => Number(readColumn(row, column)) <= Number(raw);
     case "in": {
       const inner = raw.startsWith("(") && raw.endsWith(")") ? raw.slice(1, -1) : raw;
       const values = inner.split(",").map((v) => v.trim());
-      return (row) => values.includes(String(row[column]));
+      return (row) => values.includes(String(readColumn(row, column)));
     }
     case "is":
-      if (raw === "null") return (row) => row[column] === null || row[column] === undefined;
-      if (raw === "true") return (row) => row[column] === true;
-      if (raw === "false") return (row) => row[column] === false;
+      if (raw === "null")
+        return (row) => {
+          const v = readColumn(row, column);
+          return v === null || v === undefined;
+        };
+      if (raw === "true") return (row) => readColumn(row, column) === true;
+      if (raw === "false") return (row) => readColumn(row, column) === false;
       return () => false;
     case "like":
     case "ilike": {
       const pattern = raw.replace(/%/g, ".*").replace(/_/g, ".");
       const re = new RegExp(`^${pattern}$`, op === "ilike" ? "i" : "");
-      return (row) => re.test(String(row[column] ?? ""));
+      return (row) => re.test(String(readColumn(row, column) ?? ""));
     }
     default:
       return () => true;
@@ -205,6 +264,21 @@ export function applyParsedQuery(
   rows: Record<string, unknown>[],
   parsed: ParsedQuery,
 ): Record<string, unknown>[] {
+  return applyParsedQueryWithTotal(rows, parsed).rows;
+}
+
+/**
+ * Variant of `applyParsedQuery` that also returns the pre-slice count.
+ * `useTestSessions` (and friends) call PostgREST with `range(...)` +
+ * `count=exact` — the real server returns the slice's body but a total
+ * count reflecting ALL matching rows. Without this split, the mock
+ * reports `total = body.length`, which breaks KPI cards that read
+ * `count` directly off `useTestSessions({ pageSize: 1 })`.
+ */
+export function applyParsedQueryWithTotal(
+  rows: Record<string, unknown>[],
+  parsed: ParsedQuery,
+): { rows: Record<string, unknown>[]; total: number } {
   let out = rows.filter((row) => parsed.predicates.every((p) => p(row)));
   if (parsed.order) {
     const { column, ascending } = parsed.order;
@@ -218,10 +292,11 @@ export function applyParsedQuery(
       return ascending ? 1 : -1;
     });
   }
+  const total = out.length;
   const start = parsed.offset ?? 0;
   const end = parsed.limit !== null ? start + parsed.limit : undefined;
   if (start || end !== undefined) {
     out = out.slice(start, end);
   }
-  return out;
+  return { rows: out, total };
 }
