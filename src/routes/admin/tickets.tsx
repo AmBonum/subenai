@@ -30,7 +30,14 @@ const CATEGORY_VALUES = [
   "other",
 ] as const;
 
-const SORT_VALUES = ["recency-desc", "recency-asc", "status", "category"] as const;
+// Legacy single-key sort (kept for back-compat with bookmarked URLs;
+// translated to the new per-column shape at the orchestrator level).
+const LEGACY_SORT_VALUES = ["recency-desc", "recency-asc", "status", "category"] as const;
+
+// E48-v3 per-column sort: `?sort=col:dir` where col is one of the
+// SORT_COLUMNS and dir is `asc` or `desc`. Anything else falls back
+// to the default (newest first).
+const SORT_REGEX = /^(status|category|subject|submitter|assigned|created_at):(asc|desc)$/;
 
 // Comma-separated multi-select → string[] coercion.
 function parseCsv<T extends string>(allowed: readonly T[]) {
@@ -71,7 +78,15 @@ const ticketsSearchSchema = z.object({
     .catch("")
     .optional()
     .transform((s) => (s && s.length > 0 ? s : undefined)),
-  sort: z.enum(SORT_VALUES).catch("recency-desc").optional(),
+  sort: z
+    .string()
+    .refine((s) => SORT_REGEX.test(s), "invalid sort key")
+    .catch("")
+    .optional()
+    .transform((s) => (s && s.length > 0 ? s : undefined)),
+  // Legacy dropdown-style sort param. The orchestrator translates it to
+  // the new `sort` shape on mount so old bookmarks keep working.
+  sortDropdown: z.enum(LEGACY_SORT_VALUES).catch("recency-desc").optional(),
   page: z.coerce.number().int().min(1).catch(1).optional(),
 });
 

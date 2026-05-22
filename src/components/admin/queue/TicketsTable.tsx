@@ -2,30 +2,32 @@ import { forwardRef } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronRight, Paperclip } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import type { AdminSupportTicketRow } from "@/lib/admin/queries-tickets";
+import type {
+  AdminSupportTicketRow,
+  SortColumn,
+  TicketSortState,
+} from "@/lib/admin/queries-tickets";
 import { relativeTime } from "@/lib/admin/format-time";
 
 import { TicketActionMenu } from "./TicketActionMenu";
+import { AssigneesCell } from "./AssigneesCell";
+import { QueueStatusPopover, type SupportTicketStatus } from "./QueueStatusPopover";
+import { SortableHeader } from "./SortableHeader";
 
 // E48-v2 PR-D — main rich tickets table. Headline UX change vs. the
 // previous queue: whole-row clickability via `role="button"` + Enter,
 // chevron affordance, sticky checkbox column for bulk operations, and a
 // per-row "..." action menu. The component owns no state — selection
-// + nav are handed via props so the parent (queue orchestrator) keeps
-// URL params + selection in sync.
-
-const STATUS_LABELS: Record<string, string> = {
-  new: "Nové",
-  in_progress: "Riešim",
-  waiting_user: "Čaká",
-  resolved: "Vyriešené",
-  reopened: "Znovu otv.",
-  archived: "Archív",
-};
+// + nav + sort are handed via props so the parent (queue orchestrator)
+// keeps URL params + selection in sync.
+//
+// E48-v3 PR-QUEUE-EXTEND — extends the table with:
+//   - Assigned column (AssigneesCell) between Téma and Stav
+//   - Inline status badge replaced by QueueStatusPopover
+//   - All headers (except checkbox + Prílohy + Akcie) are sortable
 
 const CATEGORY_LABEL: Record<string, string> = {
   bug: "Chyba",
@@ -37,20 +39,6 @@ const CATEGORY_LABEL: Record<string, string> = {
   other: "Iné",
 };
 
-const STATUS_BADGE_CLASS: Record<string, string> = {
-  new: "bg-blue-100 text-blue-900 border-blue-300 dark:bg-blue-950 dark:text-blue-200 dark:border-blue-700",
-  in_progress:
-    "bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:border-amber-700",
-  waiting_user:
-    "bg-purple-100 text-purple-900 border-purple-300 dark:bg-purple-950 dark:text-purple-200 dark:border-purple-700",
-  resolved:
-    "bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-200 dark:border-emerald-700",
-  reopened:
-    "bg-orange-100 text-orange-900 border-orange-300 dark:bg-orange-950 dark:text-orange-200 dark:border-orange-700",
-  archived:
-    "bg-slate-100 text-slate-700 border-slate-300 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700",
-};
-
 interface Props {
   rows: AdminSupportTicketRow[];
   attachmentCounts: Record<string, number>;
@@ -59,14 +47,37 @@ interface Props {
   onToggleAll: () => void;
   isLoading: boolean;
   focusedRowIndex: number | null;
+  currentSort: TicketSortState | null;
+  onSortChange: (next: TicketSortState | null) => void;
 }
 
 export const TicketsTable = forwardRef<HTMLTableSectionElement, Props>(function TicketsTable(
-  { rows, attachmentCounts, selectedIds, onToggleRow, onToggleAll, isLoading, focusedRowIndex },
+  {
+    rows,
+    attachmentCounts,
+    selectedIds,
+    onToggleRow,
+    onToggleAll,
+    isLoading,
+    focusedRowIndex,
+    currentSort,
+    onSortChange,
+  },
   bodyRef,
 ) {
   const allChecked = rows.length > 0 && rows.every((r) => selectedIds.has(r.id));
   const someChecked = !allChecked && rows.some((r) => selectedIds.has(r.id));
+
+  function header(column: SortColumn, label: string) {
+    return (
+      <SortableHeader
+        column={column}
+        label={label}
+        currentSort={currentSort}
+        onSortChange={onSortChange}
+      />
+    );
+  }
 
   return (
     <div className="overflow-x-auto rounded-md border border-border bg-card">
@@ -76,7 +87,7 @@ export const TicketsTable = forwardRef<HTMLTableSectionElement, Props>(function 
       >
         <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
           <tr>
-            <th className="w-10 px-3 py-2">
+            <th className="w-10 px-3 py-2" scope="col">
               <Checkbox
                 checked={allChecked ? true : someChecked ? "indeterminate" : false}
                 onCheckedChange={onToggleAll}
@@ -84,12 +95,15 @@ export const TicketsTable = forwardRef<HTMLTableSectionElement, Props>(function 
                 data-testid="admin-tickets-select-all"
               />
             </th>
-            <th className="px-3 py-2 font-semibold">Stav</th>
-            <th className="px-3 py-2 font-semibold">Kategória</th>
-            <th className="px-3 py-2 font-semibold">Téma</th>
-            <th className="px-3 py-2 font-semibold">Odosielateľ</th>
-            <th className="px-3 py-2 font-semibold">Vytvorené</th>
-            <th className="px-3 py-2 font-semibold">Prílohy</th>
+            {header("status", "Stav")}
+            {header("category", "Kategória")}
+            {header("subject", "Téma")}
+            {header("submitter", "Odosielateľ")}
+            {header("assigned", "Pridelení")}
+            {header("created_at", "Vytvorené")}
+            <th className="px-3 py-2 font-semibold" scope="col">
+              Prílohy
+            </th>
             <th className="w-8 px-2 py-2" aria-label="Akcie" />
             <th className="w-8 px-2 py-2" aria-label="Otvoriť" />
           </tr>
@@ -134,6 +148,9 @@ function SkeletonRows() {
           </td>
           <td className="px-3 py-3">
             <Skeleton className="h-4 w-40" />
+          </td>
+          <td className="px-3 py-3">
+            <Skeleton className="h-4 w-24" />
           </td>
           <td className="px-3 py-3">
             <Skeleton className="h-4 w-16" />
@@ -208,9 +225,10 @@ function TicketRow({
         />
       </td>
       <td className="px-3 py-2">
-        <Badge variant="outline" className={STATUS_BADGE_CLASS[ticket.status] ?? ""}>
-          {STATUS_LABELS[ticket.status] ?? ticket.status}
-        </Badge>
+        <QueueStatusPopover
+          ticketId={ticket.id}
+          currentStatus={ticket.status as SupportTicketStatus}
+        />
       </td>
       <td className="px-3 py-2 text-xs text-muted-foreground">
         {CATEGORY_LABEL[ticket.category] ?? ticket.category}
@@ -221,6 +239,9 @@ function TicketRow({
       <td className="px-3 py-2">
         <div className="text-sm">{ticket.submitter_name ?? "—"}</div>
         <div className="text-xs text-muted-foreground">{ticket.submitter_email}</div>
+      </td>
+      <td className="px-3 py-2">
+        <AssigneesCell ticketId={ticket.id} assignees={ticket.assignees ?? []} />
       </td>
       <td className="px-3 py-2 text-xs text-muted-foreground" title={ticket.created_at}>
         {relativeTime(ticket.created_at)}
