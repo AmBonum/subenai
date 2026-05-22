@@ -35,6 +35,9 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - Príloh viewer pripravený na inline render (image/PDF) cez nový p_inline parameter v signed URL RPC.
 - TODO: po aplikácii migrácie 20260522170000 v Supabase doplniť späť schema-invariants assertions pre support_ticket_assignees + 3 nové RPCs + p_inline parameter v request_attachment_signed_url. Sledujte follow-up PR.
 
+### Pridané (bezpečnosť)
+- E48-v3 security regression suite: XSS battery proti admin display_name (5 payloadov), picker search (5), attachment filename (5), signed URL injection. RLS verification proti junction table + 3 nové RPCs.
+
 ### Opravené (interné)
 - Re-enabled schema-invariants assertions for E48-v3 after migration applied to prod.
 - Replaced stale useAssignToMe hook (wrote to dropped assigned_to column) with useAssignAdminToTicket throughout the queue UI.
