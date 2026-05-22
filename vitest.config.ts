@@ -5,6 +5,13 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // in the TanStack Start / Cloudflare server plugins, which break `jsdom`.
 export default defineConfig({
   plugins: [tsconfigPaths()],
+  // Expose non-VITE_ env vars (e.g. SUPABASE_SERVICE_ROLE_KEY,
+  // PROD_INVARIANT_CHECK_KEY) into process.env. Without this, Vite's
+  // default `VITE_*`-only filter hides the keys that live-DB regression
+  // tests (tests/db/prod-schema-invariants.test.ts, tests/security/
+  // e48-v3-rls-junction.test.ts) read from process.env — the tests
+  // silently skip even when the developer has the secrets in .env.
+  envPrefix: ["VITE_", "SUPABASE_", "PROD_INVARIANT_CHECK_KEY"],
   test: {
     environment: "jsdom",
     globals: true,
