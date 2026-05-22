@@ -101,3 +101,38 @@ test.describe("POST /api/support-ticket-create — honeypot", () => {
     expect(body.ticket_id).toBe("honeypot-discarded");
   });
 });
+
+// Wave 4 additions — boundary and whitespace edge cases.
+
+// TC-06: Body at 5001 characters is rejected by the API with body_invalid
+test.describe("POST /api/support-ticket-create — body boundary (TC-06)", () => {
+  test("TC-06: body at 5001 chars is rejected with body_invalid", async ({ request }) => {
+    const r = await request.post(ENDPOINT, {
+      data: { ...validPayload, body: "a".repeat(5001) },
+    });
+    expect(r.status()).toBe(400);
+    expect((await r.json()).error).toBe("body_invalid");
+  });
+});
+
+// TC-16: Subject at 201 chars is rejected with subject_invalid
+test.describe("POST /api/support-ticket-create — subject boundary (TC-16)", () => {
+  test("TC-16: subject at 201 chars is rejected with subject_invalid", async ({ request }) => {
+    const r = await request.post(ENDPOINT, {
+      data: { ...validPayload, subject: "a".repeat(201) },
+    });
+    expect(r.status()).toBe(400);
+    expect((await r.json()).error).toBe("subject_invalid");
+  });
+});
+
+// TC-17: Body with only whitespace is rejected with body_invalid
+test.describe("POST /api/support-ticket-create — whitespace body (TC-17)", () => {
+  test("TC-17: body with only whitespace is rejected with body_invalid", async ({ request }) => {
+    const r = await request.post(ENDPOINT, {
+      data: { ...validPayload, body: "   " },
+    });
+    expect(r.status()).toBe(400);
+    expect((await r.json()).error).toBe("body_invalid");
+  });
+});

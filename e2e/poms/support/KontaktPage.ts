@@ -32,6 +32,10 @@ export class KontaktPage extends BasePage {
     return this.page.getByTestId("kontakt-form-category-select");
   }
 
+  categoryOption(value: string): Locator {
+    return this.page.getByTestId(`kontakt-form-category-option-${value}`);
+  }
+
   get bodyTextarea(): Locator {
     return this.page.getByTestId("kontakt-form-body-textarea");
   }
@@ -82,6 +86,19 @@ export class KontaktPage extends BasePage {
     return this.page.getByTestId("kontakt-success-ticket-id");
   }
 
+  // Attachment picker (requires onAttachmentUpload prop wired) ----------
+  get attachmentDropzone(): Locator {
+    return this.page.getByTestId("kontakt-form-attachments");
+  }
+
+  attachmentFileItem(index: number): Locator {
+    return this.page.getByTestId(`kontakt-form-attachment-${index}`);
+  }
+
+  get attachmentError(): Locator {
+    return this.page.getByTestId("kontakt-form-attachments-error");
+  }
+
   // Actions -------------------------------------------------------------
   async open(): Promise<void> {
     await this.goto(KontaktPage.PATH);
@@ -96,7 +113,10 @@ export class KontaktPage extends BasePage {
     name?: string;
   }): Promise<void> {
     await this.subjectInput.fill(opts.subject);
-    await this.categorySelect.selectOption(opts.category);
+    // Radix Select renders a visible trigger (button) + a hidden native
+    // <select>. Click the trigger to open, then click the option by testid.
+    await this.categorySelect.click();
+    await this.categoryOption(opts.category).click();
     await this.bodyTextarea.fill(opts.body);
     await this.emailInput.fill(opts.email);
     if (opts.name) await this.nameInput.fill(opts.name);
