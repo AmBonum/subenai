@@ -268,16 +268,23 @@ export const TicketsToolbar = forwardRef<HTMLInputElement, Props>(function Ticke
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onSelect={() => onExportRequest("filter")}>
+            <DropdownMenuItem
+              data-testid="admin-tickets-export-option-filter"
+              onSelect={() => onExportRequest("filter")}
+            >
               Aktuálny filter ({totalSelectableCount})
             </DropdownMenuItem>
             <DropdownMenuItem
+              data-testid="admin-tickets-export-option-selected"
               disabled={selectedCount === 0}
               onSelect={() => onExportRequest("selected")}
             >
               Označené ({selectedCount})
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => onExportRequest("all")}>
+            <DropdownMenuItem
+              data-testid="admin-tickets-export-option-all"
+              onSelect={() => onExportRequest("all")}
+            >
               Všetky (bez filtra)
             </DropdownMenuItem>
           </DropdownMenuContent>

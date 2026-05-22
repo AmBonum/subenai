@@ -35,6 +35,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - Príloh viewer pripravený na inline render (image/PDF) cez nový p_inline parameter v signed URL RPC.
 - TODO: po aplikácii migrácie 20260522170000 v Supabase doplniť späť schema-invariants assertions pre support_ticket_assignees + 3 nové RPCs + p_inline parameter v request_attachment_signed_url. Sledujte follow-up PR.
 - Wave 3 E2E suite: 8 Playwright specs + 4 integration specs covering multi-assignment, attachment viewer, queue extensions (Assigned column, inline status, sortable headers), admin picker. SQL-driven seed + cleanup pattern.
+- Wave 4 admin coverage: 4 nové Playwright specs (admin-detail-render, admin-queue-filters-sort, admin-queue-csv-export, admin-queue-sidebar-badge) pokrývajúce filtre, vyhľadávanie, sidebar badge, status-machine prechody, ConfirmDialog severity, typed-confirm gate. POMs `AdminTicketDetailPage` + `AdminTicketsQueuePage` rozšírené o getter pre confirm dialog, kebab menu, CSV export options, sidebar badge.
 
 ### Pridané (bezpečnosť)
 - E48-v3 security regression suite: XSS battery proti admin display_name (5 payloadov), picker search (5), attachment filename (5), signed URL injection. RLS verification proti junction table + 3 nové RPCs.
