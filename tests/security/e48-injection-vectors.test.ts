@@ -1,11 +1,9 @@
 // E48-v2 PR-C — Security regression suite: XSS + CSV injection payload battery.
 //
-// PR-A coupling note: supportTicketReceivedEmail currently accepts
-// { ticketId, subject, category, viewUrl? }. The suite below tests the fields
-// that exist today. The name/body/attachments fields land in PR-A; the
-// corresponding describe blocks are marked it.skip so they:
-//   - compile cleanly against the current signature, and
-//   - remind the reviewer exactly what to un-skip once PR-A merges.
+// PR-A coupling note: supportTicketReceivedEmail now accepts
+// { ticketId, subject, category, name, body, attachments, viewUrl? }. The suite
+// below tests all fields. The name/body/attachments describe blocks previously
+// marked it.skip have been un-skipped and now test these fields.
 //
 // Assertion semantics:
 //   Text fields (subject, ticketId) go through escapeText() which converts
@@ -72,6 +70,9 @@ describe("E48 XSS resistance — supportTicketReceivedEmail (subject)", () => {
       ticketId: "test-id",
       subject: payload,
       category: "question",
+      name: null,
+      body: "Test body",
+      attachments: [],
     });
     noExecutableMarkup(result.html);
   });
@@ -85,6 +86,9 @@ describe("E48 XSS resistance — supportTicketReceivedEmail (ticketId)", () => {
       ticketId: payload,
       subject: "Legitimate subject",
       category: "question",
+      name: null,
+      body: "Test body",
+      attachments: [],
     });
     noExecutableMarkup(result.html);
   });
@@ -104,6 +108,9 @@ describe("E48 XSS resistance — supportTicketReceivedEmail (viewUrl)", () => {
       ticketId: "test-id",
       subject: "Legitimate subject",
       category: "question",
+      name: null,
+      body: "Test body",
+      attachments: [],
       viewUrl: payload,
     });
     noExecutableMarkup(result.html);
@@ -116,21 +123,45 @@ describe("E48 XSS resistance — supportTicketReceivedEmail (viewUrl)", () => {
 // Once PR-A lands and adds name/body/attachments to supportTicketReceivedEmail,
 // remove the .skip from all three blocks below and verify they pass.
 
-describe("E48 XSS resistance — supportTicketReceivedEmail (name) [awaits PR-A]", () => {
-  it.skip.each(XSS_PAYLOADS)("escapes payload in name field: %s", (_payload) => {
-    // Un-skip and implement once PR-A adds `name` param.
+describe("E48 XSS resistance — supportTicketReceivedEmail (name)", () => {
+  it.each(XSS_PAYLOADS)("escapes payload in name field: %s", (payload) => {
+    const result = supportTicketReceivedEmail({
+      ticketId: "test-id",
+      subject: "Legitimate subject",
+      category: "question",
+      name: payload,
+      body: "Test body",
+      attachments: [],
+    });
+    noExecutableMarkup(result.html);
   });
 });
 
-describe("E48 XSS resistance — supportTicketReceivedEmail (body) [awaits PR-A]", () => {
-  it.skip.each(XSS_PAYLOADS)("escapes payload in body field: %s", (_payload) => {
-    // Un-skip and implement once PR-A adds `body` param.
+describe("E48 XSS resistance — supportTicketReceivedEmail (body)", () => {
+  it.each(XSS_PAYLOADS)("escapes payload in body field: %s", (payload) => {
+    const result = supportTicketReceivedEmail({
+      ticketId: "test-id",
+      subject: "Legitimate subject",
+      category: "question",
+      name: null,
+      body: payload,
+      attachments: [],
+    });
+    noExecutableMarkup(result.html);
   });
 });
 
-describe("E48 XSS resistance — supportTicketReceivedEmail (attachment filename) [awaits PR-A]", () => {
-  it.skip.each(XSS_PAYLOADS)("escapes payload in attachment filename: %s", (_payload) => {
-    // Un-skip and implement once PR-A adds `attachments` param.
+describe("E48 XSS resistance — supportTicketReceivedEmail (attachment filename)", () => {
+  it.each(XSS_PAYLOADS)("escapes payload in attachment filename: %s", (payload) => {
+    const result = supportTicketReceivedEmail({
+      ticketId: "test-id",
+      subject: "Legitimate subject",
+      category: "question",
+      name: null,
+      body: "Test body",
+      attachments: [{ filename: payload, size_bytes: 1024 }],
+    });
+    noExecutableMarkup(result.html);
   });
 });
 
