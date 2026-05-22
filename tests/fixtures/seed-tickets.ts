@@ -418,6 +418,276 @@ export async function cleanupSeedAttachmentFiles(
   return { deleted: (dbRows ?? []).length };
 }
 
+// ---------------------------------------------------------------------------
+// Wave 4 seed helpers
+// ---------------------------------------------------------------------------
+
+export interface MessageSeedRow {
+  id: string;
+  ticket_id: string;
+  author_kind: "admin" | "submitter";
+  body: string;
+  created_at: string;
+  is_internal: boolean;
+}
+
+export interface AttachmentMeta {
+  filename: string;
+  mimeType: string;
+  scanStatus: "pending" | "clean" | "infected" | "error";
+}
+
+/**
+ * Seed one parent ticket plus `messageCount` message rows for it.
+ * Returns the ticket id and message ids for cleanup tracking.
+ */
+export async function seedTicketWithMessages(
+  workerIndex: number,
+  messageCount: number,
+): Promise<{ ticketId: string; messageIds: string[] }> {
+  const { client, url } = getClient();
+  guardProduction(url);
+
+  const pfx = `${SEED_PREFIX}${workerIndex}]`;
+  const ticketRow: SeedRow = {
+    subject: `${pfx} with-messages seed`,
+    status: "in_progress",
+    category: "question",
+    requester_name: `Seed W${workerIndex} messages`,
+    requester_email: `seed-msg-w${workerIndex}@example.test`,
+    body: `Parent ticket seeded by seedTicketWithMessages for worker ${workerIndex}.`,
+    created_at: daysAgo(1),
+  };
+
+  const { data: ticketData, error: ticketError } = await client
+    .from("support_tickets")
+    .insert(ticketRow)
+    .select("id")
+    .single();
+
+  if (ticketError || !ticketData) {
+    throw new Error(`E48 seed: seedTicketWithMessages insert failed — ${ticketError?.message}`);
+  }
+
+  const ticketId = (ticketData as { id: string }).id;
+  const messageRows = Array.from({ length: messageCount }, (_, i) => ({
+    ticket_id: ticketId,
+    author_kind: i % 2 === 0 ? "admin" : "submitter",
+    body: `Seeded message ${i + 1} for worker ${workerIndex} ticket ${ticketId}.`,
+    created_at: daysAgo(1),
+    is_internal: false,
+  }));
+
+  const { data: msgData, error: msgError } = await client
+    .from("support_ticket_messages")
+    .insert(messageRows)
+    .select("id");
+
+  if (msgError) {
+    throw new Error(
+      `E48 seed: seedTicketWithMessages messages insert failed — ${msgError.message}`,
+    );
+  }
+
+  const messageIds = (msgData ?? []).map((r: { id: string }) => r.id);
+  return { ticketId, messageIds };
+}
+
+/**
+ * Seed one parent ticket plus attachment rows with the given metadata.
+ * Does NOT upload real Storage objects — only inserts DB rows. For specs
+ * that need real Storage objects, use `seedAttachmentFiles` instead.
+ * Returns the ticket id and attachment ids.
+ */
+export async function seedTicketWithAttachments(
+  workerIndex: number,
+  attachmentMeta: AttachmentMeta[],
+): Promise<{ ticketId: string; attachmentIds: string[] }> {
+  const { client, url } = getClient();
+  guardProduction(url);
+
+  const pfx = `${SEED_PREFIX}${workerIndex}]`;
+  const ticketRow: SeedRow = {
+    subject: `${pfx} with-attachments seed`,
+    status: "new",
+    category: "question",
+    requester_name: `Seed W${workerIndex} attachments`,
+    requester_email: `seed-att-w${workerIndex}@example.test`,
+    body: `Parent ticket seeded by seedTicketWithAttachments for worker ${workerIndex}.`,
+    created_at: daysAgo(1),
+  };
+
+  const { data: ticketData, error: ticketError } = await client
+    .from("support_tickets")
+    .insert(ticketRow)
+    .select("id")
+    .single();
+
+  if (ticketError || !ticketData) {
+    throw new Error(
+      `E48 seed: seedTicketWithAttachments ticket insert failed — ${ticketError?.message}`,
+    );
+  }
+
+  const ticketId = (ticketData as { id: string }).id;
+  const attachmentRows = attachmentMeta.map((meta, i) => ({
+    ticket_id: ticketId,
+    filename: meta.filename,
+    mime_type: meta.mimeType,
+    scan_status: meta.scanStatus,
+    storage_path: `e2e/W${workerIndex}/${ticketId}/${meta.filename}`,
+    created_at: daysAgo(1),
+  }));
+
+  const { data: attData, error: attError } = await client
+    .from("support_ticket_attachments")
+    .insert(attachmentRows)
+    .select("id");
+
+  if (attError) {
+    throw new Error(
+      `E48 seed: seedTicketWithAttachments attachments insert failed — ${attError.message}`,
+    );
+  }
+
+  const attachmentIds = (attData ?? []).map((r: { id: string }) => r.id);
+  return { ticketId, attachmentIds };
+}
+
+/**
+ * Bulk-seed `count` tickets all sharing the same `status` for pagination
+ * and performance tests.
+ * Returns the seeded ticket ids.
+ */
+export async function seedTicketsForQueue(
+  workerIndex: number,
+  count: number,
+  status: TicketStatus,
+): Promise<string[]> {
+  const { client, url } = getClient();
+  guardProduction(url);
+
+  const pfx = `${SEED_PREFIX}${workerIndex}]`;
+  const categories: TicketCategory[] = [
+    "bug",
+    "question",
+    "feature_request",
+    "billing",
+    "gdpr",
+    "other",
+  ];
+
+  const rows: SeedRow[] = Array.from({ length: count }, (_, i) => ({
+    subject: `${pfx} queue-perf ${i + 1} — ${status}`,
+    status,
+    category: categories[i % categories.length],
+    requester_name: `Queue Perf User ${i}`,
+    requester_email: `seed-queue-w${workerIndex}-${i}@example.test`,
+    body: `Bulk-seeded queue performance ticket #${i + 1} for worker ${workerIndex}.`,
+    created_at: daysAgo((i % 90) + 1),
+  }));
+
+  const { data, error } = await client.from("support_tickets").insert(rows).select("id");
+
+  if (error) {
+    throw new Error(`E48 seed: seedTicketsForQueue insert failed — ${error.message}`);
+  }
+
+  return (data ?? []).map((r: { id: string }) => r.id);
+}
+
+/**
+ * Delete audit_log rows associated with seeded ticket ids for the given
+ * worker index. Reads back the seeded ticket ids first to build the filter.
+ */
+export async function cleanupAuditRows(workerIndex: number): Promise<{ deleted: number }> {
+  const { client, url } = getClient();
+  guardProduction(url);
+
+  const prefix = `${SEED_PREFIX}${workerIndex}]%`;
+  const { data: tickets, error: readError } = await client
+    .from("support_tickets")
+    .select("id")
+    .like("subject", prefix);
+
+  if (readError) {
+    throw new Error(`E48 seed: cleanupAuditRows read tickets failed — ${readError.message}`);
+  }
+
+  const ticketIds = (tickets ?? []).map((t: { id: string }) => t.id);
+  if (ticketIds.length === 0) return { deleted: 0 };
+
+  // Build a filter: metadata->>'ticket_id' IN (id1, id2, ...)
+  // Supabase PostgREST does not natively support jsonb -> in; use a raw delete
+  // via service-role client with a JS-side filter over a full scan (acceptable
+  // for the small seed volumes in tests).
+  const { data: allAudit, error: auditReadError } = await client
+    .from("audit_log")
+    .select("id, metadata");
+
+  if (auditReadError) {
+    // audit_log table may not exist in all environments — fail silently.
+    console.warn(`E48 seed: cleanupAuditRows audit_log read failed — ${auditReadError.message}`);
+    return { deleted: 0 };
+  }
+
+  const ticketIdSet = new Set(ticketIds);
+  const toDelete = (allAudit ?? []).filter((row: { id: string; metadata: unknown }) => {
+    const meta = row.metadata as Record<string, unknown> | null;
+    return meta && ticketIdSet.has(meta["ticket_id"] as string);
+  });
+
+  let deleted = 0;
+  for (const row of toDelete) {
+    const { error: delError } = await client.from("audit_log").delete().eq("id", row.id);
+    if (!delError) deleted++;
+  }
+
+  return { deleted };
+}
+
+/**
+ * Delete Storage objects (not DB rows) for the given ticket ids.
+ * The DB rows cascade-delete with the parent support_ticket; this helper
+ * cleans up the Storage bucket objects which do NOT cascade.
+ */
+export async function cleanupAttachmentObjects(ticketIds: string[]): Promise<{ deleted: number }> {
+  const { client, url } = getClient();
+  guardProduction(url);
+
+  let deleted = 0;
+
+  for (const ticketId of ticketIds) {
+    const prefix = `${ticketId}/`;
+
+    const { data: objects, error: listError } = await client.storage
+      .from("support-attachments")
+      .list(ticketId, { limit: 1000 });
+
+    if (listError) {
+      console.warn(
+        `E48 seed: cleanupAttachmentObjects list failed for ${ticketId} — ${listError.message}`,
+      );
+      continue;
+    }
+
+    if (!objects || objects.length === 0) continue;
+
+    const paths = objects.map((o) => `${prefix}${o.name}`);
+    const { error: removeError } = await client.storage.from("support-attachments").remove(paths);
+
+    if (removeError) {
+      console.warn(
+        `E48 seed: cleanupAttachmentObjects remove failed for ${ticketId} — ${removeError.message}`,
+      );
+    } else {
+      deleted += paths.length;
+    }
+  }
+
+  return { deleted };
+}
+
 export async function cleanupAllSeedAttachmentFiles(): Promise<{ deleted: number }> {
   const url = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL ?? "";
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
