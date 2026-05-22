@@ -44,7 +44,7 @@ INSERT INTO public.questions (id, type, prompt, options, correct, status, create
 VALUES
   (
     'e2e00001-e49a-4001-8001-7e57cab00501'::uuid,
-    'single_choice',
+    'single',
     'E49 prod-smoke Q1',
     '["a", "b", "c"]'::jsonb,
     '["a"]'::jsonb,
@@ -53,7 +53,7 @@ VALUES
   ),
   (
     'e2e00001-e49a-4001-8001-7e57cab00502'::uuid,
-    'single_choice',
+    'single',
     'E49 prod-smoke Q2',
     '["a", "b", "c"]'::jsonb,
     '["b"]'::jsonb,
@@ -62,7 +62,7 @@ VALUES
   ),
   (
     'e2e00001-e49a-4001-8001-7e57cab00503'::uuid,
-    'single_choice',
+    'single',
     'E49 prod-smoke Q3',
     '["a", "b", "c"]'::jsonb,
     '["c"]'::jsonb,
