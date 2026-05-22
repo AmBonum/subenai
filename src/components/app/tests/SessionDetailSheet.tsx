@@ -199,6 +199,7 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
         side="right"
         className="w-full overflow-y-auto sm:max-w-2xl"
         data-testid="session-detail-root"
+        closeTestId="session-detail-close"
       >
         <SheetHeader>
           <SheetTitle data-testid="session-detail-title">{t("title")}</SheetTitle>
@@ -223,7 +224,7 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
           >
             <p>{t("not_found")}</p>
             <Button asChild size="sm" variant="outline" className="mt-3">
-              <Link to={onCloseHref} data-testid="session-detail-close">
+              <Link to={onCloseHref} data-testid="session-detail-not-found-close">
                 {t("close")}
               </Link>
             </Button>

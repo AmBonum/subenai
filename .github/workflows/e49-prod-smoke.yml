@@ -96,14 +96,20 @@ jobs:
           fi
           sudo apt-get update -y >/dev/null
           sudo apt-get install -y postgresql-client >/dev/null
-          # Pooler URI: username is `postgres.<project_ref>`, password is the
-          # actual Postgres DB password (NOT the service-role JWT — that's an
-          # API key, not a DB credential). Pattern mirrors `supabase db push`.
+          # Pooler auth: username is `postgres.<project_ref>`, password is
+          # the actual Postgres DB password (NOT the service-role JWT —
+          # that's an API key, not a DB credential). Pass via PGPASSWORD
+          # env var rather than the connection URI — psql then handles
+          # the password verbatim, side-stepping URL-encoding for chars
+          # like `=`, `+`, `&` that resets routinely emit.
           PROJECT_HOST="$(echo "${PGCONN}" | sed -E 's#https?://([^./]+)\.supabase\.co.*#\1#')"
-          # URL-encode the password in case it contains URL-reserved chars.
-          DB_PASSWORD_ENC="$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["DB_PASSWORD"], safe=""))')"
-          PGURI="postgresql://postgres.${PROJECT_HOST}:${DB_PASSWORD_ENC}@aws-0-eu-west-1.pooler.supabase.com:6543/postgres"
-          psql "${PGURI}" -v ON_ERROR_STOP=1 <<'SQL'
+          export PGPASSWORD="${DB_PASSWORD}"
+          psql \
+            -h aws-0-eu-west-1.pooler.supabase.com \
+            -p 6543 \
+            -U "postgres.${PROJECT_HOST}" \
+            -d postgres \
+            -v ON_ERROR_STOP=1 <<'SQL'
           BEGIN;
           DELETE FROM public.session_answers
            WHERE session_id IN (
