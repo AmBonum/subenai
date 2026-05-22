@@ -7,7 +7,11 @@ detailov, ciest k súborom alebo technického žargónu.
 Formát vychádza zo [Keep a Changelog 1.1](https://keepachangelog.com/en/1.1.0/).
 Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
-## [Unreleased]
+## [Unreleased] — 2026-05-22
+
+### Vylepšené
+- **Potvrdzovací e-mail po odoslaní žiadosti o podporu** teraz obsahuje presnú kópiu vašej správy: tému, kategóriu, meno (ak ste ho zadali) a samotný text správy.
+- **Footer transakčných e-mailov** teraz správne odkazuje na `podpora@subenai.sk` namiesto zavádzajúceho "Odpovedz priamo na tento e-mail" (e-mail je posielaný z `noreply@subenai.sk`).
 
 ### Opravené
 - **Opravený admin reply email — odkaz na vlákno teraz obsahuje view_token (rotácia tokenu pri každej odpovedi pre vyššiu bezpečnosť).** (2026-05-22)

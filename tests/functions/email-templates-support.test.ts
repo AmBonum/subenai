@@ -4,7 +4,10 @@ import {
   supportTicketReceivedEmail,
   supportTicketReplyEmail,
   supportTicketResolvedEmail,
+  __internal,
 } from "../../functions/_lib/email-templates";
+
+const { formatBytes } = __internal;
 
 // E48.5 — Slovak transactional email templates for the support pipeline.
 // Snapshot-style assertions: every template must include (a) the ticket
@@ -16,6 +19,9 @@ describe("supportTicketReceivedEmail", () => {
     ticketId: "tkt-abc-123",
     subject: "Test sa nedá spustiť",
     category: "bug",
+    name: null,
+    body: "Popis problému.",
+    attachments: [] as ReadonlyArray<{ filename: string; size_bytes: number }>,
   };
 
   it("subject contains the ticketId", () => {
@@ -82,6 +88,9 @@ describe("supportTicketReceivedEmail", () => {
       ticketId: "x",
       subject: "<script>alert(1)</script>",
       category: "question",
+      name: null,
+      body: "Telo správy.",
+      attachments: [],
       viewUrl: "https://subenai.sk/contact-form/ticket/x?token=y",
     });
 
@@ -155,5 +164,106 @@ describe("supportTicketResolvedEmail", () => {
     // (plain text, "otvori" + ť). Match the shared "znova otvor" prefix.
     expect(t.text).toMatch(/znova otvor/iu);
     expect(t.html).toMatch(/znova otvor/iu);
+  });
+});
+
+describe("supportTicketReceivedEmail (E48-v2)", () => {
+  const base = {
+    ticketId: "tkt-v2-001",
+    subject: "test subject",
+    category: "question",
+    name: null as string | null,
+    body: "Test body text.",
+    attachments: [] as ReadonlyArray<{ filename: string; size_bytes: number }>,
+  };
+
+  it("renders subject in html and text", () => {
+    const { html, text } = supportTicketReceivedEmail(base);
+    expect(html).toContain("test subject");
+    expect(text).toContain("Téma: test subject");
+  });
+
+  it("renders Slovak category label instead of raw key", () => {
+    const { html, text } = supportTicketReceivedEmail(base);
+    expect(html).toContain("Otázka");
+    expect(html).not.toContain(">question<");
+    expect(text).toContain("Otázka");
+  });
+
+  it("omits Meno block when name is null", () => {
+    const { html, text } = supportTicketReceivedEmail({ ...base, name: null });
+    expect(html).not.toContain("Meno:");
+    expect(text).not.toContain("Meno:");
+  });
+
+  it("renders Meno block when name is provided", () => {
+    const { html, text } = supportTicketReceivedEmail({ ...base, name: "Ján Novák" });
+    expect(html).toContain("Meno:");
+    expect(html).toContain("Ján Novák");
+    expect(text).toContain("Meno: Ján Novák");
+  });
+
+  it("omits Prílohy block when attachments is empty", () => {
+    const { html, text } = supportTicketReceivedEmail({ ...base, attachments: [] });
+    expect(html).not.toContain("Prílohy");
+    expect(text).not.toContain("Prílohy");
+  });
+
+  it("renders Prílohy block with Slovak-formatted size when attachments are present", () => {
+    const { html, text } = supportTicketReceivedEmail({
+      ...base,
+      attachments: [{ filename: "a.png", size_bytes: 1234 }],
+    });
+    expect(html).toContain("a.png");
+    expect(html).toContain("1,2 kB");
+    expect(text).toContain("a.png");
+  });
+
+  it("preserves line breaks in body: html gets <br />, plain text keeps literal newline", () => {
+    const { html, text } = supportTicketReceivedEmail({
+      ...base,
+      body: "line 1\nline 2",
+    });
+    expect(html).toContain("line 1<br />line 2");
+    expect(text).toContain("line 1\nline 2");
+  });
+
+  it("footer contains podpora@subenai.sk and does not say 'odpovedz ... na tento'", () => {
+    const { html } = supportTicketReceivedEmail(base);
+    expect(html).toContain("podpora@subenai.sk");
+    expect(html).not.toMatch(/odpovedz.*na.*tento/i);
+  });
+
+  it("escapes XSS in subject: raw <script> absent, &lt;script escaped present", () => {
+    const { html } = supportTicketReceivedEmail({
+      ...base,
+      subject: "<script>alert(1)</script>",
+    });
+    expect(html).not.toMatch(/<script/i);
+    expect(html).toContain("&lt;script");
+  });
+
+  it("escapes HTML tags in attachment filename", () => {
+    const { html } = supportTicketReceivedEmail({
+      ...base,
+      attachments: [{ filename: "<b>a</b>.png", size_bytes: 100 }],
+    });
+    expect(html).not.toContain("<b>");
+    expect(html).toContain("&lt;b&gt;");
+  });
+
+  it("renders ticketId inside a <code> element", () => {
+    const { html } = supportTicketReceivedEmail(base);
+    expect(html).toContain("<code>");
+    expect(html).toContain("tkt-v2-001");
+  });
+
+  describe("formatBytes", () => {
+    it("0 bytes", () => expect(formatBytes(0)).toBe("0 B"));
+    it("1023 bytes", () => expect(formatBytes(1023)).toBe("1023 B"));
+    it("1024 bytes → 1 kB", () => expect(formatBytes(1024)).toBe("1 kB"));
+    it("1234 bytes → 1,2 kB (Slovak decimal)", () => expect(formatBytes(1234)).toBe("1,2 kB"));
+    it("1048576 bytes → 1 MB", () => expect(formatBytes(1048576)).toBe("1 MB"));
+    it("5242880 bytes → 5 MB", () => expect(formatBytes(5242880)).toBe("5 MB"));
   });
 });
