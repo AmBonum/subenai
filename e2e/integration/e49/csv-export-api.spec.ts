@@ -13,6 +13,8 @@
  * test order doesn't leak counter state between cases.
  */
 
+import { randomBytes } from "node:crypto";
+
 import { test, expect } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 
@@ -158,10 +160,7 @@ test.describe("E49 CSV export API — live-Supabase", () => {
     }) => {
       const token = await mintLiveAccessToken(request, "educatorA", state!);
       const supabase = createClient(state!.supabaseUrl, state!.serviceRoleKey);
-      const sessionId = `e2e00001-e49a-4001-8001-0000c0de${Math.random()
-        .toString(16)
-        .slice(2, 10)
-        .padStart(8, "0")}`;
+      const sessionId = `e2e00001-e49a-4001-8001-0000c0de${randomBytes(4).toString("hex")}`;
       await supabase.from("sessions").insert({
         id: sessionId,
         test_id: E49_TESTS.typicalPublished,
