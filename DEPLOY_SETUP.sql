@@ -8215,3 +8215,15 @@ FROM public.support_tickets t;
 
 REVOKE ALL    ON public.support_tickets_with_assignees FROM anon;
 GRANT  SELECT ON public.support_tickets_with_assignees TO authenticated;
+
+-- ============================================================================
+-- 2026-05-22 — Public-by-link SELECT for authenticated viewers of test_sets.
+-- Mirror of `supabase/migrations/20260522210000_test_sets_authenticated_public_select.sql`.
+-- ============================================================================
+
+DROP POLICY IF EXISTS test_sets_authenticated_public_select ON public.test_sets;
+CREATE POLICY test_sets_authenticated_public_select
+  ON public.test_sets
+  FOR SELECT
+  TO authenticated
+  USING (true);
