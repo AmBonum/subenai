@@ -26,16 +26,17 @@ name: E49 prod-smoke
 #   Auth users (`e2e-e49-educator-a@subenai.test`) persist across runs.
 
 on:
+  # MANUAL ONLY. This workflow hits production https://subenai.sk and the
+  # production Supabase project. Every run costs CI minutes AND mutates
+  # prod data (teardown DELETEs the `e2e-e49-prodsmoke-%` rows). Auto-run
+  # on `push: main` was removed 2026-05-22 after surfacing real prod-data
+  # impact during E49 Phase 1c-4 verification. To re-enable auto-runs:
+  #   1. Stand up a free pre-prod environment (separate Cloudflare Pages
+  #      target + separate Supabase project — see
+  #      `tasks/PLAN-E49-preprod-environment.md`).
+  #   2. Repoint this workflow at the pre-prod URLs.
+  #   3. Then (and only then) restore a push or schedule trigger.
   workflow_dispatch: {}
-  push:
-    branches: [main]
-    paths:
-      - "src/routes/app.tests.**"
-      - "src/components/app/tests/**"
-      - "functions/api/tests/**"
-      - "e2e/specs/prod-smoke/**"
-      - "e2e/poms/prod-smoke/**"
-      - ".github/workflows/e49-prod-smoke.yml"
 
 jobs:
   e49-prod-smoke:
