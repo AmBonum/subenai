@@ -44,6 +44,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
 import { tFor } from "@/i18n/admin";
+import { LiveSupportBadge } from "@/components/admin/queue/LiveSupportBadge";
 
 type NavItem = {
   key: string;
@@ -223,14 +224,16 @@ export function AdminSidebar() {
         <Link to={item.url} className="flex items-center gap-3" data-testid={item.testid}>
           <item.icon className="h-4 w-4" />
           <span className="flex-1">{t(`nav.${item.key}`)}</span>
-          {item.badge && (
+          {item.key === "support" ? (
+            <LiveSupportBadge />
+          ) : item.badge ? (
             <Badge
               variant="secondary"
               className="h-5 px-1.5 text-[10px] group-data-[collapsible=icon]:hidden"
             >
               {item.badge}
             </Badge>
-          )}
+          ) : null}
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>

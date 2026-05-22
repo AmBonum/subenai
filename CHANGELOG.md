@@ -13,6 +13,9 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - **Potvrdzovací e-mail po odoslaní žiadosti o podporu** teraz obsahuje presnú kópiu vašej správy: tému, kategóriu, meno (ak ste ho zadali) a samotný text správy.
 - **Footer transakčných e-mailov** teraz správne odkazuje na `podpora@subenai.sk` namiesto zavádzajúceho "Odpovedz priamo na tento e-mail" (e-mail je posielaný z `noreply@subenai.sk`).
 
+### Pridané
+- Admin panel: v ľavom menu pri "Žiadosti podpory" sa zobrazuje červený badge s počtom ticketov, ktoré potrebujú pozornosť (status nový alebo znovu otvorený). Aktualizuje sa automaticky každú minútu. (2026-05-22)
+
 ### Opravené
 - **Opravený admin reply email — odkaz na vlákno teraz obsahuje view_token (rotácia tokenu pri každej odpovedi pre vyššiu bezpečnosť).** (2026-05-22)
 - **Opravený TOCTOU trigger pre prílohy v podporných žiadostiach.** Produkčné nahrávanie súborov zlyhalo s chybou 500 kvôli neplatnej kombinácii `aggregate + FOR UPDATE` v PostgreSQL. Trigger teraz zamyká radok rodičovskej podpornej žiadosti namiesto súboru, čím sa serializujú konkurentné nahrávania a cap je korektne vynútený.
