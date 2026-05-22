@@ -77,6 +77,17 @@ function installSupabaseMock() {
           // panel reads only the meta cols. Updates also go through here.
           return makeChain({ data: state.ticket, error: null });
         }
+        if (table === "support_tickets_with_assignees") {
+          // E48-v3 PR-ASSIGN-DETAIL — the detail query now reads from the
+          // multi-assignee view. The mock returns the same ticket row with
+          // an `assignees` array (default empty when not set on the state).
+          if (!state.ticket) return makeChain({ data: null, error: null });
+          const row = {
+            ...state.ticket,
+            assignees: (state.ticket.assignees as unknown[]) ?? [],
+          };
+          return makeChain({ data: row, error: null });
+        }
         if (table === "support_ticket_messages") {
           return makeChain({ data: state.messages, error: null });
         }

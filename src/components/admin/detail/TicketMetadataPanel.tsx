@@ -4,12 +4,12 @@ import { Copy } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import type { AdminSupportTicketRow } from "@/lib/admin/queries-tickets";
+import type { AdminSupportTicketDetailRow } from "@/lib/admin/queries-tickets";
 
 import { SOURCE_LABEL_SK } from "./ticket-labels";
 
 interface TicketMetadataPanelProps {
-  ticket: AdminSupportTicketRow;
+  ticket: AdminSupportTicketDetailRow;
 }
 
 interface ExtendedMeta {

@@ -1,4 +1,4 @@
-import type { AdminSupportTicketRow } from "@/lib/admin/queries-tickets";
+import type { AdminSupportTicketDetailRow } from "@/lib/admin/queries-tickets";
 
 import { TicketStatusActions } from "./TicketStatusActions";
 import { TicketAssignmentActions } from "./TicketAssignmentActions";
@@ -7,7 +7,7 @@ import { TicketAuditLog } from "./TicketAuditLog";
 import type { TicketStatus } from "./ticket-labels";
 
 interface TicketActionsSidebarProps {
-  ticket: AdminSupportTicketRow;
+  ticket: AdminSupportTicketDetailRow;
 }
 
 export function TicketActionsSidebar({ ticket }: TicketActionsSidebarProps) {
@@ -17,7 +17,7 @@ export function TicketActionsSidebar({ ticket }: TicketActionsSidebarProps) {
       data-testid="admin-ticket-actions-sidebar"
     >
       <TicketStatusActions ticketId={ticket.id} status={ticket.status as TicketStatus} />
-      <TicketAssignmentActions ticketId={ticket.id} assignedTo={ticket.assigned_to} />
+      <TicketAssignmentActions ticketId={ticket.id} assignees={ticket.assignees} />
       <TicketMetadataPanel ticket={ticket} />
       <TicketAuditLog ticketId={ticket.id} />
     </aside>

@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
-import type { AdminSupportTicketRow } from "@/lib/admin/queries-tickets";
+import type { AdminSupportTicketDetailRow } from "@/lib/admin/queries-tickets";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -26,7 +26,7 @@ import {
 } from "./ticket-labels";
 
 interface TicketDetailHeaderProps {
-  ticket: AdminSupportTicketRow;
+  ticket: AdminSupportTicketDetailRow;
   onPrimaryAction?: () => void;
 }
 

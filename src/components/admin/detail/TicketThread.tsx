@@ -1,12 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import type {
-  AdminSupportTicketRow,
+  AdminSupportTicketDetailRow,
   AdminSupportTicketMessage,
   AdminSupportTicketAttachment,
 } from "@/lib/admin/queries-tickets";
 
 interface TicketThreadProps {
-  ticket: AdminSupportTicketRow;
+  ticket: AdminSupportTicketDetailRow;
   messages: AdminSupportTicketMessage[];
   attachments: AdminSupportTicketAttachment[];
 }
