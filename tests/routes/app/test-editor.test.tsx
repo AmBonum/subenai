@@ -26,6 +26,7 @@ vi.mock("@tanstack/react-router", async () => {
     Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => (
       <a {...(rest as Record<string, string>)}>{children}</a>
     ),
+    Outlet: () => null,
   };
 });
 

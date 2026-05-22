@@ -29,10 +29,12 @@ import type {
   Respondent,
   RespondentGroup,
   Session,
+  SessionAnswerWithQuestion,
   Team,
   TeamMember,
   Template,
   Test,
+  TestSessionsPage,
   TestStatus,
   TestVersion,
 } from "./types";
@@ -574,6 +576,130 @@ export function useUserSession(id: string | undefined) {
         .maybeSingle();
       if (error) throw error;
       return data ? mapSession(data as SessionsRow) : null;
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// E49 Phase 1 — server-paginated sessions for the test-editor Results tab +
+// per-session answer fetch joined with the question library for the
+// respondent-detail side sheet.
+//
+// RLS on `sessions` / `session_answers` already filters to the test owner —
+// no client-side owner check is needed and is intentionally avoided so RLS
+// remains the single source of truth. The hooks shape the request chain
+// (range/order/eq/ilike) and merge `questions` rows in memory.
+// ---------------------------------------------------------------------------
+
+export type TestSessionsSort = "started_at_desc" | "started_at_asc" | "score_desc" | "score_asc";
+
+export type TestSessionsStatus = "all" | "in_progress" | "completed" | "abandoned";
+
+export interface UseTestSessionsOpts {
+  page?: number;
+  pageSize?: number;
+  sort?: TestSessionsSort;
+  status?: TestSessionsStatus;
+  search?: string;
+}
+
+export function useTestSessions(testId: string | undefined, opts: UseTestSessionsOpts = {}) {
+  const page = Math.max(0, opts.page ?? 0);
+  const pageSize = Math.max(1, Math.min(100, opts.pageSize ?? 20));
+  const sort: TestSessionsSort = opts.sort ?? "started_at_desc";
+  const status: TestSessionsStatus = opts.status ?? "all";
+  const search = (opts.search ?? "").trim();
+  return useQuery({
+    queryKey: ["user", "tests", testId, "sessions", { page, pageSize, sort, status, search }],
+    enabled: !!testId,
+    queryFn: async (): Promise<TestSessionsPage> => {
+      if (!testId) return { rows: [], total: 0, pageCount: 0 };
+      const from = page * pageSize;
+      const to = from + pageSize - 1;
+      let q = supabase
+        .from("sessions")
+        .select(SESSIONS_COLS, { count: "exact" })
+        .eq("test_id", testId);
+      if (status !== "all") {
+        q = q.eq("status", status);
+      }
+      if (search.length > 0) {
+        // PostgREST escapes commas/parens for us via the second arg; the
+        // `or` filter targets the two intake_data keys we display.
+        const safe = search.replace(/[%,()]/g, " ");
+        q = q.or(`intake_data->>name.ilike.%${safe}%,intake_data->>email.ilike.%${safe}%`);
+      }
+      switch (sort) {
+        case "started_at_asc":
+          q = q.order("started_at", { ascending: true });
+          break;
+        case "score_desc":
+          q = q.order("score", { ascending: false, nullsFirst: false });
+          break;
+        case "score_asc":
+          q = q.order("score", { ascending: true, nullsFirst: true });
+          break;
+        case "started_at_desc":
+        default:
+          q = q.order("started_at", { ascending: false });
+          break;
+      }
+      q = q.range(from, to);
+      const { data, error, count } = await q;
+      if (error) throw error;
+      const total = count ?? 0;
+      const pageCount = pageSize > 0 ? Math.max(1, Math.ceil(total / pageSize)) : 1;
+      return {
+        rows: (data ?? []).map((r) => mapSession(r as SessionsRow)),
+        total,
+        pageCount,
+      };
+    },
+  });
+}
+
+export function useTestSessionAnswers(sessionId: string | undefined) {
+  return useQuery({
+    queryKey: ["user", "sessions", sessionId, "answers"],
+    enabled: !!sessionId,
+    queryFn: async (): Promise<SessionAnswerWithQuestion[]> => {
+      if (!sessionId) return [];
+      const { data: answersData, error: aErr } = await supabase
+        .from("session_answers")
+        .select("question_id, value, is_correct, time_ms")
+        .eq("session_id", sessionId);
+      if (aErr) throw aErr;
+      const answers = (answersData ?? []) as Array<{
+        question_id: string;
+        value: string | null;
+        is_correct: boolean | null;
+        time_ms: number | null;
+      }>;
+      if (answers.length === 0) return [];
+      const ids = Array.from(new Set(answers.map((a) => a.question_id)));
+      const { data: qData, error: qErr } = await supabase
+        .from("questions")
+        .select("id, prompt, type, options, correct")
+        .in("id", ids);
+      if (qErr) throw qErr;
+      const qMap = new Map(
+        (
+          (qData ?? []) as Array<{
+            id: string;
+            prompt: string;
+            type: string;
+            options: unknown;
+            correct: unknown;
+          }>
+        ).map((q) => [q.id, q]),
+      );
+      return answers.map((a) => ({
+        question_id: a.question_id,
+        value: a.value ?? "",
+        is_correct: a.is_correct,
+        time_ms: a.time_ms ?? 0,
+        question: qMap.get(a.question_id) ?? null,
+      }));
     },
   });
 }

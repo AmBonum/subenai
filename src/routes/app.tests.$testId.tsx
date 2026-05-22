@@ -1,5 +1,12 @@
-import { createFileRoute, Link, useNavigate, useParams, useSearch } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  useNavigate,
+  useParams,
+  useSearch,
+} from "@tanstack/react-router";
+import { useState } from "react";
 import { z } from "zod";
 import {
   ArrowLeft,
@@ -26,6 +33,7 @@ import { QuestionsEditor } from "@/components/app/tests/QuestionsEditor";
 import { OrderModeToggle } from "@/components/app/tests/OrderModeToggle";
 import { PasswordCard } from "@/components/app/tests/PasswordCard";
 import { InviteEmailDialog } from "@/components/app/tests/InviteEmailDialog";
+import { SessionsList } from "@/components/app/tests/SessionsList";
 import { ComingSoonBadge } from "@/components/feature-gates/ComingSoonBadge";
 import { ProBadge } from "@/components/feature-gates/ProBadge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -35,8 +43,8 @@ import {
   useArchiveTest,
   usePublishTest,
   useTest,
+  useTestSessions,
   useUpdateTest,
-  useUserSessions,
 } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
 import { tFor as tAppShell } from "@/i18n/app-shell";
@@ -64,22 +72,30 @@ function TestEditorPage() {
   const search = useSearch({ from: "/app/tests/$testId" });
   const nav = useNavigate({ from: "/app/tests/$testId" });
   const testQ = useTest(testId);
-  const sessionsQ = useUserSessions();
+  // KPI cards: total respondents (all statuses), completed count, avg
+  // score. We fetch the first page just to get total via the count header
+  // and a small sample for the avg; for an accurate avg over all completed
+  // sessions we issue a second query scoped to status=completed with the
+  // max page size we allow (100). For typical author scale this is the
+  // right trade-off; E49 Phase 2+ will move the aggregate to an RPC.
+  const totalQ = useTestSessions(testId, { page: 0, pageSize: 1, status: "all" });
+  const completedQ = useTestSessions(testId, { page: 0, pageSize: 100, status: "completed" });
   const updateMut = useUpdateTest();
   const publishMut = usePublishTest();
   const archiveMut = useArchiveTest();
   const test = testQ.data ?? null;
-  const sessions = (sessionsQ.data ?? []).filter((s) => s.test_id === testId);
 
   const [title, setTitle] = useState(test?.title ?? "");
   const [description, setDescription] = useState(test?.description ?? "");
   const [shareOpen, setShareOpen] = useState(search.share === "1");
   const [inviteOpen, setInviteOpen] = useState(false);
 
-  const completed = useMemo(() => sessions.filter((s) => s.status === "completed"), [sessions]);
+  const totalRespondents = totalQ.data?.total ?? 0;
+  const completedRows = completedQ.data?.rows ?? [];
+  const completedCount = completedQ.data?.total ?? 0;
   const avgScore =
-    completed.length > 0
-      ? Math.round(completed.reduce((a, s) => a + (s.score ?? 0), 0) / completed.length)
+    completedRows.length > 0
+      ? Math.round(completedRows.reduce((a, s) => a + (s.score ?? 0), 0) / completedRows.length)
       : 0;
 
   if (!test) {
@@ -239,14 +255,45 @@ function TestEditorPage() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="results" className="mt-4">
+        <TabsContent value="results" className="mt-4 space-y-4">
+          <div className="grid gap-3 sm:grid-cols-3" data-testid="test-editor-results-kpis">
+            <Card data-testid="test-editor-kpi-total">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-medium text-muted-foreground">
+                  {t("kpi_total")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-semibold tabular-nums">{totalRespondents}</p>
+              </CardContent>
+            </Card>
+            <Card data-testid="test-editor-kpi-completed">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-medium text-muted-foreground">
+                  {t("kpi_completed")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-semibold tabular-nums">{completedCount}</p>
+              </CardContent>
+            </Card>
+            <Card data-testid="test-editor-kpi-avg-score">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-medium text-muted-foreground">
+                  {t("kpi_avg_score")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-semibold tabular-nums">{avgScore}%</p>
+              </CardContent>
+            </Card>
+          </div>
           <Card data-testid="test-editor-results-panel">
             <CardHeader>
-              <CardTitle>{t("tab_results")}</CardTitle>
+              <CardTitle>{t("sessions_list_title")}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p>Dokončené: {completed.length}</p>
-              <p>Priemerné skóre: {avgScore}%</p>
+            <CardContent>
+              <SessionsList testId={test.id} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -257,7 +304,7 @@ function TestEditorPage() {
               <CardTitle>{t("tab_analytics")}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              <p>Sessions: {sessions.length}</p>
+              <p>Sessions: {totalRespondents}</p>
               <p>Otázok: {test.question_ids.length}</p>
             </CardContent>
           </Card>
@@ -325,6 +372,9 @@ function TestEditorPage() {
         testId={test.id}
         hasPassword={test.has_password}
       />
+      {/* Child routes (e.g. /sessions/$sessionId) mount here as portal'd
+          side sheets layered above the editor. */}
+      <Outlet />
     </div>
   );
 }

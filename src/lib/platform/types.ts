@@ -156,6 +156,32 @@ export interface SessionAnswer {
   time_ms: number;
 }
 
+// E49 Phase 1 — answer row joined with its question metadata so the
+// respondent-detail sheet can render the respondent's value next to the
+// expected one without a second per-row fetch. `options`/`correct` are
+// `unknown` because the questions table stores them as jsonb — callers
+// narrow as needed.
+export interface SessionAnswerWithQuestion {
+  question_id: string;
+  value: string;
+  is_correct: boolean | null;
+  time_ms: number;
+  question: {
+    id: string;
+    prompt: string;
+    type: QuestionType | string;
+    options: unknown;
+    correct: unknown;
+  } | null;
+}
+
+// E49 Phase 1 — paginated sessions response shape used by useTestSessions.
+export interface TestSessionsPage {
+  rows: Session[];
+  total: number;
+  pageCount: number;
+}
+
 export interface Session {
   id: string;
   test_id: string;
