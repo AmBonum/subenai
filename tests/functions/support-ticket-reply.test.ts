@@ -292,6 +292,27 @@ describe("POST /api/support-ticket-reply — input validation", () => {
     expect(res.status).toBe(400);
     expect((await res.json()).error).toBe("body_invalid");
   });
+
+  // Regression: previously the supabase-config check ran BEFORE input
+  // validation, so a malformed JSON body in an environment without
+  // service-role keys returned 500 supabase_not_configured instead of
+  // the correct 400 invalid_json. Client errors must be surfaced before
+  // server-side configuration errors.
+  it("prefers 400 client error over 500 supabase_not_configured for malformed JSON", async () => {
+    const envWithoutKeys = {
+      ...env,
+      SUPABASE_SERVICE_ROLE_KEY: "",
+      SUPABASE_ANON_KEY: "",
+    };
+    const req = new Request("https://subenai.sk/api/support-ticket-reply", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${makeJwt("aal2")}` },
+      body: "not json",
+    });
+    const res = await onRequestPost({ request: req, env: envWithoutKeys });
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toBe("invalid_json");
+  });
 });
 
 describe("POST /api/support-ticket-reply — happy path + state machine", () => {
