@@ -704,6 +704,48 @@ export function useTestSessionAnswers(sessionId: string | undefined) {
   });
 }
 
+// E49.4 — kick off the server-rendered CSV export. The CF function does
+// the heavy lifting (auth, owner check, rate limits, injection defense,
+// audit row); this hook only assembles the request and returns the Blob
+// + capped flag for the caller to convert into a browser download.
+export interface ExportTestSessionsResult {
+  blob: Blob;
+  filename: string;
+  capped: boolean;
+}
+
+export function useExportTestSessionsCsv(testId: string | undefined) {
+  return useMutation<ExportTestSessionsResult, Error>({
+    mutationFn: async () => {
+      if (!testId) throw new Error("missing_test_id");
+      const { data: session } = await supabase.auth.getSession();
+      const token = session.session?.access_token;
+      if (!token) throw new Error("not_signed_in");
+      const res = await fetch(`/api/tests/export-sessions?testId=${encodeURIComponent(testId)}`, {
+        method: "GET",
+        credentials: "same-origin",
+        headers: { authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) {
+        let key = `http_${res.status}`;
+        try {
+          const body = (await res.json()) as { error?: string };
+          if (body.error) key = body.error;
+        } catch {
+          // Body wasn't JSON — fall back to the status-derived key.
+        }
+        throw new Error(key);
+      }
+      const blob = await res.blob();
+      const cd = res.headers.get("content-disposition") ?? "";
+      const m = cd.match(/filename="([^"]+)"/);
+      const filename = m?.[1] ?? `sessions-${testId}.csv`;
+      const capped = res.headers.get("x-total-capped") === "true";
+      return { blob, filename, capped };
+    },
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Audiences (respondent_groups)
 // ---------------------------------------------------------------------------

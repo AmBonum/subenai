@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,7 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 import { tFor } from "@/i18n/tests";
 import {
   useTestSessions,
+  useExportTestSessionsCsv,
   type TestSessionsSort,
   type TestSessionsStatus,
 } from "@/lib/platform/queries";
@@ -61,17 +63,37 @@ export function SessionsList({ testId }: Props) {
   const [search, setSearch] = useState("");
 
   const sessionsQ = useTestSessions(testId, { page, pageSize, sort, status, search });
-
-  const onFilterChange = (next: () => void) => {
-    setPage(0);
-    next();
-  };
+  const exportMut = useExportTestSessionsCsv(testId);
 
   const total = sessionsQ.data?.total ?? 0;
   const pageCount = sessionsQ.data?.pageCount ?? 1;
   const rows = sessionsQ.data?.rows ?? [];
   const fromIdx = total === 0 ? 0 : page * pageSize + 1;
   const toIdx = Math.min((page + 1) * pageSize, total);
+
+  const onFilterChange = (next: () => void) => {
+    setPage(0);
+    next();
+  };
+
+  const onExport = async () => {
+    try {
+      const result = await exportMut.mutateAsync();
+      // Browser-side download: object URL + synthetic <a> click + revoke
+      // immediately. Same pattern used elsewhere for blob downloads.
+      const url = URL.createObjectURL(result.blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = result.filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast.success(t("export_csv_success", { count: total }));
+    } catch {
+      toast.error(t("export_csv_error"));
+    }
+  };
 
   return (
     <div className="space-y-4" data-testid="test-sessions-list-root">
@@ -140,6 +162,15 @@ export function SessionsList({ testId }: Props) {
             </SelectContent>
           </Select>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onExport}
+          disabled={total === 0 || exportMut.isPending}
+          data-testid="test-sessions-list-export-csv-button"
+        >
+          {exportMut.isPending ? "…" : t("export_csv_button")}
+        </Button>
       </div>
 
       {sessionsQ.isLoading ? (

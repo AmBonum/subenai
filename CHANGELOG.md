@@ -15,6 +15,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ### Pridané
 - **Detail respondenta v `/app/tests/$testId`**: záložka Výsledky teraz zobrazuje stránkovaný zoznam respondentov s filtrom podľa stavu, vyhľadávaním podľa mena a e‑mailu, a triedením podľa skóre alebo času začatia. Kliknutím na "Otvoriť detail" sa otvorí bočný panel s úplným prehľadom: identita respondenta, skóre, čas, IP audit ref a všetky odpovede s farebným označením správnych a nesprávnych. Sumár nad zoznamom prináša tri KPI karty (Spolu respondentov, Dokončené, Priemerné skóre). (2026-05-22)
+- **Export respondentov do CSV** priamo zo záložky Výsledky. Súbor je v UTF‑8 (s BOM, aby Excel správne otvoril diakritiku), bezpečne escapovaný proti CSV injection útokom (formuly začínajúce `=`, `+`, `-`, `@` sú prefixované apostrofom), a obmedzený limitmi proti zneužitiu (50 exportov denne na autora, 100 na IP za hodinu). Export je auditovaný. (2026-05-22)
 - Admin panel: v ľavom menu pri "Žiadosti podpory" sa zobrazuje červený badge s počtom ticketov, ktoré potrebujú pozornosť (status nový alebo znovu otvorený). Aktualizuje sa automaticky každú minútu. (2026-05-22)
 
 ### Bezpečnosť

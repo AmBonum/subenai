@@ -107,7 +107,7 @@ function AnswerRow({
   return (
     <li
       className="rounded-lg border p-3"
-      data-testid={`session-detail-answer-${answer.question_id}`}
+      data-testid={`session-detail-answer-row-${answer.question_id}`}
     >
       <div className="flex items-start justify-between gap-3">
         <p className="text-sm font-medium text-foreground">
@@ -115,7 +115,7 @@ function AnswerRow({
         </p>
         <span
           className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground"
-          data-testid={`session-detail-answer-${answer.question_id}-time`}
+          data-testid={`session-detail-answer-row-${answer.question_id}-time`}
         >
           {timeLabel}: {formatTime(answer.time_ms)}
         </span>
@@ -130,7 +130,7 @@ function AnswerRow({
           <span className="text-muted-foreground">{answerLabel}:</span>
           <span
             className={valueClass}
-            data-testid={`session-detail-answer-${answer.question_id}-value`}
+            data-testid={`session-detail-answer-row-${answer.question_id}-value`}
             data-correct={isCorrect ? "true" : isWrong ? "false" : "null"}
           >
             {answer.value || "—"}
@@ -139,10 +139,22 @@ function AnswerRow({
         {expected && (
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground">{expectedLabel}:</span>
-            <span className="text-foreground">{expected}</span>
+            <span
+              className="text-foreground"
+              data-testid={`session-detail-answer-row-${answer.question_id}-expected`}
+            >
+              {expected}
+            </span>
           </div>
         )}
-        <span className="sr-only">{isWrong ? wrongLabel : isCorrect ? correctLabel : ""}</span>
+        {(isCorrect || isWrong) && (
+          <span
+            className="sr-only"
+            data-testid={`session-detail-answer-row-${answer.question_id}-correctness`}
+          >
+            {isWrong ? wrongLabel : correctLabel}
+          </span>
+        )}
       </div>
     </li>
   );
@@ -171,12 +183,12 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
       <SheetContent
         side="right"
         className="w-full overflow-y-auto sm:max-w-2xl"
-        data-testid="session-detail-sheet"
+        data-testid="session-detail-root"
       >
         <SheetHeader>
           <SheetTitle data-testid="session-detail-title">{t("title")}</SheetTitle>
           {session && (
-            <SheetDescription data-testid="session-detail-respondent">
+            <SheetDescription data-testid="session-detail-respondent-identity">
               {respondentLabel(session, t("anonymous"))}
             </SheetDescription>
           )}
@@ -196,7 +208,7 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
           >
             <p>{t("not_found")}</p>
             <Button asChild size="sm" variant="outline" className="mt-3">
-              <Link to={onCloseHref} data-testid="session-detail-close-link">
+              <Link to={onCloseHref} data-testid="session-detail-close">
                 {t("close")}
               </Link>
             </Button>
@@ -204,7 +216,9 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
         ) : session ? (
           <div className="mt-4 space-y-4">
             <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge status={session.status} />
+              <span data-testid="session-detail-status-badge">
+                <StatusBadge status={session.status} />
+              </span>
               {session.score != null && (
                 <span
                   className="text-sm font-medium tabular-nums"
@@ -240,7 +254,7 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
                 <dt className="text-muted-foreground">{t("audit_ref")}</dt>
                 <dd
                   className="font-mono text-[11px] text-foreground"
-                  data-testid="session-detail-ip-ref"
+                  data-testid="session-detail-audit-ref"
                 >
                   {truncateIpRef(session.ip_hash)}
                 </dd>
@@ -265,7 +279,7 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
             ) : (
               <div
                 className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground"
-                data-testid="session-detail-answers-empty"
+                data-testid="session-detail-empty-in-progress"
               >
                 {t("empty_answers_in_progress")}
               </div>

@@ -2,7 +2,7 @@
 
 **Owner:** Claude — closes the loop on `/app/tests` after E45 shipped the editor. The author must be able to (1) drill into individual respondent results, (2) reset / delete / re-invite a respondent's session, (3) configure all available test parameters (expiry, max attempts, time limit, anonymization, behavioural tracking), (4) organize tests (duplicate, bulk archive, pin), and (5) every flow above must be locked down by unit + integration + security + e2e tests with seeded data + global teardown.
 **Date opened:** 2026-05-22
-**Status:** 🟡 Phase 1a in progress — queries + side-sheet + Results v2 + plan markdown shipped (this commit). Phase 1b (CSV export CF + Playwright spec + extended Vitest) next.
+**Status:** 🟢 **Phase 1 complete** (2026-05-22) — respondent drill-down + CSV export + Playwright POM/spec + injection contract battery shipped across 2 commits. Phase 2 (session ops: reset/delete/re-invite) next.
 
 **Originating request (verbatim, Slovak — for traceability):**
 > "Tu musí všetko fungovať a aj testy musia otvárať detail testov aj s respondentmi a ich výsledkami. Užívateľ musí vedieť organizovať svoje testy, musí ich vedieť editovať v detaile ako aj nastaviť heslo, zmeniť/prispôsobiť/pridať/odobrať otázky, nastaviť rôzne parametre testu a zároveň resetovať/vymazať/vyžiadať znova vyplnenie testu. Vsetko to chcem mat pokryte automation tetsami z hladiska funkcnosti, integracie, security a e2e."
@@ -120,10 +120,10 @@ E49 closes all of these and ships them under one consistent severity-driven `Con
 | ~~E49.1 Queries: `useTestSessions(paged)`, `useTestSessionAnswers`~~ | S | P1 | ✅ Done |
 | ~~E49.2 Sub-route `app.tests.$testId.sessions.$sessionId.tsx` (side-sheet)~~ | M | P1 | ✅ Done |
 | ~~E49.3 Results tab v2: paginated list + filters + sort + 3 KPI cards~~ | M | P1 | ✅ Done |
-| E49.4 CSV export CF function `functions/api/tests/export-sessions.ts` | S | P1 | ⏳ Next |
+| ~~E49.4 CSV export CF function `functions/api/tests/export-sessions.ts` + `functions/_lib/csv.ts` helper~~ | S | P1 | ✅ Done |
 | ~~E49.5 i18n sk/en/cs for all new strings~~ | XS | P2 | ✅ Done |
-| E49.6 Vitest: extend with CSV-injection contract + question-metadata edge cases | M | P1 | 🟡 Partial — basic queries + list component covered (16 tests); CSV contract pending |
-| E49.7 Playwright spec `e2e/specs/app/test-sessions-detail.spec.ts` + POM `e2e/poms/app/TestSessionsDetail.ts` | M | P1 | 🟡 Plan markdown shipped (`specs/app/test-sessions-detail.md`), spec generation pending |
+| ~~E49.6 Vitest: extend with CSV-injection contract + question-metadata edge cases~~ | M | P1 | ✅ Done — 16 (Phase 1a) + 14 (CF function) + 32 (security payload battery) = 62 new tests |
+| ~~E49.7 Playwright spec `e2e/specs/app/test-sessions-detail.spec.ts` + POM `e2e/poms/app/TestSessionsDetail.ts` + seed helper~~ | M | P1 | ✅ Done — 19 TCs, POM-only locators |
 | ~~E49.8 Docs: story `tasks/stories/E49.1-respondent-drilldown.md` + CHANGELOG entry~~ | XS | P2 | ✅ Done |
 
 ### Phase 2 — Session ops (PR-2)

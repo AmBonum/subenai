@@ -3,7 +3,16 @@ export { seedProfile, type Profile } from "./profiles";
 export { seedUserRole, type UserRole } from "./user-roles";
 export { seedTest, type TestRow } from "./tests";
 export { seedQuestion, type QuestionRow } from "./questions";
-export { seedSession, type SessionRow } from "./sessions";
+export {
+  seedSession,
+  seedE49TestWithSessions,
+  type SessionRow,
+  type SessionAnswerRow,
+  type SeedE49Input,
+  type SeedE49Result,
+  type SeedE49Sessions,
+  type SeedE49Tables,
+} from "./sessions";
 export { seedAudience, type AudienceRow } from "./audiences";
 export { seedAnswerSet, type AnswerSetRow } from "./answer-sets";
 export { seedNotification, type NotificationRow } from "./notifications";
