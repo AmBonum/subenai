@@ -2141,228 +2141,32 @@ export function useCancelPendingErasure() {
 }
 
 // E48.6 — Admin support tickets queries.
-// useAdminSupportTickets reads support_tickets via the admin-all RLS policy
-// (has_role(uid, 'admin') gate). View is client-side filtered + capped at 200
-// rows. The partial admin_working_set_idx keeps the query fast at scale.
+//
+// E48-v2 PR-X (2026-05): the ticket hooks + escape helpers were
+// extracted to `./queries-tickets.ts`. This block keeps re-exports as a
+// deprecation shim so existing call-sites continue to compile against
+// the old import path for one release cycle. New code MUST import from
+// `@/lib/admin/queries-tickets` directly.
 
-/**
- * Escape a user-supplied substring for use inside a PostgreSQL
- * LIKE/ILIKE pattern. Backslash MUST be escaped first.
- *
- * Exported for unit testing — see `tests/lib/admin/support-ticket-search.test.ts`.
- */
-export function ilikePatternEscape(input: string): string {
-  return input.replace(/\\/g, "\\\\").replace(/[%_]/g, "\\$&");
-}
+// @deprecated — moved to queries-tickets.ts. Import from there instead.
+export {
+  ilikePatternEscape,
+  postgrestOrEscape,
+  useAdminSupportTickets,
+  useAdminSupportTicketAttachmentCounts,
+  useAdminSupportTicket,
+  useAdminSupportTicketMessages,
+  useAdminSupportTicketAttachments,
+  useTransitionTicketStatus,
+} from "./queries-tickets";
 
-/**
- * Escape a value being embedded into a PostgREST `or(...)` filter
- * expression. PostgREST's tokeniser treats `,`, `(`, `)` as structural
- * separators; URL-encoding them yields literal matches after PostgREST
- * decodes the request, while keeping the tokeniser from seeing them.
- *
- * Caller is responsible for first applying `ilikePatternEscape` if the
- * value goes into an ILIKE pattern.
- *
- * Exported for unit testing.
- */
-export function postgrestOrEscape(input: string): string {
-  return input.replace(/,/g, "%2C").replace(/\(/g, "%28").replace(/\)/g, "%29");
-}
-
-export interface SupportTicketsFilters {
-  statuses?: string[];
-  categories?: string[];
-  query?: string;
-  includeArchived?: boolean;
-}
-
-export interface AdminSupportTicketRow {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  status: string;
-  category: string;
-  source: string;
-  subject: string;
-  body: string;
-  submitter_user_id: string | null;
-  submitter_email: string;
-  submitter_name: string | null;
-  assigned_to: string | null;
-  archived_at: string | null;
-  deleted_at: string | null;
-}
-
-export function useAdminSupportTickets(filters: SupportTicketsFilters = {}) {
-  const { statuses, categories, query, includeArchived } = filters;
-  return useQuery({
-    queryKey: ["admin", "support_tickets", statuses, categories, query, includeArchived],
-    queryFn: async (): Promise<AdminSupportTicketRow[]> => {
-      let q = supabase
-        .from("support_tickets")
-        .select(
-          "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, assigned_to, archived_at, deleted_at",
-        )
-        .is("deleted_at", null)
-        .order("created_at", { ascending: false })
-        .limit(200);
-
-      if (!includeArchived) {
-        q = q.is("archived_at", null);
-      }
-      if (statuses && statuses.length > 0) {
-        q = q.in("status", statuses);
-      }
-      if (categories && categories.length > 0) {
-        q = q.in("category", categories);
-      }
-      if (query && query.trim().length >= 2) {
-        // Two layers of escape are necessary on a `q.or(...)` ILIKE call:
-        //
-        //   1. PostgreSQL LIKE/ILIKE pattern escape — the three special
-        //      chars are `\`, `%`, `_`. Backslash must be escaped FIRST
-        //      (if we escaped `%`/`_` first, the new backslashes they
-        //      emit would get doubled again on a second pass). CodeQL
-        //      flagged the original 2-char-only escape as incomplete.
-        //
-        //   2. PostgREST `or()` parser escape (audit A4) — the parser
-        //      uses `,`, `(`, `)` as structural separators. A search
-        //      term containing them (e.g. `foo),id.eq.<uuid>`) would
-        //      inject extra filter clauses. URL-encode them after the
-        //      ILIKE escape: PostgREST decodes them back to literals,
-        //      but the `or()` tokeniser doesn't.
-        const ilikeEscaped = ilikePatternEscape(query.trim());
-        const term = `%${postgrestOrEscape(ilikeEscaped)}%`;
-        q = q.or(`subject.ilike.${term},body.ilike.${term},submitter_email.ilike.${term}`);
-      }
-
-      const { data, error } = await q;
-      if (error) throw error;
-      return (data ?? []) as AdminSupportTicketRow[];
-    },
-  });
-}
-
-export function useAdminSupportTicketAttachmentCounts(ticketIds: string[]) {
-  return useQuery({
-    queryKey: ["admin", "support_tickets", "attachment_counts", ...ticketIds],
-    queryFn: async (): Promise<Record<string, number>> => {
-      if (ticketIds.length === 0) return {};
-      const { data, error } = await supabase
-        .from("support_ticket_attachments")
-        .select("ticket_id")
-        .in("ticket_id", ticketIds);
-      if (error) throw error;
-      const counts: Record<string, number> = {};
-      for (const r of (data ?? []) as { ticket_id: string }[]) {
-        counts[r.ticket_id] = (counts[r.ticket_id] ?? 0) + 1;
-      }
-      return counts;
-    },
-    enabled: ticketIds.length > 0,
-  });
-}
-
-export function useAdminSupportTicket(ticketId: string) {
-  return useQuery({
-    queryKey: ["admin", "support_ticket", ticketId],
-    queryFn: async (): Promise<AdminSupportTicketRow | null> => {
-      const { data, error } = await supabase
-        .from("support_tickets")
-        .select(
-          "id, created_at, updated_at, status, category, source, subject, body, submitter_user_id, submitter_email, submitter_name, assigned_to, archived_at, deleted_at",
-        )
-        .eq("id", ticketId)
-        .maybeSingle();
-      if (error) throw error;
-      return (data ?? null) as AdminSupportTicketRow | null;
-    },
-    enabled: !!ticketId,
-  });
-}
-
-export interface AdminSupportTicketMessage {
-  id: string;
-  ticket_id: string;
-  created_at: string;
-  author_kind: string;
-  author_user_id: string | null;
-  author_name: string;
-  body: string;
-}
-
-export function useAdminSupportTicketMessages(ticketId: string) {
-  return useQuery({
-    queryKey: ["admin", "support_ticket_messages", ticketId],
-    queryFn: async (): Promise<AdminSupportTicketMessage[]> => {
-      const { data, error } = await supabase
-        .from("support_ticket_messages")
-        .select("id, ticket_id, created_at, author_kind, author_user_id, author_name, body")
-        .eq("ticket_id", ticketId)
-        .order("created_at", { ascending: true });
-      if (error) throw error;
-      return (data ?? []) as AdminSupportTicketMessage[];
-    },
-    enabled: !!ticketId,
-  });
-}
-
-export interface AdminSupportTicketAttachment {
-  id: string;
-  ticket_id: string;
-  message_id: string | null;
-  filename: string;
-  mime_type: string;
-  size_bytes: number;
-  scan_status: string;
-  created_at: string;
-}
-
-export function useAdminSupportTicketAttachments(ticketId: string) {
-  return useQuery({
-    queryKey: ["admin", "support_ticket_attachments", ticketId],
-    queryFn: async (): Promise<AdminSupportTicketAttachment[]> => {
-      const { data, error } = await supabase
-        .from("support_ticket_attachments")
-        .select(
-          "id, ticket_id, message_id, filename, mime_type, size_bytes, scan_status, created_at",
-        )
-        .eq("ticket_id", ticketId)
-        .order("created_at", { ascending: true });
-      if (error) throw error;
-      return (data ?? []) as AdminSupportTicketAttachment[];
-    },
-    enabled: !!ticketId,
-  });
-}
-
-export function useTransitionTicketStatus() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async ({
-      ticketId,
-      newStatus,
-      note,
-    }: {
-      ticketId: string;
-      newStatus: string;
-      note?: string;
-    }) => {
-      const { data, error } = await supabase.rpc("transition_ticket_status", {
-        p_ticket_id: ticketId,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        p_new_status: newStatus as any,
-        p_note: note ?? null,
-      });
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["admin", "support_tickets"] });
-    },
-  });
-}
+// @deprecated — moved to queries-tickets.ts.
+export type {
+  SupportTicketsFilters,
+  AdminSupportTicketRow,
+  AdminSupportTicketMessage,
+  AdminSupportTicketAttachment,
+} from "./queries-tickets";
 
 // E48.9 — admin notification preferences (per-user row in
 // admin_notification_preferences). RLS limits SELECT/UPDATE to the
