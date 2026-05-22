@@ -224,7 +224,7 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
           >
             <p>{t("not_found")}</p>
             <Button asChild size="sm" variant="outline" className="mt-3">
-              <Link to={onCloseHref} data-testid="session-detail-close">
+              <Link to={onCloseHref} data-testid="session-detail-not-found-close">
                 {t("close")}
               </Link>
             </Button>
