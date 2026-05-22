@@ -24,6 +24,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ### Pridané (interné)
 - Test infraštruktúra pre E48-v2: SQL seed helper s worker-isolation prefixom, security regression suite (XSS + CSV injection battery).
+- Reusable `AdminPicker` komponent pre výber adminov v dropdowne (search + listbox). Pripravený na použitie v PR-DETAIL a budúcich admin features.
 
 ### Opravené
 - **Opravený admin reply email — odkaz na vlákno teraz obsahuje view_token (rotácia tokenu pri každej odpovedi pre vyššiu bezpečnosť).** (2026-05-22)
