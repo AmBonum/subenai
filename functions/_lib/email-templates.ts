@@ -403,24 +403,17 @@ function escapeAttr(value: string): string {
   return escapeText(value).replace(/"/g, "&quot;");
 }
 
+// Allow-list for URL schemes that are safe to use in href attributes.
+// Any value that doesn't start with an allowed scheme is replaced with "#"
+// to prevent javascript:/data:/vbscript: XSS vectors.
+const SAFE_URL_SCHEMES = ["https://", "http://"];
+
 function sanitizeUrl(value: string): string {
-  if (!value || typeof value !== "string" || !value.trim()) {
-    return "";
-  }
   const trimmed = value.trim();
-  if (trimmed.startsWith("<") || trimmed.startsWith(">")) {
-    return "";
+  if (SAFE_URL_SCHEMES.some((scheme) => trimmed.toLowerCase().startsWith(scheme))) {
+    return escapeAttr(trimmed);
   }
-  const lowerUrl = trimmed.toLowerCase();
-  if (
-    lowerUrl.startsWith("javascript:") ||
-    lowerUrl.startsWith("data:") ||
-    lowerUrl.startsWith("vbscript:") ||
-    lowerUrl.startsWith("file:")
-  ) {
-    return "";
-  }
-  return escapeAttr(trimmed);
+  return "#";
 }
 
 export const __internal = { formatBytes, sanitizeUrl };

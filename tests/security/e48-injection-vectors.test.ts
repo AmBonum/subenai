@@ -13,14 +13,17 @@
 //   sequence), NOT as an executable attribute. We therefore check the HTML
 //   AFTER stripping entity-escaped segments to avoid false positives.
 //
-//   viewUrl fields go through escapeAttr() which escapes &, <, >, " but does NOT
-//   strip the javascript: protocol. A bare `javascript:alert(1)` viewUrl still
-//   produces href="javascript:alert(1)" — a genuine exposure. Those failures are
-//   INTENTIONAL regression markers for the URL sanitisation fix.
+//   viewUrl fields go through sanitizeUrl() which only permits https:// and
+//   http:// schemes. Any other scheme (javascript:, data:, vbscript:, etc.)
+//   is replaced with "#". The noJavascriptHref assertions below verify this.
 
 import { describe, expect, it } from "vitest";
 
-import { supportTicketReceivedEmail } from "../../functions/_lib/email-templates";
+import {
+  supportTicketReceivedEmail,
+  supportTicketReplyEmail,
+  supportTicketResolvedEmail,
+} from "../../functions/_lib/email-templates";
 import { XSS_PAYLOADS, CSV_INJECTION_PAYLOADS } from "./e48-payloads";
 
 // --- helpers -----------------------------------------------------------------
@@ -94,13 +97,7 @@ describe("E48 XSS resistance — supportTicketReceivedEmail (ticketId)", () => {
   });
 });
 
-// --- XSS: viewUrl (URL field via escapeAttr — javascript: protocol check) ----
-//
-// escapeAttr() HTML-encodes &, <, >, " but does NOT strip the javascript:
-// protocol from URLs. Payloads containing `javascript:` therefore produce
-// href="javascript:alert(1)" — a real exposure in email clients that render
-// raw HTML. These assertions document the current gap and should be unblocked
-// by adding URL-protocol sanitisation to escapeAttr or the viewBlock template.
+// --- XSS: viewUrl (URL field via sanitizeUrl — allow-list scheme check) ------
 
 describe("E48 XSS resistance — supportTicketReceivedEmail (viewUrl)", () => {
   it.each(XSS_PAYLOADS)("escapes executable markup in viewUrl: %s", (payload) => {
@@ -173,5 +170,109 @@ describe("E48 XSS resistance — supportTicketReceivedEmail (attachment filename
 describe("E48 CSV injection — placeholder for future CSV export helper", () => {
   it.skip.each(CSV_INJECTION_PAYLOADS)("escapes payload: %s", (_payload) => {
     // Will be filled in PR-E when csvEscapeCell is available.
+  });
+});
+
+// --- E48 XSS defense-in-depth: Reply + Resolved templates -------------------
+//
+// sanitizeUrl() replaces any href that isn't https:// or http:// with "#",
+// preventing javascript:/data:/vbscript: execution in email clients that
+// render HTML. These tests lock that contract for every template that
+// interpolates a user-supplied viewUrl into an href attribute.
+
+const XSS_URL_PAYLOADS = [
+  "javascript:alert(1)",
+  "JAVASCRIPT:alert(1)",
+  "javascript\t:alert(1)",
+  "data:text/html,<script>alert(1)</script>",
+  "data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==",
+  "vbscript:msgbox(1)",
+  "VBSCRIPT:msgbox(1)",
+  " javascript:alert(1)",
+  "\tjavascript:alert(1)",
+];
+
+const SAFE_URL = "https://subenai.sk/contact-form/ticket/abc?token=tok123";
+
+describe("supportTicketReplyEmail — href XSS defense", () => {
+  it("renders the view-thread link with a safe https:// viewUrl", () => {
+    const { html } = supportTicketReplyEmail({
+      ticketId: "tkt-1",
+      adminName: "Admin",
+      body: "Reply.",
+      viewUrl: SAFE_URL,
+    });
+    expect(html).toContain(`href="${SAFE_URL}"`);
+    expect(html).toContain("Otvoriť celé vlákno");
+  });
+
+  it("replaces javascript: viewUrl with # in the rendered href", () => {
+    const { html } = supportTicketReplyEmail({
+      ticketId: "tkt-1",
+      adminName: "Admin",
+      body: "Reply.",
+      viewUrl: "javascript:alert(1)",
+    });
+    expect(html).toContain('href="#"');
+    expect(html).not.toContain("javascript:");
+  });
+
+  it.each(XSS_URL_PAYLOADS)("blocks dangerous scheme %s → href becomes #", (viewUrl) => {
+    const { html } = supportTicketReplyEmail({
+      ticketId: "tkt-xss",
+      adminName: "Admin",
+      body: "Reply.",
+      viewUrl,
+    });
+    const lower = html.toLowerCase();
+    expect(lower).not.toContain("javascript:");
+    expect(lower).not.toContain("vbscript:");
+    expect(lower).not.toContain("data:text/html");
+    expect(html).toContain('href="#"');
+  });
+
+  it("omits the view block entirely when viewUrl is undefined", () => {
+    const { html } = supportTicketReplyEmail({
+      ticketId: "tkt-1",
+      adminName: "Admin",
+      body: "Reply.",
+    });
+    expect(html).not.toContain("Otvoriť celé vlákno");
+    expect(html).not.toContain("contact-form/ticket");
+  });
+});
+
+describe("supportTicketResolvedEmail — href XSS defense", () => {
+  it("renders the view-record link with a safe https:// viewUrl", () => {
+    const { html } = supportTicketResolvedEmail({
+      ticketId: "tkt-2",
+      viewUrl: SAFE_URL,
+    });
+    expect(html).toContain(`href="${SAFE_URL}"`);
+    expect(html).toContain("Pozrieť záznam");
+  });
+
+  it("replaces javascript: viewUrl with # in the rendered href", () => {
+    const { html } = supportTicketResolvedEmail({
+      ticketId: "tkt-2",
+      viewUrl: "javascript:alert(1)",
+    });
+    expect(html).toContain('href="#"');
+    expect(html).not.toContain("javascript:");
+  });
+
+  it.each(XSS_URL_PAYLOADS)("blocks dangerous scheme %s → href becomes #", (viewUrl) => {
+    const { html } = supportTicketResolvedEmail({ ticketId: "tkt-xss", viewUrl });
+    const lower = html.toLowerCase();
+    expect(lower).not.toContain("javascript:");
+    expect(lower).not.toContain("vbscript:");
+    expect(lower).not.toContain("data:text/html");
+    expect(html).toContain('href="#"');
+  });
+
+  it("omits the view block entirely when viewUrl is undefined", () => {
+    const { html } = supportTicketResolvedEmail({ ticketId: "tkt-2" });
+    expect(html).not.toContain("Pozrieť záznam");
+    expect(html).not.toContain("contact-form/ticket");
   });
 });
