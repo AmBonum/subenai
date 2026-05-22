@@ -57,6 +57,10 @@ export default defineConfig({
       testDir: "./e2e/integration",
       // No `devices` → no browser launched. `request` fixture works on
       // the bare config — keeps these tests fast and stable in CI.
+      // E49 live-supabase specs need a running Supabase stack + preview
+      // server + wrangler — they live in their own project below and
+      // must be excluded from this unit-level integration suite.
+      testIgnore: ["e2e/integration/e49/**"],
       use: { baseURL: BASE_URL },
     },
     {
@@ -114,6 +118,38 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         baseURL: PROD_URL,
       },
+    },
+    {
+      // E49 Phase 1c-2 — setup project for `e2e-live-supabase`. Boots
+      // `supabase start` (if needed), seeds users + data, rebuilds the
+      // bundle against local Supabase if drift is detected, and starts
+      // vite preview (8080) + wrangler pages dev (8788) child processes.
+      // Implementation in `e2e/integration/e49/_setup.spec.ts` →
+      // `e2e/global-setup.live-supabase.ts`.
+      name: "e2e-live-supabase-setup",
+      testMatch: /e2e\/integration\/e49\/_setup\.spec\.ts$/,
+      teardown: "e2e-live-supabase-teardown",
+    },
+    {
+      name: "e2e-live-supabase-teardown",
+      testMatch: /e2e\/integration\/e49\/_teardown\.spec\.ts$/,
+    },
+    {
+      // E49 Phase 1c-2 — integration tests against a local Supabase
+      // stack + a built bundle + CF Pages Functions served by wrangler.
+      //
+      //   npx playwright test --project=e2e-live-supabase
+      //
+      // Specs auto-skip when no live state file is present, so the
+      // suite is a no-op on machines without Docker.
+      name: "e2e-live-supabase",
+      testMatch: ["e2e/integration/e49/**/*.spec.ts"],
+      testIgnore: ["e2e/integration/e49/_setup.spec.ts", "e2e/integration/e49/_teardown.spec.ts"],
+      dependencies: ["e2e-live-supabase-setup"],
+      fullyParallel: false,
+      workers: 1,
+      retries: 0,
+      use: { baseURL: "http://localhost:8080" },
     },
     {
       name: "audit-screenshots",

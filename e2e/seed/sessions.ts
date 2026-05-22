@@ -67,6 +67,20 @@ export interface SeedE49Input {
    * included so the test plan's TC-13 fixture has a target.
    */
   emptyTestId?: string;
+  /**
+   * When `true`, additionally seeds the Phase 1c-3 edge-case shapes:
+   * - score-0 completed session
+   * - score-100 completed session
+   * - null-score "completed" session (defensive — should never happen but
+   *   the UI must not render `null` literally)
+   * - long-name completed session (>200 chars — truncate target)
+   * - RTL respondent name (display safety)
+   * - stale-question session (answer references a `question_id` not
+   *   present in `questions` — placeholder branch)
+   * - sub-1s answer (time_ms=850 → "850ms")
+   * - >60s answer (time_ms=72000 → "1m 12s")
+   */
+  extended?: boolean;
 }
 
 export interface SeedE49Sessions {
@@ -76,6 +90,13 @@ export interface SeedE49Sessions {
   inProgress: SessionRow;
   abandoned: SessionRow;
   foreign: SessionRow;
+  // Extended (only present when input.extended === true).
+  score0?: SessionRow;
+  score100?: SessionRow;
+  nullScore?: SessionRow;
+  longName?: SessionRow;
+  rtlName?: SessionRow;
+  staleQuestion?: SessionRow;
 }
 
 export interface SeedE49Tables {
@@ -84,6 +105,14 @@ export interface SeedE49Tables {
   session_answers: SessionAnswerRow[];
   questions: QuestionRow[];
   respondents: RespondentRow[];
+  /**
+   * `useTest()` issues `Promise.all([from('tests'), from('test_questions')])` —
+   * an unmocked `test_questions` table makes the entire `useTest` query
+   * reject, causing the editor route to render its "Test sa nenašiel"
+   * state. We seed an empty array so the table exists in the mock layer
+   * even if no spec needs row content yet.
+   */
+  test_questions: Array<{ test_id: string; question_id: string; position: number }>;
 }
 
 export interface SeedE49Result {
@@ -256,6 +285,79 @@ export function seedE49TestWithSessions(input: SeedE49Input = {}): SeedE49Result
     }),
   };
 
+  // Phase 1c-3 extended fixtures. Only materialise when explicitly
+  // requested so the existing 19 TCs see the original 6 rows verbatim.
+  const longNameValue = "x".repeat(220) + "-end";
+  const rtlNameValue = "‮gnirts.lams‬ Jana";
+  if (input.extended) {
+    sessions.score0 = seedSession({
+      id: "sess-score-0",
+      test_id: testId,
+      intake_data: { name: "Zero Scorer" },
+      consent_given: true,
+      started_at: T0,
+      finished_at: T0_PLUS_3,
+      score: 0,
+      status: "completed",
+      ip_hash: "0000000000000000000zer",
+    });
+    sessions.score100 = seedSession({
+      id: "sess-score-100",
+      test_id: testId,
+      intake_data: { name: "Perfect Scorer" },
+      consent_given: true,
+      started_at: T0,
+      finished_at: T0_PLUS_5,
+      score: 100,
+      status: "completed",
+      ip_hash: "1111111111111111111one",
+    });
+    sessions.nullScore = seedSession({
+      id: "sess-null-score",
+      test_id: testId,
+      intake_data: { name: "Null Score" },
+      consent_given: true,
+      started_at: T0,
+      finished_at: T0_PLUS_5,
+      score: null,
+      status: "completed",
+      ip_hash: "2222222222222222222nul",
+    });
+    sessions.longName = seedSession({
+      id: "sess-long-name",
+      test_id: testId,
+      intake_data: { name: longNameValue },
+      consent_given: true,
+      started_at: T0,
+      finished_at: T0_PLUS_5,
+      score: 70,
+      status: "completed",
+      ip_hash: "3333333333333333333lng",
+    });
+    sessions.rtlName = seedSession({
+      id: "sess-rtl-name",
+      test_id: testId,
+      intake_data: { name: rtlNameValue, email: "rtl@example.com" },
+      consent_given: true,
+      started_at: T0,
+      finished_at: T0_PLUS_5,
+      score: 75,
+      status: "completed",
+      ip_hash: "4444444444444444444rtl",
+    });
+    sessions.staleQuestion = seedSession({
+      id: "sess-stale-question",
+      test_id: testId,
+      intake_data: { name: "Stale QID" },
+      consent_given: true,
+      started_at: T0,
+      finished_at: T0_PLUS_3,
+      score: 50,
+      status: "completed",
+      ip_hash: "5555555555555555555stq",
+    });
+  }
+
   // Per-question answers — only the "named" completed session populates
   // both correctness branches; the in-progress session is intentionally
   // left with ZERO `session_answers` rows so TC-15 exercises the empty
@@ -284,6 +386,35 @@ export function seedE49TestWithSessions(input: SeedE49Input = {}): SeedE49Result
     },
   ];
 
+  if (input.extended && sessions.staleQuestion && sessions.longName) {
+    // Stale-question: answer points at a question_id absent from the
+    // questions library — UI must render the row with a fallback prompt
+    // and not crash.
+    session_answers.push({
+      session_id: sessions.staleQuestion.id,
+      question_id: "q-e49-deleted",
+      value: "any",
+      is_correct: null,
+      time_ms: 5000,
+    });
+    // Sub-1s answer (formatTime → `${ms}ms`)
+    session_answers.push({
+      session_id: sessions.longName.id,
+      question_id: qCorrect.id,
+      value: "Bratislava",
+      is_correct: true,
+      time_ms: 850,
+    });
+    // >60s answer (formatTime → `${sec}s` since formatter uses seconds throughout).
+    session_answers.push({
+      session_id: sessions.longName.id,
+      question_id: qWrong.id,
+      value: "56",
+      is_correct: true,
+      time_ms: 72000,
+    });
+  }
+
   const tests: TestRow[] = [parentTest, foreignTest];
   if (emptyTestId) {
     tests.push(
@@ -299,6 +430,23 @@ export function seedE49TestWithSessions(input: SeedE49Input = {}): SeedE49Result
     );
   }
 
+  const sessionsList: SessionRow[] = [
+    sessions.named,
+    sessions.emailOnly,
+    sessions.anon,
+    sessions.inProgress,
+    sessions.abandoned,
+    sessions.foreign,
+  ];
+  if (input.extended) {
+    if (sessions.score0) sessionsList.push(sessions.score0);
+    if (sessions.score100) sessionsList.push(sessions.score100);
+    if (sessions.nullScore) sessionsList.push(sessions.nullScore);
+    if (sessions.longName) sessionsList.push(sessions.longName);
+    if (sessions.rtlName) sessionsList.push(sessions.rtlName);
+    if (sessions.staleQuestion) sessionsList.push(sessions.staleQuestion);
+  }
+
   return {
     testId,
     foreignTestId,
@@ -306,17 +454,14 @@ export function seedE49TestWithSessions(input: SeedE49Input = {}): SeedE49Result
     sessions,
     tables: {
       tests,
-      sessions: [
-        sessions.named,
-        sessions.emailOnly,
-        sessions.anon,
-        sessions.inProgress,
-        sessions.abandoned,
-        sessions.foreign,
-      ],
+      sessions: sessionsList,
       session_answers,
       questions: [qCorrect, qWrong],
       respondents: [respNamed, respEmail, respAnon],
+      test_questions: [
+        { test_id: testId, question_id: qCorrect.id, position: 0 },
+        { test_id: testId, question_id: qWrong.id, position: 1 },
+      ],
     },
   };
 }
