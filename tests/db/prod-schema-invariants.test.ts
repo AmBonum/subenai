@@ -45,11 +45,7 @@ const EXPECTED_RPCS: Array<[string, string]> = [
     "get_ticket_thread_for_view_token",
     "p_ticket_id uuid, p_view_token text, p_ip_country text DEFAULT NULL::text",
   ],
-  // TODO(E48-v3): revert this back to "p_attachment_id uuid, p_inline boolean DEFAULT false"
-  //   after migration 20260522170000 is applied to prod Supabase. The p_inline param was
-  //   added in that migration; prod still has the old 1-arg signature.
-  //   Follow-up PR will restore this once the schema invariant CI step passes cleanly.
-  ["request_attachment_signed_url", "p_attachment_id uuid"],
+  ["request_attachment_signed_url", "p_attachment_id uuid, p_inline boolean DEFAULT false"],
   [
     "transition_ticket_status",
     // Postgres pg_get_function_arguments omits schema prefix for types
@@ -57,11 +53,9 @@ const EXPECTED_RPCS: Array<[string, string]> = [
     // lives in public; public is in search_path → returned as bare name.
     "p_ticket_id uuid, p_new_status support_ticket_status, p_note text DEFAULT NULL::text",
   ],
-  // TODO(E48-v3): re-enable after migration 20260522170000 is applied to prod Supabase.
-  //   Follow-up PR will uncomment these once the schema invariant CI step won't fail.
-  //   ["assign_admin_to_ticket", "p_ticket_id uuid, p_user_id uuid"],
-  //   ["unassign_admin_from_ticket", "p_ticket_id uuid, p_user_id uuid"],
-  //   ["list_admin_users", ""],
+  ["assign_admin_to_ticket", "p_ticket_id uuid, p_user_id uuid"],
+  ["unassign_admin_from_ticket", "p_ticket_id uuid, p_user_id uuid"],
+  ["list_admin_users", ""],
 ];
 
 const EXPECTED_TABLES = [
@@ -69,9 +63,7 @@ const EXPECTED_TABLES = [
   "support_ticket_messages",
   "support_ticket_attachments",
   "admin_notification_preferences",
-  // TODO(E48-v3): re-enable after migration 20260522170000 is applied to prod Supabase.
-  //   Follow-up PR will uncomment this once the schema invariant CI step won't fail.
-  //   "support_ticket_assignees",
+  "support_ticket_assignees",
 ];
 
 function getClient() {

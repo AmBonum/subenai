@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { MoreVertical, ExternalLink, UserCheck2, CheckCircle2, Archive, Link2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,8 +13,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { supabase } from "@/integrations/supabase/client";
 import type { AdminSupportTicketRow } from "@/lib/admin/queries-tickets";
-import { useAssignToMe, useTransitionTicketStatus } from "@/lib/admin/queries-tickets";
+import { useAssignAdminToTicket, useTransitionTicketStatus } from "@/lib/admin/queries-tickets";
+
+function useCurrentUserId() {
+  return useQuery({
+    queryKey: ["auth", "current-user-id"],
+    queryFn: async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      return user?.id ?? null;
+    },
+    staleTime: 5 * 60_000,
+  });
+}
 
 // E48-v2 PR-D — per-row "..." action menu. Items shown depend on the
 // current ticket status (no point offering "mark resolved" on an
@@ -26,7 +41,8 @@ interface Props {
 
 export function TicketActionMenu({ ticket }: Props) {
   const navigate = useNavigate();
-  const assign = useAssignToMe();
+  const { data: currentUserId } = useCurrentUserId();
+  const assign = useAssignAdminToTicket();
   const transition = useTransitionTicketStatus();
   const [confirmKind, setConfirmKind] = useState<"resolve" | "archive" | null>(null);
 
@@ -46,10 +62,14 @@ export function TicketActionMenu({ ticket }: Props) {
   }
 
   function handleAssignMe() {
-    assign.mutate(ticket.id, {
-      onSuccess: () => toast.success("Pridelené vám."),
-      onError: () => toast.error("Pridelenie zlyhalo."),
-    });
+    if (!currentUserId) return;
+    assign.mutate(
+      { ticketId: ticket.id, userId: currentUserId },
+      {
+        onSuccess: () => toast.success("Pridelené vám."),
+        onError: () => toast.error("Pridelenie zlyhalo."),
+      },
+    );
   }
 
   function handleResolve() {

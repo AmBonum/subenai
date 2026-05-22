@@ -1,4 +1,5 @@
 import { forwardRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   Search,
@@ -37,8 +38,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { SUPPORT_TICKET_CATEGORIES } from "@/components/support/support-form-config";
-import { useAssignToMe, useBulkArchive, useBulkResolve } from "@/lib/admin/queries-tickets";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  useAssignAdminToTicket,
+  useBulkArchive,
+  useBulkResolve,
+} from "@/lib/admin/queries-tickets";
 import { cn } from "@/lib/utils";
+
+function useCurrentUserId() {
+  return useQuery({
+    queryKey: ["auth", "current-user-id"],
+    queryFn: async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      return user?.id ?? null;
+    },
+    staleTime: 5 * 60_000,
+  });
+}
 
 // E48-v2 PR-D — sticky 3-row toolbar:
 //   1. status filter chips (sort dropdown removed in E48-v3; sorting
@@ -86,7 +105,8 @@ export const TicketsToolbar = forwardRef<HTMLInputElement, Props>(function Ticke
   },
   searchInputRef,
 ) {
-  const assign = useAssignToMe();
+  const { data: currentUserId } = useCurrentUserId();
+  const assign = useAssignAdminToTicket();
   const bulkResolve = useBulkResolve();
   const bulkArchive = useBulkArchive();
   const [confirmKind, setConfirmKind] = useState<"resolve" | "archive" | null>(null);
@@ -109,7 +129,10 @@ export const TicketsToolbar = forwardRef<HTMLInputElement, Props>(function Ticke
   }
 
   function handleBulkAssign() {
-    Promise.allSettled(selectedArr.map((id) => assign.mutateAsync(id))).then((results) => {
+    if (!currentUserId) return;
+    Promise.allSettled(
+      selectedArr.map((id) => assign.mutateAsync({ ticketId: id, userId: currentUserId })),
+    ).then((results) => {
       const ok = results.filter((r) => r.status === "fulfilled").length;
       const failed = results.length - ok;
       if (failed > 0) {

@@ -513,27 +513,6 @@ export function useTicketsNeedingAttentionCount() {
   });
 }
 
-export function useAssignToMe() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (ticketId: string) => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-      const { error } = await supabase
-        .from("support_tickets")
-        .update({ assigned_to: user.id, updated_at: new Date().toISOString() })
-        .eq("id", ticketId);
-      if (error) throw error;
-      return { ticketId, assignedTo: user.id };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "support_tickets"] });
-    },
-  });
-}
-
 export function useBulkResolve() {
   const queryClient = useQueryClient();
   return useMutation({
