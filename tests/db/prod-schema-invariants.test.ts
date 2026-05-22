@@ -48,7 +48,10 @@ const EXPECTED_RPCS: Array<[string, string]> = [
   ["request_attachment_signed_url", "p_attachment_id uuid"],
   [
     "transition_ticket_status",
-    "p_ticket_id uuid, p_new_status public.support_ticket_status, p_note text DEFAULT NULL::text",
+    // Postgres pg_get_function_arguments omits schema prefix for types
+    // whose schema is in the function's search_path. support_ticket_status
+    // lives in public; public is in search_path → returned as bare name.
+    "p_ticket_id uuid, p_new_status support_ticket_status, p_note text DEFAULT NULL::text",
   ],
 ];
 
