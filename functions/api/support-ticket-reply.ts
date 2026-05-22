@@ -194,22 +194,13 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   // The RPC mints a new plaintext token, updates the hash in DB, and returns
   // the plaintext.  Non-fatal: if regen fails the reply is already persisted
   // and the email still sends — just without the view link.
-  const { data: freshToken, error: tokenErr } = await adminClient.rpc(
-    "regenerate_support_ticket_view_token",
-    { p_ticket_id: ticketId },
-  );
-  if (tokenErr) {
-    console.warn("support-ticket-reply view_token regen failed (non-fatal)", {
-      ticket_id: ticketId,
-      error: (tokenErr as { message?: string }).message ?? String(tokenErr),
-    });
-  }
+  const freshToken = await mintFreshViewToken(adminClient, ticketId);
 
   // Send email (non-fatal).
   if (env.RESEND_API_KEY && env.EMAIL_FROM && env.EMAIL_REPLY_TO) {
     const origin = env.SITE_ORIGIN || DEFAULT_SITE_ORIGIN;
     const viewUrl = freshToken
-      ? `${origin}/contact-form/ticket/${encodeURIComponent(ticketId)}?token=${encodeURIComponent(freshToken as string)}`
+      ? `${origin}/contact-form/ticket/${encodeURIComponent(ticketId)}?token=${encodeURIComponent(freshToken)}`
       : undefined;
 
     const template = supportTicketReplyEmail({
@@ -247,6 +238,39 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     ok: true,
     message_id: messageRow.id,
   });
+}
+
+async function mintFreshViewToken(
+  client: ReturnType<typeof createClient>,
+  ticketId: string,
+): Promise<string | null> {
+  try {
+    const { data, error } = await client.rpc("regenerate_support_ticket_view_token", {
+      p_ticket_id: ticketId,
+    });
+    if (error) {
+      console.warn("regen view_token RPC error (non-fatal)", {
+        ticket_id: ticketId,
+        code: (error as { code?: string }).code,
+        message: (error as { message?: string }).message,
+      });
+      return null;
+    }
+    if (typeof data !== "string" || data.length === 0) {
+      console.warn("regen view_token returned non-string or empty (non-fatal)", {
+        ticket_id: ticketId,
+        value_type: typeof data,
+      });
+      return null;
+    }
+    return data;
+  } catch (err) {
+    console.warn("regen view_token threw (non-fatal)", {
+      ticket_id: ticketId,
+      error: String(err),
+    });
+    return null;
+  }
 }
 
 function decodeJwtPayload(jwt: string): { aal?: string; sub?: string } | null {

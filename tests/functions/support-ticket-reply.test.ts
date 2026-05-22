@@ -36,6 +36,10 @@ interface MockState {
   tokenInvalidated?: boolean;
   tokenExpired?: boolean;
   regenTokenResult?: string | null;
+  /** When true: RPC returns HTTP 200 with JSON null body (empty result, no error). */
+  regenTokenNullData?: boolean;
+  /** When true: fetch() throws a network error for the regen RPC call. */
+  regenTokenThrows?: boolean;
   regenTokenCalls?: string[];
   transitionCalls?: string[];
   emailCalled?: { value: boolean };
@@ -90,9 +94,18 @@ function mockFetch(state: MockState) {
       } catch {
         /* ignore */
       }
+      if (state.regenTokenThrows) {
+        throw new TypeError("network error (stubbed)");
+      }
       if (state.regenTokenResult === null) {
         return new Response(JSON.stringify({ code: "PGRST", message: "regen_failed" }), {
           status: 500,
+          headers: { "content-type": "application/json" },
+        });
+      }
+      if (state.regenTokenNullData) {
+        return new Response(JSON.stringify(null), {
+          status: 200,
           headers: { "content-type": "application/json" },
         });
       }
@@ -394,5 +407,41 @@ describe("POST /api/support-ticket-reply — view_token rotation", () => {
     const emailPayload = JSON.parse(state.lastEmailBody!.value) as { html?: string; text?: string };
     expect(emailPayload.html ?? "").not.toContain("?token=");
     expect(emailPayload.text ?? "").not.toContain("?token=");
+  });
+
+  it("sends email without view link when RPC returns null data (empty result, no error)", async () => {
+    const state: MockState = {
+      hasRoleResult: true,
+      ticketStatus: "in_progress",
+      regenTokenNullData: true,
+    };
+    mockFetch(state);
+    const res = await onRequestPost({
+      request: buildRequest(validBody, { auth: makeJwt("aal2") }),
+      env,
+    });
+    expect(res.status).toBe(200);
+    const json = (await res.json()) as { ok: boolean; message_id: string };
+    expect(json.ok).toBe(true);
+    expect(state.emailCalled!.value).toBe(true);
+    const emailPayload = JSON.parse(state.lastEmailBody!.value) as { html?: string; text?: string };
+    expect(emailPayload.html ?? "").not.toContain("?token=");
+  });
+
+  it("returns 200 and sends email even when regen RPC fetch throws a network error", async () => {
+    const state: MockState = {
+      hasRoleResult: true,
+      ticketStatus: "in_progress",
+      regenTokenThrows: true,
+    };
+    mockFetch(state);
+    const res = await onRequestPost({
+      request: buildRequest(validBody, { auth: makeJwt("aal2") }),
+      env,
+    });
+    expect(res.status).toBe(200);
+    const json = (await res.json()) as { ok: boolean };
+    expect(json.ok).toBe(true);
+    expect(state.emailCalled!.value).toBe(true);
   });
 });
