@@ -36,6 +36,8 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - TODO: po aplikácii migrácie 20260522170000 v Supabase doplniť späť schema-invariants assertions pre support_ticket_assignees + 3 nové RPCs + p_inline parameter v request_attachment_signed_url. Sledujte follow-up PR.
 
 ### Opravené (interné)
+- Re-enabled schema-invariants assertions for E48-v3 after migration applied to prod.
+- Replaced stale useAssignToMe hook (wrote to dropped assigned_to column) with useAssignAdminToTicket throughout the queue UI.
 - Test infra: pridaný `pdf-lib` do `node_modules` (balík bol v `dependencies` v package.json, ale chýbal v node_modules), čím Vitest mohol importovať `functions/_lib/attachment-sanitize.ts` (predtým zlyhával počas test-collect fázy — ~2 testy v každom PR).
 
 ### Opravené

@@ -330,42 +330,38 @@ describe("useAdminSupportTickets — extended filters", () => {
   });
 });
 
-describe("useAssignToMe", () => {
-  it("calls update({ assigned_to: currentUserId, updated_at }) on the ticket row", async () => {
-    state.authUser = { id: "admin-77" };
+describe("useAssignAdminToTicket", () => {
+  it("calls assign_admin_to_ticket RPC with p_ticket_id and p_user_id", async () => {
+    state.rpcResponse = { data: null, error: null };
     const { qc, Wrapper } = wrap();
-    const { result } = renderHook(() => ticketsModule.useAssignToMe(), { wrapper: Wrapper });
-
-    await act(async () => {
-      await result.current.mutateAsync("ticket-xyz");
+    const { result } = renderHook(() => ticketsModule.useAssignAdminToTicket(), {
+      wrapper: Wrapper,
     });
 
-    // Update path: from('support_tickets').update(...).eq('id', ticketId)
-    expect(state.fromCalls).toContain("support_tickets");
-    const updateCall = state.filterCalls.find((c) => c.method === "update");
-    expect(updateCall).toBeDefined();
-    const patch = updateCall!.args[0] as { assigned_to: string; updated_at: string };
-    expect(patch.assigned_to).toBe("admin-77");
-    expect(typeof patch.updated_at).toBe("string");
+    await act(async () => {
+      await result.current.mutateAsync({ ticketId: "ticket-xyz", userId: "admin-77" });
+    });
 
-    const eqCall = state.filterCalls.find(
-      (c) => c.method === "eq" && (c.args[0] as string) === "id",
-    );
-    expect(eqCall?.args).toEqual(["id", "ticket-xyz"]);
+    expect(state.rpcCalls).toHaveLength(1);
+    expect(state.rpcCalls[0].name).toBe("assign_admin_to_ticket");
+    const args = state.rpcCalls[0].args as { p_ticket_id: string; p_user_id: string };
+    expect(args.p_ticket_id).toBe("ticket-xyz");
+    expect(args.p_user_id).toBe("admin-77");
 
-    // Silence unused warnings.
     expect(qc).toBeDefined();
   });
 
-  it("throws when no authenticated user", async () => {
-    state.authUser = null;
+  it("throws when the RPC returns an error", async () => {
+    state.rpcResponse = { data: null, error: { message: "not found", code: "PGRST116" } };
     const { Wrapper } = wrap();
-    const { result } = renderHook(() => ticketsModule.useAssignToMe(), { wrapper: Wrapper });
+    const { result } = renderHook(() => ticketsModule.useAssignAdminToTicket(), {
+      wrapper: Wrapper,
+    });
     await expect(
       act(async () => {
-        await result.current.mutateAsync("ticket-xyz");
+        await result.current.mutateAsync({ ticketId: "ticket-xyz", userId: "admin-77" });
       }),
-    ).rejects.toThrow();
+    ).rejects.toBeDefined();
   });
 });
 
