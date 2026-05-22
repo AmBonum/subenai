@@ -9,6 +9,9 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+### Opravené
+- **Opravený TOCTOU trigger pre prílohy v podporných žiadostiach.** Produkčné nahrávanie súborov zlyhalo s chybou 500 kvôli neplatnej kombinácii `aggregate + FOR UPDATE` v PostgreSQL. Trigger teraz zamyká radok rodičovskej podpornej žiadosti namiesto súboru, čím sa serializujú konkurentné nahrávania a cap je korektne vynútený.
+
 ### Zmenené
 - **Stránka `/contact` zostáva ako rozcestník na kontakt.** Hlavný CTA tlačidlo
   „Napísať" a všetkých 6 tematických čipov (technika, obsah, sponzorstvo, GDPR,
