@@ -264,6 +264,10 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
       ticketId: result.ticket_id,
       subject,
       category,
+      name: name || null,
+      body,
+      // TODO(E48-v2): once attachments arrive as part of the same request, populate this array.
+      attachments: [],
       viewUrl,
     });
     const mailResult = await sendEmail(

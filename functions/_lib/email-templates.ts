@@ -3,7 +3,8 @@ const FOOTER_HTML = `
 <p style="color:#64748b;font-size:12px;line-height:1.5">
   am.bonum s. r. o., IČO 55 055 290, Škultétyho 1560/3, 052 01 Spišská Nová Ves.
   Tento e-mail je transakčný — nie marketingový. Posielame ho len v reakcii na konkrétnu akciu
-  (platba, žiadosť o magic link, refund). Otázky? Odpovedz priamo na tento e-mail.
+  (platba, žiadosť o magic link, vytvorenie žiadosti o podporu, refund).
+  Otázky alebo doplnenie? Napíšte nám na <a href="mailto:podpora@subenai.sk" style="color:#64748b;text-decoration:underline">podpora@subenai.sk</a>.
 </p>
 `;
 
@@ -206,6 +207,8 @@ export function testInviteEmail(input: {
 //   - supportTicketResolvedEmail: transition_ticket_status RPC consumer
 //     in /admin/tickets detail page (E48.7) when status flips to 'resolved'.
 
+// Mirrors SUPPORT_TICKET_CATEGORIES from src/components/support/support-form-config.ts.
+// Not imported directly — CF Functions live in a separate bundle from src/*.
 const CATEGORY_LABEL_SK: Record<string, string> = {
   bug: "Chyba alebo problém",
   question: "Otázka",
@@ -216,14 +219,42 @@ const CATEGORY_LABEL_SK: Record<string, string> = {
   other: "Iné",
 };
 
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb.toLocaleString("sk-SK", { maximumFractionDigits: 1 })} kB`;
+  return `${(kb / 1024).toLocaleString("sk-SK", { maximumFractionDigits: 1 })} MB`;
+}
+
+export const __internal = { formatBytes };
+
 export function supportTicketReceivedEmail(input: {
   ticketId: string;
   subject: string;
   category: string;
+  name: string | null;
+  body: string;
+  attachments: ReadonlyArray<{ filename: string; size_bytes: number }>;
   viewUrl?: string;
 }): { subject: string; html: string; text: string } {
   const categoryLabel = CATEGORY_LABEL_SK[input.category] ?? input.category;
   const mailSubject = `Vašu žiadosť o podporu sme prijali — ${input.ticketId}`;
+
+  const nameBlock = input.name ? `<p><strong>Meno:</strong> ${escapeText(input.name)}</p>` : "";
+
+  const attachmentsBlock =
+    input.attachments.length > 0
+      ? `<p style="margin-top:12px"><strong>Prílohy (${input.attachments.length}):</strong></p>
+    <ul style="margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.7">
+      ${input.attachments
+        .map(
+          (a) =>
+            `<li>${escapeText(a.filename)} <span style="color:#64748b">(${formatBytes(a.size_bytes)})</span></li>`,
+        )
+        .join("\n      ")}
+    </ul>`
+      : "";
+
   const viewBlock = input.viewUrl
     ? `
     <p style="margin:24px 0">
@@ -245,20 +276,39 @@ export function supportTicketReceivedEmail(input: {
       Ďakujeme, vašu žiadosť sme prijali. Odpovieme čo najskôr,
       <strong>najneskôr do dvoch pracovných dní</strong>.
     </p>
+    <p style="font-size:14px;line-height:1.6"><strong>Tu je presná kópia vašej žiadosti</strong></p>
+    <div style="background:#f8fafc;border-left:3px solid #cbd5e1;border-radius:8px;padding:16px 18px;margin:8px 0 24px">
+      <p><strong>Téma:</strong> ${escapeText(input.subject)}</p>
+      <p><strong>Kategória:</strong> ${escapeText(categoryLabel)}</p>
+      ${nameBlock}
+      <p style="margin-top:12px"><strong>Správa:</strong></p>
+      <div style="white-space:pre-wrap;font-size:14px;line-height:1.6;background:#ffffff;border:1px solid #e2e8f0;border-radius:6px;padding:12px;margin-top:4px">${escapeText(input.body).replace(/\n/g, "<br />")}</div>
+      ${attachmentsBlock}
+    </div>
     <p style="font-size:14px;line-height:1.6">
-      <strong>Téma:</strong> ${escapeText(input.subject)}<br />
-      <strong>Kategória:</strong> ${escapeText(categoryLabel)}<br />
       <strong>Číslo žiadosti:</strong> <code>${escapeText(input.ticketId)}</code>
     </p>
     ${viewBlock}
   `);
 
+  const nameTextLine = input.name ? `Meno: ${input.name}\n` : "";
+  const attachmentsTextBlock =
+    input.attachments.length > 0
+      ? `\nPrílohy (${input.attachments.length}):\n${input.attachments.map((a) => `  - ${a.filename} (${formatBytes(a.size_bytes)})`).join("\n")}`
+      : "";
+
   const text = [
     "Ďakujeme, vašu žiadosť sme prijali.",
     "Odpovieme najneskôr do dvoch pracovných dní.",
     "",
+    "Tu je presná kópia vašej žiadosti",
+    "---",
     `Téma: ${input.subject}`,
     `Kategória: ${categoryLabel}`,
+    nameTextLine.trimEnd(),
+    `Správa:\n${input.body}`,
+    attachmentsTextBlock.trimStart() ? attachmentsTextBlock.trimStart() : "",
+    "---",
     `Číslo žiadosti: ${input.ticketId}`,
     input.viewUrl ? `\nZobraziť vlákno: ${input.viewUrl}\n(odkaz platí 90 dní)` : "",
   ]
