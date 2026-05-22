@@ -25,6 +25,9 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ### Pridané (interné)
 - Test infraštruktúra pre E48-v2: SQL seed helper s worker-isolation prefixom, security regression suite (XSS + CSV injection battery).
 
+### Opravené (interné)
+- Test infra: pridaný `pdf-lib` do `node_modules` (balík bol v `dependencies` v package.json, ale chýbal v node_modules), čím Vitest mohol importovať `functions/_lib/attachment-sanitize.ts` (predtým zlyhával počas test-collect fázy — ~2 testy v každom PR).
+
 ### Opravené
 - **Opravený admin reply email — odkaz na vlákno teraz obsahuje view_token (rotácia tokenu pri každej odpovedi pre vyššiu bezpečnosť).** (2026-05-22)
 - **Opravený TOCTOU trigger pre prílohy v podporných žiadostiach.** Produkčné nahrávanie súborov zlyhalo s chybou 500 kvôli neplatnej kombinácii `aggregate + FOR UPDATE` v PostgreSQL. Trigger teraz zamyká radok rodičovskej podpornej žiadosti namiesto súboru, čím sa serializujú konkurentné nahrávania a cap je korektne vynútený.
