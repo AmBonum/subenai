@@ -19,6 +19,9 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ### Refactor (interné)
 - Hooky súvisiace s ticketmi podpory v admin paneli sa presunuli z `src/lib/admin/queries.ts` do `src/lib/admin/queries-tickets.ts`. Pôvodný import path naďalej funguje cez deprecation shim — refactor je transparentný pre existujúci kód.
 
+### Pridané (admin)
+- Admin môže exportovať žiadosti podpory ako CSV súbor — server-side endpoint s ochranou pred CSV injection a rate-limit 1/min.
+
 ### Pridané (interné)
 - Test infraštruktúra pre E48-v2: SQL seed helper s worker-isolation prefixom, security regression suite (XSS + CSV injection battery).
 
