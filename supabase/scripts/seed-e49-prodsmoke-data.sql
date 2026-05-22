@@ -119,6 +119,7 @@ ON CONFLICT (id) DO UPDATE
       status       = EXCLUDED.status,
       share_id     = EXCLUDED.share_id,
       slug         = EXCLUDED.slug,
+      owner_id     = EXCLUDED.owner_id,
       published_at = COALESCE(public.tests.published_at, EXCLUDED.published_at),
       updated_at   = now();
 
