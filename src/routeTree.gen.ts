@@ -115,6 +115,7 @@ import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-
 import { Route as TestBuilderIdIndexRouteImport } from './routes/test.builder.$id.index'
 import { Route as TestBuilderIdResultsRouteImport } from './routes/test.builder.$id.results'
 import { Route as TestBuilderIdResultsAttemptIdRouteImport } from './routes/test.builder.$id.results.$attemptId'
+import { Route as AppTestsTestIdSessionsSessionIdRouteImport } from './routes/app.tests.$testId.sessions.$sessionId'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -720,6 +721,12 @@ const TestBuilderIdResultsAttemptIdRoute =
       (d) => d.Route,
     ),
   )
+const AppTestsTestIdSessionsSessionIdRoute =
+  AppTestsTestIdSessionsSessionIdRouteImport.update({
+    id: '/sessions/$sessionId',
+    path: '/sessions/$sessionId',
+    getParentRoute: () => AppTestsTestIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -810,7 +817,7 @@ export interface FileRoutesByFullPath {
   '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
-  '/app/tests/$testId': typeof AppTestsTestIdRoute
+  '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
@@ -827,6 +834,7 @@ export interface FileRoutesByFullPath {
   '/test/builder/': typeof TestBuilderIndexRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
   '/test/builder/$id/': typeof TestBuilderIdIndexRoute
+  '/app/tests/$testId/sessions/$sessionId': typeof AppTestsTestIdSessionsSessionIdRoute
   '/test/builder/$id/results/$attemptId': typeof TestBuilderIdResultsAttemptIdRoute
 }
 export interface FileRoutesByTo {
@@ -911,7 +919,7 @@ export interface FileRoutesByTo {
   '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
-  '/app/tests/$testId': typeof AppTestsTestIdRoute
+  '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
@@ -927,6 +935,7 @@ export interface FileRoutesByTo {
   '/test/builder': typeof TestBuilderIndexRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
   '/test/builder/$id': typeof TestBuilderIdIndexRoute
+  '/app/tests/$testId/sessions/$sessionId': typeof AppTestsTestIdSessionsSessionIdRoute
   '/test/builder/$id/results/$attemptId': typeof TestBuilderIdResultsAttemptIdRoute
 }
 export interface FileRoutesById {
@@ -1019,7 +1028,7 @@ export interface FileRoutesById {
   '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/sets/$setId': typeof AppSetsSetIdRoute
-  '/app/tests/$testId': typeof AppTestsTestIdRoute
+  '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
   '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
@@ -1036,6 +1045,7 @@ export interface FileRoutesById {
   '/test/builder/': typeof TestBuilderIndexRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
   '/test/builder/$id/': typeof TestBuilderIdIndexRoute
+  '/app/tests/$testId/sessions/$sessionId': typeof AppTestsTestIdSessionsSessionIdRoute
   '/test/builder/$id/results/$attemptId': typeof TestBuilderIdResultsAttemptIdRoute
 }
 export interface FileRouteTypes {
@@ -1146,6 +1156,7 @@ export interface FileRouteTypes {
     | '/test/builder/'
     | '/test/builder/$id/results'
     | '/test/builder/$id/'
+    | '/app/tests/$testId/sessions/$sessionId'
     | '/test/builder/$id/results/$attemptId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -1246,6 +1257,7 @@ export interface FileRouteTypes {
     | '/test/builder'
     | '/test/builder/$id/results'
     | '/test/builder/$id'
+    | '/app/tests/$testId/sessions/$sessionId'
     | '/test/builder/$id/results/$attemptId'
   id:
     | '__root__'
@@ -1354,6 +1366,7 @@ export interface FileRouteTypes {
     | '/test/builder/'
     | '/test/builder/$id/results'
     | '/test/builder/$id/'
+    | '/app/tests/$testId/sessions/$sessionId'
     | '/test/builder/$id/results/$attemptId'
   fileRoutesById: FileRoutesById
 }
@@ -2144,6 +2157,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestBuilderIdResultsAttemptIdRouteImport
       parentRoute: typeof TestBuilderIdResultsRoute
     }
+    '/app/tests/$testId/sessions/$sessionId': {
+      id: '/app/tests/$testId/sessions/$sessionId'
+      path: '/sessions/$sessionId'
+      fullPath: '/app/tests/$testId/sessions/$sessionId'
+      preLoaderRoute: typeof AppTestsTestIdSessionsSessionIdRouteImport
+      parentRoute: typeof AppTestsTestIdRoute
+    }
   }
 }
 
@@ -2296,6 +2316,18 @@ const AppHelpRouteChildren: AppHelpRouteChildren = {
 const AppHelpRouteWithChildren =
   AppHelpRoute._addFileChildren(AppHelpRouteChildren)
 
+interface AppTestsTestIdRouteChildren {
+  AppTestsTestIdSessionsSessionIdRoute: typeof AppTestsTestIdSessionsSessionIdRoute
+}
+
+const AppTestsTestIdRouteChildren: AppTestsTestIdRouteChildren = {
+  AppTestsTestIdSessionsSessionIdRoute: AppTestsTestIdSessionsSessionIdRoute,
+}
+
+const AppTestsTestIdRouteWithChildren = AppTestsTestIdRoute._addFileChildren(
+  AppTestsTestIdRouteChildren,
+)
+
 interface AppRouteChildren {
   AppAudiencesRoute: typeof AppAudiencesRoute
   AppDigestRoute: typeof AppDigestRoute
@@ -2314,7 +2346,7 @@ interface AppRouteChildren {
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
   AppLegalDsrRoute: typeof AppLegalDsrRoute
   AppSetsSetIdRoute: typeof AppSetsSetIdRoute
-  AppTestsTestIdRoute: typeof AppTestsTestIdRoute
+  AppTestsTestIdRoute: typeof AppTestsTestIdRouteWithChildren
   AppTestsNewRoute: typeof AppTestsNewRoute
   AppEduTestsIndexRoute: typeof AppEduTestsIndexRoute
   AppTestsIndexRoute: typeof AppTestsIndexRoute
@@ -2338,7 +2370,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountSecurityRoute: AppAccountSecurityRoute,
   AppLegalDsrRoute: AppLegalDsrRoute,
   AppSetsSetIdRoute: AppSetsSetIdRoute,
-  AppTestsTestIdRoute: AppTestsTestIdRoute,
+  AppTestsTestIdRoute: AppTestsTestIdRouteWithChildren,
   AppTestsNewRoute: AppTestsNewRoute,
   AppEduTestsIndexRoute: AppEduTestsIndexRoute,
   AppTestsIndexRoute: AppTestsIndexRoute,
