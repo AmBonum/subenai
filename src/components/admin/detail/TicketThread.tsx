@@ -37,10 +37,14 @@ export function TicketThread({ ticket, messages }: TicketThreadProps) {
       {messages.map((m) => {
         const isAdmin = m.author_kind === "admin";
         const isSystem = m.author_kind === "system";
+        const isInternal = m.is_internal === true;
         // Admin bubbles intentionally pair `bg-accent` with
         // `text-accent-foreground` (rather than `text-foreground`) so
         // body text uses the design-system's paired token — both light
         // and dark themes guarantee AA contrast against `--accent`.
+        // Internal notes get an amber tint + left rail so they're
+        // visually unmistakable (the submitter never sees them, but
+        // every admin should know at a glance the note is private).
 
         if (isSystem) {
           return (
@@ -57,24 +61,33 @@ export function TicketThread({ ticket, messages }: TicketThreadProps) {
           );
         }
 
+        const bubbleClass = isInternal
+          ? "rounded-md border border-amber-300 border-l-4 border-l-amber-500 bg-amber-50 p-4 text-amber-950 dark:border-amber-800 dark:border-l-amber-400 dark:bg-amber-950/40 dark:text-amber-50"
+          : isAdmin
+            ? "rounded-md border border-border border-l-4 border-l-primary bg-accent p-4 text-accent-foreground"
+            : "rounded-md border border-border bg-card p-4 text-foreground";
+
+        const metaClass = isInternal
+          ? "text-xs uppercase tracking-wide text-amber-900 dark:text-amber-100"
+          : isAdmin
+            ? "text-xs uppercase tracking-wide text-accent-foreground/80"
+            : "text-xs uppercase tracking-wide text-muted-foreground";
+
+        const bodyClass = isInternal
+          ? "mt-2 whitespace-pre-wrap text-sm text-amber-950 dark:text-amber-50"
+          : isAdmin
+            ? "mt-2 whitespace-pre-wrap text-sm text-accent-foreground"
+            : "mt-2 whitespace-pre-wrap text-sm text-foreground";
+
         return (
           <article
             key={m.id}
-            className={
-              isAdmin
-                ? "rounded-md border border-border border-l-4 border-l-primary bg-accent p-4 text-accent-foreground"
-                : "rounded-md border border-border bg-card p-4 text-foreground"
-            }
+            className={bubbleClass}
             data-testid={`admin-ticket-detail-message-${m.id}`}
             data-author-kind={m.author_kind}
+            data-is-internal={isInternal ? "true" : "false"}
           >
-            <div
-              className={
-                isAdmin
-                  ? "text-xs uppercase tracking-wide text-accent-foreground/80"
-                  : "text-xs uppercase tracking-wide text-muted-foreground"
-              }
-            >
+            <div className={metaClass}>
               {m.author_name}
               <span className="ml-2 normal-case">
                 {new Date(m.created_at).toLocaleString("sk-SK")}
@@ -82,16 +95,17 @@ export function TicketThread({ ticket, messages }: TicketThreadProps) {
               <Badge variant="outline" className="ml-2 text-[10px] normal-case">
                 {isAdmin ? "admin" : "používateľ"}
               </Badge>
+              {isInternal && (
+                <Badge
+                  variant="outline"
+                  className="ml-2 border-amber-400 bg-amber-100 text-[10px] normal-case text-amber-900 dark:border-amber-500 dark:bg-amber-900/60 dark:text-amber-50"
+                  data-testid={`admin-ticket-detail-message-internal-badge-${m.id}`}
+                >
+                  Interná poznámka
+                </Badge>
+              )}
             </div>
-            <p
-              className={
-                isAdmin
-                  ? "mt-2 whitespace-pre-wrap text-sm text-accent-foreground"
-                  : "mt-2 whitespace-pre-wrap text-sm text-foreground"
-              }
-            >
-              {m.body}
-            </p>
+            <p className={bodyClass}>{m.body}</p>
           </article>
         );
       })}

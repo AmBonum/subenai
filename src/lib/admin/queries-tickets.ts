@@ -143,6 +143,8 @@ export interface AdminSupportTicketMessage {
   author_user_id: string | null;
   author_name: string;
   body: string;
+  /** E48-v4 internal note flag — admin-only thread comments. */
+  is_internal: boolean;
 }
 
 export interface AdminSupportTicketAttachment {
@@ -401,7 +403,9 @@ export function useAdminSupportTicketMessages(ticketId: string) {
     queryFn: async (): Promise<AdminSupportTicketMessage[]> => {
       const { data, error } = await supabase
         .from("support_ticket_messages")
-        .select("id, ticket_id, created_at, author_kind, author_user_id, author_name, body")
+        .select(
+          "id, ticket_id, created_at, author_kind, author_user_id, author_name, body, is_internal",
+        )
         .eq("ticket_id", ticketId)
         .order("created_at", { ascending: true });
       if (error) throw error;

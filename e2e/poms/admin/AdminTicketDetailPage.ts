@@ -144,8 +144,18 @@ export class AdminTicketDetailPage extends BasePage {
     return this.page.getByTestId("admin-ticket-detail-reply-send");
   }
 
+  /** E48-v4 — internal-note toggle inside the composer. */
+  get replyInternalToggle(): Locator {
+    return this.page.getByTestId("admin-ticket-detail-reply-internal-toggle");
+  }
+
   message(messageId: string): Locator {
     return this.page.getByTestId(`admin-ticket-detail-message-${messageId}`);
+  }
+
+  /** E48-v4 — badge rendered on internal-note message bubbles. */
+  messageInternalBadge(messageId: string): Locator {
+    return this.page.getByTestId(`admin-ticket-detail-message-internal-badge-${messageId}`);
   }
 
   // Attachment viewer ---------------------------------------------------

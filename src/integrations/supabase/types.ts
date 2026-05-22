@@ -1885,6 +1885,7 @@ export type Database = {
           author_name: string;
           body: string;
           email_message_id: string | null;
+          is_internal: boolean;
         };
         Insert: {
           id?: string;
@@ -1895,6 +1896,7 @@ export type Database = {
           author_name: string;
           body: string;
           email_message_id?: string | null;
+          is_internal?: boolean;
         };
         Update: {
           id?: string;
@@ -1905,6 +1907,7 @@ export type Database = {
           author_name?: string;
           body?: string;
           email_message_id?: string | null;
+          is_internal?: boolean;
         };
         Relationships: [];
       };

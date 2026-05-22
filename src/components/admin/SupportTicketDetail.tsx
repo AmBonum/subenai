@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, Loader2, Send } from "lucide-react";
+import { ArrowLeft, Loader2, Save, Send } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +12,7 @@ import {
   useTransitionTicketStatus,
 } from "@/lib/admin/queries-tickets";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 
 import { TicketDetailHeader } from "./detail/TicketDetailHeader";
@@ -40,6 +41,7 @@ export function SupportTicketDetail({ ticketId }: SupportTicketDetailProps) {
 
   const [replyBody, setReplyBody] = useState("");
   const [sending, setSending] = useState(false);
+  const [isInternal, setIsInternal] = useState(false);
 
   if (ticketQ.isLoading) {
     return (
@@ -97,14 +99,23 @@ export function SupportTicketDetail({ ticketId }: SupportTicketDetailProps) {
           "content-type": "application/json",
           authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ ticket_id: ticketId, body: replyBody.trim() }),
+        body: JSON.stringify({
+          ticket_id: ticketId,
+          body: replyBody.trim(),
+          is_internal: isInternal,
+        }),
       });
       if (!res.ok) {
         const errBody = (await res.json().catch(() => ({}))) as { error?: string };
         throw new Error(`Odpoveď zlyhala: ${errBody.error ?? "neznáma chyba"}`);
       }
-      toast.success("Odpoveď bola odoslaná. Stav žiadosti je teraz 'Čaká na používateľa'.");
+      toast.success(
+        isInternal
+          ? "Interná poznámka bola uložená. Zákazník ju neuvidí."
+          : "Odpoveď bola odoslaná. Stav žiadosti je teraz 'Čaká na používateľa'.",
+      );
       setReplyBody("");
+      setIsInternal(false);
       qc.invalidateQueries({ queryKey: ["admin", "support_ticket_messages", ticketId] });
       qc.invalidateQueries({ queryKey: ["admin", "support_ticket", ticketId] });
       qc.invalidateQueries({ queryKey: ["admin", "support_tickets"] });
@@ -144,25 +155,54 @@ export function SupportTicketDetail({ ticketId }: SupportTicketDetailProps) {
               />
               <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-xs text-muted-foreground">
-                  Odoslaním sa stav žiadosti zmení na <strong>Čaká na používateľa</strong> a
-                  používateľ dostane e-mail s vašou odpoveďou.
-                </p>
-                <Button
-                  type="button"
-                  onClick={handleSendReply}
-                  disabled={sending || replyBody.trim().length === 0}
-                  data-testid="admin-ticket-detail-reply-send"
-                >
-                  {sending ? (
+                  {isInternal ? (
                     <>
-                      <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" /> Odosielam…
+                      Poznámka sa uloží len pre tím podpory. <strong>Zákazník ju neuvidí</strong> a
+                      neodošle sa žiadny e-mail.
                     </>
                   ) : (
                     <>
-                      <Send className="mr-2 size-4" aria-hidden="true" /> Odoslať odpoveď
+                      Odoslaním sa stav žiadosti zmení na <strong>Čaká na používateľa</strong> a
+                      používateľ dostane e-mail s vašou odpoveďou.
                     </>
                   )}
-                </Button>
+                </p>
+                <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+                  <label
+                    htmlFor="admin-ticket-reply-internal"
+                    className="flex items-center gap-2 text-xs text-foreground"
+                  >
+                    <Checkbox
+                      id="admin-ticket-reply-internal"
+                      checked={isInternal}
+                      onCheckedChange={(v) => setIsInternal(v === true)}
+                      disabled={sending}
+                      data-testid="admin-ticket-detail-reply-internal-toggle"
+                    />
+                    <span>Interná poznámka (nepošle sa zákazníkovi)</span>
+                  </label>
+                  <Button
+                    type="button"
+                    onClick={handleSendReply}
+                    disabled={sending || replyBody.trim().length === 0}
+                    data-testid="admin-ticket-detail-reply-send"
+                  >
+                    {sending ? (
+                      <>
+                        <Loader2 className="mr-2 size-4 animate-spin" aria-hidden="true" />{" "}
+                        {isInternal ? "Ukladám…" : "Odosielam…"}
+                      </>
+                    ) : isInternal ? (
+                      <>
+                        <Save className="mr-2 size-4" aria-hidden="true" /> Uložiť poznámku
+                      </>
+                    ) : (
+                      <>
+                        <Send className="mr-2 size-4" aria-hidden="true" /> Odoslať odpoveď
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
           )}

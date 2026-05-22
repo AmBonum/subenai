@@ -44,6 +44,8 @@ interface MockState {
   transitionCalls?: string[];
   emailCalled?: { value: boolean };
   lastEmailBody?: { value: string };
+  /** Captures the JSON body of the support_ticket_messages INSERT. */
+  lastInsertBody?: { value: string };
 }
 
 function buildRequest(body: unknown, opts: { auth?: string } = {}) {
@@ -63,6 +65,7 @@ function mockFetch(state: MockState) {
   state.regenTokenCalls = state.regenTokenCalls ?? [];
   state.emailCalled = state.emailCalled ?? { value: false };
   state.lastEmailBody = state.lastEmailBody ?? { value: "" };
+  state.lastInsertBody = state.lastInsertBody ?? { value: "" };
   return vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
     const url = typeof input === "string" ? input : (input as Request).url;
 
@@ -166,6 +169,7 @@ function mockFetch(state: MockState) {
 
     // support_ticket_messages INSERT
     if (url.includes("/rest/v1/support_ticket_messages")) {
+      state.lastInsertBody!.value = (init?.body as string) ?? "";
       if (state.insertOk === false) {
         return new Response(JSON.stringify({ code: "23505", message: "conflict" }), {
           status: 500,
@@ -442,6 +446,80 @@ describe("POST /api/support-ticket-reply — view_token rotation", () => {
     expect(res.status).toBe(200);
     const json = (await res.json()) as { ok: boolean };
     expect(json.ok).toBe(true);
+    expect(state.emailCalled!.value).toBe(true);
+  });
+});
+
+describe("POST /api/support-ticket-reply — E48-v4 internal notes", () => {
+  it("is_internal=true → INSERT carries flag, Resend NOT called, no status transition, no token regen", async () => {
+    const state: MockState = { hasRoleResult: true, ticketStatus: "new" };
+    mockFetch(state);
+    const res = await onRequestPost({
+      request: buildRequest({ ...validBody, is_internal: true }, { auth: makeJwt("aal2") }),
+      env,
+    });
+    expect(res.status).toBe(200);
+    const json = (await res.json()) as {
+      ok: boolean;
+      message_id: string;
+      is_internal?: boolean;
+    };
+    expect(json.ok).toBe(true);
+    expect(json.message_id).toBe("msg-001");
+    expect(json.is_internal).toBe(true);
+
+    // INSERT row carries is_internal: true
+    const insertPayload = JSON.parse(state.lastInsertBody!.value) as
+      | Array<Record<string, unknown>>
+      | Record<string, unknown>;
+    const row = Array.isArray(insertPayload) ? insertPayload[0] : insertPayload;
+    expect(row.is_internal).toBe(true);
+    expect(row.author_kind).toBe("admin");
+
+    // Internal notes do not email, do not flip status, do not rotate token.
+    expect(state.emailCalled!.value).toBe(false);
+    expect(state.transitionCalls).toEqual([]);
+    expect(state.regenTokenCalls).toEqual([]);
+  });
+
+  it("is_internal=false (default) → existing public-reply behaviour preserved", async () => {
+    const state: MockState = { hasRoleResult: true, ticketStatus: "in_progress" };
+    mockFetch(state);
+    const res = await onRequestPost({
+      request: buildRequest(validBody, { auth: makeJwt("aal2") }),
+      env,
+    });
+    expect(res.status).toBe(200);
+    const json = (await res.json()) as {
+      ok: boolean;
+      message_id: string;
+      is_internal?: boolean;
+    };
+    expect(json.ok).toBe(true);
+    expect(json.message_id).toBe("msg-001");
+    expect(json.is_internal).toBeUndefined();
+
+    // INSERT carries is_internal: false explicitly.
+    const insertPayload = JSON.parse(state.lastInsertBody!.value) as
+      | Array<Record<string, unknown>>
+      | Record<string, unknown>;
+    const row = Array.isArray(insertPayload) ? insertPayload[0] : insertPayload;
+    expect(row.is_internal).toBe(false);
+
+    // Public reply: email sent, status flipped, token rotated.
+    expect(state.emailCalled!.value).toBe(true);
+    expect(state.transitionCalls).toEqual(["waiting_user"]);
+    expect(state.regenTokenCalls).toContain(ticketId);
+  });
+
+  it("is_internal omitted from body → defaults to false (public reply)", async () => {
+    const state: MockState = { hasRoleResult: true, ticketStatus: "in_progress" };
+    mockFetch(state);
+    const res = await onRequestPost({
+      request: buildRequest(validBody, { auth: makeJwt("aal2") }),
+      env,
+    });
+    expect(res.status).toBe(200);
     expect(state.emailCalled!.value).toBe(true);
   });
 });
