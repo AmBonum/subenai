@@ -32,7 +32,7 @@ export function magicLinkPortalEmail(portalUrl: string): {
       zmeniť kartu alebo <strong>zrušiť mesačný odber jedným klikom</strong>.
     </p>
     <p style="margin:24px 0">
-      <a href="${escapeAttr(portalUrl)}"
+      <a href="${sanitizeUrl(portalUrl)}"
          style="display:inline-block;background:linear-gradient(135deg,#bef264,#16a34a);color:#0f172a;text-decoration:none;font-weight:700;padding:12px 24px;border-radius:12px">
         Otvoriť portál
       </a>
@@ -155,7 +155,7 @@ export function testInviteEmail(input: {
       pozval/a vyplniť test <strong>${escapeText(input.testTitle)}</strong>.
     </p>
     <p style="margin:24px 0">
-      <a href="${escapeAttr(input.shareUrl)}"
+      <a href="${sanitizeUrl(input.shareUrl)}"
          style="display:inline-block;background:linear-gradient(135deg,#bef264,#16a34a);color:#0f172a;text-decoration:none;font-weight:700;padding:12px 24px;border-radius:12px">
         Otvoriť test
       </a>
@@ -169,7 +169,7 @@ export function testInviteEmail(input: {
     <p style="font-size:13px;line-height:1.6;color:#475569">
       Pozvánku poslal/a:
       <strong>${escapeText(input.authorName)}</strong>
-      &lt;<a href="mailto:${escapeAttr(input.authorEmail)}" style="color:#475569">${escapeText(input.authorEmail)}</a>&gt;.
+      &lt;<a href="${sanitizeUrl(`mailto:${input.authorEmail}`)}" style="color:#475569">${escapeText(input.authorEmail)}</a>&gt;.
       Otázky o teste smeruj naňho/ňu, nie na nás.
     </p>
     <p style="font-size:12px;line-height:1.5;color:#94a3b8">
@@ -226,8 +226,6 @@ function formatBytes(bytes: number): string {
   return `${(kb / 1024).toLocaleString("sk-SK", { maximumFractionDigits: 1 })} MB`;
 }
 
-export const __internal = { formatBytes };
-
 export function supportTicketReceivedEmail(input: {
   ticketId: string;
   subject: string;
@@ -258,7 +256,7 @@ export function supportTicketReceivedEmail(input: {
   const viewBlock = input.viewUrl
     ? `
     <p style="margin:24px 0">
-      <a href="${escapeAttr(input.viewUrl)}"
+      <a href="${sanitizeUrl(input.viewUrl)}"
          style="display:inline-block;background:linear-gradient(135deg,#bef264,#16a34a);color:#0f172a;text-decoration:none;font-weight:700;padding:12px 24px;border-radius:12px">
         Zobraziť vlákno
       </a>
@@ -327,7 +325,7 @@ export function supportTicketReplyEmail(input: {
   const mailSubject = `Re: vaša žiadosť o podporu — ${input.ticketId}`;
   const bodyHtml = escapeText(input.body).replace(/\n/g, "<br />");
   const viewBlock = input.viewUrl
-    ? `<p style="margin:20px 0"><a href="${escapeAttr(input.viewUrl)}" style="color:#16a34a;font-weight:600">Otvoriť celé vlákno →</a></p>`
+    ? `<p style="margin:20px 0"><a href="${sanitizeUrl(input.viewUrl)}" style="color:#16a34a;font-weight:600">Otvoriť celé vlákno →</a></p>`
     : "";
 
   const html = wrap(`
@@ -365,7 +363,7 @@ export function supportTicketResolvedEmail(input: { ticketId: string; viewUrl?: 
 } {
   const mailSubject = `Vaša žiadosť o podporu bola uzavretá — ${input.ticketId}`;
   const viewBlock = input.viewUrl
-    ? `<p style="margin:16px 0"><a href="${escapeAttr(input.viewUrl)}" style="color:#16a34a;font-weight:600">Pozrieť záznam →</a></p>`
+    ? `<p style="margin:16px 0"><a href="${sanitizeUrl(input.viewUrl)}" style="color:#16a34a;font-weight:600">Pozrieť záznam →</a></p>`
     : "";
 
   const html = wrap(`
@@ -404,3 +402,25 @@ function escapeText(value: string): string {
 function escapeAttr(value: string): string {
   return escapeText(value).replace(/"/g, "&quot;");
 }
+
+function sanitizeUrl(value: string): string {
+  if (!value || typeof value !== "string" || !value.trim()) {
+    return "";
+  }
+  const trimmed = value.trim();
+  if (trimmed.startsWith("<") || trimmed.startsWith(">")) {
+    return "";
+  }
+  const lowerUrl = trimmed.toLowerCase();
+  if (
+    lowerUrl.startsWith("javascript:") ||
+    lowerUrl.startsWith("data:") ||
+    lowerUrl.startsWith("vbscript:") ||
+    lowerUrl.startsWith("file:")
+  ) {
+    return "";
+  }
+  return escapeAttr(trimmed);
+}
+
+export const __internal = { formatBytes, sanitizeUrl };
