@@ -46,6 +46,25 @@ export class AdminTicketsQueuePage extends BasePage {
     return this.page.getByTestId("admin-tickets-count");
   }
 
+  get clearFiltersButton(): Locator {
+    return this.page.getByTestId("admin-tickets-empty-clear-filters");
+  }
+
+  get csvExportButton(): Locator {
+    return this.page.getByTestId("admin-tickets-export-csv");
+  }
+
+  csvExportOption(scope: "filter" | "selected" | "all"): Locator {
+    return this.page.getByTestId(`admin-tickets-export-option-${scope}`);
+  }
+
+  // Cross-component convenience getter — lives on the admin shell but
+  // every queue test asserts on it, so we expose it here to keep specs
+  // POM-only.
+  get sidebarSupportBadge(): Locator {
+    return this.page.getByTestId("admin-shell-sidebar-support-badge");
+  }
+
   // Per-row helpers -----------------------------------------------------
   row(ticketId: string): Locator {
     return this.page.getByTestId(`admin-tickets-row-${ticketId}`);

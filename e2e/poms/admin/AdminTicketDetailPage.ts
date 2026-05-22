@@ -35,8 +35,75 @@ export class AdminTicketDetailPage extends BasePage {
     return this.page.getByTestId("admin-ticket-detail-status-badge");
   }
 
+  get categoryBadge(): Locator {
+    return this.page.getByTestId("admin-ticket-detail-category-badge");
+  }
+
+  get submitterBlock(): Locator {
+    return this.page.getByTestId("admin-ticket-detail-submitter");
+  }
+
+  get metadataCreatedAt(): Locator {
+    return this.page.getByTestId("admin-ticket-metadata-created-at");
+  }
+
   get actions(): Locator {
     return this.page.getByTestId("admin-ticket-detail-actions");
+  }
+
+  // Generic FSM action mapper — accepts the *target* status the button
+  // transitions to (e.g. "in_progress", "resolved", "archived",
+  // "reopened"). Mirrors the four named getters below.
+  statusActionButton(target: "in_progress" | "resolved" | "reopened" | "archived"): Locator {
+    const map = {
+      in_progress: "start",
+      resolved: "resolve",
+      reopened: "reopen",
+      archived: "archive",
+    } as const;
+    return this.page.getByTestId(`admin-ticket-action-${map[target]}`);
+  }
+
+  // Kebab (overflow) menu ----------------------------------------------
+  get kebabTrigger(): Locator {
+    return this.page.getByTestId("admin-ticket-detail-kebab-trigger");
+  }
+
+  get kebabMenu(): Locator {
+    return this.page.getByTestId("admin-ticket-detail-kebab-menu");
+  }
+
+  get kebabSpamOption(): Locator {
+    return this.page.getByTestId("admin-ticket-detail-kebab-spam");
+  }
+
+  get kebabCopyLinkOption(): Locator {
+    return this.page.getByTestId("admin-ticket-detail-kebab-copy-link");
+  }
+
+  get kebabOpenAnonOption(): Locator {
+    return this.page.getByTestId("admin-ticket-detail-kebab-open-anon");
+  }
+
+  // Confirm dialog (shared shadcn AlertDialog) -------------------------
+  get confirmDialogRoot(): Locator {
+    return this.page.getByTestId("app-shell-confirm-dialog-root");
+  }
+
+  get confirmDialogConfirmButton(): Locator {
+    return this.page.getByTestId("app-shell-confirm-dialog-confirm");
+  }
+
+  get confirmDialogCancelButton(): Locator {
+    return this.page.getByTestId("app-shell-confirm-dialog-cancel");
+  }
+
+  get confirmDialogTypedInput(): Locator {
+    return this.page.getByTestId("app-shell-confirm-dialog-typed-input");
+  }
+
+  confirmDialogIcon(severity: "info" | "warning" | "destructive" | "success"): Locator {
+    return this.page.getByTestId(`app-shell-confirm-dialog-icon-${severity}`);
   }
 
   // FSM action buttons --------------------------------------------------
