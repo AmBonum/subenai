@@ -1,3 +1,21 @@
+export const ADMIN_DISPLAY_NAME_PAYLOADS = [
+  `<script>window.__pwn=1</script>`,
+  `<img src=x onerror=window.__pwn=1>`,
+  `javascript:alert(1)`,
+  `<svg/onload=alert(1)>`,
+  `";alert(1);//`,
+] as const;
+
+export const ATTACHMENT_FILENAME_PAYLOADS = [
+  `<script>alert(1)</script>.png`,
+  `../../../etc/passwd`,
+  `%2e%2e%2fsecret.pdf`,
+  `🦊.png`,
+  `very-long-name-${"a".repeat(200)}.png`,
+] as const;
+
+export const PICKER_SEARCH_PAYLOADS = [...ADMIN_DISPLAY_NAME_PAYLOADS] as const;
+
 export const XSS_PAYLOADS = [
   `<script>alert(1)</script>`,
   `<img src=x onerror=alert(1)>`,
