@@ -5,6 +5,12 @@
 -- Run once per Supabase project (local OR prod) via the dashboard SQL editor.
 -- Idempotent: re-running ON CONFLICT-merges existing rows.
 --
+-- Reconciles pre-existing accounts: if any e2e email already lives under a
+-- non-deterministic UUID (e.g. a developer signed up through the UI before
+-- this script ran), the rogue row is dropped first (CASCADE) so the
+-- deterministic-UUID insert can land. Without this, fixtures that hard-code
+-- the deterministic UUID silently own nothing (manifests as 403 `not_owner`).
+--
 -- Why this exists
 -- ---------------
 -- E49 Phase 1c integration / live-Supabase tests need deterministic signed-in
@@ -83,6 +89,21 @@ BEGIN
     IF v_email = 'audit-bot@subenai.test' THEN
       RAISE EXCEPTION 'E49 seed: refused to touch audit-bot@subenai.test';
     END IF;
+
+    -- 0. Reconcile pre-existing accounts.
+    --    If the e2e email already lives under a non-deterministic UUID
+    --    (e.g. someone signed up through /login while developing), the
+    --    INSERT below would 23505 on the email unique index AND every
+    --    fixture that hard-codes the deterministic UUID would silently
+    --    own nothing (manifests as 403 `not_owner` against canary data).
+    --    Wipe the rogue row first — CASCADE removes its identities,
+    --    profiles, user_roles, and profile_preferences. Owned rows in
+    --    `public.tests` etc. block the delete; those are intentional
+    --    test artefacts and must be cleaned up by the caller before
+    --    re-seeding.
+    DELETE FROM auth.users
+     WHERE email = v_email
+       AND id   <> v_user_id;
 
     -- 1. auth.users — direct insert with confirmed email + bcrypt password.
     INSERT INTO auth.users (
