@@ -34,6 +34,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - Podpora viacerých priradených adminov na ticket (junction table + RPC). Predtým len jeden admin per ticket; teraz neobmedzene.
 - Príloh viewer pripravený na inline render (image/PDF) cez nový p_inline parameter v signed URL RPC.
 - TODO: po aplikácii migrácie 20260522170000 v Supabase doplniť späť schema-invariants assertions pre support_ticket_assignees + 3 nové RPCs + p_inline parameter v request_attachment_signed_url. Sledujte follow-up PR.
+- Wave 3 E2E suite: 8 Playwright specs + 4 integration specs covering multi-assignment, attachment viewer, queue extensions (Assigned column, inline status, sortable headers), admin picker. SQL-driven seed + cleanup pattern.
 
 ### Opravené (interné)
 - Test infra: pridaný `pdf-lib` do `node_modules` (balík bol v `dependencies` v package.json, ale chýbal v node_modules), čím Vitest mohol importovať `functions/_lib/attachment-sanitize.ts` (predtým zlyhával počas test-collect fázy — ~2 testy v každom PR).
