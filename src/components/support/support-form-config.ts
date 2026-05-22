@@ -21,9 +21,15 @@ const CATEGORY_VALUES = SUPPORT_TICKET_CATEGORIES.map((c) => c.value) as [
 ];
 
 export const supportContactSchema = z.object({
-  subject: z.string().min(1, "Téma je povinná.").max(200, "Téma môže mať najviac 200 znakov."),
+  subject: z
+    .string()
+    .min(5, "Téma musí mať aspoň 5 znakov.")
+    .max(200, "Téma môže mať najviac 200 znakov."),
   category: z.enum(CATEGORY_VALUES, { message: "Vyberte kategóriu." }),
-  body: z.string().min(1, "Správa je povinná.").max(5000, "Správa môže mať najviac 5000 znakov."),
+  body: z
+    .string()
+    .min(20, "Správa musí mať aspoň 20 znakov.")
+    .max(5000, "Správa môže mať najviac 5000 znakov."),
   email: z
     .string()
     .min(5, "E-mail je povinný.")

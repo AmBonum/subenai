@@ -126,10 +126,10 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   const name = (payload.name ?? "").trim();
   const category = (payload.category ?? "").trim();
 
-  if (subject.length < 1 || subject.length > 200) {
+  if (subject.length < 5 || subject.length > 200) {
     return jsonResponse(400, { error: "subject_invalid" });
   }
-  if (body.length < 1 || body.length > 5000) {
+  if (body.length < 20 || body.length > 5000) {
     return jsonResponse(400, { error: "body_invalid" });
   }
   if (!isPlausibleEmail(email)) {

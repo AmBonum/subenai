@@ -81,10 +81,12 @@ describe("SupportContactForm — validation", () => {
     await user.click(screen.getByTestId("kontakt-form-submit-button"));
     await waitFor(() => {
       expect(screen.getByTestId("kontakt-form-error-subject")).toHaveTextContent(
-        "Téma je povinná.",
+        "Téma musí mať aspoň 5 znakov.",
       );
     });
-    expect(screen.getByTestId("kontakt-form-error-body")).toHaveTextContent("Správa je povinná.");
+    expect(screen.getByTestId("kontakt-form-error-body")).toHaveTextContent(
+      "Správa musí mať aspoň 20 znakov.",
+    );
     expect(screen.getByTestId("kontakt-form-error-email")).toHaveTextContent("E-mail je povinný.");
     expect(onSubmit).not.toHaveBeenCalled();
   });
