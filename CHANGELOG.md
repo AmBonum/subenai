@@ -16,6 +16,9 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ### Pridané
 - Admin panel: v ľavom menu pri "Žiadosti podpory" sa zobrazuje červený badge s počtom ticketov, ktoré potrebujú pozornosť (status nový alebo znovu otvorený). Aktualizuje sa automaticky každú minútu. (2026-05-22)
 
+### Bezpečnosť
+- CSP rozšírená o Supabase Storage origin v `img-src` a `frame-src` aby admin mohol vidieť prílohy (image + PDF) priamo v detail page bez sťahovania.
+
 ### Refactor (interné)
 - Hooky súvisiace s ticketmi podpory v admin paneli sa presunuli z `src/lib/admin/queries.ts` do `src/lib/admin/queries-tickets.ts`. Pôvodný import path naďalej funguje cez deprecation shim — refactor je transparentný pre existujúci kód.
 

@@ -60,6 +60,8 @@ export const CSP_ALLOWLIST: Record<string, readonly string[]> = {
     "https://www.google.sk",
     "https://*.google.com",
     "https://*.google.sk",
+    // E48-v3 — admin attachment previews (image + PDF signed-URL embeds)
+    "https://lwxichbuvcakscntjkzs.supabase.co",
   ],
   "font-src": ["'self'", "data:"],
   "connect-src": [
@@ -86,6 +88,8 @@ export const CSP_ALLOWLIST: Record<string, readonly string[]> = {
     "https://hooks.stripe.com",
     "https://checkout.stripe.com",
     "https://challenges.cloudflare.com",
+    // E48-v3 — admin PDF iframe embed (signed Storage URL)
+    "https://lwxichbuvcakscntjkzs.supabase.co",
   ],
   "form-action": ["'self'", "https://checkout.stripe.com"],
 };
