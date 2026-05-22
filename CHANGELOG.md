@@ -28,6 +28,7 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - Admin môže exportovať žiadosti podpory ako CSV súbor — server-side endpoint s ochranou pred CSV injection a rate-limit 1/min.
 
 ### Pridané (interné)
+- Test infraštruktúra pre E49 Phase 1c-2: nový Playwright projekt `e2e-live-supabase` (live local Supabase + built bundle + wrangler CF Functions) so setup/teardown lifecycle (boot `supabase start`, seed E49 useri + data, rebuild bundle, spawn preview + wrangler, cleanup po behu). ~20 nových integračných TCs: RLS kontrakty (NEG-02, SEC-19, 2 pozitívne round-tripy), CSV export API (auth/origin/404/rate-limit/download contract/CSV-injection battery), real PostgREST `or()` + JSON-path ilike filtre (POS-11/12/13), audit_log contract (POS + NEG-20 rate-limited zápis nezapisuje audit riadok).
 - Test infraštruktúra pre E49 Phase 1c-1: deterministickí test-useri (TU-A/B/Resp/Admin), idempotentný SQL seed pre 9 testov + ~75 sessions + ~50 session_answers, CLI runner (`--apply` / `--cleanup` / `--verify`), TS fixture konstanty a global teardown integrácia. Bez nových scenárov — pure infra pre 1c-2/1c-3/1c-4.
 - Test infraštruktúra pre E48-v2: SQL seed helper s worker-isolation prefixom, security regression suite (XSS + CSV injection battery).
 - Reusable `AdminPicker` komponent pre výber adminov v dropdowne (search + listbox). Pripravený na použitie v PR-DETAIL a budúcich admin features.
