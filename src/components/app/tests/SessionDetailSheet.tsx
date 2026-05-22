@@ -199,6 +199,7 @@ export function SessionDetailSheet({ testId, sessionId, onClose, onCloseHref }: 
         side="right"
         className="w-full overflow-y-auto sm:max-w-2xl"
         data-testid="session-detail-root"
+        closeTestId="session-detail-close"
       >
         <SheetHeader>
           <SheetTitle data-testid="session-detail-title">{t("title")}</SheetTitle>
