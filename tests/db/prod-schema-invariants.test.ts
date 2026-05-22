@@ -107,6 +107,39 @@ describe.skipIf(!url || !key)("prod schema invariants (E48 incident response)", 
     );
   });
 
+  describe("Views — forbidden dependencies (catches security_invoker auth.users JOIN regression)", () => {
+    // Regression for the 2026-05-22 incident: `support_tickets_with_assignees`
+    // was created with `security_invoker = true` AND LEFT JOIN auth.users.
+    // Authenticated users have no GRANT SELECT on auth.users so the join
+    // failed for every admin (HTTP 403 on /admin/tickets queue). This test
+    // pins the contract: NO security_invoker view in public.* may join
+    // auth.users — the only safe path is public.profiles.
+    const FORBIDDEN_AUTH_USERS_VIEWS = ["support_tickets_with_assignees"];
+    it.each(FORBIDDEN_AUTH_USERS_VIEWS)(
+      "view %s does not reference auth.users (would 403 under security_invoker)",
+      async (viewName) => {
+        const sb = getClient();
+        const { data, error } = await sb.rpc("__test_introspect_view", {
+          p_name: viewName,
+        });
+        expect(
+          error,
+          `__test_introspect_view failed — is the helper migration applied? error: ${error?.message}`,
+        ).toBeNull();
+        const rows = data as Array<{ definition: string }> | null;
+        expect(
+          rows?.length,
+          `View "${viewName}" not found in pg_class — migration may be partially applied`,
+        ).toBe(1);
+        const def = rows![0].definition;
+        expect(
+          def,
+          `View "${viewName}" references auth.users; under security_invoker this breaks for every authenticated caller (admins get 403). Join via public.profiles instead.`,
+        ).not.toMatch(/\bauth\.users\b/);
+      },
+    );
+  });
+
   describe("PostgREST schema cache (catches stale cache after migration)", () => {
     it("submit_support_ticket is callable without 42883 (undefined_function) error", async () => {
       const sb = getClient();
