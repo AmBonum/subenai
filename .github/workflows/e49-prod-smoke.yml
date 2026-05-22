@@ -5,10 +5,14 @@ name: E49 prod-smoke
 # drill-down feature (PS-01..PS-08 in `tasks/PLAN-2026-05-22-E49-test-scenarios.md`).
 #
 # REQUIRED GITHUB SECRETS (Settings → Secrets → Actions):
-#   SUPABASE_PROD_URL              — e.g. https://<ref>.supabase.co
-#   SUPABASE_SERVICE_ROLE_KEY_PROD — service_role key for the prod project
-#                                    (used ONLY by the teardown psql step;
-#                                    never passed to the playwright runner)
+#   SUPABASE_PROD_URL          — e.g. https://<ref>.supabase.co (used to
+#                                derive the pooler project_ref)
+#   SUPABASE_DB_PASSWORD_PROD  — the **Postgres database password**
+#                                (Supabase dashboard → Project Settings →
+#                                Database → Database Password). Not the
+#                                service-role JWT — pooler auth rejects it.
+#                                Used ONLY by the teardown psql step; never
+#                                passed to the playwright runner.
 #
 # DATA SHAPE:
 #   The canary test + 3 sessions + 6 answers must already exist on prod
@@ -58,6 +62,12 @@ jobs:
         run: npx playwright test --project=prod-smoke --grep "E49"
         env:
           CI_PROD_SMOKE: "1"
+          # prod-smoke project hits https://subenai.sk directly — no local
+          # `vite preview` needed. Without this, the default CI `webServer`
+          # block in `playwright.config.ts` boots `npm run preview` and waits
+          # 120s for it, which never serves anything useful here and the run
+          # times out before the first spec.
+          SKIP_WEBSERVER: "1"
 
       - name: Upload Playwright report on failure
         if: failure()
@@ -77,20 +87,22 @@ jobs:
         if: always()
         env:
           PGCONN: ${{ secrets.SUPABASE_PROD_URL }}
-          SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_PROD }}
+          DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD_PROD }}
         run: |
           set -euo pipefail
-          if [ -z "${SERVICE_ROLE_KEY:-}" ] || [ -z "${PGCONN:-}" ]; then
-            echo "Missing SUPABASE_PROD_URL or SUPABASE_SERVICE_ROLE_KEY_PROD — skipping teardown."
+          if [ -z "${DB_PASSWORD:-}" ] || [ -z "${PGCONN:-}" ]; then
+            echo "Missing SUPABASE_PROD_URL or SUPABASE_DB_PASSWORD_PROD — skipping teardown."
             exit 0
           fi
           sudo apt-get update -y >/dev/null
           sudo apt-get install -y postgresql-client >/dev/null
-          # Derive the postgres connection string from the Supabase project
-          # URL + service-role key. The pooler endpoint pattern matches what
-          # `supabase db push` uses.
+          # Pooler URI: username is `postgres.<project_ref>`, password is the
+          # actual Postgres DB password (NOT the service-role JWT — that's an
+          # API key, not a DB credential). Pattern mirrors `supabase db push`.
           PROJECT_HOST="$(echo "${PGCONN}" | sed -E 's#https?://([^./]+)\.supabase\.co.*#\1#')"
-          PGURI="postgresql://postgres.${PROJECT_HOST}:${SERVICE_ROLE_KEY}@aws-0-eu-west-1.pooler.supabase.com:6543/postgres"
+          # URL-encode the password in case it contains URL-reserved chars.
+          DB_PASSWORD_ENC="$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["DB_PASSWORD"], safe=""))')"
+          PGURI="postgresql://postgres.${PROJECT_HOST}:${DB_PASSWORD_ENC}@aws-0-eu-west-1.pooler.supabase.com:6543/postgres"
           psql "${PGURI}" -v ON_ERROR_STOP=1 <<'SQL'
           BEGIN;
           DELETE FROM public.session_answers
