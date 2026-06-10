@@ -54,6 +54,11 @@ export const INDUSTRY_VISUALS: Record<Industry, IndustryVisual> = {
   ziaci: { gradientFrom: "from-lime-500/40", gradientTo: "to-green-800/40" },
   studenti: { gradientFrom: "from-teal-500/40", gradientTo: "to-cyan-800/40" },
   seniori: { gradientFrom: "from-amber-500/40", gradientTo: "to-orange-700/40" },
+  rodicia: { gradientFrom: "from-orange-400/40", gradientTo: "to-rose-700/40" },
+  // Topic packs — security + online-life themes
+  heslo_2fa: { gradientFrom: "from-indigo-500/40", gradientTo: "to-blue-900/40" },
+  ai_deepfake: { gradientFrom: "from-purple-500/40", gradientTo: "to-fuchsia-900/40" },
+  socialne_siete: { gradientFrom: "from-sky-500/40", gradientTo: "to-blue-800/40" },
   // Generic / cross-industry — brand palette
   vseobecny: { gradientFrom: "from-primary/40", gradientTo: "to-accent/40" },
 };

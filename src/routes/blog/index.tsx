@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { SITE_ORIGIN } from "@/config/site";
 
-// E16.4 — SSR head metadata for /blog (the "Akadémia" surface). Mirrors
+// E16.4 — head() metadata for /blog (the "Akadémia" surface), applied
+// client-side after hydration (the app is CSR; plain HTML fetchers see
+// only the static shell defaults from index.html). Mirrors
 // the SEO contract of per-article routes (titles, descriptions, OG,
 // Twitter, robots) so Google + social previews see the right thing on
 // the index page too. Description matches the SK i18n string the
@@ -49,9 +51,11 @@ export const Route = createFileRoute("/blog/")({
         { property: "og:url", content: url },
         { property: "og:locale", content: "sk_SK" },
         { property: "og:site_name", content: "subenai" },
+        { property: "og:image", content: `${SITE_ORIGIN}/og-default.png` },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: PAGE_TITLE },
         { name: "twitter:description", content: BLOG_INDEX_DESCRIPTION },
+        { name: "twitter:image", content: `${SITE_ORIGIN}/og-default.png` },
       ],
       links: [
         { rel: "canonical", href: url },

@@ -1,10 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { ListChecks, Target, Building2 } from "lucide-react";
 
 import type { TestPack } from "@/content/test-packs";
 import { fetchPackWithQuestions, fetchPlatformPacks } from "@/lib/platform/pack-queries";
-import { TestFlow } from "@/components/quiz/flow/TestFlow";
 import { RelatedTestPackArticleCard } from "@/components/test-packs/RelatedTestPackArticleCard";
 import { RelatedTestPacks } from "@/components/test-packs/RelatedTestPacks";
 import { TestPackHeroFallback } from "@/components/test-packs/TestPackHeroFallback";
@@ -14,11 +13,20 @@ import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/quiz";
 const COPYRIGHT_HOLDER = "am.bonum s. r. o.";
 
+// Quiz engine loads only when the user actually starts the test
+// (mirrors test.index.tsx) — keeps TestFlow + the question bank out of
+// the entry chunk.
+const TestFlow = lazy(() =>
+  import("@/components/quiz/flow/TestFlow").then((m) => ({ default: m.TestFlow })),
+);
+
 export const Route = createFileRoute("/tests/$slug")({
-  // E37 Phase F — detail RPC + catalog RPC fetched in parallel at SSR.
-  // The catalog list is needed by <RelatedTestPacks /> below the fold;
-  // doing it server-side keeps the detail page render synchronous from
-  // the component's perspective.
+  // E37 Phase F — detail RPC + catalog RPC fetched in parallel by the
+  // route loader (client-side; the app is CSR, so head() applies after
+  // hydration and only JS-executing crawlers see the tags). The catalog
+  // list is needed by <RelatedTestPacks /> below the fold; loading it
+  // with the detail keeps the page render synchronous from the
+  // component's perspective.
   loader: async ({ params }) => {
     const [detail, allPacks] = await Promise.all([
       fetchPackWithQuestions(params.slug),
@@ -50,9 +58,11 @@ export const Route = createFileRoute("/tests/$slug")({
         { property: "og:url", content: url },
         { property: "og:locale", content: "sk_SK" },
         { property: "og:site_name", content: "subenai" },
+        { property: "og:image", content: `${SITE_ORIGIN}/og-default.png` },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: pack.title },
         { name: "twitter:description", content: pack.tagline },
+        { name: "twitter:image", content: `${SITE_ORIGIN}/og-default.png` },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -69,6 +79,7 @@ export const Route = createFileRoute("/tests/$slug")({
 function PackPage() {
   const t = tFor("testy");
   const tCommon = tFor("common");
+  const tTake = tFor("take");
   const loaderData = Route.useLoaderData();
   const pack: TestPack = loaderData.pack;
   const questions = loaderData.questions;
@@ -78,14 +89,22 @@ function PackPage() {
   if (started) {
     return (
       <div className="min-h-screen bg-hero">
-        <TestFlow
-          config={{
-            kind: "pack",
-            questions,
-            passingThreshold: pack.passingThreshold,
-            label: INDUSTRY_LABEL[pack.industry],
-          }}
-        />
+        <Suspense
+          fallback={
+            <div className="flex min-h-[60vh] items-center justify-center text-sm text-muted-foreground">
+              {tTake("loading")}
+            </div>
+          }
+        >
+          <TestFlow
+            config={{
+              kind: "pack",
+              questions,
+              passingThreshold: pack.passingThreshold,
+              label: INDUSTRY_LABEL[pack.industry],
+            }}
+          />
+        </Suspense>
       </div>
     );
   }

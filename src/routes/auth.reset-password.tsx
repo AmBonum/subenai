@@ -105,7 +105,7 @@ function ResetPasswordPage() {
       <Card className="w-full max-w-sm" data-testid="reset-card">
         <CardHeader>
           <CardTitle data-testid="reset-heading">{t("title")}</CardTitle>
-          <CardDescription>{t("subtitle")}</CardDescription>
+          <CardDescription data-testid="reset-subtitle">{t("subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           {hasSession === false ? (

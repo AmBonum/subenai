@@ -3,6 +3,7 @@ import { ChevronRight } from "lucide-react";
 
 import { ROUTES } from "@/config/routes";
 import { SITE_ORIGIN } from "@/config/site";
+import { jsonLdString } from "@/lib/seo/json-ld";
 import { buildBreadcrumbJsonLd } from "@/lib/seo/schools-jsonld";
 import { tFor } from "@/i18n/marketing";
 
@@ -48,7 +49,7 @@ export function SchoolsBreadcrumb() {
       <script
         type="application/ld+json"
         data-testid="schools-breadcrumb-jsonld"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd(items)) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(buildBreadcrumbJsonLd(items)) }}
       />
     </nav>
   );

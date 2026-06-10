@@ -125,9 +125,11 @@ export const Route = createFileRoute("/")({
       { property: "og:type", content: "website" },
       { property: "og:url", content: SITE_ORIGIN },
       { property: "og:locale", content: "sk_SK" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: `${SITE_ORIGIN}/og-default.png` },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: tHome("home.meta_title") },
       { name: "twitter:description", content: tHome("home.meta_description") },
+      { name: "twitter:image", content: `${SITE_ORIGIN}/og-default.png` },
     ],
     links: [{ rel: "canonical", href: SITE_ORIGIN }],
     scripts: [
@@ -396,7 +398,7 @@ function Index() {
     (async () => {
       const { count: c } = await supabase
         .from("attempts")
-        .select("id", { count: "exact", head: true });
+        .select("id", { count: "estimated", head: true });
       if (!cancelled && typeof c === "number") setCount(c);
     })();
     return () => {
@@ -404,7 +406,7 @@ function Index() {
     };
   }, []);
 
-  // Display: real count + a small offset so first visitors don't see "0 ľudí"
+  // Display: estimated count + a small offset so first visitors don't see "0 ľudí"
   const displayCount = count === null ? null : count + 127;
   const faqSections = buildFaqSections(t);
 

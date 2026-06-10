@@ -20,10 +20,11 @@ import { tFor } from "@/i18n/quiz";
 // card grid with the top pack rendered as a featured spotlight,
 // FAQ accordion with 5 Q&As, and the bottom CTAs.
 //
-// SEO: head() now emits TWO JSON-LD blobs — the existing ItemList for
-// the pack catalog AND a new FAQPage for the FAQ Q&As. Both ship at
-// SSR time so Google sees them without JS execution. Rich-result
-// eligibility is independent of the accordion's collapsed UI state.
+// SEO: head() emits TWO JSON-LD blobs — the existing ItemList for
+// the pack catalog AND a FAQPage for the FAQ Q&As. The app is CSR, so
+// they apply after hydration: JS-executing crawlers (Googlebot) see
+// them, plain HTML fetchers don't. Rich-result eligibility is
+// independent of the accordion's collapsed UI state.
 
 type SortKey = "newest" | "questions_desc";
 
@@ -41,11 +42,12 @@ function sortPacks(packs: TestPack[], sort: SortKey): TestPack[] {
 }
 
 export const Route = createFileRoute("/tests/")({
-  // E37 Phase F — catalog list comes from get_platform_packs() RPC at
-  // SSR time. The loader runs before head() and component(), so both
-  // see the same data via Route.useLoaderData(). Same SSR contract as
-  // the old static manifest call; the only difference is one Supabase
-  // round-trip instead of a synchronous TS import.
+  // E37 Phase F — catalog list comes from get_platform_packs() RPC via
+  // the route loader (client-side; the app is CSR). The loader runs
+  // before head() and component(), so both see the same data via
+  // Route.useLoaderData(); the only difference vs the old static
+  // manifest is one Supabase round-trip instead of a synchronous TS
+  // import.
   loader: () => fetchPlatformPacks(),
   head: ({ loaderData }) => {
     const t = tFor("testy");
@@ -62,7 +64,9 @@ export const Route = createFileRoute("/tests/")({
         { property: "og:type", content: "website" },
         { property: "og:url", content: url },
         { property: "og:locale", content: "sk_SK" },
+        { property: "og:image", content: `${SITE_ORIGIN}/og-default.png` },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: `${SITE_ORIGIN}/og-default.png` },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [

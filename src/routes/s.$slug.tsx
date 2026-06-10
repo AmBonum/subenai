@@ -12,10 +12,12 @@ import type { CmsBlock, CmsPage } from "@/lib/admin/cms-types";
 // the static HTML shell provided — effectively un-indexable despite
 // being in the sitemap.
 //
-// Pattern reused from blog/$slug.tsx: a server-side loader runs during
-// SSR so the page row is available to head() before client hydration.
+// Pattern reused from blog/$slug.tsx: the route loader fetches the page
+// row in the browser before render so head() can emit the meta tags
+// (the app is CSR — tags apply after hydration, so only JS-executing
+// crawlers see them; plain HTML fetchers get the index.html defaults).
 // The component still uses usePublishedCmsPage() for React Query cache
-// + revalidation on subsequent navigations — the SSR load is a
+// + revalidation on subsequent navigations — the loader fetch is a
 // one-shot for first paint + meta tags, not a replacement for the
 // query layer.
 export const Route = createFileRoute("/s/$slug")({
@@ -29,7 +31,7 @@ export const Route = createFileRoute("/s/$slug")({
       .maybeSingle();
     if (error) throw error;
     if (!data) return null;
-    const row = data as {
+    const row = data as unknown as {
       id: string;
       slug: string;
       title: string;

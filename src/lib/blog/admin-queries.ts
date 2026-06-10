@@ -8,6 +8,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
+import type { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
 import type { BlogPostSource } from "./queries";
 
@@ -128,7 +129,11 @@ export function useCreateBlogPost() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: AdminBlogPostInput): Promise<{ id: string }> => {
-      const { data, error } = await supabase.from("blog_posts").insert(input).select("id").single();
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .insert(input as unknown as TablesInsert<"blog_posts">)
+        .select("id")
+        .single();
       if (error) throw error;
       return { id: (data as { id: string }).id };
     },
@@ -146,7 +151,10 @@ export function useUpdateBlogPost() {
       id: string;
       patch: Partial<AdminBlogPostInput>;
     }): Promise<void> => {
-      const { error } = await supabase.from("blog_posts").update(patch).eq("id", id);
+      const { error } = await supabase
+        .from("blog_posts")
+        .update(patch as unknown as TablesUpdate<"blog_posts">)
+        .eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["blog"] }),
@@ -238,7 +246,7 @@ export function useDuplicateBlogPost() {
       };
       const { data: created, error: insertErr } = await supabase
         .from("blog_posts")
-        .insert(insert)
+        .insert(insert as unknown as TablesInsert<"blog_posts">)
         .select("id")
         .single();
       if (insertErr) throw insertErr;

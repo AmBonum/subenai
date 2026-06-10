@@ -48,12 +48,13 @@ function BlogPostPage() {
   const listQuery = useBlogPostList();
 
   const related = useMemo(() => {
-    if (!query.data || !listQuery.data) return [];
+    const post = query.data;
+    if (!post || !listQuery.data) return [];
     const sameCategory = listQuery.data.filter(
-      (p) => p.slug !== query.data.slug && p.category.slug === query.data.category.slug,
+      (p) => p.slug !== post.slug && p.category.slug === post.category.slug,
     );
     const otherTopics = listQuery.data.filter(
-      (p) => p.slug !== query.data.slug && p.category.slug !== query.data.category.slug,
+      (p) => p.slug !== post.slug && p.category.slug !== post.category.slug,
     );
     return [...sameCategory, ...otherTopics].slice(0, RELATED_LIMIT);
   }, [query.data, listQuery.data]);

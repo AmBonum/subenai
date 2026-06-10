@@ -21,15 +21,17 @@ import { cn } from "@/lib/utils";
 // write to a clearly-named owner instead of seeing a generic local
 // variable.
 
-interface ExplainerSection {
+// Type aliases (not interfaces) so they satisfy the `JsonNode` indexed
+// constraint of `TForObject` structurally.
+type ExplainerSection = {
   heading: string;
   items: string[];
-}
+};
 
-interface ExplainerDocLink {
+type ExplainerDocLink = {
   label: string;
   href: string;
-}
+};
 
 export interface PageExplainerProps {
   pageKey: string;

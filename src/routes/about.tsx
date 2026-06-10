@@ -35,7 +35,9 @@ export const Route = createFileRoute("/about")({
       { property: "og:description", content: tAbout("about.meta_og_description") },
       { property: "og:type", content: "website" },
       { property: "og:url", content: ABOUT_URL },
+      { property: "og:image", content: `${SITE_ORIGIN}/og-default.png` },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: `${SITE_ORIGIN}/og-default.png` },
     ],
     links: [{ rel: "canonical", href: ABOUT_URL }],
     scripts: [

@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePublicTemplates } from "@/lib/platform/queries";
 import { buildSablonyCollectionAndListJsonLd } from "@/lib/seo/templates-jsonld";
+import { jsonLdString } from "@/lib/seo/json-ld";
 import type { Template } from "@/lib/platform/types";
 
 export const Route = createLazyFileRoute("/sablony/")({
@@ -40,7 +41,7 @@ function SablonyIndexPage() {
       <script
         type="application/ld+json"
         data-testid="sablony-jsonld"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
       />
 
       <header className="mb-10 space-y-4">

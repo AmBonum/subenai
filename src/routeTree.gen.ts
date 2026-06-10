@@ -146,7 +146,9 @@ const ManageSupportRoute = ManageSupportRouteImport.update({
   id: '/manage-support',
   path: '/manage-support',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/manage-support.lazy').then((d) => d.Route),
+)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -171,7 +173,7 @@ const ChangelogRoute = ChangelogRouteImport.update({
   id: '/changelog',
   path: '/changelog',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/changelog.lazy').then((d) => d.Route))
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -263,7 +265,7 @@ const SponsorsAllRoute = SponsorsAllRouteImport.update({
   id: '/all',
   path: '/all',
   getParentRoute: () => SponsorsRoute,
-} as any)
+} as any).lazy(() => import('./routes/sponsors.all.lazy').then((d) => d.Route))
 const SchoolsDpaRoute = SchoolsDpaRouteImport.update({
   id: '/schools_/dpa',
   path: '/schools/dpa',
@@ -283,7 +285,7 @@ const RShareIdRoute = RShareIdRouteImport.update({
   id: '/r/$shareId',
   path: '/r/$shareId',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/r.$shareId.lazy').then((d) => d.Route))
 const LoginVerify2faRoute = LoginVerify2faRouteImport.update({
   id: '/login_/verify-2fa',
   path: '/login/verify-2fa',
@@ -308,7 +310,7 @@ const CoursesSlugRoute = CoursesSlugRouteImport.update({
   id: '/courses/$slug',
   path: '/courses/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/courses.$slug.lazy').then((d) => d.Route))
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',

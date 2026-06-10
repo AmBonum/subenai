@@ -266,10 +266,15 @@ export function BlogPostBody({ mdx }: { mdx: string }) {
           td: ({ children }) => <td className="px-4 py-3 align-top">{children}</td>,
           img: ({ src, alt }) => (
             <figure className="my-8">
+              {/* `auto 16/9` reserves a 16:9 box before the image loads
+                  (kills the CLS of dimension-less markdown images) but
+                  switches to the intrinsic ratio once metadata arrives —
+                  no cropping or letterboxing for non-16:9 images. */}
               <img
                 src={src}
                 alt={alt ?? ""}
                 loading="lazy"
+                style={{ aspectRatio: "auto 16 / 9" }}
                 className="w-full rounded-xl border border-border"
               />
               {alt && (

@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePublicTemplateBySlug } from "@/lib/platform/queries";
 import { buildTemplateCreativeWorkJsonLd } from "@/lib/seo/templates-jsonld";
+import { jsonLdString } from "@/lib/seo/json-ld";
 
 export const Route = createLazyFileRoute("/sablony/$slug")({
   component: SablonyDetailPage,
@@ -71,7 +72,7 @@ function SablonyDetailPage() {
       <script
         type="application/ld+json"
         data-testid="sablony-detail-jsonld"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
       />
 
       <nav className="mb-6 text-sm" data-testid="sablony-detail-breadcrumb">

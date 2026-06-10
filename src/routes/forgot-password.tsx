@@ -49,7 +49,7 @@ function ForgotPasswordPage() {
       <Card className="w-full max-w-sm" data-testid="forgot-card">
         <CardHeader>
           <CardTitle data-testid="forgot-heading">{t("title")}</CardTitle>
-          <CardDescription>{t("subtitle")}</CardDescription>
+          <CardDescription data-testid="forgot-subtitle">{t("subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           {success ? (

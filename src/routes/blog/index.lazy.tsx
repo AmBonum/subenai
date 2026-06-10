@@ -14,6 +14,7 @@ import {
 import { isPillarSlug } from "@/lib/blog/pillar-slugs";
 import { useBlogPostList } from "@/lib/blog/queries";
 import { buildBlogIndexJsonLd } from "@/lib/seo/blog-jsonld";
+import { jsonLdString } from "@/lib/seo/json-ld";
 import { formatArticleCount } from "@/lib/blog/slovak-plurals";
 import { useState } from "react";
 
@@ -104,7 +105,7 @@ function BlogIndexPage() {
   const handleCategoryChange = (next: string | null): void => {
     void navigate({
       to: "/blog",
-      search: (prev) => ({ ...prev, cat: next ?? undefined }),
+      search: (prev: Record<string, unknown>) => ({ ...prev, cat: next ?? undefined }),
       replace: true,
     });
     if (lastFilterRef.current !== next) {
@@ -119,7 +120,7 @@ function BlogIndexPage() {
   const handleClearFilters = (): void => {
     void navigate({
       to: "/blog",
-      search: (prev) => ({ ...prev, cat: undefined }),
+      search: (prev: Record<string, unknown>) => ({ ...prev, cat: undefined }),
       replace: true,
     });
     setSearchQuery("");
@@ -209,7 +210,7 @@ function BlogIndexPage() {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(buildBlogIndexJsonLd(query.data)),
+            __html: jsonLdString(buildBlogIndexJsonLd(query.data)),
           }}
           data-testid="blog-index-jsonld"
         />

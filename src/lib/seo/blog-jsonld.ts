@@ -31,7 +31,7 @@ export function buildArticleJsonLd(post: BlogPostDetail): Record<string, unknown
       url: SITE_ORIGIN,
       logo: { "@type": "ImageObject", url: PUBLISHER_LOGO },
     },
-    image: post.hero_image_url ?? post.og_image_url ?? PUBLISHER_LOGO,
+    image: post.og_image_url ?? post.hero_image_url ?? PUBLISHER_LOGO,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     articleSection: post.category.name,
     keywords: post.primary_keyword ?? undefined,

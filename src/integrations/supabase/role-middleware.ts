@@ -14,12 +14,15 @@
 import { redirect } from "@tanstack/react-router";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { getAALStatus, listFactors } from "@/lib/auth/mfa";
 
+type AppRole = Database["public"]["Enums"]["app_role"];
+
 export interface RoleContext {
   session: Session;
-  role: string;
+  role: AppRole;
 }
 
 /**
@@ -29,7 +32,7 @@ export interface RoleContext {
  * "admin" role the session must additionally have currentLevel === "aal2";
  * AAL1 admin sessions are redirected to verify/enroll.
  */
-export async function requireRole(role: string, redirectTo?: string): Promise<RoleContext> {
+export async function requireRole(role: AppRole, redirectTo?: string): Promise<RoleContext> {
   const { session } = await requireSupabaseAuth(redirectTo);
   const { data, error } = await supabase.rpc("has_role", {
     _user_id: session.user.id,

@@ -44,7 +44,9 @@ export const Route = createFileRoute("/courses/")({
         { property: "og:type", content: "website" },
         { property: "og:url", content: url },
         { property: "og:locale", content: "sk_SK" },
+        { property: "og:image", content: `${SITE_ORIGIN}/og-default.png` },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: `${SITE_ORIGIN}/og-default.png` },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [

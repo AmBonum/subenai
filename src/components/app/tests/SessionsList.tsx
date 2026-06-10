@@ -5,7 +5,7 @@
 // RLS owns access control; this component only shapes the request +
 // renders rows. Identity hierarchy: name → email → "Anonymný respondent".
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 
@@ -61,8 +61,25 @@ export function SessionsList({ testId }: Props) {
   const [sort, setSort] = useState<TestSessionsSort>("started_at_desc");
   const [status, setStatus] = useState<TestSessionsStatus>("all");
   const [search, setSearch] = useState("");
+  // Debounce the raw input before it reaches the query key — otherwise
+  // every keystroke fires a Supabase round-trip. Page resets when the
+  // debounced value commits, not per keystroke.
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(0);
+    }, 300);
+    return () => window.clearTimeout(id);
+  }, [search]);
 
-  const sessionsQ = useTestSessions(testId, { page, pageSize, sort, status, search });
+  const sessionsQ = useTestSessions(testId, {
+    page,
+    pageSize,
+    sort,
+    status,
+    search: debouncedSearch,
+  });
   const exportMut = useExportTestSessionsCsv(testId);
 
   const total = sessionsQ.data?.total ?? 0;
@@ -106,7 +123,7 @@ export function SessionsList({ testId }: Props) {
             id="sessions-search"
             value={search}
             placeholder={t("filter_search_placeholder")}
-            onChange={(e) => onFilterChange(() => setSearch(e.target.value))}
+            onChange={(e) => setSearch(e.target.value)}
             data-testid="test-sessions-list-search-input"
           />
         </div>

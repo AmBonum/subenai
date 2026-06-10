@@ -55,6 +55,16 @@ export default defineConfig({
           ) {
             return "vendor-react";
           }
+          // Pin the tiny className utilities next to React. Without an
+          // explicit bucket Rollup colocated them into vendor-charts,
+          // chaining the 400KB recharts chunk into every page load.
+          if (
+            id.includes("/clsx/") ||
+            id.includes("tailwind-merge") ||
+            id.includes("class-variance-authority")
+          ) {
+            return "vendor-react";
+          }
           if (id.includes("@tanstack/")) return "vendor-tanstack";
           if (id.includes("@supabase/")) return "vendor-supabase";
           if (id.includes("@radix-ui/")) return "vendor-radix";
