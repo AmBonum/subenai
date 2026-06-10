@@ -1962,7 +1962,6 @@ export type Database = {
           display_link: string | null;
           display_message: string | null;
           created_at: string;
-          net_amount_eur: number;
           has_refund: boolean;
         };
         Relationships: [];
@@ -2036,6 +2035,14 @@ export type Database = {
         Args: { test_id: string };
         Returns: number;
       };
+      replace_test_questions: {
+        Args: { p_test_id: string; p_question_ids: string[] };
+        Returns: void;
+      };
+      duplicate_test: {
+        Args: { p_test_id: string };
+        Returns: string;
+      };
       verify_test_password: {
         Args: { p_share_id: string; p_password: string };
         Returns: Array<{ verified: boolean; current_pv: number }>;
@@ -2092,6 +2099,10 @@ export type Database = {
       };
       has_role: {
         Args: { _user_id: string; _role: Database["public"]["Enums"]["app_role"] };
+        Returns: boolean;
+      };
+      is_aal2: {
+        Args: Record<string, never>;
         Returns: boolean;
       };
       generate_mfa_backup_codes: {
@@ -2209,6 +2220,22 @@ export type Database = {
         Returns: {
           slug: string;
           question_ids: string[];
+        }[];
+      };
+      approve_template_submission: {
+        Args: { p_submission_id: string };
+        Returns: string;
+      };
+      reject_template_submission: {
+        Args: { p_submission_id: string; p_reason: string };
+        Returns: void;
+      };
+      list_admin_users: {
+        Args: Record<string, never>;
+        Returns: {
+          user_id: string;
+          email: string;
+          display_name: string;
         }[];
       };
     };

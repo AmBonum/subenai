@@ -5335,57 +5335,13 @@ GRANT EXECUTE ON FUNCTION public.get_ticket_thread_for_view_token(uuid, text, te
 COMMENT ON FUNCTION public.get_ticket_thread_for_view_token(uuid, text, text) IS
 'E48 anonymous ticket thread reader. SECURITY DEFINER, gated by SHA-256 view-token compare. audit_log INSERT must remain AFTER the IF NOT FOUND guard — otherwise anon callers can pollute the audit trail by spraying random tokens (E48 security audit, finding A5).';
 
-CREATE OR REPLACE FUNCTION public.request_attachment_signed_url(p_attachment_id uuid)
-RETURNS jsonb
-LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public, pg_temp
-AS $$
-DECLARE
-  v_attachment public.support_ticket_attachments;
-  v_uid uuid := auth.uid();
-  v_aal text;
-BEGIN
-  IF v_uid IS NULL THEN
-    RAISE EXCEPTION 'not_authenticated';
-  END IF;
-  IF NOT public.has_role(v_uid, 'admin') THEN
-    RAISE EXCEPTION 'not_authorized: admin role required';
-  END IF;
-
-  v_aal := (auth.jwt() ->> 'aal');
-  IF v_aal IS DISTINCT FROM 'aal2' THEN
-    RAISE EXCEPTION 'not_authorized: aal2 required';
-  END IF;
-
-  SELECT * INTO v_attachment FROM public.support_ticket_attachments
-  WHERE id = p_attachment_id;
-
-  IF NOT FOUND THEN
-    RAISE EXCEPTION 'not_found';
-  END IF;
-  IF v_attachment.scan_status <> 'clean' THEN
-    RAISE EXCEPTION 'not_clean';
-  END IF;
-
-  PERFORM public.log_audit_event(
-    'support_attachment_download_url_issued',
-    'support_ticket_attachments',
-    v_attachment.id::text,
-    true,
-    jsonb_build_object('ticket_id', v_attachment.ticket_id, 'filename', v_attachment.filename)
-  );
-
-  RETURN jsonb_build_object(
-    'storage_path', v_attachment.storage_path,
-    'filename', v_attachment.filename,
-    'mime_type', v_attachment.mime_type
-  );
-END;
-$$;
-
-REVOKE EXECUTE ON FUNCTION public.request_attachment_signed_url(uuid) FROM PUBLIC, anon;
-GRANT EXECUTE ON FUNCTION public.request_attachment_signed_url(uuid) TO authenticated;
+-- NOTE (SEC-2026-06 drift fix): the legacy 1-arg
+-- request_attachment_signed_url(uuid) overload that used to be created
+-- here was removed from the bootstrap. 20260522170000 replaced it with
+-- the 2-arg (uuid, boolean DEFAULT false) form and dropped the 1-arg
+-- overload; creating it here only to drop it later risked PostgREST
+-- overload ambiguity if the later section drifted. The 2-arg
+-- definition appears further down (mirror of 20260522170000).
 
 CREATE OR REPLACE FUNCTION public.transition_ticket_status(
   p_ticket_id uuid,
@@ -8227,3 +8183,1409 @@ CREATE POLICY test_sets_authenticated_public_select
   FOR SELECT
   TO authenticated
   USING (true);
+
+-- ============================================================================
+-- SEC-2026-06 (1) — public.is_aal2() AAL2 helper
+-- (mirror of supabase/migrations/20260610100000_is_aal2_helper.sql)
+-- ============================================================================
+
+-- SEC-2026-06 (1) — public.is_aal2() helper: single source of truth for AAL2.
+--
+-- Problem: several admin RPCs check the literal `auth.jwt() ->> 'aal'`.
+-- That check diverges from the route guard (`getAALStatus()` in
+-- src/lib/auth/mfa.ts), which ALSO accepts the backup-code recovery
+-- window stamped by consume_mfa_backup_code() into
+-- auth.users.raw_app_meta_data.aal2_via_backup_until (see migration
+-- 20260520900000_aal2_via_backup_metadata.sql). Net effect: an admin
+-- recovered via backup code passes the route guard but every AAL2-gated
+-- RPC raises 'not_authorized: aal2 required'.
+--
+-- This helper mirrors the client-side logic exactly:
+--   aal2 = JWT claim aal = 'aal2'
+--        OR raw_app_meta_data.aal2_via_backup_until is in the future.
+--
+-- SECURITY DEFINER because `authenticated` cannot read auth.users; the
+-- metadata timestamp is written only by consume_mfa_backup_code() after
+-- a successful backup-code match, so it cannot be forged client-side.
+
+CREATE OR REPLACE FUNCTION public.is_aal2()
+RETURNS boolean
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_until text;
+BEGIN
+  IF (auth.jwt() ->> 'aal') = 'aal2' THEN
+    RETURN true;
+  END IF;
+
+  SELECT raw_app_meta_data ->> 'aal2_via_backup_until'
+    INTO v_until
+    FROM auth.users
+    WHERE id = auth.uid();
+
+  IF v_until IS NULL THEN
+    RETURN false;
+  END IF;
+
+  BEGIN
+    RETURN v_until::timestamptz > now();
+  EXCEPTION WHEN OTHERS THEN
+    -- Malformed timestamp metadata never grants AAL2.
+    RETURN false;
+  END;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.is_aal2() FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.is_aal2() TO authenticated;
+
+COMMENT ON FUNCTION public.is_aal2() IS
+  'True when the caller''s JWT carries aal=aal2 OR the backup-code '
+  'recovery window (raw_app_meta_data.aal2_via_backup_until, stamped by '
+  'consume_mfa_backup_code) has not expired. Use this — never the '
+  'literal auth.jwt()->>''aal'' — in AAL2-gated RPCs so DB checks stay '
+  'consistent with the client route guard (getAALStatus).';
+
+-- ============================================================================
+-- SEC-2026-06 (2+3) — GDPR RPCs: in-database AAL2 + audit logging
+-- (mirror of supabase/migrations/20260610101000_gdpr_rpcs_aal2_audit.sql)
+-- ============================================================================
+
+-- SEC-2026-06 (2+3) — Admin GDPR RPCs: enforce AAL2 in-database + audit
+-- logging for every dossier action.
+--
+-- The E46 header comment (20260521230000_admin_user_data_rpcs.sql)
+-- claimed AAL2 enforcement belongs to the app layer only. That left the
+-- four GDPR RPCs callable by any aal1 admin session via PostgREST,
+-- bypassing the /admin route guard entirely. This migration re-creates
+-- erase_user_data, export_user_data_admin, rectify_user_data and
+-- cancel_pending_erasure with:
+--
+--   1. `IF NOT public.is_aal2() THEN RAISE ...` right after the admin
+--      role check (20260610100000_is_aal2_helper.sql — also honours the
+--      backup-code recovery window, so recovered admins are not locked
+--      out the way a literal auth.jwt()->>'aal' check would).
+--   2. public.log_audit_event(...) calls (same pattern as the E48
+--      ticket RPCs) AFTER authorization passes and the action succeeds:
+--      erase (both anonymize and hard-delete-enqueue paths), export
+--      (pii_access = true), rectify, cancel.
+--
+-- rectify_user_data's previous direct `INSERT INTO public.audit_log`
+-- is replaced by log_audit_event with structured jsonb details (old /
+-- new value) — same data, sanctioned insert path.
+--
+-- Bodies are otherwise identical to the latest definitions in
+-- 20260521230000_admin_user_data_rpcs.sql and
+-- 20260521250000_e46_6_rectify_user_data.sql.
+
+-- ============================================================================
+-- 1. export_user_data_admin(uuid) — Art. 15 admin export.
+-- ============================================================================
+CREATE OR REPLACE FUNCTION public.export_user_data_admin(p_user_id uuid)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_caller   uuid := auth.uid();
+  v_email    text;
+  v_payload  jsonb;
+BEGIN
+  IF v_caller IS NULL THEN
+    RAISE EXCEPTION 'unauthorized'
+      USING ERRCODE = '42501', HINT = 'admin Art. 15 export requires authentication';
+  END IF;
+  IF NOT public.has_role(v_caller, 'admin') THEN
+    RAISE EXCEPTION 'forbidden'
+      USING ERRCODE = '42501', HINT = 'admin role required';
+  END IF;
+  IF NOT public.is_aal2() THEN
+    RAISE EXCEPTION 'not_authorized: aal2 required' USING ERRCODE = '42501';
+  END IF;
+  IF p_user_id IS NULL THEN
+    RAISE EXCEPTION 'p_user_id required'
+      USING ERRCODE = '22023';
+  END IF;
+
+  SELECT email INTO v_email FROM public.profiles WHERE id = p_user_id;
+
+  -- E46.1 scope: identity + governance + DSR/DPA history. The full
+  -- 30-table dossier is built incrementally in E46.3 — each section
+  -- the UI surfaces extends this jsonb_build_object. Keeping the
+  -- initial payload focused on what an Art. 15 response actually
+  -- needs (who you are, what GDPR-relevant history we have on you).
+  v_payload := jsonb_build_object(
+    'generated_at', now(),
+    'generated_by', v_caller,
+    'subject', jsonb_build_object(
+      'user_id', p_user_id,
+      'email', v_email
+    ),
+    'rights', jsonb_build_object(
+      'access',      'GDPR Art. 15',
+      'portability', 'GDPR Art. 20',
+      'erasure',     'GDPR Art. 17 — see erase_user_data() RPC',
+      'rectification','GDPR Art. 16 — dossier section edit UI (E46.6)'
+    ),
+    'records', jsonb_build_object(
+      'profile',
+        COALESCE(
+          (SELECT to_jsonb(p) FROM public.profiles p WHERE p.id = p_user_id),
+          'null'::jsonb
+        ),
+      'profile_preferences',
+        COALESCE(
+          (SELECT to_jsonb(pp) FROM public.profile_preferences pp WHERE pp.user_id = p_user_id),
+          'null'::jsonb
+        ),
+      'user_roles',
+        COALESCE(
+          (SELECT jsonb_agg(to_jsonb(ur) ORDER BY ur.role)
+             FROM public.user_roles ur
+             WHERE ur.user_id = p_user_id),
+          '[]'::jsonb
+        ),
+      'dsr_requests',
+        COALESCE(
+          (SELECT jsonb_agg(to_jsonb(d) ORDER BY d.created_at DESC)
+             FROM public.dsr_requests d
+             WHERE v_email IS NOT NULL AND d.requester_email = v_email),
+          '[]'::jsonb
+        ),
+      'dpa_requests',
+        COALESCE(
+          (SELECT jsonb_agg(to_jsonb(d) ORDER BY d.created_at DESC)
+             FROM public.dpa_requests d
+             WHERE v_email IS NOT NULL AND d.contact_email = v_email),
+          '[]'::jsonb
+        ),
+      'pending_erasure',
+        COALESCE(
+          (SELECT to_jsonb(pe) FROM public.pending_erasures pe WHERE pe.user_id = p_user_id),
+          'null'::jsonb
+        )
+    )
+  );
+
+  PERFORM public.log_audit_event(
+    'dsr_export_admin',
+    'user',
+    p_user_id::text,
+    true,
+    jsonb_build_object('subject_email', v_email)
+  );
+
+  RETURN v_payload;
+END;
+$$;
+
+COMMENT ON FUNCTION public.export_user_data_admin(uuid) IS
+  'E46.1 — Admin variant of export_my_data(). Returns JSON of every '
+  'GDPR-relevant record for the target user_id. Caller must have admin '
+  'role AND AAL2 (is_aal2 — enforced in-database since SEC-2026-06). '
+  'Every call is audit-logged with pii_access=true.';
+
+-- ============================================================================
+-- 2. erase_user_data(uuid, text)
+-- ============================================================================
+CREATE OR REPLACE FUNCTION public.erase_user_data(p_user_id uuid, p_strategy text)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_caller        uuid := auth.uid();
+  v_target_email  text;
+  v_execute_at    timestamptz;
+  v_snapshot      jsonb;
+  v_counts        jsonb;
+  v_audit_id      uuid;
+  v_n_profiles    integer := 0;
+  v_n_dsr         integer := 0;
+  v_n_dpa         integer := 0;
+  v_n_attempts    integer := 0;
+  v_n_respondents integer := 0;
+BEGIN
+  IF v_caller IS NULL THEN
+    RAISE EXCEPTION 'unauthorized'
+      USING ERRCODE = '42501', HINT = 'erase_user_data requires authentication';
+  END IF;
+  IF NOT public.has_role(v_caller, 'admin') THEN
+    RAISE EXCEPTION 'forbidden'
+      USING ERRCODE = '42501', HINT = 'admin role required';
+  END IF;
+  IF NOT public.is_aal2() THEN
+    RAISE EXCEPTION 'not_authorized: aal2 required' USING ERRCODE = '42501';
+  END IF;
+  IF p_user_id IS NULL THEN
+    RAISE EXCEPTION 'p_user_id required' USING ERRCODE = '22023';
+  END IF;
+  IF p_strategy NOT IN ('anonymize', 'hard_delete') THEN
+    RAISE EXCEPTION 'invalid_strategy: % (expected anonymize | hard_delete)', p_strategy
+      USING ERRCODE = '22023';
+  END IF;
+  -- Refuse on a self-target — an admin should not be able to wipe
+  -- themselves; if they want out, use the user-facing path.
+  IF p_user_id = v_caller THEN
+    RAISE EXCEPTION 'cannot_target_self'
+      USING ERRCODE = 'P0001',
+        HINT = 'Use /app/account/profile self-service to delete your own account.';
+  END IF;
+
+  -- Block both strategies if a Stripe sub looks active.
+  PERFORM public.assert_no_active_sponsorship(p_user_id);
+
+  SELECT email INTO v_target_email FROM public.profiles WHERE id = p_user_id;
+
+  IF p_strategy = 'anonymize' THEN
+    -- D-1: NULL only PII columns. Statistical / structural rows
+    -- (attempts.score, dsr_requests.status, etc.) stay so Art. 30
+    -- records-of-processing audits still work.
+
+    -- profiles — NULL identity strings; keep id + created_at + role
+    UPDATE public.profiles
+       SET email = NULL,
+           display_name = NULL,
+           avatar_initials = NULL
+     WHERE id = p_user_id;
+    GET DIAGNOSTICS v_n_profiles = ROW_COUNT;
+
+    -- DSR requests for this user — NULL the requester_email + note
+    -- (note may contain free-text PII). Keep status + type + dates.
+    IF v_target_email IS NOT NULL THEN
+      UPDATE public.dsr_requests
+         SET requester_email = NULL,
+             note = NULL
+       WHERE requester_email = v_target_email;
+      GET DIAGNOSTICS v_n_dsr = ROW_COUNT;
+    END IF;
+
+    -- DPA requests where this user was the school contact.
+    IF v_target_email IS NOT NULL THEN
+      UPDATE public.dpa_requests
+         SET contact_email = NULL,
+             contact_name = NULL,
+             anonymized_at = COALESCE(anonymized_at, now())
+       WHERE contact_email = v_target_email;
+      GET DIAGNOSTICS v_n_dpa = ROW_COUNT;
+    END IF;
+
+    -- attempts — for edu mode rows owned by this user as a
+    -- respondent, NULL the PII. We do NOT touch admin-of-test
+    -- attempts here (those are anonymous respondent rows owned
+    -- by another author).
+    UPDATE public.attempts
+       SET respondent_email = NULL,
+           respondent_name = NULL
+     WHERE respondent_email = v_target_email
+        OR (respondent_name IS NOT NULL AND v_target_email IS NOT NULL
+            AND respondent_email IS NULL);
+    GET DIAGNOSTICS v_n_attempts = ROW_COUNT;
+
+    -- respondents table (edu mode respondent registry).
+    UPDATE public.respondents
+       SET email = NULL,
+           display_name = NULL
+     WHERE email = v_target_email;
+    GET DIAGNOSTICS v_n_respondents = ROW_COUNT;
+
+    v_counts := jsonb_build_object(
+      'profiles', v_n_profiles,
+      'dsr_requests', v_n_dsr,
+      'dpa_requests', v_n_dpa,
+      'attempts', v_n_attempts,
+      'respondents', v_n_respondents
+    );
+
+    PERFORM public.log_audit_event(
+      'dsr_erase_anonymize_executed',
+      'user',
+      p_user_id::text,
+      true,
+      jsonb_build_object(
+        'strategy', 'anonymize',
+        'rows_affected', v_counts
+      )
+    );
+
+    RETURN jsonb_build_object(
+      'strategy', 'anonymize',
+      'executed_at', now(),
+      'rows_affected', v_counts
+    );
+  END IF;
+
+  -- p_strategy = 'hard_delete' — enqueue, do not destroy.
+  --
+  -- 1. Snapshot the user's data into pre_delete_snapshot. This is
+  --    the recovery surface: if the destroy step turns out to be a
+  --    mistake, an operator with a database backup can reconstruct
+  --    everything from this jsonb.
+  -- 2. Set execute_at = now() + 5 min (D-3).
+  -- 3. Foreign keys with ON DELETE CASCADE on auth.users.id will
+  --    take care of the actual data wipe when the CF Function cron
+  --    (E46.5) calls auth.admin.deleteUser(p_user_id) post-window.
+  v_snapshot := public.export_user_data_admin(p_user_id);
+  v_execute_at := now() + interval '5 minutes';
+
+  v_audit_id := public.log_audit_event(
+    'dsr_hard_delete_enqueued',
+    'user',
+    p_user_id::text,
+    true,
+    jsonb_build_object(
+      'strategy', 'hard_delete',
+      'execute_at', v_execute_at,
+      'grace_window_minutes', 5
+    )
+  );
+
+  INSERT INTO public.pending_erasures
+    (user_id, strategy, execute_at, initiated_by, audit_log_id, pre_delete_snapshot)
+  VALUES
+    (p_user_id, 'hard_delete', v_execute_at, v_caller, v_audit_id, v_snapshot)
+  ON CONFLICT (user_id) DO UPDATE
+    SET execute_at = EXCLUDED.execute_at,
+        initiated_by = EXCLUDED.initiated_by,
+        audit_log_id = EXCLUDED.audit_log_id,
+        pre_delete_snapshot = EXCLUDED.pre_delete_snapshot,
+        created_at = now();
+
+  RETURN jsonb_build_object(
+    'strategy', 'hard_delete',
+    'enqueued_at', now(),
+    'execute_at', v_execute_at,
+    'grace_window_minutes', 5,
+    'snapshot_bytes', length(v_snapshot::text)
+  );
+END;
+$$;
+
+COMMENT ON FUNCTION public.erase_user_data(uuid, text) IS
+  'E46.1 — Admin GDPR Art. 17 fulfilment. Strategy = anonymize | '
+  'hard_delete. Anonymize NULLs PII columns inline (synchronous). '
+  'Hard delete enqueues a pending_erasures row with 5-minute grace '
+  'window; actual auth.users deletion is processed by the E46.5 cron '
+  'via Supabase Admin API. Both strategies refuse self-target + '
+  'refuse if assert_no_active_sponsorship() raises. Requires admin '
+  'role AND AAL2 (is_aal2). Both paths are audit-logged.';
+
+-- ============================================================================
+-- 3. cancel_pending_erasure(uuid)
+-- ============================================================================
+CREATE OR REPLACE FUNCTION public.cancel_pending_erasure(p_user_id uuid)
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_caller uuid := auth.uid();
+  v_deleted integer;
+BEGIN
+  IF v_caller IS NULL THEN
+    RAISE EXCEPTION 'unauthorized' USING ERRCODE = '42501';
+  END IF;
+  IF NOT public.has_role(v_caller, 'admin') THEN
+    RAISE EXCEPTION 'forbidden' USING ERRCODE = '42501';
+  END IF;
+  IF NOT public.is_aal2() THEN
+    RAISE EXCEPTION 'not_authorized: aal2 required' USING ERRCODE = '42501';
+  END IF;
+
+  -- Only cancel if the deletion has not yet executed (the cron may
+  -- be in flight; once it's past execute_at the row is presumed
+  -- to have been processed and a cancel is meaningless).
+  DELETE FROM public.pending_erasures
+   WHERE user_id = p_user_id
+     AND execute_at > now();
+  GET DIAGNOSTICS v_deleted = ROW_COUNT;
+
+  IF v_deleted > 0 THEN
+    PERFORM public.log_audit_event(
+      'dsr_hard_delete_cancelled',
+      'user',
+      p_user_id::text,
+      false,
+      jsonb_build_object('rows_cancelled', v_deleted)
+    );
+  END IF;
+
+  RETURN v_deleted > 0;
+END;
+$$;
+
+COMMENT ON FUNCTION public.cancel_pending_erasure(uuid) IS
+  'E46.1 — Removes a hard-delete row from pending_erasures if the '
+  '5-minute grace window has not elapsed. Returns true on success, '
+  'false if no row matched or the window has expired. Requires admin '
+  'role AND AAL2 (is_aal2). Successful cancels are audit-logged.';
+
+-- ============================================================================
+-- 4. rectify_user_data(uuid, text, text, text)
+-- ============================================================================
+CREATE OR REPLACE FUNCTION public.rectify_user_data(
+  p_user_id   uuid,
+  p_table     text,
+  p_column    text,
+  p_new_value text
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_caller    uuid := auth.uid();
+  v_old_value text;
+BEGIN
+  IF v_caller IS NULL THEN
+    RAISE EXCEPTION 'unauthorized'
+      USING ERRCODE = '42501', HINT = 'rectify_user_data requires authentication';
+  END IF;
+  IF NOT public.has_role(v_caller, 'admin') THEN
+    RAISE EXCEPTION 'forbidden'
+      USING ERRCODE = '42501', HINT = 'admin role required';
+  END IF;
+  IF NOT public.is_aal2() THEN
+    RAISE EXCEPTION 'not_authorized: aal2 required' USING ERRCODE = '42501';
+  END IF;
+  IF p_user_id IS NULL THEN
+    RAISE EXCEPTION 'p_user_id required' USING ERRCODE = '22023';
+  END IF;
+  IF p_new_value IS NULL THEN
+    -- A NULL rectification would be an erasure dressed as a fix.
+    -- Force operators through the proper Art. 17 path.
+    RAISE EXCEPTION 'p_new_value cannot be NULL — use erase_user_data() for clearing fields'
+      USING ERRCODE = '22023';
+  END IF;
+  IF length(p_new_value) > 200 THEN
+    -- Defence in depth: profiles.display_name has no explicit length
+    -- constraint but normal display names are <80 chars. Cap to 200
+    -- so a malformed input doesn't write 10MB of garbage.
+    RAISE EXCEPTION 'p_new_value too long (max 200 chars)' USING ERRCODE = '22001';
+  END IF;
+
+  -- Whitelist of (table, column) pairs we know how to rectify.
+  -- Each new entry must add (a) the capture-old-value SELECT, (b) the
+  -- UPDATE statement, (c) a corresponding UI driver in the dossier.
+  IF p_table = 'profiles' AND p_column = 'display_name' THEN
+    SELECT display_name INTO v_old_value FROM public.profiles WHERE id = p_user_id;
+    UPDATE public.profiles
+       SET display_name = p_new_value
+     WHERE id = p_user_id;
+
+    -- If the UPDATE matched 0 rows we silently no-op the audit
+    -- (no PII change happened). Raise instead so the operator sees it.
+    IF NOT FOUND THEN
+      RAISE EXCEPTION 'profile not found for user_id %', p_user_id
+        USING ERRCODE = '02000';
+    END IF;
+  ELSE
+    RAISE EXCEPTION
+      'rectification not supported for %.%', p_table, p_column
+      USING ERRCODE = '42501',
+            HINT = 'E46.6 ships profiles.display_name only. Add to the whitelist + wire a dossier UI driver to support more.';
+  END IF;
+
+  -- Audit log entry — captures the OLD and NEW values for forensic
+  -- accountability per GDPR Art. 5(2). Routed through log_audit_event
+  -- (the single sanctioned audit_log INSERT path) with structured
+  -- jsonb details.
+  PERFORM public.log_audit_event(
+    'dsr_rectification_applied',
+    'profile',
+    p_user_id::text,
+    true,
+    jsonb_build_object(
+      'table', p_table,
+      'column', p_column,
+      'old_value', v_old_value,
+      'new_value', p_new_value
+    )
+  );
+
+  RETURN jsonb_build_object(
+    'table', p_table,
+    'column', p_column,
+    'old_value', v_old_value,
+    'new_value', p_new_value,
+    'applied_at', now()
+  );
+END;
+$$;
+
+COMMENT ON FUNCTION public.rectify_user_data(uuid, text, text, text) IS
+  'E46.6 — Admin GDPR Art. 16 rectification. Whitelisted (table, column) '
+  'pairs only — currently profiles.display_name. Captures OLD value into '
+  'audit_log details for accountability. NULL new_value rejected (use '
+  'erase_user_data() instead). Requires admin role AND AAL2 (is_aal2).';
+
+-- ============================================================================
+-- SEC-2026-06 (2) — E48 ticket RPCs unified on is_aal2()
+-- (mirror of supabase/migrations/20260610102000_ticket_rpcs_unified_aal2.sql)
+-- ============================================================================
+
+-- SEC-2026-06 (2) — E48 ticket RPCs: swap literal auth.jwt()->>'aal'
+-- checks for public.is_aal2().
+--
+-- The route guard (getAALStatus) accepts the backup-code recovery
+-- window (aal2_via_backup_until app metadata) as AAL2, but these RPCs
+-- checked the raw JWT claim only — a backup-code-recovered admin could
+-- open /admin yet every ticket mutation returned 403. is_aal2()
+-- (20260610100000) implements the guard's exact semantics in-database.
+--
+-- Function bodies are otherwise byte-identical to their latest
+-- definitions (transition_ticket_status from 20260521260000;
+-- assign/unassign/request_attachment_signed_url from 20260522170000).
+
+-- ============================================================================
+-- transition_ticket_status (admin + AAL2; state-machine enforced)
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION public.transition_ticket_status(
+  p_ticket_id uuid,
+  p_new_status public.support_ticket_status,
+  p_note text DEFAULT NULL
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_old_status public.support_ticket_status;
+  v_uid uuid := auth.uid();
+BEGIN
+  IF v_uid IS NULL OR NOT public.has_role(v_uid, 'admin') THEN
+    RAISE EXCEPTION 'not_authorized: admin role required';
+  END IF;
+
+  IF NOT public.is_aal2() THEN
+    RAISE EXCEPTION 'not_authorized: aal2 required';
+  END IF;
+
+  SELECT status INTO v_old_status FROM public.support_tickets
+  WHERE id = p_ticket_id AND deleted_at IS NULL
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'not_found';
+  END IF;
+
+  IF NOT (
+    (v_old_status = 'new' AND p_new_status = 'in_progress') OR
+    (v_old_status = 'in_progress' AND p_new_status IN ('waiting_user', 'resolved')) OR
+    (v_old_status = 'waiting_user' AND p_new_status IN ('in_progress', 'resolved')) OR
+    (v_old_status = 'resolved' AND p_new_status IN ('reopened', 'archived')) OR
+    (v_old_status = 'reopened' AND p_new_status = 'in_progress') OR
+    (v_old_status = 'archived' AND p_new_status = 'reopened')
+  ) THEN
+    RAISE EXCEPTION 'invalid_transition: % -> %', v_old_status, p_new_status;
+  END IF;
+
+  UPDATE public.support_tickets
+  SET status = p_new_status,
+      resolved_at = CASE WHEN p_new_status = 'resolved' THEN now() ELSE resolved_at END,
+      archived_at = CASE WHEN p_new_status = 'archived' THEN now() ELSE archived_at END
+  WHERE id = p_ticket_id;
+
+  PERFORM public.log_audit_event(
+    'support_ticket_status_transitioned',
+    'support_tickets',
+    p_ticket_id::text,
+    true,
+    jsonb_build_object(
+      'from_status', v_old_status,
+      'to_status', p_new_status,
+      'note', p_note
+    )
+  );
+
+  RETURN jsonb_build_object(
+    'ticket_id', p_ticket_id,
+    'from_status', v_old_status,
+    'to_status', p_new_status
+  );
+END;
+$$;
+
+-- ============================================================================
+-- request_attachment_signed_url (admin + AAL2)
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION public.request_attachment_signed_url(
+  p_attachment_id uuid,
+  p_inline        boolean DEFAULT false
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_attachment public.support_ticket_attachments;
+  v_uid uuid := auth.uid();
+BEGIN
+  IF v_uid IS NULL THEN
+    RAISE EXCEPTION 'not_authenticated';
+  END IF;
+  IF NOT public.has_role(v_uid, 'admin') THEN
+    RAISE EXCEPTION 'not_authorized: admin role required';
+  END IF;
+
+  IF NOT public.is_aal2() THEN
+    RAISE EXCEPTION 'not_authorized: aal2 required';
+  END IF;
+
+  SELECT * INTO v_attachment FROM public.support_ticket_attachments
+  WHERE id = p_attachment_id;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'not_found';
+  END IF;
+
+  IF v_attachment.scan_status <> 'clean' THEN
+    RAISE EXCEPTION 'not_clean';
+  END IF;
+
+  PERFORM public.log_audit_event(
+    'support_attachment_download_url_issued',
+    'support_ticket_attachments',
+    v_attachment.id::text,
+    true,
+    jsonb_build_object(
+      'ticket_id', v_attachment.ticket_id,
+      'filename',  v_attachment.filename,
+      'inline',    p_inline
+    )
+  );
+
+  RETURN jsonb_build_object(
+    'storage_path', v_attachment.storage_path,
+    'filename',     v_attachment.filename,
+    'mime_type',    v_attachment.mime_type,
+    'inline',       p_inline
+  );
+END;
+$$;
+
+-- ============================================================================
+-- assign_admin_to_ticket (admin + AAL2)
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION public.assign_admin_to_ticket(
+  p_ticket_id uuid,
+  p_user_id   uuid
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions, pg_temp
+AS $$
+DECLARE
+  v_uid           uuid := auth.uid();
+  v_ticket_exists boolean;
+BEGIN
+  IF v_uid IS NULL OR NOT public.has_role(v_uid, 'admin') THEN
+    RAISE EXCEPTION 'not_authorized: admin role required';
+  END IF;
+  IF NOT public.is_aal2() THEN
+    RAISE EXCEPTION 'not_authorized: aal2 required';
+  END IF;
+  IF NOT public.has_role(p_user_id, 'admin') THEN
+    RAISE EXCEPTION 'invalid_assignee: target user is not an admin';
+  END IF;
+
+  SELECT EXISTS (
+    SELECT 1 FROM public.support_tickets
+    WHERE id = p_ticket_id AND deleted_at IS NULL
+  ) INTO v_ticket_exists;
+  IF NOT v_ticket_exists THEN
+    RAISE EXCEPTION 'not_found';
+  END IF;
+
+  INSERT INTO public.support_ticket_assignees (ticket_id, user_id, assigned_by)
+  VALUES (p_ticket_id, p_user_id, v_uid)
+  ON CONFLICT (ticket_id, user_id) DO NOTHING;
+
+  UPDATE public.support_tickets SET updated_at = now() WHERE id = p_ticket_id;
+
+  RETURN jsonb_build_object('ticket_id', p_ticket_id, 'user_id', p_user_id);
+END;
+$$;
+
+-- ============================================================================
+-- unassign_admin_from_ticket (admin + AAL2)
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION public.unassign_admin_from_ticket(
+  p_ticket_id uuid,
+  p_user_id   uuid
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions, pg_temp
+AS $$
+DECLARE
+  v_uid     uuid    := auth.uid();
+  v_deleted integer;
+BEGIN
+  IF v_uid IS NULL OR NOT public.has_role(v_uid, 'admin') THEN
+    RAISE EXCEPTION 'not_authorized: admin role required';
+  END IF;
+  IF NOT public.is_aal2() THEN
+    RAISE EXCEPTION 'not_authorized: aal2 required';
+  END IF;
+
+  DELETE FROM public.support_ticket_assignees
+   WHERE ticket_id = p_ticket_id AND user_id = p_user_id;
+  GET DIAGNOSTICS v_deleted = ROW_COUNT;
+
+  IF v_deleted > 0 THEN
+    UPDATE public.support_tickets SET updated_at = now() WHERE id = p_ticket_id;
+  END IF;
+
+  RETURN jsonb_build_object(
+    'ticket_id', p_ticket_id,
+    'user_id',   p_user_id,
+    'removed',   v_deleted > 0
+  );
+END;
+$$;
+
+-- ============================================================================
+-- SEC-2026-06 (4) — attempts demographics UPDATE window
+-- (mirror of supabase/migrations/20260610103000_attempts_demographics_update_window.sql)
+-- ============================================================================
+
+-- SEC-2026-06 (4) — Scope the attempts demographics UPDATE policy to
+-- recent rows.
+--
+-- 20260425174650 created `"Anyone can update demographics"` with
+-- USING (true) / WITH CHECK (true) — any anonymous client that learns
+-- (or enumerates) a share_id could rewrite the demographics / survey
+-- columns of ANY attempt forever. Score columns are protected by the
+-- forbid_attempt_score_changes trigger, but nickname / age_range /
+-- gender / city / country / survey answers were mutable indefinitely.
+--
+-- Legitimate write path (verified 2026-06-10): the ONLY attempts UPDATE
+-- in src/** is SurveyCard (src/components/quiz/survey/SurveyCard.tsx),
+-- rendered exclusively on the immediate post-test results screen inside
+-- TestFlow — minutes after the attempts row is inserted. The shared
+-- result page /r/$shareId is read-only (SELECT + self-service DELETE),
+-- so there is no edit-later path. A 24-hour window comfortably covers a
+-- results tab left open overnight while ending the indefinite
+-- tamper-by-share-id surface. attempts.created_at is immutable
+-- (forbid_attempt_score_changes raises on change), so the window cannot
+-- be extended from the client.
+
+DROP POLICY IF EXISTS "Anyone can update demographics" ON public.attempts;
+CREATE POLICY "Anyone can update demographics"
+ON public.attempts
+FOR UPDATE
+TO anon, authenticated
+USING (created_at > now() - interval '24 hours')
+WITH CHECK (created_at > now() - interval '24 hours');
+
+-- ============================================================================
+-- SEC-2026-06 (6) — dsr_requests user policies
+-- (mirror of supabase/migrations/20260610104000_dsr_requests_user_policies.sql)
+-- ============================================================================
+
+-- SEC-2026-06 (6) — dsr_requests: user-side INSERT + SELECT policies
+-- bound to auth.email().
+--
+-- 20260517000000_admin_hub_schema.sql shipped only
+-- dsr_requests_admin_read. The user-facing surface
+-- (useSubmitDSR / useUserDSRList in src/lib/platform/queries.ts, driven
+-- by DsrSubmitForm on /app/legal/dsr) inserts and selects directly from
+-- the authenticated client — with no matching policies those calls were
+-- denied by RLS, and the queries.ts comment ("RLS by requester_email
+-- match") described a policy that never existed.
+--
+-- The DSR form is reachable ONLY under /app (authenticated route);
+-- there is no logged-out submission path, so no anon policy is added.
+-- Binding both directions to auth.email() means a user can only file
+-- requests for, and read requests about, their own login e-mail —
+-- preventing both impersonated submissions and cross-user snooping on
+-- request history.
+
+CREATE POLICY dsr_requests_own_insert ON public.dsr_requests
+  FOR INSERT TO authenticated
+  WITH CHECK (requester_email = auth.email());
+
+CREATE POLICY dsr_requests_own_select ON public.dsr_requests
+  FOR SELECT TO authenticated
+  USING (requester_email = auth.email());
+
+-- ============================================================================
+-- SEC-2026-06 (7) — server-side respondent score
+-- (mirror of supabase/migrations/20260610105000_finalize_respondent_server_score.sql)
+-- ============================================================================
+
+-- SEC-2026-06 (7) — finalize_respondent_session: recompute the score
+-- server-side; stop trusting the client-supplied p_score.
+--
+-- The anonymous /t/$shareId runner could finalize with ANY 0–100 score
+-- regardless of the answers actually stored. The score now derives from
+-- the session's own session_answers rows:
+--   score = round(100 * count(is_correct = true) / count(*))
+-- (matching the client's Math.round((correct / total) * 100) exactly).
+-- p_score is KEPT in the signature for backward compatibility with the
+-- deployed frontend but its value is ignored.
+--
+-- Why submit_respondent_answer still accepts p_is_correct: per-answer
+-- correctness is NOT reliably derivable in SQL. Sessions are pinned to
+-- tests.version, whose published question set lives in
+-- test_versions.snapshot — a client-defined jsonb blob. The live
+-- questions.correct column can drift after publication (admin edits),
+-- and the client's evaluation (TakeTestFlow: correct may be an index
+-- array into options, or a literal string) is type-dependent.
+-- Recomputing against the live table would mis-grade respondents who
+-- answered an older published version. Recomputing the AGGREGATE here
+-- still removes the worst lever: a forged finalize can no longer claim
+-- a score inconsistent with the per-answer rows submitted during the
+-- session (each of which is upsert-guarded by the session token).
+--
+-- Signature, token enforcement and grants are unchanged from
+-- 20260520800000_session_token_dod.sql.
+
+CREATE OR REPLACE FUNCTION public.finalize_respondent_session(
+  p_session_id uuid,
+  p_score numeric DEFAULT NULL,
+  p_session_token uuid DEFAULT NULL
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_status     public.session_status;
+  v_token_hash text;
+  v_cutoff_at  timestamptz;
+  v_now        timestamptz := now();
+  v_correct    integer;
+  v_total      integer;
+  v_score      numeric;
+BEGIN
+  -- p_score is intentionally ignored (kept for signature compatibility
+  -- with deployed clients). The authoritative score is computed below.
+
+  SELECT status INTO v_status FROM public.sessions WHERE id = p_session_id;
+  IF v_status IS NULL THEN
+    RAISE EXCEPTION 'session_not_found';
+  END IF;
+  IF v_status <> 'in_progress' THEN
+    RAISE EXCEPTION 'session_closed';
+  END IF;
+
+  SELECT token_hash, cutoff_at
+    INTO v_token_hash, v_cutoff_at
+    FROM public.respondent_session_tokens
+    WHERE session_id = p_session_id;
+
+  IF p_session_token IS NULL THEN
+    IF v_token_hash IS NOT NULL AND v_now >= v_cutoff_at THEN
+      RAISE EXCEPTION 'session_token_required' USING ERRCODE = '42501';
+    END IF;
+  ELSE
+    IF v_token_hash IS NULL
+       OR v_token_hash <> encode(digest(p_session_token::text, 'sha256'), 'hex') THEN
+      RAISE EXCEPTION 'invalid_session_token' USING ERRCODE = '42501';
+    END IF;
+  END IF;
+
+  SELECT count(*) FILTER (WHERE is_correct IS TRUE), count(*)
+    INTO v_correct, v_total
+    FROM public.session_answers
+    WHERE session_id = p_session_id;
+
+  IF v_total > 0 THEN
+    v_score := round(100.0 * v_correct / v_total);
+  ELSE
+    v_score := NULL;
+  END IF;
+
+  UPDATE public.sessions
+    SET status = 'completed',
+        finished_at = now(),
+        score = v_score
+    WHERE id = p_session_id;
+END;
+$$;
+
+COMMENT ON FUNCTION public.finalize_respondent_session(uuid, numeric, uuid) IS
+  'Anonymous respondent finalize. SEC-2026-06: score is recomputed from '
+  'session_answers (is_correct=true / total); the p_score argument is '
+  'accepted for backward compatibility but ignored.';
+
+-- ============================================================================
+-- SEC-2026-06 (8) — ticket thread payload allowlist
+-- (mirror of supabase/migrations/20260610106000_ticket_thread_payload_narrowing.sql)
+-- ============================================================================
+
+-- SEC-2026-06 (8) — get_ticket_thread_for_view_token: explicit ticket
+-- projection instead of to_jsonb(row) minus a denylist.
+--
+-- The previous payload built the ticket object as
+-- `to_jsonb(v_ticket) - 'view_token_hash' - ...` — a denylist. Any
+-- column added to support_tickets later (or simply forgotten, like
+-- ip_country and user_agent today) leaked to every anonymous caller
+-- holding a view token. The public thread page
+-- (src/routes/contact-form.ticket.$id.lazy.tsx, ThreadTicket interface)
+-- consumes exactly: id, subject, body, category, status, created_at,
+-- submitter_email, submitter_name. Project only those — an allowlist
+-- fails closed when the schema grows.
+--
+-- Everything else (token gate, audit-after-FOUND ordering per E48 audit
+-- A5, is_internal filter per E48-v4) is unchanged from 20260522180000.
+
+CREATE OR REPLACE FUNCTION public.get_ticket_thread_for_view_token(
+  p_ticket_id uuid,
+  p_view_token text,
+  p_ip_country text DEFAULT NULL
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions, pg_temp
+AS $$
+DECLARE
+  v_token_hash text;
+  v_ticket public.support_tickets;
+BEGIN
+  IF p_view_token IS NULL OR char_length(p_view_token) <> 64 THEN
+    RETURN NULL;
+  END IF;
+
+  v_token_hash := encode(digest(p_view_token, 'sha256'), 'hex');
+
+  SELECT * INTO v_ticket FROM public.support_tickets
+  WHERE id = p_ticket_id
+    AND view_token_hash = v_token_hash
+    AND view_token_expires_at > now()
+    AND view_token_invalidated_at IS NULL
+    AND deleted_at IS NULL;
+
+  -- Security gate (E48 audit A5). The audit_log INSERT below MUST stay
+  -- behind this guard. Anon has GRANT EXECUTE on this RPC; logging
+  -- every probe would let unauthenticated callers pollute the audit
+  -- trail by spraying random tokens.
+  IF NOT FOUND THEN
+    RETURN NULL;
+  END IF;
+
+  INSERT INTO public.audit_log (
+    actor_id, actor_name, action, target_type, target_id, pii_access, details, at
+  ) VALUES (
+    NULL, 'anon-view-token', 'support_ticket_view_token_used',
+    'support_tickets', v_ticket.id::text, false,
+    jsonb_build_object('ip_country', p_ip_country),
+    now()
+  );
+
+  RETURN jsonb_build_object(
+    'ticket', jsonb_build_object(
+      'id',              v_ticket.id,
+      'subject',         v_ticket.subject,
+      'body',            v_ticket.body,
+      'category',        v_ticket.category,
+      'status',          v_ticket.status,
+      'created_at',      v_ticket.created_at,
+      'submitter_email', v_ticket.submitter_email,
+      'submitter_name',  v_ticket.submitter_name
+    ),
+    'messages', (
+      SELECT COALESCE(jsonb_agg(jsonb_build_object(
+        'id', m.id,
+        'created_at', m.created_at,
+        'author_kind', m.author_kind,
+        'author_name', m.author_name,
+        'body', m.body
+      ) ORDER BY m.created_at), '[]'::jsonb)
+      FROM public.support_ticket_messages m
+      WHERE m.ticket_id = v_ticket.id
+        AND m.is_internal = false
+    ),
+    'attachments', (
+      SELECT COALESCE(jsonb_agg(jsonb_build_object(
+        'id', a.id,
+        'filename', a.filename,
+        'mime_type', a.mime_type,
+        'size_bytes', a.size_bytes,
+        'scan_status', a.scan_status,
+        'created_at', a.created_at
+      )), '[]'::jsonb)
+      FROM public.support_ticket_attachments a
+      WHERE a.ticket_id = v_ticket.id
+    )
+  );
+END;
+$$;
+
+COMMENT ON FUNCTION public.get_ticket_thread_for_view_token(uuid, text, text) IS
+'E48 anonymous ticket thread reader. SECURITY DEFINER, gated by SHA-256 view-token compare. audit_log INSERT must remain AFTER the IF NOT FOUND guard (E48 audit A5). E48-v4: messages subquery filters is_internal=false. SEC-2026-06: ticket payload is an explicit jsonb_build_object allowlist — never to_jsonb(row) minus columns, which leaks new/forgotten columns (ip_country, user_agent) to anon.';
+
+NOTIFY pgrst, 'reload schema';
+
+-- ============================================================================
+-- SEC-2026-06 (9) — public_sponsors drops net_amount_eur
+-- (mirror of supabase/migrations/20260610107000_public_sponsors_drop_net_amount.sql)
+-- ============================================================================
+
+-- SEC-2026-06 (9) — public_sponsors: drop net_amount_eur from the
+-- anon-readable view.
+--
+-- The sponsors / subscriptions / donations base tables have RLS enabled
+-- with NO anon SELECT policies — the views exist precisely to expose a
+-- safe definer-resolved subset, so they intentionally stay
+-- security_definer (flipping to security_invoker would blank them for
+-- every public visitor).
+--
+-- 20260517000000_refund_aware_views.sql added `total_eur AS
+-- net_amount_eur` to public_sponsors, contradicting the original E10.2
+-- contract ("never exposes total_eur") — and the frontend never reads
+-- it: /sponzori and /sponzori/vsetci select only id, display_name,
+-- display_link, display_message, created_at, has_refund (the "Vrátené"
+-- badge needs has_refund, not the amount). Cumulative donation totals
+-- per named person are financial data with no public purpose here —
+-- drop the column. has_refund stays.
+--
+-- footer_sponsors already projects an explicit narrow column list
+-- (id, display_name, display_link, created_at — created_at feeds the
+-- footer's ORDER BY) and is left unchanged.
+--
+-- DROP + CREATE (not CREATE OR REPLACE) because Postgres cannot remove
+-- a column from an existing view in-place.
+
+DROP VIEW IF EXISTS public.public_sponsors;
+CREATE VIEW public.public_sponsors AS
+SELECT
+  s.id,
+  s.display_name,
+  s.display_link,
+  s.display_message,
+  s.created_at,
+  EXISTS (
+    SELECT 1 FROM public.donations d
+    WHERE d.sponsor_id = s.id AND d.kind = 'refund'
+  ) AS has_refund
+FROM public.sponsors s
+WHERE s.display_name IS NOT NULL;
+
+GRANT SELECT ON public.public_sponsors TO anon, authenticated;
+
+COMMENT ON VIEW public.public_sponsors IS
+  'E10.2 sponsorship — anon-readable subset with opt-in display_* fields '
+  'plus has_refund (renders the "Vrátené" badge on /sponzori). '
+  'SEC-2026-06: net_amount_eur removed — donation totals are never '
+  'exposed publicly and the frontend never consumed the column.';
+
+-- ============================================================================
+-- SEC-2026-06 (10) — MFA backup code entropy + bcrypt
+-- (mirror of supabase/migrations/20260610108000_mfa_backup_code_entropy.sql)
+-- ============================================================================
+
+-- SEC-2026-06 (10) — MFA backup codes: 64-bit entropy + bcrypt hashing.
+--
+-- Previous scheme (20260518000000_mfa_backup_codes.sql): codes were
+-- XXXX-XXXX from 2 x gen_random_bytes(2) — 32 bits — stored as unsalted
+-- SHA-256. 32 bits is offline-bruteforceable in minutes if the hash
+-- table ever leaks, and the unsalted fast hash makes that attack cheap.
+--
+-- New scheme:
+--   - 2 groups of 8 hex chars (2 x gen_random_bytes(4)) = 64 bits.
+--   - Stored with extensions.crypt + gen_salt('bf') (salted bcrypt).
+--
+-- UI compatibility (verified 2026-06-10): the verify input
+-- (src/routes/login_.verify-2fa.tsx) is a free-text field — no
+-- maxLength, no pattern, value uppercased on change; the one-shot
+-- display (src/components/auth/BackupCodesManager.tsx) renders codes in
+-- a font-mono grid with copy/download. A 17-char code fits both.
+--
+-- Backward compatibility: codes generated before this migration remain
+-- valid until used or rotated — consume_mfa_backup_code() dispatches on
+-- the stored hash shape (bcrypt hashes start '$2', legacy SHA-256 is 64
+-- hex chars) via CASE, which guarantees evaluation order. The
+-- aal2_via_backup_until stamping from 20260520900000 is preserved
+-- verbatim.
+
+CREATE OR REPLACE FUNCTION public.generate_mfa_backup_codes()
+RETURNS text[]
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions, pg_temp
+AS $$
+DECLARE
+  v_uid uuid := auth.uid();
+  v_codes text[] := ARRAY[]::text[];
+  v_code text;
+  i int;
+BEGIN
+  IF v_uid IS NULL THEN
+    RAISE EXCEPTION 'not_authenticated';
+  END IF;
+
+  -- Rotate: drop any existing rows (used or unused) so the user has exactly
+  -- 8 fresh codes after this call.
+  DELETE FROM public.mfa_backup_codes WHERE user_id = v_uid;
+
+  FOR i IN 1..8 LOOP
+    -- XXXXXXXX-XXXXXXXX from 2 x 4 random bytes (64 bits of entropy).
+    v_code := upper(
+      encode(gen_random_bytes(4), 'hex') ||
+      '-' ||
+      encode(gen_random_bytes(4), 'hex')
+    );
+    INSERT INTO public.mfa_backup_codes (user_id, code_hash)
+    VALUES (v_uid, crypt(v_code, gen_salt('bf')));
+    v_codes := array_append(v_codes, v_code);
+  END LOOP;
+
+  RETURN v_codes;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.consume_mfa_backup_code(p_code text)
+RETURNS boolean
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions, pg_temp
+AS $$
+DECLARE
+  v_uid uuid := auth.uid();
+  v_rows int;
+BEGIN
+  IF v_uid IS NULL THEN
+    RAISE EXCEPTION 'not_authenticated';
+  END IF;
+  IF p_code IS NULL OR length(p_code) = 0 THEN
+    RETURN false;
+  END IF;
+
+  -- Hash-shape dispatch: bcrypt rows ('$2...') verify via crypt with
+  -- the stored value as salt; legacy unsalted SHA-256 rows (64 hex)
+  -- verify by digest equality. CASE (unlike OR) guarantees crypt is
+  -- never fed a non-bcrypt string.
+  UPDATE public.mfa_backup_codes
+     SET used_at = now()
+   WHERE user_id = v_uid
+     AND used_at IS NULL
+     AND code_hash = CASE
+           WHEN code_hash LIKE '$2%'
+             THEN crypt(upper(p_code), code_hash)
+           ELSE encode(digest(upper(p_code), 'sha256'), 'hex')
+         END;
+
+  GET DIAGNOSTICS v_rows = ROW_COUNT;
+  IF v_rows = 1 THEN
+    -- Stamp AAL2 expiry on the user record so getAALStatus() can treat
+    -- this as a recovery-equivalent AAL2 for the next 30 minutes.
+    -- raw_app_meta_data merges via `||` so we preserve any other keys.
+    UPDATE auth.users
+       SET raw_app_meta_data = COALESCE(raw_app_meta_data, '{}'::jsonb)
+         || jsonb_build_object(
+              'aal2_via_backup_until',
+              to_char(now() + interval '30 minutes', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')
+            )
+     WHERE id = v_uid;
+    RETURN true;
+  END IF;
+  RETURN false;
+END;
+$$;
+
+COMMENT ON FUNCTION public.generate_mfa_backup_codes() IS
+  'AH-12.1 / SEC-2026-06 — rotates 8 single-use backup codes for the '
+  'caller. Codes are XXXXXXXX-XXXXXXXX (64-bit), stored bcrypt-hashed '
+  '(crypt/gen_salt bf). Plaintext returned exactly once.';
+
+COMMENT ON FUNCTION public.consume_mfa_backup_code(text) IS
+  'AH-12.1 / AH-12.8 / SEC-2026-06 — marks a matching unused backup '
+  'code used and stamps aal2_via_backup_until (+30 min) into '
+  'raw_app_meta_data. Verifies both bcrypt (new) and legacy unsalted '
+  'SHA-256 hashes so pre-rotation codes keep working.';
+
+-- ============================================================================
+-- SEC-2026-06 (11) — test-builder RPCs: replace_test_questions + duplicate_test
+-- (mirror of supabase/migrations/20260610109000_test_questions_rpcs.sql)
+-- ============================================================================
+
+-- SEC-2026-06 (11) — test-builder RPCs: replace_test_questions + duplicate_test.
+--
+-- The frontend (src/lib/platform/queries.ts) already calls both RPCs:
+--   * useCreateTest / useUpdateTestQuestionOrder → replace_test_questions
+--     (replaces the old client-side delete-all-then-insert, which could
+--     leave a test empty if the insert failed mid-flight),
+--   * useDuplicateTest → duplicate_test (the old client-side copy
+--     silently dropped every test_questions row).
+--
+-- Schema facts (20260517000000_admin_hub_schema.sql):
+--   * test_questions(test_id, question_id, position int NOT NULL DEFAULT 0),
+--     PK (test_id, question_id). Positions are 0-based — the removed
+--     client insert used the array index directly.
+--   * tests.share_id must match the respondent gate ^[a-zA-Z0-9]{6,12}$
+--     (attempts_share_id_format precedent in 20260425173314_*.sql and
+--     src/lib/platform/share-id.ts). Generated here as 10-char base62
+--     via rejection sampling (248 = 4 * 62, no modulo bias).
+--
+-- Authorization follows the hash_test_password house pattern
+-- (20260521220000_test_password_v2.sql): SECURITY DEFINER + explicit
+-- in-body ownership check (owner OR admin — same principals the
+-- test_questions_via_test_write RLS policy grants), pinned search_path,
+-- EXECUTE granted to authenticated only.
+--
+-- Input contract for replace_test_questions: p_question_ids must be
+-- non-null with no NULL elements; duplicates are REJECTED (explicit
+-- 'duplicate_question_ids') rather than silently deduplicated — a dup
+-- in the payload means the client's ordering state is corrupt and the
+-- PK would abort the insert anyway, so fail loudly with a clean error.
+-- An empty array is valid and clears the test's question list (matches
+-- the old client path: delete all, skip insert).
+
+CREATE OR REPLACE FUNCTION public.replace_test_questions(
+  p_test_id uuid,
+  p_question_ids uuid[]
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_owner uuid;
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'unauthenticated';
+  END IF;
+  IF p_test_id IS NULL OR p_question_ids IS NULL THEN
+    RAISE EXCEPTION 'invalid_args';
+  END IF;
+  IF EXISTS (SELECT 1 FROM unnest(p_question_ids) AS u(id) WHERE u.id IS NULL) THEN
+    RAISE EXCEPTION 'invalid_args';
+  END IF;
+  IF cardinality(p_question_ids)
+     <> (SELECT count(DISTINCT u.id) FROM unnest(p_question_ids) AS u(id)) THEN
+    RAISE EXCEPTION 'duplicate_question_ids';
+  END IF;
+
+  SELECT owner_id INTO v_owner FROM public.tests WHERE id = p_test_id;
+  IF v_owner IS NULL THEN
+    RAISE EXCEPTION 'test_not_found';
+  END IF;
+  IF v_owner <> auth.uid() AND NOT public.has_role(auth.uid(), 'admin') THEN
+    RAISE EXCEPTION 'not_owner';
+  END IF;
+
+  DELETE FROM public.test_questions WHERE test_id = p_test_id;
+
+  INSERT INTO public.test_questions (test_id, question_id, position)
+  SELECT p_test_id, q.id, (q.ord - 1)::int
+    FROM unnest(p_question_ids) WITH ORDINALITY AS q(id, ord);
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.replace_test_questions(uuid, uuid[]) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.replace_test_questions(uuid, uuid[]) TO authenticated;
+
+COMMENT ON FUNCTION public.replace_test_questions(uuid, uuid[]) IS
+  'Transactionally replaces a test''s question list; position = 0-based '
+  'array index. Owner/admin only. Rejects NULL elements and duplicate '
+  'ids (duplicate_question_ids). Empty array clears the list.';
+
+-- ----------------------------------------------------------------------------
+-- duplicate_test: server-side copy of a tests row + its test_questions.
+-- Copied columns mirror the removed client (queries.ts useDuplicateTest):
+-- slug suffixed '-copy-<epoch ms>', fresh share_id, owner_id, team_id,
+-- title suffixed ' (kópia)', description; status always 'draft'
+-- (published_at stays NULL via default). Everything else takes table
+-- defaults, exactly like the old client insert.
+-- ----------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.duplicate_test(p_test_id uuid)
+RETURNS uuid
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions, pg_temp
+AS $$
+DECLARE
+  v_src public.tests%ROWTYPE;
+  v_new_id uuid;
+  v_share_id text;
+  v_alphabet constant text :=
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  v_bytes bytea;
+  v_byte int;
+  i int;
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'unauthenticated';
+  END IF;
+  IF p_test_id IS NULL THEN
+    RAISE EXCEPTION 'invalid_args';
+  END IF;
+
+  SELECT * INTO v_src FROM public.tests WHERE id = p_test_id;
+  IF v_src.id IS NULL THEN
+    RAISE EXCEPTION 'test_not_found';
+  END IF;
+  IF v_src.owner_id <> auth.uid() AND NOT public.has_role(auth.uid(), 'admin') THEN
+    RAISE EXCEPTION 'not_owner';
+  END IF;
+
+  LOOP
+    v_share_id := '';
+    WHILE length(v_share_id) < 10 LOOP
+      v_bytes := gen_random_bytes(16);
+      FOR i IN 0..15 LOOP
+        v_byte := get_byte(v_bytes, i);
+        -- Rejection sampling: 248 = 4 * 62, bytes < 248 map uniformly
+        -- onto the 62-char alphabet (same scheme as share-id.ts).
+        IF v_byte < 248 THEN
+          v_share_id := v_share_id || substr(v_alphabet, (v_byte % 62) + 1, 1);
+          EXIT WHEN length(v_share_id) = 10;
+        END IF;
+      END LOOP;
+    END LOOP;
+    EXIT WHEN NOT EXISTS (SELECT 1 FROM public.tests WHERE share_id = v_share_id);
+  END LOOP;
+
+  INSERT INTO public.tests
+    (slug, share_id, owner_id, team_id, title, description, status)
+  VALUES (
+    v_src.slug || '-copy-'
+      || (extract(epoch FROM clock_timestamp()) * 1000)::bigint,
+    v_share_id,
+    v_src.owner_id,
+    v_src.team_id,
+    v_src.title || ' (kópia)',
+    v_src.description,
+    'draft'
+  )
+  RETURNING id INTO v_new_id;
+
+  INSERT INTO public.test_questions (test_id, question_id, position)
+  SELECT v_new_id, tq.question_id, tq.position
+    FROM public.test_questions tq
+    WHERE tq.test_id = p_test_id;
+
+  RETURN v_new_id;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.duplicate_test(uuid) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.duplicate_test(uuid) TO authenticated;
+
+COMMENT ON FUNCTION public.duplicate_test(uuid) IS
+  'Copies a tests row (fresh 10-char base62 share_id, slug ''-copy-<ms>'', '
+  'title '' (kópia)'', status draft) AND its test_questions in one '
+  'transaction. Owner/admin only. Returns the new test id.';
