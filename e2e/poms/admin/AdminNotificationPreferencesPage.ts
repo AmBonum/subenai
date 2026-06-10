@@ -85,6 +85,14 @@ export class AdminNotificationPreferencesPage extends BasePage {
     return this.page.getByTestId("admin-notif-discard");
   }
 
+  /**
+   * Sonner success toast after save (portal-rendered, no testid hook) —
+   * verbatim Slovak copy is the user-facing contract.
+   */
+  get savedToast(): Locator {
+    return this.page.getByText(/Nastavenia upozornení boli uložené\./i);
+  }
+
   async open(): Promise<void> {
     await this.goto(AdminNotificationPreferencesPage.PATH);
     await this.root.waitFor({ state: "visible" });

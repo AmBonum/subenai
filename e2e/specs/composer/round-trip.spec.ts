@@ -346,15 +346,15 @@ test.describe("E33 Phase 2 — composer pipeline round-trip", () => {
     const attemptId = seeded.attempt_ids[0];
     expect(attemptId, "seed should return an attempt_id").toBeTruthy();
 
-    await page.getByTestId(`resp-table-detail-btn-${attemptId}`).click();
+    await results.tableDetailButton(attemptId).click();
 
     // Sub-route mounts with the respondent's name in the heading.
     await expect(page).toHaveURL(new RegExp(`/test/builder/${seeded.id}/results/${attemptId}$`));
-    await expect(page.getByTestId("respondent-detail-page")).toBeVisible({ timeout: 5_000 });
-    await expect(page.getByTestId("respondent-detail-heading")).toContainText("Diana Drill");
+    await expect(results.respondentDetailPage).toBeVisible({ timeout: 5_000 });
+    await expect(results.respondentDetailHeading).toContainText("Diana Drill");
 
     // Back-link returns to the dashboard.
-    await page.getByTestId("respondent-detail-back-link").click();
+    await results.respondentDetailBackLink.click();
     await expect(results.dashboard).toBeVisible({ timeout: 5_000 });
   });
 });

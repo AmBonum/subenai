@@ -43,7 +43,6 @@ test.describe("Custom test composer", () => {
 
   // TC-01: Page renders with all three sections and disabled action buttons
   test("TC-01: page renders all three sections with action buttons disabled", async ({
-    page,
     composer,
   }) => {
     await test.step("Open /test/builder", async () => {
@@ -82,7 +81,6 @@ test.describe("Custom test composer", () => {
 
   // TC-02: Selecting ≤ 10 questions enables URL copy button; > 10 hides it
   test("TC-02: URL copy button appears for ≤ 10 selected questions and disappears for > 10", async ({
-    page,
     composer,
   }) => {
     await test.step("Open /test/builder", async () => {
@@ -120,13 +118,6 @@ test.describe("Custom test composer", () => {
     });
 
     await test.step("Select 5 more questions to exceed the URL-share threshold (> 10)", async () => {
-      const extra = [
-        "p-sms-tatra-1",
-        "p-email-paypal-1",
-        "f-fake-stripe-1",
-        "f-bazos-iphone-1",
-        "u-shopify-1",
-      ];
       // Deselect the current 6, then select 11 unique ones.
       // Easier: just toggle the eshop pack chip which adds 14 IDs total.
       for (const id of REAL_IDS_6) {
@@ -230,7 +221,6 @@ test.describe("Custom test composer", () => {
 
   // TC-06: Stale-pack notice from ?config= drift — amber notice renders and can be dismissed
   test("TC-06: stale drift notice appears for renamed question IDs in ?config= and can be dismissed", async ({
-    page,
     composer,
   }) => {
     const encoded = encodeComposerConfig({

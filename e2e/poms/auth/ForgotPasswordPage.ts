@@ -17,6 +17,14 @@ export class ForgotPasswordPage extends BasePage {
     return this.page.getByTestId("forgot-heading");
   }
 
+  /**
+   * Card subtitle — the CardDescription carries no testid (candidate:
+   * `forgot-subtitle`); verbatim Slovak text is the locator meanwhile.
+   */
+  get subtitle() {
+    return this.page.getByText("Zadaj e-mail a pošleme ti odkaz na obnovu hesla.");
+  }
+
   get form() {
     return this.page.getByTestId("forgot-form");
   }

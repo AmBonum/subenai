@@ -198,7 +198,7 @@ test.describe("/app/templates", () => {
     });
 
     await test.step('Pick the "HR" option', async () => {
-      await page.getByRole("option", { name: "HR", exact: true }).click();
+      await templates.categoryFilterOption("HR").click();
     });
 
     await test.step("Verify both HR cards remain visible", async () => {

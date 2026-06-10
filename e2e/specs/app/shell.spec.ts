@@ -144,7 +144,7 @@ test.describe("/app shell — signout flow (E36 C3)", () => {
     await page.waitForURL(/\/(\?|$)/, { timeout: 5_000 });
     // Sonner renders the toast in a portal — the text is the most
     // resilient locator and is the actual user-facing surface.
-    await expect(page.getByText("Boli ste odhlásení.")).toBeVisible();
+    await expect(shell.signedOutToast).toBeVisible();
   });
 
   test("the toast is consumed once — a reload of / does NOT re-fire it", async ({ page }) => {
@@ -152,11 +152,12 @@ test.describe("/app shell — signout flow (E36 C3)", () => {
     await shell.open();
     await shell.headerLogout.click();
     await page.waitForURL(/\/(\?|$)/, { timeout: 5_000 });
-    await expect(page.getByText("Boli ste odhlásení.")).toBeVisible();
-    // Wait for the toast to dismiss, then reload — the flag was
-    // consumed so the second mount must not re-trigger.
-    await page.waitForTimeout(4_500);
+    await expect(shell.signedOutToast).toBeVisible();
+    // Wait for the toast to auto-dismiss (Sonner default ~4s), then
+    // reload — the flag was consumed so the second mount must not
+    // re-trigger.
+    await expect(shell.signedOutToast).toHaveCount(0, { timeout: 6_000 });
     await page.reload();
-    await expect(page.getByText("Boli ste odhlásení.")).toHaveCount(0);
+    await expect(shell.signedOutToast).toHaveCount(0);
   });
 });

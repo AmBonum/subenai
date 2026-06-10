@@ -97,7 +97,7 @@ test.describe("/admin/tests index", () => {
 
     await test.step('Click the status filter and select "Koncept"', async () => {
       await p.statusFilter.click();
-      await page.getByRole("option", { name: "Koncept" }).click();
+      await p.filterOption("Koncept").click();
     });
 
     await test.step("Verify only the draft row is visible", async () => {

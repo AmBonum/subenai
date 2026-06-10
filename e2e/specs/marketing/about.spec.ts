@@ -99,6 +99,7 @@ test.describe("About page /about", () => {
   test("TC-03: Back-home link and 'Nastavenia cookies' link are navigable", async ({
     page,
     about,
+    marketingHome,
   }) => {
     await test.step("Open /about at 1280×800", async () => {
       await page.setViewportSize({ width: 1280, height: 800 });
@@ -111,7 +112,7 @@ test.describe("About page /about", () => {
     });
 
     await test.step("Verify the home page heading is visible after navigation", async () => {
-      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await expect(marketingHome.pageH1).toBeVisible();
     });
 
     await test.step("Return to /about", async () => {
@@ -368,7 +369,7 @@ test.describe("About page /about", () => {
 
     await test.step("Verify the dataLayer consent default sets analytics_storage and ad_storage to 'denied'", async () => {
       const consentDefaults = await page.evaluate(() => {
-        const dl = window.dataLayer as Array<Record<string, unknown>> | undefined;
+        const dl = (window as { dataLayer?: Array<Record<string, unknown>> }).dataLayer;
         if (!dl) return null;
         for (const entry of dl) {
           // GTM pushes consent commands as array-like objects with numeric string keys:

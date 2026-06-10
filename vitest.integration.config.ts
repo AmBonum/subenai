@@ -30,8 +30,9 @@ export default defineConfig({
     testTimeout: 30_000,
     // Run sequentially — RLS tests share a small fixture set and
     // parallel writes from multiple workers would corrupt assertions.
+    // (`fileParallelism: false` forces maxWorkers to 1; vitest 4
+    // dropped the old `poolOptions.forks.singleFork` knob.)
     fileParallelism: false,
     pool: "forks",
-    poolOptions: { forks: { singleFork: true } },
   },
 });

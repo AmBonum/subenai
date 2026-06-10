@@ -381,11 +381,12 @@ test.describe("LocaleSwitcher disabled state", () => {
     // TC-13: LOCALE_SWITCHER_ENABLED flag state — aria audit confirms no stray role="combobox" or role="listbox"
     test("TC-13: Accessibility snapshot contains no stray locale menu roles in the site header", async ({
       page,
+      header,
     }) => {
       await test.step("Set desktop viewport (1280×800) and navigate to the home page", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
         await page.goto("/");
-        await page.getByTestId("header-root").waitFor({ state: "visible" });
+        await header.root.waitFor({ state: "visible" });
       });
 
       await test.step("Verify no element with role='menu' is a child of the site header", async () => {

@@ -125,7 +125,13 @@ export class PodakovaniePage extends BasePage {
     await this.stateReady.waitFor({ state: "visible", timeout: opts?.timeout ?? 45_000 });
   }
 
-  async waitForTimeout(opts?: { timeout?: number }): Promise<void> {
+  /**
+   * Waits for the page's TimeoutState UI (POLL_MAX_MS elapsed without a
+   * webhook confirmation) — a condition-based wait on `stateTimeout`,
+   * NOT a hard sleep. Renamed from `waitForTimeout` to avoid reading
+   * like Playwright's banned `page.waitForTimeout` hard wait.
+   */
+  async waitForTimeoutState(opts?: { timeout?: number }): Promise<void> {
     await this.stateTimeout.waitFor({ state: "visible", timeout: opts?.timeout ?? 35_000 });
   }
 

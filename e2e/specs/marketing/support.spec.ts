@@ -215,7 +215,6 @@ test.describe("Support page /support", () => {
 
   // TC-07: Cancellation banner appears when ?cancelled=1 is present; absent otherwise
   test("TC-07: Cancellation banner appears with ?cancelled=1; absent without it", async ({
-    page,
     support,
   }) => {
     await test.step("Navigate to /support?cancelled=1", async () => {

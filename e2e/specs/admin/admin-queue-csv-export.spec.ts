@@ -20,11 +20,9 @@ import { seedTickets, cleanupSeeds } from "../../../tests/fixtures/seed-tickets"
 
 const WORKER = Number(process.env.TEST_WORKER_INDEX ?? 0);
 
-let ticketIds: string[] = [];
-
 test.beforeAll(async () => {
   if (!process.env.E2E_LIVE_DB) return;
-  ticketIds = await seedTickets(WORKER);
+  await seedTickets(WORKER);
 });
 
 test.afterAll(async () => {

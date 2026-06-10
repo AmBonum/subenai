@@ -16,11 +16,13 @@
 //    message — this is the right behaviour for cross-environment
 //    consistency.
 
+import type { APIRequestContext } from "@playwright/test";
+
 import { test, expect } from "../../fixtures/base";
 
 const API_BASE = process.env.API_BASE_URL ?? "http://localhost:8788";
 
-async function pingApi(request: Parameters<typeof test>[0]["request"]): Promise<boolean> {
+async function pingApi(request: APIRequestContext): Promise<boolean> {
   try {
     const resp = await request.head(`${API_BASE}/api/portal-magic-link`);
     // Any response — even 405 / 404 — means the server is up.

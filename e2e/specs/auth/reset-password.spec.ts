@@ -128,7 +128,7 @@ test.describe("Reset-password page — happy paths", () => {
     });
 
     await test.step("Verify the subtitle 'Zadaj nové heslo k svojmu účtu.' is visible", async () => {
-      await expect(page.getByText("Zadaj nové heslo k svojmu účtu.")).toBeVisible();
+      await expect(reset.subtitle).toBeVisible();
     });
 
     await test.step("Verify the new-password input is visible and empty", async () => {

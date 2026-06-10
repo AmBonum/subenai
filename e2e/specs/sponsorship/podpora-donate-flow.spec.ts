@@ -18,311 +18,313 @@ test.describe("/support donate flow", () => {
 
   test.describe("Happy paths", () => {
     // TC-01: One-off 25 EUR donation, anonymous, completes Stripe Checkout
-    test(
-      "TC-01: One-off 25 EUR donation, anonymous, completes Stripe Checkout and lands on ready thank-you view",
-      { timeout: 120_000 },
-      async ({ page, podpora, podakovanie, stripeCheckout }) => {
-        // Belt-and-suspenders: test.extend() strips the options-object
-        // timeout in this Playwright version — set it via the runtime API.
-        test.setTimeout(120_000);
+    test("TC-01: One-off 25 EUR donation, anonymous, completes Stripe Checkout and lands on ready thank-you view", async ({
+      page,
+      podpora,
+      podakovanie,
+      stripeCheckout,
+    }) => {
+      // Belt-and-suspenders: test.extend() strips the options-object
+      // timeout in this Playwright version — set it via the runtime API.
+      test.setTimeout(120_000);
 
-        await test.step("Open /support at default viewport 1280×800", async () => {
-          await page.setViewportSize({ width: 1280, height: 800 });
-          await podpora.open();
-        });
+      await test.step("Open /support at default viewport 1280×800", async () => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await podpora.open();
+      });
 
-        await test.step("Select Jednorazovo mode (already default) and click the 25 € preset chip", async () => {
-          await podpora.modeOneoff.click();
-          await podpora.amountPreset(25).click();
-        });
+      await test.step("Select Jednorazovo mode (already default) and click the 25 € preset chip", async () => {
+        await podpora.modeRadio("oneoff").click();
+        await podpora.amountPreset(25).click();
+      });
 
-        await test.step("Fill E-mail and Meno alebo firma fields", async () => {
-          await podpora.emailInput.fill("donor-tc01@example.com");
-          await podpora.nameInput.fill("Test Donor");
-        });
+      await test.step("Fill E-mail and Meno alebo firma fields", async () => {
+        await podpora.emailInput.fill("donor-tc01@example.com");
+        await podpora.nameInput.fill("Test Donor");
+      });
 
-        await test.step("Tick both mandatory consent checkboxes", async () => {
-          await podpora.consentImmediateCheckbox.click();
-          await podpora.consentDataCheckbox.click();
-        });
+      await test.step("Tick both mandatory consent checkboxes", async () => {
+        await podpora.consentImmediateCheckbox.click();
+        await podpora.consentDataCheckbox.click();
+      });
 
-        await test.step("Verify submit button label reads Pokračovať na platbu — 25 €", async () => {
-          await expect(podpora.submitButton).toHaveText(/Pokračovať na platbu — 25 €/);
-          await expect(podpora.submitButton).toBeEnabled();
-        });
+      await test.step("Verify submit button label reads Pokračovať na platbu — 25 €", async () => {
+        await expect(podpora.submitButton).toHaveText(/Pokračovať na platbu — 25 €/);
+        await expect(podpora.submitButton).toBeEnabled();
+      });
 
-        await test.step("Click submit and wait for redirect to Stripe Checkout domain", async () => {
-          await podpora.submitButton.click();
-          await stripeCheckout.waitForOnStripeDomain();
-        });
+      await test.step("Click submit and wait for redirect to Stripe Checkout domain", async () => {
+        await podpora.submitButton.click();
+        await stripeCheckout.waitForOnStripeDomain();
+      });
 
-        await test.step("Wait for Stripe Checkout page to fully load", async () => {
-          await stripeCheckout.waitForLoaded();
-        });
+      await test.step("Wait for Stripe Checkout page to fully load", async () => {
+        await stripeCheckout.waitForLoaded();
+      });
 
-        await test.step("Fill the default test card (no SCA) and click Pay", async () => {
-          await stripeCheckout.fillTestCard(
-            STRIPE_TEST_CARDS.basic.number,
-            STRIPE_TEST_CARDS.basic.exp,
-            STRIPE_TEST_CARDS.basic.cvc,
-            STRIPE_TEST_CARDS.basic.zip,
-          );
-          await stripeCheckout.pay();
-        });
+      await test.step("Fill the default test card (no SCA) and click Pay", async () => {
+        await stripeCheckout.fillTestCard(
+          STRIPE_TEST_CARDS.basic.number,
+          STRIPE_TEST_CARDS.basic.exp,
+          STRIPE_TEST_CARDS.basic.cvc,
+          STRIPE_TEST_CARDS.basic.zip,
+        );
+        await stripeCheckout.pay();
+      });
 
-        await test.step("Verify browser lands on /thank-you/cs_test_…", async () => {
-          await expect(page).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 });
-        });
+      await test.step("Verify browser lands on /thank-you/cs_test_…", async () => {
+        await expect(page).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 });
+      });
 
-        await test.step("Verify page initially shows Hľadáme tvoju platbu… (PendingState)", async () => {
-          // PendingState may flash briefly before ready; assert it was shown at some point
-          // by checking URL arrival (already verified) then waiting for ready
-          await expect(podakovanie.pendingHeading)
-            .toBeVisible({ timeout: 5_000 })
-            .catch(() => {
-              // May have transitioned to ready already — that is fine
-            });
-        });
+      await test.step("Verify page initially shows Hľadáme tvoju platbu… (PendingState)", async () => {
+        // PendingState may flash briefly before ready; assert it was shown at some point
+        // by checking URL arrival (already verified) then waiting for ready
+        await expect(podakovanie.pendingHeading)
+          .toBeVisible({ timeout: 5_000 })
+          .catch(() => {
+            // May have transitioned to ready already — that is fine
+          });
+      });
 
-        await test.step("Wait up to 30 seconds for the ReadyState heading Ďakujeme za podporu!", async () => {
-          await podakovanie.waitForReady({ timeout: 30_000 });
-          await expect(podakovanie.readyHeading).toHaveText("Ďakujeme za podporu!");
-        });
+      await test.step("Wait up to 30 seconds for the ReadyState heading Ďakujeme za podporu!", async () => {
+        await podakovanie.waitForReady({ timeout: 30_000 });
+        await expect(podakovanie.readyHeading).toHaveText("Ďakujeme za podporu!");
+      });
 
-        await test.step("Verify kind label is Jednorazová podpora and amount is 25.00 EUR", async () => {
-          await expect(podakovanie.readyKindLabel).toHaveText("Jednorazová podpora");
-          await expect(podakovanie.readyAmount).toHaveText("25.00 EUR");
-        });
-      },
-    );
+      await test.step("Verify kind label is Jednorazová podpora and amount is 25.00 EUR", async () => {
+        await expect(podakovanie.readyKindLabel).toHaveText("Jednorazová podpora");
+        await expect(podakovanie.readyAmount).toHaveText("25.00 EUR");
+      });
+    });
 
     // TC-02: One-off 100 EUR donation with sponsor profile and footer opt-in
-    test(
-      "TC-02: One-off 100 EUR donation with sponsor profile and footer opt-in",
-      { timeout: 120_000 },
-      async ({ page, podpora, podakovanie, stripeCheckout }) => {
-        test.setTimeout(120_000);
+    test("TC-02: One-off 100 EUR donation with sponsor profile and footer opt-in", async ({
+      page,
+      podpora,
+      podakovanie,
+      stripeCheckout,
+    }) => {
+      test.setTimeout(120_000);
 
-        await test.step("Open /support at default viewport 1280×800", async () => {
-          await page.setViewportSize({ width: 1280, height: 800 });
-          await podpora.open();
-        });
+      await test.step("Open /support at default viewport 1280×800", async () => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await podpora.open();
+      });
 
-        await test.step("Select Jednorazovo mode and 100 € preset chip", async () => {
-          await podpora.modeOneoff.click();
-          await podpora.amountPreset(100).click();
-        });
+      await test.step("Select Jednorazovo mode and 100 € preset chip", async () => {
+        await podpora.modeRadio("oneoff").click();
+        await podpora.amountPreset(100).click();
+      });
 
-        await test.step("Fill E-mail and Meno alebo firma", async () => {
-          await podpora.emailInput.fill("donor-tc02@example.com");
-          await podpora.nameInput.fill("Acme s. r. o.");
-        });
+      await test.step("Fill E-mail and Meno alebo firma", async () => {
+        await podpora.emailInput.fill("donor-tc02@example.com");
+        await podpora.nameInput.fill("Acme s. r. o.");
+      });
 
-        await test.step("Tick both mandatory consents", async () => {
-          await podpora.consentImmediateCheckbox.click();
-          await podpora.consentDataCheckbox.click();
-        });
+      await test.step("Tick both mandatory consents", async () => {
+        await podpora.consentImmediateCheckbox.click();
+        await podpora.consentDataCheckbox.click();
+      });
 
-        await test.step("Tick Chcem byť na zozname sponzorov (/sponsors)", async () => {
-          await podpora.showInListCheckbox.click();
-        });
+      await test.step("Tick Chcem byť na zozname sponzorov (/sponsors)", async () => {
+        await podpora.showInListCheckbox.click();
+      });
 
-        await test.step("Fill sponsor display name, link, and message", async () => {
-          await podpora.displayNameInput.fill("Acme s. r. o.");
-          await podpora.displayLinkInput.fill("https://acme.example");
-          await podpora.displayMessageTextarea.fill("Podporujeme vzdelanost na Slovensku.");
-        });
+      await test.step("Fill sponsor display name, link, and message", async () => {
+        await podpora.displayNameInput.fill("Acme s. r. o.");
+        await podpora.displayLinkInput.fill("https://acme.example");
+        await podpora.displayMessageInput.fill("Podporujeme vzdelanost na Slovensku.");
+      });
 
-        await test.step("Tick Zobraziť ma aj v päte stránky (enabled because 100 EUR ≥ 50 EUR threshold)", async () => {
-          await expect(podpora.showInFooterCheckbox).toBeEnabled();
-          await podpora.showInFooterCheckbox.click();
-        });
+      await test.step("Tick Zobraziť ma aj v päte stránky (enabled because 100 EUR ≥ 50 EUR threshold)", async () => {
+        await expect(podpora.showInFooterCheckbox).toBeEnabled();
+        await podpora.showInFooterCheckbox.click();
+      });
 
-        await test.step("Click submit and wait for Stripe Checkout domain", async () => {
-          await podpora.submitButton.click();
-          await stripeCheckout.waitForOnStripeDomain();
-          await stripeCheckout.waitForLoaded();
-        });
+      await test.step("Click submit and wait for Stripe Checkout domain", async () => {
+        await podpora.submitButton.click();
+        await stripeCheckout.waitForOnStripeDomain();
+        await stripeCheckout.waitForLoaded();
+      });
 
-        await test.step("Fill test card and pay", async () => {
-          await stripeCheckout.fillTestCard(
-            STRIPE_TEST_CARDS.basic.number,
-            STRIPE_TEST_CARDS.basic.exp,
-            STRIPE_TEST_CARDS.basic.cvc,
-            STRIPE_TEST_CARDS.basic.zip,
-          );
-          await stripeCheckout.pay();
-        });
+      await test.step("Fill test card and pay", async () => {
+        await stripeCheckout.fillTestCard(
+          STRIPE_TEST_CARDS.basic.number,
+          STRIPE_TEST_CARDS.basic.exp,
+          STRIPE_TEST_CARDS.basic.cvc,
+          STRIPE_TEST_CARDS.basic.zip,
+        );
+        await stripeCheckout.pay();
+      });
 
-        await test.step("Verify redirect to /thank-you/cs_test_…", async () => {
-          await expect(page).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 });
-        });
+      await test.step("Verify redirect to /thank-you/cs_test_…", async () => {
+        await expect(page).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 });
+      });
 
-        await test.step("Wait for ReadyState and verify personalised heading Ďakujeme, Acme s. r. o.!", async () => {
-          await podakovanie.waitForReady({ timeout: 30_000 });
-          await expect(podakovanie.readyHeading).toHaveText("Ďakujeme, Acme s. r. o.!");
-        });
+      await test.step("Wait for ReadyState and verify personalised heading Ďakujeme, Acme s. r. o.!", async () => {
+        await podakovanie.waitForReady({ timeout: 30_000 });
+        await expect(podakovanie.readyHeading).toHaveText("Ďakujeme, Acme s. r. o.!");
+      });
 
-        await test.step("Verify kind label is Jednorazová podpora and amount is 100.00 EUR", async () => {
-          await expect(podakovanie.readyKindLabel).toHaveText("Jednorazová podpora");
-          await expect(podakovanie.readyAmount).toHaveText("100.00 EUR");
-        });
-      },
-    );
+      await test.step("Verify kind label is Jednorazová podpora and amount is 100.00 EUR", async () => {
+        await expect(podakovanie.readyKindLabel).toHaveText("Jednorazová podpora");
+        await expect(podakovanie.readyAmount).toHaveText("100.00 EUR");
+      });
+    });
 
     // TC-03: Monthly 10 EUR/mes subscription completes and thank-you shows subscription rendering
-    test(
-      "TC-03: Monthly 10 EUR/mes subscription completes and thank-you shows subscription rendering",
-      { timeout: 180_000 },
-      async ({ page, podpora, podakovanie, stripeCheckout }) => {
-        test.setTimeout(180_000);
+    test("TC-03: Monthly 10 EUR/mes subscription completes and thank-you shows subscription rendering", async ({
+      page,
+      podpora,
+      podakovanie,
+      stripeCheckout,
+    }) => {
+      test.setTimeout(180_000);
 
-        await test.step("Open /support at default viewport 1280×800", async () => {
-          await page.setViewportSize({ width: 1280, height: 800 });
-          await podpora.open();
-        });
+      await test.step("Open /support at default viewport 1280×800", async () => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await podpora.open();
+      });
 
-        await test.step("Click Mesačne frequency button", async () => {
-          await podpora.modeMonthly.click();
-        });
+      await test.step("Click Mesačne frequency button", async () => {
+        await podpora.modeRadio("monthly").click();
+      });
 
-        await test.step("Click the 10 € preset chip", async () => {
-          await podpora.amountPreset(10).click();
-        });
+      await test.step("Click the 10 € preset chip", async () => {
+        await podpora.amountPreset(10).click();
+      });
 
-        await test.step("Fill E-mail and Meno alebo firma", async () => {
-          await podpora.emailInput.fill("donor-tc03@example.com");
-          await podpora.nameInput.fill("Monthly Donor");
-        });
+      await test.step("Fill E-mail and Meno alebo firma", async () => {
+        await podpora.emailInput.fill("donor-tc03@example.com");
+        await podpora.nameInput.fill("Monthly Donor");
+      });
 
-        await test.step("Tick both mandatory consents", async () => {
-          await podpora.consentImmediateCheckbox.click();
-          await podpora.consentDataCheckbox.click();
-        });
+      await test.step("Tick both mandatory consents", async () => {
+        await podpora.consentImmediateCheckbox.click();
+        await podpora.consentDataCheckbox.click();
+      });
 
-        await test.step("Verify submit button label reads Pokračovať na platbu — 10 €/mes", async () => {
-          await expect(podpora.submitButton).toHaveText(/Pokračovať na platbu — 10 €\/mes/);
-        });
+      await test.step("Verify submit button label reads Pokračovať na platbu — 10 €/mes", async () => {
+        await expect(podpora.submitButton).toHaveText(/Pokračovať na platbu — 10 €\/mes/);
+      });
 
-        await test.step("Click submit and wait for Stripe Checkout domain", async () => {
-          await podpora.submitButton.click();
-          await stripeCheckout.waitForOnStripeDomain();
-          await stripeCheckout.waitForLoaded();
-        });
+      await test.step("Click submit and wait for Stripe Checkout domain", async () => {
+        await podpora.submitButton.click();
+        await stripeCheckout.waitForOnStripeDomain();
+        await stripeCheckout.waitForLoaded();
+      });
 
-        await test.step("Fill test card and subscribe", async () => {
-          await stripeCheckout.fillTestCard(
-            STRIPE_TEST_CARDS.basic.number,
-            STRIPE_TEST_CARDS.basic.exp,
-            STRIPE_TEST_CARDS.basic.cvc,
-            STRIPE_TEST_CARDS.basic.zip,
-          );
-          await stripeCheckout.pay();
-        });
+      await test.step("Fill test card and subscribe", async () => {
+        await stripeCheckout.fillTestCard(
+          STRIPE_TEST_CARDS.basic.number,
+          STRIPE_TEST_CARDS.basic.exp,
+          STRIPE_TEST_CARDS.basic.cvc,
+          STRIPE_TEST_CARDS.basic.zip,
+        );
+        await stripeCheckout.pay();
+      });
 
-        await test.step("Verify redirect to /thank-you/cs_test_…", async () => {
-          await expect(page).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 });
-        });
+      await test.step("Verify redirect to /thank-you/cs_test_…", async () => {
+        await expect(page).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 });
+      });
 
-        // TC-03 note: invoice.paid may arrive after checkout.session.completed.
-        // The page only polls for POLL_MAX_MS=30s before transitioning to
-        // TimeoutState (a UX hint, not a hard failure). Under parallel test
-        // load this often fires before the subscription webhook lands.
-        // Strategy: race waitForReady against waitForTimeout; if Timeout
-        // wins, reload to restart polling and try again until the test
-        // budget runs out.
-        await test.step("Wait up to 90 seconds for ReadyState (reload past TimeoutState if needed)", async () => {
-          const deadline = Date.now() + 90_000;
-          let lastErr: unknown;
-          while (Date.now() < deadline) {
-            const budget = Math.min(35_000, deadline - Date.now());
-            const ready = podakovanie
-              .waitForReady({ timeout: budget })
-              .then(() => "ready" as const);
-            const timedOut = podakovanie
-              .waitForTimeout({ timeout: budget })
-              .then(() => "timeout" as const);
-            try {
-              const which = await Promise.race([ready, timedOut]);
-              if (which === "ready") return;
-              await page.reload();
-            } catch (err) {
-              lastErr = err;
-              break;
-            }
+      // TC-03 note: invoice.paid may arrive after checkout.session.completed.
+      // The page only polls for POLL_MAX_MS=30s before transitioning to
+      // TimeoutState (a UX hint, not a hard failure). Under parallel test
+      // load this often fires before the subscription webhook lands.
+      // Strategy: race waitForReady against waitForTimeoutState; if Timeout
+      // wins, reload to restart polling and try again until the test
+      // budget runs out.
+      await test.step("Wait up to 90 seconds for ReadyState (reload past TimeoutState if needed)", async () => {
+        const deadline = Date.now() + 90_000;
+        let lastErr: unknown;
+        while (Date.now() < deadline) {
+          const budget = Math.min(35_000, deadline - Date.now());
+          const ready = podakovanie.waitForReady({ timeout: budget }).then(() => "ready" as const);
+          const timedOut = podakovanie
+            .waitForTimeoutState({ timeout: budget })
+            .then(() => "timeout" as const);
+          try {
+            const which = await Promise.race([ready, timedOut]);
+            if (which === "ready") return;
+            await page.reload();
+          } catch (err) {
+            lastErr = err;
+            break;
           }
-          throw lastErr ?? new Error("Did not reach ReadyState within 90 s");
-        });
+        }
+        throw lastErr ?? new Error("Did not reach ReadyState within 90 s");
+      });
 
-        await test.step("Verify kind label is Mesačný odber and amount contains /mes", async () => {
-          await expect(podakovanie.readyKindLabel).toHaveText("Mesačný odber");
-          await expect(podakovanie.readyAmount).toContainText("/mes");
-        });
+      await test.step("Verify kind label is Mesačný odber and amount contains /mes", async () => {
+        await expect(podakovanie.readyKindLabel).toHaveText("Mesačný odber");
+        await expect(podakovanie.readyAmount).toContainText("/mes");
+      });
 
-        await test.step("Verify subscription block with heading Spravovať mesačný odber is visible", async () => {
-          await expect(podakovanie.subscriptionBlock).toBeVisible();
-          await expect(podakovanie.subscriptionHeading).toHaveText("Spravovať mesačný odber");
-          await expect(podakovanie.manageSubscriptionButton).toBeVisible();
-        });
-      },
-    );
+      await test.step("Verify subscription block with heading Spravovať mesačný odber is visible", async () => {
+        await expect(podakovanie.subscriptionBlock).toBeVisible();
+        await expect(podakovanie.subscriptionHeading).toHaveText("Spravovať mesačný odber");
+        await expect(podakovanie.manageSubscriptionButton).toBeVisible();
+      });
+    });
 
     // TC-04: Custom one-off amount with comma decimal separator is accepted
-    test(
-      "TC-04: Custom one-off amount with comma decimal separator is accepted",
-      { timeout: 120_000 },
-      async ({ page, podpora, podakovanie, stripeCheckout }) => {
-        test.setTimeout(120_000);
+    test("TC-04: Custom one-off amount with comma decimal separator is accepted", async ({
+      page,
+      podpora,
+      podakovanie,
+      stripeCheckout,
+    }) => {
+      test.setTimeout(120_000);
 
-        await test.step("Open /support at default viewport 1280×800", async () => {
-          await page.setViewportSize({ width: 1280, height: 800 });
-          await podpora.open();
-        });
+      await test.step("Open /support at default viewport 1280×800", async () => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await podpora.open();
+      });
 
-        await test.step("Click Iná suma and type 17,50 (comma decimal separator)", async () => {
-          await podpora.selectCustomAmount("17,50");
-        });
+      await test.step("Click Iná suma and type 17,50 (comma decimal separator)", async () => {
+        await podpora.selectCustomAmount("17,50");
+      });
 
-        await test.step("Fill E-mail and Meno alebo firma", async () => {
-          await podpora.emailInput.fill("donor-tc04@example.com");
-          await podpora.nameInput.fill("Custom Donor");
-        });
+      await test.step("Fill E-mail and Meno alebo firma", async () => {
+        await podpora.emailInput.fill("donor-tc04@example.com");
+        await podpora.nameInput.fill("Custom Donor");
+      });
 
-        await test.step("Tick both mandatory consents", async () => {
-          await podpora.consentImmediateCheckbox.click();
-          await podpora.consentDataCheckbox.click();
-        });
+      await test.step("Tick both mandatory consents", async () => {
+        await podpora.consentImmediateCheckbox.click();
+        await podpora.consentDataCheckbox.click();
+      });
 
-        await test.step("Verify submit button label reads Pokračovať na platbu — 17.5 € (comma replaced by dot)", async () => {
-          await expect(podpora.submitButton).toHaveText(/Pokračovať na platbu — 17\.5 €/);
-        });
+      await test.step("Verify submit button label reads Pokračovať na platbu — 17.5 € (comma replaced by dot)", async () => {
+        await expect(podpora.submitButton).toHaveText(/Pokračovať na platbu — 17\.5 €/);
+      });
 
-        await test.step("Click submit and wait for Stripe Checkout", async () => {
-          await podpora.submitButton.click();
-          await stripeCheckout.waitForOnStripeDomain();
-          await stripeCheckout.waitForLoaded();
-        });
+      await test.step("Click submit and wait for Stripe Checkout", async () => {
+        await podpora.submitButton.click();
+        await stripeCheckout.waitForOnStripeDomain();
+        await stripeCheckout.waitForLoaded();
+      });
 
-        await test.step("Fill test card and pay", async () => {
-          await stripeCheckout.fillTestCard(
-            STRIPE_TEST_CARDS.basic.number,
-            STRIPE_TEST_CARDS.basic.exp,
-            STRIPE_TEST_CARDS.basic.cvc,
-            STRIPE_TEST_CARDS.basic.zip,
-          );
-          await stripeCheckout.pay();
-        });
+      await test.step("Fill test card and pay", async () => {
+        await stripeCheckout.fillTestCard(
+          STRIPE_TEST_CARDS.basic.number,
+          STRIPE_TEST_CARDS.basic.exp,
+          STRIPE_TEST_CARDS.basic.cvc,
+          STRIPE_TEST_CARDS.basic.zip,
+        );
+        await stripeCheckout.pay();
+      });
 
-        await test.step("Verify redirect to /thank-you/cs_test_…", async () => {
-          await expect(page).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 });
-        });
+      await test.step("Verify redirect to /thank-you/cs_test_…", async () => {
+        await expect(page).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 });
+      });
 
-        await test.step("Wait for ReadyState and verify rendered amount is 17.50 EUR", async () => {
-          await podakovanie.waitForReady({ timeout: 30_000 });
-          await expect(podakovanie.readyAmount).toHaveText("17.50 EUR");
-        });
-      },
-    );
+      await test.step("Wait for ReadyState and verify rendered amount is 17.50 EUR", async () => {
+        await podakovanie.waitForReady({ timeout: 30_000 });
+        await expect(podakovanie.readyAmount).toHaveText("17.50 EUR");
+      });
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -483,11 +485,11 @@ test.describe("/support donate flow", () => {
 
       await test.step("Paste an 85-character string into the Krátka správa textarea", async () => {
         const eightyFiveChars = "a".repeat(85);
-        await podpora.displayMessageTextarea.fill(eightyFiveChars);
+        await podpora.displayMessageInput.fill(eightyFiveChars);
       });
 
       await test.step("Verify the textarea value is truncated to exactly 80 characters", async () => {
-        const value = await podpora.displayMessageTextarea.inputValue();
+        const value = await podpora.displayMessageInput.inputValue();
         expect(value.length).toBe(80);
       });
 
@@ -519,7 +521,7 @@ test.describe("/support donate flow", () => {
       });
 
       await test.step("Switch to Mesačne mode and select 10 € (below 25 EUR monthly threshold) — still disabled", async () => {
-        await podpora.modeMonthly.click();
+        await podpora.modeRadio("monthly").click();
         await podpora.amountPreset(10).click();
         await expect(podpora.showInFooterCheckbox).toBeDisabled();
       });
@@ -545,15 +547,15 @@ test.describe("/support donate flow", () => {
       await test.step("Open /support and click Iná suma", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
         await podpora.open();
-        await podpora.customAmountToggle.click();
+        await podpora.amountCustomButton.click();
       });
 
       await test.step("Type 501 into the custom amount input", async () => {
-        await podpora.customAmountInput.fill("501");
+        await podpora.amountCustomInput.fill("501");
       });
 
       await test.step("Verify aria-invalid=true on the custom amount input (amountValid is false)", async () => {
-        await expect(podpora.customAmountInput).toHaveAttribute("aria-invalid", "true");
+        await expect(podpora.amountCustomInput).toHaveAttribute("aria-invalid", "true");
       });
 
       await test.step("Verify submit button is disabled", async () => {
@@ -575,56 +577,57 @@ test.describe("/support donate flow", () => {
     });
 
     // TC-12: SCA 3DS challenge card completes authentication and lands on thank-you
-    test(
-      "TC-12: SCA 3DS challenge card completes authentication and lands on thank-you",
-      { timeout: 120_000 },
-      async ({ page, podpora, podakovanie, stripeCheckout }) => {
-        test.setTimeout(120_000);
+    test("TC-12: SCA 3DS challenge card completes authentication and lands on thank-you", async ({
+      page,
+      podpora,
+      podakovanie,
+      stripeCheckout,
+    }) => {
+      test.setTimeout(120_000);
 
-        await test.step("Open /support and fill a valid form with 25 €", async () => {
-          await page.setViewportSize({ width: 1280, height: 800 });
-          await podpora.open();
-          await podpora.amountPreset(25).click();
-          await podpora.emailInput.fill("donor-tc12@example.com");
-          await podpora.nameInput.fill("SCA Donor");
-          await podpora.consentImmediateCheckbox.click();
-          await podpora.consentDataCheckbox.click();
-        });
+      await test.step("Open /support and fill a valid form with 25 €", async () => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await podpora.open();
+        await podpora.amountPreset(25).click();
+        await podpora.emailInput.fill("donor-tc12@example.com");
+        await podpora.nameInput.fill("SCA Donor");
+        await podpora.consentImmediateCheckbox.click();
+        await podpora.consentDataCheckbox.click();
+      });
 
-        await test.step("Submit and wait for Stripe Checkout domain", async () => {
-          await podpora.submitButton.click();
-          await stripeCheckout.waitForOnStripeDomain();
-          await stripeCheckout.waitForLoaded();
-        });
+      await test.step("Submit and wait for Stripe Checkout domain", async () => {
+        await podpora.submitButton.click();
+        await stripeCheckout.waitForOnStripeDomain();
+        await stripeCheckout.waitForLoaded();
+      });
 
-        await test.step("Enter the SCA 3DS challenge card 4000 0027 6000 3184", async () => {
-          await stripeCheckout.fillTestCard(
-            STRIPE_TEST_CARDS.sca.number,
-            STRIPE_TEST_CARDS.sca.exp,
-            STRIPE_TEST_CARDS.sca.cvc,
-            STRIPE_TEST_CARDS.sca.zip,
-          );
-          await stripeCheckout.pay();
-        });
+      await test.step("Enter the SCA 3DS challenge card 4000 0027 6000 3184", async () => {
+        await stripeCheckout.fillTestCard(
+          STRIPE_TEST_CARDS.sca.number,
+          STRIPE_TEST_CARDS.sca.exp,
+          STRIPE_TEST_CARDS.sca.cvc,
+          STRIPE_TEST_CARDS.sca.zip,
+        );
+        await stripeCheckout.pay();
+      });
 
-        await test.step("Wait for the 3DS authentication challenge modal", async () => {
-          await stripeCheckout.expectSCAChallenge({ timeout: 20_000 });
-        });
+      await test.step("Wait for the 3DS authentication challenge modal", async () => {
+        await stripeCheckout.expectSCAChallenge({ timeout: 20_000 });
+      });
 
-        await test.step("Click Complete authentication inside the 3DS iframe", async () => {
-          await stripeCheckout.completeSCAChallenge();
-        });
+      await test.step("Click Complete authentication inside the 3DS iframe", async () => {
+        await stripeCheckout.completeSCAChallenge();
+      });
 
-        await test.step("Verify Stripe redirects to /thank-you/cs_test_…", async () => {
-          await expect(page).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 });
-        });
+      await test.step("Verify Stripe redirects to /thank-you/cs_test_…", async () => {
+        await expect(page).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 });
+      });
 
-        await test.step("Wait for ReadyState and verify heading Ďakujeme za podporu!", async () => {
-          await podakovanie.waitForReady({ timeout: 45_000 });
-          await expect(podakovanie.readyHeading).toHaveText("Ďakujeme za podporu!");
-        });
-      },
-    );
+      await test.step("Wait for ReadyState and verify heading Ďakujeme za podporu!", async () => {
+        await podakovanie.waitForReady({ timeout: 45_000 });
+        await expect(podakovanie.readyHeading).toHaveText("Ďakujeme za podporu!");
+      });
+    });
 
     // TC-13: Refreshing /thank-you mid-poll restarts polling from loading state
     test("TC-13: Refreshing /thank-you mid-poll restarts polling from loading state", async ({
@@ -707,50 +710,49 @@ test.describe("/support donate flow", () => {
     });
 
     // TC-15: Poll timeout after 30 seconds renders TimeoutState
-    test(
-      "TC-15: Poll timeout after 30 seconds renders TimeoutState",
-      { timeout: 90_000 },
-      async ({ page, podakovanie }) => {
-        // Belt-and-suspenders: test.setTimeout ensures the budget is 90s even
-        // when test.extend() strips the options-object timeout in some versions.
-        test.setTimeout(90_000);
+    test("TC-15: Poll timeout after 30 seconds renders TimeoutState", async ({
+      page,
+      podakovanie,
+    }) => {
+      // Belt-and-suspenders: test.setTimeout ensures the budget is 90s even
+      // when test.extend() strips the options-object timeout in some versions.
+      test.setTimeout(90_000);
 
-        await test.step("Install route mock that always returns pending before opening the page", async () => {
-          // SOLE permitted route mock — exercises 30s timeout deterministically
-          await page.route("**/api/donation-status**", async (route) => {
-            await route.fulfill({
-              status: 200,
-              contentType: "application/json",
-              body: JSON.stringify({ status: "pending" }),
-            });
+      await test.step("Install route mock that always returns pending before opening the page", async () => {
+        // SOLE permitted route mock — exercises 30s timeout deterministically
+        await page.route("**/api/donation-status**", async (route) => {
+          await route.fulfill({
+            status: 200,
+            contentType: "application/json",
+            body: JSON.stringify({ status: "pending" }),
           });
         });
+      });
 
-        await test.step("Navigate to /thank-you with a placeholder session ID", async () => {
-          await page.setViewportSize({ width: 1280, height: 800 });
-          // Use cs_test_PROBE which passes the cs_ prefix guard
-          await podakovanie.open("cs_test_PROBE_TIMEOUT_TC15");
-        });
+      await test.step("Navigate to /thank-you with a placeholder session ID", async () => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        // Use cs_test_PROBE which passes the cs_ prefix guard
+        await podakovanie.open("cs_test_PROBE_TIMEOUT_TC15");
+      });
 
-        await test.step("Wait for TimeoutState — every poll returns pending, POLL_MAX_MS=30000 elapses", async () => {
-          await podakovanie.waitForTimeout({ timeout: 35_000 });
-        });
+      await test.step("Wait for TimeoutState — every poll returns pending, POLL_MAX_MS=30000 elapses", async () => {
+        await podakovanie.waitForTimeoutState({ timeout: 35_000 });
+      });
 
-        await test.step("Verify heading reads Stále spracúvame…", async () => {
-          await expect(podakovanie.timeoutHeading).toHaveText("Stále spracúvame…");
-        });
+      await test.step("Verify heading reads Stále spracúvame…", async () => {
+        await expect(podakovanie.timeoutHeading).toHaveText("Stále spracúvame…");
+      });
 
-        await test.step("Verify copy includes Stripe nám ešte neposlal potvrdenie.", async () => {
-          await expect(podakovanie.stateTimeout).toContainText(
-            "Stripe nám ešte neposlal potvrdenie.",
-          );
-        });
+      await test.step("Verify copy includes Stripe nám ešte neposlal potvrdenie.", async () => {
+        await expect(podakovanie.stateTimeout).toContainText(
+          "Stripe nám ešte neposlal potvrdenie.",
+        );
+      });
 
-        await test.step("Remove route mock", async () => {
-          await page.unroute("**/api/donation-status**");
-        });
-      },
-    );
+      await test.step("Remove route mock", async () => {
+        await page.unroute("**/api/donation-status**");
+      });
+    });
 
     // TC-16: Mobile viewport (375×812) — donate form is fully usable
     test("TC-16: Mobile viewport (375×812) — donate form is fully usable", async ({
@@ -768,8 +770,8 @@ test.describe("/support donate flow", () => {
       });
 
       await test.step("Verify the frequency radio group is visible without clipping", async () => {
-        await expect(podpora.modeOneoff).toBeVisible();
-        await expect(podpora.modeMonthly).toBeVisible();
+        await expect(podpora.modeRadio("oneoff")).toBeVisible();
+        await expect(podpora.modeRadio("monthly")).toBeVisible();
       });
 
       await test.step("Verify preset amount chips are all visible", async () => {
@@ -812,9 +814,9 @@ test.describe("/support donate flow", () => {
       });
 
       await test.step("Tab to Jednorazovo radio button and press Space to confirm it", async () => {
-        await podpora.modeOneoff.focus();
+        await podpora.modeRadio("oneoff").focus();
         await page.keyboard.press("Space");
-        await expect(podpora.modeOneoff).toHaveAttribute("aria-checked", "true");
+        await expect(podpora.modeRadio("oneoff")).toHaveAttribute("aria-checked", "true");
       });
 
       await test.step("Tab to the 25 € amount chip and press Space to select it", async () => {
@@ -910,110 +912,110 @@ test.describe("/support donate flow", () => {
     });
 
     // TC-19: Two browser contexts submitting the same email concurrently get independent sessions
-    test(
-      "TC-19: Two browser contexts submitting the same email concurrently get independent sessions",
-      { timeout: 180_000 },
-      async ({ browser }) => {
-        // TC-19 exception: uses browser.newContext() twice and constructs POMs
-        // directly per page — the fixture wiring provides one page per test,
-        // but this TC specifically requires two independent contexts.
+    test("TC-19: Two browser contexts submitting the same email concurrently get independent sessions", async ({
+      browser,
+    }) => {
+      test.setTimeout(180_000);
+      // TC-19 exception: uses browser.newContext() twice and constructs POMs
+      // directly per page — the fixture wiring provides one page per test,
+      // but this TC specifically requires two independent contexts.
 
-        const ctxA = await browser.newContext();
-        const ctxB = await browser.newContext();
-        const pageA = await ctxA.newPage();
-        const pageB = await ctxB.newPage();
-        const podporaA = new PodporaPage(pageA);
-        const podporaB = new PodporaPage(pageB);
-        const stripeA = new StripeCheckoutPage(pageA);
-        const stripeB = new StripeCheckoutPage(pageB);
-        const podakovaniePomA = new PodakovaniePage(pageA);
-        const podakovaniePomB = new PodakovaniePage(pageB);
+      const ctxA = await browser.newContext();
+      const ctxB = await browser.newContext();
+      const pageA = await ctxA.newPage();
+      const pageB = await ctxB.newPage();
+      const podporaA = new PodporaPage(pageA);
+      const podporaB = new PodporaPage(pageB);
+      const stripeA = new StripeCheckoutPage(pageA);
+      const stripeB = new StripeCheckoutPage(pageB);
+      const podakovaniePomA = new PodakovaniePage(pageA);
+      const podakovaniePomB = new PodakovaniePage(pageB);
 
-        try {
-          await test.step("Both contexts open /support simultaneously", async () => {
-            await Promise.all([podporaA.open(), podporaB.open()]);
-          });
+      try {
+        await test.step("Both contexts open /support simultaneously", async () => {
+          await Promise.all([podporaA.open(), podporaB.open()]);
+        });
 
-          await test.step("Both contexts fill identical forms with the shared email", async () => {
-            await Promise.all([
-              (async () => {
-                await podporaA.amountPreset(25).click();
-                await podporaA.emailInput.fill("donor-shared@example.com");
-                await podporaA.nameInput.fill("Shared Donor A");
-                await podporaA.consentImmediateCheckbox.click();
-                await podporaA.consentDataCheckbox.click();
-              })(),
-              (async () => {
-                await podporaB.amountPreset(25).click();
-                await podporaB.emailInput.fill("donor-shared@example.com");
-                await podporaB.nameInput.fill("Shared Donor B");
-                await podporaB.consentImmediateCheckbox.click();
-                await podporaB.consentDataCheckbox.click();
-              })(),
-            ]);
-          });
+        await test.step("Both contexts fill identical forms with the shared email", async () => {
+          await Promise.all([
+            (async () => {
+              await podporaA.amountPreset(25).click();
+              await podporaA.emailInput.fill("donor-shared@example.com");
+              await podporaA.nameInput.fill("Shared Donor A");
+              await podporaA.consentImmediateCheckbox.click();
+              await podporaA.consentDataCheckbox.click();
+            })(),
+            (async () => {
+              await podporaB.amountPreset(25).click();
+              await podporaB.emailInput.fill("donor-shared@example.com");
+              await podporaB.nameInput.fill("Shared Donor B");
+              await podporaB.consentImmediateCheckbox.click();
+              await podporaB.consentDataCheckbox.click();
+            })(),
+          ]);
+        });
 
-          await test.step("Both contexts submit at approximately the same time", async () => {
-            await Promise.all([podporaA.submitButton.click(), podporaB.submitButton.click()]);
-          });
+        await test.step("Both contexts submit at approximately the same time", async () => {
+          await Promise.all([podporaA.submitButton.click(), podporaB.submitButton.click()]);
+        });
 
-          await test.step("Both contexts land on Stripe Checkout", async () => {
-            await Promise.all([stripeA.waitForOnStripeDomain(), stripeB.waitForOnStripeDomain()]);
-            await Promise.all([stripeA.waitForLoaded(), stripeB.waitForLoaded()]);
-          });
+        await test.step("Both contexts land on Stripe Checkout", async () => {
+          await Promise.all([stripeA.waitForOnStripeDomain(), stripeB.waitForOnStripeDomain()]);
+          await Promise.all([stripeA.waitForLoaded(), stripeB.waitForLoaded()]);
+        });
 
-          await test.step("Both contexts complete payment with the default test card", async () => {
-            await Promise.all([
-              (async () => {
-                await stripeA.fillTestCard(
-                  STRIPE_TEST_CARDS.basic.number,
-                  STRIPE_TEST_CARDS.basic.exp,
-                  STRIPE_TEST_CARDS.basic.cvc,
-                  STRIPE_TEST_CARDS.basic.zip,
-                );
-                await stripeA.pay();
-              })(),
-              (async () => {
-                await stripeB.fillTestCard(
-                  STRIPE_TEST_CARDS.basic.number,
-                  STRIPE_TEST_CARDS.basic.exp,
-                  STRIPE_TEST_CARDS.basic.cvc,
-                  STRIPE_TEST_CARDS.basic.zip,
-                );
-                await stripeB.pay();
-              })(),
-            ]);
-          });
+        await test.step("Both contexts complete payment with the default test card", async () => {
+          await Promise.all([
+            (async () => {
+              await stripeA.fillTestCard(
+                STRIPE_TEST_CARDS.basic.number,
+                STRIPE_TEST_CARDS.basic.exp,
+                STRIPE_TEST_CARDS.basic.cvc,
+                STRIPE_TEST_CARDS.basic.zip,
+              );
+              await stripeA.pay();
+            })(),
+            (async () => {
+              await stripeB.fillTestCard(
+                STRIPE_TEST_CARDS.basic.number,
+                STRIPE_TEST_CARDS.basic.exp,
+                STRIPE_TEST_CARDS.basic.cvc,
+                STRIPE_TEST_CARDS.basic.zip,
+              );
+              await stripeB.pay();
+            })(),
+          ]);
+        });
 
-          await test.step("Both contexts land on distinct /thank-you/cs_test_… URLs", async () => {
-            await Promise.all([
-              expect(pageA).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 }),
-              expect(pageB).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 }),
-            ]);
-            const urlA = pageA.url();
-            const urlB = pageB.url();
-            expect(urlA).not.toBe(urlB);
-          });
+        await test.step("Both contexts land on distinct /thank-you/cs_test_… URLs", async () => {
+          await Promise.all([
+            expect(pageA).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 }),
+            expect(pageB).toHaveURL(/\/thank-you\/cs_test_/, { timeout: 30_000 }),
+          ]);
+          const urlA = pageA.url();
+          const urlB = pageB.url();
+          expect(urlA).not.toBe(urlB);
+        });
 
-          await test.step("Both contexts poll to ready and show Ďakujeme za podporu!", async () => {
-            await Promise.all([
-              podakovaniePomA.waitForReady({ timeout: 30_000 }),
-              podakovaniePomB.waitForReady({ timeout: 30_000 }),
-            ]);
-            await expect(podakovaniePomA.readyHeading).toHaveText("Ďakujeme za podporu!");
-            await expect(podakovaniePomB.readyHeading).toHaveText("Ďakujeme za podporu!");
-          });
-        } finally {
-          await ctxA.close();
-          await ctxB.close();
-        }
-      },
-    );
+        await test.step("Both contexts poll to ready and show Ďakujeme za podporu!", async () => {
+          await Promise.all([
+            podakovaniePomA.waitForReady({ timeout: 30_000 }),
+            podakovaniePomB.waitForReady({ timeout: 30_000 }),
+          ]);
+          await expect(podakovaniePomA.readyHeading).toHaveText("Ďakujeme za podporu!");
+          await expect(podakovaniePomB.readyHeading).toHaveText("Ďakujeme za podporu!");
+        });
+      } finally {
+        await ctxA.close();
+        await ctxB.close();
+      }
+    });
 
     // TC-20: /support page title and meta tags match the E11.1 AC-1 spec
     test("TC-20: /support page title and meta tags match the E11.1 AC-1 spec", async ({
       page,
       podpora,
+      docHead,
     }) => {
       await test.step("Open /support at default viewport 1280×800", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
@@ -1022,7 +1024,7 @@ test.describe("/support donate flow", () => {
         // rendered before asserting the document title (TanStack Router sets
         // the <title> as part of client-side hydration; domcontentloaded alone
         // is not sufficient when the SPA replaces the default title).
-        await expect(podpora.pageHeading).toBeVisible({ timeout: 10_000 });
+        await expect(podpora.heading).toBeVisible({ timeout: 10_000 });
       });
 
       await test.step("Verify document.title equals Podpora projektu — subenai", async () => {
@@ -1034,13 +1036,13 @@ test.describe("/support donate flow", () => {
 
       await test.step("Verify meta description contains jednorazovo alebo mesačne", async () => {
         // <head> query — explicit carve-out per TC-20 (no element testid for meta tags)
-        const content = await page.locator('meta[name="description"]').getAttribute("content");
+        const content = await docHead.metaDescriptionContent();
         expect(content).toContain("jednorazovo alebo mesačne");
       });
 
       await test.step("Verify h1 reads Podpora projektu and is visible", async () => {
-        await expect(podpora.pageHeading).toBeVisible();
-        await expect(podpora.pageHeading).toHaveText("Podpora projektu");
+        await expect(podpora.heading).toBeVisible();
+        await expect(podpora.heading).toHaveText("Podpora projektu");
       });
 
       await test.step("Verify hero paragraph contains the AC-2 copy", async () => {
@@ -1051,7 +1053,7 @@ test.describe("/support donate flow", () => {
 
       await test.step("Verify canonical link ends with /support", async () => {
         // <head> query — explicit carve-out per TC-20 (no element testid for link tags)
-        const href = await page.locator('link[rel="canonical"]').getAttribute("href");
+        const href = await docHead.canonicalHref();
         expect(href).toMatch(/\/support$/);
       });
     });
@@ -1104,70 +1106,68 @@ test.describe("/support donate flow", () => {
     });
 
     // TC-23: Stripe Checkout locale is forced to Slovak
-    test(
-      "TC-23: Stripe Checkout locale is forced to Slovak",
-      { timeout: 60_000 },
-      async ({ page, podpora, stripeCheckout }) => {
-        test.setTimeout(60_000);
+    test("TC-23: Stripe Checkout locale is forced to Slovak", async ({
+      page,
+      podpora,
+      stripeCheckout,
+    }) => {
+      test.setTimeout(60_000);
 
-        await test.step("Open /support and fill a valid form with 25 €", async () => {
-          await page.setViewportSize({ width: 1280, height: 800 });
-          await podpora.open();
-          await podpora.amountPreset(25).click();
-          await podpora.emailInput.fill("donor-tc23@example.com");
-          await podpora.nameInput.fill("Locale Donor");
-          await podpora.consentImmediateCheckbox.click();
-          await podpora.consentDataCheckbox.click();
+      await test.step("Open /support and fill a valid form with 25 €", async () => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await podpora.open();
+        await podpora.amountPreset(25).click();
+        await podpora.emailInput.fill("donor-tc23@example.com");
+        await podpora.nameInput.fill("Locale Donor");
+        await podpora.consentImmediateCheckbox.click();
+        await podpora.consentDataCheckbox.click();
+      });
+
+      await test.step("Submit and capture the POST to /api/create-checkout-session response", async () => {
+        // Capture the response body via page.on("response") which fires eagerly
+        // during the response streaming phase, before the page navigation (caused
+        // by window.location.href = url) can discard the CDP resource handle.
+        // .json() / .body() called from waitForResponse.then() race with the
+        // navigation — the listener approach wins because it buffers immediately.
+        // Capture status from the response listener (fires before the
+        // SPA consumes the JSON and navigates). Body URL is verified by
+        // the subsequent waitForOnStripeDomain step — that IS the redirect.
+        let capturedStatus = 0;
+        const statusReady = new Promise<void>((resolve) => {
+          const handler = (r: import("@playwright/test").Response) => {
+            if (
+              r.url().includes("/api/create-checkout-session") &&
+              r.request().method() === "POST"
+            ) {
+              page.off("response", handler);
+              capturedStatus = r.status();
+              resolve();
+            }
+          };
+          page.on("response", handler);
         });
 
-        await test.step("Submit and capture the POST to /api/create-checkout-session response", async () => {
-          // Capture the response body via page.on("response") which fires eagerly
-          // during the response streaming phase, before the page navigation (caused
-          // by window.location.href = url) can discard the CDP resource handle.
-          // .json() / .body() called from waitForResponse.then() race with the
-          // navigation — the listener approach wins because it buffers immediately.
-          // Capture status from the response listener (fires before the
-          // SPA consumes the JSON and navigates). Body URL is verified by
-          // the subsequent waitForOnStripeDomain step — that IS the redirect.
-          let capturedStatus = 0;
-          const statusReady = new Promise<void>((resolve) => {
-            const handler = (r: import("@playwright/test").Response) => {
-              if (
-                r.url().includes("/api/create-checkout-session") &&
-                r.request().method() === "POST"
-              ) {
-                page.off("response", handler);
-                capturedStatus = r.status();
-                resolve();
-              }
-            };
-            page.on("response", handler);
-          });
+        await podpora.submitButton.click();
+        await statusReady;
+        expect(capturedStatus).toBe(200);
+      });
 
-          await podpora.submitButton.click();
-          await statusReady;
-          expect(capturedStatus).toBe(200);
-        });
+      await test.step("Wait for Stripe Checkout page to load", async () => {
+        await stripeCheckout.waitForOnStripeDomain();
+        await stripeCheckout.waitForLoaded();
+      });
 
-        await test.step("Wait for Stripe Checkout page to load", async () => {
-          await stripeCheckout.waitForOnStripeDomain();
-          await stripeCheckout.waitForLoaded();
-        });
+      await test.step("Verify Stripe Checkout renders with Slovak-language UI (locale: sk)", async () => {
+        const hasSlovak = await stripeCheckout.hasSlovakLocaleHint();
+        expect(hasSlovak).toBe(true);
+      });
 
-        await test.step("Verify Stripe Checkout renders with Slovak-language UI (locale: sk)", async () => {
-          const hasSlovak = await stripeCheckout.hasSlovakLocaleHint();
-          expect(hasSlovak).toBe(true);
-        });
-
-        await test.step("Verify custom submit message contains the Slovak disclosure text", async () => {
-          const msgText = await stripeCheckout.submitMessageText();
-          // The custom_text.submit.message is set in create-checkout-session.ts
-          expect(msgText).toContain(
-            "Stlačením potvrdzujete súhlas so začatím poskytovania okamžite",
-          );
-        });
-      },
-    );
+      await test.step("Verify custom submit message contains the Slovak disclosure text", async () => {
+        const msgText = await stripeCheckout.submitMessageText();
+        // The custom_text.submit.message is set in create-checkout-session.ts
+        expect(msgText).toContain("Stlačením potvrdzujete súhlas so začatím poskytovania okamžite");
+      });
+    });
 
     // TC-24: XSS-like string in display_name is stored verbatim (no script execution)
     test("TC-24: XSS-like string in display_name is stored verbatim (no script execution)", async ({

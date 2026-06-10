@@ -47,6 +47,19 @@ export class TestsIndexPage extends BasePage {
     return this.page.getByTestId(`tests-catalog-filter-${industry}`);
   }
 
+  /**
+   * Every rendered industry filter chip — the chip set varies with the
+   * loaded packs, so touch-target specs grab `.first()` of this.
+   */
+  get filterChips(): Locator {
+    return this.page.locator('[data-testid^="tests-catalog-filter-"]');
+  }
+
+  /** The visually-hidden (sr-only) h2 above the catalog grid. */
+  get srOnlyGridHeading(): Locator {
+    return this.page.getByTestId("tests-catalog-grid-heading");
+  }
+
   get filterClearButton(): Locator {
     return this.page.getByTestId("tests-catalog-filter-clear");
   }

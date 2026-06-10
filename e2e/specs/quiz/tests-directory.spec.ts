@@ -13,10 +13,7 @@ test.describe("Tests directory — catalog + pack landing", () => {
   // ---------------------------------------------------------------------------
 
   // TC-01: Catalog page renders with all pack cards visible
-  test("TC-01: Catalog page renders with all pack cards visible", async ({
-    page,
-    testsDirectory,
-  }) => {
+  test("TC-01: Catalog page renders with all pack cards visible", async ({ testsDirectory }) => {
     await test.step("Open the /tests catalog page", async () => {
       await testsDirectory.index.open();
     });
@@ -35,7 +32,6 @@ test.describe("Tests directory — catalog + pack landing", () => {
 
   // TC-02: Each card displays title, question-count meta and is a link to /tests/$slug
   test("TC-02: Each card displays title, question-count meta and is a link to /tests/$slug", async ({
-    page,
     testsDirectory,
   }) => {
     await test.step("Open the /tests catalog page", async () => {

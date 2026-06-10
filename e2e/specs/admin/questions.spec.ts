@@ -123,7 +123,7 @@ test.describe("/admin/questions", () => {
 
     await test.step('Select "E-shop" from the branch filter', async () => {
       await q.branchFilter.click();
-      await page.getByRole("option", { name: "E-shop" }).click();
+      await q.filterOption("E-shop").click();
     });
 
     await test.step("Verify only the eshop row is visible", async () => {

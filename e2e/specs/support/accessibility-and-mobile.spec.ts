@@ -194,7 +194,7 @@ test.describe("I-04: role='dialog' on lightbox and confirm dialogs", () => {
     });
   });
 
-  test("I-04: lightbox dialog has role='dialog'", async ({ page, adminTicketDetail }) => {
+  test("I-04: lightbox dialog has role='dialog'", async ({ adminTicketDetail }) => {
     await test.step("Open the ticket detail page with an image attachment", async () => {
       await adminTicketDetail.open(TICKET_ID);
       await expect(adminTicketDetail.root).toBeVisible();
@@ -238,8 +238,7 @@ test.describe("I-04: role='dialog' on lightbox and confirm dialogs", () => {
     });
 
     await test.step("Verify the confirm dialog appears with role='dialog' or 'alertdialog'", async () => {
-      const dialog = page.getByRole("dialog").or(page.getByRole("alertdialog")).first();
-      await expect(dialog).toBeVisible();
+      await expect(adminTicketDetail.confirmDialogByRole).toBeVisible();
     });
   });
 });

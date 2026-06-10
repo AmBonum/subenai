@@ -116,10 +116,10 @@ test.describe("/schools — senior marketing landing (E19)", () => {
     await expect(schools.jsonLdScripts).toHaveCount(4);
   });
 
-  test("page <title> + robots meta are SEO-correct", async ({ page, schools }) => {
+  test("page <title> + robots meta are SEO-correct", async ({ page, schools, docHead }) => {
     await schools.open();
     await expect(page).toHaveTitle(/subenai/i);
-    const robots = await page.locator('meta[name="robots"]').getAttribute("content");
+    const robots = await docHead.robotsContent();
     expect(robots).toMatch(/index/);
     expect(robots).toMatch(/follow/);
   });

@@ -479,8 +479,8 @@ test.describe("Auth callback page — edge cases", () => {
 
   // TC-12: Cancellation flag prevents navigate after component unmount
   test("TC-12: Cancellation flag prevents navigate after component unmount", async ({ page }) => {
-    const callback = new AuthCallbackPage(page);
     const consoleWarnings: string[] = [];
+    let exchangeSettled = false;
 
     await test.step("Register console warning listener and 2000 ms delayed token intercept before navigation", async () => {
       page.on("console", (msg) => {
@@ -492,11 +492,17 @@ test.describe("Auth callback page — edge cases", () => {
           return;
         }
         await new Promise((r) => setTimeout(r, 2000));
-        await route.fulfill({
-          status: 200,
-          contentType: "application/json",
-          body: JSON.stringify(EDUCATOR_SESSION),
-        });
+        // The page may already have navigated away (that is the point of
+        // this TC) — fulfilling a detached route throws; swallow it and
+        // still flip the flag so the spec can wait on completion.
+        await route
+          .fulfill({
+            status: 200,
+            contentType: "application/json",
+            body: JSON.stringify(EDUCATOR_SESSION),
+          })
+          .catch(() => {});
+        exchangeSettled = true;
       });
     });
 
@@ -509,8 +515,8 @@ test.describe("Auth callback page — edge cases", () => {
       await page.goto("/login");
     });
 
-    await test.step("Wait for the 2000 ms exchange to complete and any deferred effects to settle", async () => {
-      await page.waitForTimeout(2500);
+    await test.step("Wait for the delayed exchange to complete and any deferred effects to settle", async () => {
+      await expect.poll(() => exchangeSettled, { timeout: 5_000 }).toBe(true);
     });
 
     await test.step("Verify no unmounted-component state-update warning was emitted", async () => {

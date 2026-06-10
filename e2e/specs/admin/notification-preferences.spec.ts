@@ -98,7 +98,7 @@ test.describe("TC-33..35: notification preferences — master toggle, save, lazy
     page,
     adminNotifPrefs,
   }) => {
-    let upsertCaptured = false;
+    let _upsertCaptured = false;
 
     await test.step("Set up admin session with notification prefs row seeded", async () => {
       await setupAppShell(context, page, {
@@ -118,7 +118,7 @@ test.describe("TC-33..35: notification preferences — master toggle, save, lazy
         if (method === "POST") {
           const preferHeader = route.request().headers()["prefer"] ?? "";
           if (/resolution=merge-duplicates/.test(preferHeader)) {
-            upsertCaptured = true;
+            _upsertCaptured = true;
           }
         }
         await route.fallback();
@@ -140,7 +140,7 @@ test.describe("TC-33..35: notification preferences — master toggle, save, lazy
     });
 
     await test.step("Verify toast with 'Nastavenia upozornení boli uložené.' appears", async () => {
-      await expect(page.getByText(/Nastavenia upozornení boli uložené\./i)).toBeVisible();
+      await expect(adminNotifPrefs.savedToast).toBeVisible();
     });
 
     await test.step("Verify dirty bar hides after save completes", async () => {
@@ -157,7 +157,7 @@ test.describe("TC-33..35: notification preferences — master toggle, save, lazy
     page,
     adminNotifPrefs,
   }) => {
-    let insertCaptured = false;
+    let _insertCaptured = false;
 
     await test.step("Set up admin session with empty admin_notification_preferences table", async () => {
       await setupAppShell(context, page, {
@@ -176,7 +176,7 @@ test.describe("TC-33..35: notification preferences — master toggle, save, lazy
       await page.route("**/rest/v1/admin_notification_preferences**", async (route) => {
         const method = route.request().method();
         if (method === "POST") {
-          insertCaptured = true;
+          _insertCaptured = true;
         }
         await route.fallback();
       });

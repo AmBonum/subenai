@@ -39,6 +39,15 @@ export class AdminTestsIndexPage extends BasePage {
     return this.page.getByTestId("admin-tests-list-clear-filters");
   }
 
+  /**
+   * A Radix Select option in the open filter dropdown (status /
+   * difficulty / branch / owner). SelectItem carries no testid, so
+   * role+name is the locator (precedence #2).
+   */
+  filterOption(name: string) {
+    return this.page.getByRole("option", { name });
+  }
+
   get bulkDeleteButton() {
     return this.page.getByTestId("admin-tests-list-bulk-delete-button");
   }

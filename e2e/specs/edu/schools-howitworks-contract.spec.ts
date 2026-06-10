@@ -989,7 +989,6 @@ test.describe("Edge cases", () => {
   // TC-23: Step 4 — Cross-set tampering: results cookie for set A cannot access data for set B
   test("TC-23: Step 4 — set_mismatch guard: cookie for set A rejected when requesting set B data", async ({
     request,
-    context,
   }) => {
     // Passwords must be ≥ 8 chars per AUTHOR_PASSWORD_MIN_LEN in test-sets.ts.
     const eduA = await seedEduTest({ password: "passwordA1" });

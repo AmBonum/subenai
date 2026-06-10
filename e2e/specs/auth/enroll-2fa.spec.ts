@@ -22,14 +22,14 @@ test.use({ baseURL: process.env.BASE_URL ?? "http://localhost:8788" });
 const FACTOR_ID = "factor-abc";
 const CHALLENGE_ID = "chal-xyz";
 const BACKUP_CODES = [
-  "aaa-bbb",
-  "ccc-ddd",
-  "eee-fff",
-  "ggg-hhh",
-  "iii-jjj",
-  "jjj-kkk",
-  "lll-mmm",
-  "nnn-ooo",
+  "aaaa1111-bbbb2222",
+  "cccc3333-dddd4444",
+  "eeee5555-ffff6666",
+  "07182930-4a5b6c7d",
+  "11223344-55667788",
+  "99aabbcc-ddeeff00",
+  "12345678-9abcdef0",
+  "fedcba98-76543210",
 ];
 
 const ENROLL_RESPONSE = {
@@ -461,7 +461,7 @@ test.describe("2FA enrollment page — beforeLoad redirects", () => {
   // which POSTs to `/auth/v1/token?grant_type=aal` on the server — unreachable by
   // Playwright route mocks. This TC requires a real Supabase session at AAL2 level
   // to exercise. Skipped pending a real-session test account strategy.
-  test.skip("TC-08: Already-AAL2 visitor is redirected to /app by beforeLoad", async ({
+  test.fixme("TC-08: Already-AAL2 visitor is redirected to /app by beforeLoad", async ({
     page,
     context,
   }) => {
@@ -502,7 +502,7 @@ test.describe("2FA enrollment page — beforeLoad redirects", () => {
   // `supabase.auth.mfa.listFactors()` server-side on the wrangler worker — the
   // `page.route("**/auth/v1/factors**")` intercept targets browser requests only and
   // never fires for server-side calls. Skipped pending a real-session test account strategy.
-  test.skip("TC-09: User with an existing verified factor is redirected to /login/verify-2fa", async ({
+  test.fixme("TC-09: User with an existing verified factor is redirected to /login/verify-2fa", async ({
     page,
     context,
   }) => {
@@ -633,7 +633,7 @@ test.describe("2FA enrollment page — edge cases", () => {
   // a wrapping component that intercepts events before the lib sees them.
   //
   // The `pattern` prop was kept in the source as defensive paste-filter.
-  test.skip("TC-11: OTP input does not accept non-digit characters", async ({ page }) => {
+  test.fixme("TC-11: OTP input does not accept non-digit characters", async ({ page }) => {
     const enroll = new Enroll2faPage(page);
 
     await test.step("Set up enrollment intercepts and navigate to step 3 at 1280×800", async () => {

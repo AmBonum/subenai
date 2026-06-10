@@ -17,7 +17,7 @@ test.describe("Quiz flow /test", () => {
   });
 
   // TC-01: `/test` page renders the ready card
-  test("TC-01: /test page renders the ready card", async ({ page, quizFlow }) => {
+  test("TC-01: /test page renders the ready card", async ({ quizFlow }) => {
     await test.step("Navigate to /test", async () => {
       await quizFlow.open();
     });
@@ -36,7 +36,7 @@ test.describe("Quiz flow /test", () => {
   });
 
   // TC-02: First question is shown after the intro delay
-  test("TC-02: First question is shown after the intro delay", async ({ page, quizFlow }) => {
+  test("TC-02: First question is shown after the intro delay", async ({ quizFlow }) => {
     await test.step("Navigate to /test and wait for the playing phase", async () => {
       await quizFlow.open();
       await quizFlow.waitForPlayingPhase();
@@ -66,83 +66,76 @@ test.describe("Quiz flow /test", () => {
   });
 
   // TC-03: Answering all 10 questions advances to the results view
-  test(
-    "TC-03: Answering all 10 questions advances to the results view",
-    async ({ page, quizFlow }) => {
-      await test.step("Navigate to /test and wait for the playing phase", async () => {
-        await quizFlow.open();
-        await quizFlow.waitForPlayingPhase();
-      });
+  test("TC-03: Answering all 10 questions advances to the results view", async ({ quizFlow }) => {
+    test.setTimeout(60_000);
+    await test.step("Navigate to /test and wait for the playing phase", async () => {
+      await quizFlow.open();
+      await quizFlow.waitForPlayingPhase();
+    });
 
-      await test.step("Answer all 10 questions by selecting option b on each", async () => {
-        await quizFlow.answerAllQuestions(10);
-      });
+    await test.step("Answer all 10 questions by selecting option b on each", async () => {
+      await quizFlow.answerAllQuestions(10);
+    });
 
-      await test.step("Wait for the results view to appear", async () => {
-        await quizFlow.waitForResultsPhase();
-      });
+    await test.step("Wait for the results view to appear", async () => {
+      await quizFlow.waitForResultsPhase();
+    });
 
-      await test.step("Verify the animated score value is visible", async () => {
-        await expect(quizFlow.scoreValue).toBeVisible();
-      });
+    await test.step("Verify the animated score value is visible", async () => {
+      await expect(quizFlow.scoreValue).toBeVisible();
+    });
 
-      await test.step("Verify the breakdown section is visible", async () => {
-        await expect(quizFlow.breakdown).toBeVisible();
-      });
-    },
-    { timeout: 60_000 },
-  );
+    await test.step("Verify the breakdown section is visible", async () => {
+      await expect(quizFlow.breakdown).toBeVisible();
+    });
+  });
 
   // TC-04: Results view shows share section after the attempts INSERT resolves
-  test(
-    "TC-04: Results view shows share section after the attempts INSERT resolves",
-    async ({ page, quizFlow }) => {
-      await test.step("Navigate to /test, wait for playing phase, and answer all 10 questions", async () => {
-        await quizFlow.open();
-        await quizFlow.waitForPlayingPhase();
-        await quizFlow.answerAllQuestions(10);
-        await quizFlow.waitForResultsPhase();
-      });
+  test("TC-04: Results view shows share section after the attempts INSERT resolves", async ({
+    quizFlow,
+  }) => {
+    test.setTimeout(60_000);
+    await test.step("Navigate to /test, wait for playing phase, and answer all 10 questions", async () => {
+      await quizFlow.open();
+      await quizFlow.waitForPlayingPhase();
+      await quizFlow.answerAllQuestions(10);
+      await quizFlow.waitForResultsPhase();
+    });
 
-      await test.step("Verify the share section is visible", async () => {
-        await expect(quizFlow.shareSection).toBeVisible();
-      });
+    await test.step("Verify the share section is visible", async () => {
+      await expect(quizFlow.shareSection).toBeVisible();
+    });
 
-      await test.step("Verify the share URL input contains a /r/ link", async () => {
-        await expect(quizFlow.shareUrlInput).toBeVisible();
-        await expect(quizFlow.shareUrlInput).toHaveValue(/\/r\/[A-Z0-9]{8}/);
-      });
-    },
-    { timeout: 60_000 },
-  );
+    await test.step("Verify the share URL input contains a /r/ link", async () => {
+      await expect(quizFlow.shareUrlInput).toBeVisible();
+      await expect(quizFlow.shareUrlInput).toHaveValue(/\/r\/[A-Z0-9]{8}/);
+    });
+  });
 
   // TC-05: Restart button returns to question 1
-  test(
-    "TC-05: Restart button returns to question 1",
-    async ({ page, quizFlow }) => {
-      // Re-enabled 2026-05-19: TestFlow.restart() now re-seeds questions
-      // from `dbQuestions` directly instead of clearing + refetching.
-      // This TC is the regression sentinel for the React Query stale-ref
-      // trap (see TestFlow.tsx restart() for the inline note).
-      await test.step("Navigate to /test, wait for playing phase, and answer all 10 questions", async () => {
-        await quizFlow.open();
-        await quizFlow.waitForPlayingPhase();
-        await quizFlow.answerAllQuestions(10);
-        await quizFlow.waitForResultsPhase();
-      });
+  test("TC-05: Restart button returns to question 1", async ({ quizFlow }) => {
+    test.setTimeout(60_000);
+    // Re-enabled 2026-05-19: TestFlow.restart() now re-seeds questions
+    // from `dbQuestions` directly instead of clearing + refetching.
+    // This TC is the regression sentinel for the React Query stale-ref
+    // trap (see TestFlow.tsx restart() for the inline note).
+    await test.step("Navigate to /test, wait for playing phase, and answer all 10 questions", async () => {
+      await quizFlow.open();
+      await quizFlow.waitForPlayingPhase();
+      await quizFlow.answerAllQuestions(10);
+      await quizFlow.waitForResultsPhase();
+    });
 
-      await test.step("Click the restart button", async () => {
-        await quizFlow.restartButton.click();
-      });
+    await test.step("Click the restart button", async () => {
+      await quizFlow.restartButton.click();
+    });
 
-      await test.step("Verify the question card reappears", async () => {
-        await expect(quizFlow.questionCard).toBeVisible();
-      });
+    await test.step("Verify the question card reappears", async () => {
+      await expect(quizFlow.questionCard).toBeVisible();
+    });
 
-      await test.step("Verify the progress indicator reads 'Otázka 1 / 10'", async () => {
-        await expect(quizFlow.progressIndicator).toHaveText("Otázka 1 / 10");
-      });
-    },
-    { timeout: 60_000 },
-  );
+    await test.step("Verify the progress indicator reads 'Otázka 1 / 10'", async () => {
+      await expect(quizFlow.progressIndicator).toHaveText("Otázka 1 / 10");
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import type { Locator, Page } from "@playwright/test";
+import type { Locator } from "@playwright/test";
 import { BasePage } from "../BasePage";
 
 /**
@@ -17,6 +17,15 @@ export class MarketingHomePage extends BasePage {
 
   get heroHeading(): Locator {
     return this.page.getByTestId("home-hero-heading");
+  }
+
+  /**
+   * The page-level h1 located by role — for navigation specs that verify
+   * "we landed on a rendered page with a level-1 heading", not the hero
+   * copy itself.
+   */
+  get pageH1(): Locator {
+    return this.page.getByRole("heading", { level: 1 });
   }
 
   get heroCta(): Locator {

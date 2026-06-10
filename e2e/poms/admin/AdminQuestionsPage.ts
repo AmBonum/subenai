@@ -43,6 +43,15 @@ export class AdminQuestionsPage extends BasePage {
     return this.page.getByTestId("admin-questions-clear-filters-button");
   }
 
+  /**
+   * A Radix Select option in the open filter dropdown (status or branch).
+   * SelectItem carries no testid, so role+name is the locator
+   * (precedence #2).
+   */
+  filterOption(name: string) {
+    return this.page.getByRole("option", { name });
+  }
+
   // ---- Table ---------------------------------------------------------------
 
   get emptyState() {

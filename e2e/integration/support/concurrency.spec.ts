@@ -1,10 +1,5 @@
 import { test, expect } from "@playwright/test";
-import {
-  seedTickets,
-  cleanupSeeds,
-  seedAdminUsers,
-  cleanupSeedAdminUsers,
-} from "../../../tests/fixtures/seed-tickets";
+import { seedTickets, cleanupSeeds } from "../../../tests/fixtures/seed-tickets";
 
 // E48 Wave 4 — concurrency / race condition integration tests.
 //
@@ -30,7 +25,6 @@ const ANON_KEY = process.env.SUPABASE_E2E_ANON_KEY ?? "";
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
 const ADMIN_JWT_A = process.env.SUPPORT_ADMIN_JWT ?? "";
 const ADMIN_JWT_B = process.env.SUPPORT_ADMIN_JWT_B ?? "";
-const BASE_URL = process.env.BASE_URL ?? "http://localhost:8788";
 
 // ---------------------------------------------------------------------------
 // TC-24: Concurrent self-assign by two admin sessions → both end up assigned

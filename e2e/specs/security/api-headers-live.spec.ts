@@ -10,6 +10,8 @@
 // Skips with a clear message if the API server isn't reachable so
 // CI doesn't fail when this is run against a static-only preview.
 
+import type { APIRequestContext } from "@playwright/test";
+
 import { test, expect } from "../../fixtures/base";
 
 const API_BASE = process.env.API_BASE_URL ?? "http://localhost:8788";
@@ -25,7 +27,7 @@ const REQUIRED_HEADERS = [
   "cross-origin-resource-policy",
 ] as const;
 
-async function pingApi(request: Parameters<typeof test>[0]["request"]): Promise<boolean> {
+async function pingApi(request: APIRequestContext): Promise<boolean> {
   try {
     const resp = await request.head(`${API_BASE}/api/portal-magic-link`);
     return resp.status() > 0;

@@ -15,8 +15,8 @@ import { primeConsent } from "../../fixtures/consent";
  */
 
 test.describe("/tests catalog — accessibility (Phase I)", () => {
-  test.beforeEach(async ({ page }) => {
-    await primeConsent(page);
+  test.beforeEach(async ({ context }) => {
+    await primeConsent(context, "all");
   });
 
   // TC-11 — Keyboard focus travels through filter chips → sort → grid.
@@ -48,7 +48,7 @@ test.describe("/tests catalog — accessibility (Phase I)", () => {
   });
 
   // TC-12 — Touch targets ≥ 44px on the catalog header controls.
-  test("filter chips and sort control have min-height ≥ 44px", async ({ page, testsDirectory }) => {
+  test("filter chips and sort control have min-height ≥ 44px", async ({ testsDirectory }) => {
     await testsDirectory.index.open();
     // Pick one filter chip + the sort select. Both must satisfy the
     // 44px touch-target minimum (WCAG 2.5.5).
@@ -58,7 +58,7 @@ test.describe("/tests catalog — accessibility (Phase I)", () => {
 
     // Locate any visible filter chip. The chip industry varies based on
     // which packs are loaded; we just need one.
-    const anyChip = page.locator('[data-testid^="tests-catalog-filter-"]').first();
+    const anyChip = testsDirectory.index.filterChips.first();
     const chipBox = await anyChip.boundingBox();
     if (chipBox) {
       expect(chipBox.height).toBeGreaterThanOrEqual(44);
@@ -67,7 +67,6 @@ test.describe("/tests catalog — accessibility (Phase I)", () => {
 
   // TC-13 — ARIA: grid is a list, result-count is live, sr-only h2 exists.
   test("grid is role='list', result-count has aria-live, sr-only h2 exists", async ({
-    page,
     testsDirectory,
   }) => {
     await testsDirectory.index.open();
@@ -75,9 +74,9 @@ test.describe("/tests catalog — accessibility (Phase I)", () => {
     expect(gridRole).toBe("list");
     const liveAttr = await testsDirectory.index.resultCountBadge.getAttribute("aria-live");
     expect(liveAttr).toBe("polite");
-    // The sr-only h2 doesn't have a testid but it does have the
-    // semantic role + sr-only utility class. Locate by role.
-    const srH2Count = await page.locator('h2.sr-only, h2[class*="sr-only"]').count();
-    expect(srH2Count).toBeGreaterThanOrEqual(1);
+    // The grid heading is an h2 hidden via the sr-only utility — assert
+    // it exists and still carries the sr-only class.
+    await expect(testsDirectory.index.srOnlyGridHeading).toHaveCount(1);
+    await expect(testsDirectory.index.srOnlyGridHeading).toHaveClass(/sr-only/);
   });
 });

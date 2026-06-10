@@ -37,7 +37,6 @@ const REPO_ROOT = path.resolve(HERE, "..");
 const LIVE_STATE_DIR = path.join(REPO_ROOT, ".e2e-live-supabase");
 const LIVE_STATE_FILE = path.join(LIVE_STATE_DIR, "state.json");
 
-const DEFAULT_LOCAL_URL = "http://127.0.0.1:54321";
 const DEFAULT_LOCAL_DB_URL = "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
 const PREVIEW_PORT = Number.parseInt(process.env.E49_PREVIEW_PORT ?? "8080", 10);
 const WRANGLER_PORT = Number.parseInt(process.env.E49_WRANGLER_PORT ?? "8788", 10);

@@ -64,6 +64,15 @@ export class AdminTicketDetailPage extends BasePage {
     return this.page.getByTestId(`admin-ticket-action-${map[target]}`);
   }
 
+  /**
+   * The confirm modal opened by destructive/terminal status actions —
+   * located by role on purpose: the a11y spec verifies the dialog carries
+   * proper `dialog` / `alertdialog` semantics, not just a testid.
+   */
+  get confirmDialogByRole(): Locator {
+    return this.page.getByRole("dialog").or(this.page.getByRole("alertdialog")).first();
+  }
+
   // Kebab (overflow) menu ----------------------------------------------
   get kebabTrigger(): Locator {
     return this.page.getByTestId("admin-ticket-detail-kebab-trigger");

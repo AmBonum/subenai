@@ -13,8 +13,8 @@ import { primeConsent } from "../../fixtures/consent";
  */
 
 test.describe("/tests/$slug — detail render + start flow + 404 + related", () => {
-  test.beforeEach(async ({ page }) => {
-    await primeConsent(page);
+  test.beforeEach(async ({ context }) => {
+    await primeConsent(context, "all");
   });
 
   // TC-02 — Clicking a pack card navigates to the correct detail page.

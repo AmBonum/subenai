@@ -3,14 +3,14 @@ import { setupAdmin } from "../../setup/app-shell";
 import { AdminSecurityPage } from "../../poms/admin/AdminSecurityPage";
 
 const BACKUP_CODES = [
-  "AAAA-1111",
-  "BBBB-2222",
-  "CCCC-3333",
-  "DDDD-4444",
-  "EEEE-5555",
-  "FFFF-6666",
-  "GGGG-7777",
-  "HHHH-8888",
+  "a1b2c3d4-e5f60718",
+  "b2c3d4e5-f6071829",
+  "c3d4e5f6-0718293a",
+  "d4e5f607-18293a4b",
+  "e5f60718-293a4b5c",
+  "f6071829-3a4b5c6d",
+  "0718293a-4b5c6d7e",
+  "18293a4b-5c6d7e8f",
 ];
 
 function makeBackupRows(count: number) {
@@ -144,7 +144,7 @@ test.describe("/admin/security", () => {
 
     await test.step("Verify the new-codes panel is visible with the first code item", async () => {
       await expect(security.newCodesPanel).toBeVisible();
-      await expect(security.newCodeItem("AAAA-1111")).toBeVisible();
+      await expect(security.newCodeItem("a1b2c3d4-e5f60718")).toBeVisible();
     });
 
     await test.step("Verify copy, download, and dismiss buttons are visible with correct labels", async () => {

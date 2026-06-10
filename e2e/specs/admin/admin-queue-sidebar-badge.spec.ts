@@ -88,7 +88,6 @@ test.describe("Admin queue — row navigation and sidebar badge", () => {
   // C-24: sidebar badge shows count of new+reopened tickets
   test("C-24: sidebar badge shows the count of new+reopened tickets needing attention", async ({
     adminTicketsQueue,
-    page,
   }) => {
     await test.step("Open the admin queue so the sidebar renders", async () => {
       await adminTicketsQueue.open();

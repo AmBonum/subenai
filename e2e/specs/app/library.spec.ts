@@ -130,12 +130,12 @@ test.describe("/app/library", () => {
       // Branch values mirror SEED_QUESTIONS.category — the first CATS entry
       // is "phishing", so it's guaranteed to be in the dropdown.
       await library.branchFilter.click();
-      await page.getByRole("option", { name: "phishing", exact: true }).click();
+      await library.filterOption("phishing").click();
     });
 
     await test.step("Pick the 'Ľahká' difficulty from the difficulty filter", async () => {
       await library.difficultyFilter.click();
-      await page.getByRole("option", { name: "Ľahká", exact: true }).click();
+      await library.filterOption("Ľahká").click();
     });
 
     await test.step("Verify the empty state is not shown — intersection is non-empty", async () => {

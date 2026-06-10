@@ -14,6 +14,7 @@ export function seedNotification(overrides: Partial<NotificationRow> = {}): Noti
     body: null,
     read_at: null,
     created_at: "2026-05-19T00:00:00.000Z",
+    kind: "user",
     ...overrides,
   };
 }

@@ -1,7 +1,6 @@
 import type { Page, Request as PlaywrightRequest, Route } from "@playwright/test";
 
 import {
-  applyParsedQuery,
   applyParsedQueryWithTotal,
   buildPostgrestArrayResponse,
   buildPostgrestSingleResponse,

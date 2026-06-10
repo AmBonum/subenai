@@ -69,10 +69,7 @@ test.describe("E48-v3 — inline status change from queue row", () => {
     await expect(adminTicketsQueue.rowStatusTrigger(newTicket)).toBeVisible();
   });
 
-  test("ConfirmDialog appears when transitioning to resolved", async ({
-    adminTicketsQueue,
-    page,
-  }) => {
+  test("ConfirmDialog appears when transitioning to resolved", async ({ adminTicketsQueue }) => {
     // Use an in_progress ticket (index 5 in seed = first in_progress batch)
     const inProgressTicket = ticketIds[5];
     await adminTicketsQueue.open();
@@ -80,9 +77,9 @@ test.describe("E48-v3 — inline status change from queue row", () => {
     await expect(adminTicketsQueue.rowStatusOption(inProgressTicket, "resolved")).toBeVisible();
     await adminTicketsQueue.rowStatusOption(inProgressTicket, "resolved").click();
     // A ConfirmDialog (role=alertdialog) must appear before the RPC fires.
-    await expect(page.getByRole("alertdialog")).toBeVisible();
+    await expect(adminTicketsQueue.confirmDialog).toBeVisible();
     // Confirm
-    await page.getByRole("button", { name: /potvrdi|confirm/i }).click();
-    await expect(page.getByRole("alertdialog")).toBeHidden();
+    await adminTicketsQueue.confirmDialogConfirm.click();
+    await expect(adminTicketsQueue.confirmDialog).toBeHidden();
   });
 });

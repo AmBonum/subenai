@@ -27,6 +27,7 @@ export function seedQuestion(overrides: Partial<QuestionRow> = {}): QuestionRow 
     options_cs: null,
     visual_en: null,
     visual_cs: null,
+    sources_jsonb: [],
     ...overrides,
   };
 }

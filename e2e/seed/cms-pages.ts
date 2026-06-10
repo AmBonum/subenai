@@ -1,7 +1,7 @@
 import type { CmsBlock, PageStatus } from "../../src/lib/admin/cms-types";
 import { nextId, pad } from "./counters";
 
-export interface CmsPageRow {
+export type CmsPageRow = {
   id: string;
   slug: string;
   title: string;
@@ -10,7 +10,7 @@ export interface CmsPageRow {
   status: PageStatus;
   published_at: string | null;
   updated_at: string;
-}
+};
 
 export function seedCmsPage(overrides: Partial<CmsPageRow> = {}): CmsPageRow {
   const n = nextId("cms_page");

@@ -63,17 +63,11 @@ test.describe("Shared-set routes — /test/builder/$id", () => {
     // regression sentinel for "did we accidentally revert the hero copy"
     // — the user-facing conversion lever for cold first-time visitors.
     await test.step("Verify the senior hero renders eyebrow + subline + trust line (D3 = confidence framing)", async () => {
-      await expect(page.getByTestId("respondent-hero-eyebrow")).toHaveText(
-        "TEST BEZPEČNOSTI · 5 MINÚT",
-      );
-      await expect(page.getByTestId("respondent-hero-subline")).toContainText(
-        "slepé miesta v rozpoznávaní podvodov",
-      );
+      await expect(sharedSet.heroEyebrow).toHaveText("TEST BEZPEČNOSTI · 5 MINÚT");
+      await expect(sharedSet.heroSubline).toContainText("slepé miesta v rozpoznávaní podvodov");
       // Seeded set has collects_responses=false → no-collect trust line
       // (no row stored, only the respondent sees their score).
-      await expect(page.getByTestId("respondent-hero-trust")).toContainText(
-        "Výsledky vidíš len ty",
-      );
+      await expect(sharedSet.heroTrust).toContainText("Výsledky vidíš len ty");
     });
   });
 
@@ -151,10 +145,7 @@ test.describe("Shared-set routes — /test/builder/$id", () => {
         await flow.clickOption("a");
         if (i < 4) {
           const nextLabel = `Otázka ${i + 2} / 5`;
-          await flow.page
-            .getByTestId("quiz-flow-progress")
-            .filter({ hasText: nextLabel })
-            .waitFor({ state: "visible", timeout: 10000 });
+          await flow.progressWithText(nextLabel).waitFor({ state: "visible", timeout: 10000 });
         }
       }
     });

@@ -130,6 +130,25 @@ export class PodporaPage extends BasePage {
     return this.page.getByTestId("podpora-checkbox-show-in-footer");
   }
 
+  /**
+   * The <label> wrapping the show-in-footer checkbox — carries the
+   * dynamic qualifying/disabled copy. The label has no call-site
+   * testid (rendered by the shared CheckboxRow), so we anchor on the
+   * checkbox's testid.
+   */
+  get showInFooterLabel(): Locator {
+    return this.page.locator("label").filter({ has: this.showInFooterCheckbox });
+  }
+
+  /**
+   * Validation hint under the display-link field. The hint <p> has no
+   * testid (shared Field component), so we fall back to the verbatim
+   * Slovak copy per the locator-precedence rule.
+   */
+  get displayLinkHint(): Locator {
+    return this.page.getByText("Odkaz musí začínať https://", { exact: true });
+  }
+
   // ---------------------------------------------------------------------------
   // Consents + submit
   // ---------------------------------------------------------------------------
@@ -196,9 +215,20 @@ export class PodporaPage extends BasePage {
     await this.amountCustomInput.fill(String(amountEur));
   }
 
+  /** Opens the custom-amount input and types a raw (possibly localised) value. */
+  async selectCustomAmount(value: string): Promise<void> {
+    await this.amountCustomButton.click();
+    await this.amountCustomInput.fill(value);
+  }
+
   // ---------------------------------------------------------------------------
   // Computed-state helpers (return values, never assertions)
   // ---------------------------------------------------------------------------
+
+  async amountPresetClassList(value: number): Promise<string[]> {
+    const cls = await this.amountPreset(value).getAttribute("class");
+    return cls ? cls.split(/\s+/).filter(Boolean) : [];
+  }
 
   async hasHorizontalOverflow(): Promise<boolean> {
     return this.page.evaluate(

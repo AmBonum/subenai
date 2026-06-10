@@ -78,7 +78,10 @@ test.describe("No-leak journey — reject all", () => {
     for (const route of PUBLIC_ROUTES_REJECT_ALL) {
       await test.step(`Navigate to ${route}`, async () => {
         await page.goto(route);
-        await page.waitForLoadState("networkidle");
+        // Bounded networkidle (mirrors BasePage.goto) — supabase-js
+        // schedules low-frequency refreshes that may never fully idle;
+        // 3s is enough for any tracker script to have fired.
+        await page.waitForLoadState("networkidle", { timeout: 3000 }).catch(() => {});
       });
     }
 
@@ -153,7 +156,8 @@ test.describe("No-leak journey — Stripe / Turnstile are surface-scoped", () =>
       }
       for (const route of ["/privacy", "/cookies", "/about"]) {
         await page.goto(route);
-        await page.waitForLoadState("networkidle");
+        // Bounded networkidle (mirrors BasePage.goto) — see TC-NL-01.
+        await page.waitForLoadState("networkidle", { timeout: 3000 }).catch(() => {});
       }
     });
 

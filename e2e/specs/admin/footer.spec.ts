@@ -74,7 +74,7 @@ test.describe("Admin Footer CMS", () => {
     });
 
     await test.step("Verify the success toast 'Päta uložená.' is visible", async () => {
-      await expect(page.getByText("Päta uložená.")).toBeVisible();
+      await expect(footer.savedToast).toBeVisible();
     });
   });
 

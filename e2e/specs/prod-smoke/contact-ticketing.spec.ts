@@ -28,55 +28,54 @@
 //   See: https://developers.cloudflare.com/turnstile/reference/testing/
 
 import { test, expect } from "@playwright/test";
+import { KontaktPage } from "../../poms/support/KontaktPage";
 
 test.skip(!process.env.CI_PROD_SMOKE, "prod smoke only — set CI_PROD_SMOKE=1 to enable");
 
 test.describe("prod smoke — /kontakt full pipeline", () => {
   test("submits real ticket to prod, gets ticket_id in success state", async ({ page }) => {
+    const kontakt = new KontaktPage(page);
+
     // The prod-smoke playwright project sets baseURL=https://subenai.sk.
     await page.goto("/kontakt");
 
     // Wait for the form root to mount.
-    await page.getByTestId("kontakt-page-root").waitFor({ state: "visible", timeout: 20_000 });
+    await kontakt.root.waitFor({ state: "visible", timeout: 20_000 });
 
     // Wait for Turnstile widget slot to be present. If the always-pass test
     // key is configured the token is issued automatically within a few seconds;
     // if not, the submit button stays disabled and the last expect() times out
     // with a clear message rather than a cryptic selector error.
-    await page
-      .getByTestId("kontakt-form-turnstile-slot")
-      .waitFor({ state: "attached", timeout: 30_000 });
+    await kontakt.turnstileSlot.waitFor({ state: "attached", timeout: 30_000 });
 
-    await page.getByTestId("kontakt-form-subject-input").fill("[CI-SMOKE] automated daily check");
+    await kontakt.subjectInput.fill("[CI-SMOKE] automated daily check");
 
     // Select "question" category — always-valid for smoke.
-    await page.getByTestId("kontakt-form-category-select").selectOption("question");
+    await kontakt.categorySelect.selectOption("question");
 
-    await page
-      .getByTestId("kontakt-form-body-textarea")
-      .fill(
-        "Production smoke from Playwright CI. This ticket is auto-archived within 1h. If you see this in the queue it means the cleanup cron is not running.",
-      );
+    await kontakt.bodyTextarea.fill(
+      "Production smoke from Playwright CI. This ticket is auto-archived within 1h. If you see this in the queue it means the cleanup cron is not running.",
+    );
 
-    await page.getByTestId("kontakt-form-email-input").fill("ci-smoke@subenai.sk");
+    await kontakt.emailInput.fill("ci-smoke@subenai.sk");
 
     // Submit button is disabled until Turnstile resolves a token.
     // Generous timeout — the always-pass test key typically resolves in <3s
     // but CF CDN cold-starts can add latency.
-    await expect(page.getByTestId("kontakt-form-submit-button")).toBeEnabled({
+    await expect(kontakt.submitButton).toBeEnabled({
       timeout: 30_000,
     });
 
-    await page.getByTestId("kontakt-form-submit-button").click();
+    await kontakt.submitButton.click();
 
     // Assert success state visible — proves the full pipeline ran:
     // CF function validated Turnstile, called submit_support_ticket() RPC,
     // and got back a ticket_id.
-    await expect(page.getByTestId("kontakt-success-state")).toBeVisible({
+    await expect(kontakt.successState).toBeVisible({
       timeout: 15_000,
     });
 
-    const ticketId = await page.getByTestId("kontakt-success-ticket-id").textContent();
+    const ticketId = await kontakt.successTicketId.textContent();
     // A real ticket_id is a UUID v4 from the DB — 8-4-4-4-12 hex groups.
     expect(ticketId?.trim()).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,

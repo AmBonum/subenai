@@ -45,6 +45,11 @@ export class ConsentBanner {
     return this.page.getByTestId("consent-banner-privacy-link");
   }
 
+  /** Root of the granular preferences dialog the banner / footer opens. */
+  get preferencesDialog(): Locator {
+    return this.page.getByTestId("consent-dialog-root");
+  }
+
   async isVisible(): Promise<boolean> {
     return this.root.isVisible();
   }

@@ -214,6 +214,6 @@ export class SponsorsPage extends BasePage {
   }
 
   async xssMarker(): Promise<unknown> {
-    return this.page.evaluate(() => (window as Record<string, unknown>)["__xss"]);
+    return this.page.evaluate(() => (window as unknown as Record<string, unknown>)["__xss"]);
   }
 }

@@ -273,7 +273,6 @@ test.describe("Admin ticket detail — render, reply, transitions", () => {
   // D-09 / TC-13: "Uzavrieť" transition opens ConfirmDialog; cancelling leaves status unchanged
   test("D-09 / TC-13: clicking 'Označiť ako vyriešené' opens ConfirmDialog; cancelling leaves status unchanged", async ({
     adminTicketDetail,
-    page,
   }) => {
     await test.step("Open the ticket detail page", async () => {
       await adminTicketDetail.open(TICKET_ID);
@@ -303,7 +302,6 @@ test.describe("Admin ticket detail — render, reply, transitions", () => {
   // D-10: "Archivovať" transition shows ConfirmDialog severity='warning'; confirms changes badge
   test("D-10: clicking 'Archivovať' opens warning ConfirmDialog; confirming changes status badge", async ({
     adminTicketDetail,
-    page,
   }) => {
     await test.step("Open the detail page for a 'new' ticket", async () => {
       await adminTicketDetail.open(TICKET_ID);
@@ -335,7 +333,6 @@ test.describe("Admin ticket detail — render, reply, transitions", () => {
   // confirm. The test is written against the actual live ConfirmDialog.
   test("D-11 / TC-14: 'Označiť ako spam' confirm button stays disabled until ticket ID is typed", async ({
     adminTicketDetail,
-    page,
   }) => {
     await test.step("Open the ticket detail page", async () => {
       await adminTicketDetail.open(TICKET_ID);

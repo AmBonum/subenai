@@ -84,6 +84,7 @@ test.describe("Contact page /contact", () => {
     page,
     contact,
     context,
+    marketingHome,
   }) => {
     await test.step("Prime consent and open /contact", async () => {
       await primeConsent(context, "all");
@@ -96,7 +97,7 @@ test.describe("Contact page /contact", () => {
 
     await test.step("Verify the browser navigated to / with no 404 or error page", async () => {
       await expect(page).toHaveURL(/\/$/);
-      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await expect(marketingHome.pageH1).toBeVisible();
     });
   });
 

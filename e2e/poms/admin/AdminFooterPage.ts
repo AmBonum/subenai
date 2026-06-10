@@ -25,6 +25,14 @@ export class AdminFooterPage extends BasePage {
     return this.page.getByTestId("cms-footer-form-empty");
   }
 
+  /**
+   * Sonner success toast after save (portal-rendered, no testid hook) —
+   * verbatim Slovak copy is the user-facing contract.
+   */
+  get savedToast() {
+    return this.page.getByText("Päta uložená.");
+  }
+
   // ---- Columns -------------------------------------------------------------
 
   columnCard(idx: number) {

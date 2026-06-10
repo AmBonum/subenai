@@ -40,6 +40,20 @@ export class SharedSetPage extends BasePage {
     return this.page.getByTestId("shared-set-question-count");
   }
 
+  // E34 Phase 2 senior hero parts (eyebrow + subline + trust line).
+
+  get heroEyebrow() {
+    return this.page.getByTestId("respondent-hero-eyebrow");
+  }
+
+  get heroSubline() {
+    return this.page.getByTestId("respondent-hero-subline");
+  }
+
+  get heroTrust() {
+    return this.page.getByTestId("respondent-hero-trust");
+  }
+
   get startButton() {
     return this.page.getByTestId("shared-set-start-button");
   }

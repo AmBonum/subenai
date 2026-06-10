@@ -99,7 +99,7 @@ export interface SeedE49Sessions {
   staleQuestion?: SessionRow;
 }
 
-export interface SeedE49Tables {
+export type SeedE49Tables = {
   tests: TestRow[];
   sessions: SessionRow[];
   session_answers: SessionAnswerRow[];
@@ -113,7 +113,7 @@ export interface SeedE49Tables {
    * even if no spec needs row content yet.
    */
   test_questions: Array<{ test_id: string; question_id: string; position: number }>;
-}
+};
 
 export interface SeedE49Result {
   testId: string;

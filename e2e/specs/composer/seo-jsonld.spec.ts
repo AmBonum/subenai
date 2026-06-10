@@ -19,15 +19,16 @@
 //     block is injected into the DOM by TanStack Router after the lazy
 //     route chunk loads and mounts.
 //
-// We therefore use `page.locator(...)` with a wait timeout — which observes
-// the DOM after hydration in either runtime — rather than `page.content()`
-// (which would capture only the pre-hydration SSR HTML and miss the
-// WebApplication block under Vite dev).
+// We therefore use the DocumentHead POM locators with a wait timeout —
+// which observe the DOM after hydration in either runtime — rather than
+// `page.content()` (which would capture only the pre-hydration SSR HTML
+// and miss the WebApplication block under Vite dev).
 //
 // Dev server requirement: npm run dev must be running at BASE_URL.
 
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import type { DocumentHead } from "../../poms/shared/DocumentHead";
 
 interface JsonLdWebApp {
   "@context": string;
@@ -42,7 +43,7 @@ interface JsonLdWebApp {
   provider?: { "@type": string; name: string; url: string };
 }
 
-async function readWebAppJsonLd(page: import("@playwright/test").Page): Promise<JsonLdWebApp> {
+async function readWebAppJsonLd(docHead: DocumentHead): Promise<JsonLdWebApp> {
   // Wait up to 15 s for the WebApplication block to land in the DOM. On
   // CF Pages the block is in the initial HTML response and the wait is
   // a no-op; on Vite dev the route chunk has to load + head() runs in the
@@ -52,9 +53,7 @@ async function readWebAppJsonLd(page: import("@playwright/test").Page): Promise<
   // because the page already emits two root-template JSON-LD blocks
   // (Organization, WebSite) and the per-route emission order is an
   // implementation detail we don't want to depend on.
-  const webAppScript = page
-    .locator('script[type="application/ld+json"]')
-    .filter({ hasText: '"WebApplication"' });
+  const webAppScript = docHead.jsonLdScripts.filter({ hasText: '"WebApplication"' });
   await webAppScript.waitFor({ state: "attached", timeout: 15_000 });
 
   const raw = await webAppScript.first().textContent();
@@ -107,10 +106,10 @@ test.describe("E33 Phase 1 — composer JSON-LD WebApplication (SSR contract)", 
   // silently loses Google rich-result eligibility for "tool" surfaces.
   test("TC-50: emits a WebApplication JSON-LD block at /test/builder", async ({
     composer,
-    page,
+    docHead,
   }) => {
     await composer.open();
-    const ld = await readWebAppJsonLd(page);
+    const ld = await readWebAppJsonLd(docHead);
 
     expect(ld["@context"]).toBe("https://schema.org");
     expect(ld["@type"]).toBe("WebApplication");
@@ -124,10 +123,10 @@ test.describe("E33 Phase 1 — composer JSON-LD WebApplication (SSR contract)", 
   // mis-attribute the result in search.
   test("TC-51: WebApplication JSON-LD has all fields required for the Free Tool rich badge", async ({
     composer,
-    page,
+    docHead,
   }) => {
     await composer.open();
-    const ld = await readWebAppJsonLd(page);
+    const ld = await readWebAppJsonLd(docHead);
 
     expect(ld.isAccessibleForFree).toBe(true);
     expect(ld.applicationCategory).toBe("BusinessApplication");

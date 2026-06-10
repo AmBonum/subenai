@@ -6,6 +6,7 @@ import { ConsentPreferencesDialog } from "../poms/shared/ConsentPreferencesDialo
 import { SiteHeader } from "../poms/shared/SiteHeader";
 import { SiteFooter } from "../poms/shared/SiteFooter";
 import { NotFoundPage } from "../poms/shared/NotFoundPage";
+import { DocumentHead } from "../poms/shared/DocumentHead";
 import { HomePage } from "../poms/quiz/HomePage";
 import { ComposerPage } from "../poms/quiz/ComposerPage";
 import { QuizFlowPage } from "../poms/quiz/QuizFlowPage";
@@ -19,6 +20,8 @@ import { SupportPage } from "../poms/marketing/SupportPage";
 import { SponsorsPage } from "../poms/marketing/SponsorsPage";
 import { ManageSupportPage } from "../poms/marketing/ManageSupportPage";
 import { PodporaPage } from "../poms/sponsorship/PodporaPage";
+import { PodakovaniePage } from "../poms/sponsorship/PodakovaniePage";
+import { StripeCheckoutPage } from "../poms/external/StripeCheckoutPage";
 import { PrivacyPage, CookiesPage, ChangelogPage } from "../poms/marketing/LegalPages";
 import { KontaktPage } from "../poms/support/KontaktPage";
 import { KontaktTicketViewPage } from "../poms/support/KontaktTicketViewPage";
@@ -94,7 +97,10 @@ type Fixtures = {
   header: SiteHeader;
   footer: SiteFooter;
   notFound: NotFoundPage;
+  docHead: DocumentHead;
   podpora: PodporaPage;
+  podakovanie: PodakovaniePage;
+  stripeCheckout: StripeCheckoutPage;
   privacy: PrivacyPage;
   cookies: CookiesPage;
   changelog: ChangelogPage;
@@ -162,8 +168,17 @@ export const test = base.extend<Fixtures>({
   notFound: async ({ page }, use) => {
     await use(new NotFoundPage(page));
   },
+  docHead: async ({ page }, use) => {
+    await use(new DocumentHead(page));
+  },
   podpora: async ({ page }, use) => {
     await use(new PodporaPage(page));
+  },
+  podakovanie: async ({ page }, use) => {
+    await use(new PodakovaniePage(page));
+  },
+  stripeCheckout: async ({ page }, use) => {
+    await use(new StripeCheckoutPage(page));
   },
   privacy: async ({ page }, use) => {
     await use(new PrivacyPage(page));

@@ -16,8 +16,8 @@ import { primeConsent } from "../../fixtures/consent";
  */
 
 test.describe("/tests catalog — render + filter + sort", () => {
-  test.beforeEach(async ({ page }) => {
-    await primeConsent(page);
+  test.beforeEach(async ({ context }) => {
+    await primeConsent(context, "all");
   });
 
   // TC-01 — Catalog renders all 15 packs from DB and count badge matches.

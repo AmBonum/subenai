@@ -106,6 +106,24 @@ export class ResultsGatePage extends BasePage {
     return this.page.getByTestId(`resp-table-delete-btn-${attemptId}`);
   }
 
+  tableDetailButton(attemptId: string) {
+    return this.page.getByTestId(`resp-table-detail-btn-${attemptId}`);
+  }
+
+  // ── Respondent detail sub-route (/test/builder/$id/results/$attemptId) ──────
+
+  get respondentDetailPage() {
+    return this.page.getByTestId("respondent-detail-page");
+  }
+
+  get respondentDetailHeading() {
+    return this.page.getByTestId("respondent-detail-heading");
+  }
+
+  get respondentDetailBackLink() {
+    return this.page.getByTestId("respondent-detail-back-link");
+  }
+
   // ── Table sort headers ────────────────────────────────────────────────────────
 
   /** The <th> element for a sortable column identified by its visible label text. */

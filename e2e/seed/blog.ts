@@ -1,19 +1,19 @@
 import { nextId, pad } from "./counters";
 
-export interface BlogCategoryRow {
+export type BlogCategoryRow = {
   id: string;
   slug: string;
   name: string;
   sort_order: number;
-}
+};
 
-export interface BlogAuthorRow {
+export type BlogAuthorRow = {
   id: string;
   slug: string;
   display_name: string;
-}
+};
 
-export interface BlogPostRow {
+export type BlogPostRow = {
   id: string;
   slug: string;
   title: string;
@@ -44,7 +44,7 @@ export interface BlogPostRow {
   // The mock returns rows as-is, so these must be present on the seed row.
   category: { slug: string; name: string };
   author: { slug: string; display_name: string };
-}
+};
 
 export function seedBlogCategory(overrides: Partial<BlogCategoryRow> = {}): BlogCategoryRow {
   const n = nextId("blog_category");

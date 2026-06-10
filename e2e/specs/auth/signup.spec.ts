@@ -54,38 +54,6 @@ async function stubSignupError(
   });
 }
 
-/**
- * Stub `POST /auth/v1/signup` with a delayed success response (for double-click
- * and in-flight state tests). Delay in ms defaults to 400.
- */
-async function stubSignupDelayed(
-  page: import("@playwright/test").Page,
-  delayMs = 400,
-): Promise<{ requestCount: () => number }> {
-  let count = 0;
-  await page.route("**/auth/v1/signup**", async (route) => {
-    if (route.request().method() !== "POST") {
-      await route.fallback();
-      return;
-    }
-    count++;
-    await new Promise((r) => setTimeout(r, delayMs));
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        session: null,
-        user: {
-          id: "00000000-0000-0000-0000-000000000001",
-          email: "test@example.com",
-          confirmation_sent_at: new Date().toISOString(),
-        },
-      }),
-    });
-  });
-  return { requestCount: () => count };
-}
-
 // ---------------------------------------------------------------------------
 // Happy paths
 // ---------------------------------------------------------------------------
@@ -527,10 +495,6 @@ test.describe("Signup page — edge cases", () => {
     page,
   }) => {
     const signup = new SignupPage(page);
-
-    await test.step("Stub /auth/v1/signup with a 400 ms delay then success, and count requests", async () => {
-      // stubSignupDelayed returns a counter accessor; we store it for the assertion
-    });
 
     let requestCount = 0;
     await page.route("**/auth/v1/signup**", async (route) => {

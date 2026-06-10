@@ -88,9 +88,7 @@ test.describe("Forgot-password page — happy paths", () => {
     });
 
     await test.step("Verify the subtitle is visible", async () => {
-      await expect(
-        page.getByText("Zadaj e-mail a pošleme ti odkaz na obnovu hesla."),
-      ).toBeVisible();
+      await expect(forgot.subtitle).toBeVisible();
     });
 
     await test.step("Verify the e-mail input is visible and empty", async () => {

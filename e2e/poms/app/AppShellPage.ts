@@ -170,4 +170,13 @@ export class AppShellPage extends BasePage {
   get confirmDialogCancel() {
     return this.page.getByTestId("app-shell-confirm-dialog-cancel");
   }
+
+  /**
+   * Sonner "signed out" confirmation toast fired by <SignedOutFlash /> on
+   * the public root after logout. Sonner renders in a portal with no
+   * testid hook — verbatim Slovak text is the user-facing contract.
+   */
+  get signedOutToast() {
+    return this.page.getByText("Boli ste odhlásení.");
+  }
 }

@@ -52,7 +52,6 @@ test.describe("Public submission — /contact-form", () => {
 
   // TC-01: Anonymous submitter completes the contact form and sees ticket id in success state
   test("TC-01: Anonymous submitter completes the form and sees ticket id in success state", async ({
-    page,
     kontakt,
   }) => {
     await test.step("Open /contact-form", async () => {
@@ -198,7 +197,7 @@ test.describe("Public submission — /contact-form", () => {
   });
 
   // TC-23: Double-click on "Odoslať žiadosť" sends exactly one POST
-  test("TC-23: Double-click on submit button sends exactly one POST", async ({ page, kontakt }) => {
+  test("TC-23: Double-click on submit button sends exactly one POST", async ({ kontakt }) => {
     await test.step("Open /contact-form and fill all required fields", async () => {
       await kontakt.open();
       await kontakt.subjectInput.fill("Testovacia žiadosť pre double-click");

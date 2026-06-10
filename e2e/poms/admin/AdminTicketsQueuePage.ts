@@ -106,6 +106,15 @@ export class AdminTicketsQueuePage extends BasePage {
     return this.page.getByTestId(`admin-tickets-sort-indicator-${column}`);
   }
 
+  // ConfirmDialog (portal-rendered shadcn AlertDialog) ------------------
+  get confirmDialog(): Locator {
+    return this.page.getByTestId("app-shell-confirm-dialog-root");
+  }
+
+  get confirmDialogConfirm(): Locator {
+    return this.page.getByTestId("app-shell-confirm-dialog-confirm");
+  }
+
   async open(): Promise<void> {
     await this.goto(AdminTicketsQueuePage.PATH);
     await this.root.waitFor({ state: "visible" });

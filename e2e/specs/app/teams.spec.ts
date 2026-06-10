@@ -129,7 +129,7 @@ test.describe("/app/teams — members list", () => {
     const row = teams.memberRow(MEMBER_ROW.id);
     await expect(row).toBeVisible();
     await expect(row).toContainText(MEMBER_PROFILE.display_name!);
-    await expect(row).toContainText(MEMBER_PROFILE.email);
+    await expect(row).toContainText(MEMBER_PROFILE.email!);
   });
 
   test("each member row exposes a role select and remove button", async ({ page }) => {

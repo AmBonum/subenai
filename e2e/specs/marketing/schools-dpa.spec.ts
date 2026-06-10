@@ -70,11 +70,11 @@ test.describe("/schools/dpa — DPA intake route", () => {
   });
 
   test("route is noindex,nofollow (intake page should not show in SERP)", async ({
-    page,
+    docHead,
     schoolsDpa,
   }) => {
     await schoolsDpa.open();
-    const robots = await page.locator('meta[name="robots"]').getAttribute("content");
+    const robots = await docHead.robotsContent();
     expect(robots).toMatch(/noindex/);
     expect(robots).toMatch(/nofollow/);
   });

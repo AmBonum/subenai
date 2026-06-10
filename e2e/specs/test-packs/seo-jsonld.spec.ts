@@ -1,5 +1,6 @@
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import type { DocumentHead } from "../../poms/shared/DocumentHead";
 
 /**
  * E37 — SEO JSON-LD blobs on /tests + /tests/$slug.
@@ -24,8 +25,8 @@ import { primeConsent } from "../../fixtures/consent";
  * Runtime caveat (see e2e/specs/composer/seo-jsonld.spec.ts header):
  *   - Production CF Pages: head() runs in SSR worker; JSON-LD ships in
  *     the initial HTML response.
- *   - npm run dev (Vite): head() runs client-side after hydration; we
- *     use page.locator(...) which observes the DOM either way.
+ *   - npm run dev (Vite): head() runs client-side after hydration; the
+ *     DocumentHead POM locators observe the DOM either way.
  */
 
 interface JsonLdBlob {
@@ -34,8 +35,8 @@ interface JsonLdBlob {
   [key: string]: unknown;
 }
 
-async function readJsonLdBlobs(page: import("@playwright/test").Page): Promise<JsonLdBlob[]> {
-  const scripts = page.locator('script[type="application/ld+json"]');
+async function readJsonLdBlobs(docHead: DocumentHead): Promise<JsonLdBlob[]> {
+  const scripts = docHead.jsonLdScripts;
   await scripts.first().waitFor({ state: "attached", timeout: 5_000 });
   const count = await scripts.count();
   const out: JsonLdBlob[] = [];
@@ -56,24 +57,24 @@ async function readJsonLdBlobs(page: import("@playwright/test").Page): Promise<J
 }
 
 test.describe("/tests catalog — SEO JSON-LD blobs (TC-14)", () => {
-  test.beforeEach(async ({ page }) => {
-    await primeConsent(page);
+  test.beforeEach(async ({ context }) => {
+    await primeConsent(context, "all");
   });
 
-  test("emits ItemList AND FAQPage JSON-LD blobs", async ({ page, testsDirectory }) => {
+  test("emits ItemList AND FAQPage JSON-LD blobs", async ({ docHead, testsDirectory }) => {
     await testsDirectory.index.open();
-    const blobs = await readJsonLdBlobs(page);
+    const blobs = await readJsonLdBlobs(docHead);
     const types = blobs.map((b) => b["@type"]);
     expect(types).toContain("ItemList");
     expect(types).toContain("FAQPage");
   });
 
   test("ItemList carries non-empty itemListElement of /tests/<slug> URLs", async ({
-    page,
+    docHead,
     testsDirectory,
   }) => {
     await testsDirectory.index.open();
-    const blobs = await readJsonLdBlobs(page);
+    const blobs = await readJsonLdBlobs(docHead);
     const itemList = blobs.find((b) => b["@type"] === "ItemList");
     expect(itemList).toBeDefined();
     const elements = (itemList as { itemListElement?: Array<{ url?: string }> }).itemListElement;
@@ -84,9 +85,9 @@ test.describe("/tests catalog — SEO JSON-LD blobs (TC-14)", () => {
     }
   });
 
-  test("FAQPage carries 5 mainEntity Question entries", async ({ page, testsDirectory }) => {
+  test("FAQPage carries 5 mainEntity Question entries", async ({ docHead, testsDirectory }) => {
     await testsDirectory.index.open();
-    const blobs = await readJsonLdBlobs(page);
+    const blobs = await readJsonLdBlobs(docHead);
     const faq = blobs.find((b) => b["@type"] === "FAQPage");
     expect(faq).toBeDefined();
     const entries = (faq as { mainEntity?: Array<{ "@type"?: string }> }).mainEntity;
@@ -100,16 +101,16 @@ test.describe("/tests catalog — SEO JSON-LD blobs (TC-14)", () => {
 });
 
 test.describe("/tests/$slug — SEO JSON-LD blob (TC-15)", () => {
-  test.beforeEach(async ({ page }) => {
-    await primeConsent(page);
+  test.beforeEach(async ({ context }) => {
+    await primeConsent(context, "all");
   });
 
   test("detail page emits Quiz JSON-LD with pack title + slug-canonical URL", async ({
-    page,
+    docHead,
     testsDirectory,
   }) => {
     await testsDirectory.pack.open("heslo-2fa");
-    const blobs = await readJsonLdBlobs(page);
+    const blobs = await readJsonLdBlobs(docHead);
     const quiz = blobs.find((b) => b["@type"] === "Quiz");
     expect(quiz).toBeDefined();
     const name = (quiz as { name?: string }).name;
@@ -119,9 +120,9 @@ test.describe("/tests/$slug — SEO JSON-LD blob (TC-15)", () => {
     expect(url).toMatch(/\/tests\/heslo-2fa$/);
   });
 
-  test("detail page sets canonical link to the slug URL", async ({ page, testsDirectory }) => {
+  test("detail page sets canonical link to the slug URL", async ({ docHead, testsDirectory }) => {
     await testsDirectory.pack.open("heslo-2fa");
-    const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
+    const canonical = await docHead.canonicalHref();
     expect(canonical).toMatch(/\/tests\/heslo-2fa$/);
   });
 });

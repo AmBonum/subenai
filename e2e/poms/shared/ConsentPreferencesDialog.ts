@@ -51,10 +51,11 @@ export class ConsentPreferencesDialog {
   /**
    * The "X" close button rendered by the shadcn DialogContent wrapper.
    * It has no call-site testid (the button is hardcoded inside the wrapper);
-   * we locate it by its accessible name ("Close") scoped to the dialog root.
+   * we locate it by its accessible name (sr-only "Zavrieť" in
+   * src/components/ui/dialog.tsx) scoped to the dialog root.
    */
   get closeButton(): Locator {
-    return this.root.getByRole("button", { name: "Close" });
+    return this.root.getByRole("button", { name: "Zavrieť" });
   }
 
   async clickSave(): Promise<void> {

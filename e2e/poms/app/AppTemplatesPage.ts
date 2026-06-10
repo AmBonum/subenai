@@ -48,4 +48,12 @@ export class AppTemplatesPage extends BasePage {
   get allRows() {
     return this.page.locator('[data-testid^="templates-list-row-"]');
   }
+
+  /**
+   * A Radix Select option in the open category-filter dropdown. SelectItem
+   * carries no testid, so role+name is the locator (precedence #2).
+   */
+  categoryFilterOption(name: string) {
+    return this.page.getByRole("option", { name, exact: true });
+  }
 }

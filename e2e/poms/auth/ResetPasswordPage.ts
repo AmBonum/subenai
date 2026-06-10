@@ -21,6 +21,14 @@ export class ResetPasswordPage extends BasePage {
     return this.page.getByTestId("reset-heading");
   }
 
+  /**
+   * Card subtitle — the CardDescription carries no testid (candidate:
+   * `reset-subtitle`); verbatim Slovak text is the locator meanwhile.
+   */
+  get subtitle() {
+    return this.page.getByText("Zadaj nové heslo k svojmu účtu.");
+  }
+
   get form() {
     return this.page.getByTestId("reset-form");
   }

@@ -141,37 +141,12 @@ async function stubVerifyAbort(page: import("@playwright/test").Page) {
   });
 }
 
-async function stubChallengeDelayed(page: import("@playwright/test").Page, delayMs: number) {
-  await page.route(`**/auth/v1/factors/${FACTOR_ID}/challenge**`, async (route) => {
-    await new Promise((r) => setTimeout(r, delayMs));
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({ id: CHALLENGE_ID, factor_id: FACTOR_ID }),
-    });
-  });
-}
-
 async function stubBackupCodeResult(page: import("@playwright/test").Page, result: boolean) {
   await page.route("**/rest/v1/rpc/consume_mfa_backup_code**", async (route) => {
     await route.fulfill({
       status: 200,
       contentType: "application/json",
       body: JSON.stringify(result),
-    });
-  });
-}
-
-// Stub profile_preferences so that /app's beforeLoad does not redirect to /app/onboarding
-async function stubProfilePreferences(page: import("@playwright/test").Page) {
-  await page.route("**/rest/v1/profile_preferences**", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        user_id: ADMIN_AAL1_SESSION.user.id,
-        onboarded_at: "2026-05-01T00:00:00.000Z",
-      }),
     });
   });
 }
@@ -525,7 +500,7 @@ test.describe("2FA verification page — beforeLoad redirects", () => {
   // TC-08: Already-AAL2 session → beforeLoad redirects immediately to /app
   //
   // FINDING: server-side beforeLoad — uncheckable via page.route()
-  test.skip("TC-08: Already-AAL2 session → beforeLoad redirects immediately to /app", async ({
+  test.fixme("TC-08: Already-AAL2 session → beforeLoad redirects immediately to /app", async ({
     page,
     context,
   }) => {
@@ -556,7 +531,7 @@ test.describe("2FA verification page — beforeLoad redirects", () => {
   // TC-09: Unauthenticated visit → beforeLoad redirects to /login
   //
   // FINDING: server-side beforeLoad — uncheckable via page.route()
-  test.skip("TC-09: Unauthenticated visit → beforeLoad redirects to /login", async ({ page }) => {
+  test.fixme("TC-09: Unauthenticated visit → beforeLoad redirects to /login", async ({ page }) => {
     const verify = new Verify2faPage(page);
 
     await test.step("Navigate to /login/verify-2fa with no session in localStorage", async () => {
@@ -576,12 +551,10 @@ test.describe("2FA verification page — beforeLoad redirects", () => {
   // TC-10: AAL1 session with no verified TOTP factor → beforeLoad redirects to /login/enroll-2fa
   //
   // FINDING: server-side beforeLoad — uncheckable via page.route()
-  test.skip("TC-10: AAL1 session with no verified TOTP factor → beforeLoad redirects to /login/enroll-2fa", async ({
+  test.fixme("TC-10: AAL1 session with no verified TOTP factor → beforeLoad redirects to /login/enroll-2fa", async ({
     page,
     context,
   }) => {
-    const verify = new Verify2faPage(page);
-
     await test.step("Seed AAL1 session with no verified factors and intercept factors returning empty totp", async () => {
       await primeAuthSession(context, page, EDUCATOR_SESSION);
       await page.route("**/auth/v1/factors**", async (route) => {
@@ -720,12 +693,12 @@ test.describe("2FA verification page — edge cases", () => {
       await expect(verify.backupForm).toBeVisible({ timeout: 4000 });
     });
 
-    await test.step("Type 'abcde-12345' (lowercase) into the backup input", async () => {
-      await verify.fillBackupCode("abcde-12345");
+    await test.step("Type 'abcd1234-ef567890' (lowercase) into the backup input", async () => {
+      await verify.fillBackupCode("abcd1234-ef567890");
     });
 
-    await test.step("Verify the displayed value is 'ABCDE-12345' (all uppercase)", async () => {
-      await expect(verify.backupInput).toHaveValue("ABCDE-12345");
+    await test.step("Verify the displayed value is 'ABCD1234-EF567890' (all uppercase)", async () => {
+      await expect(verify.backupInput).toHaveValue("ABCD1234-EF567890");
     });
   });
 
@@ -922,7 +895,7 @@ test.describe("2FA verification page — edge cases", () => {
     });
 
     await test.step("Type a valid-looking backup code into the backup input", async () => {
-      await verify.fillBackupCode("ABCDE-12345");
+      await verify.fillBackupCode("ABCD1234-EF567890");
     });
 
     await test.step("Click 'Použiť kód'", async () => {

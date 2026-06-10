@@ -284,9 +284,7 @@ test.describe("/app/account/profile — GDPR data export (Art. 15 + 20)", () => 
     });
     await profile.open();
     await profile.dataExportButton.click();
-    await expect(
-      page.getByText("Tvoja relácia vypršala — prihlás sa znova a skús to ešte raz."),
-    ).toBeVisible();
+    await expect(profile.exportUnauthorizedToast).toBeVisible();
   });
 
   // TC-11: Server-side failure path — a 500 from the API surfaces the
@@ -308,18 +306,16 @@ test.describe("/app/account/profile — GDPR data export (Art. 15 + 20)", () => 
     });
     await profile.open();
     await profile.dataExportButton.click();
-    await expect(
-      page.getByText(
-        "Export sa nepodaril. Skús to o chvíľu znova, alebo nám napíš na subenai.podpora@gmail.com.",
-      ),
-    ).toBeVisible();
+    await expect(profile.exportGenericErrorToast).toBeVisible();
   });
 
   // TC-12: The button is disabled while a request is in flight.
   // Without this, double-clicks fire duplicate fetches.
   test("TC-12: button disables while the export is in flight", async ({ page }) => {
     const profile = new AppAccountProfilePage(page);
-    let release: (() => void) | null = null;
+    // Explicit wide annotation — TS doesn't track the assignment inside
+    // the Promise executor and would otherwise narrow `release` to null.
+    let release: (() => void) | undefined;
     const block = new Promise<void>((r) => {
       release = r;
     });

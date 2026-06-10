@@ -19,6 +19,11 @@ export class QuizFlowPage extends BasePage {
     return this.page.getByTestId("quiz-flow-progress");
   }
 
+  /** The progress indicator narrowed to a specific "Otázka X / Y" label. */
+  progressWithText(label: string) {
+    return this.progressIndicator.filter({ hasText: label });
+  }
+
   get timer() {
     return this.page.getByTestId("quiz-flow-timer");
   }

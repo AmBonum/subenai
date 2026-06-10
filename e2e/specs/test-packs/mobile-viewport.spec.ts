@@ -16,8 +16,8 @@ import { primeConsent } from "../../fixtures/consent";
 test.use({ viewport: { width: 375, height: 667 } });
 
 test.describe("/tests catalog — 375x667 mobile viewport (TC-29)", () => {
-  test.beforeEach(async ({ page }) => {
-    await primeConsent(page);
+  test.beforeEach(async ({ context }) => {
+    await primeConsent(context, "all");
   });
 
   test("standard + courses CTAs are within the 375px viewport width", async ({
@@ -45,14 +45,13 @@ test.describe("/tests catalog — 375x667 mobile viewport (TC-29)", () => {
   });
 
   test("touch targets on sort + filter chips remain ≥44px at narrow viewport", async ({
-    page,
     testsDirectory,
   }) => {
     await testsDirectory.index.open();
     const sortBox = await testsDirectory.index.sortSelect.boundingBox();
     expect(sortBox).not.toBeNull();
     expect(sortBox!.height).toBeGreaterThanOrEqual(44);
-    const chip = page.locator('[data-testid^="tests-catalog-filter-"]').first();
+    const chip = testsDirectory.index.filterChips.first();
     const chipBox = await chip.boundingBox();
     if (chipBox) {
       expect(chipBox.height).toBeGreaterThanOrEqual(44);

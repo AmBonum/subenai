@@ -56,6 +56,11 @@ export class KontaktPage extends BasePage {
     return this.page.getByTestId("kontakt-form-submit-button");
   }
 
+  /** Turnstile widget mount point — present only in the anonymous variant. */
+  get turnstileSlot(): Locator {
+    return this.page.getByTestId("kontakt-form-turnstile-slot");
+  }
+
   // Error states --------------------------------------------------------
   get subjectError(): Locator {
     return this.page.getByTestId("kontakt-form-error-subject");

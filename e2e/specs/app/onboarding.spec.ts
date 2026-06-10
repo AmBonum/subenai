@@ -17,7 +17,7 @@ test.describe("/app/onboarding — form renders + happy paths", () => {
     });
   });
 
-  test("TC-01: page renders with all fieldsets and no site header", async ({ page }) => {
+  test("TC-01: page renders with all fieldsets and no site header", async ({ page, header }) => {
     const onboarding = new AppOnboardingPage(page);
     await onboarding.open();
 
@@ -32,7 +32,7 @@ test.describe("/app/onboarding — form renders + happy paths", () => {
 
     // `staticData.hideSiteHeader = true` should suppress the marketing
     // header — assert it's NOT in the DOM at all.
-    await expect(page.locator("header[role='banner']")).toHaveCount(0);
+    await expect(header.root).toHaveCount(0);
   });
 
   test("TC-02: audience radio toggles selected state", async ({ page }) => {
