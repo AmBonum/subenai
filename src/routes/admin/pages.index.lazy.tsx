@@ -1,9 +1,9 @@
 import { createLazyFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,6 @@ export const Route = createLazyFileRoute("/admin/pages/")({
 
 function AdminCmsPagesPage() {
   const t = tFor("pagesList");
-  const qc = useQueryClient();
   const pagesQuery = useCmsPages();
   const createPage = useCreateCmsPage();
   const deletePage = useDeleteCmsPage();
@@ -45,6 +44,7 @@ function AdminCmsPagesPage() {
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<PageStatus | "all">("all");
+  const [confirmDelete, setConfirmDelete] = useState<CmsPage | null>(null);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -66,9 +66,6 @@ function AdminCmsPagesPage() {
   };
 
   const onDelete = (id: string) => {
-    qc.setQueryData<CmsPage[]>(["admin", "cms", "pages"], (prev) =>
-      (prev ?? []).filter((p) => p.id !== id),
-    );
     deletePage.mutate(id, {
       onSuccess: () => toast.success(t("delete")),
       onError: (e) => toast.error((e as Error).message),
@@ -161,7 +158,7 @@ function AdminCmsPagesPage() {
                           size="icon"
                           variant="ghost"
                           title={t("delete")}
-                          onClick={() => onDelete(p.id)}
+                          onClick={() => setConfirmDelete(p)}
                           data-testid={`cms-pages-list-delete-${p.id}`}
                           className="text-destructive hover:text-destructive"
                         >
@@ -176,6 +173,22 @@ function AdminCmsPagesPage() {
           </Table>
         </CardContent>
       </Card>
+
+      <ConfirmDialog
+        open={!!confirmDelete}
+        onOpenChange={(o) => !o && setConfirmDelete(null)}
+        title="Zmazať stránku?"
+        description={
+          confirmDelete
+            ? `Stránka „${confirmDelete.title}“ (/${confirmDelete.slug}) bude nenávratne zmazaná.`
+            : undefined
+        }
+        confirmLabel={t("delete")}
+        severity="destructive"
+        onConfirm={() => {
+          if (confirmDelete) onDelete(confirmDelete.id);
+        }}
+      />
     </div>
   );
 }

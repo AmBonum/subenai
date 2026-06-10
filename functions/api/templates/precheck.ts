@@ -21,6 +21,7 @@
 //  10. Return summarised verdict — never raw JSON or PII.
 
 import { createClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
 import {
@@ -37,6 +38,12 @@ import {
   toVerdict,
   type PrecheckEnvelope,
 } from "../../../src/lib/templates/precheckSchema";
+
+// `createClient()` without generated types infers `Database = any`;
+// `ReturnType<typeof createClient>` resolves the generic defaults to
+// `unknown` instead, so helper params need the inferred shape spelled out.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DbClient = SupabaseClient<any, "public", "public", any, any>;
 
 interface Env {
   ANTHROPIC_API_KEY: string;
@@ -141,7 +148,7 @@ interface TemplateRow {
 }
 
 async function loadTemplateForAuthor(
-  service: ReturnType<typeof createClient>,
+  service: DbClient,
   templateId: string,
   userId: string,
 ): Promise<TemplateRow | null> {
@@ -164,7 +171,7 @@ interface RecentSubmission {
 const REJECTION_COOLDOWN_HOURS = 24;
 
 async function findCooldownBlocker(
-  service: ReturnType<typeof createClient>,
+  service: DbClient,
   templateId: string,
   userId: string,
 ): Promise<RecentSubmission | null> {
@@ -182,7 +189,7 @@ async function findCooldownBlocker(
   return data[0] as RecentSubmission;
 }
 
-async function readSpentTodayUsd(service: ReturnType<typeof createClient>): Promise<number> {
+async function readSpentTodayUsd(service: DbClient): Promise<number> {
   const today = new Date().toISOString().slice(0, 10);
   const { data, error } = await service
     .from("template_submissions")
@@ -198,10 +205,7 @@ async function readSpentTodayUsd(service: ReturnType<typeof createClient>): Prom
   return sum;
 }
 
-async function getAuthorDisplayName(
-  service: ReturnType<typeof createClient>,
-  userId: string,
-): Promise<string> {
+async function getAuthorDisplayName(service: DbClient, userId: string): Promise<string> {
   const { data } = await service
     .from("profiles")
     .select("display_name, email")

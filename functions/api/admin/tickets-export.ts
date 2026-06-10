@@ -6,7 +6,7 @@
 //   1. Authorization: Bearer <jwt> required → 401 if absent.
 //   2. auth.getUser() validates the JWT against Supabase → 401 if invalid.
 //   3. has_role(uid, 'admin') RPC → 403 if not admin.
-//   4. JWT payload aal claim must equal 'aal2' → 403 if not.
+//   4. AAL2 required (native aal claim OR backup-code stamp) → 403 if not.
 //   5. Rate limit: 1 export / 60s per admin sub (KV-backed in prod).
 //
 // After the query succeeds:
@@ -16,6 +16,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 
+import { decodeJwtPayload, isAal2 } from "../../_lib/aal";
 import { consumeRateLimit, type SupportRateLimitKV } from "../../_lib/security";
 import { PROD_SUPABASE_URL } from "../../_lib/supabase-url";
 
@@ -166,19 +167,6 @@ function formatBratislava(isoString: string): string {
   }
 }
 
-function decodeJwtPayload(jwt: string): { aal?: string; sub?: string; email?: string } | null {
-  try {
-    const parts = jwt.split(".");
-    if (parts.length !== 3) return null;
-    const b64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    const padding = "=".repeat((4 - (b64.length % 4)) % 4);
-    const json = atob(b64 + padding);
-    return JSON.parse(json) as { aal?: string; sub?: string; email?: string };
-  } catch {
-    return null;
-  }
-}
-
 type TicketRow = {
   id: string;
   created_at: string;
@@ -300,11 +288,12 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     return jsonResponse(403, { error: "not_admin" });
   }
 
-  // AAL2 check — defence-in-depth on the CF function side
-  const jwtPayload = decodeJwtPayload(jwt);
-  if (jwtPayload?.aal !== "aal2") {
+  // AAL2 check — defence-in-depth on the CF function side. isAal2 also
+  // honours the backup-code recovery stamp (app_metadata.aal2_via_backup_until).
+  if (!isAal2(jwt, userData.user.app_metadata)) {
     return jsonResponse(403, { error: "aal2_required" });
   }
+  const jwtPayload = decodeJwtPayload(jwt);
 
   const adminEmail = jwtPayload?.email ?? userData.user.email ?? adminUserId;
   const adminSub = jwtPayload?.sub ?? adminUserId;
@@ -423,10 +412,12 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
         row_count: actualRowCount,
       },
     })
-    .then(() => {})
-    .catch((err: unknown) => {
-      console.warn("tickets-export audit_log insert failed", err);
-    });
+    .then(
+      () => {},
+      (err: unknown) => {
+        console.warn("tickets-export audit_log insert failed", err);
+      },
+    );
 
   const filename = `ziadosti-podpory-${today}.csv`;
 

@@ -67,7 +67,7 @@ function buildRequest(opts: {
     // to a few bytes during the multipart roundtrip). Wrap in a Blob
     // built from the underlying ArrayBuffer — that preserves binary
     // bytes faithfully across jsdom + Node FormData implementations.
-    const blob = new Blob([opts.file.content.buffer.slice(0)], {
+    const blob = new Blob([opts.file.content.buffer.slice(0) as ArrayBuffer], {
       type: opts.file.type,
     });
     form.append("file", blob, opts.file.name);

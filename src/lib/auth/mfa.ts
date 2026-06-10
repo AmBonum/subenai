@@ -158,26 +158,36 @@ export async function generateBackupCodes(): Promise<string[]> {
   return data as string[];
 }
 
+export type ConsumeBackupCodeResult = "ok" | "invalid" | "refresh_failed";
+
 /**
- * Consume a backup code. Returns true if the code was valid and unused,
- * false otherwise. The DB function atomically flips used_at = now() AND
- * stamps app_metadata.aal2_via_backup_until = now() + 30min (AH-12.8).
+ * Consume a backup code. The DB function atomically flips used_at = now()
+ * AND stamps app_metadata.aal2_via_backup_until = now() + 30min (AH-12.8).
  * On success we refresh the session so the new app_metadata reaches the
  * JWT and getAALStatus() will return "aal2" on the next call.
+ *
+ * Returns:
+ *   - "invalid"        — code rejected (wrong or already used)
+ *   - "refresh_failed" — code consumed BUT the session refresh failed, so
+ *     the local JWT lacks the AAL2 stamp. Callers must NOT navigate into
+ *     /admin (the guard would bounce back here in a loop) — surface the
+ *     failure instead. The code is spent either way.
+ *   - "ok"             — consumed + session carries the stamp
  */
-export async function consumeBackupCode(code: string): Promise<boolean> {
+export async function consumeBackupCode(code: string): Promise<ConsumeBackupCodeResult> {
   const { data, error } = await supabase.rpc("consume_mfa_backup_code", {
     p_code: code.trim(),
   });
   if (error || data !== true) {
-    return false;
+    return "invalid";
   }
-  // Pull the updated user.app_metadata into the local session so the
-  // downstream /admin guard's getAALStatus() sees the new timestamp.
-  // refreshSession is idempotent and won't fail destructively if the
-  // server rejects — we still return true so the UI continues.
-  await supabase.auth.refreshSession().catch(() => undefined);
-  return true;
+  try {
+    const { error: refreshError } = await supabase.auth.refreshSession();
+    if (refreshError) return "refresh_failed";
+  } catch {
+    return "refresh_failed";
+  }
+  return "ok";
 }
 
 /**

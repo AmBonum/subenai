@@ -2,16 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Copy, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import {
   useArchiveBlogPost,
@@ -137,28 +128,16 @@ export function BlogRowActions({ post }: BlogRowActionsProps) {
         <Trash2 className="size-4" />
       </Button>
 
-      <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-        <AlertDialogContent data-testid={`admin-blog-delete-confirm-${post.slug}`}>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Vymazať článok?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Týmto natrvalo vymažeš článok „{post.title}". Operáciu nemožno vrátiť.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel data-testid={`admin-blog-delete-cancel-${post.slug}`}>
-              Zrušiť
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              data-testid={`admin-blog-delete-confirm-button-${post.slug}`}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Vymazať natrvalo
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog
+        open={confirmDelete}
+        onOpenChange={setConfirmDelete}
+        title="Vymazať článok?"
+        description={`Týmto natrvalo vymažeš článok „${post.title}". Operáciu nemožno vrátiť.`}
+        confirmLabel="Vymazať natrvalo"
+        cancelLabel="Zrušiť"
+        severity="destructive"
+        onConfirm={() => void handleDelete()}
+      />
     </div>
   );
 }

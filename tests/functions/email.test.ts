@@ -70,6 +70,19 @@ describe("sendEmail", () => {
     expect(result.error).toBe("resend_422");
   });
 
+  it("scrubs email-shaped substrings from the logged Resend error body", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response('{"message":"Invalid recipient jan.novak@example.sk rejected"}', {
+        status: 422,
+      }),
+    );
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    await sendEmail(env, { to: "jan.novak@example.sk", subject: "s", html: "h" });
+    const logged = errorSpy.mock.calls[0]?.[1] as { body: string };
+    expect(logged.body).not.toContain("jan.novak@example.sk");
+    expect(logged.body).toContain("[email]");
+  });
+
   it("returns ok:false when fetch throws", async () => {
     vi.spyOn(globalThis, "fetch").mockRejectedValue(new TypeError("network down"));
     const result = await sendEmail(env, { to: "x@y.test", subject: "s", html: "h" });

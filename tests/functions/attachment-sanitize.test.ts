@@ -131,7 +131,7 @@ async function buildPdfWithStreamFilter(filter: string | string[]): Promise<Uint
     ? filter.map((n) => PDFName.of(n))
     : PDFName.of(filter);
   const stream = ctx.stream(new Uint8Array([0x00, 0x01, 0x02]), {
-    Filter: filterEntry,
+    Filter: filterEntry as PDFName,
   });
   ctx.register(stream);
   return doc.save();

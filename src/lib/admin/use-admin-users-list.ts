@@ -16,7 +16,7 @@ export function useAdminUsersList() {
         console.warn("list_admin_users failed", error);
         return [];
       }
-      return (data ?? []) as AdminUser[];
+      return data ?? [];
     },
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,

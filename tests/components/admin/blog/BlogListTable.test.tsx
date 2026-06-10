@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import type { ComponentProps, ReactNode } from "react";
 
 import type { AdminBlogPostListItem } from "@/lib/blog/admin-queries";

@@ -17,10 +17,17 @@
 // and can manually re-send from the Resend dashboard (runbook §7).
 
 import { createClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { sendEmail } from "../_lib/email";
 import { supportTicketReplyEmail } from "../_lib/email-templates";
 import { PROD_SUPABASE_URL } from "../_lib/supabase-url";
+
+// `createClient()` without generated types infers `Database = any`;
+// `ReturnType<typeof createClient>` resolves the generic defaults to
+// `unknown` instead, so helper params need the inferred shape spelled out.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DbClient = SupabaseClient<any, "public", "public", any, any>;
 
 interface Env {
   SUPABASE_URL?: string;
@@ -274,10 +281,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   });
 }
 
-async function mintFreshViewToken(
-  client: ReturnType<typeof createClient>,
-  ticketId: string,
-): Promise<string | null> {
+async function mintFreshViewToken(client: DbClient, ticketId: string): Promise<string | null> {
   try {
     const { data, error } = await client.rpc("regenerate_support_ticket_view_token", {
       p_ticket_id: ticketId,

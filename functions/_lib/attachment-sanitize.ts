@@ -337,7 +337,7 @@ export async function stripPdfRiskyFeatures(bytes: Uint8Array): Promise<PdfStrip
  * + jsdom (vitest) — no polyfill needed.
  */
 export async function computeSha256Hex(bytes: Uint8Array): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  const digest = await crypto.subtle.digest("SHA-256", bytes as BufferSource);
   return Array.from(new Uint8Array(digest))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");

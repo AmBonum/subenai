@@ -94,7 +94,7 @@ describe("DpaRequestsQueue", () => {
     expect(callArg.row.id).toBe("row-1");
   });
 
-  it("anonymise button opens the destructive ConfirmDialog and fires the mutation on confirm", async () => {
+  it("anonymise button opens the destructive ConfirmDialog and fires the mutation after typed confirm", async () => {
     const user = userEvent.setup();
     render(<DpaRequestsQueue />);
     await user.click(screen.getByTestId("dpa-queue-anonymise-row-1"));
@@ -104,7 +104,13 @@ describe("DpaRequestsQueue", () => {
     expect(dialog).toBeInTheDocument();
     expect(dialog.getAttribute("data-severity")).toBe("destructive");
     expect(screen.getByTestId("app-shell-confirm-dialog-icon-destructive")).toBeInTheDocument();
-    await user.click(screen.getByTestId("app-shell-confirm-dialog-confirm"));
+    const confirm = screen.getByTestId("app-shell-confirm-dialog-confirm") as HTMLButtonElement;
+    // Irreversible PII action — confirm stays disabled until the admin
+    // types the target contact e-mail exactly.
+    expect(confirm.disabled).toBe(true);
+    await user.type(screen.getByTestId("app-shell-confirm-dialog-typed-input"), "jana@gymzlb.sk");
+    expect(confirm.disabled).toBe(false);
+    await user.click(confirm);
     expect(mutateAnonymise).toHaveBeenCalledTimes(1);
     const callArg = mutateAnonymise.mock.calls[0][0] as { id: string };
     expect(callArg.id).toBe("row-1");

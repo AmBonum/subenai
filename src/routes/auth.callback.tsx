@@ -76,7 +76,13 @@ function AuthCallbackPage() {
         if (data.session) {
           // Explicit ?redirect=/path wins over role-based default — it's
           // how the 2FA verify flow returns the admin to their target.
-          if (search.redirect && search.redirect.startsWith("/")) {
+          // "//evil.example" is protocol-relative, so a single leading
+          // slash is not enough.
+          if (
+            search.redirect &&
+            search.redirect.startsWith("/") &&
+            !search.redirect.startsWith("//")
+          ) {
             void navigate({ to: search.redirect });
             return;
           }

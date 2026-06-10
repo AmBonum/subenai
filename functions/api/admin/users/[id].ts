@@ -6,7 +6,8 @@
 // Auth:
 //   - `Authorization: Bearer <jwt>` from the caller. The function verifies
 //     the JWT via the anon Supabase client (getUser) and then checks the
-//     `has_role(uid, 'admin')` RPC. The caller MUST be an admin.
+//     `has_role(uid, 'admin')` RPC. The caller MUST be an admin at AAL2
+//     (native MFA claim or a valid backup-code stamp — see _lib/aal.ts).
 //   - Only after both checks pass does the function instantiate the
 //     service-role client (SUPABASE_SERVICE_ROLE_KEY env) to perform the
 //     mutation that the anon client cannot (user_roles writes + auth.admin
@@ -24,6 +25,7 @@
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
+import { isAal2 } from "../../../_lib/aal";
 import { createAdminClient } from "../../../../src/integrations/supabase/admin";
 
 interface Env {
@@ -93,6 +95,12 @@ async function verifyAdminCaller(
   }
   if (hasRole !== true) {
     return { ok: false, status: 403, error: "not_admin" };
+  }
+  // AAL2 gate — role grants + bans are privileged mutations. isAal2 reads
+  // the locally-decoded payload of the same JWT string getUser() just
+  // validated, plus the backup-code stamp on the verified user object.
+  if (!isAal2(token, userData.user.app_metadata)) {
+    return { ok: false, status: 403, error: "aal2_required" };
   }
   return { ok: true, userId: userData.user.id, client };
 }

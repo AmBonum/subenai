@@ -4,7 +4,7 @@
 // log render + empty state, kebab dropdown items present.
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { screen, fireEvent, waitFor } from "@testing-library/react";
 import type { ReactNode, ComponentProps } from "react";
 
 import { makeQueryClient, renderAdmin, flushQueries } from "../../utils/admin-query-wrapper";

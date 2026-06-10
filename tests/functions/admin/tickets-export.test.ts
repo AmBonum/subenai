@@ -44,15 +44,16 @@ const SAMPLE_TICKET = {
 
 interface MockState {
   authUserId?: string | null;
+  appMetadata?: Record<string, unknown>;
   hasAdminRole?: boolean;
   roleError?: boolean;
   queryRows?: unknown[];
   queryError?: boolean;
-  auditInsertSpy?: ReturnType<typeof vi.fn>;
+  auditInsertSpy?: ReturnType<typeof vi.fn<() => void>>;
 }
 
 function mockFetch(state: MockState) {
-  const auditInsertSpy = state.auditInsertSpy ?? vi.fn();
+  const auditInsertSpy = state.auditInsertSpy ?? vi.fn<() => void>();
 
   return {
     fetchSpy: vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
@@ -63,7 +64,11 @@ function mockFetch(state: MockState) {
           return new Response(JSON.stringify({ msg: "invalid" }), { status: 401 });
         }
         return new Response(
-          JSON.stringify({ id: state.authUserId ?? ADMIN_ID, email: ADMIN_EMAIL }),
+          JSON.stringify({
+            id: state.authUserId ?? ADMIN_ID,
+            email: ADMIN_EMAIL,
+            app_metadata: state.appMetadata ?? {},
+          }),
           { status: 200, headers: { "content-type": "application/json" } },
         );
       }
@@ -204,6 +209,21 @@ describe("POST /api/admin/tickets-export — auth", () => {
     });
     expect(r.status).toBe(403);
     expect((await r.json()).error).toBe("aal2_required");
+  });
+
+  it("accepts an aal1 admin JWT with a fresh app_metadata.aal2_via_backup_until stamp", async () => {
+    mockFetch({
+      hasAdminRole: true,
+      appMetadata: {
+        aal2_via_backup_until: new Date(Date.now() + 20 * 60 * 1000).toISOString(),
+      },
+      queryRows: [],
+    });
+    const r = await onRequestPost({
+      request: buildRequest(VALID_BODY, { authorization: `Bearer ${ADMIN_JWT_AAL1}` }),
+      env,
+    });
+    expect(r.status).toBe(200);
   });
 });
 

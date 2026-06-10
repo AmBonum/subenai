@@ -85,10 +85,17 @@ function AdminTestsListPage() {
   };
 
   const onBulkDelete = () => {
-    for (const id of selected) {
-      deleteTest.mutate(id, { onError: (err: Error) => toast.error(err.message) });
-    }
+    const ids = [...selected];
     setSelected(new Set());
+    void Promise.allSettled(ids.map((id) => deleteTest.mutateAsync(id))).then((results) => {
+      const failed = results.filter((r) => r.status === "rejected").length;
+      const ok = results.length - failed;
+      if (failed === 0) {
+        toast.success(`Vymazaných ${ok} testov.`);
+      } else {
+        toast.error(`Vymazaných ${ok}, zlyhalo ${failed}.`);
+      }
+    });
   };
 
   const onRowDelete = () => {
@@ -149,10 +156,21 @@ function AdminTestsListPage() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t("status_all")}</SelectItem>
-                <SelectItem value="draft">{t("status_draft")}</SelectItem>
-                <SelectItem value="published">{t("status_published")}</SelectItem>
-                <SelectItem value="archived">{t("status_archived")}</SelectItem>
+                <SelectItem value="all" data-testid="admin-tests-list-status-option-all">
+                  {t("status_all")}
+                </SelectItem>
+                <SelectItem value="draft" data-testid="admin-tests-list-status-option-draft">
+                  {t("status_draft")}
+                </SelectItem>
+                <SelectItem
+                  value="published"
+                  data-testid="admin-tests-list-status-option-published"
+                >
+                  {t("status_published")}
+                </SelectItem>
+                <SelectItem value="archived" data-testid="admin-tests-list-status-option-archived">
+                  {t("status_archived")}
+                </SelectItem>
               </SelectContent>
             </Select>
             <Select value={difficulty} onValueChange={setDifficulty}>
@@ -303,7 +321,7 @@ function AdminTestsListPage() {
         onOpenChange={setBulkConfirm}
         title={t("bulk_delete_confirm_title")}
         description={t("bulk_delete_confirm_body")}
-        destructive
+        severity="destructive"
         onConfirm={onBulkDelete}
       />
       <ConfirmDialog
@@ -311,7 +329,7 @@ function AdminTestsListPage() {
         onOpenChange={(o) => !o && setRowConfirm(null)}
         title={t("bulk_delete_confirm_title")}
         description={t("bulk_delete_confirm_body")}
-        destructive
+        severity="destructive"
         onConfirm={onRowDelete}
       />
     </div>

@@ -359,6 +359,16 @@ export function DpaRequestsQueue() {
             : t("anonymise_confirm")
         }
         confirmLabel={t("action_anonymise")}
+        typedConfirm={
+          anonymiseTarget
+            ? {
+                expected: anonymiseTarget.contact_email ?? anonymiseTarget.school_name,
+                label: tFor("user_dossier")("hard_delete_dialog_input_label", {
+                  email: anonymiseTarget.contact_email ?? anonymiseTarget.school_name,
+                }),
+              }
+            : undefined
+        }
         onConfirm={() => {
           if (anonymiseTarget) runAnonymise(anonymiseTarget);
           setAnonymiseTarget(null);

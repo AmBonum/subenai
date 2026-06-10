@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -92,7 +93,6 @@ function DossierContent({ userId, dossier }: DossierContentProps) {
 
   const [anonymizeOpen, setAnonymizeOpen] = useState(false);
   const [hardDeleteOpen, setHardDeleteOpen] = useState(false);
-  const [typedEmail, setTypedEmail] = useState("");
 
   // E46.6 — rectification dialog state. The MVP wires ONE field
   // (profiles.display_name). The shape is generic enough to drop in
@@ -128,7 +128,6 @@ function DossierContent({ userId, dossier }: DossierContentProps) {
               total: Object.values(data.rows_affected).reduce((a, b) => a + b, 0),
             }),
           );
-          setAnonymizeOpen(false);
         },
         onError: (err: Error) => toast.error(`${t("toast_action_failed")} (${err.message})`),
       },
@@ -142,8 +141,6 @@ function DossierContent({ userId, dossier }: DossierContentProps) {
         onSuccess: (data) => {
           const minutes = data.grace_window_minutes;
           toast.success(t("toast_hard_delete_enqueued", { minutes }));
-          setHardDeleteOpen(false);
-          setTypedEmail("");
         },
         onError: (err: Error) => toast.error(`${t("toast_action_failed")} (${err.message})`),
       },
@@ -351,88 +348,37 @@ function DossierContent({ userId, dossier }: DossierContentProps) {
         </CardContent>
       </Card>
 
-      {/* ── Anonymize confirm dialog ────────────────────────────────── */}
-      <Dialog open={anonymizeOpen} onOpenChange={setAnonymizeOpen}>
-        <DialogContent data-testid="admin-user-dossier-anonymize-dialog">
-          <DialogHeader>
-            <DialogTitle>{t("anonymize_dialog_title")}</DialogTitle>
-            <DialogDescription>{t("anonymize_dialog_description")}</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setAnonymizeOpen(false)}>
-              {t("dialog_cancel")}
-            </Button>
-            <Button
-              variant="default"
-              disabled={anonymize.isPending}
-              onClick={onAnonymizeConfirm}
-              data-testid="admin-user-dossier-anonymize-confirm"
-            >
-              {anonymize.isPending ? (
-                <Loader2 className="mr-1.5 size-4 animate-spin" aria-hidden="true" />
-              ) : null}
-              {t("anonymize_dialog_confirm")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* ── Anonymize typed-confirm dialog ──────────────────────────── */}
+      <ConfirmDialog
+        open={anonymizeOpen}
+        onOpenChange={setAnonymizeOpen}
+        title={t("anonymize_dialog_title")}
+        description={t("anonymize_dialog_description")}
+        confirmLabel={t("anonymize_dialog_confirm")}
+        cancelLabel={t("dialog_cancel")}
+        severity="destructive"
+        typedConfirm={{
+          expected: targetEmail ?? "",
+          label: t("hard_delete_dialog_input_label", { email: targetEmail ?? "(anonymized)" }),
+        }}
+        onConfirm={onAnonymizeConfirm}
+      />
 
       {/* ── Hard delete typed-confirm dialog ────────────────────────── */}
-      <Dialog
+      <ConfirmDialog
         open={hardDeleteOpen}
-        onOpenChange={(open) => {
-          setHardDeleteOpen(open);
-          if (!open) setTypedEmail("");
+        onOpenChange={setHardDeleteOpen}
+        title={t("hard_delete_dialog_title")}
+        description={t("hard_delete_dialog_description")}
+        confirmLabel={t("hard_delete_dialog_confirm")}
+        cancelLabel={t("dialog_cancel")}
+        severity="destructive"
+        typedConfirm={{
+          expected: targetEmail ?? "",
+          label: t("hard_delete_dialog_input_label", { email: targetEmail ?? "(anonymized)" }),
         }}
-      >
-        <DialogContent data-testid="admin-user-dossier-hard-delete-dialog">
-          <DialogHeader>
-            <DialogTitle>{t("hard_delete_dialog_title")}</DialogTitle>
-            <DialogDescription>{t("hard_delete_dialog_description")}</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-2">
-            <Label htmlFor="hard-delete-confirm-input">
-              {t("hard_delete_dialog_input_label", { email: targetEmail ?? "(anonymized)" })}
-            </Label>
-            <Input
-              id="hard-delete-confirm-input"
-              value={typedEmail}
-              onChange={(e) => setTypedEmail(e.target.value)}
-              placeholder={targetEmail ?? ""}
-              autoComplete="off"
-              data-testid="admin-user-dossier-hard-delete-confirm-input"
-            />
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setHardDeleteOpen(false);
-                setTypedEmail("");
-              }}
-            >
-              {t("dialog_cancel")}
-            </Button>
-            <Button
-              variant="destructive"
-              disabled={
-                hardDelete.isPending ||
-                typedEmail.trim() === "" ||
-                typedEmail.trim() !== targetEmail
-              }
-              onClick={onHardDeleteConfirm}
-              data-testid="admin-user-dossier-hard-delete-confirm"
-            >
-              {hardDelete.isPending ? (
-                <Loader2 className="mr-1.5 size-4 animate-spin" aria-hidden="true" />
-              ) : (
-                <Trash2 className="mr-1.5 size-4" aria-hidden="true" />
-              )}
-              {t("hard_delete_dialog_confirm")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        onConfirm={onHardDeleteConfirm}
+      />
 
       {/* ── E46.6: Rectify display_name dialog ───────────────────────── */}
       <Dialog

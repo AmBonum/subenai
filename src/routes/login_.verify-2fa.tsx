@@ -61,7 +61,13 @@ function VerifyTwoFactorPage() {
   const t = tFor("verify");
   const navigate = useNavigate();
   const search = useSearch({ from: "/login_/verify-2fa" });
-  const target = search.redirect ?? "/admin";
+  // Open-redirect hardening: only same-origin paths. "//evil.sk" parses
+  // as a protocol-relative external URL, so a single leading slash is
+  // not enough.
+  const target =
+    search.redirect && search.redirect.startsWith("/") && !search.redirect.startsWith("//")
+      ? search.redirect
+      : "/admin";
 
   const [mode, setMode] = useState<"totp" | "backup">("totp");
   const [code, setCode] = useState("");
@@ -124,9 +130,18 @@ function VerifyTwoFactorPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const ok = await consumeBackupCode(backup);
-      if (!ok) {
+      const result = await consumeBackupCode(backup);
+      if (result === "invalid") {
         setError(t("backup_error_invalid"));
+        return;
+      }
+      if (result === "refresh_failed") {
+        // The code is spent but the session refresh failed — navigating
+        // to /admin would bounce straight back here. Keep the user on
+        // this page with an actionable message instead.
+        setError(
+          "Kód bol prijatý, ale obnovenie prihlásenia zlyhalo. Odhlás sa a prihlás znova — záložný kód už netreba zadávať.",
+        );
         return;
       }
       navigate({ to: target });

@@ -19,10 +19,17 @@
 //   9. Jitter 100ms ± 25ms before every response.
 
 import { createClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { ipRateLimit, readClientIp, consumeDailyQuota } from "../../_lib/security";
 import { signRespondentPwdToken, RESPONDENT_PWD_COOKIE_NAME } from "../../_lib/jwt";
 import { PROD_SUPABASE_URL } from "../../_lib/supabase-url";
+
+// `createClient()` without generated types infers `Database = any`;
+// `ReturnType<typeof createClient>` resolves the generic defaults to
+// `unknown` instead, so helper params need the inferred shape spelled out.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DbClient = SupabaseClient<any, "public", "public", any, any>;
 
 interface Env {
   SUPABASE_URL: string;
@@ -111,7 +118,7 @@ function buildCookie(shareId: string, token: string): string {
 }
 
 async function writeAuditRow(
-  supabase: ReturnType<typeof createClient>,
+  supabase: DbClient,
   testId: string | null,
   shareId: string,
   ipHash: string,

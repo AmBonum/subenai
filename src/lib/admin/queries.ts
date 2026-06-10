@@ -16,6 +16,7 @@ import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
+import type { Json, TablesUpdate } from "@/integrations/supabase/types";
 
 import type {
   AdminActivityEvent,
@@ -101,11 +102,11 @@ const mapQuestion = (row: QuestionsRow): AdminQuestion => {
 // Parses an editor-supplied JSON string for a jsonb column.
 // "" -> null (clear column), undefined -> undefined (don't touch),
 // invalid JSON throws so the mutation surfaces the error.
-const parseJsonbForUpdate = (value: string | undefined): unknown => {
+const parseJsonbForUpdate = (value: string | undefined): Json | undefined => {
   if (value === undefined) return undefined;
   const trimmed = value.trim();
   if (trimmed === "") return null;
-  return JSON.parse(trimmed);
+  return JSON.parse(trimmed) as Json;
 };
 
 type AnswerSetsRow = {
@@ -272,7 +273,7 @@ type DsrRequestsRow = {
   id: string;
   requester_email: string;
   type: string;
-  status: string;
+  status: "open" | "in_progress" | "completed" | "rejected";
   note: string | null;
   created_at: string;
   sla_due_at: string;
@@ -366,7 +367,7 @@ export function useUpdateQuestion() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<AdminQuestion> }) => {
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"questions"> = {};
       if (patch.body !== undefined) update.prompt = patch.body;
       else if (patch.title !== undefined) update.prompt = patch.title;
       if (patch.categories) update.branch_slug = patch.categories[0] ?? null;
@@ -481,7 +482,7 @@ export function useUpdateAnswerSet() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<AdminAnswerSet> }) => {
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"answer_sets"> = {};
       if (patch.name !== undefined) update.name = patch.name;
       if (patch.description !== undefined) update.description = patch.description;
       if (patch.categories) update.branch_slugs = patch.categories;
@@ -533,7 +534,7 @@ export function useUpdateAnswer() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<AdminAnswer> }) => {
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"answers"> = {};
       if (patch.text !== undefined) update.text = patch.text;
       if (patch.is_correct !== undefined) update.is_correct = patch.is_correct;
       if (patch.explanation !== undefined) update.explanation = patch.explanation;
@@ -628,7 +629,7 @@ export function useUpdateTest() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<AdminTest> }) => {
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"tests"> = {};
       if (patch.title !== undefined) update.title = patch.title;
       if (patch.slug !== undefined) update.slug = patch.slug;
       if (patch.description !== undefined) update.description = patch.description;
@@ -694,7 +695,14 @@ export function useUpdateCategory() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<AdminCategory> }) => {
-      const { error } = await supabase.from("categories").update(patch).eq("id", id);
+      // Explicit column mapping — AdminCategory carries UI-only fields
+      // (questions_count) that must not reach PostgREST.
+      const update: TablesUpdate<"categories"> = {};
+      if (patch.name !== undefined) update.name = patch.name;
+      if (patch.slug !== undefined) update.slug = patch.slug;
+      if (patch.description !== undefined) update.description = patch.description;
+      if (patch.color !== undefined) update.color = patch.color;
+      const { error } = await supabase.from("categories").update(update).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "categories"] }),
@@ -751,7 +759,14 @@ export function useUpdateTopic() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<AdminTopic> }) => {
-      const { error } = await supabase.from("topics").update(patch).eq("id", id);
+      // Explicit column mapping — AdminTopic carries UI-only fields
+      // (trainings_count) that must not reach PostgREST.
+      const update: TablesUpdate<"topics"> = {};
+      if (patch.name !== undefined) update.name = patch.name;
+      if (patch.slug !== undefined) update.slug = patch.slug;
+      if (patch.description !== undefined) update.description = patch.description;
+      if (patch.color !== undefined) update.color = patch.color;
+      const { error } = await supabase.from("topics").update(update).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "topics"] }),
@@ -812,7 +827,7 @@ export function useUpdateTraining() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<AdminTraining> }) => {
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"trainings"> = {};
       if (patch.title !== undefined) update.title = patch.title;
       if (patch.description !== undefined) update.description = patch.description;
       if (patch.topic !== undefined) update.topic_slug = patch.topic;
@@ -895,8 +910,9 @@ export function useLogAuditEvent() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: LogAuditEventInput) => {
-      const details =
-        typeof input.details === "string" ? { note: input.details } : (input.details ?? {});
+      const details = (
+        typeof input.details === "string" ? { note: input.details } : (input.details ?? {})
+      ) as Json;
       const { data, error } = await supabase.rpc("log_audit_event", {
         p_action: input.action,
         p_target_type: input.target_type,
@@ -1075,7 +1091,7 @@ export function useUpdateDSRStatus() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: DsrRequestsRow["status"] }) => {
-      const patch: Record<string, unknown> = { status };
+      const patch: TablesUpdate<"dsr_requests"> = { status };
       if (status === "completed" || status === "rejected") {
         patch.resolved_at = new Date().toISOString();
       }
@@ -1322,12 +1338,12 @@ const mapCmsPage = (row: CmsPagesRow): CmsPage => ({
   updated_at: row.updated_at,
 });
 
-const cmsPagePatchToRow = (patch: Partial<CmsPage>): Record<string, unknown> => {
-  const row: Record<string, unknown> = {};
+const cmsPagePatchToRow = (patch: Partial<CmsPage>): TablesUpdate<"cms_pages"> => {
+  const row: TablesUpdate<"cms_pages"> = {};
   if (patch.slug !== undefined) row.slug = patch.slug;
   if (patch.title !== undefined) row.title = patch.title;
   if (patch.seo_description !== undefined) row.seo_description = patch.seo_description;
-  if (patch.content_blocks !== undefined) row.blocks = patch.content_blocks;
+  if (patch.content_blocks !== undefined) row.blocks = patch.content_blocks as unknown as Json;
   if (patch.status !== undefined) row.status = patch.status;
   if (patch.published_at !== undefined) row.published_at = patch.published_at;
   return row;
@@ -1376,7 +1392,7 @@ export function useCreateCmsPage() {
         slug: input?.slug ?? `nova-stranka-${Date.now().toString(36).slice(-4)}`,
         title: input?.title ?? "Nová stránka",
         seo_description: input?.seo_description ?? "",
-        blocks: input?.content_blocks ?? [],
+        blocks: (input?.content_blocks ?? []) as unknown as Json,
         status: "draft",
       };
       const { data, error } = await supabase.from("cms_pages").insert(draft).select().single();
@@ -1564,7 +1580,10 @@ export function useUpdateCmsFooter() {
     mutationFn: async (next: CmsFooter) => {
       const { error } = await supabase
         .from("cms_footer")
-        .update({ columns: next.columns, socials: next.socials })
+        .update({
+          columns: next.columns as unknown as Json,
+          socials: next.socials as unknown as Json,
+        })
         .eq("id", 1);
       if (error) throw error;
     },
@@ -1603,7 +1622,10 @@ export function useUpdateCmsNavigation() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (items: CmsNavItem[]) => {
-      const { error } = await supabase.from("cms_navigation").update({ items }).eq("id", 1);
+      const { error } = await supabase
+        .from("cms_navigation")
+        .update({ items: items as unknown as Json })
+        .eq("id", 1);
       if (error) throw error;
     },
     onMutate: (items) => {

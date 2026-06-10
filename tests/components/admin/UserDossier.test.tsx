@@ -71,12 +71,17 @@ describe("UserDossier", () => {
     expect(screen.getByTestId("admin-user-dossier-governance-empty")).toBeInTheDocument();
   });
 
-  it("anonymize action opens a confirm dialog and fires the mutation on confirm", async () => {
+  it("anonymize opens a destructive typed-confirm dialog and fires the mutation after the email matches", async () => {
     const user = userEvent.setup();
     render(<UserDossier userId="user-1" />);
     await user.click(screen.getByTestId("admin-user-dossier-anonymize-button"));
-    expect(screen.getByTestId("admin-user-dossier-anonymize-dialog")).toBeInTheDocument();
-    await user.click(screen.getByTestId("admin-user-dossier-anonymize-confirm"));
+    const dialog = screen.getByTestId("app-shell-confirm-dialog-root");
+    expect(dialog).toHaveAttribute("data-severity", "destructive");
+    const confirm = screen.getByTestId("app-shell-confirm-dialog-confirm") as HTMLButtonElement;
+    expect(confirm.disabled).toBe(true);
+    await user.type(screen.getByTestId("app-shell-confirm-dialog-typed-input"), "test@example.com");
+    expect(confirm.disabled).toBe(false);
+    await user.click(confirm);
     expect(mutateAnonymize).toHaveBeenCalledTimes(1);
     expect((mutateAnonymize.mock.calls[0][0] as { userId: string }).userId).toBe("user-1");
   });
@@ -85,12 +90,12 @@ describe("UserDossier", () => {
     const user = userEvent.setup();
     render(<UserDossier userId="user-1" />);
     await user.click(screen.getByTestId("admin-user-dossier-hard-delete-button"));
-    const input = screen.getByTestId(
-      "admin-user-dossier-hard-delete-confirm-input",
-    ) as HTMLInputElement;
-    const confirm = screen.getByTestId(
-      "admin-user-dossier-hard-delete-confirm",
-    ) as HTMLButtonElement;
+    expect(screen.getByTestId("app-shell-confirm-dialog-root")).toHaveAttribute(
+      "data-severity",
+      "destructive",
+    );
+    const input = screen.getByTestId("app-shell-confirm-dialog-typed-input") as HTMLInputElement;
+    const confirm = screen.getByTestId("app-shell-confirm-dialog-confirm") as HTMLButtonElement;
     expect(confirm.disabled).toBe(true);
     await user.type(input, "wrong@example.com");
     expect(confirm.disabled).toBe(true);

@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { describe, it, expect, vi, beforeAll, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 

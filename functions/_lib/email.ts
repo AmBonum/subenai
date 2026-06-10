@@ -73,9 +73,12 @@ export async function sendEmail(env: EmailEnv, input: SendEmailInput): Promise<S
 
   if (!response.ok) {
     const text = await response.text().catch(() => "");
+    // Resend error bodies echo the recipient address — scrub anything
+    // email-shaped before it lands in CF logs.
+    const scrubbed = text.replace(/[^\s@"]+@[^\s@"]+/g, "[email]");
     console.error("email.sendEmail rejected", {
       status: response.status,
-      body: text.slice(0, 200),
+      body: scrubbed.slice(0, 200),
     });
     return { ok: false, error: `resend_${response.status}` };
   }

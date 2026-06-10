@@ -241,7 +241,7 @@ function AnswerSetsPage() {
           confirmDelete ? t("confirm_delete_description", { name: confirmDelete.name }) : ""
         }
         confirmLabel={t("confirm_delete_button")}
-        destructive
+        severity="destructive"
         onConfirm={() => {
           if (confirmDelete) {
             deleteSet.mutate(confirmDelete.id, {

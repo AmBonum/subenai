@@ -30,7 +30,15 @@ const SECURITY_HEADERS: Record<string, string> = {
   "Cross-Origin-Resource-Policy": "same-origin",
 };
 
-export const onRequest: PagesFunction = async ({ next }) => {
+// Structural subset of the CF PagesFunction context — keeps this file
+// type-checkable from the main project tsconfig (which has DOM libs,
+// not @cloudflare/workers-types). Same pattern as the per-route
+// RequestContext interfaces in functions/api/**.
+interface MiddlewareContext {
+  next: () => Promise<Response>;
+}
+
+export const onRequest = async ({ next }: MiddlewareContext): Promise<Response> => {
   const response = await next();
 
   // Create a new response so we can mutate the headers without

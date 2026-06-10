@@ -187,31 +187,33 @@ describe("BlogRowActions — status dropdown", () => {
 // ---- Delete confirmation ------------------------------------------------
 
 describe("BlogRowActions — delete", () => {
-  it("clicking delete opens the confirmation dialog but does NOT delete yet", () => {
+  it("clicking delete opens the destructive ConfirmDialog but does NOT delete yet", () => {
     render(<BlogRowActions post={SAMPLE} />);
     fireEvent.click(screen.getByTestId(`admin-blog-row-delete-${SAMPLE.slug}`));
-    expect(screen.getByTestId(`admin-blog-delete-confirm-${SAMPLE.slug}`)).toBeInTheDocument();
+    const dialog = screen.getByTestId("app-shell-confirm-dialog-root");
+    expect(dialog).toBeInTheDocument();
+    expect(dialog.getAttribute("data-severity")).toBe("destructive");
     expect(deleteMutateAsync).not.toHaveBeenCalled();
   });
 
   it("clicking 'Vymazať natrvalo' in the dialog fires the delete mutation", () => {
     render(<BlogRowActions post={SAMPLE} />);
     fireEvent.click(screen.getByTestId(`admin-blog-row-delete-${SAMPLE.slug}`));
-    fireEvent.click(screen.getByTestId(`admin-blog-delete-confirm-button-${SAMPLE.slug}`));
+    fireEvent.click(screen.getByTestId("app-shell-confirm-dialog-confirm"));
     expect(deleteMutateAsync).toHaveBeenCalledWith(SAMPLE.id);
   });
 
   it("clicking 'Zrušiť' closes the dialog without deleting", () => {
     render(<BlogRowActions post={SAMPLE} />);
     fireEvent.click(screen.getByTestId(`admin-blog-row-delete-${SAMPLE.slug}`));
-    fireEvent.click(screen.getByTestId(`admin-blog-delete-cancel-${SAMPLE.slug}`));
+    fireEvent.click(screen.getByTestId("app-shell-confirm-dialog-cancel"));
     expect(deleteMutateAsync).not.toHaveBeenCalled();
   });
 
   it("delete dialog quotes the article title", () => {
     render(<BlogRowActions post={SAMPLE} />);
     fireEvent.click(screen.getByTestId(`admin-blog-row-delete-${SAMPLE.slug}`));
-    const dialog = screen.getByTestId(`admin-blog-delete-confirm-${SAMPLE.slug}`);
+    const dialog = screen.getByTestId("app-shell-confirm-dialog-root");
     expect(dialog).toHaveTextContent(`„${SAMPLE.title}`);
   });
 });

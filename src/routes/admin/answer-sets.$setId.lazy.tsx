@@ -248,7 +248,7 @@ function AnswerSetDetailPage() {
             : ""
         }
         confirmLabel={t("confirm_delete_answer_button")}
-        destructive
+        severity="destructive"
         onConfirm={() => {
           if (confirmDeleteAnswer) {
             deleteAnswer.mutate(confirmDeleteAnswer.id, {
@@ -266,7 +266,7 @@ function AnswerSetDetailPage() {
         title={t("confirm_delete_set_title")}
         description={t("confirm_delete_set_description", { name: set.name })}
         confirmLabel={t("confirm_delete_set_button")}
-        destructive
+        severity="destructive"
         onConfirm={() => {
           deleteSet.mutate(set.id, {
             onSuccess: () => {

@@ -332,7 +332,7 @@ function AdminCategoriesPage() {
         title={t("delete_confirm_title")}
         description={confirmDel ? confirmDel.name : t("delete_confirm_description")}
         confirmLabel={t("delete")}
-        destructive
+        severity="destructive"
         onConfirm={tryDelete}
       />
     </div>

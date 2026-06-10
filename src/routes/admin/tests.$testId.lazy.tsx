@@ -137,7 +137,7 @@ function AdminTestEditorPage() {
         description={t("unsaved_body")}
         confirmLabel={t("unsaved_confirm")}
         cancelLabel={t("unsaved_cancel")}
-        destructive
+        severity="warning"
         onConfirm={() => nav({ to: "/admin/tests" })}
       />
     </div>

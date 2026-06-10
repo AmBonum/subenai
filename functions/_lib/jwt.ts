@@ -58,7 +58,7 @@ async function verify(secret: string, message: string, signature: string): Promi
     return await crypto.subtle.verify(
       "HMAC",
       key,
-      base64UrlDecode(signature),
+      base64UrlDecode(signature) as BufferSource,
       new TextEncoder().encode(message),
     );
   } catch {

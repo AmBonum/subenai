@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
@@ -52,7 +53,7 @@ describe("/login/verify-2fa", () => {
   });
 
   it("toggles to backup code input and consumes a code", async () => {
-    consumeBackupCode.mockResolvedValue(true);
+    consumeBackupCode.mockResolvedValue("ok");
     navigate.mockClear();
 
     render(<Page />);
@@ -69,7 +70,7 @@ describe("/login/verify-2fa", () => {
   });
 
   it("shows error when backup code is rejected", async () => {
-    consumeBackupCode.mockResolvedValue(false);
+    consumeBackupCode.mockResolvedValue("invalid");
 
     render(<Page />);
     fireEvent.click(screen.getByTestId("verify-2fa-use-backup-link"));
@@ -122,6 +123,24 @@ describe("/login/verify-2fa", () => {
     const input = screen.getByTestId("verify-2fa-backup-input") as HTMLInputElement;
     fireEvent.change(input, { target: { value: "aaaa-bbbb" } });
     expect(input.value).toBe("AAAA-BBBB");
+  });
+
+  it("shows the refresh-failed message and does NOT navigate when the session refresh fails after consume", async () => {
+    consumeBackupCode.mockResolvedValue("refresh_failed");
+    navigate.mockClear();
+
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("verify-2fa-use-backup-link"));
+    fireEvent.change(screen.getByTestId("verify-2fa-backup-input"), {
+      target: { value: "AAAA-BBBB" },
+    });
+    fireEvent.click(screen.getByTestId("verify-2fa-backup-submit-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("verify-2fa-backup-error").textContent).toContain(
+        "obnovenie prihlásenia zlyhalo",
+      );
+    });
+    expect(navigate).not.toHaveBeenCalled();
   });
 
   it("renders generic error when consumeBackupCode throws (network failure)", async () => {

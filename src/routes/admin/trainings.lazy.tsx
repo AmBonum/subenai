@@ -202,7 +202,7 @@ function AdminTrainingsPage() {
         title={t("delete_confirm_title")}
         description={confirmDelete ? confirmDelete.title : t("delete_confirm_description")}
         confirmLabel={t("delete")}
-        destructive
+        severity="destructive"
         onConfirm={() => {
           if (confirmDelete) {
             deleteTraining.mutate(confirmDelete.id, {

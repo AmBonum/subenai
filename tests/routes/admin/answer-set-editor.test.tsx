@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 
@@ -7,12 +8,11 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: (_path: string) => (config: unknown) => {
-      const r = config as { component: () => JSX.Element };
       return {
         ...(config as object),
         useLoaderData: () => ({ setId: "as_001" }),
         useParams: () => ({ setId: "as_001" }),
-      } as typeof r;
+      } as unknown as { component: () => JSX.Element };
     },
     notFound: () => new Error("not-found"),
     useRouter: () => ({ navigate: () => {} }),

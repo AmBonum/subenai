@@ -93,7 +93,7 @@ function QuestionsPage() {
     open: boolean;
     title: string;
     description?: string;
-    destructive?: boolean;
+    severity?: "destructive";
     onConfirm: () => void;
   } | null>(null);
 
@@ -151,33 +151,33 @@ function QuestionsPage() {
     }
   };
 
-  const bulkUpdateStatus = (ids: string[], status: AdminQuestion["status"]) => {
-    for (const id of ids) {
-      updateQuestion.mutate(
-        { id, patch: { status } },
-        {
-          onError: (err: Error) => toast.error(err.message),
-        },
-      );
-    }
-  };
+  const bulkUpdateStatus = (ids: string[], status: AdminQuestion["status"]) =>
+    Promise.allSettled(ids.map((id) => updateQuestion.mutateAsync({ id, patch: { status } })));
 
-  const bulkDelete = (ids: string[]) => {
-    for (const id of ids) {
-      deleteQuestion.mutate(id, { onError: (err: Error) => toast.error(err.message) });
-    }
-  };
+  const bulkDelete = (ids: string[]) =>
+    Promise.allSettled(ids.map((id) => deleteQuestion.mutateAsync(id)));
 
-  const askBulk = (label: string, fn: () => void, destructive?: boolean) =>
+  const askBulk = (
+    label: string,
+    fn: () => Promise<PromiseSettledResult<unknown>[]>,
+    severity?: "destructive",
+  ) =>
     setConfirm({
       open: true,
       title: t("confirm_bulk_title", { label, count: selected.size }),
       description: t("confirm_bulk_description"),
-      destructive,
+      severity,
       onConfirm: () => {
-        fn();
         clearSelection();
-        toast.success(t("confirm_bulk_done", { label }));
+        void fn().then((results) => {
+          const failed = results.filter((r) => r.status === "rejected").length;
+          const ok = results.length - failed;
+          if (failed === 0) {
+            toast.success(t("confirm_bulk_done", { label }));
+          } else {
+            toast.error(`${label}: ${ok} úspešných, ${failed} zlyhalo`);
+          }
+        });
       },
     });
 
@@ -286,9 +286,15 @@ function QuestionsPage() {
                 <SelectValue placeholder={t("branch_placeholder")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t("branch_all")}</SelectItem>
+                <SelectItem value="all" data-testid="admin-questions-branch-option-all">
+                  {t("branch_all")}
+                </SelectItem>
                 {BRANCHES.map((b) => (
-                  <SelectItem key={b.slug} value={b.slug}>
+                  <SelectItem
+                    key={b.slug}
+                    value={b.slug}
+                    data-testid={`admin-questions-branch-option-${b.slug}`}
+                  >
                     {b.name}
                   </SelectItem>
                 ))}
@@ -382,7 +388,9 @@ function QuestionsPage() {
                   size="sm"
                   variant="ghost"
                   className="text-destructive"
-                  onClick={() => askBulk(t("delete"), () => bulkDelete([...selected]), true)}
+                  onClick={() =>
+                    askBulk(t("delete"), () => bulkDelete([...selected]), "destructive")
+                  }
                 >
                   {t("delete")}
                 </Button>
@@ -542,7 +550,7 @@ function QuestionsPage() {
                                   open: true,
                                   title: t("confirm_delete_title"),
                                   description: q.title,
-                                  destructive: true,
+                                  severity: "destructive",
                                   onConfirm: () => {
                                     deleteQuestion.mutate(q.id, {
                                       onSuccess: () => toast.success(t("toast_question_deleted")),
@@ -622,7 +630,7 @@ function QuestionsPage() {
           onOpenChange={(o) => setConfirm((c) => (c ? { ...c, open: o } : null))}
           title={confirm.title}
           description={confirm.description}
-          destructive={confirm.destructive}
+          severity={confirm.severity}
           onConfirm={confirm.onConfirm}
         />
       )}

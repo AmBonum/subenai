@@ -38,7 +38,12 @@ function safeString(value: unknown, max = 200): string {
   return value.slice(0, max).replace(/[\r\n\t]/g, " ");
 }
 
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+interface RequestContext {
+  request: Request;
+  env: Env;
+}
+
+export const onRequestPost = async ({ request, env }: RequestContext): Promise<Response> => {
   // Always respond 204 — browsers don't expect a body and treat
   // anything else as a retry signal.
   const respond = () =>

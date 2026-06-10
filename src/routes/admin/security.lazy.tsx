@@ -314,7 +314,7 @@ function AdminSecurityPage() {
         onOpenChange={setResetOpen}
         title={t("factor_reset_confirm_title")}
         description={t("factor_reset_confirm_body")}
-        destructive
+        severity="destructive"
         onConfirm={() => {
           void onConfirmReset();
         }}
@@ -325,7 +325,7 @@ function AdminSecurityPage() {
         onOpenChange={setRegenOpen}
         title={t("backup_regen_confirm_title")}
         description={t("backup_regen_confirm_body")}
-        destructive
+        severity="destructive"
         onConfirm={() => {
           void onConfirmRegen();
         }}

@@ -8,9 +8,10 @@
 // did nothing.
 //
 // Failure mode: if signOut throws (network error, refresh token already
-// invalid), we still navigate away. The session may linger client-side
-// for a few minutes until the access token expires; that is acceptable
-// — protected routes re-check via getSession on each navigation.
+// invalid), we fall back to a local-scope signOut so at least the
+// client-side session is purged, then still navigate away. Any remnant
+// lingers at most until the access token expires; protected routes
+// re-check via getSession on each navigation.
 
 import { supabase } from "@/integrations/supabase/client";
 import { setSignedOutFlash } from "@/lib/auth/signout-flash";
@@ -19,7 +20,11 @@ export async function signOutAndRedirect(redirectTo: string = "/"): Promise<void
   try {
     await supabase.auth.signOut();
   } catch {
-    // Swallow — we still want to land the user on a safe page.
+    try {
+      await supabase.auth.signOut({ scope: "local" });
+    } catch {
+      // Swallow — we still want to land the user on a safe page.
+    }
   }
   // Flash flag is set even when signOut throws — the user clicked sign
   // out, so the destination page should still acknowledge it.

@@ -17,6 +17,13 @@ const env = {
 const CALLER_ID = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
 const TARGET_ID = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb";
 
+function makeJwt(payload: Record<string, unknown>): string {
+  const b64 = (o: unknown) => Buffer.from(JSON.stringify(o)).toString("base64url");
+  return `${b64({ alg: "HS256", typ: "JWT" })}.${b64(payload)}.sig`;
+}
+const AAL2_JWT = makeJwt({ aal: "aal2", sub: CALLER_ID });
+const AAL1_JWT = makeJwt({ aal: "aal1", sub: CALLER_ID });
+
 interface SupabaseMockState {
   callerId?: string | null;
   hasAdminRole?: boolean;
@@ -24,6 +31,7 @@ interface SupabaseMockState {
   roleDeleteError?: boolean;
   roleInsertError?: boolean;
   banError?: boolean;
+  appMetadata?: Record<string, unknown>;
 }
 
 function mockFetch(state: SupabaseMockState) {
@@ -36,10 +44,13 @@ function mockFetch(state: SupabaseMockState) {
       if (state.callerId === null) {
         return new Response(JSON.stringify({ msg: "invalid token" }), { status: 401 });
       }
-      return new Response(JSON.stringify({ id: state.callerId ?? CALLER_ID }), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ id: state.callerId ?? CALLER_ID, app_metadata: state.appMetadata ?? {} }),
+        {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        },
+      );
     }
 
     // has_role RPC
@@ -144,7 +155,7 @@ describe("PATCH /api/admin/users/:id", () => {
   it("returns 403 when caller is not admin", async () => {
     mockFetch({ hasAdminRole: false });
     const r = await onRequestPatch({
-      request: buildRequest({ role: "admin" }, { authorization: "Bearer ok" }),
+      request: buildRequest({ role: "admin" }, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });
@@ -155,7 +166,7 @@ describe("PATCH /api/admin/users/:id", () => {
   it("returns 400 on empty body (no role and no banned)", async () => {
     mockFetch({ hasAdminRole: true });
     const r = await onRequestPatch({
-      request: buildRequest({}, { authorization: "Bearer ok" }),
+      request: buildRequest({}, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });
@@ -166,7 +177,7 @@ describe("PATCH /api/admin/users/:id", () => {
   it("returns 400 on invalid role value", async () => {
     mockFetch({ hasAdminRole: true });
     const r = await onRequestPatch({
-      request: buildRequest({ role: "superuser" }, { authorization: "Bearer ok" }),
+      request: buildRequest({ role: "superuser" }, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });
@@ -177,7 +188,7 @@ describe("PATCH /api/admin/users/:id", () => {
   it("returns 400 on non-boolean banned", async () => {
     mockFetch({ hasAdminRole: true });
     const r = await onRequestPatch({
-      request: buildRequest({ banned: "yes" }, { authorization: "Bearer ok" }),
+      request: buildRequest({ banned: "yes" }, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });
@@ -188,7 +199,7 @@ describe("PATCH /api/admin/users/:id", () => {
   it("prevents admin from demoting self", async () => {
     mockFetch({ hasAdminRole: true, callerId: TARGET_ID });
     const r = await onRequestPatch({
-      request: buildRequest({ role: "user" }, { authorization: "Bearer ok" }),
+      request: buildRequest({ role: "user" }, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });
@@ -199,7 +210,7 @@ describe("PATCH /api/admin/users/:id", () => {
   it("prevents admin from banning self", async () => {
     mockFetch({ hasAdminRole: true, callerId: TARGET_ID });
     const r = await onRequestPatch({
-      request: buildRequest({ banned: true }, { authorization: "Bearer ok" }),
+      request: buildRequest({ banned: true }, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });
@@ -207,10 +218,52 @@ describe("PATCH /api/admin/users/:id", () => {
     expect((await r.json()).error).toBe("cannot_ban_self");
   });
 
+  it("returns 403 aal2_required for an AAL1 token without a backup-code stamp", async () => {
+    mockFetch({ hasAdminRole: true });
+    const r = await onRequestPatch({
+      request: buildRequest({ role: "admin" }, { authorization: `Bearer ${AAL1_JWT}` }),
+      env,
+      params: { id: TARGET_ID },
+    });
+    expect(r.status).toBe(403);
+    expect((await r.json()).error).toBe("aal2_required");
+  });
+
+  it("accepts an AAL1 token with a fresh app_metadata.aal2_via_backup_until stamp", async () => {
+    mockFetch({
+      hasAdminRole: true,
+      appMetadata: {
+        aal2_via_backup_until: new Date(Date.now() + 20 * 60 * 1000).toISOString(),
+      },
+    });
+    const r = await onRequestPatch({
+      request: buildRequest({ role: "admin" }, { authorization: `Bearer ${AAL1_JWT}` }),
+      env,
+      params: { id: TARGET_ID },
+    });
+    expect(r.status).toBe(200);
+  });
+
+  it("rejects an AAL1 token whose backup-code stamp has expired", async () => {
+    mockFetch({
+      hasAdminRole: true,
+      appMetadata: {
+        aal2_via_backup_until: new Date(Date.now() - 60 * 1000).toISOString(),
+      },
+    });
+    const r = await onRequestPatch({
+      request: buildRequest({ role: "admin" }, { authorization: `Bearer ${AAL1_JWT}` }),
+      env,
+      params: { id: TARGET_ID },
+    });
+    expect(r.status).toBe(403);
+    expect((await r.json()).error).toBe("aal2_required");
+  });
+
   it("happy path — promote to admin returns 200", async () => {
     mockFetch({ hasAdminRole: true });
     const r = await onRequestPatch({
-      request: buildRequest({ role: "admin" }, { authorization: "Bearer ok" }),
+      request: buildRequest({ role: "admin" }, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });
@@ -224,7 +277,7 @@ describe("PATCH /api/admin/users/:id", () => {
   it("happy path — set role 'user' clears user_roles without insert", async () => {
     mockFetch({ hasAdminRole: true });
     const r = await onRequestPatch({
-      request: buildRequest({ role: "user" }, { authorization: "Bearer ok" }),
+      request: buildRequest({ role: "user" }, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });
@@ -235,7 +288,7 @@ describe("PATCH /api/admin/users/:id", () => {
   it("happy path — banned toggle returns 200", async () => {
     mockFetch({ hasAdminRole: true });
     const r = await onRequestPatch({
-      request: buildRequest({ banned: true }, { authorization: "Bearer ok" }),
+      request: buildRequest({ banned: true }, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });
@@ -247,7 +300,7 @@ describe("PATCH /api/admin/users/:id", () => {
   it("500 when role delete fails", async () => {
     mockFetch({ hasAdminRole: true, roleDeleteError: true });
     const r = await onRequestPatch({
-      request: buildRequest({ role: "admin" }, { authorization: "Bearer ok" }),
+      request: buildRequest({ role: "admin" }, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });
@@ -258,7 +311,7 @@ describe("PATCH /api/admin/users/:id", () => {
   it("500 when ban update fails", async () => {
     mockFetch({ hasAdminRole: true, banError: true });
     const r = await onRequestPatch({
-      request: buildRequest({ banned: true }, { authorization: "Bearer ok" }),
+      request: buildRequest({ banned: true }, { authorization: `Bearer ${AAL2_JWT}` }),
       env,
       params: { id: TARGET_ID },
     });

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Eye } from "lucide-react";
 import { toast } from "sonner";
 
@@ -43,25 +43,42 @@ export function RespondentsList() {
   const [filterTest, setFilterTest] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
 
-  // Audit every "load" — initial mount + any filter change that re-queries.
+  // Audit every "load" — initial mount + any settled filter change. The
+  // search query is debounced so per-keystroke renders don't each emit a
+  // PII-access audit row.
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   useEffect(() => {
+    const id = setTimeout(() => setDebouncedQuery(query), 400);
+    return () => clearTimeout(id);
+  }, [query]);
+
+  // Dedupe by filter signature — StrictMode re-runs the effect with the
+  // same state, which would double-log the same access.
+  const lastAuditKey = useRef<string | null>(null);
+  useEffect(() => {
+    const key = `${filterTest}|${filterStatus}|${debouncedQuery}`;
+    if (lastAuditKey.current === key) return;
+    lastAuditKey.current = key;
     logAudit.mutate(
       buildRespondentsAccessAudit({
         filterTestId: filterTest === "all" ? undefined : filterTest,
         filterStatus: filterStatus === "all" ? undefined : filterStatus,
-        query: query || undefined,
+        query: debouncedQuery || undefined,
       }),
     );
     // logAudit.mutate identity is stable across renders via TanStack Query
     // — including it in deps would invalidate the dep array every render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterTest, filterStatus, query]);
+  }, [filterTest, filterStatus, debouncedQuery]);
 
   const filtered = useMemo(() => {
     const respondentsByTest = new Set<string>(
       filterTest === "all"
         ? []
-        : sessions.filter((s) => s.test_id === filterTest).map((s) => s.respondent_id),
+        : sessions
+            .filter((s) => s.test_id === filterTest)
+            .map((s) => s.respondent_id)
+            .filter((id): id is string => id !== null),
     );
     return respondents.filter((r) => {
       if (filterStatus === "active" && r.anonymized_at) return false;
