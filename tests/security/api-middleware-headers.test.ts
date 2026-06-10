@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { __SECURITY_HEADERS__, onRequest } from "../../functions/_middleware";
+import { __SECURITY_HEADERS__, __securityHeaders__ } from "../../functions/_middleware";
 
 const REQUIRED_HEADERS = [
   "Strict-Transport-Security",
@@ -71,7 +71,7 @@ describe("functions/_middleware — API security headers", () => {
     });
 
     // synthetic minimal context for the middleware
-    const wrapped = await onRequest(makeFakeContext(upstream));
+    const wrapped = await __securityHeaders__(makeFakeContext(upstream));
 
     for (const header of REQUIRED_HEADERS) {
       expect(wrapped.headers.get(header), `wrapped response missing "${header}"`).toBeTruthy();
@@ -91,7 +91,7 @@ describe("functions/_middleware — API security headers", () => {
     });
 
     // synthetic context
-    const wrapped = await onRequest(makeFakeContext(upstream));
+    const wrapped = await __securityHeaders__(makeFakeContext(upstream));
 
     expect(wrapped.headers.get("content-disposition")).toBe('attachment; filename="x.json"');
     expect(wrapped.headers.get("cache-control")).toBe("no-store");
@@ -104,7 +104,7 @@ describe("functions/_middleware — API security headers", () => {
     });
 
     // synthetic context
-    const wrapped = await onRequest(makeFakeContext(upstream));
+    const wrapped = await __securityHeaders__(makeFakeContext(upstream));
 
     expect(wrapped.status).toBe(401);
     expect(wrapped.headers.get("X-Content-Type-Options")).toBe("nosniff");
@@ -120,7 +120,7 @@ describe("functions/_middleware — API security headers", () => {
     });
 
     // synthetic context
-    const wrapped = await onRequest(makeFakeContext(upstream));
+    const wrapped = await __securityHeaders__(makeFakeContext(upstream));
 
     expect(wrapped.headers.get("Referrer-Policy")).toBe("same-origin");
   });

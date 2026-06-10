@@ -19,6 +19,8 @@
 // (e.g. /api/account/export-data sets Content-Disposition) is
 // preserved — we only ADD headers, never overwrite.
 
+import { handleSeoMeta, type SeoMetaEnv } from "./_lib/seo-meta";
+
 const SECURITY_HEADERS: Record<string, string> = {
   "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
   "X-Content-Type-Options": "nosniff",
@@ -35,10 +37,25 @@ const SECURITY_HEADERS: Record<string, string> = {
 // not @cloudflare/workers-types). Same pattern as the per-route
 // RequestContext interfaces in functions/api/**.
 interface MiddlewareContext {
+  request: Request;
+  env: SeoMetaEnv;
   next: () => Promise<Response>;
 }
 
-export const onRequest = async ({ next }: MiddlewareContext): Promise<Response> => {
+// E50 — per-route social/crawler meta injection. Runs INSIDE the security
+// wrapper: it transforms the SPA-fallback HTML (only for crawlable
+// document requests; everything else passes through), then the security
+// middleware adds HSTS/CSP/etc. to whatever HTML/JSON comes back. Kept as
+// a library module (functions/_lib/seo-meta.ts) so the routing/fetch/404
+// logic is unit-testable without an HTMLRewriter runtime. See that file
+// for the [[path]].ts-vs-middleware rationale and the CSP note (no change
+// needed — public/_headers already permits the og:image hosts).
+const seoMeta = async ({ request, env, next }: MiddlewareContext): Promise<Response> => {
+  const upstream = await next();
+  return handleSeoMeta(request, env, upstream);
+};
+
+const securityHeaders = async ({ next }: MiddlewareContext): Promise<Response> => {
   const response = await next();
 
   // Create a new response so we can mutate the headers without
@@ -58,5 +75,11 @@ export const onRequest = async ({ next }: MiddlewareContext): Promise<Response> 
   });
 };
 
+// CF Pages runs middleware in array order, each wrapping the next via
+// next(). securityHeaders is outermost so its header set lands on the
+// final (possibly meta-rewritten) response.
+export const onRequest = [securityHeaders, seoMeta];
+
 // Exported for unit tests.
 export const __SECURITY_HEADERS__ = SECURITY_HEADERS;
+export const __securityHeaders__ = securityHeaders;
