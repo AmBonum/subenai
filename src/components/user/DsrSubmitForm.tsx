@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useSubmitDSR } from "@/lib/platform/queries";
+import { useCurrentProfile, useSubmitDSR } from "@/lib/platform/queries";
 import type { DSRType } from "@/lib/platform/types";
 import { tFor } from "@/i18n/governance";
 
@@ -29,7 +29,10 @@ const TYPES: DSRType[] = [
 export function DsrSubmitForm() {
   const t = tFor("dsr_form");
   const submitMut = useSubmitDSR();
-  const [email, setEmail] = useState("");
+  const profileQ = useCurrentProfile();
+  // RLS requires dsr_requests.requester_email = auth.email(), so the field
+  // is locked to the signed-in user's e-mail.
+  const email = profileQ.data?.email ?? "";
   const [type, setType] = useState<DSRType>("access");
   const [note, setNote] = useState("");
   const [success, setSuccess] = useState(false);
@@ -47,7 +50,6 @@ export function DsrSubmitForm() {
       {
         onSuccess: () => {
           setSuccess(true);
-          setEmail("");
           setNote("");
         },
         onError: () => setError(t("error_generic")),
@@ -87,7 +89,8 @@ export function DsrSubmitForm() {
             id="dsr-email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            readOnly
+            disabled
             placeholder={t("email_placeholder")}
             data-testid="dsr-form-subject-input"
           />

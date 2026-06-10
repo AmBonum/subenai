@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import {
   ArrowDown,
@@ -48,6 +48,7 @@ import {
   useLibraryQuestions,
   useTemplates,
 } from "@/lib/platform/queries";
+import { copyToClipboard } from "@/lib/browser/clipboard";
 import { tFor } from "@/i18n/tests";
 import { tFor as tAppShell } from "@/i18n/app-shell";
 
@@ -117,10 +118,25 @@ function WizardPage() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
 
+  // Deep-link/refresh: templates resolve async, so the useState
+  // initializers above see no template on first render. Prefill once when
+  // the template arrives — only while the form is still pristine so a
+  // slow response never clobbers user input.
+  const templatePrefillDone = useRef(initialFromTemplate !== null);
+  useEffect(() => {
+    if (!initialFromTemplate || templatePrefillDone.current) return;
+    templatePrefillDone.current = true;
+    if (title === "" && description === "" && questionIds.length === 0) {
+      setTitle(initialFromTemplate.title);
+      setDescription(initialFromTemplate.description);
+      setQuestionIds(initialFromTemplate.questionIds);
+    }
+  }, [initialFromTemplate, title, description, questionIds]);
+
   const remainingCapacity = Math.max(0, MAX_QUESTIONS_PER_TEST - questionIds.length);
 
   const goStep = (n: 1 | 2 | 3 | 4) =>
-    nav({ search: (prev) => ({ ...prev, step: n }), replace: false });
+    nav({ search: (prev: Record<string, unknown>) => ({ ...prev, step: n }), replace: false });
 
   const step1Valid = title.trim().length > 0;
   const step3Valid = questionIds.length > 0;
@@ -157,13 +173,15 @@ function WizardPage() {
   }
 
   const onPublish = () => {
-    const ownerId = profileQ.data?.id ?? "";
+    const ownerId = profileQ.data?.id;
+    if (!ownerId) return;
     createMut.mutate(
       {
         owner_id: ownerId,
         title: title.trim(),
         description: description.trim(),
         segmentation: groupId === "none" ? [] : [groupId],
+        question_ids: questionIds,
       },
       {
         onSuccess: (created) => {
@@ -186,8 +204,8 @@ function WizardPage() {
         : "";
 
   const onCopy = () => {
-    if (shareUrl && typeof navigator !== "undefined" && navigator.clipboard) {
-      void navigator.clipboard.writeText(shareUrl);
+    if (shareUrl) {
+      void copyToClipboard(shareUrl);
     }
   };
 
@@ -490,7 +508,7 @@ function WizardPage() {
               </Button>
               <Button
                 onClick={onPublish}
-                disabled={!step3Valid || createMut.isPending}
+                disabled={!step3Valid || createMut.isPending || !profileQ.data}
                 data-testid="new-test-wizard-step-3-next"
               >
                 {t("publish_button")}

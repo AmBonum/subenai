@@ -20,6 +20,10 @@
         "label": "My tests",
         "tip": "Everything you've built — drafts, live, archived."
       },
+      "edu_tests": {
+        "label": "My edu tests",
+        "tip": "Tests for your class or team — assignments, attempts and student results."
+      },
       "templates": {
         "label": "Templates",
         "tip": "Sector-specific starters. Copy and tailor."
@@ -241,26 +245,86 @@
     },
     "faq": {
       "items": [
-        { "question": "How do I create a new test?", "answer": "Click 'New test' in the left menu and follow the 3-step wizard." },
-        { "question": "How do I share a test with respondents?", "answer": "In the test editor open the 'Details' tab → the Share button generates a /t/{shareId} link." },
-        { "question": "Can I password-protect a test?", "answer": "Yes, set a password in 'Details'. The respondent enters it before starting." },
-        { "question": "Which question types do you support?", "answer": "15 types: single choice, multi choice, NPS, scale, matrix, ranking, slider, text, date, time, image, yes/no, file." },
-        { "question": "What is the question limit per test?", "answer": "A maximum of 50 questions per test." },
-        { "question": "Is respondent data anonymised?", "answer": "If you enable 'Anonymise after 90 days', PII is removed automatically." },
-        { "question": "How do I export results?", "answer": "In the test detail → 'Exports' → pick CSV, JSON or PDF." },
-        { "question": "What does conditional branching do?", "answer": "It lets you skip questions based on previous answers (in Advanced features)." },
-        { "question": "Which roles can I assign in a team?", "answer": "Owner (full access), Editor (content edits), Viewer (read only)." },
-        { "question": "How do I version a test?", "answer": "Each publish creates a new version — see them in the editor's 'Versions' tab." },
-        { "question": "What is a GDPR DSR?", "answer": "Data Subject Request — a form for access / erasure / portability of personal data, SLA 30 days." },
-        { "question": "How does password rate limiting work?", "answer": "After 5 wrong attempts the IP is blocked for 15 minutes." },
-        { "question": "What hashing do you use?", "answer": "Argon2id for test passwords, bcrypt for user passwords." },
-        { "question": "I have several respondents — can I send invitations?", "answer": "Yes, in the Share dialog enter several emails separated by commas." },
-        { "question": "Where do I find the audit log?", "answer": "Per-test in the editor's 'Audit' tab; global in the Admin panel." },
-        { "question": "How do I set up notifications?", "answer": "In the test editor's 'Notifications' tab — 5 event types." },
-        { "question": "How do I export a single respondent's data?", "answer": "In the session detail click 'Export JSON' (it is recorded in the audit log)." },
-        { "question": "Can I create a test from a template?", "answer": "Yes, in the wizard pick 'Template' at step 1." },
-        { "question": "What is the difference between a private and public test?", "answer": "Private: only you. Unlisted: via link. Public: indexed in the listing." },
-        { "question": "What kind of support do you provide?", "answer": "Email support@subenai.sk, we reply within 24 h on business days." }
+        {
+          "question": "How do I create a new test?",
+          "answer": "Click 'New test' in the left menu and follow the 3-step wizard."
+        },
+        {
+          "question": "How do I share a test with respondents?",
+          "answer": "In the test editor open the 'Details' tab → the Share button generates a /t/{shareId} link."
+        },
+        {
+          "question": "Can I password-protect a test?",
+          "answer": "Yes, set a password in 'Details'. The respondent enters it before starting."
+        },
+        {
+          "question": "Which question types do you support?",
+          "answer": "15 types: single choice, multi choice, NPS, scale, matrix, ranking, slider, text, date, time, image, yes/no, file."
+        },
+        {
+          "question": "What is the question limit per test?",
+          "answer": "A maximum of 50 questions per test."
+        },
+        {
+          "question": "Is respondent data anonymised?",
+          "answer": "If you enable 'Anonymise after 90 days', PII is removed automatically."
+        },
+        {
+          "question": "How do I export results?",
+          "answer": "In the test detail → 'Exports' → pick CSV, JSON or PDF."
+        },
+        {
+          "question": "What does conditional branching do?",
+          "answer": "It lets you skip questions based on previous answers (in Advanced features)."
+        },
+        {
+          "question": "Which roles can I assign in a team?",
+          "answer": "Owner (full access), Editor (content edits), Viewer (read only)."
+        },
+        {
+          "question": "How do I version a test?",
+          "answer": "Each publish creates a new version — see them in the editor's 'Versions' tab."
+        },
+        {
+          "question": "What is a GDPR DSR?",
+          "answer": "Data Subject Request — a form for access / erasure / portability of personal data, SLA 30 days."
+        },
+        {
+          "question": "How does password rate limiting work?",
+          "answer": "After 5 wrong attempts the IP is blocked for 15 minutes."
+        },
+        {
+          "question": "What hashing do you use?",
+          "answer": "Argon2id for test passwords, bcrypt for user passwords."
+        },
+        {
+          "question": "I have several respondents — can I send invitations?",
+          "answer": "Yes, in the Share dialog enter several emails separated by commas."
+        },
+        {
+          "question": "Where do I find the audit log?",
+          "answer": "Per-test in the editor's 'Audit' tab; global in the Admin panel."
+        },
+        {
+          "question": "How do I set up notifications?",
+          "answer": "In the test editor's 'Notifications' tab — 5 event types."
+        },
+        {
+          "question": "How do I export a single respondent's data?",
+          "answer": "In the session detail click 'Export JSON' (it is recorded in the audit log)."
+        },
+        {
+          "question": "Can I create a test from a template?",
+          "answer": "Yes, in the wizard pick 'Template' at step 1."
+        },
+        {
+          "question": "What is the difference between a private and public test?",
+          "answer": "Private: only you. Unlisted: via link. Public: indexed in the listing."
+        },
+        {
+          "question": "What kind of support do you provide?",
+          "answer": "Email support@subenai.sk, we reply within 24 h on business days."
+        }
       ]
     }
   },

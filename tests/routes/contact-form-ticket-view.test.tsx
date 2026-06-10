@@ -1,10 +1,11 @@
+import type { JSX } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const rpcSpy = vi.fn();
 const useParamsSpy = vi.fn(() => ({ id: "11111111-1111-4111-8111-111111111111" }));
-const useSearchSpy = vi.fn(() => ({ token: "a".repeat(64) }));
+const useSearchSpy = vi.fn((): { token: string | undefined } => ({ token: "a".repeat(64) }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {

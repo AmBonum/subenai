@@ -5,7 +5,7 @@
 
 import type { ComponentProps, ReactNode } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import type { Session, TestSessionsPage } from "@/lib/platform/types";
 
@@ -133,7 +133,7 @@ describe("SessionsList", () => {
     );
   });
 
-  it("re-invokes useTestSessions with page=0 after typing in the search box", () => {
+  it("re-invokes useTestSessions with page=0 after the debounced search commits", async () => {
     useTestSessionsMock.mockReturnValue({ data: mkResp([]), isLoading: false });
     render(<SessionsList testId="test-1" />);
 
@@ -150,12 +150,18 @@ describe("SessionsList", () => {
       target: { value: "anna" },
     });
 
-    const last = useTestSessionsMock.mock.calls.at(-1)![1] as {
-      page: number;
-      search: string;
-    };
-    expect(last.search).toBe("anna");
-    expect(last.page).toBe(0);
+    // Debounced: the keystroke itself must NOT reach the query.
+    const immediately = useTestSessionsMock.mock.calls.at(-1)![1] as { search: string };
+    expect(immediately.search).toBe("");
+
+    await waitFor(() => {
+      const last = useTestSessionsMock.mock.calls.at(-1)![1] as {
+        page: number;
+        search: string;
+      };
+      expect(last.search).toBe("anna");
+      expect(last.page).toBe(0);
+    });
   });
 
   it("disables Prev on the first page and Next on the last page", () => {

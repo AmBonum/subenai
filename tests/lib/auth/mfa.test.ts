@@ -129,8 +129,16 @@ describe("mfa helpers", () => {
 
   it("consumeBackupCode refreshes the session after a successful RPC", async () => {
     rpc.mockResolvedValue({ data: true, error: null });
-    expect(await consumeBackupCode("AAAA-BBBB")).toBe(true);
+    expect(await consumeBackupCode("AAAA-BBBB")).toBe("ok");
     expect(refreshSession).toHaveBeenCalled();
+  });
+
+  it("consumeBackupCode surfaces a failed session refresh as refresh_failed", async () => {
+    rpc.mockResolvedValue({ data: true, error: null });
+    refreshSession.mockResolvedValueOnce({ data: { session: null }, error: { message: "boom" } });
+    expect(await consumeBackupCode("AAAA-BBBB")).toBe("refresh_failed");
+    refreshSession.mockRejectedValueOnce(new Error("network down"));
+    expect(await consumeBackupCode("AAAA-BBBB")).toBe("refresh_failed");
   });
 
   it("listFactors returns the totp list", async () => {
@@ -155,17 +163,17 @@ describe("mfa helpers", () => {
     expect(rpc).toHaveBeenCalledWith("generate_mfa_backup_codes", undefined);
   });
 
-  it("consumeBackupCode returns true on RPC success", async () => {
+  it("consumeBackupCode returns ok on RPC success", async () => {
     rpc.mockResolvedValue({ data: true, error: null });
-    expect(await consumeBackupCode("AAAA-BBBB")).toBe(true);
+    expect(await consumeBackupCode("AAAA-BBBB")).toBe("ok");
     expect(rpc).toHaveBeenCalledWith("consume_mfa_backup_code", { p_code: "AAAA-BBBB" });
   });
 
-  it("consumeBackupCode returns false on RPC error or non-true data", async () => {
+  it("consumeBackupCode returns invalid on RPC error or non-true data", async () => {
     rpc.mockResolvedValueOnce({ data: false, error: null });
-    expect(await consumeBackupCode("BAD")).toBe(false);
+    expect(await consumeBackupCode("BAD")).toBe("invalid");
     rpc.mockResolvedValueOnce({ data: null, error: { message: "x" } });
-    expect(await consumeBackupCode("BAD")).toBe(false);
+    expect(await consumeBackupCode("BAD")).toBe("invalid");
   });
 
   it("remainingBackupCodes uses head+count query, filtered by used_at null", async () => {

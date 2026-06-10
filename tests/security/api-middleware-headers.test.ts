@@ -70,7 +70,7 @@ describe("functions/_middleware — API security headers", () => {
       headers: { "content-type": "application/json" },
     });
 
-    // @ts-expect-error — synthetic minimal context for the middleware
+    // synthetic minimal context for the middleware
     const wrapped = await onRequest(makeFakeContext(upstream));
 
     for (const header of REQUIRED_HEADERS) {
@@ -90,7 +90,7 @@ describe("functions/_middleware — API security headers", () => {
       },
     });
 
-    // @ts-expect-error — synthetic context
+    // synthetic context
     const wrapped = await onRequest(makeFakeContext(upstream));
 
     expect(wrapped.headers.get("content-disposition")).toBe('attachment; filename="x.json"');
@@ -103,7 +103,7 @@ describe("functions/_middleware — API security headers", () => {
       headers: { "content-type": "application/json" },
     });
 
-    // @ts-expect-error — synthetic context
+    // synthetic context
     const wrapped = await onRequest(makeFakeContext(upstream));
 
     expect(wrapped.status).toBe(401);
@@ -119,7 +119,7 @@ describe("functions/_middleware — API security headers", () => {
       headers: { "Referrer-Policy": "same-origin" },
     });
 
-    // @ts-expect-error — synthetic context
+    // synthetic context
     const wrapped = await onRequest(makeFakeContext(upstream));
 
     expect(wrapped.headers.get("Referrer-Policy")).toBe("same-origin");

@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { copyToClipboard } from "@/lib/browser/clipboard";
 import {
   buildShareIntentUrl,
   isMobileUserAgent,
@@ -31,13 +32,13 @@ export function SocialShareGrid({ url, text }: Props) {
   async function handleClick(platform: SharePlatform) {
     if (platform === "messenger" && !isMobileUserAgent()) {
       const utmUrl = withUtm(url, "messenger");
-      try {
-        await navigator.clipboard.writeText(`${text} ${utmUrl}`);
+      const ok = await copyToClipboard(`${text} ${utmUrl}`);
+      if (ok) {
         setMessengerCopied(true);
         window.setTimeout(() => setMessengerCopied(false), 2400);
-      } catch {
-        // Clipboard write can throw in insecure contexts; fall through to
-        // the deep-link attempt so something still happens.
+      } else {
+        // Clipboard unavailable (insecure context) — fall through to the
+        // deep-link attempt so something still happens.
         window.open(buildShareIntentUrl("messenger", url, text), "_blank");
       }
       return;

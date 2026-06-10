@@ -63,7 +63,7 @@ export function EduTestsList() {
   if (phase === "loading") {
     return (
       <div className="space-y-6">
-        <PageHeader title={t("heading")} description={t("description")} />
+        <PageHeader title={t("heading")} subtitle={t("description")} />
         <p data-testid="edu-tests-loading" className="text-sm text-muted-foreground">
           {t("loading")}
         </p>
@@ -111,7 +111,7 @@ export function EduTestsList() {
   if (sets.length === 0) {
     return (
       <div className="space-y-6">
-        <PageHeader title={t("heading")} description={t("description")} />
+        <PageHeader title={t("heading")} subtitle={t("description")} />
         <Card>
           <CardContent className="py-10 text-center">
             <p data-testid="edu-tests-empty" className="text-sm text-muted-foreground">
@@ -126,7 +126,7 @@ export function EduTestsList() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("heading")} description={t("description")} />
+      <PageHeader title={t("heading")} subtitle={t("description")} />
       <AppPageExplainer pageKey="edu_tests" />
       <ul data-testid="edu-tests-list" className="space-y-3">
         {sets.map((s) => (

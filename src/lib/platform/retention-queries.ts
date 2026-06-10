@@ -8,6 +8,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
+import type { TablesUpdate } from "@/integrations/supabase/types";
 
 export interface DigestStats {
   sessions_count?: number;
@@ -143,7 +144,7 @@ function useRecommendationTimestampMutation(column: "dismissed_at" | "clicked_at
     mutationFn: async (recId: string) => {
       const { error } = await supabase
         .from("course_recommendations")
-        .update({ [column]: new Date().toISOString() })
+        .update({ [column]: new Date().toISOString() } as TablesUpdate<"course_recommendations">)
         .eq("id", recId);
       if (error) throw error;
     },
@@ -233,7 +234,7 @@ function useRetestTimestampMutation(column: "dismissed_at" | "retested_at") {
     mutationFn: async (reminderId: string) => {
       const { error } = await supabase
         .from("retest_reminders")
-        .update({ [column]: new Date().toISOString() })
+        .update({ [column]: new Date().toISOString() } as TablesUpdate<"retest_reminders">)
         .eq("id", reminderId);
       if (error) throw error;
     },

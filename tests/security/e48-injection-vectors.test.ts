@@ -24,6 +24,7 @@ import {
   supportTicketReplyEmail,
   supportTicketResolvedEmail,
 } from "../../functions/_lib/email-templates";
+import { escapeCsvCell } from "../../functions/_lib/csv";
 import { XSS_PAYLOADS, CSV_INJECTION_PAYLOADS } from "./e48-payloads";
 
 // --- helpers -----------------------------------------------------------------
@@ -162,14 +163,26 @@ describe("E48 XSS resistance — supportTicketReceivedEmail (attachment filename
   });
 });
 
-// --- CSV injection: placeholder for future export helper ---------------------
+// --- CSV injection: escapeCsvCell (functions/_lib/csv.ts) --------------------
 //
-// The CSV export helper lands in PR-E. This describe block is a stub
-// that will be expanded once PR-E provides the csvEscapeCell helper.
+// The CSV export helper shipped in E49.4 as `escapeCsvCell`. The deep
+// contract suite lives in `tests/security/csv-export-injection.test.ts`;
+// this block keeps the E48 payload battery wired to the helper so a
+// regression in the formula-injection sentinel fails BOTH suites.
 
-describe("E48 CSV injection — placeholder for future CSV export helper", () => {
-  it.skip.each(CSV_INJECTION_PAYLOADS)("escapes payload: %s", (_payload) => {
-    // Will be filled in PR-E when csvEscapeCell is available.
+const CSV_FORMULA_TRIGGERS = new Set(["=", "+", "-", "@", "\t", "\r"]);
+
+describe("E48 CSV injection — escapeCsvCell formula-injection defense", () => {
+  it.each(CSV_INJECTION_PAYLOADS)("escapes payload: %s", (payload) => {
+    const escaped = escapeCsvCell(payload);
+    // Strip RFC-4180 outer quoting to get the content a spreadsheet sees.
+    const inner = escaped.startsWith('"') ? escaped.slice(1, -1).replace(/""/g, '"') : escaped;
+    // The rendered cell content must never START with a formula trigger —
+    // dangerous leading chars get the `'` text sentinel prefix.
+    expect(CSV_FORMULA_TRIGGERS.has(inner.charAt(0))).toBe(false);
+    // The payload itself survives (suffix after an optional sentinel) —
+    // escaping must neutralise, not destroy, the data.
+    expect(inner === payload || inner === "'" + payload).toBe(true);
   });
 });
 

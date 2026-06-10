@@ -18,7 +18,6 @@ import {
   SENSITIVITY_BORDER,
   SENSITIVITY_LABEL,
   TRAP_FIELDS,
-  TRAP_SEEN_STORAGE_KEY,
   type TrapFieldCopy,
 } from "@/lib/data-trap/copy";
 import { matchers, type TrapFieldId } from "@/lib/data-trap/matchers";

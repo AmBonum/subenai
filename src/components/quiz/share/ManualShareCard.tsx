@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { copyToClipboard } from "@/lib/browser/clipboard";
 import { tFor } from "@/i18n/quiz";
 
 interface Props {
@@ -28,14 +29,10 @@ export function ManualShareCard({ url, text, onDownloadStory, downloading }: Pro
   const caption = `${text} ${url}`;
 
   async function handleCopyCaption() {
-    try {
-      await navigator.clipboard.writeText(caption);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1800);
-    } catch {
-      // Insecure-context clipboard write can throw; swallow silently —
-      // there's no good fallback here and an alert would be intrusive.
-    }
+    const ok = await copyToClipboard(caption);
+    if (!ok) return;
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
   }
 
   return (

@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, fireEvent, act } from "@testing-library/react";
+import { render, act } from "@testing-library/react";
 import { ConsentProvider } from "@/hooks/useConsent";
 import { ResultsView } from "@/components/quiz/results/ResultsView";
 import { TRAP_SEEN_STORAGE_KEY } from "@/lib/data-trap/copy";
+import { track } from "@/lib/browser/tracking";
 import type { AnswerRecord, ScoreResult } from "@/lib/quiz/score/scoring";
 
 // Mock Link component to avoid RouterProvider requirement
@@ -102,10 +103,19 @@ function renderResults(result = mockResult, answers = mockAnswers, onRestart = v
   );
 }
 
+function trapShownCalls() {
+  return vi
+    .mocked(track)
+    .mock.calls.filter(
+      ([, evt]) => (evt as { name?: string } | undefined)?.name === "data_trap.shown",
+    );
+}
+
 describe("ResultsView — E4.3 TrapDialog integration", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     localStorage.clear();
+    vi.mocked(track).mockClear();
   });
 
   afterEach(() => {
@@ -116,19 +126,48 @@ describe("ResultsView — E4.3 TrapDialog integration", () => {
   it("clears timer on unmount before 5s (no memory leak)", async () => {
     const { unmount } = renderResults();
 
-    // Unmount before timer fires
+    // Let the score-reveal timer (1.2s) fire so `showRest` flips and the
+    // 5s trap auto-open timer actually gets scheduled.
     await act(async () => {
-      vi.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1500);
     });
+    expect(vi.getTimerCount()).toBeGreaterThan(0);
+
+    // NOTE: tests/setup.ts wraps the NATIVE setTimeout/clearTimeout, but
+    // `vi.useFakeTimers()` (beforeEach) re-replaces the globals with the
+    // fake implementations for the duration of this test — so spying on
+    // `globalThis.clearTimeout` observes the same fake the component
+    // calls through `window.clearTimeout` (jsdom: window === globalThis).
+    const clearTimeoutSpy = vi.spyOn(globalThis, "clearTimeout");
     unmount();
 
-    // Advance past 5s — no error should occur
+    // The effect cleanup must have cleared the pending trap timer.
+    expect(clearTimeoutSpy).toHaveBeenCalled();
+
+    // Advance past 5s — the cleared timer callback must never fire, i.e.
+    // the auto-open tracking event is never emitted after unmount.
     await act(async () => {
       vi.advanceTimersByTime(6000);
     });
+    expect(trapShownCalls()).toHaveLength(0);
 
-    // If we get here without error, cleanup worked
-    expect(true).toBe(true);
+    clearTimeoutSpy.mockRestore();
+  });
+
+  // Positive control for the unmount test above — proves the auto-open
+  // event DOES fire when the component stays mounted, so the
+  // zero-calls assertion there is not vacuous.
+  it("fires the data_trap.shown auto-open event after 5s when mounted", async () => {
+    renderResults();
+
+    await act(async () => {
+      vi.advanceTimersByTime(1500);
+    });
+    await act(async () => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    expect(trapShownCalls()).toHaveLength(1);
   });
 
   it("skips auto-open timer if iiq_trap_seen flag is already set", async () => {

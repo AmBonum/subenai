@@ -58,9 +58,7 @@ export function IntakeStep({ intakeFields, onSubmit }: IntakeStepProps) {
                 data-testid={
                   f.label.toLowerCase().includes("meno")
                     ? "respondent-flow-intake-name"
-                    : f.type === "email"
-                      ? "respondent-flow-intake-email"
-                      : `respondent-flow-intake-field-${f.id}`
+                    : `respondent-flow-intake-field-${f.id}`
                 }
               >
                 <option value="">—</option>

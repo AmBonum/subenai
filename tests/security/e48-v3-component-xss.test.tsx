@@ -49,12 +49,12 @@ vi.mock("@/lib/admin/use-admin-users-list", () => ({
 beforeEach(() => {
   // Reset the canary before every test so prior executions don't mask failure.
   if (typeof window !== "undefined") {
-    delete (window as Record<string, unknown>).__pwn;
+    delete (window as unknown as Record<string, unknown>).__pwn;
   }
 });
 
 function noPwn() {
-  expect((window as Record<string, unknown>).__pwn).toBeUndefined();
+  expect((window as unknown as Record<string, unknown>).__pwn).toBeUndefined();
 }
 
 // ---------------------------------------------------------------------------
@@ -198,7 +198,7 @@ describe("E48-v3 attachment filename XSS — AttachmentItem", () => {
           }}
           expanded={true}
           onToggle={() => {}}
-          imageSiblings={[{ id: "att-xss", filename: payload }]}
+          imageSiblings={[{ id: "att-xss", filename: payload, mime_type: "image/png" }]}
         />,
       );
       noPwn();

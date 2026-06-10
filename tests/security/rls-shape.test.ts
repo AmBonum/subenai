@@ -186,10 +186,6 @@ function fromCalls(): string[] {
   return log.current.calls.filter((c) => c.op === "from").map((c) => String(c.args[0] ?? ""));
 }
 
-function allSelects(): string[] {
-  return log.current.calls.filter((c) => c.op === "select").map((c) => String(c.args[0] ?? ""));
-}
-
 beforeEach(() => {
   resetLog();
 });

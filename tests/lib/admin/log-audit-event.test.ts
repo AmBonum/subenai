@@ -3,7 +3,15 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 
-const rpcSpy = vi.fn(async () => ({ data: "audit-row-id-1", error: null }));
+const rpcSpy = vi.fn(
+  async (
+    _name: string,
+    _args: Record<string, unknown>,
+  ): Promise<{ data: string | null; error: { message: string } | null }> => ({
+    data: "audit-row-id-1",
+    error: null,
+  }),
+);
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {

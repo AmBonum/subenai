@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 
@@ -41,10 +42,12 @@ describe("/app/tests/$testId (AH-5.3 editor)", () => {
     searchState.share = undefined;
   });
 
-  it("renders the not-found state for an unknown id", () => {
+  it("renders the not-found state for an unknown id", async () => {
     params.testId = "tst_does_not_exist_xyz";
     render(<Page />);
-    expect(screen.getByTestId("test-editor-not-found")).toBeInTheDocument();
+    // The id is not in the seeded cache, so the route shows the loading
+    // skeleton until the (stubbed) fetch resolves to null.
+    expect(await screen.findByTestId("test-editor-not-found")).toBeInTheDocument();
   });
 
   it("renders the editor with tabs for a real test", () => {

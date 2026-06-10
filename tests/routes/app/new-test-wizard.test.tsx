@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
@@ -130,6 +131,8 @@ describe("/app/tests/new (AH-5.2 wizard)", () => {
     rerender(<Page />);
     expect(screen.getByTestId("new-test-wizard-step-4-root")).toBeInTheDocument();
     const shareInput = screen.getByTestId("new-test-wizard-share-link-input") as HTMLInputElement;
-    expect(shareInput.value).toMatch(/\/t\/[a-z0-9-]+$/);
+    // share_id is now a 10-char base62 id (respondent regex compatible),
+    // not a 36-char uuid.
+    expect(shareInput.value).toMatch(/\/t\/[A-Za-z0-9]{6,12}$/);
   });
 });

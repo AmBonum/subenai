@@ -90,19 +90,32 @@ export function TakeTestFlow({ test, questionIds, shareId, onClose }: TakeTestFl
         ? q.correct
         : null;
     const isCorrect = expected ? value === expected : null;
-    const next = [...answers, { question_id: q.id, value, is_correct: isCorrect, time_ms }];
+    // Back-navigation can re-answer an already-answered question: replace
+    // the record by question_id instead of appending so the array stays
+    // deduped and the score denominator stays = question count. An
+    // unchanged re-answer skips the server submit entirely.
+    const existing = answers.find((a) => a.question_id === q.id);
+    const unchanged = existing !== undefined && existing.value === value;
+    const next = unchanged
+      ? answers
+      : [
+          ...answers.filter((a) => a.question_id !== q.id),
+          { question_id: q.id, value, is_correct: isCorrect, time_ms },
+        ];
     setSubmitError(null);
     setSubmitting(true);
     try {
-      await submitRespondentAnswer({
-        sessionId,
-        sessionToken,
-        questionId: q.id,
-        value,
-        isCorrect,
-        timeMs: time_ms,
-      });
-      setAnswers(next);
+      if (!unchanged) {
+        await submitRespondentAnswer({
+          sessionId,
+          sessionToken,
+          questionId: q.id,
+          value,
+          isCorrect,
+          timeMs: time_ms,
+        });
+        setAnswers(next);
+      }
       if (qIdx + 1 < questions.length) {
         setQIdx(qIdx + 1);
         setQuestionStart(Date.now());
@@ -161,10 +174,11 @@ export function TakeTestFlow({ test, questionIds, shareId, onClose }: TakeTestFl
         {stage === "questions" && questions[qIdx] && (
           <>
             <QuestionStep
+              key={questions[qIdx].id}
               index={qIdx}
               total={questions.length}
               question={questions[qIdx]}
-              initialValue={answers[qIdx]?.value ?? ""}
+              initialValue={answers.find((a) => a.question_id === questions[qIdx].id)?.value ?? ""}
               isLast={qIdx + 1 === questions.length}
               onPrev={qIdx > 0 ? () => setQIdx(qIdx - 1) : undefined}
               onAnswer={onAnswer}

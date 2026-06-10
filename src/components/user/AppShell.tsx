@@ -36,6 +36,7 @@ const TESTID_PREFIX: Record<NavMode, string> = {
 type NavKey =
   | "dashboard"
   | "tests"
+  | "edu_tests"
   | "templates"
   | "library"
   | "audiences"

@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { ConsentProvider } from "@/hooks/useConsent";
 import { TrapDialog } from "@/components/quiz/results/TrapDialog";
-import { TRAP_SEEN_STORAGE_KEY } from "@/lib/data-trap/copy";
 import { supabase } from "@/integrations/supabase/client";
 
 // Centralised guard against the design-invariant violations we care about

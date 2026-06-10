@@ -10,10 +10,12 @@
 // Query key convention: ["user", <domain>, ...filters?]. Mutations
 // invalidate the matching ["user", <domain>] root.
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
+import type { TablesUpdate } from "@/integrations/supabase/types";
 import { getCurrentLocale } from "@/i18n/locale-context";
+import { generateShareId } from "@/lib/platform/share-id";
 import type { PrecheckVerdict } from "@/lib/templates/precheckSchema";
 
 import type { Option, Visual } from "@/lib/quiz/bank/questions";
@@ -53,19 +55,22 @@ type TestsRow = {
   description: string | null;
   status: string;
   version: number;
-  password_hash: string | null;
+  // Detail-only columns (absent on list rows — the tests list never
+  // fetches password_hash / heavy jsonb so the hash can't leak into a
+  // list payload and the response stays small).
+  password_hash?: string | null;
   segmentation: string[];
   gdpr_purpose: string;
-  intake_fields: unknown;
-  branches: unknown;
-  notif_config: unknown;
+  intake_fields?: unknown;
+  branches?: unknown;
+  notif_config?: unknown;
   anonymize_after_days: number | null;
   allow_behavioral_tracking: boolean;
   expires_at: string | null;
   published_at: string | null;
   question_order_mode: string | null;
   source_template_id: string | null;
-  password_hash_version: number | null;
+  password_hash_version?: number | null;
   created_at: string;
   updated_at: string;
 };
@@ -83,7 +88,7 @@ const mapTest = (row: TestsRow, question_ids: string[] = []): Test => ({
   // E45 Phase 2 — `password` kept for back-compat; new code reads `has_password`.
   // We DO NOT expose the hash on the client even to the owner — defense in depth.
   password: row.password_hash ? "" : null,
-  has_password: row.password_hash !== null,
+  has_password: (row.password_hash ?? null) !== null,
   password_hash_version: row.password_hash_version ?? 0,
   segmentation: row.segmentation ?? [],
   gdpr_purpose: row.gdpr_purpose as Test["gdpr_purpose"],
@@ -270,8 +275,15 @@ const mapLibraryQuestion = (row: QuestionsRow): LibraryQuestion => ({
 // Tests (user-owned + team-shared via RLS)
 // ---------------------------------------------------------------------------
 
+// Detail view (PasswordCard needs password presence; settings need the
+// jsonb configs). The hash value itself is still blanked by mapTest.
 const TESTS_COLS =
   "id, slug, share_id, owner_id, team_id, title, description, status, version, password_hash, segmentation, gdpr_purpose, intake_fields, branches, notif_config, anonymize_after_days, allow_behavioral_tracking, expires_at, published_at, question_order_mode, source_template_id, password_hash_version, created_at, updated_at";
+
+// List views render title/status/version/segmentation only — no
+// password_hash (never ship the hash for N rows), no heavy jsonb.
+const TESTS_LIST_COLS =
+  "id, slug, share_id, owner_id, team_id, title, description, status, version, segmentation, gdpr_purpose, anonymize_after_days, allow_behavioral_tracking, expires_at, published_at, question_order_mode, source_template_id, created_at, updated_at";
 
 export function useTests() {
   return useQuery({
@@ -279,7 +291,7 @@ export function useTests() {
     queryFn: async (): Promise<Test[]> => {
       const { data, error } = await supabase
         .from("tests")
-        .select(TESTS_COLS)
+        .select(TESTS_LIST_COLS)
         .order("updated_at", { ascending: false });
       if (error) throw error;
       return (data ?? []).map((r) => mapTest(r as TestsRow));
@@ -318,7 +330,7 @@ export function useCreateTest() {
         .from("tests")
         .insert({
           slug: input.slug ?? `test-${Date.now()}`,
-          share_id: input.share_id ?? crypto.randomUUID(),
+          share_id: input.share_id ?? generateShareId(),
           owner_id: input.owner_id,
           team_id: input.team_id ?? null,
           title: input.title,
@@ -328,6 +340,15 @@ export function useCreateTest() {
         .select()
         .single();
       if (error) throw error;
+      const questionIds = input.question_ids ?? [];
+      if (questionIds.length > 0) {
+        const created = data as { id: string };
+        const { error: rpcError } = await supabase.rpc("replace_test_questions", {
+          p_test_id: created.id,
+          p_question_ids: questionIds,
+        });
+        if (rpcError) throw rpcError;
+      }
       return data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests"] }),
@@ -338,7 +359,7 @@ export function useUpdateTest() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<Test> }) => {
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"tests"> = {};
       if (patch.title !== undefined) update.title = patch.title;
       if (patch.slug !== undefined) update.slug = patch.slug;
       if (patch.description !== undefined) update.description = patch.description;
@@ -422,23 +443,14 @@ export function useUpdateTestQuestionOrder(testId: string) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (orderedQuestionIds: string[]) => {
-      // Bulk-rewrite positions. Strategy: delete then re-insert preserves
-      // historical session_answers (those FK question_id, not the
-      // test_questions row) while sidestepping the unique (test_id,
-      // position) constraint that would block a same-row swap.
-      const { error: delErr } = await supabase
-        .from("test_questions")
-        .delete()
-        .eq("test_id", testId);
-      if (delErr) throw delErr;
-      if (orderedQuestionIds.length === 0) return;
-      const rows = orderedQuestionIds.map((qid, i) => ({
-        test_id: testId,
-        question_id: qid,
-        position: i,
-      }));
-      const { error: insErr } = await supabase.from("test_questions").insert(rows);
-      if (insErr) throw insErr;
+      // Transactional rewrite via RPC — the previous client-side
+      // delete-all-then-insert could lose every row if the insert failed
+      // mid-flight (network drop = empty test).
+      const { error } = await supabase.rpc("replace_test_questions", {
+        p_test_id: testId,
+        p_question_ids: orderedQuestionIds,
+      });
+      if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests", testId] }),
   });
@@ -514,29 +526,12 @@ export function useDuplicateTest() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const { data: src, error: e1 } = await supabase
-        .from("tests")
-        .select(TESTS_COLS)
-        .eq("id", id)
-        .maybeSingle();
-      if (e1) throw e1;
-      if (!src) throw new Error("Test not found");
-      const row = src as TestsRow;
-      const { data, error } = await supabase
-        .from("tests")
-        .insert({
-          slug: `${row.slug}-copy-${Date.now()}`,
-          share_id: crypto.randomUUID(),
-          owner_id: row.owner_id,
-          team_id: row.team_id,
-          title: `${row.title} (kópia)`,
-          description: row.description,
-          status: "draft" as never,
-        })
-        .select()
-        .single();
+      // Server-side copy: duplicates the tests row AND its test_questions
+      // in one transaction (the old client-side insert silently dropped
+      // every question). Returns the new test id.
+      const { data, error } = await supabase.rpc("duplicate_test", { p_test_id: id });
       if (error) throw error;
-      return data;
+      return data as string;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests"] }),
   });
@@ -559,6 +554,66 @@ export function useUserSessions() {
         .order("started_at", { ascending: false });
       if (error) throw error;
       return (data ?? []).map((r) => mapSession(r as SessionsRow));
+    },
+  });
+}
+
+// Dashboard KPI aggregates. head:true count queries per slice instead of
+// fetching every sessions/respondents row to the browser just to call
+// `.length` — the dashboard only renders counts plus a per-test recency
+// signal, so the only row fetch is a narrow (test_id) select bounded to
+// the last 7 days.
+export interface DashboardStats {
+  sessionsTotal: number;
+  sessionsCompleted: number;
+  completedSinceMonday: number;
+  recentSessionsByTest: Record<string, number>;
+  respondentsTotal: number;
+}
+
+function lastMondayIso(): string {
+  const d = new Date();
+  const day = d.getDay(); // 0=Sun..6=Sat
+  const back = day === 0 ? 6 : day - 1;
+  d.setDate(d.getDate() - back);
+  d.setHours(0, 0, 0, 0);
+  return d.toISOString();
+}
+
+export function useDashboardStats() {
+  return useQuery({
+    queryKey: ["user", "dashboard-stats"],
+    queryFn: async (): Promise<DashboardStats> => {
+      const sinceMonday = lastMondayIso();
+      const since7d = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const [totalRes, completedRes, weekRes, recentRes, respondentsRes] = await Promise.all([
+        supabase.from("sessions").select("id", { count: "exact", head: true }),
+        supabase
+          .from("sessions")
+          .select("id", { count: "exact", head: true })
+          .eq("status", "completed"),
+        supabase
+          .from("sessions")
+          .select("id", { count: "exact", head: true })
+          .eq("status", "completed")
+          .gte("finished_at", sinceMonday),
+        supabase.from("sessions").select("test_id").gte("started_at", since7d),
+        supabase.from("respondents").select("id", { count: "exact", head: true }),
+      ]);
+      for (const res of [totalRes, completedRes, weekRes, recentRes, respondentsRes]) {
+        if (res.error) throw res.error;
+      }
+      const recentSessionsByTest: Record<string, number> = {};
+      for (const row of (recentRes.data ?? []) as { test_id: string }[]) {
+        recentSessionsByTest[row.test_id] = (recentSessionsByTest[row.test_id] ?? 0) + 1;
+      }
+      return {
+        sessionsTotal: totalRes.count ?? 0,
+        sessionsCompleted: completedRes.count ?? 0,
+        completedSinceMonday: weekRes.count ?? 0,
+        recentSessionsByTest,
+        respondentsTotal: respondentsRes.count ?? 0,
+      };
     },
   });
 }
@@ -612,6 +667,7 @@ export function useTestSessions(testId: string | undefined, opts: UseTestSession
   return useQuery({
     queryKey: ["user", "tests", testId, "sessions", { page, pageSize, sort, status, search }],
     enabled: !!testId,
+    placeholderData: keepPreviousData,
     queryFn: async (): Promise<TestSessionsPage> => {
       if (!testId) return { rows: [], total: 0, pageCount: 0 };
       const from = page * pageSize;
@@ -810,7 +866,7 @@ export function useUpdateAudience() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<RespondentGroup> }) => {
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"respondent_groups"> = {};
       if (patch.name !== undefined) update.name = patch.name;
       if (patch.description !== undefined) update.description = patch.description;
       if (patch.member_emails) update.member_emails = patch.member_emails;
@@ -1026,7 +1082,7 @@ export function useUpdateOwnTemplate() {
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<Template> }) => {
       const uid = await fetchCurrentUserId();
       if (!uid) throw new Error("not_authenticated");
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"templates"> = {};
       if (patch.title !== undefined) update.title = patch.title;
       if (patch.description !== undefined) update.description = patch.description;
       if (patch.question_ids) update.question_ids = patch.question_ids;
@@ -1177,7 +1233,7 @@ export function useUpdateTemplate() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<Template> }) => {
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"templates"> = {};
       if (patch.title !== undefined) update.title = patch.title;
       if (patch.description !== undefined) update.description = patch.description;
       if (patch.question_ids) update.question_ids = patch.question_ids;
@@ -1368,7 +1424,7 @@ export function useUpdateTeam() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<Team> }) => {
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"teams"> = {};
       if (patch.name !== undefined) update.name = patch.name;
       const { error } = await supabase.from("teams").update(update).eq("id", id);
       if (error) throw error;
@@ -1454,7 +1510,7 @@ export function useUpdateProfile() {
       const { data: auth } = await supabase.auth.getUser();
       const uid = auth.user?.id;
       if (!uid) throw new Error("Not authenticated");
-      const update: Record<string, unknown> = {};
+      const update: TablesUpdate<"profiles"> = {};
       if (patch.email !== undefined) update.email = patch.email;
       if (patch.display_name !== undefined) update.display_name = patch.display_name;
       if (patch.avatar_initials !== undefined) update.avatar_initials = patch.avatar_initials;

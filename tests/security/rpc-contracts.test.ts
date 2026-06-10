@@ -104,29 +104,29 @@ describe("consume_mfa_backup_code RPC contract", () => {
   it("trims surrounding whitespace from the code before sending", async () => {
     rpcMock.mockResolvedValueOnce({ data: true, error: null });
     const ok = await consumeBackupCode("  AB-CD-EF  ");
-    expect(ok).toBe(true);
+    expect(ok).toBe("ok");
     const [, args] = rpcMock.mock.calls[0] as [string, RpcArgs];
     expect(args.p_code).toBe("AB-CD-EF");
   });
 
-  it("returns false (and refreshes nothing harmful) on RPC error envelope", async () => {
+  it("returns invalid (and refreshes nothing harmful) on RPC error envelope", async () => {
     rpcMock.mockResolvedValueOnce({
       data: null,
       error: { message: "invalid_or_used" },
     });
     const ok = await consumeBackupCode("XX-YY-ZZ");
-    expect(ok).toBe(false);
+    expect(ok).toBe("invalid");
     // refreshSession only runs on success — must NOT fire on error
     // (otherwise we'd leak which attempt was the rate-limit boundary).
     expect(refreshSessionMock).not.toHaveBeenCalled();
   });
 
-  it("returns false when the RPC succeeds but data !== true", async () => {
+  it("returns invalid when the RPC succeeds but data !== true", async () => {
     // The DB function returns boolean — anything other than literal true
     // (null, false, undefined) is a non-redemption and must NOT promote.
     rpcMock.mockResolvedValueOnce({ data: false, error: null });
     const ok = await consumeBackupCode("AA-BB-CC");
-    expect(ok).toBe(false);
+    expect(ok).toBe("invalid");
     expect(refreshSessionMock).not.toHaveBeenCalled();
   });
 });

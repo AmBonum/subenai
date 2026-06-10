@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, within, waitFor } from "@testing-library/react";
 
@@ -31,22 +32,23 @@ describe("/app/legal/dsr", () => {
     expect(screen.getByTestId("dsr-form-submit-button")).toBeInTheDocument();
   });
 
-  it("submitting without a valid e-mail shows the error banner", () => {
-    render(<Page />);
-    fireEvent.click(screen.getByTestId("dsr-form-submit-button"));
-    expect(screen.getByTestId("dsr-form-error-banner")).toBeInTheDocument();
-    expect(screen.queryByTestId("dsr-form-success-banner")).toBeNull();
-  });
-
-  it("submitting with a valid e-mail shows success banner and appends to history", async () => {
+  // RLS requires dsr_requests.requester_email = auth.email(), so the field
+  // is locked to the signed-in user's e-mail (seeded profile: jana@example.sk).
+  it("e-mail field is prefilled from the session and read-only", () => {
     render(<Page />);
     const email = screen.getByTestId("dsr-form-subject-input") as HTMLInputElement;
-    fireEvent.change(email, { target: { value: "test-user-7-1@example.sk" } });
+    expect(email.value).toBe("jana@example.sk");
+    expect(email).toHaveAttribute("readonly");
+    expect(email).toBeDisabled();
+  });
+
+  it("submitting shows success banner and appends to history", async () => {
+    render(<Page />);
     fireEvent.click(screen.getByTestId("dsr-form-submit-button"));
     const banner = await screen.findByTestId("dsr-form-success-banner");
     expect(banner).toBeInTheDocument();
     const history = screen.getByTestId("app-legal-dsr-history-card");
-    expect(await within(history).findByText(/test-user-7-1@example.sk/)).toBeInTheDocument();
+    expect(await within(history).findByText(/jana@example.sk/)).toBeInTheDocument();
   });
 
   // Phase 9e — GDPR matrix: educator-submitted DSR must hit `dsr_requests`
@@ -56,8 +58,6 @@ describe("/app/legal/dsr", () => {
   it("submitting a DSR insert hits dsr_requests with requester_email, type, status=open and a +30d sla_due_at", async () => {
     resetAdminMockRecorded();
     render(<Page />);
-    const email = screen.getByTestId("dsr-form-subject-input") as HTMLInputElement;
-    fireEvent.change(email, { target: { value: "gdpr-subject-9e@example.sk" } });
     const note = screen.getByTestId("dsr-form-details-textarea") as HTMLTextAreaElement;
     fireEvent.change(note, { target: { value: "Please erase my data." } });
 
@@ -71,7 +71,7 @@ describe("/app/legal/dsr", () => {
 
     const inserts = adminMockRecorded.inserts.filter((i) => i.table === "dsr_requests");
     const row = inserts[0].values as Record<string, unknown>;
-    expect(row.requester_email).toBe("gdpr-subject-9e@example.sk");
+    expect(row.requester_email).toBe("jana@example.sk");
     expect(row.type).toBe("access"); // default selection in the form
     expect(row.status).toBe("open");
     expect(row.note).toBe("Please erase my data.");

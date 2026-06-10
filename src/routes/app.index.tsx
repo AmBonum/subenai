@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/app/page-header";
 import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { StatCard } from "@/components/admin/StatCard";
@@ -20,7 +21,7 @@ import { DigestDashboardCard } from "@/components/user/DigestDashboardCard";
 import { RecommendationsDashboardCard } from "@/components/user/RecommendationsDashboardCard";
 import { RetestDashboardCard } from "@/components/user/RetestDashboardCard";
 import { PeerDashboardCard } from "@/components/user/PeerDashboardCard";
-import { useTests, useUserRespondents, useUserSessions } from "@/lib/platform/queries";
+import { useDashboardStats, useTests } from "@/lib/platform/queries";
 import { hasConsent, loadConsent } from "@/lib/consent";
 import { tFor } from "@/i18n/app-shell";
 
@@ -75,39 +76,38 @@ function formatRelative(iso: string): string {
 function AppDashboardPage() {
   const t = tFor("dashboard");
   const testsQ = useTests();
-  const sessionsQ = useUserSessions();
-  const respondentsQ = useUserRespondents();
+  const statsQ = useDashboardStats();
   const tests = useMemo(() => testsQ.data ?? [], [testsQ.data]);
-  const sessions = useMemo(() => sessionsQ.data ?? [], [sessionsQ.data]);
-  const respondents = respondentsQ.data ?? [];
+  const stats = statsQ.data;
   const intro = useIntroBanner();
 
-  const isEmpty = tests.length === 0 && sessions.length === 0 && respondents.length === 0;
+  const isLoading = testsQ.isLoading || statsQ.isLoading;
+  const isError = testsQ.isError || statsQ.isError;
+  const isEmpty =
+    !isLoading &&
+    !isError &&
+    tests.length === 0 &&
+    (stats?.sessionsTotal ?? 0) === 0 &&
+    (stats?.respondentsTotal ?? 0) === 0;
 
   const activeTests = tests.filter((x) => x.status === "published").length;
-  const recentSessions = sessions.length;
-  const respondentCount = respondents.length;
-  const completed = sessions.filter((s) => s.status === "completed").length;
-  const completionRate = sessions.length ? Math.round((completed / sessions.length) * 100) : 0;
+  const recentSessions = stats?.sessionsTotal ?? 0;
+  const respondentCount = stats?.respondentsTotal ?? 0;
+  const completed = stats?.sessionsCompleted ?? 0;
+  const completionRate = recentSessions ? Math.round((completed / recentSessions) * 100) : 0;
 
   // "Tvoj posledný test": the most recently updated published test with at
   // least one session in the last 7 days. Counts as "new responses since
   // your last visit" until the real last_login_at lands in a later phase.
-  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-  const sinceCutoff = Date.now() - SEVEN_DAYS_MS;
   const lastTest = useMemo(() => {
+    const recentByTest = stats?.recentSessionsByTest ?? {};
     const candidates = tests
       .filter((x) => x.status === "published")
-      .map((x) => {
-        const recent = sessions.filter(
-          (s) => s.test_id === x.id && new Date(s.started_at).getTime() >= sinceCutoff,
-        );
-        return { test: x, count: recent.length };
-      })
+      .map((x) => ({ test: x, count: recentByTest[x.id] ?? 0 }))
       .filter((c) => c.count > 0);
     candidates.sort((a, b) => b.count - a.count);
     return candidates[0];
-  }, [tests, sessions, sinceCutoff]);
+  }, [tests, stats?.recentSessionsByTest]);
 
   // "Čo sa zmenilo od pondelka" — counts of finished sessions and tests
   // touched (status change or new version) since the last Monday 00:00.
@@ -119,10 +119,7 @@ function AppDashboardPage() {
     d.setHours(0, 0, 0, 0);
     return d.getTime();
   }, []);
-  const completionsThisWeek = sessions.filter(
-    (s) =>
-      s.status === "completed" && s.finished_at && new Date(s.finished_at).getTime() >= sinceMonday,
-  ).length;
+  const completionsThisWeek = stats?.completedSinceMonday ?? 0;
   const testsTouchedThisWeek = tests.filter(
     (x) => new Date(x.updated_at).getTime() >= sinceMonday,
   ).length;
@@ -143,7 +140,45 @@ function AppDashboardPage() {
 
       <AppPageExplainer pageKey="dashboard" />
 
-      {isEmpty ? (
+      {isLoading ? (
+        <div className="space-y-4" data-testid="app-dashboard-loading">
+          <Card>
+            <CardContent className="space-y-3 p-5">
+              <Skeleton className="h-5 w-1/3" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+            </CardContent>
+          </Card>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[0, 1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-24 w-full rounded-xl" />
+            ))}
+          </div>
+        </div>
+      ) : isError ? (
+        <Card data-testid="app-dashboard-error-state">
+          <CardContent className="space-y-3 p-8 text-center">
+            <p
+              className="text-sm font-medium text-foreground"
+              data-testid="app-dashboard-error-title"
+            >
+              Prehľad sa nepodarilo načítať.
+            </p>
+            <p className="text-sm text-muted-foreground">Skontroluj pripojenie a skús to znova.</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                void testsQ.refetch();
+                void statsQ.refetch();
+              }}
+              data-testid="app-dashboard-error-retry"
+            >
+              Skúsiť znova
+            </Button>
+          </CardContent>
+        </Card>
+      ) : isEmpty ? (
         <Card data-testid="app-dashboard-empty-state">
           <CardContent className="space-y-4 p-8 text-center">
             <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">

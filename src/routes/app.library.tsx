@@ -104,9 +104,11 @@ function LibraryPage() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t("branch_all")}</SelectItem>
+              <SelectItem value="all" data-testid="library-branch-option-all">
+                {t("branch_all")}
+              </SelectItem>
               {branches.map((b) => (
-                <SelectItem key={b} value={b}>
+                <SelectItem key={b} value={b} data-testid={`library-branch-option-${b}`}>
                   {b}
                 </SelectItem>
               ))}
@@ -117,9 +119,11 @@ function LibraryPage() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t("difficulty_all")}</SelectItem>
+              <SelectItem value="all" data-testid="library-difficulty-option-all">
+                {t("difficulty_all")}
+              </SelectItem>
               {DIFFICULTIES.map((d) => (
-                <SelectItem key={d} value={d}>
+                <SelectItem key={d} value={d} data-testid={`library-difficulty-option-${d}`}>
                   {t(`difficulty_${d}`)}
                 </SelectItem>
               ))}

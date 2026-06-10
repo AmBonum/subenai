@@ -20,6 +20,7 @@ const test: SafeTestProjection = {
   gdpr_purpose: "research",
   allow_behavioral_tracking: false,
   status: "published",
+  question_order_mode: "fixed",
 };
 
 // E39 — shareId must match the regex [a-zA-Z0-9]{6,12} (zod boundary).
@@ -95,5 +96,64 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
     // No submit_respondent_answer / finalize_respondent_session calls.
     const calls = rpcMock.mock.calls.map((c) => c[0]);
     expect(calls).toEqual(["start_respondent_session"]);
+  });
+
+  it("back-navigation does not duplicate answers nor re-submit an unchanged answer", async () => {
+    rpcMock.mockImplementation(async (fn: unknown) => {
+      if (fn === "start_respondent_session") {
+        return {
+          data: { session_id: TEST_SESSION_ID, session_token: TEST_SESSION_TOKEN },
+          error: null,
+        };
+      }
+      return { data: null, error: null };
+    });
+    // qp_0001 (single, correct = "Možnosť A") + qp_0002 (multi, no correct).
+    renderFlow({ questionIds: ["qp_0001", "qp_0002"] });
+    await completeIntake();
+
+    // Q1 — answer "Možnosť A" and advance.
+    await waitFor(() => {
+      expect(screen.getByTestId("respondent-flow-question-0-prompt")).toBeInTheDocument();
+    });
+    fireEvent.click(
+      screen.getByTestId("respondent-flow-question-0-answer-0").querySelector("input")!,
+    );
+    fireEvent.click(screen.getByTestId("respondent-flow-next-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("respondent-flow-question-1-prompt")).toBeInTheDocument();
+    });
+
+    // Back to Q1 — previously chosen answer is pre-selected via key remount.
+    fireEvent.click(screen.getByTestId("respondent-flow-prev-button"));
+    const q1Radio = screen
+      .getByTestId("respondent-flow-question-0-answer-0")
+      .querySelector("input")!;
+    expect(q1Radio.checked).toBe(true);
+
+    // Re-submit the SAME value — must not fire a second submit RPC.
+    fireEvent.click(screen.getByTestId("respondent-flow-next-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("respondent-flow-question-1-prompt")).toBeInTheDocument();
+    });
+    const submitsAfterReanswer = rpcMock.mock.calls.filter(
+      (c) => c[0] === "submit_respondent_answer",
+    );
+    expect(submitsAfterReanswer).toHaveLength(1);
+
+    // Q2 — answer and finish. Score must be computed over deduped answers
+    // (1 correct of 2 questions = 50, not polluted by a duplicate Q1 row).
+    fireEvent.click(
+      screen.getByTestId("respondent-flow-question-1-answer-1").querySelector("input")!,
+    );
+    fireEvent.click(screen.getByTestId("respondent-flow-submit-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("respondent-flow-thank-you")).toBeInTheDocument();
+    });
+    const submits = rpcMock.mock.calls.filter((c) => c[0] === "submit_respondent_answer");
+    expect(submits).toHaveLength(2);
+    const finalize = rpcMock.mock.calls.find((c) => c[0] === "finalize_respondent_session");
+    expect(finalize).toBeDefined();
+    expect((finalize![1] as { p_score: number }).p_score).toBe(50);
   });
 });

@@ -378,7 +378,6 @@ SEED_TESTS.forEach((t, ti) => {
       };
     });
     const completed = i % 6 !== 0;
-    const duration = answers.reduce((a, x) => a + x.time_ms, 0);
     const score = completed
       ? Math.round((answers.filter((a) => a.is_correct).length / answers.length) * 100)
       : null;

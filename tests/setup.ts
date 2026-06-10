@@ -154,7 +154,7 @@ globalThis.setTimeout = ((handler: TimerHandler, timeout?: number, ...args: unkn
   );
   trackedTimeouts.add(id);
   return id;
-}) as typeof setTimeout;
+}) as unknown as typeof setTimeout;
 globalThis.setInterval = ((handler: TimerHandler, timeout?: number, ...args: unknown[]) => {
   const id = (_nativeSetInterval as (...a: unknown[]) => ReturnType<typeof setInterval>)(
     handler as unknown,
@@ -163,7 +163,7 @@ globalThis.setInterval = ((handler: TimerHandler, timeout?: number, ...args: unk
   );
   trackedIntervals.add(id);
   return id;
-}) as typeof setInterval;
+}) as unknown as typeof setInterval;
 
 afterEach(async () => {
   cleanup();

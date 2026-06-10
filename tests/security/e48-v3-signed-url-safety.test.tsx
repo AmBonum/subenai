@@ -52,7 +52,7 @@ const safeDefault = (): HookReturn => ({
 beforeEach(() => {
   hookReturn.current = safeDefault();
   if (typeof window !== "undefined") {
-    delete (window as Record<string, unknown>).__pwn;
+    delete (window as unknown as Record<string, unknown>).__pwn;
   }
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
@@ -95,11 +95,11 @@ describe("E48-v3 signed URL safety — AttachmentImagePreview", () => {
         <AttachmentImagePreview
           attachmentId="att-safe"
           filename="photo.png"
-          siblings={[{ id: "att-safe", filename: "photo.png" }]}
+          siblings={[{ id: "att-safe", filename: "photo.png", mime_type: "image/png" }]}
         />,
       );
       // Primary assertion: no code executed from the URL.
-      expect((window as Record<string, unknown>).__pwn).toBeUndefined();
+      expect((window as unknown as Record<string, unknown>).__pwn).toBeUndefined();
     },
   );
 
@@ -118,11 +118,11 @@ describe("E48-v3 signed URL safety — AttachmentImagePreview", () => {
           <AttachmentImagePreview
             attachmentId="att-data"
             filename="photo.png"
-            siblings={[{ id: "att-data", filename: "photo.png" }]}
+            siblings={[{ id: "att-data", filename: "photo.png", mime_type: "image/png" }]}
           />,
         ),
       ).not.toThrow();
-      expect((window as Record<string, unknown>).__pwn).toBeUndefined();
+      expect((window as unknown as Record<string, unknown>).__pwn).toBeUndefined();
     },
   );
 
@@ -166,7 +166,7 @@ describe("E48-v3 signed URL safety — AttachmentPdfPreview", () => {
       };
       render(<AttachmentPdfPreview attachmentId="att-pdf-exec" filename="doc.pdf" />);
       // jsdom may try to evaluate the iframe src but must not execute __pwn.
-      expect((window as Record<string, unknown>).__pwn).toBeUndefined();
+      expect((window as unknown as Record<string, unknown>).__pwn).toBeUndefined();
     },
   );
 
@@ -182,7 +182,7 @@ describe("E48-v3 signed URL safety — AttachmentPdfPreview", () => {
       expect(() =>
         render(<AttachmentPdfPreview attachmentId="att-pdf-data" filename="doc.pdf" />),
       ).not.toThrow();
-      expect((window as Record<string, unknown>).__pwn).toBeUndefined();
+      expect((window as unknown as Record<string, unknown>).__pwn).toBeUndefined();
     },
   );
 

@@ -343,6 +343,15 @@ function makeBuilder(state: QueryState): unknown {
       state.filters.push((r) => vals.includes(r[col]));
       return builder;
     },
+    gte(col: string, val: unknown) {
+      // ISO timestamps compare lexicographically — enough for the
+      // dashboard-stats date filters that hit this builder.
+      state.filters.push((r) => {
+        const v = r[col];
+        return typeof v === "string" && typeof val === "string" ? v >= val : false;
+      });
+      return builder;
+    },
     not(col: string, op: string, val: unknown) {
       // Only `is null` negation is used by queries.ts today; keep the
       // implementation tight rather than building a full PostgREST shim.

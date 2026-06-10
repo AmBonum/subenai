@@ -34,7 +34,7 @@ const baseProps = {
 // element names in static markup. renderToStaticMarkup handles that fine
 // for our purposes — we only inspect textContent shape.
 function staticMarkup(props = baseProps): string {
-  // @ts-expect-error — react-pdf JSX isn't a normal React DOM tree; we
+  // react-pdf JSX isn't a normal React DOM tree; we
   // intentionally serialise it for text-presence assertions only.
   return renderToStaticMarkup(DpaTemplate(props));
 }

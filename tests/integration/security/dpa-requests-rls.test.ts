@@ -100,7 +100,7 @@ describe("dpa_requests — RLS contract", () => {
     const { error } = await fixture!.serviceRole.from("dpa_requests").insert({
       school_name: SCHOOL(),
       dpa_version: "v0.1",
-      // @ts-expect-error — intentionally invalid status for the test
+      // intentionally invalid status for the test
       status: "not-a-status",
     });
     expect(error, "status CHECK must reject unknown values").not.toBeNull();

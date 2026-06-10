@@ -19,31 +19,27 @@
 // which is the same UX as a missing key — acceptable for the brief flash.
 import { getCurrentLocale, type Locale } from "./locale-context";
 
-type Json = string | { [k: string]: Json };
-
-// E47 — looser type for `tForObject`. The user-facing locale JSON files
-// happen to contain arrays of strings and arrays of `{label, href}`
-// objects, which the strict `Json` type above (string-or-object) does
-// not model. `JsonNode` is the actual on-disk shape: string, object,
-// or array. Confined to the `resolveRaw` / `tForObject` path so the
-// existing string-only `Json` contract for `tFor` callers is untouched.
+// `JsonNode` is the actual on-disk shape of the locale bundles: string,
+// number, boolean, null, object, or array (e.g. explainer `items` are
+// string arrays). `tFor` still resolves string leaves only; `tForObject`
+// returns the raw node.
 export type JsonNode = string | number | boolean | null | JsonNode[] | { [k: string]: JsonNode };
 
-type LazyLoaders = Partial<Record<Exclude<Locale, "sk">, () => Promise<Json>>>;
+type LazyLoaders = Partial<Record<Exclude<Locale, "sk">, () => Promise<JsonNode>>>;
 
 // Registry of every namespace's preload functions. The locale-context calls
 // `preloadLocale(next)` before flipping state, which fans out across every
 // registered namespace in parallel and resolves once they're all warm.
 const registry = new Set<(locale: Exclude<Locale, "sk">) => Promise<void>>();
 
-function resolve(node: Json | undefined, path: string): string | null {
+function resolve(node: JsonNode | undefined, path: string): string | null {
   if (node === undefined) return null;
   const parts = path.split(".");
-  let cur: Json = node;
+  let cur: JsonNode = node;
   for (const p of parts) {
     if (typeof cur === "string") return cur;
     if (cur && typeof cur === "object" && p in cur) {
-      cur = cur[p];
+      cur = (cur as Record<string, JsonNode>)[p];
     } else {
       return null;
     }
@@ -76,7 +72,7 @@ function interpolate(template: string, vars?: Record<string, string | number>): 
   return template.replace(/\{(\w+)\}/g, (_, k) => (k in vars ? String(vars[k]) : `{${k}}`));
 }
 
-function pickSection(root: Json, section: string): Json {
+function pickSection(root: JsonNode, section: string): JsonNode {
   // Walks dotted section paths so `tFor("account.profile")` reaches the
   // nested `account → profile` subtree, mirroring how `resolve` walks
   // dotted key paths. Without this, the resolver did a single-level
@@ -90,10 +86,10 @@ function pickSection(root: Json, section: string): Json {
   // change this to return null on missing section and broke /about,
   // /contact, /schools, home FAQ, etc. Keep the original behaviour.
   if (typeof root !== "object" || root === null) return root;
-  let cur: Json = root;
+  let cur: JsonNode = root;
   for (const part of section.split(".")) {
     if (typeof cur !== "object" || cur === null || !(part in cur)) return root;
-    cur = (cur as Record<string, Json>)[part];
+    cur = (cur as Record<string, JsonNode>)[part];
   }
   return cur;
 }
@@ -104,10 +100,10 @@ type TForFactory = ((section: string) => TFor) & {
   object: (section: string) => TForObject;
 };
 
-export function createResolver(opts: { sk: Json; loaders: LazyLoaders }): TForFactory {
+export function createResolver(opts: { sk: JsonNode; loaders: LazyLoaders }): TForFactory {
   const { sk, loaders } = opts;
   // Per-namespace cache of loaded non-sk bundles. Sticky for the page lifetime.
-  const loaded: Partial<Record<Exclude<Locale, "sk">, Json>> = {};
+  const loaded: Partial<Record<Exclude<Locale, "sk">, JsonNode>> = {};
   // Per-namespace in-flight promises so concurrent preload calls dedupe.
   const inflight: Partial<Record<Exclude<Locale, "sk">, Promise<void>>> = {};
 
@@ -177,13 +173,13 @@ export function createResolver(opts: { sk: Json; loaders: LazyLoaders }): TForFa
     if (cached) return cached;
     const fn = (<T extends JsonNode = JsonNode>(key: string): T | null => {
       const locale = getCurrentLocale();
-      const skSection = pickSection(sk, section) as JsonNode;
+      const skSection = pickSection(sk, section);
       if (locale !== "sk") {
         const bundle = loaded[locale];
         if (!bundle) {
           void preload(locale);
         } else {
-          const localeSection = pickSection(bundle, section) as JsonNode;
+          const localeSection = pickSection(bundle, section);
           const value = resolveRaw(localeSection, key) ?? resolveRaw(skSection, key);
           return (value as T) ?? null;
         }

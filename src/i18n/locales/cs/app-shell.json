@@ -20,6 +20,10 @@
         "label": "Moje testy",
         "tip": "Vše, co jste vytvořili — koncepty, aktivní, archivované."
       },
+      "edu_tests": {
+        "label": "Moje edu testy",
+        "tip": "Testy pro třídu nebo tým — zadání, pokusy a výsledky žáků."
+      },
       "templates": {
         "label": "Šablony",
         "tip": "Hotové sady podle odvětví. Zkopírujte a upravte."
@@ -241,26 +245,86 @@
     },
     "faq": {
       "items": [
-        { "question": "Jak vytvořím nový test?", "answer": "Klikněte na 'Nový test' v levém menu a projděte 3krokový průvodce." },
-        { "question": "Jak sdílím test s respondenty?", "answer": "V editoru testu otevřete záložku 'Detaily' → tlačítko Sdílet vygeneruje odkaz /t/{shareId}." },
-        { "question": "Mohu test chránit heslem?", "answer": "Ano, v 'Detailech' nastavte heslo. Respondent ho zadá před začátkem." },
-        { "question": "Jaké typy otázek podporujete?", "answer": "15 typů: jednovýběr, vícevýběr, NPS, škála, matice, ranking, slider, text, datum, čas, image, ano/ne, file." },
-        { "question": "Jaký je limit otázek v sadě?", "answer": "Maximálně 50 otázek na jeden test." },
-        { "question": "Jsou data respondentů anonymizována?", "answer": "Pokud zapnete 'Anonymizovat po 90 dnech', PII se automaticky odstraní." },
-        { "question": "Jak exportuji výsledky?", "answer": "V detailu testu → 'Exporty' → vyberte CSV, JSON nebo PDF." },
-        { "question": "Co dělá podmíněné větvení?", "answer": "Umožňuje přeskočit otázky podle předchozích odpovědí (v Pokročilých funkcích)." },
-        { "question": "Jaké role mohu přiřadit v týmu?", "answer": "Owner (plný přístup), Editor (úpravy obsahu), Viewer (pouze čtení)." },
-        { "question": "Jak verzuji test?", "answer": "Při každém publishi se vytvoří nová verze — vidíte je v záložce 'Verze' editoru." },
-        { "question": "Co je GDPR DSR?", "answer": "Data Subject Request — formulář pro přístup/výmaz/portabilitu osobních údajů, SLA 30 dní." },
-        { "question": "Jak funguje rate-limit pro hesla?", "answer": "Po 5 nesprávných pokusech je IP zablokovaná na 15 minut." },
-        { "question": "Jaký typ hashe používáte?", "answer": "Argon2id pro hesla testů, bcrypt pro uživatelská hesla." },
-        { "question": "Mám více respondentů — mohu jim poslat pozvánky?", "answer": "Ano, v Share dialogu zadejte více e-mailů oddělených čárkou." },
-        { "question": "Kde najdu audit log?", "answer": "Per-test v editoru záložka 'Audit'; globální v Admin panelu." },
-        { "question": "Jak nastavím notifikace?", "answer": "V editoru testu záložka 'Notifikace' — 5 typů událostí." },
-        { "question": "Jak exportuji data jednoho respondenta?", "answer": "V detailu sezení klikněte na 'Export JSON' (zapíše se do audit logu)." },
-        { "question": "Mohu vytvořit test ze šablony?", "answer": "Ano, v průvodci vyberte 'Šablona' v kroku 1." },
-        { "question": "Jaký je rozdíl mezi privátním a veřejným testem?", "answer": "Privátní: jen vy. Unlisted: přes odkaz. Veřejné: index v seznamu." },
-        { "question": "Jakou podporu poskytujete?", "answer": "E-mail support@subenai.sk, odpovídáme do 24 h v pracovních dnech." }
+        {
+          "question": "Jak vytvořím nový test?",
+          "answer": "Klikněte na 'Nový test' v levém menu a projděte 3krokový průvodce."
+        },
+        {
+          "question": "Jak sdílím test s respondenty?",
+          "answer": "V editoru testu otevřete záložku 'Detaily' → tlačítko Sdílet vygeneruje odkaz /t/{shareId}."
+        },
+        {
+          "question": "Mohu test chránit heslem?",
+          "answer": "Ano, v 'Detailech' nastavte heslo. Respondent ho zadá před začátkem."
+        },
+        {
+          "question": "Jaké typy otázek podporujete?",
+          "answer": "15 typů: jednovýběr, vícevýběr, NPS, škála, matice, ranking, slider, text, datum, čas, image, ano/ne, file."
+        },
+        {
+          "question": "Jaký je limit otázek v sadě?",
+          "answer": "Maximálně 50 otázek na jeden test."
+        },
+        {
+          "question": "Jsou data respondentů anonymizována?",
+          "answer": "Pokud zapnete 'Anonymizovat po 90 dnech', PII se automaticky odstraní."
+        },
+        {
+          "question": "Jak exportuji výsledky?",
+          "answer": "V detailu testu → 'Exporty' → vyberte CSV, JSON nebo PDF."
+        },
+        {
+          "question": "Co dělá podmíněné větvení?",
+          "answer": "Umožňuje přeskočit otázky podle předchozích odpovědí (v Pokročilých funkcích)."
+        },
+        {
+          "question": "Jaké role mohu přiřadit v týmu?",
+          "answer": "Owner (plný přístup), Editor (úpravy obsahu), Viewer (pouze čtení)."
+        },
+        {
+          "question": "Jak verzuji test?",
+          "answer": "Při každém publishi se vytvoří nová verze — vidíte je v záložce 'Verze' editoru."
+        },
+        {
+          "question": "Co je GDPR DSR?",
+          "answer": "Data Subject Request — formulář pro přístup/výmaz/portabilitu osobních údajů, SLA 30 dní."
+        },
+        {
+          "question": "Jak funguje rate-limit pro hesla?",
+          "answer": "Po 5 nesprávných pokusech je IP zablokovaná na 15 minut."
+        },
+        {
+          "question": "Jaký typ hashe používáte?",
+          "answer": "Argon2id pro hesla testů, bcrypt pro uživatelská hesla."
+        },
+        {
+          "question": "Mám více respondentů — mohu jim poslat pozvánky?",
+          "answer": "Ano, v Share dialogu zadejte více e-mailů oddělených čárkou."
+        },
+        {
+          "question": "Kde najdu audit log?",
+          "answer": "Per-test v editoru záložka 'Audit'; globální v Admin panelu."
+        },
+        {
+          "question": "Jak nastavím notifikace?",
+          "answer": "V editoru testu záložka 'Notifikace' — 5 typů událostí."
+        },
+        {
+          "question": "Jak exportuji data jednoho respondenta?",
+          "answer": "V detailu sezení klikněte na 'Export JSON' (zapíše se do audit logu)."
+        },
+        {
+          "question": "Mohu vytvořit test ze šablony?",
+          "answer": "Ano, v průvodci vyberte 'Šablona' v kroku 1."
+        },
+        {
+          "question": "Jaký je rozdíl mezi privátním a veřejným testem?",
+          "answer": "Privátní: jen vy. Unlisted: přes odkaz. Veřejné: index v seznamu."
+        },
+        {
+          "question": "Jakou podporu poskytujete?",
+          "answer": "E-mail support@subenai.sk, odpovídáme do 24 h v pracovních dnech."
+        }
       ]
     }
   },

@@ -51,6 +51,23 @@ export function seedUserQueryClient(qc: QueryClient): void {
   const sessions: Session[] = SEED_SESSIONS;
   qc.setQueryData(["user", "sessions"], sessions);
 
+  // Dashboard KPI aggregates — mirrors the useDashboardStats() shape so
+  // /app dashboard renders stat cards synchronously.
+  const since7d = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const recentSessionsByTest: Record<string, number> = {};
+  for (const s of sessions) {
+    if (new Date(s.started_at).getTime() >= since7d) {
+      recentSessionsByTest[s.test_id] = (recentSessionsByTest[s.test_id] ?? 0) + 1;
+    }
+  }
+  qc.setQueryData(["user", "dashboard-stats"], {
+    sessionsTotal: sessions.length,
+    sessionsCompleted: sessions.filter((s) => s.status === "completed").length,
+    completedSinceMonday: 0,
+    recentSessionsByTest,
+    respondentsTotal: SEED_RESPONDENTS.length,
+  });
+
   const audiences: Audience[] = SEED_GROUPS.map((g) => ({
     id: g.id,
     name: g.name,

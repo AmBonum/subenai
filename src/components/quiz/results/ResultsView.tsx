@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { buildShareCaption } from "@/lib/share/intents";
 import { TRAP_SEEN_STORAGE_KEY } from "@/lib/data-trap/copy";
 import { useConsent } from "@/hooks/useConsent";
+import { copyToClipboard } from "@/lib/browser/clipboard";
 import { track } from "@/lib/browser/tracking";
 import { SurveyCard } from "@/components/quiz/survey/SurveyCard";
 import { SocialShareGrid } from "@/components/quiz/share/SocialShareGrid";
@@ -106,7 +107,12 @@ export function ResultsView({
   const [trapOpen, setTrapOpen] = useState(false);
   const [trapSeen, setTrapSeen] = useState(() => {
     if (typeof window === "undefined") return false;
-    return window.localStorage.getItem(TRAP_SEEN_STORAGE_KEY) === "1";
+    try {
+      return window.localStorage.getItem(TRAP_SEEN_STORAGE_KEY) === "1";
+    } catch {
+      // Storage unavailable (private mode, blocked) — treat as unseen.
+      return false;
+    }
   });
   const persistAttempted = useRef(false);
   const reviewRef = useRef<HTMLDivElement | null>(null);
@@ -248,7 +254,8 @@ export function ResultsView({
 
   async function handleCopyLink() {
     if (!shareUrl) return;
-    await navigator.clipboard.writeText(shareUrl);
+    const ok = await copyToClipboard(shareUrl);
+    if (!ok) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   }
@@ -268,7 +275,8 @@ export function ResultsView({
         /* user cancelled */
       }
     } else {
-      await navigator.clipboard.writeText(`${text} ${url}`);
+      const ok = await copyToClipboard(`${text} ${url}`);
+      if (!ok) return;
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     }

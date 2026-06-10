@@ -22,13 +22,13 @@ import { useAttachmentSignedUrl } from "@/lib/admin/use-attachment-signed-url";
 
 const rpcMock = vi.fn();
 const createSignedUrlMock = vi.fn();
-const fromMock = vi.fn(() => ({ createSignedUrl: createSignedUrlMock }));
+const fromMock = vi.fn((_bucket: string) => ({ createSignedUrl: createSignedUrlMock }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     rpc: (...args: unknown[]) => rpcMock(...args),
     storage: {
-      from: (...args: unknown[]) => fromMock(...args),
+      from: (bucket: string) => fromMock(bucket),
     },
   },
 }));

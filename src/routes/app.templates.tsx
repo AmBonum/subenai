@@ -222,9 +222,11 @@ function TemplatesPage() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{t("category_all")}</SelectItem>
+              <SelectItem value="all" data-testid="templates-list-category-option-all">
+                {t("category_all")}
+              </SelectItem>
               {categories.map((c) => (
-                <SelectItem key={c} value={c}>
+                <SelectItem key={c} value={c} data-testid={`templates-list-category-option-${c}`}>
                   {t(`purposes.${c}`)}
                 </SelectItem>
               ))}

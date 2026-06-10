@@ -28,9 +28,14 @@ export function useAuth(): AuthState {
 
   useEffect(() => {
     let cancelled = false;
+    // Monotonic sequence per apply(): a slow has_role RPC from an older
+    // auth event (e.g. sign-in) must not overwrite the state written by a
+    // newer event (e.g. sign-out) that resolved first.
+    let seq = 0;
 
     const apply = async (session: Session | null) => {
       if (cancelled) return;
+      const mySeq = ++seq;
       if (!session?.user) {
         setState(UNAUTH);
         return;
@@ -42,10 +47,10 @@ export function useAuth(): AuthState {
           _user_id: session.user.id,
           _role: "admin",
         });
-        if (cancelled) return;
+        if (cancelled || mySeq !== seq) return;
         setState({ isAuthenticated: true, isAdmin: !error && data === true });
       } catch {
-        if (cancelled) return;
+        if (cancelled || mySeq !== seq) return;
         setState({ isAuthenticated: true, isAdmin: false });
       }
     };

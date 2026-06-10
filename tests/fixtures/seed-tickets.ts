@@ -530,7 +530,7 @@ export async function seedTicketWithAttachments(
   }
 
   const ticketId = (ticketData as { id: string }).id;
-  const attachmentRows = attachmentMeta.map((meta, i) => ({
+  const attachmentRows = attachmentMeta.map((meta) => ({
     ticket_id: ticketId,
     filename: meta.filename,
     mime_type: meta.mimeType,

@@ -60,7 +60,7 @@ describe("CSP report endpoint — handler", () => {
         "document-uri": "https://subenai.sk/",
       },
     });
-    // @ts-expect-error — minimal synthetic context for the handler
+    // minimal synthetic context for the handler
     const resp = await onRequestPost(makeCtx(req, { CSP_REPORT_LOGGING: "1" }));
     expect(resp.status).toBe(204);
     expect(resp.headers.get("cache-control")).toBe("no-store");
@@ -71,14 +71,14 @@ describe("CSP report endpoint — handler", () => {
       method: "POST",
       body: "not json",
     });
-    // @ts-expect-error — synthetic context
+    // synthetic context
     const resp = await onRequestPost(makeCtx(req, { CSP_REPORT_LOGGING: "1" }));
     expect(resp.status).toBe(204);
   });
 
   it("default-off: does NOT log when CSP_REPORT_LOGGING is unset", async () => {
     const req = makeRequest({ "csp-report": { "violated-directive": "script-src" } });
-    // @ts-expect-error — synthetic context
+    // synthetic context
     await onRequestPost(makeCtx(req, {}));
     expect(warnSpy).not.toHaveBeenCalled();
   });
@@ -93,7 +93,7 @@ describe("CSP report endpoint — handler", () => {
         "line-number": 42,
       },
     });
-    // @ts-expect-error — synthetic context
+    // synthetic context
     await onRequestPost(makeCtx(req, { CSP_REPORT_LOGGING: "1" }));
     expect(warnSpy).toHaveBeenCalledTimes(1);
     const message = warnSpy.mock.calls[0][0] as string;
@@ -109,7 +109,7 @@ describe("CSP report endpoint — handler", () => {
     const req = makeRequest({
       "csp-report": { "violated-directive": "script-src", "blocked-uri": huge },
     });
-    // @ts-expect-error — synthetic context
+    // synthetic context
     await onRequestPost(makeCtx(req, { CSP_REPORT_LOGGING: "1" }));
     const message = warnSpy.mock.calls[0][0] as string;
     expect(message.length, "log line must be bounded").toBeLessThan(2000);

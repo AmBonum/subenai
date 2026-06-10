@@ -6,7 +6,7 @@ import {
   useParams,
   useSearch,
 } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import {
   ArrowLeft,
@@ -25,6 +25,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusBadge } from "@/components/admin/StatusBadge";
@@ -90,6 +91,18 @@ function TestEditorPage() {
   const [shareOpen, setShareOpen] = useState(search.share === "1");
   const [inviteOpen, setInviteOpen] = useState(false);
 
+  // useTest resolves async, so the useState initializers above see no data
+  // on a deep-link/refresh. Sync once per test identity — keyed on the id
+  // so a background refetch never clobbers in-flight user edits.
+  const syncedTestIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (test && syncedTestIdRef.current !== test.id) {
+      syncedTestIdRef.current = test.id;
+      setTitle(test.title);
+      setDescription(test.description);
+    }
+  }, [test]);
+
   const totalRespondents = totalQ.data?.total ?? 0;
   const completedRows = completedQ.data?.rows ?? [];
   const completedCount = completedQ.data?.total ?? 0;
@@ -97,6 +110,24 @@ function TestEditorPage() {
     completedRows.length > 0
       ? Math.round(completedRows.reduce((a, s) => a + (s.score ?? 0), 0) / completedRows.length)
       : 0;
+
+  if (testQ.isLoading) {
+    return (
+      <div className="space-y-6" data-testid="test-editor-loading">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-8 w-2/3" />
+          <Skeleton className="h-4 w-40" />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <Skeleton className="h-24 w-full rounded-xl" />
+          <Skeleton className="h-24 w-full rounded-xl" />
+          <Skeleton className="h-24 w-full rounded-xl" />
+        </div>
+        <Skeleton className="h-64 w-full rounded-xl" />
+      </div>
+    );
+  }
 
   if (!test) {
     return (
@@ -133,7 +164,7 @@ function TestEditorPage() {
   };
 
   const setTab = (tab: EditorTab) => {
-    nav({ search: (prev) => ({ ...prev, tab }), replace: true });
+    nav({ search: (prev: Record<string, unknown>) => ({ ...prev, tab }), replace: true });
   };
 
   return (

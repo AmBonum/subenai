@@ -122,12 +122,19 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
   // Restore prior completed test ONLY when the user used the browser's
   // back/forward button — fresh navigation (link click, address bar) must
   // start a clean test, even if a stale result lives in sessionStorage.
-  // Drop any stale entry for this key on fresh navigation so it can't
-  // resurface later in the same tab via cross-test contamination.
-  const restored =
+  // Lazy initializer: computed exactly once per mount, never on re-render
+  // (a per-render clear used to wipe the snapshot saved on completion).
+  const [restored] = useState<PersistedResult | null>(() =>
     typeof window !== "undefined" && isBackForwardNavigation()
       ? loadPersistedResult(storageKey)
-      : (clearPersistedResult(storageKey), null);
+      : null,
+  );
+
+  // Drop any stale entry for this key on fresh navigation so it can't
+  // resurface later in the same tab via cross-test contamination.
+  useEffect(() => {
+    if (!restored) clearPersistedResult(storageKey);
+  }, [restored, storageKey]);
 
   const [phase, setPhase] = useState<Phase>(restored ? "done" : "intro");
   const [questions, setQuestions] = useState<Question[]>(() => {

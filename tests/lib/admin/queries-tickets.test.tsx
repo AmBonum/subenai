@@ -23,7 +23,7 @@ interface MockState {
   updateCalls: Array<{ table: string; patch: unknown; eq?: { col: string; val: unknown } }>;
   authUser: { id: string } | null;
   // Per-table responses.
-  selectResponse: { data: unknown; error: unknown; count?: number };
+  selectResponse: { data: unknown; error: unknown; count?: number | null };
   rpcResponse: { data: unknown; error: unknown };
   // Sequence of responses (used for parallel bulk RPCs).
   rpcSequence: Array<{ data: unknown; error: unknown }> | null;
