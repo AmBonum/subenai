@@ -278,8 +278,11 @@ async function loadPublishedTemplateSlugs() {
 
 const templates = await loadPublishedTemplateSlugs();
 
+// Static routes carry no lastmod: stamping the build date claimed every
+// page changed on every deploy, which teaches crawlers to distrust the
+// field. Dynamic entries keep lastmod sourced from real content data.
 const urls = [
-  ...STATIC_ROUTES.map((r) => ({ ...r, lastmod: TODAY })),
+  ...STATIC_ROUTES,
   ...courses.map((c) => ({
     loc: `/courses/${c.slug}`,
     priority: "0.8",
@@ -302,7 +305,6 @@ const urls = [
     loc: `/blog/kategoria/${slug}`,
     priority: "0.6",
     changefreq: slug === "news-a-trendy" ? "daily" : "weekly",
-    lastmod: TODAY,
   })),
   ...blogPosts.map((post) => ({
     loc: `/blog/${post.slug}`,
@@ -324,8 +326,7 @@ ${urls
   .map(
     (u) => `  <url>
     <loc>${ORIGIN}${u.loc}</loc>
-    <lastmod>${u.lastmod}</lastmod>
-    <changefreq>${u.changefreq}</changefreq>
+${u.lastmod ? `    <lastmod>${u.lastmod}</lastmod>\n` : ""}    <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`,
   )

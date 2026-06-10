@@ -20,11 +20,13 @@ fi
 # in. Pure share-intent URLs (e.g. `facebook.com/sharer/sharer.php`) are OK
 # because they are *strings used by window.open*, not script sources — they
 # match the domain `facebook.com` but NOT any of the suffixes below.
+# NOTE: googletagmanager.com / google-analytics.com are deliberately absent —
+# GA4 ships via index.html with Consent Mode v2 defaults=denied and a consent
+# manager (documented in /cookies + /privacy). That is a product decision,
+# not an accidental SDK import.
 PATTERNS=(
   "connect\.facebook\.net"
   "facebook\.net/en_US"
-  "googletagmanager\.com"
-  "google-analytics\.com"
   "platform\.twitter\.com"
   "static\.ads-twitter\.com"
   "analytics\.tiktok\.com"

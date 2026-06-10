@@ -33,11 +33,31 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Covers both projects: app/tests (tsconfig.json) + e2e/playwright/scripts
+      # (tsconfig.e2e.json).
+      - name: Typecheck
+        run: npm run typecheck:all
+
       - name: Vitest (with coverage)
         run: npm run test:coverage
 
       - name: Build
         run: npm run build
+
+      # Bundle guards — scan the built client bundle for leaked secrets,
+      # mock-module identifiers, and tracker SDK domains.
+      - name: Bundle guard — no secrets
+        run: npm run check:bundle-no-secrets
+
+      # Known-red until AH-14 lands (public take-test flow still imports the
+      # client-side mock store). Non-blocking so the failure stays visible on
+      # every run; flip to blocking when AH-14 removes the mock imports.
+      - name: Bundle guard — no mocks (non-blocking, AH-14)
+        run: npm run check:bundle-no-mocks
+        continue-on-error: true
+
+      - name: Bundle guard — no trackers
+        run: npm run audit:bundle
 
       # E48 incident response — verify RPCs + tables exist in production.
       # Skipped when secrets are absent (fork PRs, local runs without prod creds).

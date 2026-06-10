@@ -25,7 +25,57 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
-      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
+  {
+    // Senior UX rule — no default browser modals in app code. Every
+    // confirmation/dialog goes through shadcn ConfirmDialog / Dialog.
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-properties": [
+        "error",
+        {
+          object: "window",
+          property: "confirm",
+          message:
+            "Use ConfirmDialog (src/components/admin/ConfirmDialog.tsx) — window.confirm is forbidden in src/**.",
+        },
+        {
+          object: "window",
+          property: "alert",
+          message: "Use a shadcn Dialog / toast — window.alert is forbidden in src/**.",
+        },
+        {
+          object: "window",
+          property: "prompt",
+          message:
+            "Use a shadcn Dialog with an input field — window.prompt is forbidden in src/**.",
+        },
+      ],
+      "no-restricted-globals": [
+        "error",
+        {
+          name: "confirm",
+          message:
+            "Use ConfirmDialog (src/components/admin/ConfirmDialog.tsx) — confirm() is forbidden in src/**.",
+        },
+        {
+          name: "alert",
+          message: "Use a shadcn Dialog / toast — alert() is forbidden in src/**.",
+        },
+        {
+          name: "prompt",
+          message: "Use a shadcn Dialog with an input field — prompt() is forbidden in src/**.",
+        },
+      ],
     },
   },
   {
@@ -196,6 +246,22 @@ export default tseslint.config(
       "react-hooks/rules-of-hooks": "off",
       "react-hooks/exhaustive-deps": "off",
       "react-refresh/only-export-components": "off",
+    },
+  },
+  {
+    // POM-only locators in Playwright specs (CLAUDE.md canonical rule).
+    // Element locators live in e2e/poms/** getters; specs consume them.
+    files: ["e2e/specs/**/*.{ts,tsx}", "e2e/integration/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "CallExpression[callee.object.name='page'][callee.property.name=/^(locator|getByTestId|getByRole|getByText|getByLabel|getByPlaceholder|getByTitle|getByAltText)$/]",
+          message:
+            "Specs must not locate elements directly on `page`. Add a getter to the relevant POM in e2e/poms/ and use it from the spec.",
+        },
+      ],
     },
   },
   eslintPluginPrettier,

@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "e2e/**/*.ts",
+    "e2e/**/*.tsx",
+    "playwright.config.ts",
+    "vitest.integration.config.ts",
+    "scripts/**/*.ts",
+    "scripts/**/*.mts"
+  ],
+  "compilerOptions": {
+    "types": ["node"]
+  }
+}

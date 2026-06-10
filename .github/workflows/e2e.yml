@@ -60,7 +60,6 @@ jobs:
       composer: ${{ steps.filter.outputs.composer }}
       quiz: ${{ steps.filter.outputs.quiz }}
       courses: ${{ steps.filter.outputs.courses }}
-      blog: ${{ steps.filter.outputs.blog }}
       test-packs: ${{ steps.filter.outputs.test-packs }}
     steps:
       - uses: actions/checkout@v4
@@ -154,12 +153,10 @@ jobs:
               - 'src/routes/courses*'
               - 'src/components/courses/**'
               - 'src/content/courses/**'
-            blog:
-              - 'src/routes/blog/**'
-              - 'src/components/blog/**'
-              - 'src/lib/blog/**'
-              - 'src/content/blog/**'
-              - 'src/i18n/locales/sk/blog.json'
+            # NOTE: no `blog` domain — e2e/specs/blog does not exist, so a
+            # blog filter would silently select zero tests. Blog changes get
+            # cross-cutting coverage only; add the domain back when blog
+            # browser specs land.
             test-packs:
               - 'src/routes/tests*'
 
@@ -244,7 +241,6 @@ jobs:
           [[ "${{ needs.changes.outputs.composer }}" == "true" ]] && add "e2e/specs/composer"
           [[ "${{ needs.changes.outputs.quiz }}" == "true" ]] && add "e2e/specs/quiz"
           [[ "${{ needs.changes.outputs.courses }}" == "true" ]] && add "e2e/specs/courses"
-          [[ "${{ needs.changes.outputs.blog }}" == "true" ]] && add "e2e/specs/blog"
           [[ "${{ needs.changes.outputs.test-packs }}" == "true" ]] && add "e2e/specs/test-packs"
 
           echo "paths=$paths" >> "$GITHUB_OUTPUT"
