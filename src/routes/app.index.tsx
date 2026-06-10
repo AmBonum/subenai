@@ -162,9 +162,9 @@ function AppDashboardPage() {
               className="text-sm font-medium text-foreground"
               data-testid="app-dashboard-error-title"
             >
-              Prehľad sa nepodarilo načítať.
+              {t("error.title")}
             </p>
-            <p className="text-sm text-muted-foreground">Skontroluj pripojenie a skús to znova.</p>
+            <p className="text-sm text-muted-foreground">{t("error.body")}</p>
             <Button
               variant="outline"
               size="sm"
@@ -174,7 +174,7 @@ function AppDashboardPage() {
               }}
               data-testid="app-dashboard-error-retry"
             >
-              Skúsiť znova
+              {t("error.retry")}
             </Button>
           </CardContent>
         </Card>

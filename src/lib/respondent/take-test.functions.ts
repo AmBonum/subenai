@@ -1,20 +1,20 @@
-// AH-8.1 — public (anonymous) respondent flow server-fn skeleton.
+// AH-14 — public (anonymous) respondent flow type contract.
 //
-// SECURITY CHECKLIST (mirrors the story's review section):
-//   - supabaseAdmin must be imported ONLY from this `*.functions.ts` file
-//     (covered by AH-1's ESLint no-restricted-imports rule).
-//   - Safe-column projection: AH-11 swaps the mock resolver for a Supabase
-//     query that selects EXACTLY the SAFE_TEST_COLUMNS allowlist below —
-//     never owner_id, password_hash, segmentation, or any column not on it.
-//   - Route does NOT call requireSupabaseAuth; incognito completes the flow
-//     with NO auth cookie set or read.
-//   - Rate-limit: 10 submissions / 5 min / IP via CF Pages Function
-//     `functions/_middleware.ts`. AH-11 wires this — DO NOT edit functions/
-//     in AH-8.1.
+// The actual resolution now runs through the SECURITY DEFINER RPC
+// `get_respondent_test_by_share_id` (see
+// supabase/migrations/20260610110000_*.sql), called from
+// `@/lib/respondent/queries`. This module is the shared type contract:
+//   - SafeTestProjection — the non-sensitive test shape the runner renders.
+//   - SAFE_TEST_COLUMNS  — the allowlist the RPC projects (asserted in tests).
+//   - TakeTestInputSchema — zod boundary on the share id.
+//
+// SECURITY INVARIANTS (mirrored in the RPC, asserted by tests):
+//   - The projection NEVER carries owner_id, password_hash, segmentation,
+//     team_id, source_template_id, notif_config — only the columns below.
+//   - Only status = 'published' tests resolve; drafts/archived are NULL.
 import { z } from "zod";
 
-import { getTestByShareId } from "@/lib/respondent/mock-store";
-import type { IntakeField } from "@/lib/platform/types";
+import type { IntakeField, Question } from "@/lib/platform/types";
 
 export const SAFE_TEST_COLUMNS = [
   "id",
@@ -40,39 +40,16 @@ export type SafeTestProjection = {
   question_order_mode: "fixed" | "random";
 };
 
+// The runner consumes the platform Question shape. The RPC returns a subset
+// of questions columns (id, type, prompt, options, correct) plus position;
+// `mapRespondentQuestion` in queries.ts fills the non-rendered fields.
+export type ResolvedRespondentTest = {
+  test: SafeTestProjection;
+  questions: Question[];
+};
+
 export const TakeTestInputSchema = z.object({
-  shareId: z
-    .string()
-    .min(8, "shareId must be at least 8 chars")
-    .max(64, "shareId must be at most 64 chars"),
+  shareId: z.string().regex(/^[a-zA-Z0-9]{6,12}$/, "shareId must be 6-12 alphanumeric chars"),
 });
 
 export type TakeTestInput = z.infer<typeof TakeTestInputSchema>;
-
-/**
- * Resolve a public test by share id. Mock-only — AH-11 swaps the body to:
- *   const { data, error } = await supabaseAdmin
- *     .from("tests")
- *     .select(SAFE_TEST_COLUMNS.join(","))
- *     .eq("share_id", parsed.shareId)
- *     .eq("status", "published")
- *     .maybeSingle();
- * The returned object SHAPE must remain a strict subset of SafeTestProjection.
- */
-export function takeTestFn(input: TakeTestInput): SafeTestProjection | null {
-  const parsed = TakeTestInputSchema.parse(input);
-  const test = getTestByShareId(parsed.shareId);
-  if (!test) return null;
-  // Explicit safe-column projection in this branch — never spread the whole
-  // mock test object. Matches what supabaseAdmin will return in AH-11.
-  return {
-    id: test.id,
-    title: test.title,
-    description: test.description,
-    intake_fields: test.intake_fields,
-    gdpr_purpose: test.gdpr_purpose,
-    allow_behavioral_tracking: test.allow_behavioral_tracking,
-    status: test.status,
-    question_order_mode: test.question_order_mode,
-  };
-}

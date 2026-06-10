@@ -1,9 +1,8 @@
-// AH-11.6 carve-out — admin in-memory repo, retained for tests and the
-// `answer-sets-mock-store` user-side viewer at /app/sets/$setId.
+// AH-11.6 carve-out — admin in-memory repo, retained for TESTS ONLY
+// (imported by tests/utils/admin-supabase-mock.ts and admin route tests).
 // Production admin reads go through `@/lib/admin/queries.ts` + Supabase.
-// AH-14 migrates the answer-sets viewer onto `useAnswerSets` /
-// `useAnswers` query hooks; at that point this file plus
-// `answer-sets-mock-store` and `mock-data` can be deleted together.
+// AH-14 removed the mock-backed user-side viewer; nothing under src/routes
+// or src/components imports this module in a client code path.
 //
 // Reactive in-memory store + repo abstraction for the SubenAI admin.
 //

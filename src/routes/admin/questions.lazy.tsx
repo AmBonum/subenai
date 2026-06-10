@@ -175,7 +175,7 @@ function QuestionsPage() {
           if (failed === 0) {
             toast.success(t("confirm_bulk_done", { label }));
           } else {
-            toast.error(`${label}: ${ok} úspešných, ${failed} zlyhalo`);
+            toast.error(t("confirm_bulk_partial", { label, ok, failed }));
           }
         });
       },

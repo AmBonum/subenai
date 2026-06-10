@@ -19,6 +19,12 @@
 import { z } from "zod";
 
 import { supabase } from "@/integrations/supabase/client";
+import type { Question, QuestionType } from "@/lib/platform/types";
+import type {
+  ResolvedRespondentTest,
+  SafeTestProjection,
+} from "@/lib/respondent/take-test.functions";
+import { TakeTestInputSchema } from "@/lib/respondent/take-test.functions";
 
 // share_id format pinned to the same regex enforced in
 // supabase/migrations/20260425173314_*.sql so the client-side and
@@ -179,4 +185,113 @@ export async function finalizeRespondentSession(input: FinalizeSessionInput): Pr
     p_session_token: validated.sessionToken ?? null,
   });
   if (error) throw error;
+}
+
+// ---------------------------------------------------------------------------
+// AH-14 — resolve a published test + its question set by share id.
+//
+// Anonymous read via the SECURITY DEFINER RPC
+// `get_respondent_test_by_share_id` (migration 20260610110000). Anon has no
+// direct SELECT on tests/questions; the RPC is the only sanctioned path and
+// returns ONLY the non-sensitive projection (no owner_id / password_hash /
+// segmentation). Returns null when the share id is malformed or no published
+// test matches.
+// ---------------------------------------------------------------------------
+
+// The RPC `options` jsonb is an array of objects ({id,label,correct,...}) for
+// choice questions, or absent for free-text. The runner renders option
+// labels as plain strings; normalize either shape to string[].
+function normalizeOptions(raw: unknown): string[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const out = raw.map((o) => {
+    if (typeof o === "string") return o;
+    if (o && typeof o === "object") {
+      const rec = o as Record<string, unknown>;
+      const label = rec.label ?? rec.text;
+      if (typeof label === "string") return label;
+    }
+    return "";
+  });
+  return out.length > 0 ? out : undefined;
+}
+
+// `correct` is an index array ([1]) for single/multi, a string for free-text,
+// or null. Preserve the shape the runner's scoring expects (number[] | string).
+function normalizeCorrect(raw: unknown): number[] | string | undefined {
+  if (Array.isArray(raw) && raw.every((n) => typeof n === "number")) {
+    return raw as number[];
+  }
+  if (typeof raw === "string") return raw;
+  return undefined;
+}
+
+interface RespondentQuestionRow {
+  id: string;
+  type: string;
+  prompt: string;
+  options: unknown;
+  correct: unknown;
+  position: number;
+}
+
+function mapRespondentQuestion(row: RespondentQuestionRow): Question {
+  const options = normalizeOptions(row.options);
+  const correct = normalizeCorrect(row.correct);
+  const q: Question = {
+    id: row.id,
+    type: row.type as QuestionType,
+    prompt: row.prompt,
+    category: "",
+    difficulty: "medium",
+    author_id: "",
+    status: "approved",
+    created_at: "",
+  };
+  if (options) q.options = options;
+  if (correct !== undefined) q.correct = correct;
+  return q;
+}
+
+interface ResolvedRpcPayload {
+  test: {
+    id: string;
+    title: string;
+    description: string;
+    intake_fields: unknown;
+    gdpr_purpose: string;
+    allow_behavioral_tracking: boolean;
+    status: string;
+    question_order_mode: string;
+  } | null;
+  questions: RespondentQuestionRow[] | null;
+}
+
+export async function resolveRespondentTest(
+  shareId: string,
+): Promise<ResolvedRespondentTest | null> {
+  const parsed = TakeTestInputSchema.safeParse({ shareId });
+  if (!parsed.success) return null;
+
+  const { data, error } = await supabase.rpc("get_respondent_test_by_share_id", {
+    p_share_id: parsed.data.shareId,
+  });
+  if (error) throw error;
+  if (data == null) return null;
+
+  const payload = data as unknown as ResolvedRpcPayload;
+  if (!payload.test) return null;
+
+  const test: SafeTestProjection = {
+    id: payload.test.id,
+    title: payload.test.title,
+    description: payload.test.description ?? "",
+    intake_fields: (payload.test.intake_fields ?? []) as SafeTestProjection["intake_fields"],
+    gdpr_purpose: payload.test.gdpr_purpose,
+    allow_behavioral_tracking: payload.test.allow_behavioral_tracking,
+    status: payload.test.status,
+    question_order_mode: payload.test.question_order_mode === "random" ? "random" : "fixed",
+  };
+
+  const questions = (payload.questions ?? []).map(mapRespondentQuestion);
+  return { test, questions };
 }

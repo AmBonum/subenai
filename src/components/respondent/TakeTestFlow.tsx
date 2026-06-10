@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { IntakeStep } from "@/components/respondent/IntakeStep";
 import { QuestionStep } from "@/components/respondent/QuestionStep";
-import { getQuestion } from "@/lib/respondent/mock-store";
 import {
   startRespondentSession,
   submitRespondentAnswer,
@@ -21,17 +20,22 @@ type Stage = "intake" | "questions" | "done";
 
 interface TakeTestFlowProps {
   test: SafeTestProjection;
-  // Question ids are loaded server-side via the same safe projection — for
-  // the mock we pull them from the platform store. AH-11 returns them in
-  // the safe projection alongside the test.
-  questionIds: string[];
+  // Resolved server-side via get_respondent_test_by_share_id (AH-14). The
+  // route fetches { test, questions } in one RPC and passes the ordered
+  // question set straight through.
+  questions: Question[];
   // The /t/$shareId route resolves the test via share id; we need it again
   // here to start the Supabase session under the same anonymous identity.
   shareId: string;
   onClose: () => void;
 }
 
-export function TakeTestFlow({ test, questionIds, shareId, onClose }: TakeTestFlowProps) {
+export function TakeTestFlow({
+  test,
+  questions: resolvedQuestions,
+  shareId,
+  onClose,
+}: TakeTestFlowProps) {
   const tRoot = tFor("root");
   const tThanks = tFor("thank_you");
   const tErr = tFor("errors");
@@ -52,11 +56,16 @@ export function TakeTestFlow({ test, questionIds, shareId, onClose }: TakeTestFl
   // shuffle deterministically so a reload mid-take rehydrates the same
   // sequence. Pre-intake (sessionId === null) we keep the DB order so the
   // server-rendered shell doesn't briefly show a leaked random order.
-  const orderedQuestionIds = useMemo(
-    () => resolveQuestionOrder(questionIds, test.question_order_mode, sessionId),
-    [questionIds, test.question_order_mode, sessionId],
-  );
-  const questions = orderedQuestionIds.map((qid) => getQuestion(qid)).filter(Boolean) as Question[];
+  const questions = useMemo(() => {
+    const byId = new Map(resolvedQuestions.map((q) => [q.id, q]));
+    return resolveQuestionOrder(
+      resolvedQuestions.map((q) => q.id),
+      test.question_order_mode,
+      sessionId,
+    )
+      .map((qid) => byId.get(qid))
+      .filter(Boolean) as Question[];
+  }, [resolvedQuestions, test.question_order_mode, sessionId]);
 
   const onIntakeSubmit = async (vals: Record<string, string>, c: boolean) => {
     if (submitting) return;

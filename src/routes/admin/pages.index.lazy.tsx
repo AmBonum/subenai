@@ -177,10 +177,13 @@ function AdminCmsPagesPage() {
       <ConfirmDialog
         open={!!confirmDelete}
         onOpenChange={(o) => !o && setConfirmDelete(null)}
-        title="Zmazať stránku?"
+        title={t("delete_dialog_title")}
         description={
           confirmDelete
-            ? `Stránka „${confirmDelete.title}“ (/${confirmDelete.slug}) bude nenávratne zmazaná.`
+            ? t("delete_dialog_description", {
+                title: confirmDelete.title,
+                slug: confirmDelete.slug,
+              })
             : undefined
         }
         confirmLabel={t("delete")}

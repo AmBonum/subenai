@@ -139,9 +139,7 @@ function VerifyTwoFactorPage() {
         // The code is spent but the session refresh failed — navigating
         // to /admin would bounce straight back here. Keep the user on
         // this page with an actionable message instead.
-        setError(
-          "Kód bol prijatý, ale obnovenie prihlásenia zlyhalo. Odhlás sa a prihlás znova — záložný kód už netreba zadávať.",
-        );
+        setError(t("backup_error_refresh_failed"));
         return;
       }
       navigate({ to: target });

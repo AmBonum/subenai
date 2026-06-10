@@ -2023,6 +2023,78 @@ $$;
 
 REVOKE ALL ON FUNCTION public.finalize_respondent_session(uuid, numeric) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.finalize_respondent_session(uuid, numeric) TO anon, authenticated;
+
+-- ============================================================================
+-- AH-14 — Public respondent flow: resolve a published test + question set
+-- by share_id for the anonymous /t/$shareId runner. See migration
+-- 20260610110000_get_respondent_test_by_share_id.sql for the full rationale
+-- (why correct is returned, what columns are deliberately withheld).
+-- ============================================================================
+CREATE OR REPLACE FUNCTION public.get_respondent_test_by_share_id(p_share_id text)
+RETURNS jsonb
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_test_id uuid;
+  v_test jsonb;
+  v_questions jsonb;
+BEGIN
+  IF p_share_id IS NULL OR p_share_id !~ '^[a-zA-Z0-9]{6,12}$' THEN
+    RETURN NULL;
+  END IF;
+
+  SELECT t.id INTO v_test_id
+    FROM public.tests t
+   WHERE t.share_id = p_share_id AND t.status = 'published'
+   LIMIT 1;
+
+  IF v_test_id IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  SELECT jsonb_build_object(
+    'id', t.id,
+    'title', t.title,
+    'description', COALESCE(t.description, ''),
+    'intake_fields', t.intake_fields,
+    'gdpr_purpose', t.gdpr_purpose,
+    'allow_behavioral_tracking', t.allow_behavioral_tracking,
+    'status', t.status,
+    'question_order_mode', t.question_order_mode
+  ) INTO v_test
+    FROM public.tests t
+   WHERE t.id = v_test_id;
+
+  SELECT COALESCE(
+    jsonb_agg(
+      jsonb_build_object(
+        'id', q.id,
+        'type', q.type,
+        'prompt', q.prompt,
+        'options', q.options,
+        'correct', q.correct,
+        'position', tq.position
+      )
+      ORDER BY tq.position ASC
+    ),
+    '[]'::jsonb
+  ) INTO v_questions
+    FROM public.test_questions tq
+    JOIN public.questions q ON q.id = tq.question_id
+   WHERE tq.test_id = v_test_id
+     AND q.status IN ('approved', 'published');
+
+  RETURN jsonb_build_object('test', v_test, 'questions', v_questions);
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.get_respondent_test_by_share_id(text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.get_respondent_test_by_share_id(text)
+  TO anon, authenticated;
+
 -- ============================================================================
 -- AH-11.5b.1 — Quiz questions DB infrastructure
 -- ============================================================================

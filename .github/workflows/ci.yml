@@ -49,12 +49,8 @@ jobs:
       - name: Bundle guard — no secrets
         run: npm run check:bundle-no-secrets
 
-      # Known-red until AH-14 lands (public take-test flow still imports the
-      # client-side mock store). Non-blocking so the failure stays visible on
-      # every run; flip to blocking when AH-14 removes the mock imports.
-      - name: Bundle guard — no mocks (non-blocking, AH-14)
+      - name: Bundle guard — no mocks
         run: npm run check:bundle-no-mocks
-        continue-on-error: true
 
       - name: Bundle guard — no trackers
         run: npm run audit:bundle

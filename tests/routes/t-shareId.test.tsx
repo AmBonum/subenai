@@ -1,15 +1,26 @@
 import type { JSX } from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, renderHook, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 let currentShareId = "abcdefgh";
 
-// E45 Phase 2 — the route now preflight-fetches /api/tests/check-password
+// AH-14 — the route resolves the test via the get_respondent_test_by_share_id
+// RPC (anon SECURITY DEFINER). Mock the supabase client so we control the
+// resolved payload without a live DB.
+const rpcMock = vi.fn();
+vi.mock("@/integrations/supabase/client", () => ({
+  supabase: {
+    rpc: (...args: unknown[]) => rpcMock(...args),
+  },
+}));
+
+// E45 Phase 2 — the route also preflight-fetches /api/tests/check-password
 // before rendering the intake/gate. Stub fetch to resolve as "open" (no
 // password) so the existing flow assertions still find the intake.
 const fetchMock = vi.fn();
 const originalFetch = globalThis.fetch;
 beforeEach(() => {
+  rpcMock.mockReset();
   fetchMock.mockReset();
   fetchMock.mockResolvedValue(
     new Response(JSON.stringify({ has_password: false }), {
@@ -39,43 +50,64 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
-import { useTests } from "@/lib/platform/mock-store";
 import { Route } from "@/routes/t.$shareId";
 
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
 
-function firstPublishedShareId(): string {
-  const tests = renderHook(() => useTests()).result.current;
-  const t = tests.find((x) => x.status === "published");
-  if (!t) throw new Error("seed missing a published test");
-  return t.share_id;
+const PUBLISHED_SHARE_ID = "shareid12345";
+
+function resolvedPayload() {
+  return {
+    data: {
+      test: {
+        id: "tst_1",
+        title: "Sample test",
+        description: "Desc",
+        intake_fields: [{ id: "if_name", label: "Meno", type: "text", required: true, pii: true }],
+        gdpr_purpose: "research",
+        allow_behavioral_tracking: false,
+        status: "published",
+        question_order_mode: "fixed",
+      },
+      questions: [],
+    },
+    error: null,
+  };
 }
 
 describe("/t/$shareId — public respondent flow", () => {
-  it("renders not-found banner when shareId is too short", () => {
+  it("renders not-found banner when shareId is malformed (too short)", async () => {
     currentShareId = "abc";
     render(<Page />);
-    expect(screen.getByTestId("respondent-flow-error-not-found")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByTestId("respondent-flow-error-not-found")).toBeInTheDocument(),
+    );
+    // Malformed share id is rejected client-side before any RPC.
+    expect(rpcMock).not.toHaveBeenCalled();
   });
 
-  it("renders not-found banner when shareId doesn't match any test", () => {
-    currentShareId = "no-such-share-id";
+  it("renders not-found banner when the RPC resolves no published test", async () => {
+    currentShareId = PUBLISHED_SHARE_ID;
+    rpcMock.mockResolvedValueOnce({ data: null, error: null });
     render(<Page />);
-    expect(screen.getByTestId("respondent-flow-error-not-found")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByTestId("respondent-flow-error-not-found")).toBeInTheDocument(),
+    );
   });
 
-  it("renders the flow root + intake stage for a valid published shareId", async () => {
-    currentShareId = firstPublishedShareId();
+  it("renders the flow root + intake stage for a resolved published test", async () => {
+    currentShareId = PUBLISHED_SHARE_ID;
+    rpcMock.mockResolvedValueOnce(resolvedPayload());
     render(<Page />);
-    // Preflight resolves asynchronously to "open" → intake then renders.
     await waitFor(() => expect(screen.getByTestId("respondent-flow-root")).toBeInTheDocument());
     expect(screen.getByTestId("respondent-flow-intake-consent-checkbox")).toBeInTheDocument();
     expect(screen.getByTestId("respondent-flow-intake-submit-button")).toBeInTheDocument();
   });
 
   it("blocks intake submission when consent is missing", async () => {
-    currentShareId = firstPublishedShareId();
+    currentShareId = PUBLISHED_SHARE_ID;
+    rpcMock.mockResolvedValueOnce(resolvedPayload());
     render(<Page />);
     const submit = await screen.findByTestId("respondent-flow-intake-submit-button");
     fireEvent.click(submit);

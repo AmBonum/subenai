@@ -99,7 +99,6 @@ import { Route as BlogKategoriaSlugRouteImport } from './routes/blog/kategoria/$
 import { Route as BlogAutorSlugRouteImport } from './routes/blog/autor/$slug'
 import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
 import { Route as AppTestsTestIdRouteImport } from './routes/app.tests.$testId'
-import { Route as AppSetsSetIdRouteImport } from './routes/app.sets.$setId'
 import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
 import { Route as AppHelpContactRouteImport } from './routes/app.help.contact'
 import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
@@ -131,7 +130,7 @@ const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/signup.lazy').then((d) => d.Route))
 const SchoolsRoute = SchoolsRouteImport.update({
   id: '/schools',
   path: '/schools',
@@ -153,7 +152,7 @@ const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
@@ -198,7 +197,7 @@ const TestsIndexRoute = TestsIndexRouteImport.update({
   id: '/tests/',
   path: '/tests/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/tests.index.lazy').then((d) => d.Route))
 const TestIndexRoute = TestIndexRouteImport.update({
   id: '/test/',
   path: '/test/',
@@ -218,7 +217,7 @@ const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/courses.index.lazy').then((d) => d.Route))
 const ContactFormIndexRoute = ContactFormIndexRouteImport.update({
   id: '/contact-form/',
   path: '/contact-form/',
@@ -617,11 +616,6 @@ const AppTestsTestIdRoute = AppTestsTestIdRouteImport.update({
   path: '/tests/$testId',
   getParentRoute: () => AppRoute,
 } as any)
-const AppSetsSetIdRoute = AppSetsSetIdRouteImport.update({
-  id: '/sets/$setId',
-  path: '/sets/$setId',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppLegalDsrRoute = AppLegalDsrRouteImport.update({
   id: '/legal/dsr',
   path: '/legal/dsr',
@@ -818,7 +812,6 @@ export interface FileRoutesByFullPath {
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
-  '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -920,7 +913,6 @@ export interface FileRoutesByTo {
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
-  '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -1029,7 +1021,6 @@ export interface FileRoutesById {
   '/app/account/security': typeof AppAccountSecurityRoute
   '/app/help/contact': typeof AppHelpContactRoute
   '/app/legal/dsr': typeof AppLegalDsrRoute
-  '/app/sets/$setId': typeof AppSetsSetIdRoute
   '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
   '/blog/autor/$slug': typeof BlogAutorSlugRoute
@@ -1140,7 +1131,6 @@ export interface FileRouteTypes {
     | '/app/account/security'
     | '/app/help/contact'
     | '/app/legal/dsr'
-    | '/app/sets/$setId'
     | '/app/tests/$testId'
     | '/app/tests/new'
     | '/blog/autor/$slug'
@@ -1242,7 +1232,6 @@ export interface FileRouteTypes {
     | '/app/account/security'
     | '/app/help/contact'
     | '/app/legal/dsr'
-    | '/app/sets/$setId'
     | '/app/tests/$testId'
     | '/app/tests/new'
     | '/blog/autor/$slug'
@@ -1350,7 +1339,6 @@ export interface FileRouteTypes {
     | '/app/account/security'
     | '/app/help/contact'
     | '/app/legal/dsr'
-    | '/app/sets/$setId'
     | '/app/tests/$testId'
     | '/app/tests/new'
     | '/blog/autor/$slug'
@@ -2047,13 +2035,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTestsTestIdRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/sets/$setId': {
-      id: '/app/sets/$setId'
-      path: '/sets/$setId'
-      fullPath: '/app/sets/$setId'
-      preLoaderRoute: typeof AppSetsSetIdRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/app/legal/dsr': {
       id: '/app/legal/dsr'
       path: '/legal/dsr'
@@ -2347,7 +2328,6 @@ interface AppRouteChildren {
   AppAccountProfileRoute: typeof AppAccountProfileRoute
   AppAccountSecurityRoute: typeof AppAccountSecurityRoute
   AppLegalDsrRoute: typeof AppLegalDsrRoute
-  AppSetsSetIdRoute: typeof AppSetsSetIdRoute
   AppTestsTestIdRoute: typeof AppTestsTestIdRouteWithChildren
   AppTestsNewRoute: typeof AppTestsNewRoute
   AppEduTestsIndexRoute: typeof AppEduTestsIndexRoute
@@ -2371,7 +2351,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppAccountProfileRoute: AppAccountProfileRoute,
   AppAccountSecurityRoute: AppAccountSecurityRoute,
   AppLegalDsrRoute: AppLegalDsrRoute,
-  AppSetsSetIdRoute: AppSetsSetIdRoute,
   AppTestsTestIdRoute: AppTestsTestIdRouteWithChildren,
   AppTestsNewRoute: AppTestsNewRoute,
   AppEduTestsIndexRoute: AppEduTestsIndexRoute,

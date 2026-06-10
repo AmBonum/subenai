@@ -11,6 +11,36 @@ vi.mock("@/integrations/supabase/client", () => ({
 
 import { TakeTestFlow } from "@/components/respondent/TakeTestFlow";
 import type { SafeTestProjection } from "@/lib/respondent/take-test.functions";
+import type { Question } from "@/lib/platform/types";
+
+// Mirrors the resolved-question shape returned by resolveRespondentTest
+// (RPC get_respondent_test_by_share_id): options as string[], correct as
+// the index array. q1 single (correct = "Možnosť A"), q2 multi (no correct).
+const QUESTIONS: Question[] = [
+  {
+    id: "qp_0001",
+    type: "single",
+    prompt: "Q1",
+    options: ["Možnosť A", "Možnosť B", "Možnosť C", "Možnosť D"],
+    correct: [0],
+    category: "",
+    difficulty: "medium",
+    author_id: "",
+    status: "approved",
+    created_at: "",
+  },
+  {
+    id: "qp_0002",
+    type: "multi",
+    prompt: "Q2",
+    options: ["Možnosť A", "Možnosť B", "Možnosť C", "Možnosť D"],
+    category: "",
+    difficulty: "medium",
+    author_id: "",
+    status: "approved",
+    created_at: "",
+  },
+];
 
 const test: SafeTestProjection = {
   id: "tst_1",
@@ -29,12 +59,12 @@ const TEST_SHARE_ID = "shareid12345";
 const TEST_SESSION_ID = "11111111-1111-1111-1111-111111111111";
 const TEST_SESSION_TOKEN = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
 
-function renderFlow(opts: { questionIds?: string[] } = {}) {
+function renderFlow(opts: { questions?: Question[] } = {}) {
   const onClose = vi.fn();
   render(
     <TakeTestFlow
       test={test}
-      questionIds={opts.questionIds ?? []}
+      questions={opts.questions ?? []}
       shareId={TEST_SHARE_ID}
       onClose={onClose}
     />,
@@ -60,7 +90,7 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
       data: { session_id: TEST_SESSION_ID, session_token: TEST_SESSION_TOKEN },
       error: null,
     });
-    renderFlow({ questionIds: [] });
+    renderFlow({ questions: [] });
     await completeIntake();
     await waitFor(() => {
       expect(rpcMock).toHaveBeenCalledWith(
@@ -88,7 +118,7 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
       data: { session_id: TEST_SESSION_ID, session_token: TEST_SESSION_TOKEN },
       error: null,
     });
-    renderFlow({ questionIds: [] });
+    renderFlow({ questions: [] });
     await completeIntake();
     await waitFor(() => {
       expect(rpcMock).toHaveBeenCalledTimes(1);
@@ -109,7 +139,7 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
       return { data: null, error: null };
     });
     // qp_0001 (single, correct = "Možnosť A") + qp_0002 (multi, no correct).
-    renderFlow({ questionIds: ["qp_0001", "qp_0002"] });
+    renderFlow({ questions: QUESTIONS });
     await completeIntake();
 
     // Q1 — answer "Možnosť A" and advance.

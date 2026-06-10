@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { TakeTestFlow } from "@/components/respondent/TakeTestFlow";
 import { RespondentPasswordGate } from "@/components/respondent/RespondentPasswordGate";
-import { takeTestFn } from "@/lib/respondent/take-test.functions";
-import { getTestByShareId } from "@/lib/respondent/mock-store";
+import { resolveRespondentTest } from "@/lib/respondent/queries";
+import type { ResolvedRespondentTest } from "@/lib/respondent/take-test.functions";
 import { tFor } from "@/i18n/respondent-flow";
 import { tFor as tQuiz } from "@/i18n/quiz";
 
@@ -74,63 +74,91 @@ export const Route = createFileRoute("/t/$shareId")({
   component: PublicTakeTestPage,
 });
 
+type ResolveState =
+  | { status: "loading" }
+  | { status: "not_found" }
+  | { status: "ready"; resolved: ResolvedRespondentTest };
+
+// Resolve the published test + its question set by share id via the
+// anonymous SECURITY DEFINER RPC (AH-14). No auth session, no React Query
+// context on this route — call the wrapper directly and hold the result in
+// component state.
+function useResolveRespondentTest(shareId: string): ResolveState {
+  const [state, setState] = useState<ResolveState>({ status: "loading" });
+
+  useEffect(() => {
+    let cancelled = false;
+    setState({ status: "loading" });
+    void (async () => {
+      try {
+        const resolved = await resolveRespondentTest(shareId);
+        if (cancelled) return;
+        if (!resolved) {
+          setState({ status: "not_found" });
+          return;
+        }
+        setState({ status: "ready", resolved });
+      } catch {
+        if (!cancelled) setState({ status: "not_found" });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [shareId]);
+
+  return state;
+}
+
+function NotFoundCard() {
+  const tErr = tFor("errors");
+  return (
+    <div
+      className="flex min-h-screen items-center justify-center p-6"
+      data-testid="respondent-flow-error-not-found"
+    >
+      <Card>
+        <CardContent className="space-y-3 p-8 text-center">
+          <p>{tErr("not_found")}</p>
+          <Link to="/" className="text-primary underline">
+            {tErr("back_home")}
+          </Link>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function LoadingCard() {
+  return (
+    <div
+      className="flex min-h-screen items-center justify-center p-6"
+      data-testid="respondent-flow-preflight-loading"
+      aria-busy="true"
+    >
+      <Card>
+        <CardContent className="p-8 text-center text-sm text-muted-foreground">…</CardContent>
+      </Card>
+    </div>
+  );
+}
+
 function PublicTakeTestPage() {
   const { shareId } = Route.useParams();
   const nav = useNavigate();
-  const tErr = tFor("errors");
+  const resolveState = useResolveRespondentTest(shareId);
 
-  // Two-step lookup so we exercise the safe-column projection in the same
-  // path AH-11 will swap to. `takeTestFn` is the boundary that becomes the
-  // supabaseAdmin call; the platform mock-store gives us question_ids for
-  // render (AH-11 returns them in the safe projection too).
-  if (shareId.length < 8 || shareId.length > 64) {
-    return (
-      <div
-        className="flex min-h-screen items-center justify-center p-6"
-        data-testid="respondent-flow-error-not-found"
-      >
-        <Card>
-          <CardContent className="space-y-3 p-8 text-center">
-            <p>{tErr("not_found")}</p>
-            <Link to="/" className="text-primary underline">
-              {tErr("back_home")}
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
+  if (resolveState.status === "loading") {
+    return <LoadingCard />;
   }
-
-  let safe;
-  try {
-    safe = takeTestFn({ shareId });
-  } catch {
-    safe = null;
-  }
-  const test = safe ? getTestByShareId(shareId) : null;
-  if (!safe || !test) {
-    return (
-      <div
-        className="flex min-h-screen items-center justify-center p-6"
-        data-testid="respondent-flow-error-not-found"
-      >
-        <Card>
-          <CardContent className="space-y-3 p-8 text-center">
-            <p>{tErr("not_found")}</p>
-            <Link to="/" className="text-primary underline">
-              {tErr("back_home")}
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
+  if (resolveState.status === "not_found") {
+    return <NotFoundCard />;
   }
 
   return (
     <PasswordGuardedTake
       shareId={shareId}
-      safe={safe}
-      questionIds={test.question_ids}
+      resolved={resolveState.resolved}
       onClose={() => nav({ to: "/" })}
     />
   );
@@ -138,30 +166,18 @@ function PublicTakeTestPage() {
 
 function PasswordGuardedTake({
   shareId,
-  safe,
-  questionIds,
+  resolved,
   onClose,
 }: {
   shareId: string;
-  safe: ReturnType<typeof takeTestFn>;
-  questionIds: string[];
+  resolved: ResolvedRespondentTest;
   onClose: () => void;
 }) {
   const preflight = usePasswordPreflight(shareId);
   const [optimisticVerified, setOptimisticVerified] = useState(false);
 
   if (preflight.status === "loading") {
-    return (
-      <div
-        className="flex min-h-screen items-center justify-center p-6"
-        data-testid="respondent-flow-preflight-loading"
-        aria-busy="true"
-      >
-        <Card>
-          <CardContent className="p-8 text-center text-sm text-muted-foreground">…</CardContent>
-        </Card>
-      </div>
-    );
+    return <LoadingCard />;
   }
 
   if (preflight.status === "gated" && !optimisticVerified) {
@@ -174,9 +190,12 @@ function PasswordGuardedTake({
     );
   }
 
-  if (!safe) {
-    return null;
-  }
-
-  return <TakeTestFlow test={safe} questionIds={questionIds} shareId={shareId} onClose={onClose} />;
+  return (
+    <TakeTestFlow
+      test={resolved.test}
+      questions={resolved.questions}
+      shareId={shareId}
+      onClose={onClose}
+    />
+  );
 }

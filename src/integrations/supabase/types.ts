@@ -2151,6 +2151,10 @@ export type Database = {
         };
         Returns: void;
       };
+      get_respondent_test_by_share_id: {
+        Args: { p_share_id: string };
+        Returns: Json;
+      };
       get_quick_test_questions: {
         Args: { p_limit?: number; p_locale?: string };
         Returns: {

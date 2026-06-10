@@ -91,9 +91,9 @@ function AdminTestsListPage() {
       const failed = results.filter((r) => r.status === "rejected").length;
       const ok = results.length - failed;
       if (failed === 0) {
-        toast.success(`Vymazaných ${ok} testov.`);
+        toast.success(t("bulk_delete_done", { ok }));
       } else {
-        toast.error(`Vymazaných ${ok}, zlyhalo ${failed}.`);
+        toast.error(t("bulk_delete_partial", { ok, failed }));
       }
     });
   };
