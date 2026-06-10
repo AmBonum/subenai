@@ -404,7 +404,9 @@
     "column_test": "Test",
     "column_branch": "Odvětví",
     "column_difficulty": "Obtížnost",
-    "column_status": "Stav"
+    "column_status": "Stav",
+    "bulk_delete_done": "Smazáno {ok} testů.",
+    "bulk_delete_partial": "Smazáno {ok}, selhalo {failed}."
   },
   "admin_editor": {
     "page_eyebrow": "Admin · Test",

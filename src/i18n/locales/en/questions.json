@@ -56,7 +56,8 @@
     "csv_votes": "Votes",
     "csv_answers": "Answers",
     "csv_reports": "Reports",
-    "csv_created": "Created"
+    "csv_created": "Created",
+    "confirm_bulk_partial": "{label}: {ok} succeeded, {failed} failed"
   },
   "question_editor": {
     "title_edit": "Edit question",

@@ -16,7 +16,9 @@
     "status_published": "Publikované",
     "empty": "Zatím žádné stránky.",
     "delete": "Smazat",
-    "edit": "Upravit"
+    "edit": "Upravit",
+    "delete_dialog_title": "Smazat stránku?",
+    "delete_dialog_description": "Stránka „{title}“ (/{slug}) bude nenávratně smazána."
   },
   "pageEditor": {
     "title": "Editor stránky",

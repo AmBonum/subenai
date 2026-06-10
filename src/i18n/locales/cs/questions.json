@@ -56,7 +56,8 @@
     "csv_votes": "Hlasy",
     "csv_answers": "Odpovědi",
     "csv_reports": "Reporty",
-    "csv_created": "Vytvořeno"
+    "csv_created": "Vytvořeno",
+    "confirm_bulk_partial": "{label}: {ok} úspěšných, {failed} selhalo"
   },
   "question_editor": {
     "title_edit": "Upravit otázku",

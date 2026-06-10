@@ -44,7 +44,8 @@
     "use_totp": "Zpět na kód z aplikace",
     "backup_label": "Záložní kód",
     "backup_submit": "Použít kód",
-    "backup_error_invalid": "Záložní kód je neplatný nebo již byl použit."
+    "backup_error_invalid": "Záložní kód je neplatný nebo již byl použit.",
+    "backup_error_refresh_failed": "Kód byl přijat, ale obnovení přihlášení selhalo. Odhlas se a přihlas znovu — záložní kód už není třeba zadávat."
   },
   "security_card": {
     "title": "Dvoufaktorové ověření (2FA)",

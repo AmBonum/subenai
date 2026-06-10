@@ -2,16 +2,39 @@ import type { JSX } from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
+import type { CourseJsonLdInput } from "@/lib/seo/courses-jsonld";
+
 // E25 Phase 2 — /courses catalog redesign verification.
 //
-// Asserts:
-//  - head() emits both ItemList + FAQPage JSON-LD blobs
-//  - component renders hero, value strip, search, FAQ, CTA
-//  - related-article fetch is wired via useBlogPostsByRelatedCourses
-//    and the resulting map is passed down to each CourseCard
+// E50 bundle-split — the route is split into an eager file
+// (courses.index.tsx: route def + loader + head) and a lazy file
+// (courses.index.lazy.tsx: component + the ~177KB COURSES registry).
+// head() now reads its ItemList course list from loaderData (the loader
+// dynamically imports COURSES and projects it to the light
+// CourseJsonLdInput shape), so the head() assertions feed a fixture
+// loaderData; the component assertions render the lazy component.
 //
 // We stub useBlogPostsByRelatedCourses with a one-entry map so the
 // related-article slot test path is exercised without booting Supabase.
+
+const COURSE_LD_FIXTURES: CourseJsonLdInput[] = [
+  {
+    slug: "email-phishing",
+    title: "Email phishing",
+    tagline: "x",
+    estimatedMinutes: 9,
+    publishedAt: "2026-04-26",
+    updatedAt: "2026-04-26",
+  },
+  {
+    slug: "sms-smishing",
+    title: "SMS smishing",
+    tagline: "y",
+    estimatedMinutes: 7,
+    publishedAt: "2026-04-20",
+    updatedAt: "2026-04-20",
+  },
+];
 
 vi.mock("@tanstack/react-router", async () => {
   const actual =
@@ -19,6 +42,9 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute:
+      () =>
+      <T,>(config: T) => ({ options: config }),
+    createLazyFileRoute:
       () =>
       <T,>(config: T) => ({ options: config }),
     Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => {
@@ -52,23 +78,25 @@ vi.mock("@/lib/blog/queries", () => ({
   }),
 }));
 
-import { Route } from "@/routes/courses.index";
+import { Route as EagerRoute } from "@/routes/courses.index";
+import { Route as LazyRoute } from "@/routes/courses.index.lazy";
 
-type HeadFn = () => {
+type HeadFn = (ctx: { loaderData: CourseJsonLdInput[] }) => {
   meta: Array<Record<string, string>>;
   links?: Array<{ rel: string; href: string }>;
   scripts?: Array<{ type: string; children: string }>;
 };
 
-type RouteCfg = {
-  options: { head: HeadFn; component: () => JSX.Element };
-};
+type EagerCfg = { options: { head: HeadFn } };
+type LazyCfg = { options: { component: () => JSX.Element } };
 
-const cfg = Route as unknown as RouteCfg;
+const eager = EagerRoute as unknown as EagerCfg;
+const lazy = LazyRoute as unknown as LazyCfg;
+const callHead = () => eager.options.head({ loaderData: COURSE_LD_FIXTURES });
 
 describe("/courses head() — E25 Phase 2 SEO blobs", () => {
   it("emits a FAQPage JSON-LD blob alongside the ItemList blob", () => {
-    const out = cfg.options.head();
+    const out = callHead();
     const ld = (out.scripts ?? []).map((s) => JSON.parse(s.children) as Record<string, unknown>);
     const types = ld.map((b) => b["@type"]);
     expect(types).toContain("ItemList");
@@ -76,7 +104,7 @@ describe("/courses head() — E25 Phase 2 SEO blobs", () => {
   });
 
   it("FAQPage carries 8 Question entries", () => {
-    const out = cfg.options.head();
+    const out = callHead();
     const faq = (out.scripts ?? [])
       .map((s) => JSON.parse(s.children) as Record<string, unknown>)
       .find((b) => b["@type"] === "FAQPage");
@@ -84,8 +112,16 @@ describe("/courses head() — E25 Phase 2 SEO blobs", () => {
     expect((faq!.mainEntity as unknown[]).length).toBe(8);
   });
 
+  it("ItemList carries one ListItem per loader course", () => {
+    const out = callHead();
+    const list = (out.scripts ?? [])
+      .map((s) => JSON.parse(s.children) as Record<string, unknown>)
+      .find((b) => b["@type"] === "ItemList");
+    expect((list!.itemListElement as unknown[]).length).toBe(COURSE_LD_FIXTURES.length);
+  });
+
   it("emits canonical + robots:index on the catalog index", () => {
-    const out = cfg.options.head();
+    const out = callHead();
     expect(out.links).toEqual([{ rel: "canonical", href: "https://subenai.sk/courses" }]);
     const robots = out.meta.find((m) => m.name === "robots");
     expect(robots?.content).toMatch(/^index, follow/);
@@ -93,10 +129,10 @@ describe("/courses head() — E25 Phase 2 SEO blobs", () => {
 });
 
 describe("/courses page — E25 Phase 2 layout", () => {
-  it("renders hero, value strip, search, grid, FAQ, CTA", () => {
-    const Page = cfg.options.component;
+  it("renders hero, value strip, search, grid, FAQ, CTA", async () => {
+    const Page = lazy.options.component;
     render(<Page />);
-    expect(screen.getByTestId("courses-catalog-heading")).toBeInTheDocument();
+    expect(await screen.findByTestId("courses-catalog-heading")).toBeInTheDocument();
     expect(screen.getByTestId("courses-catalog-intro")).toBeInTheDocument();
     expect(screen.getByTestId("courses-value-strip")).toBeInTheDocument();
     expect(screen.getByTestId("courses-catalog-search-input")).toBeInTheDocument();
@@ -105,11 +141,13 @@ describe("/courses page — E25 Phase 2 layout", () => {
     expect(screen.getByTestId("courses-catalog-cta-test")).toBeInTheDocument();
   });
 
-  it("wires the batched related-article fetch into the email-phishing card", () => {
-    const Page = cfg.options.component;
+  it("wires the batched related-article fetch into the email-phishing card", async () => {
+    const Page = lazy.options.component;
     render(<Page />);
     // The stub returns an article for "email-phishing" — the slot must render.
-    expect(screen.getByTestId("courses-card-related-article-email-phishing")).toBeInTheDocument();
+    expect(
+      await screen.findByTestId("courses-card-related-article-email-phishing"),
+    ).toBeInTheDocument();
     expect(
       screen.getByTestId("courses-card-related-article-title-email-phishing"),
     ).toHaveTextContent("Phishing do hĺbky");

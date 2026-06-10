@@ -129,16 +129,16 @@ describe("mfa helpers", () => {
 
   it("consumeBackupCode refreshes the session after a successful RPC", async () => {
     rpc.mockResolvedValue({ data: true, error: null });
-    expect(await consumeBackupCode("AAAA-BBBB")).toBe("ok");
+    expect(await consumeBackupCode("ABCD1234-EF567890")).toBe("ok");
     expect(refreshSession).toHaveBeenCalled();
   });
 
   it("consumeBackupCode surfaces a failed session refresh as refresh_failed", async () => {
     rpc.mockResolvedValue({ data: true, error: null });
     refreshSession.mockResolvedValueOnce({ data: { session: null }, error: { message: "boom" } });
-    expect(await consumeBackupCode("AAAA-BBBB")).toBe("refresh_failed");
+    expect(await consumeBackupCode("ABCD1234-EF567890")).toBe("refresh_failed");
     refreshSession.mockRejectedValueOnce(new Error("network down"));
-    expect(await consumeBackupCode("AAAA-BBBB")).toBe("refresh_failed");
+    expect(await consumeBackupCode("ABCD1234-EF567890")).toBe("refresh_failed");
   });
 
   it("listFactors returns the totp list", async () => {
@@ -157,16 +157,16 @@ describe("mfa helpers", () => {
   });
 
   it("generateBackupCodes returns the array from RPC", async () => {
-    rpc.mockResolvedValue({ data: ["AAAA-BBBB", "CCCC-DDDD"], error: null });
+    rpc.mockResolvedValue({ data: ["ABCD1234-EF567890", "C0DEC0DE-D00DD00D"], error: null });
     const codes = await generateBackupCodes();
-    expect(codes).toEqual(["AAAA-BBBB", "CCCC-DDDD"]);
+    expect(codes).toEqual(["ABCD1234-EF567890", "C0DEC0DE-D00DD00D"]);
     expect(rpc).toHaveBeenCalledWith("generate_mfa_backup_codes", undefined);
   });
 
   it("consumeBackupCode returns ok on RPC success", async () => {
     rpc.mockResolvedValue({ data: true, error: null });
-    expect(await consumeBackupCode("AAAA-BBBB")).toBe("ok");
-    expect(rpc).toHaveBeenCalledWith("consume_mfa_backup_code", { p_code: "AAAA-BBBB" });
+    expect(await consumeBackupCode("ABCD1234-EF567890")).toBe("ok");
+    expect(rpc).toHaveBeenCalledWith("consume_mfa_backup_code", { p_code: "ABCD1234-EF567890" });
   });
 
   it("consumeBackupCode returns invalid on RPC error or non-true data", async () => {

@@ -44,7 +44,8 @@
     "use_totp": "Späť na kód z aplikácie",
     "backup_label": "Záložný kód",
     "backup_submit": "Použiť kód",
-    "backup_error_invalid": "Záložný kód je neplatný alebo už bol použitý."
+    "backup_error_invalid": "Záložný kód je neplatný alebo už bol použitý.",
+    "backup_error_refresh_failed": "Kód bol prijatý, ale obnovenie prihlásenia zlyhalo. Odhlás sa a prihlás znova — záložný kód už netreba zadávať."
   },
   "security_card": {
     "title": "Dvojfaktorové overenie (2FA)",

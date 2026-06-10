@@ -44,7 +44,8 @@
     "use_totp": "Back to the app code",
     "backup_label": "Backup code",
     "backup_submit": "Use code",
-    "backup_error_invalid": "The backup code is invalid or has already been used."
+    "backup_error_invalid": "The backup code is invalid or has already been used.",
+    "backup_error_refresh_failed": "The code was accepted, but refreshing your session failed. Sign out and sign in again — you won't need the backup code."
   },
   "security_card": {
     "title": "Two-factor authentication (2FA)",

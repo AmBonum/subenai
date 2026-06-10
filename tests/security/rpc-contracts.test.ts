@@ -136,7 +136,7 @@ describe("consume_mfa_backup_code RPC contract", () => {
 // ---------------------------------------------------------------------------
 describe("generate_mfa_backup_codes RPC contract", () => {
   it("invokes the RPC with NO arguments and returns the plaintext array", async () => {
-    const codes = ["A1B2-C3D4", "E5F6-G7H8"];
+    const codes = ["A1B2C3D4-E5F60789", "0A1B2C3D-4E5F6078"];
     rpcMock.mockResolvedValueOnce({ data: codes, error: null });
     const result = await generateBackupCodes();
     expect(result).toEqual(codes);

@@ -3,11 +3,11 @@ import { Link } from "@tanstack/react-router";
 import { useConsent } from "@/hooks/useConsent";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import changelog from "@/content/changelog.generated.json";
+import { LATEST_CHANGELOG_VERSION } from "@/content/changelog-latest.generated";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
 
-const CURRENT_VERSION = (changelog as { version: string }[])[0]?.version ?? "—";
+const CURRENT_VERSION = LATEST_CHANGELOG_VERSION || "—";
 
 interface FooterLinkDef {
   to: string;

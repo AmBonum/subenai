@@ -50,6 +50,14 @@ vi.mock("@tanstack/react-router", async () => {
         // fixture list head() will see via its loaderData arg.
         useLoaderData: () => PACK_FIXTURES,
       }),
+    // E50 bundle-split — the component moved to tests.index.lazy.tsx and
+    // calls Route.useLoaderData() on the lazy route instance.
+    createLazyFileRoute:
+      () =>
+      <T,>(config: T) => ({
+        options: config,
+        useLoaderData: () => PACK_FIXTURES,
+      }),
     Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => {
       const {
         to: _to,
@@ -64,7 +72,8 @@ vi.mock("@tanstack/react-router", async () => {
   };
 });
 
-import { Route } from "@/routes/tests.index";
+import { Route as EagerRoute } from "@/routes/tests.index";
+import { Route as LazyRoute } from "@/routes/tests.index.lazy";
 
 type HeadFn = (ctx: { loaderData: TestPack[] }) => {
   meta: Array<Record<string, string>>;
@@ -72,12 +81,12 @@ type HeadFn = (ctx: { loaderData: TestPack[] }) => {
   scripts?: Array<{ type: string; children: string }>;
 };
 
-type RouteCfg = {
-  options: { head: HeadFn; component: () => JSX.Element };
-};
+type EagerCfg = { options: { head: HeadFn } };
+type LazyCfg = { options: { component: () => JSX.Element } };
 
-const cfg = Route as unknown as RouteCfg;
-const callHead = () => cfg.options.head({ loaderData: PACK_FIXTURES });
+const eager = EagerRoute as unknown as EagerCfg;
+const cfg = LazyRoute as unknown as LazyCfg;
+const callHead = () => eager.options.head({ loaderData: PACK_FIXTURES });
 
 describe("/tests head() — E25 Phase 1 SEO blobs", () => {
   it("emits a FAQPage JSON-LD blob alongside the ItemList blob", () => {

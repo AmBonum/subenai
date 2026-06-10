@@ -60,11 +60,11 @@ describe("/login/verify-2fa", () => {
     fireEvent.click(screen.getByTestId("verify-2fa-use-backup-link"));
     expect(screen.getByTestId("verify-2fa-backup-form")).toBeInTheDocument();
     fireEvent.change(screen.getByTestId("verify-2fa-backup-input"), {
-      target: { value: "AAAA-BBBB" },
+      target: { value: "ABCD1234-EF567890" },
     });
     fireEvent.click(screen.getByTestId("verify-2fa-backup-submit-button"));
     await waitFor(() => {
-      expect(consumeBackupCode).toHaveBeenCalledWith("AAAA-BBBB");
+      expect(consumeBackupCode).toHaveBeenCalledWith("ABCD1234-EF567890");
       expect(navigate).toHaveBeenCalledWith({ to: "/admin" });
     });
   });
@@ -75,7 +75,7 @@ describe("/login/verify-2fa", () => {
     render(<Page />);
     fireEvent.click(screen.getByTestId("verify-2fa-use-backup-link"));
     fireEvent.change(screen.getByTestId("verify-2fa-backup-input"), {
-      target: { value: "BADC-ODEX" },
+      target: { value: "BADC0DE5-12345678" },
     });
     fireEvent.click(screen.getByTestId("verify-2fa-backup-submit-button"));
     await waitFor(() => {
@@ -121,8 +121,8 @@ describe("/login/verify-2fa", () => {
     render(<Page />);
     fireEvent.click(screen.getByTestId("verify-2fa-use-backup-link"));
     const input = screen.getByTestId("verify-2fa-backup-input") as HTMLInputElement;
-    fireEvent.change(input, { target: { value: "aaaa-bbbb" } });
-    expect(input.value).toBe("AAAA-BBBB");
+    fireEvent.change(input, { target: { value: "abcd1234-ef567890" } });
+    expect(input.value).toBe("ABCD1234-EF567890");
   });
 
   it("shows the refresh-failed message and does NOT navigate when the session refresh fails after consume", async () => {
@@ -132,7 +132,7 @@ describe("/login/verify-2fa", () => {
     render(<Page />);
     fireEvent.click(screen.getByTestId("verify-2fa-use-backup-link"));
     fireEvent.change(screen.getByTestId("verify-2fa-backup-input"), {
-      target: { value: "AAAA-BBBB" },
+      target: { value: "ABCD1234-EF567890" },
     });
     fireEvent.click(screen.getByTestId("verify-2fa-backup-submit-button"));
     await waitFor(() => {
@@ -150,7 +150,7 @@ describe("/login/verify-2fa", () => {
     render(<Page />);
     fireEvent.click(screen.getByTestId("verify-2fa-use-backup-link"));
     fireEvent.change(screen.getByTestId("verify-2fa-backup-input"), {
-      target: { value: "FFFF-EEEE" },
+      target: { value: "FFFFEEEE-11112222" },
     });
     fireEvent.click(screen.getByTestId("verify-2fa-backup-submit-button"));
     await waitFor(() => {

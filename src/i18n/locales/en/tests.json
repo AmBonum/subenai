@@ -404,7 +404,9 @@
     "column_test": "Test",
     "column_branch": "Branch",
     "column_difficulty": "Difficulty",
-    "column_status": "Status"
+    "column_status": "Status",
+    "bulk_delete_done": "Deleted {ok} tests.",
+    "bulk_delete_partial": "Deleted {ok}, {failed} failed."
   },
   "admin_editor": {
     "page_eyebrow": "Admin · Test",

@@ -112,6 +112,11 @@
       "sessions_label": "Sessions (30 days)",
       "respondents_label": "Respondents",
       "completion_label": "Completion rate"
+    },
+    "error": {
+      "title": "Couldn't load the overview.",
+      "body": "Check your connection and try again.",
+      "retry": "Try again"
     }
   },
   "teams": {

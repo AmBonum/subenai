@@ -11,6 +11,7 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    createLazyFileRoute: () => (config: unknown) => config,
     Link: ({ children, ...props }: { children: React.ReactNode } & Record<string, unknown>) => (
       <a {...props}>{children}</a>
     ),
@@ -26,7 +27,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-import { Route } from "@/routes/signup";
+import { Route } from "@/routes/signup.lazy";
 type RouteConfig = { component: () => JSX.Element };
 const Page = (Route as unknown as RouteConfig).component;
 

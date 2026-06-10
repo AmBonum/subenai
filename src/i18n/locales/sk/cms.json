@@ -16,7 +16,9 @@
     "status_published": "Publikované",
     "empty": "Zatiaľ žiadne stránky.",
     "delete": "Zmazať",
-    "edit": "Editovať"
+    "edit": "Editovať",
+    "delete_dialog_title": "Zmazať stránku?",
+    "delete_dialog_description": "Stránka „{title}“ (/{slug}) bude nenávratne zmazaná."
   },
   "pageEditor": {
     "title": "Editor stránky",

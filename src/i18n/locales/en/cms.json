@@ -16,7 +16,9 @@
     "status_published": "Published",
     "empty": "No pages yet.",
     "delete": "Delete",
-    "edit": "Edit"
+    "edit": "Edit",
+    "delete_dialog_title": "Delete page?",
+    "delete_dialog_description": "The page “{title}” (/{slug}) will be permanently deleted."
   },
   "pageEditor": {
     "title": "Page editor",

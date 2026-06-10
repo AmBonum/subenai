@@ -52,14 +52,14 @@ describe("/admin/security", () => {
     remainingBackupCodesMock.mockResolvedValue(5);
     unenrollFactorMock.mockResolvedValue(undefined);
     generateBackupCodesMock.mockResolvedValue([
-      "AAAA-1111",
-      "BBBB-2222",
-      "CCCC-3333",
-      "DDDD-4444",
-      "EEEE-5555",
-      "FFFF-6666",
-      "GGGG-7777",
-      "HHHH-8888",
+      "AAAA1111-BBBB2222",
+      "CCCC3333-DDDD4444",
+      "EEEE5555-FFFF6666",
+      "01234567-89ABCDEF",
+      "12345678-9ABCDEF0",
+      "23456789-ABCDEF01",
+      "3456789A-BCDEF012",
+      "456789AB-CDEF0123",
     ]);
   });
 
@@ -115,7 +115,7 @@ describe("/admin/security", () => {
     });
 
     expect(await screen.findByTestId("admin-security-new-codes-panel")).toBeInTheDocument();
-    expect(screen.getByTestId("admin-security-new-code-AAAA-1111")).toBeInTheDocument();
+    expect(screen.getByTestId("admin-security-new-code-AAAA1111-BBBB2222")).toBeInTheDocument();
     expect(screen.getByTestId("admin-security-new-codes-copy")).toBeInTheDocument();
     expect(screen.getByTestId("admin-security-new-codes-download")).toBeInTheDocument();
   });

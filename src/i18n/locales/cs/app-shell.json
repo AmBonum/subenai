@@ -112,6 +112,11 @@
       "sessions_label": "Sezení (30 dní)",
       "respondents_label": "Respondenti",
       "completion_label": "Míra dokončení"
+    },
+    "error": {
+      "title": "Přehled se nepodařilo načíst.",
+      "body": "Zkontroluj připojení a zkus to znovu.",
+      "retry": "Zkusit znovu"
     }
   },
   "teams": {
