@@ -175,7 +175,7 @@
         "pitfalls": {
           "heading": "Na čo si dávať pozor",
           "items": [
-            "Polia „typ“ a „kategória“ zobrazujú dáta z mock-store; v produkcii môžu byť prázdne, kým nepribudnú v ďalšom vydaní",
+            "Polia „typ“ a „kategória“ zobrazujú ukážkové dáta; v produkcii môžu byť prázdne, kým nepribudnú v ďalšom vydaní",
             "Limit 60 otázok je hardcoded — pri veľkej knižnici uvidíš len prvých 60",
             "Knižnica zobrazuje otázky všetkých autorov v tvojom tíme; nie len tvoje"
           ]

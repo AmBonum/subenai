@@ -175,7 +175,7 @@
         "pitfalls": {
           "heading": "What to watch out for",
           "items": [
-            "The \"type\" and \"category\" fields display data from the mock-store; in production they may be empty until schema additions land in an upcoming release",
+            "The \"type\" and \"category\" fields display sample data; in production they may be empty until schema additions land in an upcoming release",
             "The 60-question limit is hardcoded — with a large library you'll only see the first 60",
             "The library shows questions from every author on your team; not just yours"
           ]
