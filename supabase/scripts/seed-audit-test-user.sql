@@ -18,10 +18,14 @@
 -- The handle_new_user() trigger fires on the auth.users INSERT and auto-
 -- creates the public.profiles + public.user_roles ('user' role) rows.
 --
--- Credentials (stable; also pinned in `.claude/CLAUDE.md`)
--- -------------------------------------------------------
+-- Credentials
+-- -----------
 --   email:    audit-bot@subenai.test
---   password: AuditBot-2026-secure
+--   password: stored in 1Password ("subenai audit-bot") — NEVER commit it.
+--             This repo is PUBLIC; the previous hardcoded password was
+--             exposed and must be considered burned. Before running this
+--             script, replace the REPLACE_ME placeholder below with the
+--             current password from 1Password (do not save the edit).
 --   user_id:  00000000-0000-4000-8000-0000a0d17b07
 --   role:     user (NOT admin — /admin still requires AAL2 TOTP setup)
 --
@@ -42,7 +46,7 @@ DO $$
 DECLARE
   v_user_id  uuid := '00000000-0000-4000-8000-0000a0d17b07';
   v_email    text := 'audit-bot@subenai.test';
-  v_password text := 'AuditBot-2026-secure';
+  v_password text := 'REPLACE_ME-from-1Password';
 BEGIN
   -- 1. auth.users — direct insert with confirmed email + bcrypt password.
   --    The on_auth_user_created trigger fires after this and seeds

@@ -22,7 +22,8 @@ bypasses all of that.
 
 ```
 email:    audit-bot@subenai.test
-password: AuditBot-2026-secure
+password: in 1Password ("subenai audit-bot") — this repo is PUBLIC, never
+          write the password into any tracked file or commit message
 user_id:  00000000-0000-4000-8000-0000a0d17b07
 role:     user (NOT admin)
 ```
@@ -43,15 +44,14 @@ public.user_roles` snippet for the admin role promotion. PR #72 already
 shipped preventive `min-w-0` to the admin shell so the most likely
 overflow class is covered even without runtime verification.
 
-**Never put these creds in `.env`** that is checked into git, in test
-fixtures, or in commit messages. They live in this file (CLAUDE.md is
-already a project-instructions file scoped to local Claude Code) plus
-inside the dashboard. If you need a per-session shortcut for the dev
-sign-in helper, set them locally in `.env`:
+**Never put these creds in any git-tracked file** (this repo is public),
+test fixtures, or commit messages. The password lives in 1Password and
+in the Supabase dashboard only. If you need a per-session shortcut for
+the dev sign-in helper, set them locally in `.env` (gitignored):
 
 ```bash
 VITE_DEV_TEST_USER_EMAIL=audit-bot@subenai.test
-VITE_DEV_TEST_USER_PASSWORD=AuditBot-2026-secure
+VITE_DEV_TEST_USER_PASSWORD=<from 1Password>
 ```
 
 The `.env` file is gitignored; the yellow "DEV E36 audit helper" panel
