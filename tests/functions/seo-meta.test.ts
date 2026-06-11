@@ -275,6 +275,35 @@ describe("handleSeoMeta orchestration", () => {
     vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("network"));
     const upstream = shellResponse();
     const res = await handleSeoMeta(htmlRequest("/blog/x"), env, upstream);
-    expect(res).toBe(upstream);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("x-seo-meta")).toBe("unavailable-network");
+  });
+
+  it("missing SUPABASE_ANON_KEY passes through with 200 — never a site-wide 404", async () => {
+    const spy = vi.spyOn(globalThis, "fetch");
+    const res = await handleSeoMeta(htmlRequest("/blog/phishing-101"), {}, shellResponse());
+    expect(res.status).toBe(200);
+    expect(res.headers.get("x-seo-meta")).toBe("unavailable-no-anon-key");
+    expect(spy).not.toHaveBeenCalled();
+    const body = await res.text();
+    expect(body).toContain('<div id="root">');
+  });
+
+  it("Supabase 5xx passes through with 200, tagged unavailable-rest-500", async () => {
+    mockSupabaseRow(null, false);
+    const res = await handleSeoMeta(htmlRequest("/blog/phishing-101"), env, shellResponse());
+    expect(res.status).toBe(200);
+    expect(res.headers.get("x-seo-meta")).toBe("unavailable-rest-500");
+  });
+
+  it("tags handled branches via x-seo-meta (rewrite / not-found)", async () => {
+    mockSupabaseRow({ slug: "phishing-101", title: "Phishing 101" });
+    const ok = await handleSeoMeta(htmlRequest("/blog/phishing-101"), env, shellResponse());
+    expect(ok.headers.get("x-seo-meta")).toBe("rewrite");
+    vi.restoreAllMocks();
+    mockSupabaseRow(null, true);
+    const nf = await handleSeoMeta(htmlRequest("/blog/missing"), env, shellResponse());
+    expect(nf.status).toBe(404);
+    expect(nf.headers.get("x-seo-meta")).toBe("not-found");
   });
 });

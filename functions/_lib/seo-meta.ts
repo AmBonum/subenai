@@ -125,26 +125,43 @@ export function isHtmlDocumentRequest(request: Request): boolean {
   return accept.includes("text/html");
 }
 
+// Lookup failure must NOT masquerade as "row doesn't exist": a missing
+// env key or a Supabase 5xx would otherwise 404 every DB-backed page
+// site-wide. Only PostgREST 406 (object+json accept with zero rows) is a
+// definitive miss; everything else throws MetaUnavailableError and the
+// caller passes the shell through untouched.
+export class MetaUnavailableError extends Error {
+  constructor(public reason: string) {
+    super(`seo-meta unavailable: ${reason}`);
+  }
+}
+
 async function supabaseSelect(
   env: SeoMetaEnv,
   path: string,
 ): Promise<Record<string, unknown> | null> {
   const key = env.SUPABASE_ANON_KEY;
-  if (!key) return null;
+  if (!key) throw new MetaUnavailableError("no-anon-key");
   const base = env.SUPABASE_URL || PROD_SUPABASE_URL;
-  const res = await fetch(`${base}/rest/v1/${path}`, {
-    headers: {
-      apikey: key,
-      authorization: `Bearer ${key}`,
-      accept: "application/vnd.pgrst.object+json",
-    },
-  });
-  if (!res.ok) return null;
+  let res: Response;
+  try {
+    res = await fetch(`${base}/rest/v1/${path}`, {
+      headers: {
+        apikey: key,
+        authorization: `Bearer ${key}`,
+        accept: "application/vnd.pgrst.object+json",
+      },
+    });
+  } catch {
+    throw new MetaUnavailableError("network");
+  }
+  if (res.status === 406) return null;
+  if (!res.ok) throw new MetaUnavailableError(`rest-${res.status}`);
   try {
     const body = (await res.json()) as Record<string, unknown> | null;
     return body && typeof body === "object" ? body : null;
   } catch {
-    return null;
+    throw new MetaUnavailableError("bad-json");
   }
 }
 
@@ -488,9 +505,12 @@ export async function handleSeoMeta(
   let meta: RouteMeta | null;
   try {
     meta = await resolveMeta(env, match);
-  } catch {
+  } catch (err) {
     // Never 500 a page request on a Supabase blip — pass the shell through.
-    return upstream;
+    // The x-seo-meta header makes the failure observable on prod (no log
+    // access) without changing what humans/crawlers see.
+    const reason = err instanceof MetaUnavailableError ? err.reason : "error";
+    return withDebugHeader(upstream, `unavailable-${reason}`);
   }
 
   if (!meta) {
@@ -505,20 +525,41 @@ export async function handleSeoMeta(
         ogType: "website",
         robots: "noindex, nofollow",
       };
-      return applyMetaToResponse(upstream, notFoundMeta, 404);
+      const nf = await applyMetaToResponse(upstream, notFoundMeta, 404);
+      return withDebugHeader(nf, "not-found");
     }
     return upstream;
   }
 
   const rewritten = await applyMetaToResponse(upstream, meta, upstream.status || 200);
-  if (cache && rewritten.status === 200) {
+  const tagged = withDebugHeader(rewritten, "rewrite");
+  if (cache && tagged.status === 200) {
     try {
-      await cache.put(cacheKey, rewritten.clone());
+      await cache.put(cacheKey, tagged.clone());
     } catch {
       // Body may already be consumed in some runtimes; cache is best-effort.
     }
   }
-  return rewritten;
+  return tagged;
+}
+
+// Diagnosis channel for a runtime we can't tail logs from: every handled
+// (route-matched) response carries x-seo-meta so `curl -I` on prod tells
+// us which branch ran. Headers may be immutable on passthrough responses,
+// hence the re-wrap.
+function withDebugHeader(response: Response, value: string): Response {
+  try {
+    response.headers.set("x-seo-meta", value);
+    return response;
+  } catch {
+    const headers = new Headers(response.headers);
+    headers.set("x-seo-meta", value);
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
+  }
 }
 
 interface CacheLike {
