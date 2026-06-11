@@ -1,6 +1,15 @@
 {
   "version": 1,
-  "description": "Functions handle /api/*; everything else is served as static SPA (with index.html fallback for client-side routing).",
-  "include": ["/api/*"],
+  "description": "Functions handle /api/* plus the crawlable per-item routes (E50 seo-meta middleware injects per-route OG/meta into the SPA shell there). Index pages and all other paths stay static-served with index.html fallback.",
+  "include": [
+    "/api/*",
+    "/blog/*",
+    "/r/*",
+    "/t/*",
+    "/s/*",
+    "/courses/*",
+    "/tests/*",
+    "/sablony/*"
+  ],
   "exclude": []
 }
