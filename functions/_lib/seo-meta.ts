@@ -142,7 +142,10 @@ async function supabaseSelect(
 ): Promise<Record<string, unknown> | null> {
   const key = env.SUPABASE_ANON_KEY;
   if (!key) throw new MetaUnavailableError("no-anon-key");
-  const base = env.SUPABASE_URL || PROD_SUPABASE_URL;
+  // PROD_SUPABASE_URL directly — env.SUPABASE_URL on CF Pages is stale
+  // (retired project, fetch → 530; see _lib/supabase-url.ts). Same
+  // precedence every other Function uses.
+  const base = PROD_SUPABASE_URL;
   let res: Response;
   try {
     res = await fetch(`${base}/rest/v1/${path}`, {
