@@ -1,6 +1,7 @@
 import { test, expect } from "../../fixtures/base";
 import { setupEducator } from "../../setup/app-shell";
 import { EDUCATOR_SESSION } from "../../fixtures/auth";
+import { buildSupabaseErrorResponse } from "../../mocks/supabase";
 import { seedSession, seedTest } from "../../seed";
 import { AppDashboardPage } from "../../poms/app/AppDashboardPage";
 
@@ -254,6 +255,116 @@ test.describe("/app dashboard", () => {
 
     await test.step("Verify the document title reads 'Môj prehľad · SubenAI'", async () => {
       await expect(page).toHaveTitle("Môj prehľad · SubenAI");
+    });
+  });
+
+  // TC-09: Loading skeleton shows while the stats queries are in flight.
+  test("TC-09: loading skeleton shows while stats queries are in flight", async ({ page }) => {
+    await setupEducator(page.context(), page, {
+      tables: { tests: [], sessions: [], respondents: [] },
+    });
+
+    // Deterministic gate — hold every /sessions read until the spec has
+    // observed the skeleton, then release. No timeouts involved.
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route("**/rest/v1/sessions**", async (route) => {
+      await gate;
+      await route.fallback();
+    });
+
+    const dash = new AppDashboardPage(page);
+
+    await test.step("Open the dashboard with the sessions queries held", async () => {
+      await dash.open();
+    });
+
+    await test.step("Verify the loading skeleton is visible while queries are pending", async () => {
+      await expect(dash.loadingSkeleton).toBeVisible();
+      await expect(dash.statsSection).toHaveCount(0);
+      await expect(dash.errorState).toHaveCount(0);
+    });
+
+    await test.step("Release the gate and verify the skeleton resolves to the empty branch", async () => {
+      release();
+      await expect(dash.emptyState).toBeVisible();
+      await expect(dash.loadingSkeleton).toHaveCount(0);
+    });
+  });
+
+  // TC-10: Stats failure shows the error card; retry recovers after the
+  // mock is restored.
+  test("TC-10: stats query failure shows the Slovak error card and retry recovers", async ({
+    page,
+  }) => {
+    const test1 = seedTest({
+      owner_id: EDUCATOR_SESSION.user.id,
+      status: "published",
+      title: "E2E Published Test",
+    });
+    await setupEducator(page.context(), page, {
+      tables: {
+        tests: [test1],
+        sessions: [
+          seedSession({
+            test_id: test1.id,
+            status: "completed",
+            started_at: "2026-05-15T00:00:00.000Z",
+            finished_at: "2026-05-15T00:30:00.000Z",
+            score: 75,
+          }),
+        ],
+        respondents: [],
+      },
+    });
+
+    // Fail-mode flag: while true, every /sessions read 500s; once
+    // flipped, requests fall through to the healthy mockSupabase layer.
+    let fail = true;
+    await page.route("**/rest/v1/sessions**", async (route) => {
+      if (!fail) {
+        await route.fallback();
+        return;
+      }
+      const response = buildSupabaseErrorResponse({
+        status: 500,
+        code: "XX000",
+        message: "internal error (e2e simulated)",
+      });
+      await route.fulfill({
+        status: response.status,
+        headers: response.headers,
+        body: response.body,
+      });
+    });
+
+    const dash = new AppDashboardPage(page);
+
+    await test.step("Open the dashboard with failing sessions queries", async () => {
+      await dash.open();
+    });
+
+    await test.step("Verify the Slovak error card renders after retries exhaust", async () => {
+      // React Query retries 3× with exponential backoff (~7 s) before
+      // surfacing the error branch — hence the extended timeout.
+      await expect(dash.errorState).toBeVisible({ timeout: 20_000 });
+      await expect(dash.errorTitle).toHaveText("Prehľad sa nepodarilo načítať.");
+      await expect(dash.errorState).toContainText("Skontroluj pripojenie a skús to znova.");
+    });
+
+    await test.step("Verify the retry button is visible with the Slovak label", async () => {
+      await expect(dash.errorRetry).toBeVisible();
+      await expect(dash.errorRetry).toHaveText("Skúsiť znova");
+    });
+
+    await test.step("Restore the mock, click retry and verify the happy dashboard", async () => {
+      fail = false;
+      await dash.errorRetry.click();
+      await expect(dash.statsSection).toBeVisible({ timeout: 20_000 });
+      await expect(dash.errorState).toHaveCount(0);
+      await expect(dash.statTestsValue).toHaveText("1");
     });
   });
 });

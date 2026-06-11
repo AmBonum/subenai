@@ -1,7 +1,7 @@
 # New test wizard — test plan
 
 **Route:** `/app/tests/new`
-**Component(s) under test:** `src/routes/app.tests.new.tsx`
+**Component(s) under test:** `src/routes/app.tests.new.tsx`, `src/components/app/tests/QuestionPickerDialog.tsx`, `useCreateTest` (`src/lib/platform/queries.ts`)
 **Playwright project:** `e2e-chromium`
 **Spec file:** `e2e/specs/app/new-test-wizard.spec.ts`
 
@@ -13,10 +13,19 @@ A four-step wizard that guides an educator through creating a test:
 
 1. **Step 1 – Basics** — title (required) + optional description.
 2. **Step 2 – Audience** — optional respondent group select.
-3. **Step 3 – Questions** — add at least one question from the mock store.
+3. **Step 3 – Questions** — pick at least one approved question from the
+   library via `QuestionPickerDialog` (backed by the `questions` table,
+   `useLibraryQuestions`).
 4. **Step 4 – Share** — read-only share link + "Finish" button navigates to `/app/tests/$testId`.
 
-Navigation between steps is via the URL search param `?step=N`. The Next button on step 1 is disabled until the title field is non-empty. The Publish button on step 3 is disabled until at least one question is added.
+Navigation between steps is via the URL search param `?step=N`. The Next button on step 1 is disabled until the title field is non-empty. The Publish button on step 3 is disabled until at least one question is picked.
+
+**Publish** (`useCreateTest`) is two-phase: INSERT into `tests` (DB
+generates the id — the mock emulates this via `generateIds: ["tests"]`),
+then RPC `replace_test_questions(p_test_id, p_question_ids)` with the
+picked ids in display order. An RPC failure rejects the mutation —
+`onError` shows `toast.error(err.message)` (the raw Supabase error
+message, not a localized string) and the wizard stays on step 3.
 
 ---
 
@@ -50,27 +59,27 @@ Navigation between steps is via the URL search param `?step=N`. The Next button 
 
 ---
 
-### TC-03: Step 3 — adding a question enables Publish; removing it disables Publish and shows validation error
+### TC-03: Step 3 — picking a question enables Publish; empty state shows validation error
 
-**Prerequisites:** Educator session; consent primed; navigate to `/app/tests/new?step=3`.
+**Prerequisites:** Educator session; consent primed; two approved questions seeded in the `questions` table; navigate to `/app/tests/new?step=3`.
 
 **When** step 3 loads with no questions selected.
 
 **Then** the `new-test-wizard-validation-questions` error paragraph shows "Pridaj aspoň jednu otázku." and the Publish button is disabled.
 
-**When** the user clicks "Pridať otázku" (`new-test-wizard-question-add-button`).
+**When** the user opens the picker via the empty-state CTA (`new-test-wizard-step-3-empty-cta`), checks one question, and confirms (`question-picker-submit-button`).
 
-**Then** `new-test-wizard-question-row-0` is visible, the validation paragraph is hidden, and the Publish button is enabled.
+**Then** `new-test-wizard-question-row-0` is visible with the picked prompt, the validation paragraph is hidden, and the Publish button is enabled.
 
 ---
 
-### TC-04: Full happy path — publishes test and reaches step 4 with a share link
+### TC-04: Happy publish — `replace_test_questions` carries both question ids in order
 
-**Prerequisites:** Educator session; consent primed; navigate to `/app/tests/new`.
+**Prerequisites:** Educator session; two approved questions (q1, q2) seeded; `replace_test_questions` RPC mocked with a recording resolver; `generateIds: ["tests"]` so the INSERT returns a row with an id.
 
-**When** the user fills in title "E2E Wizard Test", advances through steps 1, 2, adds one question on step 3, and clicks "Publikovať".
+**When** the user fills in title "E2E Wizard Test", advances through steps 1–2, picks q1 then q2 on step 3, and clicks "Publikovať".
 
-**Then** the wizard transitions to step 4, the step-4 card title reads "Zdieľanie", and the share-link input value matches `/t/<shareId>`.
+**Then** the wizard transitions to step 4 (success UI) and the share-link input value matches `/t/<shareId>` (12 alphanumeric chars), **and** the RPC was called exactly once with `p_question_ids: [q1.id, q2.id]` (picked order) and a non-empty `p_test_id`.
 
 ---
 
@@ -84,9 +93,24 @@ Navigation between steps is via the URL search param `?step=N`. The Next button 
 
 ---
 
+## Negative paths
+
+### TC-06: Publish failure — RPC 500 → error toast, wizard does NOT show success
+
+**Prerequisites:** Educator session; two approved questions seeded; `errors: { replace_test_questions: { status: 500, message: "replace failed (e2e)" } }` in the mock.
+
+**When** the user completes steps 1–3 with two questions and clicks "Publikovať".
+
+**Then** a sonner error toast appears carrying the RPC error message
+("replace failed (e2e)" — actual behavior is `toast.error(err.message)`,
+i.e. the raw error message rather than localized Slovak copy), step 4 is
+never rendered, and the wizard stays on step 3.
+
+---
+
 ## Edge cases
 
-_(none for this session — covered by the five TCs above)_
+_(none for this session — covered by the TCs above)_
 
 ---
 

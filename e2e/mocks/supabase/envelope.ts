@@ -221,6 +221,19 @@ function readColumn(row: Record<string, unknown>, accessor: string): unknown {
   return undefined;
 }
 
+// Numeric when both sides parse as numbers; otherwise lexicographic, which
+// is correct for ISO-8601 timestamps (`published_at=lte.<ISO>` filters were
+// silently dropping every row under the previous Number() coercion).
+function compare(value: unknown, raw: string): number {
+  const a = Number(value);
+  const b = Number(raw);
+  if (!Number.isNaN(a) && !Number.isNaN(b) && String(value).trim() !== "" && raw.trim() !== "") {
+    return a === b ? 0 : a > b ? 1 : -1;
+  }
+  const s = String(value);
+  return s === raw ? 0 : s > raw ? 1 : -1;
+}
+
 function makePredicate(column: string, op: string, raw: string): Predicate {
   switch (op) {
     case "eq":
@@ -228,13 +241,13 @@ function makePredicate(column: string, op: string, raw: string): Predicate {
     case "neq":
       return (row) => String(readColumn(row, column)) !== raw;
     case "gt":
-      return (row) => Number(readColumn(row, column)) > Number(raw);
+      return (row) => compare(readColumn(row, column), raw) > 0;
     case "gte":
-      return (row) => Number(readColumn(row, column)) >= Number(raw);
+      return (row) => compare(readColumn(row, column), raw) >= 0;
     case "lt":
-      return (row) => Number(readColumn(row, column)) < Number(raw);
+      return (row) => compare(readColumn(row, column), raw) < 0;
     case "lte":
-      return (row) => Number(readColumn(row, column)) <= Number(raw);
+      return (row) => compare(readColumn(row, column), raw) <= 0;
     case "in": {
       const inner = raw.startsWith("(") && raw.endsWith(")") ? raw.slice(1, -1) : raw;
       const values = inner.split(",").map((v) => v.trim());

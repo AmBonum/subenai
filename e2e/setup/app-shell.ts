@@ -87,6 +87,7 @@ export async function setupAppShell(
     tables: { ...baseTables, ...(extras?.tables ?? {}) },
     rpcs: { ...baseRpcs, ...(extras?.rpcs ?? {}) },
     errors: { ...(extras?.errors ?? {}) },
+    generateIds: extras?.generateIds,
   };
   await mockSupabase(page, merged);
 }

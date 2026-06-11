@@ -104,3 +104,29 @@ owned by (or shared with) the authenticated educator and exposes four surfaces:
 **When** the user navigates to `/app/tests`
 **and** clicks "Otvoriť" for the seeded test (`data-testid="tests-list-row-open-<id>"`)
 **Then** the page URL changes to `/app/tests/<id>`
+
+---
+
+### TC-06: Duplicate action calls `duplicate_test` with the test id and the list refetches — `test.fixme`
+
+**Status:** blocked on a missing UI trigger (finding 2026-06-11).
+
+`useDuplicateTest` (`src/lib/platform/queries.ts:525`) wraps the
+`duplicate_test` RPC and invalidates `["user","tests"]` on success, but no
+component consumes the hook — the `/app/tests` row cards expose only
+"Otvoriť" and "Zdieľať", and the `/app/tests/$testId` detail route has no
+duplicate action either. The Slovak label `action_duplicate`
+("Duplikovať") exists in `src/i18n/locales/sk/tests.json` but is only used
+by `TemplateCard`.
+
+**Intended flow (un-fixme once the trigger ships):**
+
+**Prerequisites:**
+- Educator session primed via `setupEducator`.
+- One test seeded via `seedTest`.
+- `duplicate_test` RPC mocked with a recording resolver returning a new test id.
+
+**When** the user triggers the duplicate action for the seeded test
+(testid to add: `tests-list-row-duplicate-<id>` + POM getter)
+**Then** the RPC is called exactly once with `{ p_test_id: <seeded id> }`
+**and** the duplicated row appears after the query-invalidation refetch.

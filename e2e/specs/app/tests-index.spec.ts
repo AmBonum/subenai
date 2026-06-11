@@ -157,4 +157,37 @@ test.describe("/app/tests", () => {
       await expect(page).toHaveURL(new RegExp(`/app/tests/${t.id}`));
     });
   });
+
+  // TC-06: Duplicate action calls rpc/duplicate_test and refreshes the list
+  //
+  // FINDING (2026-06-11): `useDuplicateTest` (src/lib/platform/queries.ts:525)
+  // wraps the `duplicate_test` RPC and invalidates ["user","tests"], but NO
+  // component consumes it — neither the /app/tests row cards
+  // (src/routes/app.tests.index.tsx renders only "Otvoriť" + "Zdielať") nor
+  // the /app/tests/$testId detail route expose a duplicate trigger. The
+  // i18n key "action_duplicate" ("Duplikovať") exists in
+  // src/i18n/locales/sk/tests.json but is only used by TemplateCard.
+  // Un-fixme once the UI trigger ships: seed one test, click the duplicate
+  // action (add `tests-list-row-duplicate-<id>` testid + POM getter), assert
+  // the RPC body is { p_test_id: <seeded id> } via a recording resolver and
+  // that the duplicated row appears after the ["user","tests"] invalidation
+  // refetch.
+  test.fixme("TC-06: duplicate action calls duplicate_test with the test id and the list refetches", async ({
+    context,
+    page,
+  }) => {
+    const t = seedTest({
+      owner_id: EDUCATOR_SESSION.user.id,
+      title: "Duplicate me",
+      status: "published",
+    });
+    await setupEducator(context, page, {
+      tables: { tests: [t] },
+      rpcs: { duplicate_test: "tst_e2e_duplicate_copy" },
+    });
+    const testsIndex = new AppTestsIndexPage(page);
+    await testsIndex.open();
+    await expect(testsIndex.listRow(t.id)).toBeVisible();
+    // Blocked: no duplicate trigger exists in the UI (see FINDING above).
+  });
 });

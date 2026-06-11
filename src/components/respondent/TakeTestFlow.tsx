@@ -163,8 +163,15 @@ export function TakeTestFlow({
           <div className="space-y-4">
             <Card>
               <CardContent className="space-y-3 p-6">
-                <h1 className="text-2xl font-semibold">{test.title}</h1>
-                <p className="text-sm text-muted-foreground">{test.description}</p>
+                <h1 className="text-2xl font-semibold" data-testid="respondent-flow-test-title">
+                  {test.title}
+                </h1>
+                <p
+                  className="text-sm text-muted-foreground"
+                  data-testid="respondent-flow-test-description"
+                >
+                  {test.description}
+                </p>
               </CardContent>
             </Card>
             <IntakeStep intakeFields={test.intake_fields} onSubmit={onIntakeSubmit} />
@@ -211,8 +218,15 @@ export function TakeTestFlow({
               data-testid="respondent-flow-thank-you"
             >
               <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-500" />
-              <h2 className="text-2xl font-semibold">{tThanks("title")}</h2>
-              <p className="text-sm text-muted-foreground">{tThanks("subtitle")}</p>
+              <h2 className="text-2xl font-semibold" data-testid="respondent-flow-thank-you-title">
+                {tThanks("title")}
+              </h2>
+              <p
+                className="text-sm text-muted-foreground"
+                data-testid="respondent-flow-thank-you-subtitle"
+              >
+                {tThanks("subtitle")}
+              </p>
               <Button variant="outline" onClick={onClose}>
                 {tThanks("close_button")}
               </Button>

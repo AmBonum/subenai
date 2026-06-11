@@ -43,8 +43,35 @@ export class NewTestWizardPage extends BasePage {
     return this.page.getByTestId("new-test-wizard-question-add-button");
   }
 
+  /** Empty-state CTA on step 3 — opens the question picker when the list is empty. */
+  get emptyStateCta() {
+    return this.page.getByTestId("new-test-wizard-step-3-empty-cta");
+  }
+
   questionRow(idx: number) {
     return this.page.getByTestId(`new-test-wizard-question-row-${idx}`);
+  }
+
+  questionRowPrompt(idx: number) {
+    return this.page.getByTestId(`new-test-wizard-question-row-${idx}-prompt`);
+  }
+
+  // ---- Question picker dialog ----------------------------------------------
+  get pickerDialog() {
+    return this.page.getByTestId("question-picker-dialog");
+  }
+
+  pickerRowCheckbox(questionId: string) {
+    return this.page.getByTestId(`question-picker-row-${questionId}-checkbox`);
+  }
+
+  get pickerSubmitButton() {
+    return this.page.getByTestId("question-picker-submit-button");
+  }
+
+  /** First sonner toast — the wizard surfaces publish failures here. */
+  get toast() {
+    return this.page.locator("[data-sonner-toast]").first();
   }
 
   get publishButton() {

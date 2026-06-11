@@ -82,4 +82,20 @@ export class AppDashboardPage extends BasePage {
   draftsRow(id: string) {
     return this.page.getByTestId(`app-dashboard-drafts-row-${id}`);
   }
+
+  get loadingSkeleton() {
+    return this.page.getByTestId("app-dashboard-loading");
+  }
+
+  get errorState() {
+    return this.page.getByTestId("app-dashboard-error-state");
+  }
+
+  get errorTitle() {
+    return this.page.getByTestId("app-dashboard-error-title");
+  }
+
+  get errorRetry() {
+    return this.page.getByTestId("app-dashboard-error-retry");
+  }
 }

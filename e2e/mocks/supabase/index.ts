@@ -54,6 +54,12 @@ export interface MockSupabaseConfig {
   auth?: MockSupabaseAuthConfig;
   /** Optional override for the Supabase project ref (storage key prefix). */
   projectRef?: string;
+  /**
+   * Tables whose POSTed rows get a generated uuid `id` when the client
+   * omits it — mirrors a DB column default. Opt-in per table so existing
+   * specs that assert on echoed insert bodies stay byte-identical.
+   */
+  generateIds?: string[];
 }
 
 const PGRST_OBJECT_MIME = "application/vnd.pgrst.object+json";
@@ -224,6 +230,11 @@ export async function mockSupabase(page: Page, config: MockSupabaseConfig): Prom
       const body = parseJsonBody(request);
       const inserted = Array.isArray(body) ? body : [body];
       const newRows = inserted.filter((r): r is Row => typeof r === "object" && r !== null);
+      if (config.generateIds?.includes(table)) {
+        for (const row of newRows) {
+          if (!("id" in row)) row.id = crypto.randomUUID();
+        }
+      }
       const preferHeader = request.headers()["prefer"] ?? "";
       // Supabase JS `.upsert({...}, { onConflict: "col" })` sends
       // `Prefer: resolution=merge-duplicates` + `?on_conflict=col`.

@@ -119,8 +119,12 @@ function NotFoundCard() {
     >
       <Card>
         <CardContent className="space-y-3 p-8 text-center">
-          <p>{tErr("not_found")}</p>
-          <Link to="/" className="text-primary underline">
+          <p data-testid="respondent-flow-not-found-message">{tErr("not_found")}</p>
+          <Link
+            to="/"
+            className="text-primary underline"
+            data-testid="respondent-flow-not-found-home-link"
+          >
             {tErr("back_home")}
           </Link>
         </CardContent>

@@ -1,5 +1,7 @@
 import { test, expect } from "../../fixtures/base";
 import { setupEducator } from "../../setup/app-shell";
+import { EDUCATOR_SESSION } from "../../fixtures/auth";
+import { seedProfile } from "../../seed";
 import { AppLegalDsrPage } from "../../poms/app/AppLegalDsrPage";
 
 const DSR_OPEN_ROW = {
@@ -62,8 +64,11 @@ test.describe("/app/legal/dsr — GDPR data subject request page", () => {
     });
   });
 
-  // TC-02: Submitting a valid access request shows the success banner
-  test("TC-02: submitting a valid access request shows success banner and clears the email", async ({
+  // TC-02: Submitting with the prefilled session email shows the success
+  // banner. The requester email is locked to the signed-in user (RLS
+  // requires dsr_requests.requester_email = auth.email()), so the spec
+  // never types into the field — it asserts the prefill instead.
+  test("TC-02: submitting with the prefilled session email shows success banner and clears the note", async ({
     context,
     page,
   }) => {
@@ -74,8 +79,12 @@ test.describe("/app/legal/dsr — GDPR data subject request page", () => {
       await dsr.open();
     });
 
-    await test.step("Fill the email field with a valid address", async () => {
-      await dsr.emailInput.fill("test@example.sk");
+    await test.step("Verify the email field is prefilled with the session profile email", async () => {
+      await expect(dsr.emailInput).toHaveValue(EDUCATOR_SESSION.user.email);
+    });
+
+    await test.step("Fill the note textarea", async () => {
+      await dsr.noteTextarea.fill("Chcem export svojich údajov.");
     });
 
     await test.step("Click the 'Podať žiadosť' submit button", async () => {
@@ -87,25 +96,39 @@ test.describe("/app/legal/dsr — GDPR data subject request page", () => {
       await expect(dsr.successBanner).toHaveText("Žiadosť bola podaná — odpovieme do 30 dní.");
     });
 
-    await test.step("Verify the email field is cleared after submission", async () => {
-      await expect(dsr.emailInput).toHaveValue("");
+    await test.step("Verify the note is cleared and the email keeps the session value", async () => {
+      await expect(dsr.noteTextarea).toHaveValue("");
+      await expect(dsr.emailInput).toHaveValue(EDUCATOR_SESSION.user.email);
     });
   });
 
-  // TC-03: Submitting with an invalid email shows an inline validation error
-  test("TC-03: submitting with an invalid email shows validation error and no success banner", async ({
+  // TC-03: Profile without a usable email → validation error, no insert.
+  // (The field is read-only, so the only way to reach the invalid-email
+  // branch is a profile whose email is missing/empty.)
+  test("TC-03: profile without an email shows validation error and no insert occurs", async ({
     context,
     page,
   }) => {
-    await setupEducator(context, page, { tables: { dsr_requests: [] } });
+    await setupEducator(context, page, {
+      tables: {
+        dsr_requests: [],
+        profiles: [
+          seedProfile({
+            id: EDUCATOR_SESSION.user.id,
+            email: "",
+            display_name: "educator",
+          }),
+        ],
+      },
+    });
     const dsr = new AppLegalDsrPage(page);
 
     await test.step("Navigate to /app/legal/dsr", async () => {
       await dsr.open();
     });
 
-    await test.step("Type an invalid email into the email field", async () => {
-      await dsr.emailInput.fill("not-an-email");
+    await test.step("Verify the email field is empty (no profile email to prefill)", async () => {
+      await expect(dsr.emailInput).toHaveValue("");
     });
 
     await test.step("Click the 'Podať žiadosť' submit button", async () => {
@@ -117,13 +140,15 @@ test.describe("/app/legal/dsr — GDPR data subject request page", () => {
       await expect(dsr.errorBanner).toHaveText("Neplatný e-mail.");
     });
 
-    await test.step("Verify the success banner is absent", async () => {
+    await test.step("Verify no success banner and no inserted history row", async () => {
       await expect(dsr.successBanner).toHaveCount(0);
+      await expect(dsr.historyEmpty).toHaveText("Zatiaľ nie sú žiadne žiadosti.");
     });
   });
 
-  // TC-04: Submitting with an empty email shows the validation error
-  test("TC-04: submitting with an empty email shows validation error and no insert occurs", async ({
+  // TC-04: The requester email field is read-only — prefilled from the
+  // session and not editable by the user.
+  test("TC-04: requester email field is read-only and prefilled from the session", async ({
     context,
     page,
   }) => {
@@ -134,19 +159,13 @@ test.describe("/app/legal/dsr — GDPR data subject request page", () => {
       await dsr.open();
     });
 
-    await test.step("Leave the email field empty and click submit", async () => {
-      // No fill — the form's controlled state stays as `""`. The
-      // pre-network regex check fails first so the mutation never fires.
-      await dsr.submitButton.click();
+    await test.step("Verify the email field carries the session email", async () => {
+      await expect(dsr.emailInput).toHaveValue(EDUCATOR_SESSION.user.email);
     });
 
-    await test.step("Verify the error banner surfaces the invalid-email copy", async () => {
-      await expect(dsr.errorBanner).toBeVisible();
-      await expect(dsr.errorBanner).toHaveText("Neplatný e-mail.");
-    });
-
-    await test.step("Verify the empty-history copy still renders (no row was inserted)", async () => {
-      await expect(dsr.historyEmpty).toHaveText("Zatiaľ nie sú žiadne žiadosti.");
+    await test.step("Verify the field is disabled and read-only", async () => {
+      await expect(dsr.emailInput).toBeDisabled();
+      await expect(dsr.emailInput).toHaveAttribute("readonly", "");
     });
   });
 
