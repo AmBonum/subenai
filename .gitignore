@@ -77,3 +77,6 @@ public/blog/rss.xml
 
 # LinkedIn card renders (binary PNGs, regenerated via scripts/render-linkedin-cards.mjs)
 marketing/linkedin/rendered/
+
+# E53 RAG index manifest (operator-local artifact of scripts/build-rag-index.ts)
+.rag-index-manifest.json
