@@ -111,16 +111,33 @@ describeIfLive("attempts — anon contract", () => {
     ).not.toBeNull();
   });
 
-  maybe("anon can DELETE its own row when share_id is known", async () => {
-    const shareId = SHARE_ID();
+  // 20260612100000: the attempts_anon_delete policy (USING share_id IS
+  // NOT NULL — true for EVERY row) was dropped and direct DELETE revoked;
+  // self-service erasure now goes through the capability RPC.
+  maybe("anon direct DELETE is revoked; RPC deletes only the matching share_id", async () => {
+    // Constraint-valid share id: ^[a-zA-Z0-9]{6,12}$
+    const shareId = `e35${Math.random().toString(36).slice(2, 10)}`;
     await fixture!.anon.from("attempts").insert({
       share_id: shareId,
       score: 40,
       correct_count: 6,
       total_questions: 15,
     });
-    const { error } = await fixture!.anon.from("attempts").delete().eq("share_id", shareId);
-    expect(error, `self-service DELETE should succeed; got ${JSON.stringify(error)}`).toBeNull();
+
+    const direct = await fixture!.anon.from("attempts").delete().eq("share_id", shareId);
+    expect(direct.error, "direct table DELETE must be denied (grant revoked)").not.toBeNull();
+
+    const miss = await fixture!.anon.rpc("delete_attempt_by_share_id", {
+      p_share_id: "zzzzzzzzzz",
+    });
+    expect(miss.error).toBeNull();
+    expect(miss.data, "RPC must report false for an unknown share_id").toBe(false);
+
+    const hit = await fixture!.anon.rpc("delete_attempt_by_share_id", {
+      p_share_id: shareId,
+    });
+    expect(hit.error).toBeNull();
+    expect(hit.data, "RPC must delete the row matching the capability").toBe(true);
   });
 });
 

@@ -137,7 +137,12 @@ export function SharePage({ shareId }: { shareId: string }) {
 
   async function handleDelete() {
     setDeleteState("deleting");
-    const { error } = await supabase.from("attempts").delete().eq("share_id", shareId);
+    // Direct table DELETE was revoked (20260612100000) — the old RLS
+    // policy authorized deleting ANY row. The RPC treats the secret
+    // share_id as a capability and deletes exactly this attempt.
+    const { error } = await supabase.rpc("delete_attempt_by_share_id", {
+      p_share_id: shareId,
+    });
     if (error) {
       if (import.meta.env.DEV) console.error("Delete failed:", error);
       setDeleteState("confirming");

@@ -9763,3 +9763,140 @@ COMMENT ON FUNCTION public.publish_test(uuid) IS
   'question_count, questions[]}). Owner/admin only. Archived tests are '
   'rejected (test_archived) — unarchive to draft first. Returns the '
   'live version number.';
+
+-- ============================================================================
+-- 2026-06-12 security audit fixes
+-- (mirrors 20260612100000 + 20260612101000 + 20260612102000)
+-- ============================================================================
+
+-- ---- 20260612100000_fix_attempts_anon_delete ------------------------------
+-- attempts_anon_delete's predicate (share_id IS NOT NULL) matched every row,
+-- authorizing anonymous deletion of the whole table. Replaced by a
+-- capability RPC keyed on the secret share_id.
+
+DROP POLICY IF EXISTS attempts_anon_delete ON public.attempts;
+REVOKE DELETE ON public.attempts FROM anon, authenticated;
+
+CREATE OR REPLACE FUNCTION public.delete_attempt_by_share_id(p_share_id text)
+RETURNS boolean
+LANGUAGE plpgsql
+VOLATILE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_deleted integer;
+BEGIN
+  IF p_share_id IS NULL OR p_share_id !~ '^[a-zA-Z0-9]{6,12}$' THEN
+    RETURN false;
+  END IF;
+
+  DELETE FROM public.attempts WHERE share_id = p_share_id;
+  GET DIAGNOSTICS v_deleted = ROW_COUNT;
+  RETURN v_deleted > 0;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.delete_attempt_by_share_id(text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.delete_attempt_by_share_id(text) TO anon, authenticated;
+
+COMMENT ON FUNCTION public.delete_attempt_by_share_id(text) IS
+  'Self-service GDPR erasure for quiz attempts. The share_id is a secret '
+  'capability returned only to the user who completed the test; deletes '
+  'exactly the row matching it. Replaces the broken attempts_anon_delete '
+  'RLS policy whose predicate (share_id IS NOT NULL) matched every row.';
+
+-- ---- 20260612101000_support_ticket_messages_hide_internal ------------------
+-- The direct-table policy returned is_internal = true admin notes to the
+-- authenticated submitter; the anon view-token RPC already filtered them.
+
+DROP POLICY IF EXISTS support_ticket_messages_user_select ON public.support_ticket_messages;
+CREATE POLICY support_ticket_messages_user_select ON public.support_ticket_messages
+  FOR SELECT TO authenticated
+  USING (
+    support_ticket_messages.is_internal = false
+    AND EXISTS (
+      SELECT 1 FROM public.support_tickets t
+      WHERE t.id = support_ticket_messages.ticket_id
+        AND t.submitter_user_id = auth.uid()
+    )
+  );
+
+-- ---- 20260612102000_admin_rls_requires_aal2 --------------------------------
+-- Admin RLS branches on PII tables additionally require public.is_aal2().
+-- Admin UI sessions are always aal2 (route guard); CF Functions use the
+-- service role — no app flow regresses. Self-access branches untouched.
+
+DROP POLICY IF EXISTS profiles_self_read ON public.profiles;
+CREATE POLICY profiles_self_read ON public.profiles
+  FOR SELECT TO authenticated
+  USING (
+    id = auth.uid()
+    OR (public.has_role(auth.uid(), 'admin') AND public.is_aal2())
+  );
+
+DROP POLICY IF EXISTS profiles_self_update ON public.profiles;
+CREATE POLICY profiles_self_update ON public.profiles
+  FOR UPDATE TO authenticated
+  USING (
+    id = auth.uid()
+    OR (public.has_role(auth.uid(), 'admin') AND public.is_aal2())
+  )
+  WITH CHECK (
+    id = auth.uid()
+    OR (public.has_role(auth.uid(), 'admin') AND public.is_aal2())
+  );
+
+DROP POLICY IF EXISTS audit_log_admin_read ON public.audit_log;
+CREATE POLICY audit_log_admin_read ON public.audit_log
+  FOR SELECT TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2());
+
+DROP POLICY IF EXISTS dsr_requests_admin_read ON public.dsr_requests;
+CREATE POLICY dsr_requests_admin_read ON public.dsr_requests
+  FOR SELECT TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2());
+
+DROP POLICY IF EXISTS reports_admin_read ON public.reports;
+CREATE POLICY reports_admin_read ON public.reports
+  FOR SELECT TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2());
+
+DROP POLICY IF EXISTS dpa_requests_admin_read ON public.dpa_requests;
+CREATE POLICY dpa_requests_admin_read ON public.dpa_requests
+  FOR SELECT TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2());
+
+DROP POLICY IF EXISTS dpa_requests_admin_update ON public.dpa_requests;
+CREATE POLICY dpa_requests_admin_update ON public.dpa_requests
+  FOR UPDATE TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2())
+  WITH CHECK (public.has_role(auth.uid(), 'admin') AND public.is_aal2());
+
+DROP POLICY IF EXISTS pending_erasures_admin_read ON public.pending_erasures;
+CREATE POLICY pending_erasures_admin_read ON public.pending_erasures
+  FOR SELECT TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2());
+
+DROP POLICY IF EXISTS support_tickets_admin_all ON public.support_tickets;
+CREATE POLICY support_tickets_admin_all ON public.support_tickets
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2())
+  WITH CHECK (public.has_role(auth.uid(), 'admin') AND public.is_aal2());
+
+DROP POLICY IF EXISTS support_ticket_messages_admin_all ON public.support_ticket_messages;
+CREATE POLICY support_ticket_messages_admin_all ON public.support_ticket_messages
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2())
+  WITH CHECK (public.has_role(auth.uid(), 'admin') AND public.is_aal2());
+
+DROP POLICY IF EXISTS support_ticket_attachments_admin_all ON public.support_ticket_attachments;
+CREATE POLICY support_ticket_attachments_admin_all ON public.support_ticket_attachments
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2())
+  WITH CHECK (public.has_role(auth.uid(), 'admin') AND public.is_aal2());
+
+DROP POLICY IF EXISTS support_ticket_assignees_admin_select ON public.support_ticket_assignees;
+CREATE POLICY support_ticket_assignees_admin_select ON public.support_ticket_assignees
+  FOR SELECT TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2());

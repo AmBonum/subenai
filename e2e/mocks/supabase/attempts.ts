@@ -20,7 +20,10 @@ export interface AttemptStubRow {
 
 export interface AttemptsByShareIdStub {
   row: AttemptStubRow | null;
-  /** HTTP status for the DELETE stub. Defaults to 204. */
+  /**
+   * HTTP status for the delete-flow stub. 2xx → the RPC resolves true
+   * (deleted); anything else → PostgREST error. Defaults to 204 (success).
+   */
   deleteStatus?: number;
 }
 
@@ -56,23 +59,27 @@ export function makeAttemptRow(overrides: Partial<AttemptStubRow> = {}): Attempt
  * body when zero rows match. Supabase-js treats a 406 from maybeSingle() as
  * data: null.
  *
- * The DELETE stub intercepts the same URL pattern and returns 204 No Content.
+ * The delete flow calls the delete_attempt_by_share_id RPC (the direct
+ * table DELETE was revoked by 20260612100000) — stubbed separately below.
  */
 export async function stubAttemptsByShareId(
   page: Page,
   stub: AttemptsByShareIdStub,
 ): Promise<void> {
-  await page.route("**/rest/v1/attempts*", async (route) => {
-    const method = route.request().method().toUpperCase();
-
-    if (method === "DELETE") {
+  await page.route("**/rest/v1/rpc/delete_attempt_by_share_id*", async (route) => {
+    const status = stub.deleteStatus ?? 204;
+    if (status < 300) {
+      await route.fulfill({ status: 200, contentType: "application/json", body: "true" });
+    } else {
       await route.fulfill({
-        status: stub.deleteStatus ?? 204,
-        body: "",
+        status,
+        contentType: "application/json",
+        body: JSON.stringify({ message: "delete failed" }),
       });
-      return;
     }
+  });
 
+  await page.route("**/rest/v1/attempts*", async (route) => {
     if (stub.row === null) {
       // .maybeSingle() maps a PostgREST 406 (PGRST116 — "query returned
       // more than one row" / "no rows") to { data: null, error: null }.

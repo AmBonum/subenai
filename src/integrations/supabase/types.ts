@@ -2158,6 +2158,10 @@ export type Database = {
         };
         Returns: void;
       };
+      delete_attempt_by_share_id: {
+        Args: { p_share_id: string };
+        Returns: boolean;
+      };
       get_respondent_test_by_share_id: {
         Args: { p_share_id: string };
         Returns: Json;
