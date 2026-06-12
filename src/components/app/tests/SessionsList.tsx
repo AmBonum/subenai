@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 
+import { Copy, Send } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,10 +30,15 @@ import {
   type TestSessionsSort,
   type TestSessionsStatus,
 } from "@/lib/platform/queries";
-import type { Session } from "@/lib/platform/types";
+import { copyToClipboard } from "@/lib/browser/clipboard";
+import type { Session, TestStatus } from "@/lib/platform/types";
 
 interface Props {
   testId: string;
+  /** Drives the zero-sessions empty state: published → share-link CTA, draft → publish CTA. */
+  status?: TestStatus;
+  shareId?: string;
+  onRequestPublish?: () => void;
 }
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50] as const;
@@ -53,13 +60,13 @@ function formatStartedAt(iso: string): string {
   }
 }
 
-export function SessionsList({ testId }: Props) {
+export function SessionsList({ testId, status, shareId, onRequestPublish }: Props) {
   const t = tFor("editor");
   const tSd = tFor("session_detail");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState<number>(20);
   const [sort, setSort] = useState<TestSessionsSort>("started_at_desc");
-  const [status, setStatus] = useState<TestSessionsStatus>("all");
+  const [statusFilter, setStatusFilter] = useState<TestSessionsStatus>("all");
   const [search, setSearch] = useState("");
   // Debounce the raw input before it reaches the query key — otherwise
   // every keystroke fires a Supabase round-trip. Page resets when the
@@ -77,7 +84,7 @@ export function SessionsList({ testId }: Props) {
     page,
     pageSize,
     sort,
-    status,
+    status: statusFilter,
     search: debouncedSearch,
   });
   const exportMut = useExportTestSessionsCsv(testId);
@@ -130,8 +137,8 @@ export function SessionsList({ testId }: Props) {
         <div className="min-w-[160px]">
           <Label className="text-xs text-muted-foreground">{t("filter_status_all")}</Label>
           <Select
-            value={status}
-            onValueChange={(v) => onFilterChange(() => setStatus(v as TestSessionsStatus))}
+            value={statusFilter}
+            onValueChange={(v) => onFilterChange(() => setStatusFilter(v as TestSessionsStatus))}
           >
             <SelectTrigger data-testid="test-sessions-list-status-filter">
               <SelectValue />
@@ -198,12 +205,59 @@ export function SessionsList({ testId }: Props) {
         </div>
       ) : rows.length === 0 ? (
         <div
-          className="rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground"
+          className="space-y-3 rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground"
           data-testid="test-sessions-list-empty"
         >
-          {total === 0 && search.length === 0 && status === "all"
-            ? t("sessions_empty_no_data")
-            : t("sessions_empty_no_match")}
+          {total === 0 && search.length === 0 && statusFilter === "all" ? (
+            status === "published" && shareId ? (
+              <>
+                <p
+                  className="font-medium text-foreground"
+                  data-testid="test-sessions-list-empty-published-title"
+                >
+                  {t("sessions_empty_published_title")}
+                </p>
+                <p>{t("sessions_empty_published_body")}</p>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    void copyToClipboard(`${window.location.origin}/t/${shareId}`).then((ok) => {
+                      if (ok) toast.success(t("sessions_empty_copy_success"));
+                    });
+                  }}
+                  data-testid="test-sessions-list-empty-copy-link-button"
+                >
+                  <Copy className="mr-2 h-3 w-3" />
+                  {t("sessions_empty_copy_link")}
+                </Button>
+              </>
+            ) : status === "draft" ? (
+              <>
+                <p
+                  className="font-medium text-foreground"
+                  data-testid="test-sessions-list-empty-draft-title"
+                >
+                  {t("sessions_empty_draft_title")}
+                </p>
+                <p>{t("sessions_empty_draft_body")}</p>
+                {onRequestPublish && (
+                  <Button
+                    size="sm"
+                    onClick={onRequestPublish}
+                    data-testid="test-sessions-list-empty-publish-button"
+                  >
+                    <Send className="mr-2 h-3 w-3" />
+                    {t("sessions_empty_publish_cta")}
+                  </Button>
+                )}
+              </>
+            ) : (
+              t("sessions_empty_no_data")
+            )
+          ) : (
+            t("sessions_empty_no_match")
+          )}
         </div>
       ) : (
         <div className="overflow-x-auto rounded-lg border">

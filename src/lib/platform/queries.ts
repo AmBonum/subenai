@@ -60,6 +60,7 @@ type TestsRow = {
   // list payload and the response stays small).
   password_hash?: string | null;
   segmentation: string[];
+  audience_group_id: string | null;
   gdpr_purpose: string;
   intake_fields?: unknown;
   branches?: unknown;
@@ -91,6 +92,7 @@ const mapTest = (row: TestsRow, question_ids: string[] = []): Test => ({
   has_password: (row.password_hash ?? null) !== null,
   password_hash_version: row.password_hash_version ?? 0,
   segmentation: row.segmentation ?? [],
+  audience_group_id: row.audience_group_id ?? null,
   gdpr_purpose: row.gdpr_purpose as Test["gdpr_purpose"],
   intake_fields: (row.intake_fields as Test["intake_fields"]) ?? [],
   question_ids,
@@ -278,12 +280,12 @@ const mapLibraryQuestion = (row: QuestionsRow): LibraryQuestion => ({
 // Detail view (PasswordCard needs password presence; settings need the
 // jsonb configs). The hash value itself is still blanked by mapTest.
 const TESTS_COLS =
-  "id, slug, share_id, owner_id, team_id, title, description, status, version, password_hash, segmentation, gdpr_purpose, intake_fields, branches, notif_config, anonymize_after_days, allow_behavioral_tracking, expires_at, published_at, question_order_mode, source_template_id, password_hash_version, created_at, updated_at";
+  "id, slug, share_id, owner_id, team_id, title, description, status, version, password_hash, segmentation, audience_group_id, gdpr_purpose, intake_fields, branches, notif_config, anonymize_after_days, allow_behavioral_tracking, expires_at, published_at, question_order_mode, source_template_id, password_hash_version, created_at, updated_at";
 
 // List views render title/status/version/segmentation only — no
 // password_hash (never ship the hash for N rows), no heavy jsonb.
 const TESTS_LIST_COLS =
-  "id, slug, share_id, owner_id, team_id, title, description, status, version, segmentation, gdpr_purpose, anonymize_after_days, allow_behavioral_tracking, expires_at, published_at, question_order_mode, source_template_id, created_at, updated_at";
+  "id, slug, share_id, owner_id, team_id, title, description, status, version, segmentation, audience_group_id, gdpr_purpose, anonymize_after_days, allow_behavioral_tracking, expires_at, published_at, question_order_mode, source_template_id, created_at, updated_at";
 
 export function useTests() {
   return useQuery({
@@ -336,6 +338,7 @@ export function useCreateTest() {
           title: input.title,
           description: input.description ?? null,
           status: (input.status ?? "draft") as never,
+          audience_group_id: input.audience_group_id ?? null,
         })
         .select()
         .single();
@@ -365,6 +368,10 @@ export function useUpdateTest() {
       if (patch.description !== undefined) update.description = patch.description;
       if (patch.status) update.status = patch.status;
       if (patch.segmentation) update.segmentation = patch.segmentation;
+      if (patch.audience_group_id !== undefined) update.audience_group_id = patch.audience_group_id;
+      if (patch.intake_fields !== undefined)
+        update.intake_fields =
+          patch.intake_fields as unknown as TablesUpdate<"tests">["intake_fields"];
       if (patch.gdpr_purpose) update.gdpr_purpose = patch.gdpr_purpose;
       if (patch.expires_at !== undefined) update.expires_at = patch.expires_at;
       if (patch.anonymize_after_days !== undefined)
@@ -453,6 +460,23 @@ export function useUpdateTestQuestionOrder(testId: string) {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests", testId] }),
+  });
+}
+
+// Same RPC as useUpdateTestQuestionOrder but the test id is supplied at
+// mutate time — the wizard's re-publish path (created test id only exists
+// after the first attempt) can't fix the id at hook-creation time.
+export function useReplaceTestQuestions() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, questionIds }: { id: string; questionIds: string[] }) => {
+      const { error } = await supabase.rpc("replace_test_questions", {
+        p_test_id: id,
+        p_question_ids: questionIds,
+      });
+      if (error) throw error;
+    },
+    onSuccess: (_d, { id }) => qc.invalidateQueries({ queryKey: ["user", "tests", id] }),
   });
 }
 
@@ -1703,33 +1727,22 @@ export function useUserTeamMembers() {
 }
 
 // ---------------------------------------------------------------------------
-// Test lifecycle helpers (publish + archive). Mirror mock-store semantics.
+// Test lifecycle helpers (publish / unpublish / archive / unarchive).
+//
+// Publish goes through the `publish_test` SECURITY DEFINER RPC
+// (20260611100000): it atomically flips status, bumps the version on
+// re-publish and writes the test_versions snapshot. Archived tests are
+// REJECTED by the RPC ('test_archived') — resurrecting one requires the
+// explicit unarchive (archived → draft) action first.
 // ---------------------------------------------------------------------------
 
 export function usePublishTest() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      const { data: src, error: e1 } = await supabase
-        .from("tests")
-        .select("id, version, status, title")
-        .eq("id", id)
-        .maybeSingle();
-      if (e1) throw e1;
-      if (!src) throw new Error("Test not found");
-      const row = src as { id: string; version: number; status: string; title: string };
-      const newVersion = row.version + (row.status === "published" ? 1 : 0);
-      const nowIso = new Date().toISOString();
-      const { error } = await supabase
-        .from("tests")
-        .update({
-          status: "published" as never,
-          version: newVersion,
-          published_at: nowIso,
-          updated_at: nowIso,
-        })
-        .eq("id", id);
+      const { data, error } = await supabase.rpc("publish_test", { p_test_id: id });
       if (error) throw error;
+      return data as number;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["user", "tests"] });
@@ -1738,18 +1751,32 @@ export function usePublishTest() {
   });
 }
 
-export function useArchiveTest() {
+function useSetTestStatus(status: "draft" | "archived") {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
         .from("tests")
-        .update({ status: "archived" as never, updated_at: new Date().toISOString() })
+        .update({ status: status as never, updated_at: new Date().toISOString() })
         .eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["user", "tests"] }),
   });
+}
+
+export function useArchiveTest() {
+  return useSetTestStatus("archived");
+}
+
+/** published → draft. The /t/ share link stops resolving for new respondents. */
+export function useUnpublishTest() {
+  return useSetTestStatus("draft");
+}
+
+/** archived → draft. Re-publishing afterwards goes through publish_test. */
+export function useUnarchiveTest() {
+  return useSetTestStatus("draft");
 }
 
 // ---------------------------------------------------------------------------

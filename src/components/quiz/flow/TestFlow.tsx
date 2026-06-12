@@ -195,20 +195,19 @@ export function TestFlow({ config = { kind: "default" } }: { config?: TestFlowCo
   function restart() {
     clearPersistedResult(storageKey);
     if (config.kind === "default") {
-      // Re-seed from React Query's cached `dbQuestions` directly
-      // instead of clearing + refetching. The cache is already correct;
-      // setting questions=[] then refetching used to leave the user
-      // stuck on the intro card forever — React Query returns the
-      // same cached object reference, so `dbQuestions` doesn't change,
-      // the `useEffect([dbQuestions])` doesn't re-run, and the 700ms
-      // timer advances `phase` to "playing" while `questions.length`
-      // remains 0 (2026-05-19 finding via Phase 8 quiz-flow TC-05).
-      // If we ever want a fresh random batch on restart, invalidate
-      // the cache instead — but the existing UX promised reshuffle
-      // is also a no-op today since the RPC returns a stable seed.
-      if (dbQuestions.length > 0) {
-        setQuestions(dbQuestions);
-      }
+      // `get_quick_test_questions` does ORDER BY random() server-side,
+      // so a forced refetch (bypasses staleTime) delivers a genuinely
+      // fresh batch — "Skús znova" must not replay the same 10 questions.
+      // Questions are set imperatively from the refetch result (not via
+      // the `useEffect([dbQuestions])`) because that effect early-returns
+      // when this mount restored a back/forward snapshot. On refetch
+      // failure, fall back to the previous batch — a repeat run beats a
+      // dead intro card.
+      setQuestions([]);
+      void quickTestQuery.refetch().then((res) => {
+        const fresh = mapDbRowsToQuestions(res.data ?? []);
+        setQuestions(fresh.length > 0 ? fresh : dbQuestions);
+      });
     } else {
       setQuestions(config.questions);
     }

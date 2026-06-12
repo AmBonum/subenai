@@ -1497,6 +1497,7 @@ export type Database = {
           question_order_mode: Database["public"]["Enums"]["test_question_order_mode"];
           source_template_id: string | null;
           password_hash_version: number;
+          audience_group_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -1523,6 +1524,7 @@ export type Database = {
           question_order_mode?: Database["public"]["Enums"]["test_question_order_mode"];
           source_template_id?: string | null;
           password_hash_version?: number;
+          audience_group_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -1549,6 +1551,7 @@ export type Database = {
           question_order_mode?: Database["public"]["Enums"]["test_question_order_mode"];
           source_template_id?: string | null;
           password_hash_version?: number;
+          audience_group_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -2042,6 +2045,10 @@ export type Database = {
       duplicate_test: {
         Args: { p_test_id: string };
         Returns: string;
+      };
+      publish_test: {
+        Args: { p_test_id: string };
+        Returns: number;
       };
       verify_test_password: {
         Args: { p_share_id: string; p_password: string };

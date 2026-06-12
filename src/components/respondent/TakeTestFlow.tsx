@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { CheckCircle2, Sparkles } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +12,11 @@ import {
   submitRespondentAnswer,
   finalizeRespondentSession,
 } from "@/lib/respondent/queries";
+import {
+  loadRespondentSession,
+  saveRespondentSession,
+  clearRespondentSession,
+} from "@/lib/respondent/session-storage";
 import { resolveQuestionOrder } from "@/lib/quiz/shuffle";
 import type { Question } from "@/lib/platform/types";
 import type { SafeTestProjection } from "@/lib/respondent/take-test.functions";
@@ -39,33 +45,59 @@ export function TakeTestFlow({
   const tRoot = tFor("root");
   const tThanks = tFor("thank_you");
   const tErr = tFor("errors");
-  const [stage, setStage] = useState<Stage>("intake");
-  const [intake, setIntake] = useState<Record<string, string>>({});
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const [sessionToken, setSessionToken] = useState<string | null>(null);
-  const [qIdx, setQIdx] = useState(0);
+  // Mid-take reload resumes the saved in-progress session for this
+  // shareId (sessionStorage — dies with the tab, see session-storage.ts).
+  // Lazy initializer: read exactly once per mount.
+  const [restored] = useState(() => loadRespondentSession(shareId));
+  const [stage, setStage] = useState<Stage>(restored ? "questions" : "intake");
+  const [intake, setIntake] = useState<Record<string, string>>(restored?.intake ?? {});
+  const [sessionId, setSessionId] = useState<string | null>(restored?.sessionId ?? null);
+  const [sessionToken, setSessionToken] = useState<string | null>(restored?.sessionToken ?? null);
+  const [qIdx, setQIdx] = useState(() =>
+    restored ? Math.max(0, Math.min(restored.qIdx, restored.questionOrder.length - 1)) : 0,
+  );
   const [answers, setAnswers] = useState<
     { question_id: string; value: string; is_correct: boolean | null; time_ms: number }[]
-  >([]);
-  const [questionStart, setQuestionStart] = useState<number>(0);
+  >(restored?.answers ?? []);
+  const [questionStart, setQuestionStart] = useState<number>(() => (restored ? Date.now() : 0));
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   // E45 Phase 1 — resolve display order. When the test's
   // question_order_mode is 'random' AND we have a session.id (intake done),
-  // shuffle deterministically so a reload mid-take rehydrates the same
-  // sequence. Pre-intake (sessionId === null) we keep the DB order so the
-  // server-rendered shell doesn't briefly show a leaked random order.
+  // shuffle deterministically by session id. Pre-intake (sessionId === null)
+  // we keep the DB order so the server-rendered shell doesn't briefly show
+  // a leaked random order. On resume the order saved in sessionStorage wins
+  // (it survives author-side reordering mid-take); questions the author
+  // added after the session started are appended, removed ones drop out via
+  // the byId lookup.
   const questions = useMemo(() => {
     const byId = new Map(resolvedQuestions.map((q) => [q.id, q]));
-    return resolveQuestionOrder(
+    const derived = resolveQuestionOrder(
       resolvedQuestions.map((q) => q.id),
       test.question_order_mode,
       sessionId,
-    )
-      .map((qid) => byId.get(qid))
-      .filter(Boolean) as Question[];
-  }, [resolvedQuestions, test.question_order_mode, sessionId]);
+    );
+    const order = restored
+      ? [...restored.questionOrder, ...derived.filter((id) => !restored.questionOrder.includes(id))]
+      : derived;
+    return order.map((qid) => byId.get(qid)).filter(Boolean) as Question[];
+  }, [resolvedQuestions, test.question_order_mode, sessionId, restored]);
+
+  const persistProgress = (
+    idx: number,
+    ans: { question_id: string; value: string; is_correct: boolean | null; time_ms: number }[],
+  ) => {
+    if (!sessionId) return;
+    saveRespondentSession(shareId, {
+      sessionId,
+      sessionToken,
+      intake,
+      answers: ans,
+      qIdx: idx,
+      questionOrder: questions.map((q) => q.id),
+    });
+  };
 
   const onIntakeSubmit = async (vals: Record<string, string>, c: boolean) => {
     if (submitting) return;
@@ -80,6 +112,20 @@ export function TakeTestFlow({
       setIntake(vals);
       setSessionId(id);
       setSessionToken(token);
+      // Snapshot the freshly-started session so a reload resumes it
+      // (sessionId state isn't committed yet — use the local values).
+      saveRespondentSession(shareId, {
+        sessionId: id,
+        sessionToken: token,
+        intake: vals,
+        answers: [],
+        qIdx: 0,
+        questionOrder: resolveQuestionOrder(
+          resolvedQuestions.map((q) => q.id),
+          test.question_order_mode,
+          id,
+        ),
+      });
       setQuestionStart(Date.now());
       setStage("questions");
     } catch {
@@ -128,10 +174,12 @@ export function TakeTestFlow({
       if (qIdx + 1 < questions.length) {
         setQIdx(qIdx + 1);
         setQuestionStart(Date.now());
+        persistProgress(qIdx + 1, next);
       } else {
         const correct = next.filter((a) => a.is_correct).length;
         const score = next.length ? Math.round((correct / next.length) * 100) : 0;
         await finalizeRespondentSession({ sessionId, sessionToken, score });
+        clearRespondentSession(shareId);
         setStage("done");
       }
     } catch {
@@ -196,7 +244,14 @@ export function TakeTestFlow({
               question={questions[qIdx]}
               initialValue={answers.find((a) => a.question_id === questions[qIdx].id)?.value ?? ""}
               isLast={qIdx + 1 === questions.length}
-              onPrev={qIdx > 0 ? () => setQIdx(qIdx - 1) : undefined}
+              onPrev={
+                qIdx > 0
+                  ? () => {
+                      setQIdx(qIdx - 1);
+                      persistProgress(qIdx - 1, answers);
+                    }
+                  : undefined
+              }
               onAnswer={onAnswer}
             />
             {submitError && (
@@ -227,9 +282,23 @@ export function TakeTestFlow({
               >
                 {tThanks("subtitle")}
               </p>
-              <Button variant="outline" onClick={onClose}>
-                {tThanks("close_button")}
-              </Button>
+              {/* Respondents never see a score here by design (results
+                  belong to the test author) — so the exit offers the
+                  public quick test as a next step instead of a bare
+                  close-to-homepage dead end. */}
+              <div className="flex flex-col items-center gap-3 pt-2">
+                <Button asChild data-testid="respondent-flow-thank-you-quick-test-cta">
+                  <Link to="/test">{tThanks("quick_test_cta")}</Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onClose}
+                  data-testid="respondent-flow-thank-you-close-button"
+                >
+                  {tThanks("close_button")}
+                </Button>
+              </div>
               <span className="hidden" data-testid="respondent-flow-intake-summary">
                 {Object.values(intake).join(",")}
               </span>

@@ -6,9 +6,10 @@
 //   3. We honeypot-check (E12.7), rate-limit per-IP and per-set, validate
 //      email regex, look up the test_set, refuse if it isn't an edu set,
 //      reject duplicates per (set_id, email).
-//   4. Issue an HS256 JWT containing { set_id, name, email, exp=+60min }
-//      signed with JWT_SECRET. Client holds it in memory; on test
-//      finish it goes to /api/finish-edu-attempt.
+//   4. Issue an HS256 JWT containing { set_id, name, email, exp=+6h
+//      (EDU_ATTEMPT_TTL_SECONDS in ../_lib/jwt.ts) } signed with
+//      JWT_SECRET. Client holds it in memory; on test finish it goes
+//      to /api/finish-edu-attempt.
 //
 // Anon Supabase INSERT for rows with respondent_* is blocked by the
 // 20260501010000 RLS lockdown — bypassing this Function gets you nothing.

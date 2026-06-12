@@ -66,10 +66,19 @@ async function verify(secret: string, message: string, signature: string): Promi
   }
 }
 
+// 6 hours. The previous 1-hour TTL silently lost real attempts: a
+// respondent who left the tab open (lunch, classroom interruption) came
+// back, finished the test, and /api/finish-edu-attempt rejected the
+// expired ticket — the score was gone with no recovery path. The ticket
+// only authorizes inserting ONE attempt for a (set_id, email) pair that
+// already passed duplicate checks, so a longer window adds no abuse
+// surface worth the lost-data trade-off.
+export const EDU_ATTEMPT_TTL_SECONDS = 6 * 60 * 60;
+
 export async function signEduAttemptToken(
   claims: Omit<EduAttemptClaims, "iat" | "exp">,
   secret: string,
-  ttlSeconds = 60 * 60, // 1 hour — covers a 50-question test with thinking time
+  ttlSeconds = EDU_ATTEMPT_TTL_SECONDS,
 ): Promise<string> {
   const now = Math.floor(Date.now() / 1000);
   const payload: EduAttemptClaims = {

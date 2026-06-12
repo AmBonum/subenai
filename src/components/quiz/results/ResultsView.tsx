@@ -101,6 +101,10 @@ export function ResultsView({
   const [shareId, setShareId] = useState<string | null>(null);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [savingShare, setSavingShare] = useState(false);
+  // True after persistResult fails (network throw, non-OK edu response,
+  // or Supabase insert error). Cleared only on a later success so the
+  // alert stays visible across a failed retry — no silent swallow.
+  const [persistFailed, setPersistFailed] = useState(false);
   const [downloadingImg, setDownloadingImg] = useState(false);
   const [copied, setCopied] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
@@ -215,8 +219,10 @@ export function ResultsView({
             const text = await response.text();
             console.error("finish-edu-attempt failed", response.status, text);
           }
+          setPersistFailed(true);
           return;
         }
+        setPersistFailed(false);
         setShareId(id);
         // Edu/builder respondents share the TEST invitation, not their
         // PII-tagged result row. See EduContextProp comment for why
@@ -243,10 +249,17 @@ export function ResultsView({
       if (error) {
         // Avoid leaking constraint names / SQL hints to the browser console.
         if (import.meta.env.DEV) console.error("Failed to save attempt:", error);
+        setPersistFailed(true);
         return;
       }
+      setPersistFailed(false);
       setShareId(id);
       setShareUrl(`${window.location.origin}/r/${id}`);
+    } catch (err) {
+      // fetch rejection / client throw — same recovery path as a non-OK
+      // response; without this the void-ed promise rejected unhandled.
+      if (import.meta.env.DEV) console.error("persistResult threw:", err);
+      setPersistFailed(true);
     } finally {
       setSavingShare(false);
     }
@@ -370,6 +383,14 @@ export function ResultsView({
           </div>
         )}
       </div>
+
+      {persistFailed && (
+        <PersistFailureAlert
+          edu={!!edu}
+          retrying={savingShare}
+          onRetry={() => void persistResult()}
+        />
+      )}
 
       {showRest && (
         <>
@@ -516,9 +537,8 @@ export function ResultsView({
                   </button>
                 </div>
               )}
-              {!savingShare && !shareUrl && (
-                <div className="text-xs text-destructive">{t("share_failed")}</div>
-              )}
+              {/* Persist failure renders the prominent PersistFailureAlert
+                  (with retry) under the score block — no duplicate note here. */}
             </div>
 
             <div className="mt-4">
@@ -619,6 +639,45 @@ export function ResultsView({
         onOpenChange={setTrapOpen}
         onAcknowledged={handleTrapAcknowledged}
       />
+    </div>
+  );
+}
+
+// Shown when persistResult failed — the result never reached the server
+// (edu: the author won't see the attempt; public: no share link). Offers
+// an explicit retry; stays visible after a failed retry instead of
+// silently swallowing the loss.
+function PersistFailureAlert({
+  edu,
+  retrying,
+  onRetry,
+}: {
+  edu: boolean;
+  retrying: boolean;
+  onRetry: () => void;
+}) {
+  const t = tFor("results");
+  return (
+    <div
+      role="alert"
+      data-testid="quiz-results-persist-error"
+      className="mt-6 rounded-2xl border-2 border-destructive/50 bg-destructive/10 p-5 text-left"
+    >
+      <p
+        data-testid="quiz-results-persist-error-message"
+        className="text-sm font-semibold text-destructive"
+      >
+        {edu ? t("persist_failed_edu") : t("persist_failed_public")}
+      </p>
+      <button
+        type="button"
+        data-testid="quiz-results-persist-retry"
+        onClick={onRetry}
+        disabled={retrying}
+        className="mt-3 rounded-lg border-2 border-destructive bg-card px-4 py-2 text-sm font-semibold text-destructive transition-colors hover:bg-destructive/20 disabled:opacity-60"
+      >
+        {retrying ? t("persist_retrying") : t("persist_retry")}
+      </button>
     </div>
   );
 }

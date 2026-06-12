@@ -1,4 +1,14 @@
-import { Copy, Layers, MoreVertical, Pencil, Send, Sparkles, Trash2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import {
+  Copy,
+  ExternalLink,
+  Layers,
+  MoreVertical,
+  Pencil,
+  Send,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -52,6 +62,7 @@ const AGE_CLASS: Record<TemplateAgeRating, string> = {
 
 export function TemplateCard({
   template,
+  mode,
   currentUserId,
   onUse,
   onDuplicate,
@@ -158,6 +169,18 @@ export function TemplateCard({
             {licenseLine}
           </span>
         </div>
+
+        {mode === "public" && template.slug && (
+          <Link
+            to="/sablony/$slug"
+            params={{ slug: template.slug }}
+            data-testid={`templates-card-${id}-public-page-link`}
+            className="inline-flex items-center gap-1 text-xs text-primary underline-offset-2 hover:underline"
+          >
+            <ExternalLink className="h-3 w-3" aria-hidden="true" />
+            {t("public_page_link")}
+          </Link>
+        )}
 
         <div className="flex items-center gap-2 pt-1">
           <Button

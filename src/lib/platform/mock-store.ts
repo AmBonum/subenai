@@ -250,6 +250,7 @@ export const createTest = (input: Partial<Test> & { title: string }) => {
     has_password: (input.password ?? null) !== null,
     password_hash_version: (input.password ?? null) !== null ? 1 : 0,
     segmentation: input.segmentation ?? [],
+    audience_group_id: input.audience_group_id ?? null,
     gdpr_purpose: input.gdpr_purpose ?? "internal_training",
     intake_fields: input.intake_fields ?? [
       { id: "if_email", label: "E-mail", type: "email", required: true, pii: true },

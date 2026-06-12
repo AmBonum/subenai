@@ -46,8 +46,12 @@ import {
   useCreateTest,
   useCurrentProfile,
   useLibraryQuestions,
+  usePublishTest,
+  useReplaceTestQuestions,
   useTemplates,
+  useUpdateTest,
 } from "@/lib/platform/queries";
+import { lifecycleErrorMessage } from "@/components/app/tests/lifecycle-errors";
 import { copyToClipboard } from "@/lib/browser/clipboard";
 import { tFor } from "@/i18n/tests";
 import { tFor as tAppShell } from "@/i18n/app-shell";
@@ -78,6 +82,9 @@ function WizardPage() {
   const groupsQ = useAudiences();
   const profileQ = useCurrentProfile();
   const createMut = useCreateTest();
+  const updateMut = useUpdateTest();
+  const replaceMut = useReplaceTestQuestions();
+  const publishMut = usePublishTest();
   const templates = useMemo(() => templatesQ.data ?? [], [templatesQ.data]);
   const groups = groupsQ.data ?? [];
   const libraryQ = useLibraryQuestions();
@@ -115,6 +122,7 @@ function WizardPage() {
   const [questionIds, setQuestionIds] = useState<string[]>(initialFromTemplate?.questionIds ?? []);
   const [createdShareId, setCreatedShareId] = useState<string | null>(null);
   const [createdTestId, setCreatedTestId] = useState<string | null>(null);
+  const [publishing, setPublishing] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
 
@@ -172,28 +180,48 @@ function WizardPage() {
     setClearConfirmOpen(false);
   }
 
-  const onPublish = () => {
+  // Create (draft) + publish_test RPC in sequence — step 4 only renders
+  // after the share link is actually live. Back-navigation guard: once a
+  // test exists (createdTestId), re-clicking "Publikovať" UPDATES that test
+  // (title/description/audience + question list) and re-publishes it
+  // instead of inserting a duplicate row.
+  const onPublish = async () => {
     const ownerId = profileQ.data?.id;
-    if (!ownerId) return;
-    createMut.mutate(
-      {
-        owner_id: ownerId,
-        title: title.trim(),
-        description: description.trim(),
-        segmentation: groupId === "none" ? [] : [groupId],
-        question_ids: questionIds,
-      },
-      {
-        onSuccess: (created) => {
-          const row = created as { id: string; share_id: string } | null;
-          if (!row) return;
-          setCreatedTestId(row.id);
-          setCreatedShareId(row.share_id);
-          goStep(4);
-        },
-        onError: (err) => toast.error(err.message),
-      },
-    );
+    if (!ownerId || publishing) return;
+    setPublishing(true);
+    try {
+      const audienceGroupId = groupId === "none" ? null : groupId;
+      let testId = createdTestId;
+      if (!testId) {
+        const created = (await createMut.mutateAsync({
+          owner_id: ownerId,
+          title: title.trim(),
+          description: description.trim(),
+          audience_group_id: audienceGroupId,
+          question_ids: questionIds,
+        })) as { id: string; share_id: string } | null;
+        if (!created) return;
+        testId = created.id;
+        setCreatedTestId(created.id);
+        setCreatedShareId(created.share_id);
+      } else {
+        await updateMut.mutateAsync({
+          id: testId,
+          patch: {
+            title: title.trim(),
+            description: description.trim(),
+            audience_group_id: audienceGroupId,
+          },
+        });
+        await replaceMut.mutateAsync({ id: testId, questionIds });
+      }
+      await publishMut.mutateAsync(testId);
+      goStep(4);
+    } catch (err) {
+      toast.error(lifecycleErrorMessage(err));
+    } finally {
+      setPublishing(false);
+    }
   };
 
   const shareUrl =
@@ -507,11 +535,11 @@ function WizardPage() {
                 {t("back_button")}
               </Button>
               <Button
-                onClick={onPublish}
-                disabled={!step3Valid || createMut.isPending || !profileQ.data}
+                onClick={() => void onPublish()}
+                disabled={!step3Valid || publishing || !profileQ.data}
                 data-testid="new-test-wizard-step-3-next"
               >
-                {t("publish_button")}
+                {publishing ? t("publishing_button") : t("publish_button")}
                 <Check className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -586,7 +614,7 @@ function WizardPage() {
                 {t("back_button")}
               </Button>
               <Button onClick={onFinish} data-testid="new-test-wizard-publish-button">
-                {t("publish_button")}
+                {t("finish_button")}
                 <Check className="ml-2 h-4 w-4" />
               </Button>
             </div>

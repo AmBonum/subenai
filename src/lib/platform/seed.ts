@@ -265,6 +265,7 @@ export const SEED_TESTS: Test[] = TEST_TITLES.map((title, i) => {
     has_password: i % 4 === 0,
     password_hash_version: i % 4 === 0 ? 1 : 0,
     segmentation: i % 2 === 0 ? ["HR", "prvý ročník"] : ["IT", "seniori"],
+    audience_group_id: null,
     gdpr_purpose: (
       ["research", "education", "internal_training", "marketing", "recruitment"] as const
     )[i % 5],

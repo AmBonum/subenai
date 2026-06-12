@@ -9661,3 +9661,105 @@ COMMENT ON FUNCTION public.duplicate_test(uuid) IS
   'Copies a tests row (fresh 10-char base62 share_id, slug ''-copy-<ms>'', '
   'title '' (kópia)'', status draft) AND its test_questions in one '
   'transaction. Owner/admin only. Returns the new test id.';
+
+-- ============================================================================
+-- E50 — test lifecycle: publish_test RPC + tests.audience_group_id
+-- (mirror of supabase/migrations/20260611100000_publish_test_rpc.sql and
+--  supabase/migrations/20260611101000_tests_audience_group_id.sql —
+--  see those files for the full rationale + snapshot shape doc)
+-- ============================================================================
+
+ALTER TABLE public.tests
+  ADD COLUMN IF NOT EXISTS audience_group_id uuid NULL
+    REFERENCES public.respondent_groups(id) ON DELETE SET NULL;
+
+CREATE INDEX IF NOT EXISTS tests_audience_group_id_idx
+  ON public.tests (audience_group_id)
+  WHERE audience_group_id IS NOT NULL;
+
+CREATE OR REPLACE FUNCTION public.publish_test(p_test_id uuid)
+RETURNS integer
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_test public.tests%ROWTYPE;
+  v_new_version integer;
+  v_questions jsonb;
+  v_snapshot jsonb;
+  v_now timestamptz := now();
+BEGIN
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'unauthenticated';
+  END IF;
+  IF p_test_id IS NULL THEN
+    RAISE EXCEPTION 'invalid_args';
+  END IF;
+
+  SELECT * INTO v_test FROM public.tests WHERE id = p_test_id FOR UPDATE;
+  IF v_test.id IS NULL THEN
+    RAISE EXCEPTION 'test_not_found';
+  END IF;
+  IF v_test.owner_id <> auth.uid() AND NOT public.has_role(auth.uid(), 'admin') THEN
+    RAISE EXCEPTION 'not_owner';
+  END IF;
+  IF v_test.status = 'archived' THEN
+    RAISE EXCEPTION 'test_archived';
+  END IF;
+
+  v_new_version := v_test.version
+    + CASE WHEN v_test.status = 'published' THEN 1 ELSE 0 END;
+
+  SELECT COALESCE(
+    jsonb_agg(
+      jsonb_build_object(
+        'id', q.id,
+        'type', q.type,
+        'prompt', q.prompt,
+        'options', q.options,
+        'correct', q.correct,
+        'position', tq.position
+      )
+      ORDER BY tq.position ASC
+    ),
+    '[]'::jsonb
+  ) INTO v_questions
+    FROM public.test_questions tq
+    JOIN public.questions q ON q.id = tq.question_id
+   WHERE tq.test_id = p_test_id;
+
+  v_snapshot := jsonb_build_object(
+    'title', v_test.title,
+    'description', COALESCE(v_test.description, ''),
+    'question_count', jsonb_array_length(v_questions),
+    'questions', v_questions
+  );
+
+  UPDATE public.tests
+     SET status = 'published',
+         version = v_new_version,
+         published_at = v_now,
+         updated_at = v_now
+   WHERE id = p_test_id;
+
+  INSERT INTO public.test_versions (test_id, version, snapshot, published_at, published_by)
+  VALUES (p_test_id, v_new_version, v_snapshot, v_now, auth.uid())
+  ON CONFLICT (test_id, version) DO UPDATE
+    SET snapshot = EXCLUDED.snapshot,
+        published_at = EXCLUDED.published_at,
+        published_by = EXCLUDED.published_by;
+
+  RETURN v_new_version;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.publish_test(uuid) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.publish_test(uuid) TO authenticated;
+
+COMMENT ON FUNCTION public.publish_test(uuid) IS
+  'Atomically publishes a test: status=published, version bump on '
+  're-publish, test_versions snapshot ({title, description, '
+  'question_count, questions[]}). Owner/admin only. Archived tests are '
+  'rejected (test_archived) — unarchive to draft first. Returns the '
+  'live version number.';

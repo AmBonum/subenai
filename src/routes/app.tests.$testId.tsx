@@ -9,6 +9,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import {
+  ArchiveRestore,
   ArrowLeft,
   Archive,
   BarChart3,
@@ -18,8 +19,11 @@ import {
   Send,
   Settings,
   Share2,
+  Undo2,
+  Users,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,13 +32,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/app/page-header";
+import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { ShareDialog } from "@/components/user/ShareDialog";
 import { QuestionsEditor } from "@/components/app/tests/QuestionsEditor";
 import { OrderModeToggle } from "@/components/app/tests/OrderModeToggle";
 import { PasswordCard } from "@/components/app/tests/PasswordCard";
+import { IntakeFieldsCard } from "@/components/app/tests/IntakeFieldsCard";
 import { InviteEmailDialog } from "@/components/app/tests/InviteEmailDialog";
 import { SessionsList } from "@/components/app/tests/SessionsList";
+import { lifecycleErrorMessage } from "@/components/app/tests/lifecycle-errors";
 import { ComingSoonBadge } from "@/components/feature-gates/ComingSoonBadge";
 import { ProBadge } from "@/components/feature-gates/ProBadge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -42,9 +49,12 @@ import { getFeatureGate } from "@/lib/feature-gates";
 import { toast } from "sonner";
 import {
   useArchiveTest,
+  useAudiences,
   usePublishTest,
   useTest,
   useTestSessions,
+  useUnarchiveTest,
+  useUnpublishTest,
   useUpdateTest,
 } from "@/lib/platform/queries";
 import { tFor } from "@/i18n/tests";
@@ -84,12 +94,17 @@ function TestEditorPage() {
   const updateMut = useUpdateTest();
   const publishMut = usePublishTest();
   const archiveMut = useArchiveTest();
+  const unpublishMut = useUnpublishTest();
+  const unarchiveMut = useUnarchiveTest();
+  const audiencesQ = useAudiences();
   const test = testQ.data ?? null;
 
   const [title, setTitle] = useState(test?.title ?? "");
   const [description, setDescription] = useState(test?.description ?? "");
   const [shareOpen, setShareOpen] = useState(search.share === "1");
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [archiveConfirmOpen, setArchiveConfirmOpen] = useState(false);
+  const [unpublishConfirmOpen, setUnpublishConfirmOpen] = useState(false);
 
   // useTest resolves async, so the useState initializers above see no data
   // on a deep-link/refresh. Sync once per test identity — keyed on the id
@@ -156,12 +171,38 @@ function TestEditorPage() {
   };
 
   const onArchive = () => {
-    archiveMut.mutate(test.id, { onError: (err) => toast.error(err.message) });
+    archiveMut.mutate(test.id, {
+      onSuccess: () => toast.success(t("archive_success")),
+      onError: (err) => toast.error(lifecycleErrorMessage(err)),
+    });
   };
 
+  // publish_test rejects archived tests ('test_archived') — the button is
+  // hidden for archived status anyway; unarchive (→ draft) comes first.
   const onPublish = () => {
-    publishMut.mutate(test.id, { onError: (err) => toast.error(err.message) });
+    publishMut.mutate(test.id, {
+      onSuccess: () => toast.success(t("publish_success")),
+      onError: (err) => toast.error(lifecycleErrorMessage(err)),
+    });
   };
+
+  const onUnpublish = () => {
+    unpublishMut.mutate(test.id, {
+      onSuccess: () => toast.success(t("unpublish_success")),
+      onError: (err) => toast.error(lifecycleErrorMessage(err)),
+    });
+  };
+
+  const onUnarchive = () => {
+    unarchiveMut.mutate(test.id, {
+      onSuccess: () => toast.success(t("unarchive_success")),
+      onError: (err) => toast.error(lifecycleErrorMessage(err)),
+    });
+  };
+
+  const audienceName = test.audience_group_id
+    ? (audiencesQ.data?.find((g) => g.id === test.audience_group_id)?.name ?? null)
+    : null;
 
   const setTab = (tab: EditorTab) => {
     nav({ search: (prev: Record<string, unknown>) => ({ ...prev, tab }), replace: true });
@@ -245,7 +286,7 @@ function TestEditorPage() {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={onArchive}
+                onClick={() => setArchiveConfirmOpen(true)}
                 disabled={archiveMut.isPending}
                 data-testid="test-editor-archive-button"
               >
@@ -253,15 +294,43 @@ function TestEditorPage() {
                 {t("archive_button")}
               </Button>
             )}
-            <Button
-              size="sm"
-              onClick={onPublish}
-              disabled={publishMut.isPending}
-              data-testid="test-editor-publish-button"
-            >
-              <Send className="mr-2 h-3 w-3" />
-              {t("publish_button")}
-            </Button>
+            {test.status === "archived" && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={onUnarchive}
+                disabled={unarchiveMut.isPending}
+                data-testid="test-editor-unarchive-button"
+              >
+                <ArchiveRestore className="mr-2 h-3 w-3" />
+                {t("unarchive_button")}
+              </Button>
+            )}
+            {test.status === "published" && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setUnpublishConfirmOpen(true)}
+                disabled={unpublishMut.isPending}
+                data-testid="test-editor-unpublish-button"
+              >
+                <Undo2 className="mr-2 h-3 w-3" />
+                {t("unpublish_button")}
+              </Button>
+            )}
+            {/* Publish only from draft. Archived → publish is blocked by the
+                publish_test RPC (test_archived); unarchive first. */}
+            {test.status === "draft" && (
+              <Button
+                size="sm"
+                onClick={onPublish}
+                disabled={publishMut.isPending}
+                data-testid="test-editor-publish-button"
+              >
+                <Send className="mr-2 h-3 w-3" />
+                {t("publish_button")}
+              </Button>
+            )}
           </div>
         }
       />
@@ -324,7 +393,12 @@ function TestEditorPage() {
               <CardTitle>{t("sessions_list_title")}</CardTitle>
             </CardHeader>
             <CardContent>
-              <SessionsList testId={test.id} />
+              <SessionsList
+                testId={test.id}
+                status={test.status}
+                shareId={test.share_id}
+                onRequestPublish={test.status === "draft" ? onPublish : undefined}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -377,7 +451,23 @@ function TestEditorPage() {
                   data-testid="test-editor-description-input"
                 />
               </div>
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">{t("audience_label")}</Label>
+                <div>
+                  <Badge
+                    variant="secondary"
+                    className="font-normal"
+                    data-testid="test-editor-audience-chip"
+                  >
+                    <Users className="mr-1 h-3 w-3" aria-hidden />
+                    {audienceName ?? t("audience_none")}
+                  </Badge>
+                </div>
+              </div>
               <OrderModeToggle testId={test.id} value={test.question_order_mode} />
+              <div className="border-t pt-6">
+                <IntakeFieldsCard testId={test.id} intakeFields={test.intake_fields} />
+              </div>
               <div className="border-t pt-6">
                 <PasswordCard testId={test.id} hasPassword={test.has_password} />
               </div>
@@ -396,6 +486,24 @@ function TestEditorPage() {
         </TabsContent>
       </Tabs>
 
+      <ConfirmDialog
+        open={archiveConfirmOpen}
+        onOpenChange={setArchiveConfirmOpen}
+        title={t("archive_confirm_title")}
+        description={t("archive_confirm_body")}
+        confirmLabel={t("archive_confirm_button")}
+        severity="warning"
+        onConfirm={onArchive}
+      />
+      <ConfirmDialog
+        open={unpublishConfirmOpen}
+        onOpenChange={setUnpublishConfirmOpen}
+        title={t("unpublish_confirm_title")}
+        description={t("unpublish_confirm_body")}
+        confirmLabel={t("unpublish_confirm_button")}
+        severity="warning"
+        onConfirm={onUnpublish}
+      />
       <ShareDialog open={shareOpen} onOpenChange={setShareOpen} shareId={test.share_id} />
       <InviteEmailDialog
         open={inviteOpen}
