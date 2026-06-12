@@ -163,6 +163,28 @@ describe("PATCH /api/admin/users/:id", () => {
     expect((await r.json()).error).toBe("not_admin");
   });
 
+  it("returns 500 role_check_failed when the has_role RPC errors", async () => {
+    mockFetch({ roleCheckError: true });
+    const r = await onRequestPatch({
+      request: buildRequest({ role: "admin" }, { authorization: `Bearer ${AAL2_JWT}` }),
+      env,
+      params: { id: TARGET_ID },
+    });
+    expect(r.status).toBe(500);
+    expect((await r.json()).error).toBe("role_check_failed");
+  });
+
+  it("returns 400 invalid_json on a malformed body", async () => {
+    mockFetch({ hasAdminRole: true });
+    const r = await onRequestPatch({
+      request: buildRequest("{broken", { authorization: `Bearer ${AAL2_JWT}` }),
+      env,
+      params: { id: TARGET_ID },
+    });
+    expect(r.status).toBe(400);
+    expect((await r.json()).error).toBe("invalid_json");
+  });
+
   it("returns 400 on empty body (no role and no banned)", async () => {
     mockFetch({ hasAdminRole: true });
     const r = await onRequestPatch({
@@ -295,6 +317,17 @@ describe("PATCH /api/admin/users/:id", () => {
     expect(r.status).toBe(200);
     const body = await r.json();
     expect(body.banned).toBe(true);
+  });
+
+  it("500 role_assign_failed when the user_roles insert errors", async () => {
+    mockFetch({ hasAdminRole: true, roleInsertError: true });
+    const r = await onRequestPatch({
+      request: buildRequest({ role: "moderator" }, { authorization: `Bearer ${AAL2_JWT}` }),
+      env,
+      params: { id: TARGET_ID },
+    });
+    expect(r.status).toBe(500);
+    expect((await r.json()).error).toBe("role_assign_failed");
   });
 
   it("500 when role delete fails", async () => {
