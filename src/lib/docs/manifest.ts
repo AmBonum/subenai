@@ -72,6 +72,7 @@ export const APP_DOCS: Record<string, DocEntry> = {
   "help-support": STUB,
   history: STUB,
   "history-events": STUB,
+  insights: STUB,
   library: STUB,
   "library-insert": STUB,
   notifications: STUB,

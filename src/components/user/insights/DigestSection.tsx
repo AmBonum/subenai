@@ -1,10 +1,9 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo } from "react";
-import { Calendar, Activity, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
+import { Calendar, Activity, CheckCircle2, ArrowRight } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/app/page-header";
 import {
   useDigestList,
   useMarkDigestOpened,
@@ -12,9 +11,7 @@ import {
 } from "@/lib/platform/retention-queries";
 import { tFor } from "@/i18n/app-shell";
 
-export const Route = createLazyFileRoute("/app/digest")({
-  component: DigestPage,
-});
+type TFn = (key: string, vars?: Record<string, string | number>) => string;
 
 function formatDate(iso: string): string {
   try {
@@ -27,7 +24,7 @@ function formatDate(iso: string): string {
   }
 }
 
-function DigestPage() {
+export function DigestSection() {
   const t = tFor("digest");
   const listQ = useDigestList();
   const markOpened = useMarkDigestOpened();
@@ -35,7 +32,7 @@ function DigestPage() {
   const latest = digests[0];
 
   // Auto-mark the latest digest as opened on first render (D3 hybrid:
-  // viewing the page = acknowledgement). Avoid re-firing if already opened.
+  // viewing the section = acknowledgement). Avoid re-firing if already opened.
   useEffect(() => {
     if (!latest || latest.opened_at) return;
     markOpened.mutate(latest.id);
@@ -46,14 +43,9 @@ function DigestPage() {
 
   return (
     <div className="space-y-6" data-testid="app-digest-root">
-      <PageHeader
-        eyebrow={t("page_header_eyebrow")}
-        title={t("heading")}
-        accentWords={1}
-        icon={Sparkles}
-        subtitle={t("subheading")}
-        testId="app-digest-page-header"
-      />
+      <p className="text-sm text-muted-foreground" data-testid="app-digest-subheading">
+        {t("subheading")}
+      </p>
 
       {digests.length === 0 ? (
         <Card data-testid="app-digest-empty-state">
@@ -77,8 +69,6 @@ function DigestPage() {
     </div>
   );
 }
-
-type TFn = (key: string, vars?: Record<string, string | number>) => string;
 
 interface DigestCardProps {
   digest: UserDigest;

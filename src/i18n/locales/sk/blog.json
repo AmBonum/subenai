@@ -21,10 +21,10 @@
     "pillars_count_many": "{count} hĺbkových sprievodcov",
     "empty_state": "zatiaľ tu nič nie je. čoskoro pridáme prvé články.",
     "loading": "načítavam články…",
-    "error": "články sa nepodarilo načítať. skús stránku obnoviť."
+    "error": "Články sa nepodarilo načítať. Skús stránku obnoviť."
   },
   "post": {
-    "back_to_blog": "späť na blog",
+    "back_to_blog": "← Späť do akadémie",
     "reading_time": "{minutes} min čítania",
     "reading_time_suffix": "min čítania",
     "published_on": "publikované {date}",
@@ -34,10 +34,10 @@
     "related_heading": "čítaj ďalej v tomto tematickom celku",
     "author_prefix": "autor:",
     "loading": "načítavam článok…",
-    "error": "článok sa nepodarilo načítať. skús stránku obnoviť.",
-    "not_found_title": "tento článok neexistuje",
-    "not_found_description": "možno bol presunutý alebo zmazaný. skús sa pozrieť na zoznam článkov.",
-    "not_found_back": "späť na blog"
+    "error": "Článok sa nepodarilo načítať. Skús stránku obnoviť.",
+    "not_found_title": "Tento článok neexistuje",
+    "not_found_description": "Možno bol presunutý alebo zmazaný. Skús sa pozrieť na zoznam článkov.",
+    "not_found_back": "← Späť do akadémie"
   },
   "cta": {
     "take_test": "otestuj sa →",
@@ -55,21 +55,21 @@
     "accessed": "navštívené {date}"
   },
   "category": {
-    "back_to_blog": "späť na blog",
+    "back_to_blog": "← Späť do akadémie",
     "all_articles": "všetky články",
     "loading": "načítavam články…",
     "empty": "v tejto kategórii zatiaľ nie sú články.",
-    "not_found_title": "takúto kategóriu nemáme",
-    "not_found_description": "skús sa pozrieť na zoznam všetkých článkov.",
-    "error": "kategóriu sa nepodarilo načítať. skús stránku obnoviť."
+    "not_found_title": "Takúto kategóriu nemáme",
+    "not_found_description": "Skús sa pozrieť na zoznam všetkých článkov.",
+    "error": "Kategóriu sa nepodarilo načítať. Skús stránku obnoviť."
   },
   "author": {
-    "back_to_blog": "späť na blog",
+    "back_to_blog": "← Späť do akadémie",
     "by_author": "články od autora",
     "loading": "načítavam články…",
     "empty": "tento autor zatiaľ nepublikoval.",
-    "not_found_title": "takého autora nemáme",
-    "not_found_description": "skús sa pozrieť na zoznam všetkých článkov.",
-    "error": "stránku autora sa nepodarilo načítať."
+    "not_found_title": "Takého autora nemáme",
+    "not_found_description": "Skús sa pozrieť na zoznam všetkých článkov.",
+    "error": "Stránku autora sa nepodarilo načítať."
   }
 }

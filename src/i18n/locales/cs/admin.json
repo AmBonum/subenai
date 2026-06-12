@@ -203,8 +203,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Přehled admin konzole", "href": "/docs/admin/dashboard" },
-          { "label": "Architektura metrik a audit logu", "href": "/docs/admin/audit" }
+          {
+            "label": "Přehled admin konzole",
+            "href": "/docs/admin/dashboard"
+          },
+          {
+            "label": "Architektura metrik a audit logu",
+            "href": "/docs/admin/audit"
+          }
         ]
       }
     },
@@ -241,8 +247,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Životní cyklus testu (draft → publikované → archiv)", "href": "/docs/admin/tests" },
-          { "label": "Editor testu a otázek", "href": "/docs/admin/questions" }
+          {
+            "label": "Životní cyklus testu (draft → publikované → archiv)",
+            "href": "/docs/admin/tests"
+          },
+          {
+            "label": "Editor testu a otázek",
+            "href": "/docs/admin/questions"
+          }
         ]
       }
     },
@@ -280,8 +292,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Struktura rychlého testu a scoring", "href": "/docs/admin/quick-test" },
-          { "label": "Odvětví a publika (Senior, Mládež, Firma)", "href": "/docs/admin/categories" }
+          {
+            "label": "Struktura rychlého testu a scoring",
+            "href": "/docs/admin/quick-test"
+          },
+          {
+            "label": "Odvětví a publika (Senior, Mládež, Firma)",
+            "href": "/docs/admin/categories"
+          }
         ]
       }
     },
@@ -317,8 +335,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Open Graph specifikace a rozměry", "href": "/docs/admin/share-card" },
-          { "label": "Invalidace cache na sociálních sítích", "href": "/docs/admin/share-card-cache" }
+          {
+            "label": "Open Graph specifikace a rozměry",
+            "href": "/docs/admin/share-card"
+          },
+          {
+            "label": "Invalidace cache na sociálních sítích",
+            "href": "/docs/admin/share-card-cache"
+          }
         ]
       }
     },
@@ -356,9 +380,18 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Struktura otázky a typů odpovědí", "href": "/docs/admin/questions" },
-          { "label": "AI generátor otázek (feature flag)", "href": "/docs/admin/ai-generator" },
-          { "label": "Hlasování a nahlašování", "href": "/docs/admin/reports" }
+          {
+            "label": "Struktura otázky a typů odpovědí",
+            "href": "/docs/admin/questions"
+          },
+          {
+            "label": "AI generátor otázek (feature flag)",
+            "href": "/docs/admin/ai-generator"
+          },
+          {
+            "label": "Hlasování a nahlašování",
+            "href": "/docs/admin/reports"
+          }
         ]
       }
     },
@@ -397,8 +430,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Sady odpovědí a vazba na otázky", "href": "/docs/admin/answer-sets" },
-          { "label": "Best practices pro duplikování a verzování", "href": "/docs/admin/answer-sets-versioning" }
+          {
+            "label": "Sady odpovědí a vazba na otázky",
+            "href": "/docs/admin/answer-sets"
+          },
+          {
+            "label": "Best practices pro duplikování a verzování",
+            "href": "/docs/admin/answer-sets-versioning"
+          }
         ]
       }
     },
@@ -436,8 +475,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Struktura školení a témat", "href": "/docs/admin/trainings" },
-          { "label": "Publikační workflow", "href": "/docs/admin/publishing" }
+          {
+            "label": "Struktura školení a témat",
+            "href": "/docs/admin/trainings"
+          },
+          {
+            "label": "Publikační workflow",
+            "href": "/docs/admin/publishing"
+          }
         ]
       }
     },
@@ -473,8 +518,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Role a oprávnění", "href": "/docs/admin/users" },
-          { "label": "RLS politiky pro user_roles", "href": "/docs/admin/security" }
+          {
+            "label": "Role a oprávnění",
+            "href": "/docs/admin/users"
+          },
+          {
+            "label": "RLS politiky pro user_roles",
+            "href": "/docs/admin/security"
+          }
         ]
       }
     },
@@ -510,8 +561,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Taxonomie větví a témat", "href": "/docs/admin/categories" },
-          { "label": "Slug konvence a migrace", "href": "/docs/admin/categories-slugs" }
+          {
+            "label": "Taxonomie větví a témat",
+            "href": "/docs/admin/categories"
+          },
+          {
+            "label": "Slug konvence a migrace",
+            "href": "/docs/admin/categories-slugs"
+          }
         ]
       }
     },
@@ -547,45 +604,58 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Reportovací důvody a workflow", "href": "/docs/admin/reports" },
-          { "label": "Eskalace: kdy mazat otázku vs. autora", "href": "/docs/admin/reports-escalation" }
+          {
+            "label": "Reportovací důvody a workflow",
+            "href": "/docs/admin/reports"
+          },
+          {
+            "label": "Eskalace: kdy mazat otázku vs. autora",
+            "href": "/docs/admin/reports-escalation"
+          }
         ]
       }
     },
     "support": {
-      "title": "O sekci Podpora",
-      "lead": "Konfiguruješ kontaktní údaje support kanálu — e-mail, telefon a otevírací hodiny. Tyto údaje se zobrazují návštěvníkům v patičce, na kontaktní stránce a v automatických odpovědích.",
+      "title": "O sekci Žádosti podpory",
+      "lead": "Fronta žádostí uživatelů z kontaktního formuláře a podpory v aplikaci. Filtruješ podle stavu, kategorie a přiřazení, odpovídáš ve vlákně a posouváš žádosti přes stavový automat až po vyřešení nebo archivaci.",
       "sections": {
         "what_you_configure": {
-          "heading": "Co zde nastavuješ",
+          "heading": "Co tu děláš",
           "items": [
-            "Support e-mail (povinný, regex validace)",
-            "Telefonní číslo (volitelné, validace pokud je vyplněno)",
-            "Otevírací hodiny (volný text, např. „Po–Pá 9:00–17:00“)"
+            "Filtruješ frontu podle stavu, kategorie, přiřazení a data; fulltextově vyhledáváš",
+            "Měníš stav žádosti (Nové → Řeším → Vyřešené → Archivované) inline nebo v detailu",
+            "Přiřazuješ žádosti sobě nebo jiným adminům (více přiřazených najednou)",
+            "Odpovídáš ve vlákně — veřejná odpověď jde e-mailem, interní poznámka zůstává v týmu"
           ]
         },
         "time_impact": {
           "heading": "Časový dopad změn",
           "items": [
-            "Vstup: synchronní aktualizace stavu formuláře",
-            "Uložení: validace + zápis konfigurace + success toast",
-            "Živá aplikace načte novou konfiguraci při dalším initu (krátký bootstrap delay)"
+            "Změna stavu a přiřazení se projeví okamžitě po potvrzení (refetch fronty)",
+            "Veřejná odpověď odesílá e-mail uživateli hned po uložení",
+            "Počítadlo v bočním panelu se obnovuje jednou za minutu"
           ]
         },
         "pitfalls": {
-          "heading": "Na co si dávat pozor",
+          "heading": "Na co si dát pozor",
           "items": [
-            "Validace je jen klient-side (regex) — server akceptuje jakoukoliv hodnotu, kterou pošleš",
-            "Hodiny nemají formátovou validaci — překlepy se dostanou do živé aplikace",
-            "Aktuálně jde o in-memory config v rámci sezení; perzistence do DB přijde v další iteraci"
+            "Stavové přechody jsou vynucené stavovým automatem — přeskočit krok nejde",
+            "Archivace a označení jako spam vyžadují potvrzení; spam navíc opsání ID žádosti",
+            "Interní poznámky uživatel nikdy nevidí — zkontroluj přepínač před odesláním"
           ]
         }
       },
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Support kanály a SLA", "href": "/docs/admin/support" },
-          { "label": "Eskalační kontakty", "href": "/docs/admin/support-escalation" }
+          {
+            "label": "Kanály podpory a SLA",
+            "href": "/docs/admin/support"
+          },
+          {
+            "label": "Eskalační kontakty",
+            "href": "/docs/admin/support-escalation"
+          }
         ]
       }
     },
@@ -622,8 +692,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Blog editor a SEO pole", "href": "/docs/admin/blog" },
-          { "label": "Workflow publikování", "href": "/docs/admin/publishing" }
+          {
+            "label": "Blog editor a SEO pole",
+            "href": "/docs/admin/blog"
+          },
+          {
+            "label": "Workflow publikování",
+            "href": "/docs/admin/publishing"
+          }
         ]
       }
     },
@@ -661,8 +737,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "CMS stránky a typy bloků", "href": "/docs/admin/pages" },
-          { "label": "Slug pravidla a redirecty", "href": "/docs/admin/pages-slugs" }
+          {
+            "label": "CMS stránky a typy bloků",
+            "href": "/docs/admin/pages"
+          },
+          {
+            "label": "Slug pravidla a redirecty",
+            "href": "/docs/admin/pages-slugs"
+          }
         ]
       }
     },
@@ -700,8 +782,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Struktura navigace", "href": "/docs/admin/navigation" },
-          { "label": "auth_only vs. server-side guards", "href": "/docs/admin/security" }
+          {
+            "label": "Struktura navigace",
+            "href": "/docs/admin/navigation"
+          },
+          {
+            "label": "auth_only vs. server-side guards",
+            "href": "/docs/admin/security"
+          }
         ]
       }
     },
@@ -738,8 +826,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Hlavička: logo, CTA, mobile", "href": "/docs/admin/header" },
-          { "label": "Brand guidelines (formáty loga)", "href": "/docs/admin/branding" }
+          {
+            "label": "Hlavička: logo, CTA, mobile",
+            "href": "/docs/admin/header"
+          },
+          {
+            "label": "Brand guidelines (formáty loga)",
+            "href": "/docs/admin/branding"
+          }
         ]
       }
     },
@@ -776,8 +870,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Patička: sloupce, sociální sítě", "href": "/docs/admin/footer" },
-          { "label": "GDPR / cookie odkazy v patičce (povinné)", "href": "/docs/admin/legal" }
+          {
+            "label": "Patička: sloupce, sociální sítě",
+            "href": "/docs/admin/footer"
+          },
+          {
+            "label": "GDPR / cookie odkazy v patičce (povinné)",
+            "href": "/docs/admin/legal"
+          }
         ]
       }
     },
@@ -815,8 +915,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "GDPR čl. 15–22 a SLA tabulka", "href": "/docs/admin/dsr" },
-          { "label": "Technický runbook výmazu a anonymizace", "href": "/docs/admin/dsr-runbook" }
+          {
+            "label": "GDPR čl. 15–22 a SLA tabulka",
+            "href": "/docs/admin/dsr"
+          },
+          {
+            "label": "Technický runbook výmazu a anonymizace",
+            "href": "/docs/admin/dsr-runbook"
+          }
         ]
       }
     },
@@ -856,9 +962,18 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "DPA workflow a šablony", "href": "/docs/admin/dpa-requests" },
-          { "label": "Anonymizace: kdy a jak", "href": "/docs/admin/dpa-anonymisation" },
-          { "label": "Retention politika a cron job", "href": "/docs/admin/settings" }
+          {
+            "label": "DPA workflow a šablony",
+            "href": "/docs/admin/dpa-requests"
+          },
+          {
+            "label": "Anonymizace: kdy a jak",
+            "href": "/docs/admin/dpa-anonymisation"
+          },
+          {
+            "label": "Retention politika a cron job",
+            "href": "/docs/admin/settings"
+          }
         ]
       }
     },
@@ -897,9 +1012,18 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "Feature flagy a deploy audit", "href": "/docs/admin/settings" },
-          { "label": "Retention politika a cron", "href": "/docs/admin/retention" },
-          { "label": "Seznam subprocesorů a GDPR článek 28", "href": "/docs/admin/subprocessors" }
+          {
+            "label": "Feature flagy a deploy audit",
+            "href": "/docs/admin/settings"
+          },
+          {
+            "label": "Retention politika a cron",
+            "href": "/docs/admin/retention"
+          },
+          {
+            "label": "Seznam subprocesorů a GDPR článek 28",
+            "href": "/docs/admin/subprocessors"
+          }
         ]
       }
     },
@@ -937,9 +1061,18 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "MFA enrolment workflow", "href": "/docs/admin/security" },
-          { "label": "Backup kódy: best practices", "href": "/docs/admin/security-backup-codes" },
-          { "label": "AAL2 enforcement pro /admin", "href": "/docs/admin/aal2" }
+          {
+            "label": "MFA enrolment workflow",
+            "href": "/docs/admin/security"
+          },
+          {
+            "label": "Backup kódy: best practices",
+            "href": "/docs/admin/security-backup-codes"
+          },
+          {
+            "label": "AAL2 enforcement pro /admin",
+            "href": "/docs/admin/aal2"
+          }
         ]
       }
     },
@@ -978,8 +1111,14 @@
       "docs": {
         "heading": "Dokumentace",
         "links": [
-          { "label": "AI precheck rubrika (Claude Haiku 4.5)", "href": "/docs/admin/templates-precheck" },
-          { "label": "CC BY 4.0 a autorská práva", "href": "/docs/admin/templates-license" }
+          {
+            "label": "AI precheck rubrika (Claude Haiku 4.5)",
+            "href": "/docs/admin/templates-precheck"
+          },
+          {
+            "label": "CC BY 4.0 a autorská práva",
+            "href": "/docs/admin/templates-license"
+          }
         ]
       }
     }

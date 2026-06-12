@@ -20,7 +20,7 @@
       "app": "Moje testy",
       "profile": "Profil a nastavenia",
       "signout": "Odhlásiť sa",
-      "signed_out_toast": "Boli ste odhlásení."
+      "signed_out_toast": "Bol/a si odhlásený/á."
     },
     "menu": {
       "rychly_test": {
@@ -37,6 +37,7 @@
         "panel_link_gastro": "Gastro",
         "panel_link_it": "IT",
         "panel_link_composer": "Vytvoriť vlastný test",
+        "panel_link_sablony": "Šablóny testov",
         "panel_featured": "Nové otázky tento mesiac →"
       },
       "skolenia": {
@@ -80,8 +81,9 @@
         "title": "Obsah",
         "links": {
           "test": "Spustiť test",
-          "testy": "Sada testov",
+          "testy": "Sady testov",
           "skolenia": "Školenia",
+          "sablony": "Šablóny testov",
           "skoly": "Pre školy",
           "blog": "Akadémia"
         }
@@ -91,7 +93,7 @@
         "links": {
           "o_projekte": "O projekte",
           "kontakt": "Kontakt",
-          "podpora": "Podporiť projekt",
+          "podpora": "Podpora projektu",
           "sponzori": "Sponzori",
           "zmeny": "Zmeny a verzie"
         }
@@ -340,7 +342,7 @@
     "feature_testy_desc": "Predefinované sady podľa branže — e-shop, gastro, IT, autoservis, verejné služby. Otestuj celý tím naraz, každý dostane vlastný výsledok.",
     "feature_testy_cta": "Pozrieť sady testov",
     "feature_skolenia_title": "Bezplatné školenia",
-    "feature_skolenia_desc": "8 kurzov: phishing, smishing, vishing, BEC, marketplace, investičné a romance scams, hygiena údajov. Krátke, so slovenskými scenármi.",
+    "feature_skolenia_desc": "28 kurzov: phishing, smishing, vishing, BEC, marketplace, investičné a romance scams, hygiena údajov a ďalšie. Krátke, so slovenskými scenármi.",
     "feature_skolenia_cta": "Prejsť do školení",
     "feature_about_title": "O projekte",
     "feature_about_desc": "Prečo je to zadarmo, prečo bez reklám, kam idú peniaze. Transparentne — žiadny paywall, žiadne dark patterns, žiadne tracking bez súhlasu.",
@@ -369,7 +371,7 @@
       "subheading": "Štyri typy ľudí, štyri rôzne začiatky — všetky bezplatné, všetky v slovenčine.",
       "bezni": {
         "title": "Bežný človek",
-        "desc": "Pošlú mi SMS, neviem či kliknúť. Bojím sa, že nalákajú aj mňa. Začni 3-minútovým testom — uvidíš, kde si silný a kde slabý.",
+        "desc": "Pošlú mi SMS, neviem či kliknúť. Bojím sa, že nalákajú aj mňa. Začni testom za 90 sekúnd — uvidíš svoje silné a slabé stránky.",
         "cta": "Spravím si test →"
       },
       "rodicia": {
@@ -394,7 +396,7 @@
       "subheading": "Začni testom, precvič si v školeniach, pochop hĺbku v akadémii.",
       "step1_label": "1. Diagnostika",
       "step1_title": "Spravíš si test",
-      "step1_desc": "3 minúty, 10 reálnych scenárov. Dozvieš sa, kde máš slabé miesto.",
+      "step1_desc": "90 sekúnd, 10 reálnych scenárov. Dozvieš sa, kde máš slabé miesto.",
       "step1_cta": "Spustiť test",
       "step2_label": "2. Tréning",
       "step2_title": "Precvičíš si v školeniach",
@@ -575,20 +577,19 @@
   },
   "kontakt": {
     "meta_title": "Kontakt — subenai",
-    "meta_description": "Napíš nám priamo na email. Technická pomoc, GDPR žiadosti, sponzorstvo aj všeobecné otázky. Odpovedáme typicky do 2 pracovných dní.",
-    "meta_og_description": "Napíš nám priamo na email. Odpovedáme typicky do 2 pracovných dní.",
+    "meta_description": "Napíš nám cez kontaktný formulár. Technická pomoc, GDPR žiadosti, sponzorstvo aj všeobecné otázky. Odpovedáme typicky do 2 pracovných dní.",
+    "meta_og_description": "Napíš nám cez kontaktný formulár. Odpovedáme typicky do 2 pracovných dní.",
     "back_home": "← Späť na domov",
     "title": "Kontakt",
-    "hero_prefix": "Napíš nám priamo na e-mail. Odpovedáme typicky do ",
+    "hero_prefix": "Napíš nám cez formulár. Odpovedáme typicky do ",
     "hero_emph": "2 pracovných dní",
-    "hero_suffix": ". Žiadny formulár, žiadny ticket systém — len reálny človek na druhej strane.",
-    "main_heading": "Hlavný e-mail",
-    "main_body": "Pre všetky typy správ. Klikni na tlačidlo nižšie a otvorí sa ti tvoj e-mailový klient.",
-    "main_button": "Napísať na {email}",
-    "main_fallback_prefix": "Ak ti tlačidlo nefunguje, skopíruj adresu ručne: ",
+    "hero_suffix": ". Dostaneš číslo žiadosti a odpoveď e-mailom — od reálneho človeka, nie od bota.",
+    "main_heading": "Kontaktný formulár",
+    "main_body": "Pre všetky typy správ. Po odoslaní ti pošleme e-mailom potvrdenie s číslom žiadosti a odkazom, kde sleduješ jej stav.",
+    "main_button": "Otvoriť kontaktný formulár",
+    "main_fallback_prefix": "Ak radšej píšeš e-mail, naša adresa je ",
     "topics_heading": "Vyber typ správy",
-    "topics_body": "Predvyplníme predmet, aby tvoja správa rýchlejšie dorazila k správnemu človeku.",
-    "subject_prefix": "subenai — ",
+    "topics_body": "Predvyplníme predmet aj kategóriu, aby tvoja správa rýchlejšie dorazila k správnemu človeku.",
     "topic_tech_label": "Technická pomoc / chyba na stránke",
     "topic_tech_subject": "Technická pomoc",
     "topic_tech_hint": "Niečo nefunguje, stránka padá, alebo ti chýba feature.",
@@ -615,7 +616,24 @@
     "operator_gdpr_prefix": "Detaily o spracovaní osobných údajov sú v ",
     "operator_gdpr_link": "Zásadách ochrany súkromia",
     "operator_gdpr_middle": ". Pre formálnu GDPR žiadosť stačí napísať na ",
-    "operator_gdpr_suffix": " s typom žiadosti v predmete (vymazanie / prístup / oprava / námietka)."
+    "operator_gdpr_suffix": " s typom žiadosti v predmete (vymazanie / prístup / oprava / námietka).",
+    "form": {
+      "error_rate_limited": "Z tejto IP adresy si poslal/a priveľa žiadostí. Skús to neskôr.",
+      "error_email_cooldown": "Z tejto e-mailovej adresy si pred chvíľou poslal/a žiadosť. Skús to o pár minút.",
+      "error_turnstile_failed": "Overenie proti spamu zlyhalo. Obnov stránku a skús to znova.",
+      "error_fields_invalid": "Skontroluj vyplnené polia.",
+      "error_generic": "Nepodarilo sa odoslať. Skús to neskôr alebo nám napíš e-mailom.",
+      "error_turnstile_pending": "Overenie proti spamu sa nedokončilo. Skús to znova.",
+      "error_attachment_too_large": "Príloha presahuje 5 MB.",
+      "error_attachment_empty": "Príloha je prázdna.",
+      "error_attachment_mime": "Nepodporovaný formát (povolené: PNG, JPEG, PDF).",
+      "error_attachment_magic": "Súbor sa nezhoduje s deklarovaným typom.",
+      "error_attachment_filename": "Nepovolený názov súboru.",
+      "error_attachment_pdf": "PDF sa nepodarilo spracovať.",
+      "error_attachment_limit": "Maximum 3 prílohy na žiadosť.",
+      "error_attachment_storage": "Úložisko zlyhalo. Skús to neskôr.",
+      "error_attachment_generic": "Nahranie prílohy zlyhalo."
+    }
   },
   "skoly": {
     "meta_title": "Pre školy a vzdelávacie inštitúcie — subenai",
@@ -625,7 +643,7 @@
     "title": "Pre školy, lektorov a HR",
     "breadcrumb_home": "Domov",
     "breadcrumb_current": "Pre školy",
-    "hero": "Edu mód v Composeri ti dovolí pripraviť test pre triedu alebo tím, zbierať odpovede s menom a e-mailom respondenta a pozrieť si výsledky cez heslom chránený dashboard. Žiadne účty, žiadne registrácie. Zadarmo.",
+    "hero": "Edu mód v editore testov ti dovolí pripraviť test pre triedu alebo tím, zbierať odpovede s menom a e-mailom respondenta a pozrieť si výsledky cez heslom chránený dashboard. Žiadne účty, žiadne registrácie. Zadarmo.",
     "hero_kicker": "pre školy · lektorov · HR",
     "hero_title": "Otestuj triedu na rozpoznávanie scamov — bez registrácií, bez ceny.",
     "hero_subtitle": "Pripravíš test za 3 minúty, žiaci ho urobia za ďalších 5 a ty hneď vidíš kto na čom zlyhal. GDPR čistá rola, retencia 12 mesiacov, CSV export.",
@@ -659,7 +677,7 @@
     "comparison_row_setup": "Setup čas",
     "comparison_row_setup_riaditel": "0 min (čítanie)",
     "comparison_row_setup_itkoord": "5 min (whitelist)",
-    "comparison_row_setup_ucitel": "3 min (composer)",
+    "comparison_row_setup_ucitel": "3 min (editor testov)",
     "comparison_row_signoff": "Disclosure / consent flow",
     "comparison_row_signoff_riaditel": "✓ vidíš text",
     "comparison_row_signoff_itkoord": "—",
@@ -671,13 +689,12 @@
     "step3_outcome": "Žiaci robia test na svojom zariadení, ty vidíš počty v reálnom čase.",
     "step4_outcome": "Komu sa darilo, kde sú slabiny — a CSV pre Excel jedným klikom.",
     "what_heading": "Čo to je",
-    "what_heading": "Čo to je",
     "what_body_prefix": "Edu mód je opt-in nadstavba nad ",
-    "what_body_link": "Composer-om",
+    "what_body_link": "editorom testov",
     "what_body_suffix": ". Použijú ho učitelia (klasifikácia testu pre triedu), lektori (kontrola po školení) alebo HR (onboarding zamestnanca). V štandardnom režime sú odpovede úplne anonymné — edu mód je výnimka, kde respondent vedome odovzdáva meno a e-mail autorovi testu.",
     "step1_heading": "Krok 1: Vytvor test",
     "step1_li1_prefix": "Otvor ",
-    "step1_li1_link": "Composer",
+    "step1_li1_link": "editor testov",
     "step1_li1_suffix": " a označ predefinované sady alebo si poskladaj otázky ručne.",
     "step1_li2": "Nastav prah úspešnosti (default 70 %) a počet otázok (5–50).",
     "step1_li3": "Pomenuj zostavu (napr. „Trieda 9.A — Q1 2026\").",
@@ -741,7 +758,7 @@
     "faq_mobile_q": "Funguje to na mobile?",
     "faq_mobile_a": "Áno, intake formulár aj dashboard sú mobile-first.",
     "outro_prefix": "Pripravený? Otvor ",
-    "outro_link": "Composer",
+    "outro_link": "editor testov",
     "outro_middle": " a vytvor svoj prvý edu test. Otázky alebo požiadavku na DPA pošli na ",
     "outro_suffix": ".",
     "faq_section_pristup": "Heslo a prístup",
@@ -753,10 +770,10 @@
     "footer_heading": "Vyber si, kde pokračovať",
     "footer_subheading": "Edu mód je len jeden zo spôsobov, ako môže škola používať subenai. Pozri sa aj na ostatné.",
     "footer_cta_composer_title": "Vytvor test pre triedu",
-    "footer_cta_composer_desc": "Composer s edu módom — 3 minúty od nuly po link pre študentov.",
-    "footer_cta_composer_label": "Otvor Composer →",
+    "footer_cta_composer_desc": "Editor testov s edu módom — 3 minúty od nuly po link pre študentov.",
+    "footer_cta_composer_label": "Otvor editor testov →",
     "footer_cta_test_title": "Skús test najprv sám",
-    "footer_cta_test_desc": "Anonymný 5-minútový test rozpoznávania scamov. Zisti, čo žiakov čaká.",
+    "footer_cta_test_desc": "Anonymný test rozpoznávania scamov za 90 sekúnd. Zisti, čo žiakov čaká.",
     "footer_cta_test_label": "Spusti rýchly test →",
     "footer_cta_blog_title": "Čítaj akadémiu",
     "footer_cta_blog_desc": "80+ sprievodcov a článkov o online podvodoch. Pre teba aj pre tvojich žiakov.",

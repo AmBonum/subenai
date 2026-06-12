@@ -20,7 +20,7 @@
       "app": "Moje testy",
       "profile": "Profil a nastavení",
       "signout": "Odhlásit se",
-      "signed_out_toast": "Byli jste odhlášeni."
+      "signed_out_toast": "Byl/a jsi odhlášen/a."
     },
     "menu": {
       "rychly_test": {
@@ -37,6 +37,7 @@
         "panel_link_gastro": "Gastro",
         "panel_link_it": "IT",
         "panel_link_composer": "Vytvořit vlastní test",
+        "panel_link_sablony": "Šablony testů",
         "panel_featured": "Nové otázky tento měsíc →"
       },
       "skolenia": {
@@ -76,8 +77,9 @@
         "title": "Obsah",
         "links": {
           "test": "Spustit test",
-          "testy": "Sada testů",
+          "testy": "Sady testů",
           "skolenia": "Školení",
+          "sablony": "Šablony testů",
           "skoly": "Pro školy"
         }
       },
@@ -86,7 +88,7 @@
         "links": {
           "o_projekte": "O projektu",
           "kontakt": "Kontakt",
-          "podpora": "Podpořit projekt",
+          "podpora": "Podpora projektu",
           "sponzori": "Sponzoři",
           "zmeny": "Změny a verze"
         }
@@ -335,7 +337,7 @@
     "feature_testy_desc": "Předdefinované sady podle oboru — e-shop, gastro, IT, autoservis, veřejné služby. Otestujte celý tým najednou, každý dostane vlastní výsledek.",
     "feature_testy_cta": "Prohlédnout sady testů",
     "feature_skolenia_title": "Bezplatné kurzy",
-    "feature_skolenia_desc": "8 kurzů: phishing, smishing, vishing, BEC, marketplace, investiční a romance scams, hygiena údajů. Krátké, se slovenskými scénáři.",
+    "feature_skolenia_desc": "28 kurzů: phishing, smishing, vishing, BEC, marketplace, investiční a romance scams, hygiena údajů a další. Krátké, se slovenskými scénáři.",
     "feature_skolenia_cta": "Přejít na kurzy",
     "feature_about_title": "O projektu",
     "feature_about_desc": "Proč je to zdarma, proč bez reklam, kam jdou peníze. Transparentně — žádný paywall, žádné dark patterns, žádný tracking bez souhlasu.",
@@ -479,20 +481,19 @@
   },
   "kontakt": {
     "meta_title": "Kontakt — subenai",
-    "meta_description": "Napište nám přímo na e-mail. Technická pomoc, GDPR žádosti, sponzorství i obecné otázky. Odpovídáme typicky do 2 pracovních dnů.",
-    "meta_og_description": "Napište nám přímo na e-mail. Odpovídáme typicky do 2 pracovních dnů.",
+    "meta_description": "Napište nám přes kontaktní formulář. Technická pomoc, GDPR žádosti, sponzorství i obecné otázky. Odpovídáme typicky do 2 pracovních dnů.",
+    "meta_og_description": "Napište nám přes kontaktní formulář. Odpovídáme typicky do 2 pracovních dnů.",
     "back_home": "← Zpět na domů",
     "title": "Kontakt",
-    "hero_prefix": "Napište nám přímo na e-mail. Odpovídáme typicky do ",
+    "hero_prefix": "Napište nám přes formulář. Odpovídáme typicky do ",
     "hero_emph": "2 pracovních dnů",
-    "hero_suffix": ". Žádný formulář, žádný ticket systém — jen reálný člověk na druhé straně.",
-    "main_heading": "Hlavní e-mail",
-    "main_body": "Pro všechny typy zpráv. Klikněte na tlačítko níže a otevře se vám e-mailový klient.",
-    "main_button": "Napsat na {email}",
-    "main_fallback_prefix": "Pokud vám tlačítko nefunguje, zkopírujte adresu ručně: ",
+    "hero_suffix": ". Dostanete číslo žádosti a odpověď e-mailem — od reálného člověka, ne od bota.",
+    "main_heading": "Kontaktní formulář",
+    "main_body": "Pro všechny typy zpráv. Po odeslání vám pošleme e-mailem potvrzení s číslem žádosti a odkazem, kde sledujete její stav.",
+    "main_button": "Otevřít kontaktní formulář",
+    "main_fallback_prefix": "Pokud raději píšete e-mail, naše adresa je ",
     "topics_heading": "Vyberte typ zprávy",
-    "topics_body": "Předvyplníme předmět, aby vaše zpráva rychleji dorazila ke správnému člověku.",
-    "subject_prefix": "subenai — ",
+    "topics_body": "Předvyplníme předmět i kategorii, aby vaše zpráva rychleji dorazila ke správnému člověku.",
     "topic_tech_label": "Technická pomoc / chyba na stránce",
     "topic_tech_subject": "Technická pomoc",
     "topic_tech_hint": "Něco nefunguje, stránka padá, nebo vám chybí feature.",
@@ -519,21 +520,38 @@
     "operator_gdpr_prefix": "Detaily o zpracování osobních údajů jsou v ",
     "operator_gdpr_link": "Zásadách ochrany soukromí",
     "operator_gdpr_middle": ". Pro formální GDPR žádost stačí napsat na ",
-    "operator_gdpr_suffix": " s typem žádosti v předmětu (vymazání / přístup / oprava / námitka)."
+    "operator_gdpr_suffix": " s typem žádosti v předmětu (vymazání / přístup / oprava / námitka).",
+    "form": {
+      "error_rate_limited": "Z této IP adresy bylo odesláno příliš mnoho žádostí. Zkuste to později.",
+      "error_email_cooldown": "Z této e-mailové adresy byla před chvílí odeslána žádost. Zkuste to za pár minut.",
+      "error_turnstile_failed": "Ověření proti spamu selhalo. Obnovte stránku a zkuste to znovu.",
+      "error_fields_invalid": "Zkontrolujte vyplněná pole.",
+      "error_generic": "Nepodařilo se odeslat. Zkuste to později nebo nám napište e-mailem.",
+      "error_turnstile_pending": "Ověření proti spamu se nedokončilo. Zkuste to znovu.",
+      "error_attachment_too_large": "Příloha přesahuje 5 MB.",
+      "error_attachment_empty": "Příloha je prázdná.",
+      "error_attachment_mime": "Nepodporovaný formát (povoleno: PNG, JPEG, PDF).",
+      "error_attachment_magic": "Soubor se neshoduje s deklarovaným typem.",
+      "error_attachment_filename": "Nepovolený název souboru.",
+      "error_attachment_pdf": "PDF se nepodařilo zpracovat.",
+      "error_attachment_limit": "Maximum 3 přílohy na žádost.",
+      "error_attachment_storage": "Úložiště selhalo. Zkuste to později.",
+      "error_attachment_generic": "Nahrání přílohy selhalo."
+    }
   },
   "skoly": {
     "meta_title": "Pro školy a vzdělávací instituce — subenai",
     "meta_description": "Jak připravit edu test pro třídu nebo tým, bezpečně ho sdílet a otevřít výsledky. Heslo, GDPR role autora, retence 12 měsíců, CSV export.",
     "back_home": "← Zpět na domů",
     "title": "Pro školy, lektory a HR",
-    "hero": "Edu mód v Composeru vám umožní připravit test pro třídu nebo tým, sbírat odpovědi se jménem a e-mailem respondenta a podívat se na výsledky přes heslem chráněný dashboard. Žádné účty, žádné registrace. Zdarma.",
+    "hero": "Edu mód v editoru testů vám umožní připravit test pro třídu nebo tým, sbírat odpovědi se jménem a e-mailem respondenta a podívat se na výsledky přes heslem chráněný dashboard. Žádné účty, žádné registrace. Zdarma.",
     "what_heading": "Co to je",
     "what_body_prefix": "Edu mód je opt-in nadstavba nad ",
-    "what_body_link": "Composerem",
+    "what_body_link": "editorem testů",
     "what_body_suffix": ". Použijí ho učitelé (klasifikace testu pro třídu), lektoři (kontrola po školení) nebo HR (onboarding zaměstnance). Ve standardním režimu jsou odpovědi zcela anonymní — edu mód je výjimka, kdy respondent vědomě předává jméno a e-mail autorovi testu.",
     "step1_heading": "Krok 1: Vytvořte test",
     "step1_li1_prefix": "Otevřete ",
-    "step1_li1_link": "Composer",
+    "step1_li1_link": "editor testů",
     "step1_li1_suffix": " a označte předdefinované sady nebo si poskládejte otázky ručně.",
     "step1_li2": "Nastavte práh úspěšnosti (výchozí 70 %) a počet otázek (5–50).",
     "step1_li3": "Pojmenujte sestavu (např. „Třída 9.A — Q1 2026\").",
@@ -597,7 +615,7 @@
     "faq_mobile_q": "Funguje to na mobilu?",
     "faq_mobile_a": "Ano, intake formulář i dashboard jsou mobile-first.",
     "outro_prefix": "Připraveni? Otevřete ",
-    "outro_link": "Composer",
+    "outro_link": "editor testů",
     "outro_middle": " a vytvořte svůj první edu test. Otázky nebo požadavek na DPA pošlete na ",
     "outro_suffix": "."
   },

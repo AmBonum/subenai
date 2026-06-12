@@ -71,7 +71,7 @@ export async function drawIgStoryToCanvas(args: DrawArgs): Promise<Blob> {
   ctx.fillText("/ 100", W / 2, 780);
 
   // Percentile pill
-  const pillText = `Lepší než ${args.percentile} % ľudí`;
+  const pillText = `Lepšie než ${args.percentile} % ľudí`;
   ctx.font = "700 36px system-ui";
   const pillW = ctx.measureText(pillText).width + 80;
   const pillX = (W - pillW) / 2;

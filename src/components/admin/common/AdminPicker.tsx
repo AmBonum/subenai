@@ -54,7 +54,11 @@ export function AdminPicker({
       <PopoverTrigger asChild data-testid="admin-ticket-assignment-picker">
         {trigger as React.ReactElement}
       </PopoverTrigger>
-      <PopoverContent className="w-72 p-0" align={align}>
+      <PopoverContent
+        className="w-72 p-0"
+        align={align}
+        data-testid="admin-ticket-assignment-popover"
+      >
         <Command>
           <CommandInput
             placeholder={searchPlaceholder}
@@ -63,7 +67,7 @@ export function AdminPicker({
             data-testid="admin-ticket-assignment-search"
           />
           <CommandList style={{ maxHeight }}>
-            <CommandEmpty>{emptyLabel}</CommandEmpty>
+            <CommandEmpty data-testid="admin-ticket-assignment-empty">{emptyLabel}</CommandEmpty>
             <CommandGroup>
               {ordered.map((admin) => {
                 const isSelected = selectedAdminIds.includes(admin.user_id);

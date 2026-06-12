@@ -43,6 +43,10 @@ interface SupportContactFormProps {
   prefill?: {
     email?: string;
     name?: string;
+    /** Initial subject — e.g. from a /contact topic card deep-link. Stays editable. */
+    subject?: string;
+    /** Initially selected category — e.g. from a /contact topic card deep-link. Stays editable. */
+    category?: SupportContactFormData["category"];
   };
   /**
    * Caller is responsible for: invoking the CF endpoint, validating
@@ -136,8 +140,8 @@ export function SupportContactForm({
   const form = useForm<SupportContactFormData>({
     resolver: zodResolver(supportContactSchema),
     defaultValues: {
-      subject: "",
-      category: undefined,
+      subject: prefill?.subject ?? "",
+      category: prefill?.category,
       body: "",
       email: prefill?.email ?? "",
       name: prefill?.name ?? "",
@@ -189,7 +193,7 @@ export function SupportContactForm({
         }
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Nepodarilo sa odoslať. Skúste neskôr.";
+      const message = err instanceof Error ? err.message : "Nepodarilo sa odoslať. Skús to neskôr.";
       setSubmitError(message);
     }
   });
@@ -333,7 +337,9 @@ export function SupportContactForm({
           {...register("email")}
         />
         {isAuthenticated && (
-          <p className="text-xs text-muted-foreground">E-mail vyplníme automaticky z vášho účtu.</p>
+          <p className="text-xs text-muted-foreground">
+            E-mail vyplníme automaticky z tvojho účtu.
+          </p>
         )}
         {errors.email && (
           <p

@@ -1,5 +1,6 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { tFor } from "@/i18n/marketing";
+import { formatDateLongSk } from "@/lib/format/date";
 import type { ChangelogEntry } from "./changelog";
 
 type SectionKey = keyof Omit<ChangelogEntry, "version" | "date">;
@@ -185,7 +186,7 @@ function formatDate(iso: string): string {
   const [y, m, d] = parts as [number, number, number];
   const dt = new Date(y, m - 1, d);
   if (Number.isNaN(dt.getTime())) return iso;
-  return dt.toLocaleDateString("sk-SK", { day: "numeric", month: "long", year: "numeric" });
+  return formatDateLongSk(dt);
 }
 
 const ESCAPE_MAP: Record<string, string> = {

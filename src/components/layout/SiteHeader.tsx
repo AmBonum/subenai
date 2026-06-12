@@ -42,7 +42,10 @@ const MEGA_ITEMS: readonly MegaMenuItemDef[] = [
         },
         {
           headingKey: "panel_section_lektorov",
-          links: [{ key: "composer", labelKey: "panel_link_composer", href: ROUTES.builder }],
+          links: [
+            { key: "composer", labelKey: "panel_link_composer", href: ROUTES.builder },
+            { key: "sablony", labelKey: "panel_link_sablony", href: ROUTES.sablony },
+          ],
         },
       ],
       featured: {

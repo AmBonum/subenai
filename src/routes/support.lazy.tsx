@@ -457,6 +457,16 @@ export function DonateForm({ cancelled = false }: DonateFormProps) {
             </p>
           </div>
         </form>
+
+        <p className="mt-8 text-center text-sm text-muted-foreground">
+          <Link
+            to={ROUTES.spravovat}
+            data-testid="podpora-manage-support-link"
+            className="underline underline-offset-2 hover:text-foreground"
+          >
+            Už prispievaš? Spravuj svoju podporu
+          </Link>
+        </p>
       </main>
     </div>
   );

@@ -30,35 +30,35 @@ export const Route = createFileRoute("/app/help/contact")({
 function mapErrorCode(code: string | undefined): string {
   switch (code) {
     case "rate_limited_user":
-      return "Odoslali ste príliš veľa žiadostí. Skúste neskôr.";
+      return "Poslal/a si priveľa žiadostí. Skús to neskôr.";
     case "subject_invalid":
     case "body_invalid":
     case "email_invalid":
     case "name_invalid":
     case "category_invalid":
-      return "Skontrolujte vyplnené polia.";
+      return "Skontroluj vyplnené polia.";
     case "not_authenticated":
     case "user_id_must_match_auth_uid":
-      return "Vaša relácia vypršala. Prihláste sa znova.";
+      return "Tvoja relácia vypršala. Prihlás sa znova.";
     default:
-      return "Nepodarilo sa odoslať. Skúste neskôr alebo nás kontaktujte e-mailom.";
+      return "Nepodarilo sa odoslať. Skús to neskôr alebo nám napíš e-mailom.";
   }
 }
 
 function AppHelpContactPage() {
   const profileQ = useCurrentProfile();
-  const [submitted, setSubmitted] = useState<{ ticketId: string } | null>(null);
+  const [submitted, setSubmitted] = useState<{ ticketId: string; viewToken?: string } | null>(null);
 
   const me = profileQ.data;
 
   async function handleSubmit(data: SupportContactFormData): Promise<SupportContactSubmitResult> {
     if (!me?.id) {
-      throw new Error("Vaša relácia vypršala. Prihláste sa znova.");
+      throw new Error("Tvoja relácia vypršala. Prihlás sa znova.");
     }
     const { data: sessionData } = await supabase.auth.getSession();
     const token = sessionData.session?.access_token;
     if (!token) {
-      throw new Error("Vaša relácia vypršala. Prihláste sa znova.");
+      throw new Error("Tvoja relácia vypršala. Prihlás sa znova.");
     }
 
     const res = await fetch("/api/support-ticket-create", {
@@ -76,7 +76,7 @@ function AppHelpContactPage() {
     }
 
     const json = (await res.json()) as { ok: boolean; ticket_id: string; view_token: string };
-    setSubmitted({ ticketId: json.ticket_id });
+    setSubmitted({ ticketId: json.ticket_id, viewToken: json.view_token });
     toast.success("Žiadosť bola odoslaná. Odpovieme do dvoch pracovných dní.");
     return { ticketId: json.ticket_id, viewToken: json.view_token };
   }
@@ -126,8 +126,8 @@ function AppHelpContactPage() {
       </div>
 
       <p className="max-w-2xl text-sm text-muted-foreground">
-        Napíšte nám priamo z aplikácie — odpovieme do dvoch pracovných dní. E-mail a meno vyplníme
-        automaticky z vášho účtu.
+        Napíš nám priamo z aplikácie — odpovieme do dvoch pracovných dní. E-mail a meno vyplníme
+        automaticky z tvojho účtu.
       </p>
 
       {submitted ? (
@@ -136,18 +136,30 @@ function AppHelpContactPage() {
           aria-live="polite"
           data-testid="app-help-contact-success-state"
         >
-          <h2 className="text-base font-semibold">Vašu žiadosť sme prijali</h2>
+          <h2 className="text-base font-semibold">Tvoju žiadosť sme prijali</h2>
           <p className="mt-2 text-sm">
             Číslo žiadosti:{" "}
             <code data-testid="app-help-contact-success-ticket-id">{submitted.ticketId}</code>
           </p>
-          <p className="mt-2 text-sm">
-            Stav žiadosti uvidíte v sekcii Moje žiadosti (čoskoro). Odpovieme vám e-mailom.
-          </p>
+          <p className="mt-2 text-sm">Odpovieme ti e-mailom.</p>
+          {submitted.viewToken && (
+            <p className="mt-2 text-sm">
+              <Link
+                to="/contact-form/ticket/$id"
+                params={{ id: submitted.ticketId }}
+                search={{ token: submitted.viewToken }}
+                className="font-semibold underline underline-offset-2"
+                data-testid="app-help-contact-thread-link"
+              >
+                Sleduj stav svojej žiadosti tu
+              </Link>{" "}
+              — odkaz platí 90 dní.
+            </p>
+          )}
         </section>
       ) : profileQ.isLoading ? (
         <div data-testid="app-help-contact-loading" className="text-sm text-muted-foreground">
-          Načítavam váš profil…
+          Načítavam tvoj profil…
         </div>
       ) : (
         <div className="max-w-2xl">

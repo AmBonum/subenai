@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search, Filter } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -59,6 +60,12 @@ function LibraryPage() {
   const [q, setQ] = useState("");
   const [branch, setBranch] = useState<string>("all");
   const [difficulty, setDifficulty] = useState<string>("all");
+
+  const clearFilters = () => {
+    setQ("");
+    setBranch("all");
+    setDifficulty("all");
+  };
 
   const branches = useMemo(
     () => Array.from(new Set(questions.map((x) => x.category))).sort(),
@@ -134,8 +141,27 @@ function LibraryPage() {
 
       {filtered.length === 0 ? (
         <Card data-testid="library-empty-state">
-          <CardContent className="p-8 text-center text-sm text-muted-foreground">
-            {t("empty_state")}
+          <CardContent className="space-y-3 p-8 text-center">
+            {questions.length === 0 ? (
+              <>
+                <p className="text-sm font-medium" data-testid="library-empty-no-data-title">
+                  {t("empty_no_data_title")}
+                </p>
+                <p className="text-sm text-muted-foreground">{t("empty_no_data_body")}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">{t("empty_state")}</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearFilters}
+                  data-testid="library-empty-clear-filters-button"
+                >
+                  {t("empty_clear_filters")}
+                </Button>
+              </>
+            )}
           </CardContent>
         </Card>
       ) : (

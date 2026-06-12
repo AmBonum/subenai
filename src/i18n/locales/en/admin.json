@@ -203,8 +203,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Admin console overview", "href": "/docs/admin/dashboard" },
-          { "label": "Metrics and audit log architecture", "href": "/docs/admin/audit" }
+          {
+            "label": "Admin console overview",
+            "href": "/docs/admin/dashboard"
+          },
+          {
+            "label": "Metrics and audit log architecture",
+            "href": "/docs/admin/audit"
+          }
         ]
       }
     },
@@ -241,8 +247,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Test lifecycle (draft → published → archive)", "href": "/docs/admin/tests" },
-          { "label": "Test and question editor", "href": "/docs/admin/questions" }
+          {
+            "label": "Test lifecycle (draft → published → archive)",
+            "href": "/docs/admin/tests"
+          },
+          {
+            "label": "Test and question editor",
+            "href": "/docs/admin/questions"
+          }
         ]
       }
     },
@@ -280,8 +292,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Quick-test structure and scoring", "href": "/docs/admin/quick-test" },
-          { "label": "Verticals and audiences (Senior, Youth, Company)", "href": "/docs/admin/categories" }
+          {
+            "label": "Quick-test structure and scoring",
+            "href": "/docs/admin/quick-test"
+          },
+          {
+            "label": "Verticals and audiences (Senior, Youth, Company)",
+            "href": "/docs/admin/categories"
+          }
         ]
       }
     },
@@ -317,8 +335,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Open Graph spec and dimensions", "href": "/docs/admin/share-card" },
-          { "label": "Cache invalidation on social networks", "href": "/docs/admin/share-card-cache" }
+          {
+            "label": "Open Graph spec and dimensions",
+            "href": "/docs/admin/share-card"
+          },
+          {
+            "label": "Cache invalidation on social networks",
+            "href": "/docs/admin/share-card-cache"
+          }
         ]
       }
     },
@@ -356,9 +380,18 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Question structure and answer types", "href": "/docs/admin/questions" },
-          { "label": "AI question generator (feature flag)", "href": "/docs/admin/ai-generator" },
-          { "label": "Voting and reporting", "href": "/docs/admin/reports" }
+          {
+            "label": "Question structure and answer types",
+            "href": "/docs/admin/questions"
+          },
+          {
+            "label": "AI question generator (feature flag)",
+            "href": "/docs/admin/ai-generator"
+          },
+          {
+            "label": "Voting and reporting",
+            "href": "/docs/admin/reports"
+          }
         ]
       }
     },
@@ -397,8 +430,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Answer sets and the link to questions", "href": "/docs/admin/answer-sets" },
-          { "label": "Best practices for duplication and versioning", "href": "/docs/admin/answer-sets-versioning" }
+          {
+            "label": "Answer sets and the link to questions",
+            "href": "/docs/admin/answer-sets"
+          },
+          {
+            "label": "Best practices for duplication and versioning",
+            "href": "/docs/admin/answer-sets-versioning"
+          }
         ]
       }
     },
@@ -436,8 +475,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Training and topic structure", "href": "/docs/admin/trainings" },
-          { "label": "Publishing workflow", "href": "/docs/admin/publishing" }
+          {
+            "label": "Training and topic structure",
+            "href": "/docs/admin/trainings"
+          },
+          {
+            "label": "Publishing workflow",
+            "href": "/docs/admin/publishing"
+          }
         ]
       }
     },
@@ -473,8 +518,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Roles and permissions", "href": "/docs/admin/users" },
-          { "label": "RLS policies for user_roles", "href": "/docs/admin/security" }
+          {
+            "label": "Roles and permissions",
+            "href": "/docs/admin/users"
+          },
+          {
+            "label": "RLS policies for user_roles",
+            "href": "/docs/admin/security"
+          }
         ]
       }
     },
@@ -510,8 +561,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Branch and topic taxonomy", "href": "/docs/admin/categories" },
-          { "label": "Slug conventions and migrations", "href": "/docs/admin/categories-slugs" }
+          {
+            "label": "Branch and topic taxonomy",
+            "href": "/docs/admin/categories"
+          },
+          {
+            "label": "Slug conventions and migrations",
+            "href": "/docs/admin/categories-slugs"
+          }
         ]
       }
     },
@@ -547,45 +604,58 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Report reasons and workflow", "href": "/docs/admin/reports" },
-          { "label": "Escalation: when to delete a question vs. an author", "href": "/docs/admin/reports-escalation" }
+          {
+            "label": "Report reasons and workflow",
+            "href": "/docs/admin/reports"
+          },
+          {
+            "label": "Escalation: when to delete a question vs. an author",
+            "href": "/docs/admin/reports-escalation"
+          }
         ]
       }
     },
     "support": {
-      "title": "About the Support section",
-      "lead": "You configure the support channel contact details — email, phone and opening hours. These values are shown to visitors in the footer, on the contact page and in automated replies.",
+      "title": "About the Support requests section",
+      "lead": "The queue of user requests from the contact form and in-app support. You filter by status, category and assignment, reply in the thread, and move requests through the state machine until they are resolved or archived.",
       "sections": {
         "what_you_configure": {
-          "heading": "What you configure",
+          "heading": "What you do here",
           "items": [
-            "Support email (required, regex-validated)",
-            "Phone number (optional, validated when filled in)",
-            "Opening hours (free text, e.g. \"Mon–Fri 9:00–17:00\")"
+            "Filter the queue by status, category, assignment and date; full-text search",
+            "Change a request's status (New → In progress → Resolved → Archived) inline or in the detail",
+            "Assign requests to yourself or other admins (multiple assignees at once)",
+            "Reply in the thread — a public reply goes out by e-mail, an internal note stays within the team"
           ]
         },
         "time_impact": {
-          "heading": "Timing of changes",
+          "heading": "Time impact of changes",
           "items": [
-            "Input: synchronous form state update",
-            "Save: validation + config write + success toast",
-            "The live app picks up the new configuration on its next init (short bootstrap delay)"
+            "Status changes and assignments apply immediately after confirmation (queue refetch)",
+            "A public reply sends an e-mail to the user right after saving",
+            "The sidebar counter refreshes once a minute"
           ]
         },
         "pitfalls": {
-          "heading": "Watch out for",
+          "heading": "What to watch out for",
           "items": [
-            "Validation is client-side only (regex) — the server accepts any value you send",
-            "Hours have no format validation — typos reach the live app",
-            "This is currently an in-memory config scoped to the session; DB persistence is coming in the next iteration"
+            "Status transitions are enforced by the state machine — you cannot skip a step",
+            "Archiving and marking as spam require confirmation; spam additionally requires typing the request ID",
+            "Internal notes are never visible to the user — double-check the toggle before sending"
           ]
         }
       },
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Support channels and SLA", "href": "/docs/admin/support" },
-          { "label": "Escalation contacts", "href": "/docs/admin/support-escalation" }
+          {
+            "label": "Support channels and SLA",
+            "href": "/docs/admin/support"
+          },
+          {
+            "label": "Escalation contacts",
+            "href": "/docs/admin/support-escalation"
+          }
         ]
       }
     },
@@ -622,8 +692,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Blog editor and SEO fields", "href": "/docs/admin/blog" },
-          { "label": "Publishing workflow", "href": "/docs/admin/publishing" }
+          {
+            "label": "Blog editor and SEO fields",
+            "href": "/docs/admin/blog"
+          },
+          {
+            "label": "Publishing workflow",
+            "href": "/docs/admin/publishing"
+          }
         ]
       }
     },
@@ -661,8 +737,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "CMS pages and block types", "href": "/docs/admin/pages" },
-          { "label": "Slug rules and redirects", "href": "/docs/admin/pages-slugs" }
+          {
+            "label": "CMS pages and block types",
+            "href": "/docs/admin/pages"
+          },
+          {
+            "label": "Slug rules and redirects",
+            "href": "/docs/admin/pages-slugs"
+          }
         ]
       }
     },
@@ -700,8 +782,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Navigation structure", "href": "/docs/admin/navigation" },
-          { "label": "auth_only vs. server-side guards", "href": "/docs/admin/security" }
+          {
+            "label": "Navigation structure",
+            "href": "/docs/admin/navigation"
+          },
+          {
+            "label": "auth_only vs. server-side guards",
+            "href": "/docs/admin/security"
+          }
         ]
       }
     },
@@ -738,8 +826,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Header: logo, CTA, mobile", "href": "/docs/admin/header" },
-          { "label": "Brand guidelines (logo formats)", "href": "/docs/admin/branding" }
+          {
+            "label": "Header: logo, CTA, mobile",
+            "href": "/docs/admin/header"
+          },
+          {
+            "label": "Brand guidelines (logo formats)",
+            "href": "/docs/admin/branding"
+          }
         ]
       }
     },
@@ -776,8 +870,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Footer: columns, social networks", "href": "/docs/admin/footer" },
-          { "label": "GDPR / cookie links in the footer (mandatory)", "href": "/docs/admin/legal" }
+          {
+            "label": "Footer: columns, social networks",
+            "href": "/docs/admin/footer"
+          },
+          {
+            "label": "GDPR / cookie links in the footer (mandatory)",
+            "href": "/docs/admin/legal"
+          }
         ]
       }
     },
@@ -815,8 +915,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "GDPR art. 15–22 and SLA table", "href": "/docs/admin/dsr" },
-          { "label": "Technical runbook for erasure and anonymisation", "href": "/docs/admin/dsr-runbook" }
+          {
+            "label": "GDPR art. 15–22 and SLA table",
+            "href": "/docs/admin/dsr"
+          },
+          {
+            "label": "Technical runbook for erasure and anonymisation",
+            "href": "/docs/admin/dsr-runbook"
+          }
         ]
       }
     },
@@ -856,9 +962,18 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "DPA workflow and templates", "href": "/docs/admin/dpa-requests" },
-          { "label": "Anonymisation: when and how", "href": "/docs/admin/dpa-anonymisation" },
-          { "label": "Retention policy and cron job", "href": "/docs/admin/settings" }
+          {
+            "label": "DPA workflow and templates",
+            "href": "/docs/admin/dpa-requests"
+          },
+          {
+            "label": "Anonymisation: when and how",
+            "href": "/docs/admin/dpa-anonymisation"
+          },
+          {
+            "label": "Retention policy and cron job",
+            "href": "/docs/admin/settings"
+          }
         ]
       }
     },
@@ -897,9 +1012,18 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Feature flags and deploy audit", "href": "/docs/admin/settings" },
-          { "label": "Retention policy and cron", "href": "/docs/admin/retention" },
-          { "label": "Subprocessor list and GDPR article 28", "href": "/docs/admin/subprocessors" }
+          {
+            "label": "Feature flags and deploy audit",
+            "href": "/docs/admin/settings"
+          },
+          {
+            "label": "Retention policy and cron",
+            "href": "/docs/admin/retention"
+          },
+          {
+            "label": "Subprocessor list and GDPR article 28",
+            "href": "/docs/admin/subprocessors"
+          }
         ]
       }
     },
@@ -937,9 +1061,18 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "MFA enrolment workflow", "href": "/docs/admin/security" },
-          { "label": "Backup codes: best practices", "href": "/docs/admin/security-backup-codes" },
-          { "label": "AAL2 enforcement for /admin", "href": "/docs/admin/aal2" }
+          {
+            "label": "MFA enrolment workflow",
+            "href": "/docs/admin/security"
+          },
+          {
+            "label": "Backup codes: best practices",
+            "href": "/docs/admin/security-backup-codes"
+          },
+          {
+            "label": "AAL2 enforcement for /admin",
+            "href": "/docs/admin/aal2"
+          }
         ]
       }
     },
@@ -978,8 +1111,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "AI precheck rubric (Claude Haiku 4.5)", "href": "/docs/admin/templates-precheck" },
-          { "label": "CC BY 4.0 and authorship", "href": "/docs/admin/templates-license" }
+          {
+            "label": "AI precheck rubric (Claude Haiku 4.5)",
+            "href": "/docs/admin/templates-precheck"
+          },
+          {
+            "label": "CC BY 4.0 and authorship",
+            "href": "/docs/admin/templates-license"
+          }
         ]
       }
     }

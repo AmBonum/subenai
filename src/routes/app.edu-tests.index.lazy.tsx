@@ -108,10 +108,14 @@ export function EduTestsList() {
     );
   }
 
-  if (sets.length === 0) {
-    return (
-      <div className="space-y-6">
-        <PageHeader title={t("heading")} subtitle={t("description")} />
+  // Single PageHeader + explainer for both the empty and populated
+  // branches — the wiring test enforces exactly one explainer instance
+  // per route file.
+  return (
+    <div className="space-y-6">
+      <PageHeader title={t("heading")} subtitle={t("description")} />
+      <AppPageExplainer pageKey="edu_tests" />
+      {sets.length === 0 ? (
         <Card>
           <CardContent className="py-10 text-center">
             <p data-testid="edu-tests-empty" className="text-sm text-muted-foreground">
@@ -120,49 +124,43 @@ export function EduTestsList() {
             <p className="mt-2 text-xs text-muted-foreground">{t("empty_hint")}</p>
           </CardContent>
         </Card>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      <PageHeader title={t("heading")} subtitle={t("description")} />
-      <AppPageExplainer pageKey="edu_tests" />
-      <ul data-testid="edu-tests-list" className="space-y-3">
-        {sets.map((s) => (
-          <li key={s.id}>
-            <Card>
-              <CardContent className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h3
-                    data-testid={`edu-tests-item-${s.id}`}
-                    className="text-base font-semibold text-foreground"
-                  >
-                    {s.creator_label?.trim() || t("untitled_label")}
-                  </h3>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {t("meta_line", {
-                      questions: s.question_count,
-                      threshold: s.passing_threshold,
-                      attempts: s.attempts_count,
-                    })}
-                  </p>
-                </div>
-                <Button asChild variant="outline" size="sm">
-                  <Link
-                    to="/test/builder/$id/results"
-                    params={{ id: s.id }}
-                    data-testid={`edu-tests-open-${s.id}`}
-                  >
-                    <ExternalLink className="size-4" aria-hidden />
-                    {t("open")}
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </li>
-        ))}
-      </ul>
+      ) : (
+        <ul data-testid="edu-tests-list" className="space-y-3">
+          {sets.map((s) => (
+            <li key={s.id}>
+              <Card>
+                <CardContent className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h3
+                      data-testid={`edu-tests-item-${s.id}`}
+                      className="text-base font-semibold text-foreground"
+                    >
+                      {s.creator_label?.trim() || t("untitled_label")}
+                    </h3>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {t("meta_line", {
+                        questions: s.question_count,
+                        threshold: s.passing_threshold,
+                        attempts: s.attempts_count,
+                      })}
+                    </p>
+                  </div>
+                  <Button asChild variant="outline" size="sm">
+                    <Link
+                      to="/test/builder/$id/results"
+                      params={{ id: s.id }}
+                      data-testid={`edu-tests-open-${s.id}`}
+                    >
+                      <ExternalLink className="size-4" aria-hidden />
+                      {t("open")}
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

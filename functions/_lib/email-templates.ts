@@ -4,7 +4,7 @@ const FOOTER_HTML = `
   am.bonum s. r. o., IČO 55 055 290, Škultétyho 1560/3, 052 01 Spišská Nová Ves.
   Tento e-mail je transakčný — nie marketingový. Posielame ho len v reakcii na konkrétnu akciu
   (platba, žiadosť o magic link, vytvorenie žiadosti o podporu, refund).
-  Otázky alebo doplnenie? Napíšte nám na <a href="mailto:podpora@subenai.sk" style="color:#64748b;text-decoration:underline">podpora@subenai.sk</a>.
+  Otázky alebo doplnenie? Napíš nám na <a href="mailto:podpora@subenai.sk" style="color:#64748b;text-decoration:underline">podpora@subenai.sk</a>.
 </p>
 `;
 
@@ -236,7 +236,7 @@ export function supportTicketReceivedEmail(input: {
   viewUrl?: string;
 }): { subject: string; html: string; text: string } {
   const categoryLabel = CATEGORY_LABEL_SK[input.category] ?? input.category;
-  const mailSubject = `Vašu žiadosť o podporu sme prijali — ${input.ticketId}`;
+  const mailSubject = `Tvoju žiadosť o podporu sme prijali — ${input.ticketId}`;
 
   const nameBlock = input.name ? `<p><strong>Meno:</strong> ${escapeText(input.name)}</p>` : "";
 
@@ -266,15 +266,15 @@ export function supportTicketReceivedEmail(input: {
     </p>`
     : `
     <p style="font-size:13px;line-height:1.6;color:#475569">
-      Stav žiadosti uvidíte v sekcii <strong>Pomoc → Moje žiadosti</strong> po prihlásení.
+      Odpovieme ti e-mailom na adresu tvojho účtu.
     </p>`;
 
   const html = wrap(`
     <p style="font-size:15px;line-height:1.6">
-      Ďakujeme, vašu žiadosť sme prijali. Odpovieme čo najskôr,
+      Ďakujeme, tvoju žiadosť sme prijali. Odpovieme čo najskôr,
       <strong>najneskôr do dvoch pracovných dní</strong>.
     </p>
-    <p style="font-size:14px;line-height:1.6"><strong>Tu je presná kópia vašej žiadosti</strong></p>
+    <p style="font-size:14px;line-height:1.6"><strong>Tu je presná kópia tvojej žiadosti</strong></p>
     <div style="background:#f8fafc;border-left:3px solid #cbd5e1;border-radius:8px;padding:16px 18px;margin:8px 0 24px">
       <p><strong>Téma:</strong> ${escapeText(input.subject)}</p>
       <p><strong>Kategória:</strong> ${escapeText(categoryLabel)}</p>
@@ -296,10 +296,10 @@ export function supportTicketReceivedEmail(input: {
       : "";
 
   const text = [
-    "Ďakujeme, vašu žiadosť sme prijali.",
+    "Ďakujeme, tvoju žiadosť sme prijali.",
     "Odpovieme najneskôr do dvoch pracovných dní.",
     "",
-    "Tu je presná kópia vašej žiadosti",
+    "Tu je presná kópia tvojej žiadosti",
     "---",
     `Téma: ${input.subject}`,
     `Kategória: ${categoryLabel}`,
@@ -322,7 +322,7 @@ export function supportTicketReplyEmail(input: {
   body: string;
   viewUrl?: string;
 }): { subject: string; html: string; text: string } {
-  const mailSubject = `Re: vaša žiadosť o podporu — ${input.ticketId}`;
+  const mailSubject = `Re: tvoja žiadosť o podporu — ${input.ticketId}`;
   const bodyHtml = escapeText(input.body).replace(/\n/g, "<br />");
   const viewBlock = input.viewUrl
     ? `<p style="margin:20px 0"><a href="${sanitizeUrl(input.viewUrl)}" style="color:#16a34a;font-weight:600">Otvoriť celé vlákno →</a></p>`
@@ -337,8 +337,8 @@ export function supportTicketReplyEmail(input: {
     </div>
     ${viewBlock}
     <p style="font-size:13px;line-height:1.6;color:#475569">
-      Ak chcete odpovedať, jednoducho odpíšte na tento e-mail — vaša odpoveď sa pripojí
-      ku žiadosti <code>${escapeText(input.ticketId)}</code>.
+      Ak chceš niečo doplniť, jednoducho odpíš na tento e-mail — tvoja odpoveď príde
+      tímu podpory k žiadosti <code>${escapeText(input.ticketId)}</code>.
     </p>
   `);
 
@@ -348,7 +348,7 @@ export function supportTicketReplyEmail(input: {
     input.body,
     "",
     input.viewUrl ? `Celé vlákno: ${input.viewUrl}` : "",
-    `Žiadosť: ${input.ticketId}. Odpovedať môžete priamo na tento e-mail.`,
+    `Žiadosť: ${input.ticketId}. Odpovedať môžeš priamo na tento e-mail.`,
   ]
     .filter(Boolean)
     .join("\n");
@@ -361,29 +361,29 @@ export function supportTicketResolvedEmail(input: { ticketId: string; viewUrl?: 
   html: string;
   text: string;
 } {
-  const mailSubject = `Vaša žiadosť o podporu bola uzavretá — ${input.ticketId}`;
+  const mailSubject = `Tvoja žiadosť o podporu bola uzavretá — ${input.ticketId}`;
   const viewBlock = input.viewUrl
     ? `<p style="margin:16px 0"><a href="${sanitizeUrl(input.viewUrl)}" style="color:#16a34a;font-weight:600">Pozrieť záznam →</a></p>`
     : "";
 
   const html = wrap(`
     <p style="font-size:15px;line-height:1.6">
-      Vaša žiadosť <code>${escapeText(input.ticketId)}</code> bola uzavretá ako vyriešená.
+      Tvoja žiadosť <code>${escapeText(input.ticketId)}</code> bola uzavretá ako vyriešená.
       Ďakujeme za spätnú väzbu.
     </p>
     ${viewBlock}
     <p style="font-size:13px;line-height:1.6;color:#475569">
-      Ak ste neboli s riešením spokojní alebo sa problém vrátil, odpíšte na tento e-mail
+      Ak si nebol/a s riešením spokojný/á alebo sa problém vrátil, odpíš na tento e-mail
       a žiadosť znova otvoríme.
     </p>
   `);
 
   const text = [
-    `Vaša žiadosť ${input.ticketId} bola uzavretá ako vyriešená.`,
+    `Tvoja žiadosť ${input.ticketId} bola uzavretá ako vyriešená.`,
     "Ďakujeme za spätnú väzbu.",
     input.viewUrl ? `\nPozrieť záznam: ${input.viewUrl}` : "",
     "",
-    "Ak potrebujete znova otvoriť, jednoducho odpovedzte na tento e-mail.",
+    "Ak potrebuješ znova otvoriť, jednoducho odpovedz na tento e-mail.",
   ]
     .filter(Boolean)
     .join("\n");

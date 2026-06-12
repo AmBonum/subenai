@@ -1,17 +1,16 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { supabase } from "@/integrations/supabase/client";
-import { AllSponsorsView } from "./-all-sponsors-view";
-import type { PublicSponsor } from "./sponsors";
+import { SponzoriView, type PublicSponsor } from "./-sponsors-view";
 
 const FETCH_LIMIT = 500;
 
-export const Route = createLazyFileRoute("/sponsors/all")({
-  component: AllSponsorsPage,
+export const Route = createLazyFileRoute("/sponsors")({
+  component: SponzoriPage,
 });
 
-function AllSponsorsPage() {
-  return <AllSponsorsView fetchSponsors={fetchAllSponsors} />;
+function SponzoriPage() {
+  return <SponzoriView fetchSponsors={fetchAllSponsors} />;
 }
 
 async function fetchAllSponsors(): Promise<PublicSponsor[]> {

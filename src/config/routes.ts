@@ -23,12 +23,14 @@ export const ROUTES = {
   zostava: "/test/builder/$id",
   /** @deprecated E33 — use `builderResults` */
   zostavaVysledky: "/test/builder/$id/results",
+  sablony: "/sablony",
   skoly: "/schools",
   skolenia: "/courses",
   skoleniaSlug: "/courses/$slug",
   podpora: "/support",
   sponzori: "/sponsors",
-  sponzoriVsetci: "/sponsors/all",
+  /** @deprecated M3 — /sponsors/all merged into /sponsors; use `sponzori` */
+  sponzoriVsetci: "/sponsors",
   spravovat: "/manage-support",
   privacy: "/privacy",
   cookies: "/cookies",

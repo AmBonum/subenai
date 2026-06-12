@@ -6,7 +6,7 @@
     "new_test_button": "Nový test",
     "search_placeholder": "Hľadať testy...",
     "status_all": "Všetky",
-    "status_draft": "Drafty",
+    "status_draft": "Koncepty",
     "status_published": "Publikované",
     "status_archived": "Archív",
     "branch_all": "Všetky vetvy",
@@ -16,7 +16,18 @@
     "empty_state": "Žiadne testy v tomto filtri.",
     "questions_count": "{count} otázok",
     "version_label": "v{version}",
-    "password_label": "heslo"
+    "password_label": "heslo",
+    "empty_initial_title": "Zatiaľ nemáš žiadne testy.",
+    "empty_initial_body": "Vytvor prvý test a zdieľaj ho s respondentmi cez verejný odkaz.",
+    "empty_initial_cta": "Vytvoriť prvý test",
+    "row_duplicate": "Duplikovať",
+    "row_delete": "Vymazať",
+    "duplicate_success": "Kópia testu vytvorená.",
+    "delete_confirm_title": "Vymazať test?",
+    "delete_confirm_body": "Test „{title}“ a všetky jeho výsledky sa nenávratne vymažú. Verejný odkaz prestane fungovať.",
+    "delete_confirm_typed_label": "Pre potvrdenie napíš názov testu",
+    "delete_confirm_button": "Vymazať test",
+    "delete_success": "Test vymazaný."
   },
   "wizard": {
     "page_title": "Nový test",
@@ -72,7 +83,9 @@
       "over_cap_warning": "Vybral si {selected} otázok, ale do testu sa zmestí už len {remaining}. Zruš výber niektorých.",
       "cancel": "Zrušiť",
       "submit": "Pridať vybrané ({count})"
-    }
+    },
+    "publishing_button": "Publikujem…",
+    "finish_button": "Otvoriť test"
   },
   "editor": {
     "page_eyebrow": "Test",
@@ -200,6 +213,36 @@
       "clear_success": "Heslo zrušené. Test je opäť otvorený cez share link.",
       "set_failed": "Nastavenie hesla zlyhalo.",
       "clear_failed": "Zrušenie hesla zlyhalo."
+    },
+    "publish_success": "Test publikovaný.",
+    "unpublish_button": "Zrušiť publikovanie",
+    "unpublish_confirm_title": "Zrušiť publikovanie?",
+    "unpublish_confirm_body": "Test sa vráti do konceptu. Verejný odkaz prestane pre nových respondentov fungovať, kým test znova nepublikuješ.",
+    "unpublish_confirm_button": "Zrušiť publikovanie",
+    "unpublish_success": "Publikovanie zrušené.",
+    "archive_confirm_title": "Archivovať test?",
+    "archive_confirm_body": "Archivovaný test zmizne z aktívneho zoznamu a verejný odkaz okamžite prestane fungovať. Test môžeš kedykoľvek obnoviť z archívu.",
+    "archive_confirm_button": "Archivovať",
+    "archive_success": "Test archivovaný.",
+    "unarchive_button": "Obnoviť z archívu",
+    "unarchive_success": "Test obnovený ako koncept.",
+    "audience_label": "Cieľová skupina",
+    "audience_none": "Bez skupiny",
+    "sessions_empty_published_title": "Test zatiaľ nemá respondentov.",
+    "sessions_empty_published_body": "Pošli respondentom verejný odkaz — výsledky sa tu objavia automaticky.",
+    "sessions_empty_copy_link": "Kopírovať odkaz",
+    "sessions_empty_copy_success": "Odkaz skopírovaný.",
+    "sessions_empty_draft_title": "Test ešte nie je publikovaný.",
+    "sessions_empty_draft_body": "Respondenti môžu test vyplniť až po publikovaní.",
+    "sessions_empty_publish_cta": "Publikovať test",
+    "intake": {
+      "title": "Údaje respondenta",
+      "hint": "Vyber, ktoré údaje má respondent vyplniť pred spustením testu. Bez nich sú výsledky anonymné.",
+      "field_name": "Meno",
+      "field_email": "E-mail",
+      "required_label": "Povinné",
+      "save_success": "Údaje respondenta uložené.",
+      "save_failed": "Uloženie zlyhalo. Skús to znova."
     }
   },
   "share_dialog": {
@@ -362,7 +405,8 @@
       "verdict_error_budget": "Denný limit kontrol je vyčerpaný. Skús zajtra alebo napíš nám.",
       "verdict_error_generic": "Nepodarilo sa odoslať. Skús znova alebo napíš nám.",
       "verdict_close": "Zavrieť"
-    }
+    },
+    "public_page_link": "Verejná stránka šablóny"
   },
   "history": {
     "page_title": "Moja história",
@@ -378,7 +422,10 @@
     "event_type_version": "Verzia testu",
     "event_type_status": "Zmena stavu",
     "clear_filters_button": "Vyčistiť filtre",
-    "empty_state": "Žiadne udalosti pre zvolené filtre."
+    "empty_state": "Žiadne udalosti pre zvolené filtre.",
+    "empty_no_data_title": "Zatiaľ žiadne udalosti",
+    "empty_no_data_body": "Vytvor test a história sa začne písať.",
+    "empty_no_data_cta": "Vytvoriť test"
   },
   "admin_list": {
     "page_title": "Všetky testy",
@@ -429,5 +476,13 @@
     "unsaved_body": "Máš neuložené zmeny. Naozaj chceš opustiť stránku?",
     "unsaved_confirm": "Opustiť",
     "unsaved_cancel": "Zostať"
+  },
+  "errors": {
+    "err_generic": "Nepodarilo sa to, skús to znova.",
+    "err_unauthenticated": "Najprv sa prihlás.",
+    "err_not_owner": "Tento test ti nepatrí.",
+    "err_test_not_found": "Test sa nenašiel.",
+    "err_test_archived": "Test je archivovaný. Najprv ho obnov z archívu.",
+    "err_duplicate_question_ids": "Zoznam otázok obsahuje duplicitu. Obnov stránku a skús to znova."
   }
 }

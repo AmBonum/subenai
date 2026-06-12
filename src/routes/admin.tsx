@@ -93,7 +93,7 @@ function AdminLayout() {
             <Outlet />
           </main>
         </SidebarInset>
-        <Toaster position="top-right" />
+        <Toaster position="bottom-right" />
       </div>
     </SidebarProvider>
   );

@@ -1,7 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { Shield, Key, Lock, Monitor } from "lucide-react";
+import { Shield, Key, Lock } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/app/page-header";
 import { AccountTabs } from "@/components/user/AccountTabs";
 import { BackupCodesManager } from "@/components/auth/BackupCodesManager";
+import { supabase } from "@/integrations/supabase/client";
 import { listFactors, unenrollFactor } from "@/lib/auth/mfa";
 import { tFor } from "@/i18n/app-shell";
 import { tFor as tSecurity } from "@/i18n/security";
@@ -45,32 +46,23 @@ const score = (p: string) => {
   return Math.min(100, s);
 };
 
-const SESSIONS = [
-  {
-    id: "s1",
-    device: "MacBook Pro · Chrome 130",
-    ip: "188.121.x.x",
-    location: "Bratislava, SK",
-    current: true,
-    last: "teraz",
-  },
-  {
-    id: "s2",
-    device: "iPhone · Safari",
-    ip: "188.121.x.x",
-    location: "Bratislava, SK",
-    current: false,
-    last: "pred 2 hod.",
-  },
-  {
-    id: "s3",
-    device: "Windows · Firefox",
-    ip: "212.5.x.x",
-    location: "Žilina, SK",
-    current: false,
-    last: "pred 3 dňami",
-  },
-];
+type PasswordError = "mismatch" | "min" | "same" | "weak" | "reauth" | "generic";
+
+function mapUpdateUserError(error: { code?: string; message: string }): PasswordError {
+  const code = error.code;
+  const msg = error.message.toLowerCase();
+  if (code === "same_password" || msg.includes("different from the old password")) return "same";
+  if (code === "weak_password" || msg.includes("weak")) return "weak";
+  if (
+    code === "reauthentication_needed" ||
+    msg.includes("reauthentication") ||
+    msg.includes("session missing") ||
+    msg.includes("not logged in")
+  ) {
+    return "reauth";
+  }
+  return "generic";
+}
 
 function SecurityPage() {
   const t = tFor("account.security");
@@ -78,6 +70,11 @@ function SecurityPage() {
   const navigate = useNavigate();
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
+  const [pwSubmitting, setPwSubmitting] = useState(false);
+  const [pwError, setPwError] = useState<PasswordError | null>(null);
+  // null = identity check in flight; the form stays visible meanwhile so
+  // password-account users (the common case) never see a layout jump.
+  const [oauthOnly, setOauthOnly] = useState<boolean | null>(null);
   const [factorId, setFactorId] = useState<string | null>(null);
   const [loadingFactor, setLoadingFactor] = useState(true);
 
@@ -90,6 +87,31 @@ function SecurityPage() {
       .finally(() => setLoadingFactor(false));
   }, []);
 
+  // OAuth-only accounts (signed up via "Pokračovať cez Google") have no
+  // password to change — supabase.auth.updateUser({ password }) would set
+  // a first password silently, which is NOT what the card advertises.
+  // Detect via the providers list; only when the account demonstrably has
+  // no "email" identity do we swap the form for an explanatory note.
+  useEffect(() => {
+    let cancelled = false;
+    supabase.auth
+      .getUser()
+      .then(({ data }) => {
+        if (cancelled || !data.user) return;
+        const providers = (data.user.app_metadata?.providers as string[] | undefined) ?? [];
+        const identities = data.user.identities ?? [];
+        const hasEmailIdentity =
+          providers.includes("email") || identities.some((i) => i.provider === "email");
+        setOauthOnly(providers.length + identities.length > 0 ? !hasEmailIdentity : false);
+      })
+      .catch(() => {
+        if (!cancelled) setOauthOnly(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const onDeactivate = async () => {
     if (!factorId) return;
     try {
@@ -100,6 +122,35 @@ function SecurityPage() {
       toast.error("Error");
     }
   };
+
+  const onPasswordSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPwError(null);
+    if (pw !== pw2) {
+      setPwError("mismatch");
+      return;
+    }
+    if (pw.length < 8) {
+      setPwError("min");
+      return;
+    }
+    setPwSubmitting(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: pw });
+      if (error) {
+        setPwError(mapUpdateUserError(error));
+        return;
+      }
+      toast.success(t("toast_password_changed"));
+      setPw("");
+      setPw2("");
+    } catch {
+      setPwError("generic");
+    } finally {
+      setPwSubmitting(false);
+    }
+  };
+
   const strength = score(pw);
   const strengthLabel =
     strength < 40
@@ -107,9 +158,6 @@ function SecurityPage() {
       : strength < 75
         ? t("strength_medium")
         : t("strength_strong");
-
-  // AH-11: wire real Supabase password change + TOTP enrollment. Both UI
-  // controls stay no-op until the backend lands.
 
   return (
     <div className="space-y-6" data-testid="app-account-security-root">
@@ -130,97 +178,107 @@ function SecurityPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <form
-            data-testid="app-account-security-password-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              // AH-11 wires real password change. Until then it is a toast no-op.
-              toast.info(t("toast_password_deferred"));
-              setPw("");
-              setPw2("");
-            }}
-          >
-            <div className="space-y-2">
-              <Label htmlFor="pw-current">{t("label_new_password")}</Label>
-              <Input
-                id="pw-current"
-                type="password"
-                value={pw}
-                onChange={(e) => setPw(e.target.value)}
-                data-testid="app-account-security-current-password"
-              />
+          {oauthOnly ? (
+            <div className="space-y-1" data-testid="app-account-security-oauth-only">
+              <p className="text-sm font-medium text-foreground">{t("oauth_only_title")}</p>
+              <p className="text-sm text-muted-foreground">{t("oauth_only_body")}</p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="pw-confirm">{t("label_confirm")}</Label>
-              <Input
-                id="pw-confirm"
-                type="password"
-                value={pw2}
-                onChange={(e) => setPw2(e.target.value)}
-                data-testid="app-account-security-new-password"
-              />
-            </div>
-            <div className="space-y-1">
-              <div className="flex justify-between text-xs">
-                <span>{t("strength_label")}</span>
-                <span>{strengthLabel}</span>
-              </div>
-              <Progress value={strength} />
-            </div>
-            <div className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
-              <p className="font-medium text-foreground">{t("policy_title")}</p>
-              <ul className="mt-1 list-disc pl-4">
-                <li>{t("policy_min")}</li>
-                <li>{t("policy_complexity")}</li>
-                <li>{t("policy_hashing")}</li>
-                <li>{t("policy_rate_limit")}</li>
-              </ul>
-            </div>
-            <Button
-              type="submit"
-              disabled={!pw || pw !== pw2}
-              data-testid="app-account-security-submit-password"
+          ) : (
+            <form
+              className="space-y-3"
+              data-testid="app-account-security-password-form"
+              onSubmit={onPasswordSubmit}
+              noValidate
             >
-              {t("btn_change_password")}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Monitor className="h-5 w-5" /> {t("card_sessions_title")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="divide-y" data-testid="app-account-security-sessions-list">
-          {SESSIONS.map((s) => (
-            <div
-              key={s.id}
-              className="flex items-center justify-between py-3"
-              data-testid={`app-account-security-session-row-${s.id}`}
-            >
-              <div>
-                <p className="text-sm font-medium">
-                  {s.device} {s.current && <Badge className="ml-2">{t("session_current")}</Badge>}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {s.location} · {s.ip} · {s.last}
-                </p>
+              <div className="space-y-2">
+                <Label htmlFor="pw-new">{t("label_new_password")}</Label>
+                <Input
+                  id="pw-new"
+                  type="password"
+                  autoComplete="new-password"
+                  value={pw}
+                  onChange={(e) => setPw(e.target.value)}
+                  data-testid="app-account-security-new-password"
+                />
               </div>
-              {!s.current && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-destructive"
-                  onClick={() => toast.success(t("toast_session_revoked"))}
-                  data-testid={`app-account-security-revoke-${s.id}`}
+              <div className="space-y-2">
+                <Label htmlFor="pw-confirm">{t("label_confirm")}</Label>
+                <Input
+                  id="pw-confirm"
+                  type="password"
+                  autoComplete="new-password"
+                  value={pw2}
+                  onChange={(e) => setPw2(e.target.value)}
+                  data-testid="app-account-security-confirm-password"
+                />
+              </div>
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span>{t("strength_label")}</span>
+                  <span>{strengthLabel}</span>
+                </div>
+                <Progress value={strength} />
+              </div>
+              <div className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
+                <p className="font-medium text-foreground">{t("policy_title")}</p>
+                <ul className="mt-1 list-disc pl-4">
+                  <li>{t("policy_min")}</li>
+                  <li>{t("policy_complexity")}</li>
+                </ul>
+              </div>
+              {pwError && (
+                <p
+                  className="text-sm text-destructive"
+                  role="alert"
+                  data-testid="app-account-security-password-error"
                 >
-                  {t("session_revoke")}
-                </Button>
+                  {pwError === "reauth" ? (
+                    <>
+                      {t("error_password_reauth_prefix")}
+                      <Link
+                        to="/forgot-password"
+                        className="underline underline-offset-2"
+                        data-testid="app-account-security-reauth-forgot-link"
+                      >
+                        {t("error_password_reauth_link")}
+                      </Link>
+                      {t("error_password_reauth_suffix")}
+                    </>
+                  ) : (
+                    t(
+                      pwError === "mismatch"
+                        ? "error_password_mismatch"
+                        : pwError === "min"
+                          ? "error_password_min"
+                          : pwError === "same"
+                            ? "error_password_same"
+                            : pwError === "weak"
+                              ? "error_password_weak"
+                              : "error_password_generic",
+                    )
+                  )}
+                </p>
               )}
-            </div>
-          ))}
+              <Button
+                type="submit"
+                disabled={!pw || !pw2 || pwSubmitting}
+                data-testid="app-account-security-submit-password"
+              >
+                {pwSubmitting ? t("btn_changing_password") : t("btn_change_password")}
+              </Button>
+              <p className="text-xs text-muted-foreground">
+                {t("forgot_prefix")}
+                <Link
+                  to="/forgot-password"
+                  className="underline underline-offset-2"
+                  data-testid="app-account-security-forgot-link"
+                >
+                  {t("forgot_link")}
+                </Link>
+                {t("forgot_suffix")}
+              </p>
+            </form>
+          )}
         </CardContent>
       </Card>
 

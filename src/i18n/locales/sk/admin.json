@@ -143,22 +143,22 @@
     "factor_reset_button": "Resetovať / pridať nové zariadenie",
     "factor_reset_confirm_title": "Resetovať autentifikátor?",
     "factor_reset_confirm_body": "Aktuálne zariadenie bude odpojené. Pokračovať?",
-    "factor_reset_error": "Reset zariadenia zlyhal. Skúste znova.",
+    "factor_reset_error": "Reset zariadenia zlyhal. Skús znova.",
     "backup_section_title": "Záložné kódy",
     "backup_count": "Zostáva {count} záložných kódov",
-    "backup_warning_low": "Máte málo nepoužitých kódov — odporúčame vygenerovať novú sadu.",
+    "backup_warning_low": "Máš málo nepoužitých kódov — odporúčame vygenerovať novú sadu.",
     "backup_regen_button": "Vygenerovať nové záložné kódy",
     "backup_regen_confirm_title": "Vygenerovať nové kódy?",
     "backup_regen_confirm_body": "Stará sada kódov sa znehodnotí. Pokračovať?",
-    "backup_regen_error": "Vygenerovanie kódov zlyhalo. Skúste znova.",
-    "backup_codes_heading": "Vaše nové záložné kódy",
-    "backup_codes_body": "Uložte si ich na bezpečné miesto. Po zatvorení tohto okna ich už nezobrazíme.",
+    "backup_regen_error": "Vygenerovanie kódov zlyhalo. Skús znova.",
+    "backup_codes_heading": "Tvoje nové záložné kódy",
+    "backup_codes_body": "Ulož si ich na bezpečné miesto. Po zatvorení tohto okna ich už nezobrazíme.",
     "backup_copy": "Skopírovať",
     "backup_copied": "Skopírované",
     "backup_download": "Stiahnuť .txt",
     "backup_dismiss": "Hotovo",
     "info_section_title": "Ako to funguje",
-    "info_body": "TOTP je 6-ciferný kód generovaný autentifikátorom (napr. Google Authenticator, 1Password). Záložné kódy slúžia na prihlásenie, ak stratíte prístup k zariadeniu — každý kód je jednorazový. Ak ste stratili zariadenie, kliknite Resetovať a prejdite enrollmentom nanovo."
+    "info_body": "TOTP je 6-ciferný kód generovaný autentifikátorom (napr. Google Authenticator, 1Password). Záložné kódy slúžia na prihlásenie, ak stratíš prístup k zariadeniu — každý kód je jednorazový. Ak si zariadenie stratil/a, klikni Resetovať a prejdi enrollmentom nanovo."
   },
   "categories": {
     "title": "Kategórie",
@@ -176,14 +176,14 @@
     "dialog_branch_label": "Patrí pod branžu",
     "dialog_save": "Uložiť",
     "dialog_cancel": "Zrušiť",
-    "multiselect_placeholder": "Vyberte branže...",
+    "multiselect_placeholder": "Vyber branže...",
     "multiselect_search": "Hľadať branžu...",
     "multiselect_empty": "Nič nenájdené.",
     "multiselect_clear": "Vymazať výber"
   },
   "ai_errors": {
     "disabled": "AI generátor je momentálne vypnutý.",
-    "rate_limit": "AI Gateway: prekročený limit požiadaviek. Skúste o chvíľu.",
+    "rate_limit": "AI Gateway: prekročený limit požiadaviek. Skús o chvíľu.",
     "no_credits": "AI Gateway: vyčerpané kredity workspace."
   },
   "route_titles": {
@@ -223,8 +223,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Prehľad admin konzoly", "href": "/docs/admin/dashboard" },
-          { "label": "Architektúra metrík a audit logu", "href": "/docs/admin/audit" }
+          {
+            "label": "Prehľad admin konzoly",
+            "href": "/docs/admin/dashboard"
+          },
+          {
+            "label": "Architektúra metrík a audit logu",
+            "href": "/docs/admin/audit"
+          }
         ]
       }
     },
@@ -261,8 +267,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Životný cyklus testu (draft → publikované → archív)", "href": "/docs/admin/tests" },
-          { "label": "Editor testu a otázok", "href": "/docs/admin/questions" }
+          {
+            "label": "Životný cyklus testu (draft → publikované → archív)",
+            "href": "/docs/admin/tests"
+          },
+          {
+            "label": "Editor testu a otázok",
+            "href": "/docs/admin/questions"
+          }
         ]
       }
     },
@@ -300,8 +312,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Štruktúra rýchleho testu a scoring", "href": "/docs/admin/quick-test" },
-          { "label": "Branže a publiká (Senior, Mládež, Firma)", "href": "/docs/admin/categories" }
+          {
+            "label": "Štruktúra rýchleho testu a scoring",
+            "href": "/docs/admin/quick-test"
+          },
+          {
+            "label": "Branže a publiká (Senior, Mládež, Firma)",
+            "href": "/docs/admin/categories"
+          }
         ]
       }
     },
@@ -337,8 +355,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Open Graph špecifikácia a rozmery", "href": "/docs/admin/share-card" },
-          { "label": "Cache invalidácia na sociálnych sieťach", "href": "/docs/admin/share-card-cache" }
+          {
+            "label": "Open Graph špecifikácia a rozmery",
+            "href": "/docs/admin/share-card"
+          },
+          {
+            "label": "Cache invalidácia na sociálnych sieťach",
+            "href": "/docs/admin/share-card-cache"
+          }
         ]
       }
     },
@@ -376,9 +400,18 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Štruktúra otázky a typov odpovedí", "href": "/docs/admin/questions" },
-          { "label": "AI generátor otázok (feature flag)", "href": "/docs/admin/ai-generator" },
-          { "label": "Hlasovanie a nahlasovanie", "href": "/docs/admin/reports" }
+          {
+            "label": "Štruktúra otázky a typov odpovedí",
+            "href": "/docs/admin/questions"
+          },
+          {
+            "label": "AI generátor otázok (feature flag)",
+            "href": "/docs/admin/ai-generator"
+          },
+          {
+            "label": "Hlasovanie a nahlasovanie",
+            "href": "/docs/admin/reports"
+          }
         ]
       }
     },
@@ -417,8 +450,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Sady odpovedí a väzba na otázky", "href": "/docs/admin/answer-sets" },
-          { "label": "Best practices pre duplikovanie a verzionovanie", "href": "/docs/admin/answer-sets-versioning" }
+          {
+            "label": "Sady odpovedí a väzba na otázky",
+            "href": "/docs/admin/answer-sets"
+          },
+          {
+            "label": "Best practices pre duplikovanie a verzionovanie",
+            "href": "/docs/admin/answer-sets-versioning"
+          }
         ]
       }
     },
@@ -456,8 +495,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Štruktúra školenia a tém", "href": "/docs/admin/trainings" },
-          { "label": "Publikačný workflow", "href": "/docs/admin/publishing" }
+          {
+            "label": "Štruktúra školenia a tém",
+            "href": "/docs/admin/trainings"
+          },
+          {
+            "label": "Publikačný workflow",
+            "href": "/docs/admin/publishing"
+          }
         ]
       }
     },
@@ -493,8 +538,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Roly a oprávnenia", "href": "/docs/admin/users" },
-          { "label": "RLS politiky pre user_roles", "href": "/docs/admin/security" }
+          {
+            "label": "Roly a oprávnenia",
+            "href": "/docs/admin/users"
+          },
+          {
+            "label": "RLS politiky pre user_roles",
+            "href": "/docs/admin/security"
+          }
         ]
       }
     },
@@ -530,8 +581,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Taxonómia vetiev a tém", "href": "/docs/admin/categories" },
-          { "label": "Slug konvencie a migrácie", "href": "/docs/admin/categories-slugs" }
+          {
+            "label": "Taxonómia vetiev a tém",
+            "href": "/docs/admin/categories"
+          },
+          {
+            "label": "Slug konvencie a migrácie",
+            "href": "/docs/admin/categories-slugs"
+          }
         ]
       }
     },
@@ -567,45 +624,58 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Reportovacie dôvody a workflow", "href": "/docs/admin/reports" },
-          { "label": "Eskalácia: kedy mazať otázku vs. autora", "href": "/docs/admin/reports-escalation" }
+          {
+            "label": "Reportovacie dôvody a workflow",
+            "href": "/docs/admin/reports"
+          },
+          {
+            "label": "Eskalácia: kedy mazať otázku vs. autora",
+            "href": "/docs/admin/reports-escalation"
+          }
         ]
       }
     },
     "support": {
-      "title": "O sekcii Podpora",
-      "lead": "Konfiguruješ kontaktné údaje support kanála — e-mail, telefón a otváracie hodiny. Tieto údaje sa zobrazujú návštevníkom v päte, na kontaktnej stránke a v automatických odpovediach.",
+      "title": "O sekcii Žiadosti podpory",
+      "lead": "Fronta žiadostí používateľov z kontaktného formulára a podpory v aplikácii. Filtruješ podľa stavu, kategórie a priradenia, odpovedáš v threade a posúvaš žiadosti cez stavový automat až po vyriešenie alebo archiváciu.",
       "sections": {
         "what_you_configure": {
-          "heading": "Čo tu nastavuješ",
+          "heading": "Čo tu robíš",
           "items": [
-            "Support e-mail (povinný, regex validácia)",
-            "Telefónne číslo (voliteľné, validácia ak je vyplnené)",
-            "Otváracie hodiny (voľný text, napr. „Po–Pi 9:00–17:00“)"
+            "Filtruješ frontu podľa stavu, kategórie, priradenia a dátumu; fulltextovo vyhľadávaš",
+            "Meníš stav žiadosti (Nové → Riešim → Vyriešené → Archivované) inline alebo v detaile",
+            "Priraďuješ žiadosti sebe alebo iným adminom (viac priradených naraz)",
+            "Odpovedáš v threade — verejná odpoveď ide e-mailom, interná poznámka ostáva v tíme"
           ]
         },
         "time_impact": {
           "heading": "Časový dopad zmien",
           "items": [
-            "Vstup: synchrónna aktualizácia stavu formulára",
-            "Uloženie: validácia + zápis konfigurácie + success toast",
-            "Živá aplikácia načíta novú konfiguráciu pri ďalšom inite (krátky bootstrap delay)"
+            "Zmena stavu a priradenie sa prejavia okamžite po potvrdení (refetch fronty)",
+            "Verejná odpoveď odosiela e-mail používateľovi hneď po uložení",
+            "Počítadlo v bočnom paneli sa obnovuje raz za minútu"
           ]
         },
         "pitfalls": {
           "heading": "Na čo si dávať pozor",
           "items": [
-            "Validácia je len klient-side (regex) — server akceptuje akúkoľvek hodnotu, ktorú prepošleš",
-            "Hodiny nemajú formátovú validáciu — preklepy sa dostanú do živej aplikácie",
-            "Aktuálne ide o in-memory config v rámci sedenia; perzistencia do DB príde v ďalšej iterácii"
+            "Stavové prechody sú vynútené stavovým automatom — preskočiť krok nejde",
+            "Archivácia a označenie ako spam vyžadujú potvrdenie; spam navyše opísanie ID žiadosti",
+            "Interné poznámky používateľ nikdy nevidí — over si prepínač pred odoslaním"
           ]
         }
       },
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Support kanály a SLA", "href": "/docs/admin/support" },
-          { "label": "Eskalačné kontakty", "href": "/docs/admin/support-escalation" }
+          {
+            "label": "Support kanály a SLA",
+            "href": "/docs/admin/support"
+          },
+          {
+            "label": "Eskalačné kontakty",
+            "href": "/docs/admin/support-escalation"
+          }
         ]
       }
     },
@@ -642,8 +712,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Blog editor a SEO polia", "href": "/docs/admin/blog" },
-          { "label": "Workflow publikovania", "href": "/docs/admin/publishing" }
+          {
+            "label": "Blog editor a SEO polia",
+            "href": "/docs/admin/blog"
+          },
+          {
+            "label": "Workflow publikovania",
+            "href": "/docs/admin/publishing"
+          }
         ]
       }
     },
@@ -681,8 +757,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "CMS stránky a typy blokov", "href": "/docs/admin/pages" },
-          { "label": "Slug pravidlá a redirecty", "href": "/docs/admin/pages-slugs" }
+          {
+            "label": "CMS stránky a typy blokov",
+            "href": "/docs/admin/pages"
+          },
+          {
+            "label": "Slug pravidlá a redirecty",
+            "href": "/docs/admin/pages-slugs"
+          }
         ]
       }
     },
@@ -720,8 +802,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Štruktúra navigácie", "href": "/docs/admin/navigation" },
-          { "label": "auth_only vs. server-side guards", "href": "/docs/admin/security" }
+          {
+            "label": "Štruktúra navigácie",
+            "href": "/docs/admin/navigation"
+          },
+          {
+            "label": "auth_only vs. server-side guards",
+            "href": "/docs/admin/security"
+          }
         ]
       }
     },
@@ -758,8 +846,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Hlavička: logo, CTA, mobile", "href": "/docs/admin/header" },
-          { "label": "Brand guidelines (logo formáty)", "href": "/docs/admin/branding" }
+          {
+            "label": "Hlavička: logo, CTA, mobile",
+            "href": "/docs/admin/header"
+          },
+          {
+            "label": "Brand guidelines (logo formáty)",
+            "href": "/docs/admin/branding"
+          }
         ]
       }
     },
@@ -796,8 +890,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Päta: stĺpce, sociálne siete", "href": "/docs/admin/footer" },
-          { "label": "GDPR / cookie odkazy v päte (povinné)", "href": "/docs/admin/legal" }
+          {
+            "label": "Päta: stĺpce, sociálne siete",
+            "href": "/docs/admin/footer"
+          },
+          {
+            "label": "GDPR / cookie odkazy v päte (povinné)",
+            "href": "/docs/admin/legal"
+          }
         ]
       }
     },
@@ -835,8 +935,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "GDPR čl. 15–22 a SLA tabuľka", "href": "/docs/admin/dsr" },
-          { "label": "Technický runbook výmazu a anonymizácie", "href": "/docs/admin/dsr-runbook" }
+          {
+            "label": "GDPR čl. 15–22 a SLA tabuľka",
+            "href": "/docs/admin/dsr"
+          },
+          {
+            "label": "Technický runbook výmazu a anonymizácie",
+            "href": "/docs/admin/dsr-runbook"
+          }
         ]
       }
     },
@@ -876,9 +982,18 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "DPA workflow a šablóny", "href": "/docs/admin/dpa-requests" },
-          { "label": "Anonymizácia: kedy a ako", "href": "/docs/admin/dpa-anonymisation" },
-          { "label": "Retention politika a cron job", "href": "/docs/admin/settings" }
+          {
+            "label": "DPA workflow a šablóny",
+            "href": "/docs/admin/dpa-requests"
+          },
+          {
+            "label": "Anonymizácia: kedy a ako",
+            "href": "/docs/admin/dpa-anonymisation"
+          },
+          {
+            "label": "Retention politika a cron job",
+            "href": "/docs/admin/settings"
+          }
         ]
       }
     },
@@ -917,9 +1032,18 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Feature flagy a deploy audit", "href": "/docs/admin/settings" },
-          { "label": "Retention politika a cron", "href": "/docs/admin/retention" },
-          { "label": "Zoznam subprocesorov a GDPR článok 28", "href": "/docs/admin/subprocessors" }
+          {
+            "label": "Feature flagy a deploy audit",
+            "href": "/docs/admin/settings"
+          },
+          {
+            "label": "Retention politika a cron",
+            "href": "/docs/admin/retention"
+          },
+          {
+            "label": "Zoznam subprocesorov a GDPR článok 28",
+            "href": "/docs/admin/subprocessors"
+          }
         ]
       }
     },
@@ -957,9 +1081,18 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "MFA enrolment workflow", "href": "/docs/admin/security" },
-          { "label": "Backup kódy: best practices", "href": "/docs/admin/security-backup-codes" },
-          { "label": "AAL2 enforcement pre /admin", "href": "/docs/admin/aal2" }
+          {
+            "label": "MFA enrolment workflow",
+            "href": "/docs/admin/security"
+          },
+          {
+            "label": "Backup kódy: best practices",
+            "href": "/docs/admin/security-backup-codes"
+          },
+          {
+            "label": "AAL2 enforcement pre /admin",
+            "href": "/docs/admin/aal2"
+          }
         ]
       }
     },
@@ -998,8 +1131,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "AI precheck rubrika (Claude Haiku 4.5)", "href": "/docs/admin/templates-precheck" },
-          { "label": "CC BY 4.0 a autorské práva", "href": "/docs/admin/templates-license" }
+          {
+            "label": "AI precheck rubrika (Claude Haiku 4.5)",
+            "href": "/docs/admin/templates-precheck"
+          },
+          {
+            "label": "CC BY 4.0 a autorské práva",
+            "href": "/docs/admin/templates-license"
+          }
         ]
       }
     }

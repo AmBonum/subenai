@@ -20,7 +20,7 @@
     "s2": {
       "heading": "2. What data we process",
       "answers_label": "Your test answers and score",
-      "answers_text": " — answers to 15 questions, response time, final score and personality archetype. Without these the test cannot be evaluated or stored.",
+      "answers_text": " — answers to 10 questions, response time, final score and personality archetype. Without these the test cannot be evaluated or stored.",
       "details_label": "Your individual answers",
       "details_text": " — for each question the question ID, selected option (a, b, c, d), whether it was correct, reaction time, category and difficulty. Without these we cannot display a detailed answer review after the test completes.",
       "session_label": "Anonymous session identifier",
@@ -71,7 +71,7 @@
           "retention": "12 months"
         },
         "composer": {
-          "purpose": "Custom test packs (Composer) — only question IDs, pass threshold, optional pack name",
+          "purpose": "Custom test packs (test editor) — only question IDs, pass threshold, optional pack name",
           "basis": "Performance of a contract / Art. 6(1)(b) GDPR",
           "retention": "12 months from creation"
         },
@@ -210,7 +210,7 @@
     },
     "s8": {
       "heading": "8. Education mode (collecting edu responses)",
-      "intro_prefix": "From May 2026, authors of educational tests (teachers, lecturers, HR) can, when creating their own pack in the Composer, enable the option to ",
+      "intro_prefix": "From May 2026, authors of educational tests (teachers, lecturers, HR) can, when creating their own pack in the test editor, enable the option to ",
       "intro_emph": "collect responses together with the respondent's name and email",
       "intro_middle": ". Goal: the teacher wants to see how a specific student is improving. This mode is ",
       "intro_emph2": "opt-in",

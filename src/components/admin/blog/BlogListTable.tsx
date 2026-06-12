@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { AdminBlogPostListItem, BlogPostStatus } from "@/lib/blog/admin-queries";
+import { formatDateSk } from "@/lib/format/date";
 
 // ----- Column / sort / filter model --------------------------------------
 
@@ -304,14 +305,12 @@ export function BlogListTable({ posts }: BlogListTableProps) {
                   )}
                   {visibleColumns.has("published_at") && (
                     <TableCell className="text-sm text-muted-foreground">
-                      {post.published_at
-                        ? new Date(post.published_at).toLocaleDateString("sk-SK")
-                        : "—"}
+                      {post.published_at ? formatDateSk(post.published_at) : "—"}
                     </TableCell>
                   )}
                   {visibleColumns.has("updated_at") && (
                     <TableCell className="text-sm text-muted-foreground">
-                      {new Date(post.updated_at).toLocaleDateString("sk-SK")}
+                      {formatDateSk(post.updated_at)}
                     </TableCell>
                   )}
                   {visibleColumns.has("actions") && (

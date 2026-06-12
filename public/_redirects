@@ -7,7 +7,8 @@
 /podpora /support 301
 /podakovanie/* /thank-you/:splat 301
 /sponzori /sponsors 301
-/sponzori/vsetci /sponsors/all 301
+/sponzori/vsetci /sponsors 301
+/sponsors/all /sponsors 301
 /spravovat-podporu /manage-support 301
 /zmeny /changelog 301
 /kontakt /contact-form 301

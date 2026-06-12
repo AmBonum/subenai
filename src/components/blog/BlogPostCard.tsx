@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { tFor } from "@/i18n/blog";
 import type { BlogPostListItem } from "@/lib/blog/queries";
 import { isPillarSlug } from "@/lib/blog/pillar-slugs";
+import { formatDateLongSk } from "@/lib/format/date";
 
 import { BlogHeroFallback } from "./BlogHeroFallback";
 import { CategoryBadge } from "./CategoryBadge";
@@ -24,11 +25,7 @@ export function BlogPostCard({ post, variant = "default" }: BlogPostCardProps) {
   const pillar = isPillarSlug(post.slug);
   const isFeatured = variant === "featured";
   const isCompact = variant === "compact";
-  const published = new Date(post.published_at).toLocaleDateString("sk-SK", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  const published = formatDateLongSk(post.published_at);
   const card = (
     <Link
       to="/blog/$slug"

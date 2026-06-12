@@ -36,26 +36,7 @@ interface TransitionOption {
 }
 
 const TRANSITIONS: Record<SupportTicketStatus, TransitionOption[]> = {
-  new: [
-    { to: "in_progress", label: "Začať riešiť" },
-    {
-      to: "resolved",
-      label: "Označiť ako vyriešené",
-      confirm: "success",
-      confirmTitle: "Označiť žiadosť ako vyriešenú?",
-      confirmDescription: "Žiadosť sa presunie do vyriešených a používateľ dostane oznámenie.",
-      confirmLabel: "Vyriešiť",
-    },
-    {
-      to: "archived",
-      label: "Archivovať",
-      confirm: "warning",
-      confirmTitle: "Archivovať žiadosť?",
-      confirmDescription:
-        "Archivovaná žiadosť zmizne z hlavného zoznamu. Možno ju kedykoľvek obnoviť.",
-      confirmLabel: "Archivovať",
-    },
-  ],
+  new: [{ to: "in_progress", label: "Začať riešiť" }],
   in_progress: [
     { to: "waiting_user", label: "Čaká na používateľa" },
     {
@@ -65,15 +46,6 @@ const TRANSITIONS: Record<SupportTicketStatus, TransitionOption[]> = {
       confirmTitle: "Označiť žiadosť ako vyriešenú?",
       confirmDescription: "Žiadosť sa presunie do vyriešených a používateľ dostane oznámenie.",
       confirmLabel: "Vyriešiť",
-    },
-    {
-      to: "archived",
-      label: "Archivovať",
-      confirm: "warning",
-      confirmTitle: "Archivovať žiadosť?",
-      confirmDescription:
-        "Archivovaná žiadosť zmizne z hlavného zoznamu. Možno ju kedykoľvek obnoviť.",
-      confirmLabel: "Archivovať",
     },
   ],
   waiting_user: [
@@ -106,18 +78,8 @@ const TRANSITIONS: Record<SupportTicketStatus, TransitionOption[]> = {
       confirmLabel: "Archivovať",
     },
   ],
-  reopened: [
-    { to: "in_progress", label: "Začať riešiť" },
-    {
-      to: "resolved",
-      label: "Označiť ako vyriešené",
-      confirm: "success",
-      confirmTitle: "Označiť žiadosť ako vyriešenú?",
-      confirmDescription: "Žiadosť sa presunie do vyriešených a používateľ dostane oznámenie.",
-      confirmLabel: "Vyriešiť",
-    },
-  ],
-  archived: [{ to: "in_progress", label: "Obnoviť z archívu" }],
+  reopened: [{ to: "in_progress", label: "Začať riešiť" }],
+  archived: [{ to: "reopened", label: "Obnoviť z archívu" }],
 };
 
 const STATUS_LABELS: Record<string, string> = {

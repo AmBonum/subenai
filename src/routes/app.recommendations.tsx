@@ -1,14 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { tFor } from "@/i18n/app-shell";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
-const tRec = tFor("recommendations");
-
+// M4 — merged into /app/insights. Thin client redirect keeps old links alive.
 export const Route = createFileRoute("/app/recommendations")({
-  beforeLoad: async ({ location }) => {
-    await requireSupabaseAuth(location.pathname, { requireOnboarded: true });
+  beforeLoad: () => {
+    throw redirect({ to: "/app/insights", search: { tab: "recommendations" }, replace: true });
   },
-  head: () => ({
-    meta: [{ title: tRec("page_title") }, { name: "robots", content: "noindex,nofollow" }],
-  }),
 });

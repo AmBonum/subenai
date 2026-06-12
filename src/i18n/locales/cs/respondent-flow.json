@@ -23,6 +23,7 @@
   "thank_you": {
     "title": "Hotovo!",
     "subtitle": "Vaše odpovědi byly odeslány. Děkujeme za účast.",
+    "quick_test_cta": "Otestuj své radary na podvody — rychlý test zdarma",
     "close_button": "Zavřít"
   },
   "errors": {

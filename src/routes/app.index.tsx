@@ -17,10 +17,7 @@ import { PageHeader } from "@/components/app/page-header";
 import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { StatCard } from "@/components/admin/StatCard";
 import { ProfileCompletionBanner } from "@/components/auth/ProfileCompletionBanner";
-import { DigestDashboardCard } from "@/components/user/DigestDashboardCard";
-import { RecommendationsDashboardCard } from "@/components/user/RecommendationsDashboardCard";
-import { RetestDashboardCard } from "@/components/user/RetestDashboardCard";
-import { PeerDashboardCard } from "@/components/user/PeerDashboardCard";
+import { InsightsDashboardCard } from "@/components/user/InsightsDashboardCard";
 import { useDashboardStats, useTests } from "@/lib/platform/queries";
 import { hasConsent, loadConsent } from "@/lib/consent";
 import { tFor } from "@/i18n/app-shell";
@@ -330,17 +327,8 @@ function AppDashboardPage() {
             </Card>
           )}
 
-          {/* Phase 4: Weekly digest card */}
-          <DigestDashboardCard />
-
-          {/* Phase 5: course recommendations */}
-          <RecommendationsDashboardCard />
-
-          {/* Phase 6: retest reminders */}
-          <RetestDashboardCard />
-
-          {/* Phase 7a: peer comparison */}
-          <PeerDashboardCard />
+          {/* M4: single "Pre teba" rail linking into /app/insights tabs */}
+          <InsightsDashboardCard />
 
           <div className="space-y-3 pt-2" data-testid="app-dashboard-stats-section">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">

@@ -20,7 +20,7 @@
     "s2": {
       "heading": "2. Aké údaje spracúvame",
       "answers_label": "Tvoje odpovede a skóre v teste",
-      "answers_text": " — odpovede na 15 otázok, čas odpovede, výsledné skóre a archetyp osobnosti. Bez týchto sa test nedá vyhodnotiť ani uložiť.",
+      "answers_text": " — odpovede na 10 otázok, čas odpovede, výsledné skóre a archetyp osobnosti. Bez týchto sa test nedá vyhodnotiť ani uložiť.",
       "details_label": "Tvoje konkrétne odpovede",
       "details_text": " — pre každú otázku ID otázky, vybraná možnosť (a, b, c, d), či bola správna, čas reakcie, kategória a obtiažnosť. Bez týchto sa po dokončení testu nedá zobraziť detailné review odpovedí.",
       "session_label": "Anonymný identifikátor relácie",
@@ -71,7 +71,7 @@
           "retention": "12 mesiacov"
         },
         "composer": {
-          "purpose": "Vlastné zostavy testov (Composer) — len ID otázok, prah úspešnosti, voliteľný názov zostavy",
+          "purpose": "Vlastné zostavy testov (editor testov) — len ID otázok, prah úspešnosti, voliteľný názov zostavy",
           "basis": "Plnenie zmluvy / čl. 6 ods. 1 písm. b GDPR",
           "retention": "12 mesiacov od vytvorenia"
         },
@@ -222,7 +222,7 @@
     },
     "s8": {
       "heading": "8. Education mode (zber edu odpovedí)",
-      "intro_prefix": "Od mája 2026 si autori vzdelávacích testov (učitelia, lektori, HR) môžu pri tvorbe vlastnej zostavy v Composeri zapnúť možnosť ",
+      "intro_prefix": "Od mája 2026 si autori vzdelávacích testov (učitelia, lektori, HR) môžu pri tvorbe vlastnej zostavy v editore testov zapnúť možnosť ",
       "intro_emph": "zbierať odpovede s menom a e-mailom respondenta",
       "intro_middle": ". Cieľ: učiteľ chce vidieť, ako sa konkrétny študent zlepšuje. Tento režim je ",
       "intro_emph2": "opt-in",
@@ -247,7 +247,7 @@
       "basis_text": " súhlas respondenta podľa čl. 6 ods. 1 písm. a GDPR. Súhlas je vyžadovaný explicitne na intake formulári pred začatím testu; bez neho test nepokračuje.",
       "retention_label": "Doba uchovávania: 12 mesiacov",
       "retention_text": " od vytvorenia záznamu, potom automaticky meno a e-mail anonymizujeme (skóre + odpovede zostávajú pre štatistiku autora). Autor môže konkrétneho respondenta vymazať skôr cez dashboard.",
-      "callout_label": "Ak ste respondent edu testu:",
+      "callout_label": "Ak si respondent edu testu:",
       "callout_prefix": " primárny kontakt pre uplatnenie vašich GDPR práv (čl. 15–22 — prístup, oprava, vymazanie, prenos) je ",
       "callout_emph": "autor testu",
       "callout_middle": ", nie my. My ako sprostredkovateľ vaše dáta len hostujeme a po pokyne autora ich vymažeme. Ak neviete, kto je autor, alebo nemá odpoveď, kontaktujte nás na ",

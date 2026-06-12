@@ -13,6 +13,7 @@ import {
 } from "@/lib/platform/queries";
 import { PageHeader } from "@/components/app/page-header";
 import { AppPageExplainer } from "@/components/user/AppPageExplainer";
+import { formatDateTimeSk } from "@/lib/format/date";
 import { tFor } from "@/i18n/app-shell";
 
 const tRoutes = tFor("route_titles");
@@ -126,9 +127,7 @@ function NotificationsPage() {
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground">{n.body}</p>
-                <p className="text-xs text-muted-foreground">
-                  {new Date(n.created_at).toLocaleString("sk-SK")}
-                </p>
+                <p className="text-xs text-muted-foreground">{formatDateTimeSk(n.created_at)}</p>
               </div>
               {!n.read_at && (
                 <Button
@@ -146,12 +145,20 @@ function NotificationsPage() {
         ))}
 
         {visible.length === 0 && (
-          <p
-            className="py-8 text-center text-sm text-muted-foreground"
-            data-testid="app-notifications-empty-state"
-          >
-            {t("empty")}
-          </p>
+          <div className="py-8 text-center">
+            <p
+              className="text-sm text-muted-foreground"
+              data-testid="app-notifications-empty-state"
+            >
+              {t("empty")}
+            </p>
+            <p
+              className="mt-1 text-sm text-muted-foreground"
+              data-testid="app-notifications-empty-hint"
+            >
+              {t("empty_hint")}
+            </p>
+          </div>
         )}
       </div>
     </div>

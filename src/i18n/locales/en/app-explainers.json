@@ -33,8 +33,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "How to read overview metrics", "href": "/docs/app/dashboard" },
-          { "label": "Weekly digest by email", "href": "/docs/app/digest" }
+          {
+            "label": "How to read overview metrics",
+            "href": "/docs/app/dashboard"
+          },
+          {
+            "label": "Weekly digest by email",
+            "href": "/docs/app/digest"
+          }
         ]
       }
     },
@@ -71,8 +77,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "How to create and publish a test", "href": "/docs/app/tests-create" },
-          { "label": "Sharing and password protection", "href": "/docs/app/tests-sharing" }
+          {
+            "label": "How to create and publish a test",
+            "href": "/docs/app/tests-create"
+          },
+          {
+            "label": "Sharing and password protection",
+            "href": "/docs/app/tests-sharing"
+          }
         ]
       }
     },
@@ -109,8 +121,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Edu mode: how to create a test without registration", "href": "/docs/app/edu-tests" },
-          { "label": "Linking an anonymous test to your account", "href": "/docs/app/edu-tests-claim" }
+          {
+            "label": "Edu mode: how to create a test without registration",
+            "href": "/docs/app/edu-tests"
+          },
+          {
+            "label": "Linking an anonymous test to your account",
+            "href": "/docs/app/edu-tests-claim"
+          }
         ]
       }
     },
@@ -146,8 +164,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Working with test templates", "href": "/docs/app/templates" },
-          { "label": "GDPR purposes and template classification", "href": "/docs/app/templates-gdpr" }
+          {
+            "label": "Working with test templates",
+            "href": "/docs/app/templates"
+          },
+          {
+            "label": "GDPR purposes and template classification",
+            "href": "/docs/app/templates-gdpr"
+          }
         ]
       }
     },
@@ -184,8 +208,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Question library and types", "href": "/docs/app/library" },
-          { "label": "How to insert questions from the library into a test", "href": "/docs/app/library-insert" }
+          {
+            "label": "Question library and types",
+            "href": "/docs/app/library"
+          },
+          {
+            "label": "How to insert questions from the library into a test",
+            "href": "/docs/app/library-insert"
+          }
         ]
       }
     },
@@ -222,8 +252,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Working with respondent groups", "href": "/docs/app/audiences" },
-          { "label": "Tags and organisation", "href": "/docs/app/audiences-tags" }
+          {
+            "label": "Working with respondent groups",
+            "href": "/docs/app/audiences"
+          },
+          {
+            "label": "Tags and organisation",
+            "href": "/docs/app/audiences-tags"
+          }
         ]
       }
     },
@@ -260,8 +296,58 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "History and audit trail", "href": "/docs/app/history" },
-          { "label": "Event types and their sources", "href": "/docs/app/history-events" }
+          {
+            "label": "History and audit trail",
+            "href": "/docs/app/history"
+          },
+          {
+            "label": "Event types and their sources",
+            "href": "/docs/app/history-events"
+          }
+        ]
+      }
+    },
+    "insights": {
+      "title": "About the For you section",
+      "lead": "Personalised insights in one place: weekly activity digests, course recommendations for your audience, retest reminders, and a comparison of your results with other creators. Content switches via tabs — nothing to configure here, it is a view.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "What you see here",
+          "items": [
+            "Digest: a weekly summary of completions and respondent activity",
+            "Recommendations: courses ranked by relevance for your audience",
+            "Retests: tests whose recommended repeat interval has elapsed",
+            "Comparison: your audience's percentile against other creators"
+          ]
+        },
+        "time_impact": {
+          "heading": "How fast changes show up",
+          "items": [
+            "The weekly digest is generated once a week — new completions appear in the next digest",
+            "Recommendations and retests are recomputed on page load",
+            "Tab switching is instant (only the ?tab= URL param changes)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "What to watch out for",
+          "items": [
+            "Sections stay empty until your tests have enough completions — that is not a bug",
+            "The comparison is anonymised and aggregated; you never see individual creators",
+            "Old links to /app/digest, /app/retest, /app/recommendations and /app/peer redirect here automatically"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Documentation",
+        "links": [
+          {
+            "label": "“For you” insights and tips",
+            "href": "/docs/app/insights"
+          },
+          {
+            "label": "Weekly e-mail digest",
+            "href": "/docs/app/digest"
+          }
         ]
       }
     },
@@ -298,8 +384,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Notification types and when you receive them", "href": "/docs/app/notifications" },
-          { "label": "Email notifications and frequency", "href": "/docs/app/notifications-email" }
+          {
+            "label": "Notification types and when you receive them",
+            "href": "/docs/app/notifications"
+          },
+          {
+            "label": "Email notifications and frequency",
+            "href": "/docs/app/notifications-email"
+          }
         ]
       }
     },
@@ -336,8 +428,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Teams and roles", "href": "/docs/app/teams" },
-          { "label": "RLS policies for teams", "href": "/docs/app/teams-rls" }
+          {
+            "label": "Teams and roles",
+            "href": "/docs/app/teams"
+          },
+          {
+            "label": "RLS policies for teams",
+            "href": "/docs/app/teams-rls"
+          }
         ]
       }
     },
@@ -377,9 +475,18 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Profile and public data", "href": "/docs/app/profile" },
-          { "label": "GDPR: your rights as a data subject", "href": "/docs/app/profile-gdpr" },
-          { "label": "Account security and 2FA", "href": "/docs/app/profile-security" }
+          {
+            "label": "Profile and public data",
+            "href": "/docs/app/profile"
+          },
+          {
+            "label": "GDPR: your rights as a data subject",
+            "href": "/docs/app/profile-gdpr"
+          },
+          {
+            "label": "Account security and 2FA",
+            "href": "/docs/app/profile-security"
+          }
         ]
       }
     },
@@ -416,8 +523,14 @@
       "docs": {
         "heading": "Documentation",
         "links": [
-          { "label": "Frequently asked questions (FAQ)", "href": "/docs/app/help" },
-          { "label": "Contact support", "href": "/docs/app/help-support" }
+          {
+            "label": "Frequently asked questions (FAQ)",
+            "href": "/docs/app/help"
+          },
+          {
+            "label": "Contact support",
+            "href": "/docs/app/help-support"
+          }
         ]
       }
     }

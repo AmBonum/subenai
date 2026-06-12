@@ -21,7 +21,7 @@ export const Route = createLazyFileRoute("/contact-form/ticket/$id")({
 const STATUS_LABEL_SK: Record<string, string> = {
   new: "Nové",
   in_progress: "V riešení",
-  waiting_user: "Čaká na vás",
+  waiting_user: "Čaká na teba",
   resolved: "Vyriešené",
   reopened: "Znovu otvorené",
   archived: "Archivované",
@@ -96,7 +96,7 @@ function KontaktTicketViewPage() {
       <ViewShell>
         <NotFoundCard
           title="Chýba bezpečnostný token"
-          body="Pre zobrazenie žiadosti otvorte odkaz z e-mailu, ktorý sme vám poslali. Token je súčasťou URL adresy."
+          body="Pre zobrazenie žiadosti otvor odkaz z e-mailu, ktorý sme ti poslali. Token je súčasťou URL adresy."
         />
       </ViewShell>
     );
@@ -121,7 +121,7 @@ function KontaktTicketViewPage() {
       <ViewShell>
         <NotFoundCard
           title="Odkaz už nie je platný"
-          body="Token mohol vypršať (platnosť 90 dní), bol odvolaný, alebo bola žiadosť odstránená. Ak potrebujete pomôcť, napíšte nám prosím novú žiadosť."
+          body="Token mohol vypršať (platnosť 90 dní), bol odvolaný, alebo bola žiadosť odstránená. Ak potrebuješ pomôcť, napíš nám prosím novú žiadosť."
         />
       </ViewShell>
     );
@@ -182,7 +182,7 @@ function KontaktTicketViewPage() {
                   ? "tím podpory"
                   : m.author_kind === "system"
                     ? "systém"
-                    : "vy"}
+                    : "ty"}
               </Badge>
             </div>
             <p className="mt-1 whitespace-pre-wrap text-sm">{m.body}</p>
@@ -226,9 +226,9 @@ function KontaktTicketViewPage() {
       >
         <ShieldCheck className="size-4 shrink-0" aria-hidden="true" />
         <p>
-          Toto je read-only zobrazenie viazané na bezpečnostný token z e-mailu. Ak chcete poslať
-          ďalšiu správu, odpovedzte priamo na e-mail z podpory — vaša odpoveď sa pridá do tohto
-          vlákna.
+          Toto je zobrazenie len na čítanie, viazané na bezpečnostný token z e-mailu. Nájdeš tu
+          oficiálny stav žiadosti a odpovede tímu podpory. Ak chceš niečo doplniť, odpovedz priamo
+          na e-mail od podpory — dostane sa k reálnemu človeku, ktorý žiadosť rieši.
         </p>
       </footer>
     </ViewShell>

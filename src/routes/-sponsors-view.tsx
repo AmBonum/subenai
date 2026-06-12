@@ -1,22 +1,31 @@
 // Non-route module (the "-" prefix excludes it from route generation).
-// Hosts AllSponsorsView so the eager sponsors.all.tsx route file stays
-// head()-only while sponsors.all.lazy.tsx pulls this into the route's
-// async chunk.
+// Hosts the merged /sponsors page view (M3: the former latest-5 index and
+// the /sponsors/all filterable grid are one page now). The eager
+// sponsors.tsx route file stays head()-only while sponsors.lazy.tsx pulls
+// this into the route's async chunk.
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { formatMonthYear } from "@/lib/sponsors";
-import { type PublicSponsor } from "./sponsors";
 import { CONTACT_EMAIL } from "@/config/site";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
 
-interface AllSponsorsViewProps {
+export interface PublicSponsor {
+  id: string;
+  display_name: string;
+  display_link: string | null;
+  display_message: string | null;
+  created_at: string;
+  has_refund: boolean;
+}
+
+interface SponzoriViewProps {
   fetchSponsors: () => Promise<PublicSponsor[]>;
 }
 
 type StatusFilter = "all" | "accepted" | "refunded";
 
-export function AllSponsorsView({ fetchSponsors }: AllSponsorsViewProps) {
+export function SponzoriView({ fetchSponsors }: SponzoriViewProps) {
   const t = tFor("sponzori");
   const [all, setAll] = useState<PublicSponsor[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -64,109 +73,134 @@ export function AllSponsorsView({ fetchSponsors }: AllSponsorsViewProps) {
     });
   }, [all, nameQuery, dateFrom, dateTo, statusFilter]);
 
+  const hasAnyData = (all?.length ?? 0) > 0;
+
   return (
     <div className="min-h-screen bg-background">
       <main
-        data-testid="sponzori-vsetci-root"
+        data-testid="sponzori-index-root"
         className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:py-16"
       >
         <header className="mb-8">
           <Link
-            to={ROUTES.sponzori}
-            data-testid="sponzori-vsetci-back-link"
+            to={ROUTES.home}
+            data-testid="sponzori-index-back-link"
             className="text-sm text-muted-foreground hover:text-foreground"
           >
-            {t("vsetci_back")}
+            {t("back_home")}
           </Link>
           <h1
-            data-testid="sponzori-vsetci-heading"
+            data-testid="sponzori-index-heading"
             className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
           >
-            {t("vsetci_title")}
+            {t("title")}
           </h1>
-          <p className="mt-3 text-base text-muted-foreground sm:text-lg">{t("vsetci_hero")}</p>
+          <p
+            data-testid="sponzori-index-hero"
+            className="mt-3 text-base text-muted-foreground sm:text-lg"
+          >
+            {t("hero_prefix")}
+            <Link
+              to={ROUTES.oProjecte}
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              {t("hero_link_about")}
+            </Link>
+            .
+          </p>
         </header>
 
-        <section
-          aria-label={t("filters_aria")}
-          className="mb-6 grid gap-3 rounded-2xl border border-border/60 bg-card/40 p-4 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] sm:items-end sm:gap-4 sm:p-5"
-        >
-          <div>
-            <label htmlFor="filter-name" className="text-xs font-medium text-muted-foreground">
-              {t("filter_name_label")}
-            </label>
-            <input
-              id="filter-name"
-              data-testid="sponzori-vsetci-filter-name"
-              type="search"
-              value={nameQuery}
-              onChange={(e) => setNameQuery(e.target.value)}
-              placeholder={t("filter_name_placeholder")}
-              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
-            />
-          </div>
-          <div>
-            <label htmlFor="filter-date-from" className="text-xs font-medium text-muted-foreground">
-              {t("filter_date_from")}
-            </label>
-            <input
-              id="filter-date-from"
-              data-testid="sponzori-vsetci-filter-date-from"
-              type="date"
-              value={dateFrom}
-              max={dateTo || undefined}
-              onChange={(e) => setDateFrom(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground sm:w-40"
-            />
-          </div>
-          <div>
-            <label htmlFor="filter-date-to" className="text-xs font-medium text-muted-foreground">
-              {t("filter_date_to")}
-            </label>
-            <input
-              id="filter-date-to"
-              data-testid="sponzori-vsetci-filter-date-to"
-              type="date"
-              value={dateTo}
-              min={dateFrom || undefined}
-              onChange={(e) => setDateTo(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground sm:w-40"
-            />
-          </div>
-          <div>
-            <label htmlFor="filter-status" className="text-xs font-medium text-muted-foreground">
-              {t("filter_status")}
-            </label>
-            <select
-              id="filter-status"
-              data-testid="sponzori-vsetci-filter-status"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-              className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground sm:w-36"
-            >
-              <option value="all">{t("filter_status_all")}</option>
-              <option value="accepted">{t("filter_status_accepted")}</option>
-              <option value="refunded">{t("filter_status_refunded")}</option>
-            </select>
-          </div>
-        </section>
+        {hasAnyData ? (
+          <section
+            aria-label={t("filters_aria")}
+            className="mb-6 grid gap-3 rounded-2xl border border-border/60 bg-card/40 p-4 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] sm:items-end sm:gap-4 sm:p-5"
+          >
+            <div>
+              <label htmlFor="filter-name" className="text-xs font-medium text-muted-foreground">
+                {t("filter_name_label")}
+              </label>
+              <input
+                id="filter-name"
+                data-testid="sponzori-vsetci-filter-name"
+                type="search"
+                value={nameQuery}
+                onChange={(e) => setNameQuery(e.target.value)}
+                placeholder={t("filter_name_placeholder")}
+                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="filter-date-from"
+                className="text-xs font-medium text-muted-foreground"
+              >
+                {t("filter_date_from")}
+              </label>
+              <input
+                id="filter-date-from"
+                data-testid="sponzori-vsetci-filter-date-from"
+                type="date"
+                value={dateFrom}
+                max={dateTo || undefined}
+                onChange={(e) => setDateFrom(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground sm:w-40"
+              />
+            </div>
+            <div>
+              <label htmlFor="filter-date-to" className="text-xs font-medium text-muted-foreground">
+                {t("filter_date_to")}
+              </label>
+              <input
+                id="filter-date-to"
+                data-testid="sponzori-vsetci-filter-date-to"
+                type="date"
+                value={dateTo}
+                min={dateFrom || undefined}
+                onChange={(e) => setDateTo(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground sm:w-40"
+              />
+            </div>
+            <div>
+              <label htmlFor="filter-status" className="text-xs font-medium text-muted-foreground">
+                {t("filter_status")}
+              </label>
+              <select
+                id="filter-status"
+                data-testid="sponzori-vsetci-filter-status"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+                className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground sm:w-36"
+              >
+                <option value="all">{t("filter_status_all")}</option>
+                <option value="accepted">{t("filter_status_accepted")}</option>
+                <option value="refunded">{t("filter_status_refunded")}</option>
+              </select>
+            </div>
+          </section>
+        ) : null}
 
         {error ? (
           <ErrorState />
         ) : !all ? (
           <LoadingState />
+        ) : all.length === 0 ? (
+          <SponsorsEmpty />
         ) : filtered.length === 0 ? (
-          <EmptyFilterState hasAnyData={all.length > 0} />
+          <EmptyFilterState />
         ) : (
           <SponsorsTable sponsors={filtered} totalCount={all.length} />
         )}
 
         <p
-          data-testid="sponzori-vsetci-footer-note"
+          data-testid="sponzori-index-footer-note"
           className="mt-12 text-center text-xs text-muted-foreground"
         >
-          {t("vsetci_footer_note")}
-          <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
+          {t("footer_note")}
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            data-testid="sponzori-index-footer-mailto"
+            className="underline underline-offset-2"
+          >
             {CONTACT_EMAIL}
           </a>
           .
@@ -268,7 +302,7 @@ function ErrorState() {
   return (
     <div
       role="alert"
-      data-testid="sponzori-vsetci-error"
+      data-testid="sponzori-index-error"
       className="rounded-2xl border border-border/60 bg-card p-6 text-sm text-muted-foreground"
     >
       {t("fetch_error")}
@@ -276,7 +310,40 @@ function ErrorState() {
   );
 }
 
-function EmptyFilterState({ hasAnyData }: { hasAnyData: boolean }) {
+function SponsorsEmpty() {
+  const t = tFor("sponzori");
+  return (
+    <div
+      data-testid="sponzori-index-empty"
+      className="rounded-2xl border border-border/60 bg-card p-8 text-center"
+    >
+      <h2
+        data-testid="sponzori-index-empty-heading"
+        className="text-xl font-semibold text-foreground"
+      >
+        {t("empty_title")}
+      </h2>
+      <p
+        data-testid="sponzori-index-empty-body"
+        className="mt-2 text-sm leading-relaxed text-muted-foreground"
+      >
+        {t("empty_body")}
+      </p>
+      <div className="mt-4">
+        <Link
+          to={ROUTES.podpora}
+          data-testid="sponzori-index-empty-cta"
+          className="inline-flex items-center gap-2 rounded-2xl bg-accent-gradient px-6 py-3 text-sm font-bold text-primary-foreground shadow-glow"
+        >
+          {t("empty_cta")}
+          <span aria-hidden="true">→</span>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function EmptyFilterState() {
   const t = tFor("sponzori");
   return (
     <div
@@ -287,7 +354,7 @@ function EmptyFilterState({ hasAnyData }: { hasAnyData: boolean }) {
         data-testid="sponzori-vsetci-empty-message"
         className="text-sm leading-relaxed text-muted-foreground"
       >
-        {hasAnyData ? t("vsetci_empty_filtered") : t("vsetci_empty_none")}
+        {t("vsetci_empty_filtered")}
       </p>
     </div>
   );

@@ -23,6 +23,7 @@
   "thank_you": {
     "title": "Done!",
     "subtitle": "Your answers have been submitted. Thank you for taking part.",
+    "quick_test_cta": "Test your scam radar — a free quick test",
     "close_button": "Close"
   },
   "errors": {

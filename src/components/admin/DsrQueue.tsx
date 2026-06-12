@@ -26,6 +26,7 @@ import { useAdminDSRQueue, useUpdateDSRStatus, useUsersByEmails } from "@/lib/ad
 import type { DSRRequest, DSRType } from "@/lib/platform/types";
 import { classifyDsrSla, daysRemaining, type DsrSlaVariant } from "@/lib/admin/dsr-sla";
 import { exportToCSV } from "@/lib/admin/export";
+import { formatDateSk } from "@/lib/format/date";
 import { tFor } from "@/i18n/governance";
 
 const STATUSES: DSRRequest["status"][] = ["open", "in_progress", "completed", "rejected"];
@@ -228,7 +229,7 @@ export function DsrQueue() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
-                        {new Date(d.created_at).toLocaleDateString("sk-SK")}
+                        {formatDateSk(d.created_at)}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="inline-flex items-center gap-1">

@@ -29,6 +29,7 @@ const COLUMN_DEFS: FooterColumnDef[] = [
       { to: ROUTES.test, labelKey: "columns.obsah.links.test", slug: "test" },
       { to: ROUTES.testy, labelKey: "columns.obsah.links.testy", slug: "testy" },
       { to: ROUTES.skolenia, labelKey: "columns.obsah.links.skolenia", slug: "skolenia" },
+      { to: ROUTES.sablony, labelKey: "columns.obsah.links.sablony", slug: "sablony" },
       { to: ROUTES.skoly, labelKey: "columns.obsah.links.skoly", slug: "skoly" },
       { to: ROUTES.blog, labelKey: "columns.obsah.links.blog", slug: "blog" },
     ],

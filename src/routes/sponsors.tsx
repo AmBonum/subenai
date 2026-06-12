@@ -1,27 +1,31 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { SITE_ORIGIN } from "@/config/site";
+import { tFor } from "@/i18n/marketing";
 
-/**
- * Layout route for /sponsors — renders an Outlet so children
- * (/sponsors/, /sponsors/all) actually mount.
- *
- * TanStack file-based routing turns `sponsors.tsx` into the parent of
- * any `sponsors.<child>.tsx` sibling files. Before this layout existed,
- * `sponsors.tsx` rendered the latest-sponsors list itself; visiting
- * /sponsors/all still mounted that latest-list (because the parent
- * never deferred to its child) and the filterable grid was unreachable.
- *
- * The actual /sponsors page content lives in `sponsors.index.tsx`; the
- * filterable list in `sponsors.all.tsx`. Both mount inside this
- * Outlet.
- */
-export const Route = createFileRoute("/sponsors")({
-  component: SponzoriLayout,
-});
-
-function SponzoriLayout() {
-  return <Outlet />;
-}
+// M3 — /sponsors is the single sponsors surface: the full filterable
+// public list (the former /sponsors/all grid) under the index page's
+// heading and empty/error states. /sponsors/all 301s here (see
+// public/_redirects + sponsors_.all.tsx for the client-side redirect).
+// The component ships in sponsors.lazy.tsx; the view implementation in
+// -sponsors-view.tsx.
 
 // Backwards-compat re-exports so existing imports from "@/routes/sponsors"
-// (the all-list page + tests for both) keep working after the index split.
-export { SponzoriView, type PublicSponsor } from "./sponsors.index";
+// (unit tests) keep working after the merge.
+export { SponzoriView, type PublicSponsor } from "./-sponsors-view";
+
+const tSponzori = tFor("sponzori");
+const SPONZORI_URL = `${SITE_ORIGIN}/sponsors`;
+
+export const Route = createFileRoute("/sponsors")({
+  head: () => ({
+    meta: [
+      { title: tSponzori("head_title") },
+      { name: "description", content: tSponzori("head_description_index") },
+      { name: "robots", content: "index, follow" },
+      { property: "og:title", content: tSponzori("head_title") },
+      { property: "og:url", content: SPONZORI_URL },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: SPONZORI_URL }],
+  }),
+});

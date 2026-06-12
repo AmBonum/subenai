@@ -60,15 +60,10 @@ export interface StatusTransition {
 // FSM graph mirrors the server-side transition_ticket_status RPC. Only
 // transitions the admin can take from the current status are listed.
 export const FSM_TRANSITIONS: Record<TicketStatus, StatusTransition[]> = {
-  new: [
-    { to: "in_progress", label: "Začať riešiť", severity: "default", needsConfirm: false },
-    { to: "resolved", label: "Označiť ako vyriešené", severity: "success", needsConfirm: true },
-    { to: "archived", label: "Archivovať", severity: "warning", needsConfirm: true },
-  ],
+  new: [{ to: "in_progress", label: "Začať riešiť", severity: "default", needsConfirm: false }],
   in_progress: [
     { to: "waiting_user", label: "Čakať na používateľa", severity: "default", needsConfirm: false },
     { to: "resolved", label: "Označiť ako vyriešené", severity: "success", needsConfirm: true },
-    { to: "archived", label: "Archivovať", severity: "warning", needsConfirm: true },
   ],
   waiting_user: [
     { to: "in_progress", label: "Vrátiť do riešenia", severity: "default", needsConfirm: false },
@@ -80,10 +75,9 @@ export const FSM_TRANSITIONS: Record<TicketStatus, StatusTransition[]> = {
   ],
   reopened: [
     { to: "in_progress", label: "Začať riešiť", severity: "default", needsConfirm: false },
-    { to: "resolved", label: "Označiť ako vyriešené", severity: "success", needsConfirm: true },
   ],
   archived: [
-    { to: "in_progress", label: "Obnoviť z archívu", severity: "default", needsConfirm: false },
+    { to: "reopened", label: "Obnoviť z archívu", severity: "default", needsConfirm: false },
   ],
 };
 

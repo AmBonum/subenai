@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -9,6 +9,7 @@ import type {
   SupportContactFormData,
   SupportContactSubmitResult,
 } from "@/components/support/support-form-config";
+import { tFor } from "@/i18n/marketing";
 
 // E48.3 — Public /contact-form route. Posts to /api/support-ticket-create
 // (CF Pages Function) which handles Turnstile + honeypot + rate limit
@@ -17,10 +18,34 @@ import type {
 // that lets the anonymous submitter open the read-only thread page
 // for 90 days.
 
+const tKontakt = tFor("kontakt");
+
 const PAGE_URL = `${SITE_ORIGIN}/contact-form`;
 const PAGE_TITLE = "Kontakt | subenai";
 const PAGE_DESCRIPTION =
-  "Napíšte nám. Odpovieme do dvoch pracovných dní. Pre nahlásenie problému, otázku, alebo žiadosť o úpravu údajov použite tento formulár.";
+  "Napíš nám. Odpovieme do dvoch pracovných dní. Pre nahlásenie problému, otázku alebo žiadosť o úpravu údajov použi tento formulár.";
+
+// /contact topic cards deep-link here with ?topic=<slug>; each slug
+// preselects a ticket category and prefills the subject from the same
+// i18n label the card shows, honouring the "Predvyplníme predmet aj
+// kategóriu" promise on the hub page.
+export const TOPIC_PREFILL = {
+  tech: { category: "bug", subjectKey: "topic_tech_subject" },
+  content: { category: "question", subjectKey: "topic_content_subject" },
+  sponsor: { category: "billing", subjectKey: "topic_sponsor_subject" },
+  gdpr: { category: "gdpr", subjectKey: "topic_gdpr_subject" },
+  press: { category: "other", subjectKey: "topic_press_subject" },
+  other: { category: "other", subjectKey: "topic_other_subject" },
+} as const satisfies Record<
+  string,
+  { category: SupportContactFormData["category"]; subjectKey: string }
+>;
+
+export type ContactTopic = keyof typeof TOPIC_PREFILL;
+
+interface ContactFormSearch {
+  topic?: ContactTopic;
+}
 
 const contactJsonLd = {
   "@context": "https://schema.org",
@@ -45,23 +70,23 @@ function mapAttachmentErrorCode(code: string | undefined): string {
   switch (code) {
     case "attachment_too_large":
     case "attachment_size_too_large":
-      return "Príloha presahuje 5 MB.";
+      return tKontakt("form.error_attachment_too_large");
     case "attachment_size_zero":
-      return "Príloha je prázdna.";
+      return tKontakt("form.error_attachment_empty");
     case "attachment_mime_not_allowed":
-      return "Nepodporovaný formát (povolené: PNG, JPEG, PDF).";
+      return tKontakt("form.error_attachment_mime");
     case "attachment_magic_mismatch":
-      return "Súbor sa nezhoduje s deklarovaným typom.";
+      return tKontakt("form.error_attachment_magic");
     case "attachment_filename_invalid":
-      return "Nepovolený názov súboru.";
+      return tKontakt("form.error_attachment_filename");
     case "attachment_pdf_parse_failed":
-      return "PDF sa nepodarilo spracovať.";
+      return tKontakt("form.error_attachment_pdf");
     case "attachment_limit_reached":
-      return "Maximum 3 prílohy na žiadosť.";
+      return tKontakt("form.error_attachment_limit");
     case "storage_upload_failed":
-      return "Úložisko zlyhalo. Skúste neskôr.";
+      return tKontakt("form.error_attachment_storage");
     default:
-      return code ?? "Nahranie prílohy zlyhalo.";
+      return code ?? tKontakt("form.error_attachment_generic");
   }
 }
 
@@ -69,23 +94,29 @@ function mapErrorCode(code: string | undefined): string {
   switch (code) {
     case "rate_limited_ip":
     case "rate_limited_user":
-      return "Z tejto IP adresy ste odoslali príliš veľa žiadostí. Skúste neskôr.";
+      return tKontakt("form.error_rate_limited");
     case "email_cooldown":
-      return "Z tejto e-mailovej adresy ste pred chvíľou odoslali žiadosť. Skúste o pár minút.";
+      return tKontakt("form.error_email_cooldown");
     case "turnstile_failed":
-      return "Overenie proti spamu zlyhalo. Obnovte stránku a skúste znova.";
+      return tKontakt("form.error_turnstile_failed");
     case "subject_invalid":
     case "body_invalid":
     case "email_invalid":
     case "name_invalid":
     case "category_invalid":
-      return "Skontrolujte vyplnené polia.";
+      return tKontakt("form.error_fields_invalid");
     default:
-      return "Nepodarilo sa odoslať. Skúste neskôr alebo nás kontaktujte iným spôsobom.";
+      return tKontakt("form.error_generic");
   }
 }
 
 export const Route = createFileRoute("/contact-form/")({
+  validateSearch: (search): ContactFormSearch => ({
+    topic:
+      typeof search.topic === "string" && search.topic in TOPIC_PREFILL
+        ? (search.topic as ContactTopic)
+        : undefined,
+  }),
   head: () => ({
     meta: [
       { title: PAGE_TITLE },
@@ -103,16 +134,23 @@ export const Route = createFileRoute("/contact-form/")({
       },
     ],
   }),
-  component: KontaktPage,
+  component: ContactFormRoute,
 });
 
-export function KontaktPage() {
+function ContactFormRoute() {
+  const { topic } = Route.useSearch();
+  return <KontaktPage topic={topic} />;
+}
+
+export function KontaktPage({ topic }: { topic?: ContactTopic }) {
   const [submitted, setSubmitted] = useState<{ ticketId: string; viewToken?: string } | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
+  const prefillFromTopic = topic ? TOPIC_PREFILL[topic] : undefined;
+
   async function handleSubmit(data: SupportContactFormData): Promise<SupportContactSubmitResult> {
     if (!turnstileToken) {
-      throw new Error("Overenie proti spamu sa nedokončilo. Skúste znova.");
+      throw new Error(tKontakt("form.error_turnstile_pending"));
     }
     const res = await fetch("/api/support-ticket-create", {
       method: "POST",
@@ -134,7 +172,7 @@ export function KontaktPage() {
     };
 
     setSubmitted({ ticketId: json.ticket_id, viewToken: json.view_token });
-    toast.success("Vašu žiadosť sme prijali. Odpovieme do dvoch pracovných dní.");
+    toast.success("Tvoju žiadosť sme prijali. Odpovieme do dvoch pracovných dní.");
     return { ticketId: json.ticket_id, viewToken: json.view_token };
   }
 
@@ -164,11 +202,11 @@ export function KontaktPage() {
     <main className="mx-auto w-full max-w-2xl px-4 py-12 sm:py-16" data-testid="kontakt-page-root">
       <header className="space-y-3 pb-8">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl" data-testid="kontakt-heading">
-          Kontaktujte nás
+          Kontaktuj nás
         </h1>
         <p className="text-base text-muted-foreground" data-testid="kontakt-subtitle">
-          Máte otázku, nahlasujete problém, alebo si pýtate svoje údaje? Napíšte nám — odpovieme do
-          dvoch pracovných dní.
+          Máš otázku, nahlasuješ problém, alebo si pýtaš svoje údaje? Napíš nám — odpovieme do dvoch
+          pracovných dní.
         </p>
       </header>
 
@@ -178,24 +216,39 @@ export function KontaktPage() {
           aria-live="polite"
           data-testid="kontakt-success-state"
         >
-          <h2 className="text-lg font-semibold">Vašu žiadosť sme prijali</h2>
+          <h2 className="text-lg font-semibold">Tvoju žiadosť sme prijali</h2>
           <p className="mt-2 text-sm">
             Číslo žiadosti:{" "}
             <code data-testid="kontakt-success-ticket-id">{submitted.ticketId}</code>
           </p>
           <p className="mt-2 text-sm">
-            Odpovieme čo najskôr, najneskôr do dvoch pracovných dní. Skontrolujte si e-mail —
-            pošleme vám potvrdenie spolu s odkazom na zobrazenie vlákna.
+            Odpovieme čo najskôr, najneskôr do dvoch pracovných dní. Skontroluj si e-mail — poslali
+            sme ti potvrdenie s kópiou žiadosti.
           </p>
           {submitted.viewToken && (
-            <p className="mt-3 text-xs text-emerald-700 dark:text-emerald-300">
-              Tip: na zobrazenie vlákna použite odkaz z e-mailu. Token má 90 dní platnosti.
+            <p className="mt-3 text-sm">
+              <Link
+                to="/contact-form/ticket/$id"
+                params={{ id: submitted.ticketId }}
+                search={{ token: submitted.viewToken }}
+                className="font-semibold underline underline-offset-2"
+                data-testid="kontakt-success-thread-link"
+              >
+                Sleduj stav svojej žiadosti tu
+              </Link>{" "}
+              — odkaz platí 90 dní a je aj v potvrdzovacom e-maile.
             </p>
           )}
         </section>
       ) : (
         <SupportContactForm
           variant="public"
+          prefill={
+            prefillFromTopic && {
+              subject: tKontakt(prefillFromTopic.subjectKey),
+              category: prefillFromTopic.category,
+            }
+          }
           onSubmit={handleSubmit}
           onAttachmentUpload={handleAttachmentUpload}
           turnstileSlot={<TurnstileWidget onToken={setTurnstileToken} />}

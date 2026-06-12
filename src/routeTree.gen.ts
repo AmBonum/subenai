@@ -26,7 +26,6 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
-import { Route as SponsorsIndexRouteImport } from './routes/sponsors.index'
 import { Route as SablonyIndexRouteImport } from './routes/sablony.index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as ContactFormIndexRouteImport } from './routes/contact-form.index'
@@ -37,7 +36,7 @@ import { Route as ThankYouSessionIdRouteImport } from './routes/thank-you.$sessi
 import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
 import { Route as TestBuilderRouteImport } from './routes/test.builder'
 import { Route as TShareIdRouteImport } from './routes/t.$shareId'
-import { Route as SponsorsAllRouteImport } from './routes/sponsors.all'
+import { Route as SponsorsAllRouteImport } from './routes/sponsors_.all'
 import { Route as SchoolsDpaRouteImport } from './routes/schools_.dpa'
 import { Route as SablonySlugRouteImport } from './routes/sablony.$slug'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
@@ -58,6 +57,7 @@ import { Route as AppPeerRouteImport } from './routes/app.peer'
 import { Route as AppOnboardingRouteImport } from './routes/app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
 import { Route as AppLibraryRouteImport } from './routes/app.library'
+import { Route as AppInsightsRouteImport } from './routes/app.insights'
 import { Route as AppHistoryRouteImport } from './routes/app.history'
 import { Route as AppHelpRouteImport } from './routes/app.help'
 import { Route as AppDigestRouteImport } from './routes/app.digest'
@@ -125,7 +125,7 @@ const SponsorsRoute = SponsorsRouteImport.update({
   id: '/sponsors',
   path: '/sponsors',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/sponsors.lazy').then((d) => d.Route))
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -203,11 +203,6 @@ const TestIndexRoute = TestIndexRouteImport.update({
   path: '/test/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SponsorsIndexRoute = SponsorsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => SponsorsRoute,
-} as any)
 const SablonyIndexRoute = SablonyIndexRouteImport.update({
   id: '/sablony/',
   path: '/sablony/',
@@ -261,10 +256,10 @@ const TShareIdRoute = TShareIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const SponsorsAllRoute = SponsorsAllRouteImport.update({
-  id: '/all',
-  path: '/all',
-  getParentRoute: () => SponsorsRoute,
-} as any).lazy(() => import('./routes/sponsors.all.lazy').then((d) => d.Route))
+  id: '/sponsors_/all',
+  path: '/sponsors/all',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SchoolsDpaRoute = SchoolsDpaRouteImport.update({
   id: '/schools_/dpa',
   path: '/schools/dpa',
@@ -339,19 +334,17 @@ const AppRetestRoute = AppRetestRouteImport.update({
   id: '/retest',
   path: '/retest',
   getParentRoute: () => AppRoute,
-} as any).lazy(() => import('./routes/app.retest.lazy').then((d) => d.Route))
+} as any)
 const AppRecommendationsRoute = AppRecommendationsRouteImport.update({
   id: '/recommendations',
   path: '/recommendations',
   getParentRoute: () => AppRoute,
-} as any).lazy(() =>
-  import('./routes/app.recommendations.lazy').then((d) => d.Route),
-)
+} as any)
 const AppPeerRoute = AppPeerRouteImport.update({
   id: '/peer',
   path: '/peer',
   getParentRoute: () => AppRoute,
-} as any).lazy(() => import('./routes/app.peer.lazy').then((d) => d.Route))
+} as any)
 const AppOnboardingRoute = AppOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -369,6 +362,11 @@ const AppLibraryRoute = AppLibraryRouteImport.update({
   path: '/library',
   getParentRoute: () => AppRoute,
 } as any)
+const AppInsightsRoute = AppInsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() => import('./routes/app.insights.lazy').then((d) => d.Route))
 const AppHistoryRoute = AppHistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -383,7 +381,7 @@ const AppDigestRoute = AppDigestRouteImport.update({
   id: '/digest',
   path: '/digest',
   getParentRoute: () => AppRoute,
-} as any).lazy(() => import('./routes/app.digest.lazy').then((d) => d.Route))
+} as any)
 const AppAudiencesRoute = AppAudiencesRouteImport.update({
   id: '/audiences',
   path: '/audiences',
@@ -738,7 +736,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/schools': typeof SchoolsRoute
   '/signup': typeof SignupRoute
-  '/sponsors': typeof SponsorsRouteWithChildren
+  '/sponsors': typeof SponsorsRoute
   '/support': typeof SupportRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
@@ -766,6 +764,7 @@ export interface FileRoutesByFullPath {
   '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
+  '/app/insights': typeof AppInsightsRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
@@ -797,7 +796,6 @@ export interface FileRoutesByFullPath {
   '/contact-form/': typeof ContactFormIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/sablony/': typeof SablonyIndexRoute
-  '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
@@ -844,6 +842,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/schools': typeof SchoolsRoute
   '/signup': typeof SignupRoute
+  '/sponsors': typeof SponsorsRoute
   '/support': typeof SupportRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -868,6 +867,7 @@ export interface FileRoutesByTo {
   '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
+  '/app/insights': typeof AppInsightsRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
@@ -898,7 +898,6 @@ export interface FileRoutesByTo {
   '/contact-form': typeof ContactFormIndexRoute
   '/courses': typeof CoursesIndexRoute
   '/sablony': typeof SablonyIndexRoute
-  '/sponsors': typeof SponsorsIndexRoute
   '/test': typeof TestIndexRoute
   '/tests': typeof TestsIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
@@ -947,7 +946,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/schools': typeof SchoolsRoute
   '/signup': typeof SignupRoute
-  '/sponsors': typeof SponsorsRouteWithChildren
+  '/sponsors': typeof SponsorsRoute
   '/support': typeof SupportRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
@@ -975,6 +974,7 @@ export interface FileRoutesById {
   '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
+  '/app/insights': typeof AppInsightsRoute
   '/app/library': typeof AppLibraryRoute
   '/app/notifications': typeof AppNotificationsRoute
   '/app/onboarding': typeof AppOnboardingRoute
@@ -995,7 +995,7 @@ export interface FileRoutesById {
   '/s/$slug': typeof SSlugRoute
   '/sablony/$slug': typeof SablonySlugRoute
   '/schools_/dpa': typeof SchoolsDpaRoute
-  '/sponsors/all': typeof SponsorsAllRoute
+  '/sponsors_/all': typeof SponsorsAllRoute
   '/t/$shareId': typeof TShareIdRoute
   '/test/builder': typeof TestBuilderRouteWithChildren
   '/tests/$slug': typeof TestsSlugRoute
@@ -1006,7 +1006,6 @@ export interface FileRoutesById {
   '/contact-form/': typeof ContactFormIndexRoute
   '/courses/': typeof CoursesIndexRoute
   '/sablony/': typeof SablonyIndexRoute
-  '/sponsors/': typeof SponsorsIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
@@ -1085,6 +1084,7 @@ export interface FileRouteTypes {
     | '/app/digest'
     | '/app/help'
     | '/app/history'
+    | '/app/insights'
     | '/app/library'
     | '/app/notifications'
     | '/app/onboarding'
@@ -1116,7 +1116,6 @@ export interface FileRouteTypes {
     | '/contact-form/'
     | '/courses/'
     | '/sablony/'
-    | '/sponsors/'
     | '/test/'
     | '/tests/'
     | '/admin/answer-sets/$setId'
@@ -1163,6 +1162,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/schools'
     | '/signup'
+    | '/sponsors'
     | '/support'
     | '/admin/audit'
     | '/admin/categories'
@@ -1187,6 +1187,7 @@ export interface FileRouteTypes {
     | '/app/digest'
     | '/app/help'
     | '/app/history'
+    | '/app/insights'
     | '/app/library'
     | '/app/notifications'
     | '/app/onboarding'
@@ -1217,7 +1218,6 @@ export interface FileRouteTypes {
     | '/contact-form'
     | '/courses'
     | '/sablony'
-    | '/sponsors'
     | '/test'
     | '/tests'
     | '/admin/answer-sets/$setId'
@@ -1293,6 +1293,7 @@ export interface FileRouteTypes {
     | '/app/digest'
     | '/app/help'
     | '/app/history'
+    | '/app/insights'
     | '/app/library'
     | '/app/notifications'
     | '/app/onboarding'
@@ -1313,7 +1314,7 @@ export interface FileRouteTypes {
     | '/s/$slug'
     | '/sablony/$slug'
     | '/schools_/dpa'
-    | '/sponsors/all'
+    | '/sponsors_/all'
     | '/t/$shareId'
     | '/test/builder'
     | '/tests/$slug'
@@ -1324,7 +1325,6 @@ export interface FileRouteTypes {
     | '/contact-form/'
     | '/courses/'
     | '/sablony/'
-    | '/sponsors/'
     | '/test/'
     | '/tests/'
     | '/admin/answer-sets/$setId'
@@ -1374,7 +1374,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   SchoolsRoute: typeof SchoolsRoute
   SignupRoute: typeof SignupRoute
-  SponsorsRoute: typeof SponsorsRouteWithChildren
+  SponsorsRoute: typeof SponsorsRoute
   SupportRoute: typeof SupportRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
@@ -1388,6 +1388,7 @@ export interface RootRouteChildren {
   SSlugRoute: typeof SSlugRoute
   SablonySlugRoute: typeof SablonySlugRoute
   SchoolsDpaRoute: typeof SchoolsDpaRoute
+  SponsorsAllRoute: typeof SponsorsAllRoute
   TShareIdRoute: typeof TShareIdRoute
   TestBuilderRoute: typeof TestBuilderRouteWithChildren
   TestsSlugRoute: typeof TestsSlugRoute
@@ -1524,13 +1525,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sponsors/': {
-      id: '/sponsors/'
-      path: '/'
-      fullPath: '/sponsors/'
-      preLoaderRoute: typeof SponsorsIndexRouteImport
-      parentRoute: typeof SponsorsRoute
-    }
     '/sablony/': {
       id: '/sablony/'
       path: '/sablony'
@@ -1601,12 +1595,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TShareIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sponsors/all': {
-      id: '/sponsors/all'
-      path: '/all'
+    '/sponsors_/all': {
+      id: '/sponsors_/all'
+      path: '/sponsors/all'
       fullPath: '/sponsors/all'
       preLoaderRoute: typeof SponsorsAllRouteImport
-      parentRoute: typeof SponsorsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/schools_/dpa': {
       id: '/schools_/dpa'
@@ -1746,6 +1740,13 @@ declare module '@tanstack/react-router' {
       path: '/library'
       fullPath: '/app/library'
       preLoaderRoute: typeof AppLibraryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/insights': {
+      id: '/app/insights'
+      path: '/insights'
+      fullPath: '/app/insights'
+      preLoaderRoute: typeof AppInsightsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/history': {
@@ -2316,6 +2317,7 @@ interface AppRouteChildren {
   AppDigestRoute: typeof AppDigestRoute
   AppHelpRoute: typeof AppHelpRouteWithChildren
   AppHistoryRoute: typeof AppHistoryRoute
+  AppInsightsRoute: typeof AppInsightsRoute
   AppLibraryRoute: typeof AppLibraryRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
@@ -2339,6 +2341,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDigestRoute: AppDigestRoute,
   AppHelpRoute: AppHelpRouteWithChildren,
   AppHistoryRoute: AppHistoryRoute,
+  AppInsightsRoute: AppInsightsRoute,
   AppLibraryRoute: AppLibraryRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
@@ -2358,20 +2361,6 @@ const AppRouteChildren: AppRouteChildren = {
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
-
-interface SponsorsRouteChildren {
-  SponsorsAllRoute: typeof SponsorsAllRoute
-  SponsorsIndexRoute: typeof SponsorsIndexRoute
-}
-
-const SponsorsRouteChildren: SponsorsRouteChildren = {
-  SponsorsAllRoute: SponsorsAllRoute,
-  SponsorsIndexRoute: SponsorsIndexRoute,
-}
-
-const SponsorsRouteWithChildren = SponsorsRoute._addFileChildren(
-  SponsorsRouteChildren,
-)
 
 interface DocsAdminRouteChildren {
   DocsAdminSlugRoute: typeof DocsAdminSlugRoute
@@ -2449,7 +2438,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   SchoolsRoute: SchoolsRoute,
   SignupRoute: SignupRoute,
-  SponsorsRoute: SponsorsRouteWithChildren,
+  SponsorsRoute: SponsorsRoute,
   SupportRoute: SupportRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
@@ -2463,6 +2452,7 @@ const rootRouteChildren: RootRouteChildren = {
   SSlugRoute: SSlugRoute,
   SablonySlugRoute: SablonySlugRoute,
   SchoolsDpaRoute: SchoolsDpaRoute,
+  SponsorsAllRoute: SponsorsAllRoute,
   TShareIdRoute: TShareIdRoute,
   TestBuilderRoute: TestBuilderRouteWithChildren,
   TestsSlugRoute: TestsSlugRoute,

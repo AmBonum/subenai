@@ -72,18 +72,106 @@ export function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-type RouteKind = "blog" | "cms" | "share-result" | "respondent" | "template" | "pack" | "course";
+type RouteKind =
+  | "blog"
+  | "cms"
+  | "share-result"
+  | "respondent"
+  | "template"
+  | "pack"
+  | "course"
+  | "static-index";
 
 export interface RouteMatch {
   kind: RouteKind;
   slug: string;
 }
 
-// Path -> route descriptor. Only the per-item crawlable surfaces named
-// in the spec. Index pages (/blog, /courses, ...) keep the static shell
-// defaults (cheap + correct: they're generic landing copy).
+// One-segment index/landing routes with fully static meta. Values are
+// verbatim copies of each route's SPA head() (src/routes/**) — keep them
+// in sync when the route copy changes. No DB round-trip needed.
+const STATIC_INDEX_META: Record<string, RouteMeta> = {
+  blog: {
+    title: "akadémia subenai — návody o internetových podvodoch",
+    description:
+      "akadémia subenai — sprievodcovia a návody, ako rozpoznať scam skôr, než ťa dostane. reálne príklady, psychológia manipulácie, krátke testy. v slovenčine.",
+    canonical: `${SITE_ORIGIN}/blog`,
+    ogImage: OG_DEFAULT,
+    ogType: "website",
+    robots: "index, follow, max-image-preview:large",
+  },
+  courses: {
+    title: "Školenia kybernetickej bezpečnosti zadarmo — subenai",
+    description:
+      "Bezplatné kurzy kybernetickej bezpečnosti: phishing, vishing, smishing, online podvody, ochrana údajov. Reálne príklady zo slovenského prostredia.",
+    canonical: `${SITE_ORIGIN}/courses`,
+    ogImage: OG_DEFAULT,
+    ogType: "website",
+    robots: "index, follow, max-image-preview:large",
+  },
+  tests: {
+    title: "Kyberbezpečnostné testy pre firmy podľa odvetvia — subenai",
+    description:
+      "Phishing, podvodné SMS a online scamy — testy kybernetickej bezpečnosti pre e-shop, gastro, IT, autoservis a ďalšie odvetvia. Otestuj celý tím.",
+    canonical: `${SITE_ORIGIN}/tests`,
+    ogImage: OG_DEFAULT,
+    ogType: "website",
+    robots: "index, follow, max-image-preview:large",
+  },
+  test: {
+    title: "Test prebieha · subenai",
+    description: "Odpovedaj rýchlo. Čas beží. 10 otázok. 90 sekúnd.",
+    canonical: `${SITE_ORIGIN}/test`,
+    ogImage: OG_DEFAULT,
+    ogType: "website",
+    robots: "noindex",
+  },
+  sablony: {
+    title: "Test šablóny: bezplatné kvízy o online podvodoch | subenai",
+    description:
+      "Verejná knižnica šablón kvízov o phishingu, fake e-shopoch, AI deepfake a ďalších online podvodoch. V slovenčine, zadarmo, pod CC BY 4.0.",
+    canonical: `${SITE_ORIGIN}/sablony`,
+    ogImage: OG_DEFAULT,
+    ogType: "website",
+    robots: "index, follow, max-image-preview:large",
+  },
+  about: {
+    title: "O projekte — subenai",
+    description:
+      "Bezplatný edukačný projekt o kybernetickej bezpečnosti pre slovenských používateľov a firmy. Bez reklám, bez paywallu — transparentne.",
+    canonical: `${SITE_ORIGIN}/about`,
+    ogImage: OG_DEFAULT,
+    ogType: "website",
+    robots: "index, follow",
+  },
+  support: {
+    title: "Podpora projektu — subenai",
+    description:
+      "Podpor bezplatný vzdelávací projekt o digitálnej bezpečnosti — jednorazovo alebo mesačne. Faktúra na vyžiadanie.",
+    canonical: `${SITE_ORIGIN}/support`,
+    ogImage: OG_DEFAULT,
+    ogType: "website",
+    robots: "index, follow",
+  },
+  contact: {
+    title: "Kontakt — subenai",
+    description:
+      "Napíš nám priamo na email. Technická pomoc, GDPR žiadosti, sponzorstvo aj všeobecné otázky. Odpovedáme typicky do 2 pracovných dní.",
+    canonical: `${SITE_ORIGIN}/contact`,
+    ogImage: OG_DEFAULT,
+    ogType: "website",
+    robots: "index, follow",
+  },
+};
+
+// Path -> route descriptor. Per-item crawlable surfaces (two segments)
+// plus the static one-segment index routes in STATIC_INDEX_META. Other
+// index pages keep the static shell defaults.
 export function matchRoute(pathname: string): RouteMatch | null {
   const seg = pathname.replace(/\/+$/, "").split("/").filter(Boolean);
+  if (seg.length === 1 && seg[0] in STATIC_INDEX_META) {
+    return { kind: "static-index", slug: seg[0] };
+  }
   if (seg.length !== 2) return null;
   const [head, slug] = seg;
   if (!slug) return null;
@@ -310,6 +398,8 @@ export async function resolveMeta(env: SeoMetaEnv, match: RouteMatch): Promise<R
       return staticKindMeta("pack", match.slug);
     case "course":
       return staticKindMeta("course", match.slug);
+    case "static-index":
+      return STATIC_INDEX_META[match.slug] ?? null;
     default:
       return null;
   }

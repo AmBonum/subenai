@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { History as HistoryIcon } from "lucide-react";
 
@@ -16,6 +16,7 @@ import {
 import { PageHeader } from "@/components/app/page-header";
 import { AppPageExplainer } from "@/components/user/AppPageExplainer";
 import { useTestVersions, useTests, useUserSessions } from "@/lib/platform/queries";
+import { formatDateTimeSk } from "@/lib/format/date";
 import { tFor } from "@/i18n/tests";
 import { tFor as tAppShell } from "@/i18n/app-shell";
 
@@ -194,8 +195,30 @@ function HistoryPage() {
 
       {filtered.length === 0 ? (
         <Card data-testid="history-empty-state">
-          <CardContent className="p-8 text-center text-sm text-muted-foreground">
-            {t("empty_state")}
+          <CardContent className="space-y-3 p-8 text-center">
+            {rows.length === 0 ? (
+              <>
+                <p className="text-sm font-medium" data-testid="history-empty-no-data-title">
+                  {t("empty_no_data_title")}
+                </p>
+                <p className="text-sm text-muted-foreground">{t("empty_no_data_body")}</p>
+                <Button asChild size="sm" data-testid="history-empty-create-test-cta">
+                  <Link to="/app/tests/new">{t("empty_no_data_cta")}</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground">{t("empty_state")}</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearFilters}
+                  data-testid="history-empty-clear-filters-button"
+                >
+                  {t("clear_filters_button")}
+                </Button>
+              </>
+            )}
           </CardContent>
         </Card>
       ) : (
@@ -229,9 +252,7 @@ function HistoryPage() {
                         ? t("event_type_version")
                         : t("event_type_status")}
                   </Badge>
-                  <span data-testid={`history-row-${r.id}-date`}>
-                    {new Date(r.at).toLocaleString("sk-SK")}
-                  </span>
+                  <span data-testid={`history-row-${r.id}-date`}>{formatDateTimeSk(r.at)}</span>
                 </div>
               </CardContent>
             </Card>

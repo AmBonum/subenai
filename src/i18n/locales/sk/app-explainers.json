@@ -33,8 +33,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Ako čítať metriky na prehľade", "href": "/docs/app/dashboard" },
-          { "label": "Týždenný digest e-mailom", "href": "/docs/app/digest" }
+          {
+            "label": "Ako čítať metriky na prehľade",
+            "href": "/docs/app/dashboard"
+          },
+          {
+            "label": "Týždenný digest e-mailom",
+            "href": "/docs/app/digest"
+          }
         ]
       }
     },
@@ -71,8 +77,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Ako vytvoriť a publikovať test", "href": "/docs/app/tests-create" },
-          { "label": "Zdieľanie a ochrana heslom", "href": "/docs/app/tests-sharing" }
+          {
+            "label": "Ako vytvoriť a publikovať test",
+            "href": "/docs/app/tests-create"
+          },
+          {
+            "label": "Zdieľanie a ochrana heslom",
+            "href": "/docs/app/tests-sharing"
+          }
         ]
       }
     },
@@ -109,8 +121,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Edu mód: ako vytvoriť test bez registrácie", "href": "/docs/app/edu-tests" },
-          { "label": "Pripojenie anonymného testu k účtu", "href": "/docs/app/edu-tests-claim" }
+          {
+            "label": "Edu mód: ako vytvoriť test bez registrácie",
+            "href": "/docs/app/edu-tests"
+          },
+          {
+            "label": "Pripojenie anonymného testu k účtu",
+            "href": "/docs/app/edu-tests-claim"
+          }
         ]
       }
     },
@@ -146,8 +164,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Práca so šablónami testov", "href": "/docs/app/templates" },
-          { "label": "GDPR účely a klasifikácia šablón", "href": "/docs/app/templates-gdpr" }
+          {
+            "label": "Práca so šablónami testov",
+            "href": "/docs/app/templates"
+          },
+          {
+            "label": "GDPR účely a klasifikácia šablón",
+            "href": "/docs/app/templates-gdpr"
+          }
         ]
       }
     },
@@ -184,8 +208,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Knižnica otázok a typy", "href": "/docs/app/library" },
-          { "label": "Ako vkladať otázky z knižnice do testu", "href": "/docs/app/library-insert" }
+          {
+            "label": "Knižnica otázok a typy",
+            "href": "/docs/app/library"
+          },
+          {
+            "label": "Ako vkladať otázky z knižnice do testu",
+            "href": "/docs/app/library-insert"
+          }
         ]
       }
     },
@@ -222,8 +252,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Práca so skupinami respondentov", "href": "/docs/app/audiences" },
-          { "label": "Tagy a organizácia", "href": "/docs/app/audiences-tags" }
+          {
+            "label": "Práca so skupinami respondentov",
+            "href": "/docs/app/audiences"
+          },
+          {
+            "label": "Tagy a organizácia",
+            "href": "/docs/app/audiences-tags"
+          }
         ]
       }
     },
@@ -260,8 +296,58 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "História a audit trail", "href": "/docs/app/history" },
-          { "label": "Typy udalostí a ich zdroje", "href": "/docs/app/history-events" }
+          {
+            "label": "História a audit trail",
+            "href": "/docs/app/history"
+          },
+          {
+            "label": "Typy udalostí a ich zdroje",
+            "href": "/docs/app/history-events"
+          }
+        ]
+      }
+    },
+    "insights": {
+      "title": "O sekcii Pre teba",
+      "lead": "Personalizované prehľady na jednom mieste: týždenné súhrny aktivity, odporúčané kurzy pre tvoje publikum, pripomienky retestov a porovnanie výsledkov s ostatnými tvorcami. Obsah sa prepína cez záložky — nič tu nenastavuješ, je to pohľad.",
+      "sections": {
+        "what_you_configure": {
+          "heading": "Čo tu vidíš",
+          "items": [
+            "Súhrn: týždenný digest dokončení a aktivity respondentov",
+            "Odporúčania: kurzy zoradené podľa relevancie pre tvoje publikum",
+            "Retesty: testy, pri ktorých uplynul odporúčaný interval na opakovanie",
+            "Porovnanie: percentil tvojho publika voči ostatným tvorcom"
+          ]
+        },
+        "time_impact": {
+          "heading": "Ako rýchlo sa zmeny prejavia",
+          "items": [
+            "Týždenný súhrn sa generuje raz týždenne — nové dokončenia sa objavia v najbližšom súhrne",
+            "Odporúčania a retesty sa prepočítavajú pri načítaní stránky",
+            "Prepínanie záložiek je okamžité (mení sa len ?tab= v URL)"
+          ]
+        },
+        "pitfalls": {
+          "heading": "Na čo si dávať pozor",
+          "items": [
+            "Sekcie sú prázdne, kým tvoje testy nemajú dosť dokončení — nie je to chyba",
+            "Porovnanie s ostatnými je anonymizované a agregované; nevidíš konkrétnych tvorcov",
+            "Staré odkazy na /app/digest, /app/retest, /app/recommendations a /app/peer sem presmerujú automaticky"
+          ]
+        }
+      },
+      "docs": {
+        "heading": "Dokumentácia",
+        "links": [
+          {
+            "label": "Prehľady a tipy „Pre teba“",
+            "href": "/docs/app/insights"
+          },
+          {
+            "label": "Týždenný digest e-mailom",
+            "href": "/docs/app/digest"
+          }
         ]
       }
     },
@@ -298,8 +384,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Typy notifikácií a kedy ich dostávaš", "href": "/docs/app/notifications" },
-          { "label": "E-mail notifikácie a frekvencia", "href": "/docs/app/notifications-email" }
+          {
+            "label": "Typy notifikácií a kedy ich dostávaš",
+            "href": "/docs/app/notifications"
+          },
+          {
+            "label": "E-mail notifikácie a frekvencia",
+            "href": "/docs/app/notifications-email"
+          }
         ]
       }
     },
@@ -336,8 +428,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Tímy a roly", "href": "/docs/app/teams" },
-          { "label": "RLS politiky pre tímy", "href": "/docs/app/teams-rls" }
+          {
+            "label": "Tímy a roly",
+            "href": "/docs/app/teams"
+          },
+          {
+            "label": "RLS politiky pre tímy",
+            "href": "/docs/app/teams-rls"
+          }
         ]
       }
     },
@@ -377,9 +475,18 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Profil a verejné údaje", "href": "/docs/app/profile" },
-          { "label": "GDPR: tvoje práva ako dotknutej osoby", "href": "/docs/app/profile-gdpr" },
-          { "label": "Bezpečnosť účtu a 2FA", "href": "/docs/app/profile-security" }
+          {
+            "label": "Profil a verejné údaje",
+            "href": "/docs/app/profile"
+          },
+          {
+            "label": "GDPR: tvoje práva ako dotknutej osoby",
+            "href": "/docs/app/profile-gdpr"
+          },
+          {
+            "label": "Bezpečnosť účtu a 2FA",
+            "href": "/docs/app/profile-security"
+          }
         ]
       }
     },
@@ -416,8 +523,14 @@
       "docs": {
         "heading": "Dokumentácia",
         "links": [
-          { "label": "Časté otázky (FAQ)", "href": "/docs/app/help" },
-          { "label": "Kontakt na podporu", "href": "/docs/app/help-support" }
+          {
+            "label": "Časté otázky (FAQ)",
+            "href": "/docs/app/help"
+          },
+          {
+            "label": "Kontakt na podporu",
+            "href": "/docs/app/help-support"
+          }
         ]
       }
     }

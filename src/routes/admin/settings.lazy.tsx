@@ -1,4 +1,4 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { createLazyFileRoute, Link, Outlet, useChildMatches } from "@tanstack/react-router";
 import {
   ShieldCheck,
   AlertTriangle,
@@ -24,8 +24,18 @@ import { SUB_PROCESSORS } from "@/lib/dpa/sub-processors";
 import { tFor } from "@/i18n/admin";
 
 export const Route = createLazyFileRoute("/admin/settings")({
-  component: AdminSettingsPage,
+  component: AdminSettingsRoute,
 });
+
+// Same parent/child pattern as /admin/tickets and /admin/users: without
+// the Outlet, /admin/settings/notifications kept rendering this dashboard.
+function AdminSettingsRoute() {
+  const hasChildMatch = useChildMatches().length > 0;
+  if (hasChildMatch) {
+    return <Outlet />;
+  }
+  return <AdminSettingsPage />;
+}
 
 // E40 close-out — the previous /admin/settings was a placeholder form
 // that did nothing (a stub from AH-10 with a "deferred_notice" yellow

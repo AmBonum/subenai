@@ -36,6 +36,7 @@ import {
   useUserDossier,
   type UserDossier as DossierData,
 } from "@/lib/admin/queries";
+import { formatDateTimeSk } from "@/lib/format/date";
 import { tFor } from "@/i18n/governance";
 
 interface UserDossierProps {
@@ -235,7 +236,7 @@ function DossierContent({ userId, dossier }: DossierContentProps) {
                 <p className="text-sm font-semibold text-foreground">{t("pending_heading")}</p>
                 <p className="text-sm text-muted-foreground">
                   {t("pending_body", {
-                    when: new Date(dossier.pending_erasure.execute_at).toLocaleTimeString("sk-SK"),
+                    when: formatDateTimeSk(dossier.pending_erasure.execute_at),
                   })}
                 </p>
               </div>

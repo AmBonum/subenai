@@ -134,7 +134,10 @@ export function SupportTicketDetail({ ticketId }: SupportTicketDetailProps) {
         <div className="min-w-0 space-y-4">
           <TicketThread ticket={ticket} messages={messages} />
 
-          <AttachmentViewer attachments={attachments} />
+          {/* Mount only once rows exist — the viewer's auto-expand of the
+              first attachment runs in a useState initializer, so mounting
+              with a still-loading empty list permanently skips it. */}
+          {attachments.length > 0 && <AttachmentViewer attachments={attachments} />}
 
           {!isClosed && (
             <div

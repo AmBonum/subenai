@@ -1,6 +1,7 @@
 import { createLazyFileRoute, Outlet, useChildMatches } from "@tanstack/react-router";
 
 import { PageHeader } from "@/components/admin/PageHeader";
+import { AdminPageExplainer } from "@/components/admin/AdminPageExplainer";
 import { SupportTicketsQueue } from "@/components/admin/SupportTicketsQueue";
 
 export const Route = createLazyFileRoute("/admin/tickets")({
@@ -23,6 +24,7 @@ function AdminTicketsPage() {
         description="Filtruj, vyhľadávaj a odpovedaj na žiadosti používateľov."
         testId="admin-tickets-page-header"
       />
+      <AdminPageExplainer pageKey="support" />
       <SupportTicketsQueue />
     </div>
   );

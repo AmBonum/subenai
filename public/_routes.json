@@ -1,15 +1,23 @@
 {
   "version": 1,
-  "description": "Functions handle /api/* plus the crawlable per-item routes (E50 seo-meta middleware injects per-route OG/meta into the SPA shell there). Index pages and all other paths stay static-served with index.html fallback.",
+  "description": "Functions handle /api/* plus the crawlable routes (E50 seo-meta middleware injects per-route OG/meta into the SPA shell there). Note: '/blog/*' does NOT match '/blog' in CF Pages, so the one-segment index routes are listed explicitly. All other paths stay static-served with index.html fallback.",
   "include": [
     "/api/*",
+    "/blog",
     "/blog/*",
     "/r/*",
     "/t/*",
     "/s/*",
+    "/courses",
     "/courses/*",
+    "/tests",
     "/tests/*",
-    "/sablony/*"
+    "/test",
+    "/sablony",
+    "/sablony/*",
+    "/about",
+    "/support",
+    "/contact"
   ],
   "exclude": []
 }

@@ -82,7 +82,7 @@ export function KontaktPage() {
             to={ROUTES.contactForm}
             className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-6 py-4 text-base font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.01] active:scale-[0.99] sm:w-auto"
           >
-            {t("kontakt.main_button", { email: CONTACT_EMAIL })}
+            {t("kontakt.main_button")}
             <span aria-hidden="true">→</span>
           </Link>
           <p className="mt-3 text-xs text-muted-foreground">
@@ -105,6 +105,7 @@ export function KontaktPage() {
                 <Link
                   data-testid={`contact-topic-link-${topic.slug}`}
                   to={ROUTES.contactForm}
+                  search={{ topic: topic.slug }}
                   className="block h-full rounded-2xl border border-border/60 bg-card p-4 transition-colors hover:border-primary/60"
                 >
                   <span className="block text-sm font-semibold text-foreground">

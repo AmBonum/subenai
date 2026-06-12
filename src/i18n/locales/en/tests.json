@@ -16,7 +16,18 @@
     "empty_state": "No tests match this filter.",
     "questions_count": "{count} questions",
     "version_label": "v{version}",
-    "password_label": "password"
+    "password_label": "password",
+    "empty_initial_title": "You don't have any tests yet.",
+    "empty_initial_body": "Create your first test and share it with respondents via a public link.",
+    "empty_initial_cta": "Create your first test",
+    "row_duplicate": "Duplicate",
+    "row_delete": "Delete",
+    "duplicate_success": "Test copy created.",
+    "delete_confirm_title": "Delete test?",
+    "delete_confirm_body": "The test “{title}” and all its results will be permanently deleted. The public link will stop working.",
+    "delete_confirm_typed_label": "Type the test title to confirm",
+    "delete_confirm_button": "Delete test",
+    "delete_success": "Test deleted."
   },
   "wizard": {
     "page_title": "New test",
@@ -72,7 +83,9 @@
       "over_cap_warning": "You selected {selected} questions, but only {remaining} can still fit. Deselect some.",
       "cancel": "Cancel",
       "submit": "Add selected ({count})"
-    }
+    },
+    "publishing_button": "Publishing…",
+    "finish_button": "Open test"
   },
   "editor": {
     "page_eyebrow": "Test",
@@ -200,6 +213,36 @@
       "clear_success": "Password cleared. The test is open via share link again.",
       "set_failed": "Setting the password failed.",
       "clear_failed": "Clearing the password failed."
+    },
+    "publish_success": "Test published.",
+    "unpublish_button": "Unpublish",
+    "unpublish_confirm_title": "Unpublish test?",
+    "unpublish_confirm_body": "The test returns to draft. The public link will stop working for new respondents until you publish it again.",
+    "unpublish_confirm_button": "Unpublish",
+    "unpublish_success": "Test unpublished.",
+    "archive_confirm_title": "Archive test?",
+    "archive_confirm_body": "An archived test disappears from the active list and its public link stops working immediately. You can restore it from the archive at any time.",
+    "archive_confirm_button": "Archive",
+    "archive_success": "Test archived.",
+    "unarchive_button": "Restore from archive",
+    "unarchive_success": "Test restored as a draft.",
+    "audience_label": "Audience",
+    "audience_none": "No group",
+    "sessions_empty_published_title": "This test has no respondents yet.",
+    "sessions_empty_published_body": "Send respondents the public link — results show up here automatically.",
+    "sessions_empty_copy_link": "Copy link",
+    "sessions_empty_copy_success": "Link copied.",
+    "sessions_empty_draft_title": "This test isn't published yet.",
+    "sessions_empty_draft_body": "Respondents can take the test only after it's published.",
+    "sessions_empty_publish_cta": "Publish test",
+    "intake": {
+      "title": "Respondent details",
+      "hint": "Choose which details respondents fill in before starting the test. Without them, results are anonymous.",
+      "field_name": "Name",
+      "field_email": "E-mail",
+      "required_label": "Required",
+      "save_success": "Respondent details saved.",
+      "save_failed": "Saving failed. Try again."
     }
   },
   "share_dialog": {
@@ -362,7 +405,8 @@
       "verdict_error_budget": "The daily check budget has been exhausted. Try again tomorrow or contact us.",
       "verdict_error_generic": "Could not submit. Try again or contact us.",
       "verdict_close": "Close"
-    }
+    },
+    "public_page_link": "Public template page"
   },
   "history": {
     "page_title": "My history",
@@ -378,7 +422,10 @@
     "event_type_version": "Test version",
     "event_type_status": "Status change",
     "clear_filters_button": "Clear filters",
-    "empty_state": "No events for the selected filters."
+    "empty_state": "No events for the selected filters.",
+    "empty_no_data_title": "No events yet",
+    "empty_no_data_body": "Create a test and the history will start writing itself.",
+    "empty_no_data_cta": "Create a test"
   },
   "admin_list": {
     "page_title": "All tests",
@@ -429,5 +476,13 @@
     "unsaved_body": "You have unsaved changes. Are you sure you want to leave the page?",
     "unsaved_confirm": "Leave",
     "unsaved_cancel": "Stay"
+  },
+  "errors": {
+    "err_generic": "Something went wrong, try again.",
+    "err_unauthenticated": "Sign in first.",
+    "err_not_owner": "This test doesn't belong to you.",
+    "err_test_not_found": "Test not found.",
+    "err_test_archived": "The test is archived. Restore it from the archive first.",
+    "err_duplicate_question_ids": "The question list contains a duplicate. Refresh the page and try again."
   }
 }

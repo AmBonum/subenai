@@ -34,6 +34,7 @@ import {
 import { exportToCSV } from "@/lib/admin/export";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { tFor } from "@/i18n/governance";
+import { formatDateSk } from "@/lib/format/date";
 
 const STATUSES: DpaRequestStatus[] = ["pending", "delivered", "signed", "cancelled"];
 const EMAIL_STATUSES: DpaEmailStatus[] = ["pending", "sent", "failed"];
@@ -50,14 +51,6 @@ const EMAIL_BADGE: Record<DpaEmailStatus, string> = {
   sent: "border-emerald-500/40 bg-emerald-500/10 text-emerald-700",
   failed: "border-destructive/40 bg-destructive/10 text-destructive",
 };
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("sk-SK", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-}
 
 export function DpaRequestsQueue() {
   const t = tFor("dpa_queue");
@@ -301,7 +294,7 @@ export function DpaRequestsQueue() {
                     </TableCell>
                     <TableCell className="font-mono text-xs">{row.dpa_version}</TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {formatDate(row.created_at)}
+                      {formatDateSk(row.created_at)}
                     </TableCell>
                     <TableCell className="space-x-2 text-right">
                       <Button

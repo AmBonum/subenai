@@ -13,6 +13,7 @@ import {
   ListChecks,
   Layers,
   ClipboardList,
+  GraduationCap,
   UsersRound,
   UserCog,
   Menu,
@@ -41,6 +42,7 @@ type NavKey =
   | "library"
   | "audiences"
   | "history"
+  | "insights"
   | "notifications"
   | "teams"
   | "profile"
@@ -68,7 +70,7 @@ const TVORBA: NavItem[] = [
     key: "edu_tests",
     to: "/app/edu-tests",
     testid: "app-shell-sidebar-link-edu-tests",
-    icon: ClipboardList,
+    icon: GraduationCap,
   },
   {
     key: "templates",
@@ -87,6 +89,12 @@ const VYSLEDKY: NavItem[] = [
     icon: UsersRound,
   },
   { key: "history", to: "/app/history", testid: "app-shell-sidebar-link-history", icon: History },
+  {
+    key: "insights",
+    to: "/app/insights",
+    testid: "app-shell-sidebar-link-insights",
+    icon: Sparkles,
+  },
   {
     key: "notifications",
     to: "/app/notifications",

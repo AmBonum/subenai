@@ -37,6 +37,23 @@ function buildConsentState(input: {
   };
 }
 
+const GTAG_SRC = "https://www.googletagmanager.com/gtag/js?id=G-95QZ12WGFD";
+
+// Basic consent mode: index.html injects gtag.js only when a STORED record
+// already grants analytics. When the user grants analytics during the
+// session, this loads the script at that moment — until then nothing
+// (not even cookieless pings) reaches Google.
+function ensureGtagScript() {
+  if (document.querySelector(`script[src^="https://www.googletagmanager.com/gtag/js"]`)) return;
+  if (/^\/admin(\/|$)/.test(window.location.pathname)) return;
+  if (navigator.doNotTrack === "1") return;
+  const s = document.createElement("script");
+  s.async = true;
+  s.src = GTAG_SRC;
+  s.setAttribute("data-gtag-loader", "1");
+  document.head.appendChild(s);
+}
+
 export function GoogleAnalyticsManager() {
   const { record, hydrated } = useConsent();
 
@@ -50,7 +67,9 @@ export function GoogleAnalyticsManager() {
         })
       : deniedState();
 
-    window.gtag?.("consent", "update", applyDoNotTrackOverride(baseState));
+    const state = applyDoNotTrackOverride(baseState);
+    if (state.analytics_storage === "granted") ensureGtagScript();
+    window.gtag?.("consent", "update", state);
   }, [hydrated, record]);
 
   return null;

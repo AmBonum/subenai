@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { BookOpen, Cookie, FileText, History, Mail, Search, ShieldCheck } from "lucide-react";
+import { BookOpen, Cookie, FileText, History, LifeBuoy, Search, ShieldCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -185,9 +185,9 @@ function HelpPage() {
             </p>
             <p className="mx-auto max-w-md text-sm text-muted-foreground">{t("empty.body")}</p>
             <Button asChild variant="outline" data-testid="app-help-empty-cta">
-              <a href="mailto:support@subenai.sk">
-                <Mail className="mr-2 h-4 w-4" aria-hidden="true" /> {t("contact_button")}
-              </a>
+              <Link to="/app/help/contact">
+                <LifeBuoy className="mr-2 h-4 w-4" aria-hidden="true" /> {t("contact_button")}
+              </Link>
             </Button>
           </CardContent>
         </Card>
@@ -215,9 +215,9 @@ function HelpPage() {
             </p>
           </div>
           <Button asChild className="btn-primary" data-testid="app-help-contact-cta">
-            <a href="mailto:support@subenai.sk">
-              <Mail className="mr-2 h-4 w-4" aria-hidden="true" /> {t("contact_button")}
-            </a>
+            <Link to="/app/help/contact">
+              <LifeBuoy className="mr-2 h-4 w-4" aria-hidden="true" /> {t("contact_button")}
+            </Link>
           </Button>
         </CardContent>
       </Card>

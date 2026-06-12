@@ -1,36 +1,25 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { BarChart3, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { toast } from "sonner";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/app/page-header";
 import { usePeerCard, useShareHandle, type PeerCardData } from "@/lib/platform/retention-queries";
 import { PeerShareView } from "@/components/user/PeerShareView";
 import { tFor } from "@/i18n/app-shell";
 
-export const Route = createLazyFileRoute("/app/peer")({
-  component: PeerPage,
-});
-
 type TFn = (key: string, vars?: Record<string, string | number>) => string;
 
-function PeerPage() {
+export function PeerSection() {
   const t = tFor("peer");
   const peerQ = usePeerCard();
   const data: PeerCardData = peerQ.data ?? { has_data: false };
 
   return (
     <div className="space-y-6" data-testid="app-peer-root">
-      <PageHeader
-        eyebrow={t("page_header_eyebrow")}
-        title={t("heading")}
-        accentWords={1}
-        icon={BarChart3}
-        subtitle={t("subheading")}
-        testId="app-peer-page-header"
-      />
+      <p className="text-sm text-muted-foreground" data-testid="app-peer-subheading">
+        {t("subheading")}
+      </p>
 
       {!data.has_data && data.reason === "insufficient_cohort" && (
         <Card data-testid="app-peer-empty-cohort">

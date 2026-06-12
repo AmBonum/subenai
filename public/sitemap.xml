@@ -51,11 +51,6 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/sponsors/all</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
     <loc>https://subenai.sk/manage-support</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -255,7 +250,7 @@
   </url>
   <url>
     <loc>https://subenai.sk/s/o-projekte-rozsirene</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-06-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

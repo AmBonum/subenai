@@ -1,4 +1,4 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { createLazyFileRoute, Link, Outlet, useChildMatches } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Pencil, ScrollText } from "lucide-react";
 import { toast } from "sonner";
@@ -31,8 +31,19 @@ import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLo
 import { tFor } from "@/i18n/admin";
 
 export const Route = createLazyFileRoute("/admin/users")({
-  component: AdminUsersPage,
+  component: AdminUsersRoute,
 });
+
+// Same parent/child pattern as /admin/tickets: this route hosts both the
+// users list (no child match) and the dossier (child match on /$userId).
+// Without the Outlet, /admin/users/<id> kept rendering the list.
+function AdminUsersRoute() {
+  const hasChildMatch = useChildMatches().length > 0;
+  if (hasChildMatch) {
+    return <Outlet />;
+  }
+  return <AdminUsersPage />;
+}
 
 const initials = (n: string) =>
   n

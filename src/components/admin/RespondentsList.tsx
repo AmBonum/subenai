@@ -28,6 +28,7 @@ import {
   useLogAuditEvent,
 } from "@/lib/admin/queries";
 import { buildRespondentsAccessAudit } from "@/lib/admin/respondents.functions";
+import { formatDateSk } from "@/lib/format/date";
 import { tFor } from "@/i18n/governance";
 
 export function RespondentsList() {
@@ -180,7 +181,7 @@ export function RespondentsList() {
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">{count}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">
-                        {new Date(r.created_at).toLocaleDateString("sk-SK")}
+                        {formatDateSk(r.created_at)}
                       </TableCell>
                       <TableCell className="text-right">
                         <Button

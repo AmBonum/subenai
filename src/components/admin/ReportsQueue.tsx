@@ -22,6 +22,7 @@ import {
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { useAdminReports, useResolveReport } from "@/lib/admin/queries";
 import { AdminListLoading, AdminListError } from "@/components/admin/AdminListLoading";
+import { formatDateSk } from "@/lib/format/date";
 import { tFor } from "@/i18n/governance";
 
 const STATUSES = ["open", "reviewing", "resolved", "dismissed"] as const;
@@ -129,7 +130,7 @@ export function ReportsQueue() {
                     </TableCell>
                     <TableCell>
                       <span className="text-sm text-muted-foreground">
-                        {new Date(r.created_at).toLocaleDateString("sk-SK")}
+                        {formatDateSk(r.created_at)}
                       </span>
                     </TableCell>
                     <TableCell className="text-right">

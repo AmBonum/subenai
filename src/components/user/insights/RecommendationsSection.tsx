@@ -1,10 +1,9 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { GraduationCap, ArrowRight, X, Send, CheckCircle2 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/app/page-header";
 import {
   useCourseRecommendations,
   useDismissRecommendation,
@@ -13,10 +12,6 @@ import {
   type CourseRecommendation,
 } from "@/lib/platform/retention-queries";
 import { tFor } from "@/i18n/app-shell";
-
-export const Route = createLazyFileRoute("/app/recommendations")({
-  component: RecommendationsPage,
-});
 
 type TFn = (key: string, vars?: Record<string, string | number>) => string;
 
@@ -43,21 +38,16 @@ function reasonLabel(rec: CourseRecommendation, t: TFn): string {
   return t("reason_peer_popular");
 }
 
-function RecommendationsPage() {
+export function RecommendationsSection() {
   const t = tFor("recommendations");
   const listQ = useCourseRecommendations();
   const recs = useMemo(() => listQ.data ?? [], [listQ.data]);
 
   return (
     <div className="space-y-6" data-testid="app-recommendations-root">
-      <PageHeader
-        eyebrow={t("page_header_eyebrow")}
-        title={t("heading")}
-        accentWords={1}
-        icon={GraduationCap}
-        subtitle={t("subheading")}
-        testId="app-recommendations-page-header"
-      />
+      <p className="text-sm text-muted-foreground" data-testid="app-recommendations-subheading">
+        {t("subheading")}
+      </p>
 
       {recs.length === 0 ? (
         <Card data-testid="app-recommendations-empty-state">

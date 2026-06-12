@@ -1,10 +1,9 @@
-import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { RefreshCw, ArrowRight, X, Clock, CheckCircle2 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/app/page-header";
 import {
   useAllRetestReminders,
   useDismissRetest,
@@ -13,10 +12,6 @@ import {
   type RetestReminder,
 } from "@/lib/platform/retention-queries";
 import { tFor } from "@/i18n/app-shell";
-
-export const Route = createLazyFileRoute("/app/retest")({
-  component: RetestPage,
-});
 
 type TFn = (key: string, vars?: Record<string, string | number>) => string;
 
@@ -50,7 +45,7 @@ function isDueNow(r: RetestReminder): boolean {
   return remindOk && snoozeOk;
 }
 
-function RetestPage() {
+export function RetestSection() {
   const t = tFor("retest");
   const listQ = useAllRetestReminders();
   const reminders = useMemo(() => listQ.data ?? [], [listQ.data]);
@@ -60,14 +55,9 @@ function RetestPage() {
 
   return (
     <div className="space-y-6" data-testid="app-retest-root">
-      <PageHeader
-        eyebrow={t("page_header_eyebrow")}
-        title={t("heading")}
-        accentWords={1}
-        icon={RefreshCw}
-        subtitle={t("subheading")}
-        testId="app-retest-page-header"
-      />
+      <p className="text-sm text-muted-foreground" data-testid="app-retest-subheading">
+        {t("subheading")}
+      </p>
 
       {reminders.length === 0 ? (
         <Card data-testid="app-retest-empty-state">

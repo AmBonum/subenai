@@ -40,6 +40,10 @@
         "label": "My attempts",
         "tip": "Your own runs — for sanity-checking questions."
       },
+      "insights": {
+        "label": "For you",
+        "tip": "Weekly digests, course recommendations, retests and peer comparison."
+      },
       "notifications": {
         "label": "Notifications",
         "tip": "New sessions, completions, retest reminders."
@@ -139,12 +143,13 @@
     }
   },
   "notifications": {
-    "page_header_eyebrow": "Alerts",
+    "page_header_eyebrow": "Notifications",
     "page_header_title": "Notifications",
     "page_header_unread": "{count} unread",
     "mark_all": "Mark all as read",
     "mark_one": "Read",
     "empty": "No notifications",
+    "empty_hint": "New test completions and retest reminders will show up here.",
     "filter_unread": "Unread only"
   },
   "digest": {
@@ -229,13 +234,32 @@
       "share_attempts": "{n} attempts"
     }
   },
+  "insights": {
+    "page_title": "For you · SubenAI",
+    "page_header_eyebrow": "For you",
+    "heading": "Insights and tips",
+    "subheading": "Weekly digests, recommended courses, retest reminders and peer comparison — in one place.",
+    "tabs": {
+      "digest": "Digest",
+      "recommendations": "Recommendations",
+      "retest": "Retests",
+      "peer": "Comparison"
+    },
+    "rail": {
+      "title": "For you",
+      "digest": "New weekly digest — {count} completions",
+      "recommendations": "{count} recommended courses for your audience",
+      "retest": "{count} tests are due for a retest",
+      "peer": "Your audience is in the {p}th percentile"
+    }
+  },
   "help": {
-    "page_header_eyebrow": "Help centre",
+    "page_header_eyebrow": "Help",
     "page_header_title": "Frequently asked questions",
     "page_header_subtitle": "Quick answers and a way to contact support.",
     "search_placeholder": "Search the help centre...",
     "contact_question": "Couldn't find an answer?",
-    "contact_subtitle": "Write to us at support@subenai.sk",
+    "contact_subtitle": "Write to us via the support form — we reply within 2 working days.",
     "contact_button": "Contact support",
     "quick_links": {
       "heading": "Looking for docs?",
@@ -349,9 +373,10 @@
     "set_detail": "Set detail · SubenAI",
     "audiences": "Respondent groups · SubenAI",
     "dsr": "GDPR request · SubenAI",
-    "help": "Help centre · SubenAI",
+    "help": "Help · SubenAI",
     "retest": "Retest reminders · SubenAI",
-    "peer": "Peer comparison · SubenAI"
+    "peer": "Peer comparison · SubenAI",
+    "insights": "For you · SubenAI"
   },
   "account": {
     "tabs": {
@@ -402,29 +427,33 @@
     "security": {
       "page_header_eyebrow": "Account",
       "page_header_title": "Account security",
-      "page_header_subtitle": "Password, sign-in sessions and security policy.",
+      "page_header_subtitle": "Password and two-factor authentication.",
       "card_password_title": "Change password",
       "label_new_password": "New password",
-      "label_confirm": "Confirm",
+      "label_confirm": "Confirm new password",
       "strength_label": "Password strength",
       "strength_weak": "Weak",
       "strength_medium": "Medium",
       "strength_strong": "Strong",
-      "policy_title": "Password policy",
+      "policy_title": "Password recommendations",
       "policy_min": "min. 8 characters (12+ recommended)",
-      "policy_complexity": "at least 1 uppercase letter, 1 digit, 1 special character",
-      "policy_hashing": "hashing: Argon2id (m=64 MiB, t=3, p=4)",
-      "policy_rate_limit": "rate limit: 5 attempts / 15 min per IP, 1 h lockout when exceeded",
+      "policy_complexity": "we recommend an uppercase letter, a digit and a special character",
       "btn_change_password": "Change password",
-      "toast_password_deferred": "This feature isn't available yet — the backend is in progress.",
-      "card_sessions_title": "Active sessions",
-      "session_current": "current",
-      "session_revoke": "Sign out",
-      "toast_session_revoked": "Session ended",
-      "card_2fa_title": "Two-factor authentication",
-      "card_2fa_desc": "2FA via a TOTP app (Authy, Google Authenticator).",
-      "btn_activate_2fa": "Activate 2FA",
-      "tooltip_2fa_deferred": "The 2FA backend will arrive later (AH-11). The button is currently disabled."
+      "btn_changing_password": "Changing password…",
+      "toast_password_changed": "Your password has been changed.",
+      "error_password_mismatch": "The passwords don't match.",
+      "error_password_min": "The password must be at least 8 characters long.",
+      "error_password_same": "The new password must differ from your current one.",
+      "error_password_weak": "The password is too weak. Pick a longer or more complex one.",
+      "error_password_reauth_prefix": "For security reasons a fresh sign-in is required to change the password. Use ",
+      "error_password_reauth_link": "the e-mail password reset",
+      "error_password_reauth_suffix": ".",
+      "error_password_generic": "The password could not be changed. Try again.",
+      "forgot_prefix": "Don't remember your current password? ",
+      "forgot_link": "Reset it via e-mail",
+      "forgot_suffix": ".",
+      "oauth_only_title": "You sign in with Google",
+      "oauth_only_body": "This account has no password — it was created via \"Continue with Google\". Manage sign-in and its security directly in your Google account."
     }
   }
 }

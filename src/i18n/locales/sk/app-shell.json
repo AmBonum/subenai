@@ -38,7 +38,11 @@
       },
       "history": {
         "label": "História",
-        "tip": "Tvoje vlastné pokusy — pre referenciu a kontrolu otázok."
+        "tip": "Časová os tvojich testov: dokončenia, verzie, zmeny stavu."
+      },
+      "insights": {
+        "label": "Pre teba",
+        "tip": "Týždenné súhrny, odporúčania kurzov, retesty a porovnanie s ostatnými."
       },
       "notifications": {
         "label": "Notifikácie",
@@ -139,12 +143,13 @@
     }
   },
   "notifications": {
-    "page_header_eyebrow": "Upozornenia",
+    "page_header_eyebrow": "Notifikácie",
     "page_header_title": "Notifikácie",
     "page_header_unread": "{count} neprečítaných",
     "mark_all": "Označiť všetky ako prečítané",
     "mark_one": "Prečítané",
     "empty": "Žiadne notifikácie",
+    "empty_hint": "Tu uvidíš nové dokončenia testov a pripomienky retestov.",
     "filter_unread": "Iba neprečítané"
   },
   "digest": {
@@ -229,14 +234,33 @@
       "share_attempts": "{n} pokusov"
     }
   },
+  "insights": {
+    "page_title": "Pre teba · SubenAI",
+    "page_header_eyebrow": "Pre teba",
+    "heading": "Prehľady a tipy",
+    "subheading": "Týždenné súhrny, odporúčané kurzy, pripomienky retestov a porovnanie s ostatnými — na jednom mieste.",
+    "tabs": {
+      "digest": "Súhrn",
+      "recommendations": "Odporúčania",
+      "retest": "Retesty",
+      "peer": "Porovnanie"
+    },
+    "rail": {
+      "title": "Pre teba",
+      "digest": "Nový týždenný súhrn — {count} dokončení",
+      "recommendations": "{count} odporúčaných kurzov pre tvoje publikum",
+      "retest": "{count} testov je zrelých na retest",
+      "peer": "Tvoja audience je na {p}. percentile"
+    }
+  },
   "help": {
-    "page_header_eyebrow": "Help centrum",
+    "page_header_eyebrow": "Pomoc",
     "page_header_title": "Najčastejšie otázky",
     "page_header_subtitle": "Rýchle odpovede a kontakt na podporu.",
     "search_placeholder": "Hľadaj v help centre...",
     "contact_question": "Nenašiel si odpoveď?",
-    "contact_subtitle": "Napíš nám na support@subenai.sk",
-    "contact_button": "Kontaktovať support",
+    "contact_subtitle": "Napíš nám cez formulár podpory — odpovieme do dvoch pracovných dní.",
+    "contact_button": "Kontaktovať podporu",
     "quick_links": {
       "heading": "Hľadáš dokumentáciu?",
       "privacy": "Ochrana osobných údajov",
@@ -349,9 +373,10 @@
     "set_detail": "Detail sady · SubenAI",
     "audiences": "Skupiny respondentov · SubenAI",
     "dsr": "GDPR žiadosť · SubenAI",
-    "help": "Help centrum · SubenAI",
+    "help": "Pomoc · SubenAI",
     "retest": "Pripomienky retestov · SubenAI",
-    "peer": "Porovnanie s ostatnými · SubenAI"
+    "peer": "Porovnanie s ostatnými · SubenAI",
+    "insights": "Pre teba · SubenAI"
   },
   "account": {
     "tabs": {
@@ -402,29 +427,33 @@
     "security": {
       "page_header_eyebrow": "Účet",
       "page_header_title": "Bezpečnosť účtu",
-      "page_header_subtitle": "Heslo, prihlasovacie sedenia a politika bezpečnosti.",
+      "page_header_subtitle": "Heslo a dvojfaktorové overenie.",
       "card_password_title": "Zmena hesla",
       "label_new_password": "Nové heslo",
-      "label_confirm": "Potvrdiť",
+      "label_confirm": "Potvrď nové heslo",
       "strength_label": "Sila hesla",
       "strength_weak": "Slabé",
       "strength_medium": "Stredné",
       "strength_strong": "Silné",
-      "policy_title": "Politika hesla",
+      "policy_title": "Odporúčania pre heslo",
       "policy_min": "min. 8 znakov (odporúčané 12+)",
-      "policy_complexity": "aspoň 1 veľké písmeno, 1 číslo, 1 špeciálny znak",
-      "policy_hashing": "hashing: Argon2id (m=64 MiB, t=3, p=4)",
-      "policy_rate_limit": "rate-limit: 5 pokusov / 15 min na IP, lockout 1 h pri prekročení",
+      "policy_complexity": "odporúčame veľké písmeno, číslo a špeciálny znak",
       "btn_change_password": "Zmeniť heslo",
-      "toast_password_deferred": "Funkcia ešte nie je dostupná — backend pripravujeme.",
-      "card_sessions_title": "Aktívne sedenia",
-      "session_current": "aktuálne",
-      "session_revoke": "Odhlásiť",
-      "toast_session_revoked": "Sedenie ukončené",
-      "card_2fa_title": "Dvojfaktorové overenie",
-      "card_2fa_desc": "2FA cez TOTP appku (Authy, Google Authenticator).",
-      "btn_activate_2fa": "Aktivovať 2FA",
-      "tooltip_2fa_deferred": "Backend 2FA bude dostupný neskôr (AH-11). Tlačidlo je momentálne neaktívne."
+      "btn_changing_password": "Mením heslo…",
+      "toast_password_changed": "Heslo bolo zmenené.",
+      "error_password_mismatch": "Heslá sa nezhodujú.",
+      "error_password_min": "Heslo musí mať aspoň 8 znakov.",
+      "error_password_same": "Nové heslo musí byť iné ako tvoje súčasné heslo.",
+      "error_password_weak": "Heslo je príliš slabé. Zvoľ dlhšie alebo zložitejšie heslo.",
+      "error_password_reauth_prefix": "Z bezpečnostných dôvodov treba zmenu hesla potvrdiť čerstvým prihlásením. Použi ",
+      "error_password_reauth_link": "obnovenie hesla cez e-mail",
+      "error_password_reauth_suffix": ".",
+      "error_password_generic": "Heslo sa nepodarilo zmeniť. Skús to znova.",
+      "forgot_prefix": "Nepamätáš si súčasné heslo? ",
+      "forgot_link": "Obnov si ho cez e-mail",
+      "forgot_suffix": ".",
+      "oauth_only_title": "Prihlasuješ sa cez Google",
+      "oauth_only_body": "Tento účet nemá heslo — vznikol cez „Pokračovať cez Google“. Prihlasovanie a jeho zabezpečenie spravuješ priamo vo svojom Google účte."
     }
   }
 }

@@ -456,6 +456,10 @@ export function useTransitionTicketStatus() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin", "support_tickets"] });
+      // The detail page reads ["admin", "support_ticket", id] — without
+      // this invalidation its status badge kept the stale status after
+      // a transition until a manual reload.
+      qc.invalidateQueries({ queryKey: ["admin", "support_ticket"] });
     },
   });
 }
