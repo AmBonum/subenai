@@ -68,6 +68,7 @@ tasks/
 | File | Contents | Status |
 |---|---|---|
 | [PLAN-2026-04-25-rast-a-vzdelavanie.md](./PLAN-2026-04-25-rast-a-vzdelavanie.md) | 5 epics, 23 stories: consent bug, growth survey, answer review, data-trap edu popup, courses section | 🟡 Plan approved, awaiting kickoff |
+| [stories/E53-scam-chat-agent.md](./stories/E53-scam-chat-agent.md) | E53, 9 stories: AI scam-check chat assistant — Workers AI free tier, RAG over site content, triage + police-report PDF, photo evidence with 30-min TTL, role-aware disclosure | 🟡 Plan drafted, awaiting PO approval |
 
 ## Planning process
 
