@@ -11,6 +11,7 @@ const LIBRARY: LibraryQuestion[] = [
   {
     id: "q-a",
     prompt: "Question A — first",
+    type: "single",
     branch_slug: "phishing",
     difficulty: "easy",
     status: "approved",
@@ -19,6 +20,7 @@ const LIBRARY: LibraryQuestion[] = [
   {
     id: "q-b",
     prompt: "Question B — second",
+    type: "single",
     branch_slug: "phishing",
     difficulty: "medium",
     status: "approved",
@@ -27,6 +29,7 @@ const LIBRARY: LibraryQuestion[] = [
   {
     id: "q-c",
     prompt: "Question C — third (not in test)",
+    type: "single",
     branch_slug: "phishing",
     difficulty: "easy",
     status: "approved",
