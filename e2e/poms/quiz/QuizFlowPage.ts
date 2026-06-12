@@ -58,6 +58,21 @@ export class QuizFlowPage extends BasePage {
     return this.page.getByTestId("quiz-results-restart");
   }
 
+  /** Alert shown when /api/finish-edu-attempt (or the public Supabase insert) fails. */
+  get persistError() {
+    return this.page.getByTestId("quiz-results-persist-error");
+  }
+
+  /** Message text inside the persist-failure alert. */
+  get persistErrorMessage() {
+    return this.page.getByTestId("quiz-results-persist-error-message");
+  }
+
+  /** "Skúsiť znova" retry button inside the persist-failure alert. */
+  get persistRetry() {
+    return this.page.getByTestId("quiz-results-persist-retry");
+  }
+
   // --- actions ---
 
   async open() {

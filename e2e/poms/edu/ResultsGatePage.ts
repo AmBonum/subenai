@@ -28,6 +28,28 @@ export class ResultsGatePage extends BasePage {
     return this.page.getByTestId("vysledky-gate-error-message");
   }
 
+  // ── Phase-level error/not-found states ────────────────────────────────────────
+
+  /** Shown when /api/results-data returns 5xx. */
+  get errorState() {
+    return this.page.getByTestId("vysledky-error-state");
+  }
+
+  /** Shown when /api/results-data returns 404. */
+  get notFoundState() {
+    return this.page.getByTestId("vysledky-not-found-state");
+  }
+
+  /** Inline error inside the AuthorPasswordGate (testid lives in the gate component). */
+  get gateError() {
+    return this.page.getByTestId("vysledky-gate-error-message");
+  }
+
+  /** Inline delete-failure alert above the respondents table. */
+  get deleteError() {
+    return this.page.getByTestId("resp-table-delete-error");
+  }
+
   // ── Dashboard elements ────────────────────────────────────────────────────────
 
   get dashboard() {
@@ -139,6 +161,14 @@ export class ResultsGatePage extends BasePage {
   /** First row in the table body. */
   get tableFirstRow() {
     return this.table.locator("tbody tr").first();
+  }
+
+  /**
+   * Confirm button inside the delete ConfirmDialog (shadcn AlertDialog).
+   * Testid is defined in src/components/admin/ConfirmDialog.tsx.
+   */
+  get deleteConfirmButton() {
+    return this.page.getByTestId("app-shell-confirm-dialog-confirm");
   }
 
   // ── Actions ───────────────────────────────────────────────────────────────────

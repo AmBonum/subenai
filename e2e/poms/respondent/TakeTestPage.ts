@@ -13,6 +13,28 @@ export class TakeTestPage extends BasePage {
     return this.goto(`/t/${shareId}`);
   }
 
+  // ---- Password gate -------------------------------------------------------
+  get passwordGateRoot() {
+    return this.page.getByTestId("respondent-password-gate-root");
+  }
+
+  get passwordGateInput() {
+    return this.page.getByTestId("respondent-password-gate-input");
+  }
+
+  get passwordGateSubmit() {
+    return this.page.getByTestId("respondent-password-gate-submit");
+  }
+
+  get passwordGateError() {
+    return this.page.getByTestId("respondent-password-gate-error");
+  }
+
+  async submitPassword(password: string) {
+    await this.passwordGateInput.fill(password);
+    await this.passwordGateSubmit.click();
+  }
+
   // ---- Route-level states --------------------------------------------------
   get root() {
     return this.page.getByTestId("respondent-flow-root");

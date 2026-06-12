@@ -267,6 +267,7 @@
     "detail_button_label": "Detail",
     "detail_button_aria": "Show answer detail for respondent {name}",
     "delete_confirm_title": "Delete respondent?",
+    "delete_failed": "Failed to delete the respondent. Please try again.",
     "delete_confirm_body": "Removes the answers of {name} ({email}). This can't be undone — all personal data is wiped immediately.",
     "delete_confirm_action": "Delete",
     "delete_confirm_cancel": "Cancel",

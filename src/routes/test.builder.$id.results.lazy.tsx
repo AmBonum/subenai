@@ -188,7 +188,7 @@ export function ResultsView({ id, filters, onFiltersChange }: Props) {
   }
   if (phase === "not_found") {
     return (
-      <CenteredMessage tone="warn">
+      <CenteredMessage tone="warn" testid="vysledky-not-found-state">
         <h1 className="text-2xl font-bold text-foreground">{t("not_found_title")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t("not_found_body")}</p>
       </CenteredMessage>
@@ -196,7 +196,7 @@ export function ResultsView({ id, filters, onFiltersChange }: Props) {
   }
   if (phase === "error") {
     return (
-      <CenteredMessage tone="warn">
+      <CenteredMessage tone="warn" testid="vysledky-error-state">
         <h1 className="text-2xl font-bold text-foreground">{t("error_title")}</h1>
         <p className="mt-2 text-sm text-muted-foreground">{t("error_body")}</p>
       </CenteredMessage>
@@ -340,11 +340,20 @@ function triggerDownload(blob: Blob, filename: string): void {
   URL.revokeObjectURL(url);
 }
 
-function CenteredMessage({ children, tone }: { children: React.ReactNode; tone?: "warn" }) {
+function CenteredMessage({
+  children,
+  tone,
+  testid,
+}: {
+  children: React.ReactNode;
+  tone?: "warn";
+  testid?: string;
+}) {
   return (
     <div className="min-h-screen bg-background">
       <main className="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center px-4 py-12 text-center">
         <div
+          data-testid={testid}
           className={
             tone === "warn"
               ? "rounded-2xl border border-amber-500/40 bg-card/60 p-6"

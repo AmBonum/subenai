@@ -55,6 +55,10 @@ export function RespondentsTable({
   const [sortKey, setSortKey] = useState<SortKey>("created_at");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+  // Delete failures were previously swallowed (onDelete returned false,
+  // nobody looked) — the dialog closed, the row stayed, and the author
+  // had no idea the call failed. Surface it inline above the table.
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   // Designed AlertDialog replaces window.confirm. Two-state machine:
   // the row holds the person's name/email to render in the body; null
   // = dialog closed. The actual destructive call runs on confirm.
@@ -153,8 +157,12 @@ export function RespondentsTable({
 
   async function performDelete(row: RespondentRow): Promise<void> {
     setPendingDelete(row.id);
+    setDeleteError(null);
     try {
-      await onDelete(row.id);
+      const ok = await onDelete(row.id);
+      if (!ok) setDeleteError(t("delete_failed"));
+    } catch {
+      setDeleteError(t("delete_failed"));
     } finally {
       setPendingDelete(null);
     }
@@ -202,6 +210,15 @@ export function RespondentsTable({
 
   return (
     <section data-testid="resp-table-root" aria-labelledby="resp-h" className="space-y-3">
+      {deleteError ? (
+        <div
+          role="alert"
+          data-testid="resp-table-delete-error"
+          className="rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-foreground"
+        >
+          {deleteError}
+        </div>
+      ) : null}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 id="resp-h" className="text-lg font-semibold text-foreground">

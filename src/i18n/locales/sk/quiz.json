@@ -267,6 +267,7 @@
     "detail_button_label": "Detail",
     "detail_button_aria": "Pozrieť detail odpovedí respondenta {name}",
     "delete_confirm_title": "Vymazať respondenta?",
+    "delete_failed": "Respondenta sa nepodarilo vymazať. Skús to prosím znova.",
     "delete_confirm_body": "Vymažeš odpovede respondenta {name} ({email}). Akciu nedá vrátiť späť — všetky osobné údaje sa odstránia okamžite.",
     "delete_confirm_action": "Vymazať",
     "delete_confirm_cancel": "Zrušiť",
