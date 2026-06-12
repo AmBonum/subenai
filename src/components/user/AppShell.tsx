@@ -23,6 +23,8 @@ import { Badge } from "@/components/ui/badge";
 import { useCurrentProfile, useNotifications } from "@/lib/platform/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
+import { AccessibilityMenu } from "@/components/theme/AccessibilityMenu";
+import { SkipToContentLink } from "@/components/layout/SkipToContentLink";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Toaster } from "@/components/ui/sonner";
@@ -234,6 +236,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-[image:var(--gradient-subtle)]" data-testid="app-shell-root">
+      <SkipToContentLink />
       <header
         className="border-b border-border/40 bg-card/60 backdrop-blur"
         data-testid="app-shell-header"
@@ -297,6 +300,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div data-testid="app-shell-header-theme">
               <ThemeToggle />
             </div>
+            <div data-testid="app-shell-header-a11y">
+              <AccessibilityMenu />
+            </div>
             <div
               className="flex items-center gap-2 rounded-full border border-border/60 bg-card py-1 pl-1 pr-3"
               data-testid="app-shell-header-user"
@@ -327,7 +333,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <aside className="hidden w-60 shrink-0 lg:block" data-testid="app-shell-sidebar">
           {renderNav("desktop")}
         </aside>
-        <main className="min-w-0 flex-1" data-testid="app-shell-main">
+        <main id="main" tabIndex={-1} className="min-w-0 flex-1" data-testid="app-shell-main">
           {children}
         </main>
       </div>

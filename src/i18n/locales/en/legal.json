@@ -303,8 +303,8 @@
         },
         "prefs": {
           "category": "Preferences",
-          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, iiq_edu_intake:* (sessionStorage)",
-          "purpose": "Remembering UI preferences and in-progress forms between visits: sidebar open/closed state, whether you've seen the dashboard intro banner, whether you've dismissed the profile-completion nudge, whether you have the /blog pillar lists expanded, and the name/email you started typing into a shared-test intake form (`iiq_edu_intake:*` — sessionStorage only, wiped after submit). Without these cookies / localStorage / sessionStorage entries every button still works — you just have to re-select on next visit. Language (`subenai.locale`) is always stored as strictly necessary so the page renders in the correct language.",
+          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, subenai-theme, subenai-a11y-font, subenai-a11y-motion, iiq_edu_intake:* (sessionStorage)",
+          "purpose": "Remembering UI preferences and in-progress forms between visits: sidebar open/closed state, whether you've seen the dashboard intro banner, whether you've dismissed the profile-completion nudge, whether you have the /blog pillar lists expanded, the chosen appearance (light/dark/system, `subenai-theme`), accessibility settings — font size (`subenai-a11y-font`) and reduced animations (`subenai-a11y-motion`), and the name/email you started typing into a shared-test intake form (`iiq_edu_intake:*` — sessionStorage only, wiped after submit). Without these cookies / localStorage / sessionStorage entries every button still works — you just have to re-select on next visit. Language (`subenai.locale`) is always stored as strictly necessary so the page renders in the correct language.",
           "duration": "tab session (intake form), 1 week (sidebar), up to 12 months (others) / until cleared"
         },
         "analytics": {

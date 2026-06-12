@@ -58,6 +58,15 @@ const LOCALSTORAGE_KEYS: DeclaredStorage[] = [
       "/cookies s2 row `prefs` (E52) — `subenai-theme` light/dark/system appearance preference",
   },
   {
+    key: "FONT_STORAGE_KEY",
+    declaredAt: "/cookies s2 row `prefs` (E52) — `subenai-a11y-font` font size preference",
+  },
+  {
+    key: "MOTION_STORAGE_KEY",
+    declaredAt:
+      "/cookies s2 row `prefs` (E52) — `subenai-a11y-motion` reduced-motion preference (system/on/off)",
+  },
+  {
     key: "ADMIN_EXPLAINER_STORAGE_PREFIX",
     declaredAt:
       "/cookies s2 row `prefs` (E40) — `admin-explainer-<pageKey>` collapsed/expanded state of admin info panels (E47)",

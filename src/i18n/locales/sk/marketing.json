@@ -170,6 +170,19 @@
     "dark": "Tmavý",
     "system": "Systém"
   },
+  "a11y": {
+    "menu_aria": "Prístupnosť",
+    "skip_to_content": "Preskočiť na obsah",
+    "font_label": "Veľkosť písma",
+    "font_s": "Malé",
+    "font_m": "Normálne",
+    "font_l": "Veľké",
+    "font_xl": "Extra veľké",
+    "motion_label": "Obmedziť animácie",
+    "motion_system": "Systém",
+    "motion_on": "Zapnuté",
+    "motion_off": "Vypnuté"
+  },
   "podpora": {
     "back_home": "← Späť na domov",
     "title": "Podpora projektu",

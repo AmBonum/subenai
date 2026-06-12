@@ -1,9 +1,16 @@
 import { describe, it, expect, vi } from "vitest";
 import { render as rtlRender, screen } from "@testing-library/react";
 import { AppShell } from "@/components/user/AppShell";
+import { AccessibilityProvider } from "@/components/theme/AccessibilityProvider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
-const render = (ui: Parameters<typeof rtlRender>[0]) => rtlRender(ui, { wrapper: ThemeProvider });
+const Providers = ({ children }: { children: React.ReactNode }) => (
+  <ThemeProvider>
+    <AccessibilityProvider>{children}</AccessibilityProvider>
+  </ThemeProvider>
+);
+
+const render = (ui: Parameters<typeof rtlRender>[0]) => rtlRender(ui, { wrapper: Providers });
 
 const authStateRef = { current: { isAuthenticated: true, isAdmin: true } };
 

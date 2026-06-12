@@ -165,6 +165,19 @@
     "dark": "Dark",
     "system": "System"
   },
+  "a11y": {
+    "menu_aria": "Accessibility",
+    "skip_to_content": "Skip to content",
+    "font_label": "Font size",
+    "font_s": "Small",
+    "font_m": "Normal",
+    "font_l": "Large",
+    "font_xl": "Extra large",
+    "motion_label": "Reduce animations",
+    "motion_system": "System",
+    "motion_on": "On",
+    "motion_off": "Off"
+  },
   "podpora": {
     "back_home": "← Back to home",
     "title": "Support the project",

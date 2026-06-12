@@ -303,8 +303,8 @@
         },
         "prefs": {
           "category": "Předvolby",
-          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, iiq_edu_intake:* (sessionStorage)",
-          "purpose": "Zapamatování UI předvoleb a rozpracovaných formulářů mezi návštěvami: stav postranního panelu (otevřeno/zavřeno), zda jste viděli uvítací banner na dashboardu, zda jste zavřeli nudge na doplnění profilu, zda máte v /blog otevřené seznamy pilířů, a jméno/e-mail rozepsané v intake formuláři sdíleného testu (`iiq_edu_intake:*` — pouze v sessionStorage, mažeme po odeslání). Bez těchto cookies / localStorage / sessionStorage záznamů vám fungují všechna tlačítka, jen si při příští návštěvě musíte znovu vybrat. Jazyk (`subenai.locale`) se ukládá vždy jako nezbytný pro vykreslení stránky ve správném jazyce.",
+          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, subenai-theme, subenai-a11y-font, subenai-a11y-motion, iiq_edu_intake:* (sessionStorage)",
+          "purpose": "Zapamatování UI předvoleb a rozpracovaných formulářů mezi návštěvami: stav postranního panelu (otevřeno/zavřeno), zda jste viděli uvítací banner na dashboardu, zda jste zavřeli nudge na doplnění profilu, zda máte v /blog otevřené seznamy pilířů, zvolený vzhled (světlý/tmavý/systémový, `subenai-theme`), nastavení přístupnosti — velikost písma (`subenai-a11y-font`) a omezení animací (`subenai-a11y-motion`), a jméno/e-mail rozepsané v intake formuláři sdíleného testu (`iiq_edu_intake:*` — pouze v sessionStorage, mažeme po odeslání). Bez těchto cookies / localStorage / sessionStorage záznamů vám fungují všechna tlačítka, jen si při příští návštěvě musíte znovu vybrat. Jazyk (`subenai.locale`) se ukládá vždy jako nezbytný pro vykreslení stránky ve správném jazyce.",
           "duration": "relace karty (intake formulář), 1 týden (sidebar), až 12 měsíců (ostatní) / do smazání"
         },
         "analytics": {

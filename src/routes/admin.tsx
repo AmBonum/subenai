@@ -3,6 +3,7 @@ import { Bell, Search } from "lucide-react";
 
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { SkipToContentLink } from "@/components/layout/SkipToContentLink";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -32,6 +33,7 @@ function AdminLayout() {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background" data-testid="admin-shell-root">
+        <SkipToContentLink />
         <AdminSidebar />
         <SidebarInset className="flex flex-1 flex-col">
           <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border/60 bg-background/80 px-4 backdrop-blur">
@@ -89,7 +91,12 @@ function AdminLayout() {
               shadcn `<Table>` already wraps in `overflow-auto` and
               would handle its own scroll, but only if its ancestor
               flex chain is allowed to shrink. */}
-          <main className="min-w-0 flex-1 p-4 md:p-6 lg:p-8" data-testid="admin-shell-main">
+          <main
+            id="main"
+            tabIndex={-1}
+            className="min-w-0 flex-1 p-4 md:p-6 lg:p-8"
+            data-testid="admin-shell-main"
+          >
             <Outlet />
           </main>
         </SidebarInset>

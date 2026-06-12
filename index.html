@@ -2,11 +2,14 @@
 <html lang="sk">
   <head>
     <script>
-      // No-flash theme bootstrap (E52). Runs before first paint: reads the
-      // persisted light/dark/system choice and adds `.dark` to <html> so the
-      // dark palette in styles.css applies with zero flash on load. Mirrors
-      // the runtime logic in ThemeProvider. Kept as a static literal so the
-      // post-build CSP extractor (scripts/extract-csp-hashes.mjs) can hash it.
+      // No-flash theme + a11y bootstrap (E52). Runs before first paint:
+      // reads the persisted light/dark/system choice and adds `.dark` to
+      // <html>, applies the persisted font size, and resolves the
+      // reduced-motion preference into the `.reduce-motion` class. Mirrors
+      // the runtime logic in ThemeProvider + AccessibilityProvider (exact
+      // lockstep: same keys, same defaults, same matchMedia queries). Kept
+      // as a static literal so the post-build CSP extractor
+      // (scripts/extract-csp-hashes.mjs) can hash it.
       (function () {
         try {
           var t = localStorage.getItem("subenai-theme") || "system";
@@ -14,6 +17,14 @@
             t === "dark" ||
             (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
           if (d) document.documentElement.classList.add("dark");
+          var sizes = { s: "87.5%", m: "100%", l: "112.5%", xl: "125%" };
+          var f = sizes[localStorage.getItem("subenai-a11y-font")];
+          if (f) document.documentElement.style.fontSize = f;
+          var m = localStorage.getItem("subenai-a11y-motion") || "system";
+          var r =
+            m === "on" ||
+            (m === "system" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+          if (r) document.documentElement.classList.add("reduce-motion");
         } catch (e) {}
       })();
     </script>

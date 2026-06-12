@@ -9,7 +9,9 @@ import { SignedOutFlash } from "@/components/auth/SignedOutFlash";
 import { Footer } from "@/components/layout/Footer";
 import { NotFoundPage } from "@/components/layout/NotFoundPage";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SkipToContentLink } from "@/components/layout/SkipToContentLink";
 import { Toaster } from "@/components/ui/sonner";
+import { AccessibilityProvider } from "@/components/theme/AccessibilityProvider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { LocaleProvider } from "@/i18n/locale-context";
 
@@ -66,22 +68,35 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <LocaleProvider>
-          {/* Renders the <title> + <meta> from every matched route's `head()`
-            into the document head. Without this, route-level head config
-            (noindex on /app + /admin + /auth/*, page titles on every nav)
-            is silently dropped — production gap discovered 2026-05-19
-            during Phase 4 auth E2E (TC-17 forgot-password). */}
-          <HeadContent />
-          <GoogleAnalyticsManager />
-          {!hideSiteHeader && <SiteHeader />}
-          <Outlet />
-          {!hideSiteFooter && <Footer />}
-          <ConsentBanner />
-          <ConsentPreferencesDialog />
-          {!isInsidePrivateShell && <Toaster position="top-center" />}
-          <SignedOutFlash />
-        </LocaleProvider>
+        <AccessibilityProvider>
+          <LocaleProvider>
+            {/* Renders the <title> + <meta> from every matched route's `head()`
+              into the document head. Without this, route-level head config
+              (noindex on /app + /admin + /auth/*, page titles on every nav)
+              is silently dropped — production gap discovered 2026-05-19
+              during Phase 4 auth E2E (TC-17 forgot-password). */}
+            <HeadContent />
+            <GoogleAnalyticsManager />
+            {/* Skip link + `#main` target only for the public chrome —
+              routes with `hideSiteHeader` (app/admin shells) render their
+              own pair, so an unconditional wrapper here would duplicate
+              the `main` id. */}
+            {!hideSiteHeader && <SkipToContentLink />}
+            {!hideSiteHeader && <SiteHeader />}
+            {hideSiteHeader ? (
+              <Outlet />
+            ) : (
+              <div id="main" tabIndex={-1}>
+                <Outlet />
+              </div>
+            )}
+            {!hideSiteFooter && <Footer />}
+            <ConsentBanner />
+            <ConsentPreferencesDialog />
+            {!isInsidePrivateShell && <Toaster position="top-center" />}
+            <SignedOutFlash />
+          </LocaleProvider>
+        </AccessibilityProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

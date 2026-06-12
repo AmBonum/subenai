@@ -9,6 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
+import { AccessibilityMenu } from "@/components/theme/AccessibilityMenu";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { MegaMenu } from "@/components/layout/mega-menu";
 import type { MegaMenuItemDef } from "@/components/layout/mega-menu";
@@ -192,6 +193,9 @@ export function SiteHeader() {
           <div data-testid="header-desktop-theme">
             <ThemeToggle />
           </div>
+          <div data-testid="header-desktop-a11y">
+            <AccessibilityMenu />
+          </div>
           <CtaPill ariaLabel={ctaLong} />
           {isAuthenticated && <HeaderUserMenu />}
         </div>
@@ -237,6 +241,7 @@ export function SiteHeader() {
               <div className="flex justify-center gap-3" data-testid="header-mobile-locale">
                 <LocaleSwitcher variant="outline" />
                 <ThemeToggle variant="outline" />
+                <AccessibilityMenu variant="outline" />
               </div>
               <Link
                 to={CTA_TO}
