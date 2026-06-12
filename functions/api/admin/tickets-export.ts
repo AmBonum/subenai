@@ -120,6 +120,21 @@ function jsonResponse(status: number, body: Record<string, unknown>): Response {
 // RFC 4180 CSV cell escape with OWASP CSV-injection mitigation.
 // Dangerous-leading chars (=, +, -, @, tab, CR, LF) are prefixed with '
 // so spreadsheet apps don't evaluate them as formulas.
+// Builds the PostgREST `.or()` filter for the free-text search.
+// Two layers of defense:
+// 1. Backslash MUST be in the char class so a malicious search like
+//    `\%` doesn't pass `\\%` through to PostgREST — where the leading
+//    backslash would itself escape the wildcard escape (CodeQL #17).
+// 2. `.or()` is a filter grammar, not a value slot: an unquoted comma
+//    or paren in the search term would parse as an extra condition.
+//    Double-quoting the pattern (PostgREST quoted literal, `"`/`\`
+//    backslash-escaped) keeps the term a single ilike value.
+export function buildSearchOrFilter(q: string): string {
+  const escaped = q.trim().replace(/[\\%_]/g, "\\$&");
+  const quoted = `"%${escaped.replace(/"/g, '\\"')}%"`;
+  return `subject.ilike.${quoted},body.ilike.${quoted}`;
+}
+
 export function csvEscapeCell(value: unknown): string {
   if (value === null || value === undefined) return "";
   let s = String(value);
@@ -353,11 +368,7 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     }
 
     if (filters.q && filters.q.trim().length > 0) {
-      // Backslash MUST be in the char class so a malicious search like
-      // `\%` doesn't pass `\\%` through to PostgREST — where the leading
-      // backslash would itself escape the wildcard escape (CodeQL #17).
-      const escaped = filters.q.trim().replace(/[\\%_]/g, "\\$&");
-      query = query.or(`subject.ilike.%${escaped}%,body.ilike.%${escaped}%`);
+      query = query.or(buildSearchOrFilter(filters.q));
     }
   }
 

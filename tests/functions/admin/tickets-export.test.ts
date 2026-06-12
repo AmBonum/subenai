@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-import { onRequestPost, csvEscapeCell } from "../../../functions/api/admin/tickets-export";
+import {
+  onRequestPost,
+  csvEscapeCell,
+  buildSearchOrFilter,
+} from "../../../functions/api/admin/tickets-export";
 import { __test__ as security__test__ } from "../../../functions/_lib/security";
 
 const env = {
@@ -169,6 +173,34 @@ describe("csvEscapeCell", () => {
     expect(csvEscapeCell('=HYPERLINK("http://x.com","click")')).toBe(
       `"'=HYPERLINK(""http://x.com"",""click"")"`,
     );
+  });
+});
+
+describe("buildSearchOrFilter — PostgREST .or() injection defense", () => {
+  it("wraps a plain term in a quoted ilike pattern for both columns", () => {
+    expect(buildSearchOrFilter("faktura")).toBe('subject.ilike."%faktura%",body.ilike."%faktura%"');
+  });
+
+  it("a comma stays inside the quoted value — cannot inject an extra condition", () => {
+    const filter = buildSearchOrFilter("x,id.eq.1");
+    expect(filter).toBe('subject.ilike."%x,id.eq.1%",body.ilike."%x,id.eq.1%"');
+    // Exactly the two intended conditions: the only unquoted comma is the
+    // separator between them.
+    expect(filter.split('",')).toHaveLength(2);
+  });
+
+  it("escapes SQL wildcards so they match literally", () => {
+    expect(buildSearchOrFilter("100%_done")).toBe(
+      'subject.ilike."%100\\%\\_done%",body.ilike."%100\\%\\_done%"',
+    );
+  });
+
+  it("escapes double quotes so the value cannot break out of the quoted literal", () => {
+    expect(buildSearchOrFilter('a"b')).toBe('subject.ilike."%a\\"b%",body.ilike."%a\\"b%"');
+  });
+
+  it("doubles a lone backslash so it cannot un-escape the trailing wildcard", () => {
+    expect(buildSearchOrFilter("\\")).toBe('subject.ilike."%\\\\%",body.ilike."%\\\\%"');
   });
 });
 

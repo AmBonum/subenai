@@ -23,6 +23,33 @@ function readCustomerId(value: string | { id: string } | null | undefined): stri
   return typeof value === "string" ? value : value.id;
 }
 
+export interface PortalEligibilityInput {
+  status: string | null;
+  mode: string;
+  created: number;
+}
+
+export const PORTAL_SESSION_MAX_AGE_SECONDS = 24 * 60 * 60;
+
+// A checkout session id is a bearer credential here — anyone holding it
+// can open the customer's billing portal (payment details, cancellation).
+// The thank-you page only offers the portal right after a subscription
+// checkout, so reject anything else: unpaid sessions, one-time payments
+// (returning donors go through /api/portal-magic-link, which verifies
+// e-mail ownership) and sessions older than the post-checkout window.
+export function checkPortalEligibility(
+  session: PortalEligibilityInput,
+  nowSeconds: number,
+): "session_not_eligible" | "session_expired" | null {
+  if (session.status !== "complete" || session.mode !== "subscription") {
+    return "session_not_eligible";
+  }
+  if (nowSeconds - session.created > PORTAL_SESSION_MAX_AGE_SECONDS) {
+    return "session_expired";
+  }
+  return null;
+}
+
 export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   const { request, env } = ctx;
 
@@ -48,6 +75,11 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
     session = await stripe.checkout.sessions.retrieve(sessionId);
   } catch {
     return jsonResponse(404, { error: "session_not_found" });
+  }
+
+  const eligibilityError = checkPortalEligibility(session, Math.floor(Date.now() / 1000));
+  if (eligibilityError) {
+    return jsonResponse(403, { error: eligibilityError });
   }
 
   const customerId = readCustomerId(session.customer);
