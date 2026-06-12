@@ -32,7 +32,7 @@ slug throws `notFound()` which the router catches and renders the global 404 com
 ### TC-01: Catalog page renders with all pack cards visible
 
 **Given** the user navigates to `/tests`
-**Then** the page heading "Otestuj svoju branžu" is visible
+**Then** the page heading "Otestuj svoju branžu. Bez registrácie." is visible
 **and** the intro paragraph is visible
 **and** the catalog grid contains at least 9 pack cards
 

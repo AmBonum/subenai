@@ -266,17 +266,21 @@ E37 unified the read path for the `/tests` catalog and `/tests/$slug` detail pag
 **Then** the page does not show an unhandled React error boundary crash that exposes a raw stack trace to the user
 **and** no PII or internal Supabase URL appears in the visible page text
 
-### TC-20: Browser back/forward after starting a pack returns to detail page intact
+### TC-20: Browser back/forward after starting a pack keeps history sane and resets the started state
 
 **Prerequisites**:
-- Browser at `http://localhost:8080/tests/heslo-2fa`.
-- The user has clicked "Spustiť pack →" so `<TestFlow>` has mounted.
+- Browser arrived at `http://localhost:8080/tests/heslo-2fa` by clicking the
+  pack card on the `/tests` catalog (history: catalog → detail).
+- The user has clicked "Spustiť pack →" so `<TestFlow>` has mounted. The CTA
+  mounts the flow inline via component-local `useState` — no history entry is
+  pushed and the URL stays `/tests/heslo-2fa`.
 - Viewport 1280×800.
 
 **When** the user clicks the browser back button
-**Then** the browser returns to `/tests/heslo-2fa`
+**Then** the browser returns to the previous history entry, the `/tests` catalog
+**and** when the user clicks the browser forward button, the browser re-enters `/tests/heslo-2fa`
 **and** the element `data-testid="test-pack-heading"` is visible again
-**and** the element `data-testid="test-pack-start-button"` is enabled (the started state was in component-local useState and is reset on navigation)
+**and** the element `data-testid="test-pack-start-button"` is enabled (the started state was in component-local useState and died with the unmount)
 
 ### TC-21: Anon session cannot write to platform_pack_metadata via direct REST call
 

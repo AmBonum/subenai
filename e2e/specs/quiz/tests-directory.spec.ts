@@ -25,13 +25,15 @@ test.describe("Tests directory — catalog + pack landing", () => {
 
     await test.step("Verify the page heading and intro paragraph are visible", async () => {
       await expect(testsDirectory.index.heading).toBeVisible();
-      await expect(testsDirectory.index.heading).toHaveText("Otestuj svoju branžu");
+      await expect(testsDirectory.index.heading).toHaveText(
+        "Otestuj svoju branžu. Bez registrácie.",
+      );
       await expect(testsDirectory.index.intro).toBeVisible();
     });
 
     await test.step("Verify the catalog grid contains at least 9 pack cards", async () => {
       await expect(testsDirectory.index.grid).toBeVisible();
-      await expect(testsDirectory.index.packCards()).toHaveCount(9);
+      expect(await testsDirectory.index.packCards().count()).toBeGreaterThanOrEqual(9);
     });
   });
 

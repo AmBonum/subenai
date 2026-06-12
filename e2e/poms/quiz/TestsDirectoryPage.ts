@@ -17,7 +17,10 @@ export class TestsIndexPage extends BasePage {
   }
 
   packCards(): Locator {
-    return this.grid.locator(":scope > [data-testid^='tests-catalog-card-']");
+    // The grid is a semantic <ul role="list"> (E37 Phase I); each card
+    // root is the direct child of its <li> wrapper. The child combinator
+    // keeps nested testids (card-title-*, card-meta-*, …) out of the match.
+    return this.grid.locator(":scope > li > [data-testid^='tests-catalog-card-']");
   }
 
   packCard(slug: string): Locator {
