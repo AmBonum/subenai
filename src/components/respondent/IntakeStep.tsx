@@ -25,7 +25,7 @@ export function IntakeStep({ intakeFields, onSubmit }: IntakeStepProps) {
       setError(t("consent_required"));
       return;
     }
-    const missing = intakeFields.filter((f) => f.required && !intake[f.id]);
+    const missing = intakeFields.filter((f) => f.required && !intake[f.id]?.trim());
     if (missing.length) {
       setError(t("missing_required", { fields: missing.map((m) => m.label).join(", ") }));
       return;

@@ -352,3 +352,32 @@ describe("ComposerPage — DB share submit", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent(/rate_limited/);
   });
 });
+
+describe("ComposerPage — selection above the default cap stays publishable", () => {
+  it("a pack larger than the default max cap keeps 'Spustiť pre seba' enabled", async () => {
+    const user = userEvent.setup();
+    // 20 questions > COMPOSER_LIMITS.defaultMax (15). Before the auto-raise
+    // fix the "max questions" cap stayed at 15, meetsMax went false, and the
+    // self-run/publish controls silently disabled with the only explanation
+    // buried in the settings slider. The cap must follow the selection up.
+    const bigIds = QUESTIONS.slice(0, 20).map((q) => q.id);
+    mocks.publishedPacks = [
+      {
+        slug: "xl",
+        title: "XL pack",
+        industry: "eshop",
+        industryEmoji: "🛒",
+        questionIds: bigIds,
+        passingThreshold: 70,
+        publishedAt: "2026-04-28",
+        updatedAt: "2026-04-28",
+        tagline: "x",
+        targetPersona: "x",
+      },
+    ];
+    render(<ComposerPage />);
+    await user.click(screen.getByRole("button", { name: /XL pack/ }));
+    const selfRun = await screen.findByRole("button", { name: /Spustiť pre seba/ });
+    expect(selfRun).toBeEnabled();
+  });
+});

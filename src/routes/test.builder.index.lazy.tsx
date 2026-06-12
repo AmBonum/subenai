@@ -198,6 +198,17 @@ export function ComposerPage() {
     });
   }, []);
 
+  // Keep the "max questions" cap at or above the current selection. The
+  // picker allows up to COMPOSER_LIMITS.maxQuestions picks while the cap
+  // defaults lower (defaultMax), so without this a valid selection above
+  // the default silently disabled publish (meetsMax went false with the
+  // only explanation buried in the settings slider). Raise-only: removals
+  // shrink the selection and never grow the cap, so the intended
+  // "slide below selection → remove questions" flow still works.
+  useEffect(() => {
+    setMaxQuestions((m) => (selectedIds.size > m ? selectedIds.size : m));
+  }, [selectedIds]);
+
   // Actual clear operation — pulled out so both the confirm-dialog
   // "confirm" callback AND the short-circuit (<10 selections, no
   // prompt) path can share it.
