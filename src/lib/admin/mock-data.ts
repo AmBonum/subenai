@@ -357,14 +357,12 @@ export const mockReports: AdminReport[] = mockQuestions
 
 export const dashboardStats = {
   total_users: mockUsers.length * 87,
-  active_users_7d: Math.floor(mockUsers.length * 87 * 0.42),
   total_questions: mockQuestions.length * 23,
   pending_review:
     mockQuestions.filter((q) => q.status === "pending" || q.status === "flagged").length * 4,
   total_answers: mockQuestions.length * 23 * 3,
   open_reports: mockReports.filter((r) => r.status === "open").length,
   total_trainings: mockTrainings.length,
-  training_views: mockTrainings.reduce((acc, t) => acc + t.views, 0),
   // AH-10.2 dashboard tiles
   total_tests: 42,
   total_sessions: 1284,
@@ -375,28 +373,24 @@ export const dashboardStats = {
 export const mockAdminActivity: AdminActivityEvent[] = [
   {
     id: "act-1",
-    type: "question_created",
     actor: "Jana H.",
     summary: "Pridala novú otázku: Phishing v e-shope",
     created_at: new Date(Date.now() - 5 * 3600 * 1000).toISOString(),
   },
   {
     id: "act-2",
-    type: "test_published",
     actor: "Peter S.",
     summary: "Publikoval test: Bezpečnosť pre seniorov",
     created_at: new Date(Date.now() - 12 * 3600 * 1000).toISOString(),
   },
   {
     id: "act-3",
-    type: "report_filed",
     actor: "Anonym",
     summary: "Nahlásil otázku ako duplikát",
     created_at: new Date(Date.now() - 26 * 3600 * 1000).toISOString(),
   },
   {
     id: "act-4",
-    type: "user_signup",
     actor: "noemi.kr@example.sk",
     summary: "Nový používateľ sa zaregistroval",
     created_at: new Date(Date.now() - 36 * 3600 * 1000).toISOString(),
@@ -523,11 +517,7 @@ export const mockQuickTest: AdminTest = {
   categories: ["vseobecny"],
   difficulty: "easy",
   status: "published",
-  time_limit_min: 2,
-  pass_score: 60,
-  is_quick: true,
   question_ids: mockQuestions.slice(0, 5).map((q) => q.id),
-  attempts: 18420,
   updated_at: daysAgo(3),
 };
 

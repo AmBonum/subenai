@@ -15,12 +15,7 @@ import {
 } from "@/components/ui/select";
 import { PageHeader } from "@/components/app/page-header";
 import { AppPageExplainer } from "@/components/user/AppPageExplainer";
-// `useQuestions` reads `Question` (with `type` + `category`). Production
-// `questions` table only has `branch_slug` + `difficulty` (see
-// `useLibraryQuestions` in queries.ts). Keep on mock-store until AH-12 schema
-// enrichment adds the missing columns; otherwise the type badge + category
-// chip would render blank.
-import { useQuestions } from "@/lib/platform/mock-store";
+import { useLibraryQuestions } from "@/lib/platform/queries";
 import type { QuestionType } from "@/lib/platform/types";
 import { tFor } from "@/i18n/questions";
 import { tFor as tAppShell } from "@/i18n/app-shell";
@@ -56,7 +51,8 @@ const DIFFICULTIES = ["easy", "medium", "hard"] as const;
 
 function LibraryPage() {
   const t = tFor("user_library");
-  const questions = useQuestions();
+  const questionsQuery = useLibraryQuestions();
+  const questions = useMemo(() => questionsQuery.data ?? [], [questionsQuery.data]);
   const [q, setQ] = useState("");
   const [branch, setBranch] = useState<string>("all");
   const [difficulty, setDifficulty] = useState<string>("all");
@@ -68,7 +64,10 @@ function LibraryPage() {
   };
 
   const branches = useMemo(
-    () => Array.from(new Set(questions.map((x) => x.category))).sort(),
+    () =>
+      Array.from(
+        new Set(questions.map((x) => x.branch_slug).filter((b): b is string => Boolean(b))),
+      ).sort(),
     [questions],
   );
 
@@ -76,7 +75,7 @@ function LibraryPage() {
     () =>
       questions.filter(
         (x) =>
-          (branch === "all" || x.category === branch) &&
+          (branch === "all" || x.branch_slug === branch) &&
           (difficulty === "all" || x.difficulty === difficulty) &&
           (!q || x.prompt.toLowerCase().includes(q.toLowerCase())),
       ),
@@ -139,7 +138,17 @@ function LibraryPage() {
         </CardContent>
       </Card>
 
-      {filtered.length === 0 ? (
+      {questionsQuery.isLoading ? (
+        <Card data-testid="library-loading">
+          <CardContent className="p-8 text-center text-sm text-muted-foreground">…</CardContent>
+        </Card>
+      ) : questionsQuery.error ? (
+        <Card data-testid="library-error-state">
+          <CardContent className="p-8 text-center text-sm text-muted-foreground">
+            {t("error_state")}
+          </CardContent>
+        </Card>
+      ) : filtered.length === 0 ? (
         <Card data-testid="library-empty-state">
           <CardContent className="space-y-3 p-8 text-center">
             {questions.length === 0 ? (
@@ -180,12 +189,16 @@ function LibraryPage() {
                   </Badge>
                 </div>
                 <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
-                  <Badge variant="secondary" className="text-[10px]">
-                    {qq.category}
-                  </Badge>
-                  <Badge variant="secondary" className="text-[10px]">
-                    {t(`difficulty_${qq.difficulty}`)}
-                  </Badge>
+                  {qq.branch_slug && (
+                    <Badge variant="secondary" className="text-[10px]">
+                      {qq.branch_slug}
+                    </Badge>
+                  )}
+                  {qq.difficulty && (
+                    <Badge variant="secondary" className="text-[10px]">
+                      {t(`difficulty_${qq.difficulty}`)}
+                    </Badge>
+                  )}
                 </div>
               </CardContent>
             </Card>

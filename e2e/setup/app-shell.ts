@@ -104,11 +104,36 @@ export async function setupEducator(
  * Admin setup. /admin/* additionally calls the `has_role` RPC and reads
  * AAL — the ADMIN_SESSION already declares aal2, and we always mock
  * `has_role: true` so the role gate passes.
+ *
+ * The AH-12 enrichment in `src/lib/admin/queries.ts` joins sibling tables
+ * (profiles, answers, reports, test_questions, audit_log, …) on every list
+ * read. The mock 404s unseeded tables by design, so the admin shell ships
+ * empty defaults for the whole admin domain; specs override per-table via
+ * `extras` with the rows they actually assert on.
  */
+const ADMIN_EMPTY_TABLES = {
+  questions: [],
+  answers: [],
+  answer_sets: [],
+  reports: [],
+  trainings: [],
+  topics: [],
+  categories: [],
+  test_questions: [],
+  audit_log: [],
+  user_roles: [],
+};
+
 export async function setupAdmin(
   context: BrowserContext,
   page: Page,
   extras?: MockSupabaseConfig,
 ): Promise<void> {
-  return setupAppShell(context, page, { session: ADMIN_SESSION, extras });
+  return setupAppShell(context, page, {
+    session: ADMIN_SESSION,
+    extras: {
+      ...extras,
+      tables: { ...ADMIN_EMPTY_TABLES, ...(extras?.tables ?? {}) },
+    },
+  });
 }

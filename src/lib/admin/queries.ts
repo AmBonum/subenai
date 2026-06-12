@@ -8,9 +8,11 @@
 // Query key convention: ["admin", <domain>, ...filters?]. Mutations invalidate
 // the matching ["admin", <domain>] root.
 //
-// Schema mappers fill UI fields the DB does not have today with sensible
-// defaults marked `TODO: derive when AH-12 schema enrichment lands`. They
-// allow the admin UI to render against real data without a migration.
+// AH-12 — UI fields not stored on the row itself (author names, per-row
+// counts, report target labels) are derived from sibling tables via bulk
+// lookups inside the queryFn. PostgREST embeds are not available (the
+// schema declares no FKs to hang them on), so each hook fires one extra
+// query per lookup table and joins client-side — fine at admin scale.
 
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -39,6 +41,21 @@ import type {
 // ---------------------------------------------------------------------------
 // Mappers — DB row → UI shape
 // ---------------------------------------------------------------------------
+
+const countByKey = <T>(rows: T[], key: (row: T) => string | null | undefined) => {
+  const counts = new Map<string, number>();
+  for (const row of rows) {
+    const k = key(row);
+    if (!k) continue;
+    counts.set(k, (counts.get(k) ?? 0) + 1);
+  }
+  return counts;
+};
+
+type ProfileLabelRow = { id: string; display_name: string | null; email: string | null };
+
+const profileLabels = (rows: ProfileLabelRow[]) =>
+  new Map(rows.map((p) => [p.id, p.display_name ?? p.email ?? ""]));
 
 type QuestionsRow = {
   id: string;
@@ -69,7 +86,13 @@ const jsonbToString = (value: unknown): string | undefined => {
   }
 };
 
-const mapQuestion = (row: QuestionsRow): AdminQuestion => {
+interface QuestionEnrichment {
+  authorNames: Map<string, string>;
+  answersBySet: Map<string, number>;
+  reportsByQuestion: Map<string, number>;
+}
+
+const mapQuestion = (row: QuestionsRow, enrich: QuestionEnrichment): AdminQuestion => {
   const prompt = row.prompt ?? "";
   const firstLine = prompt.split("\n")[0] ?? prompt;
   return {
@@ -78,14 +101,11 @@ const mapQuestion = (row: QuestionsRow): AdminQuestion => {
     excerpt: prompt.slice(0, 140),
     body: prompt,
     author_id: row.author_id ?? "",
-    // TODO: derive when AH-12 schema enrichment lands (join profiles)
-    author_name: "",
+    author_name: (row.author_id && enrich.authorNames.get(row.author_id)) || "",
     categories: row.branch_slug ? [row.branch_slug] : [],
     status: (row.status as QuestionStatus) ?? "pending",
-    // TODO: derive when AH-12 schema enrichment lands
-    answers_count: 0,
-    votes: 0,
-    reports_count: 0,
+    answers_count: (row.answer_set_id && enrich.answersBySet.get(row.answer_set_id)) || 0,
+    reports_count: enrich.reportsByQuestion.get(row.id) ?? 0,
     created_at: row.created_at,
     answer_set_id: row.answer_set_id ?? undefined,
     correct_answer_ids: [],
@@ -141,8 +161,6 @@ const mapAnswer = (row: AnswersRow): AdminAnswer => ({
   text: row.text,
   is_correct: row.is_correct,
   explanation: row.explanation ?? undefined,
-  // TODO: derive when AH-12 schema enrichment lands (answers.created_at column)
-  created_at: new Date(0).toISOString(),
 });
 
 type TestsRow = {
@@ -154,20 +172,44 @@ type TestsRow = {
   updated_at: string;
 };
 
-const mapTest = (row: TestsRow): AdminTest => ({
+type QuestionMetaRow = { id: string; branch_slug: string | null; difficulty: string | null };
+
+// Tests don't carry categories/difficulty themselves — both are derived
+// from the questions linked via test_questions (unique branch slugs; the
+// most frequent question difficulty, "medium" when unknown/empty).
+const deriveTestMeta = (questionIds: string[], qMeta: Map<string, QuestionMetaRow>) => {
+  const categories = new Set<string>();
+  const difficultyCounts = new Map<string, number>();
+  for (const qid of questionIds) {
+    const q = qMeta.get(qid);
+    if (!q) continue;
+    if (q.branch_slug) categories.add(q.branch_slug);
+    if (q.difficulty)
+      difficultyCounts.set(q.difficulty, (difficultyCounts.get(q.difficulty) ?? 0) + 1);
+  }
+  let difficulty: AdminTest["difficulty"] = "medium";
+  let best = 0;
+  for (const [d, n] of difficultyCounts) {
+    if (n > best && (d === "easy" || d === "medium" || d === "hard")) {
+      best = n;
+      difficulty = d;
+    }
+  }
+  return { categories: Array.from(categories).sort(), difficulty };
+};
+
+const mapTest = (
+  row: TestsRow,
+  questionIds: string[],
+  qMeta: Map<string, QuestionMetaRow>,
+): AdminTest => ({
   id: row.id,
   title: row.title,
   slug: row.slug,
   description: row.description ?? "",
-  // TODO: derive when AH-12 schema enrichment lands
-  categories: [],
-  difficulty: "medium",
+  ...deriveTestMeta(questionIds, qMeta),
   status: (row.status as TestStatus) ?? "draft",
-  time_limit_min: 0,
-  pass_score: 60,
-  is_quick: false,
-  question_ids: [],
-  attempts: 0,
+  question_ids: questionIds,
   updated_at: row.updated_at,
 });
 
@@ -179,14 +221,13 @@ type CategoriesRow = {
   color: string | null;
 };
 
-const mapCategory = (row: CategoriesRow): AdminCategory => ({
+const mapCategory = (row: CategoriesRow, questionsPerSlug: Map<string, number>): AdminCategory => ({
   id: row.id,
   name: row.name,
   slug: row.slug,
   description: row.description ?? "",
   color: row.color ?? "#64748b",
-  // TODO: derive when AH-12 schema enrichment lands
-  questions_count: 0,
+  questions_count: questionsPerSlug.get(row.slug) ?? 0,
 });
 
 type TopicsRow = {
@@ -197,14 +238,13 @@ type TopicsRow = {
   color: string | null;
 };
 
-const mapTopic = (row: TopicsRow): AdminTopic => ({
+const mapTopic = (row: TopicsRow, trainingsPerSlug: Map<string, number>): AdminTopic => ({
   id: row.id,
   name: row.name,
   slug: row.slug,
   description: row.description ?? "",
   color: row.color ?? "#64748b",
-  // TODO: derive when AH-12 schema enrichment lands
-  trainings_count: 0,
+  trainings_count: trainingsPerSlug.get(row.slug) ?? 0,
 });
 
 type TrainingsRow = {
@@ -214,6 +254,7 @@ type TrainingsRow = {
   topic_slug: string | null;
   status: string;
   created_at: string;
+  estimated_minutes: number | null;
 };
 
 const mapTraining = (row: TrainingsRow): AdminTraining => ({
@@ -221,10 +262,8 @@ const mapTraining = (row: TrainingsRow): AdminTraining => ({
   title: row.title,
   topic: row.topic_slug ?? "vseobecne",
   description: row.description ?? "",
-  // TODO: derive when AH-12 schema enrichment lands
-  duration_min: 0,
+  duration_min: row.estimated_minutes ?? 0,
   status: (row.status as TrainingStatus) ?? "draft",
-  views: 0,
   updated_at: row.created_at,
 });
 
@@ -234,18 +273,23 @@ type ReportsRow = {
   target_id: string;
   reason: string;
   status: string;
+  reporter_id: string | null;
   created_at: string;
 };
 
-const mapReport = (row: ReportsRow): AdminReport => ({
+interface ReportEnrichment {
+  targetLabels: Map<string, string>;
+  reporterNames: Map<string, string>;
+}
+
+const mapReport = (row: ReportsRow, enrich: ReportEnrichment): AdminReport => ({
   id: row.id,
   target_type: row.target_type as AdminReport["target_type"],
   target_id: row.target_id,
-  // TODO: derive when AH-12 schema enrichment lands (join target row)
-  target_label: row.target_id,
+  target_label: enrich.targetLabels.get(`${row.target_type}:${row.target_id}`) ?? row.target_id,
   reason: row.reason as AdminReport["reason"],
   status: row.status as ReportStatus,
-  reporter_name: "",
+  reporter_name: (row.reporter_id && enrich.reporterNames.get(row.reporter_id)) || "",
   created_at: row.created_at,
 });
 
@@ -289,21 +333,52 @@ type ProfilesRow = {
 
 type UserRolesRow = { user_id: string; role: string };
 
-const mapUser = (profile: ProfilesRow, role?: string): AdminUser => ({
+const mapUser = (
+  profile: ProfilesRow,
+  role: string | undefined,
+  questionsPerAuthor: Map<string, number>,
+  bannedIds: Set<string>,
+): AdminUser => ({
   id: profile.id,
   email: profile.email ?? "",
   display_name: profile.display_name ?? profile.email ?? "",
   role: (role as AdminUser["role"]) ?? "user",
-  // TODO: derive when AH-12 schema enrichment lands
-  status: "active",
-  questions_count: 0,
+  status: bannedIds.has(profile.id) ? "suspended" : "active",
+  questions_count: questionsPerAuthor.get(profile.id) ?? 0,
   created_at: profile.created_at,
-  last_active_at: profile.created_at,
 });
 
 // ---------------------------------------------------------------------------
 // Questions
 // ---------------------------------------------------------------------------
+
+const QUESTION_COLS =
+  "id, prompt, branch_slug, author_id, status, answer_set_id, created_at, prompt_en, prompt_cs, options_en, options_cs, visual_en, visual_cs";
+
+const fetchQuestionEnrichment = async (rows: QuestionsRow[]): Promise<QuestionEnrichment> => {
+  const authorIds = Array.from(
+    new Set(rows.map((r) => r.author_id).filter((v): v is string => Boolean(v))),
+  );
+  const setIds = Array.from(
+    new Set(rows.map((r) => r.answer_set_id).filter((v): v is string => Boolean(v))),
+  );
+  const [profilesRes, answersRes, reportsRes] = await Promise.all([
+    supabase.from("profiles").select("id, display_name, email").in("id", authorIds),
+    supabase.from("answers").select("set_id").in("set_id", setIds),
+    supabase.from("reports").select("target_id").eq("target_type", "question"),
+  ]);
+  if (profilesRes.error) throw profilesRes.error;
+  if (answersRes.error) throw answersRes.error;
+  if (reportsRes.error) throw reportsRes.error;
+  return {
+    authorNames: profileLabels((profilesRes.data ?? []) as ProfileLabelRow[]),
+    answersBySet: countByKey((answersRes.data ?? []) as Array<{ set_id: string }>, (a) => a.set_id),
+    reportsByQuestion: countByKey(
+      (reportsRes.data ?? []) as Array<{ target_id: string }>,
+      (r) => r.target_id,
+    ),
+  };
+};
 
 export function useAdminQuestions() {
   return useQuery({
@@ -311,12 +386,12 @@ export function useAdminQuestions() {
     queryFn: async (): Promise<AdminQuestion[]> => {
       const { data, error } = await supabase
         .from("questions")
-        .select(
-          "id, prompt, branch_slug, author_id, status, answer_set_id, created_at, prompt_en, prompt_cs, options_en, options_cs, visual_en, visual_cs",
-        )
+        .select(QUESTION_COLS)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []).map((r) => mapQuestion(r as QuestionsRow));
+      const rows = (data ?? []) as QuestionsRow[];
+      const enrich = await fetchQuestionEnrichment(rows);
+      return rows.map((r) => mapQuestion(r, enrich));
     },
   });
 }
@@ -329,13 +404,14 @@ export function useAdminQuestion(id: string | undefined) {
       if (!id) return null;
       const { data, error } = await supabase
         .from("questions")
-        .select(
-          "id, prompt, branch_slug, author_id, status, answer_set_id, created_at, prompt_en, prompt_cs, options_en, options_cs, visual_en, visual_cs",
-        )
+        .select(QUESTION_COLS)
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
-      return data ? mapQuestion(data as QuestionsRow) : null;
+      if (!data) return null;
+      const row = data as QuestionsRow;
+      const enrich = await fetchQuestionEnrichment([row]);
+      return mapQuestion(row, enrich);
     },
   });
 }
@@ -560,16 +636,44 @@ export function useDeleteAnswer() {
 // Tests
 // ---------------------------------------------------------------------------
 
+const fetchQuestionMeta = async (questionIds: string[]): Promise<Map<string, QuestionMetaRow>> => {
+  const { data, error } = await supabase
+    .from("questions")
+    .select("id, branch_slug, difficulty")
+    .in("id", questionIds);
+  if (error) throw error;
+  return new Map(((data ?? []) as QuestionMetaRow[]).map((q) => [q.id, q]));
+};
+
 export function useAdminTests() {
   return useQuery({
     queryKey: ["admin", "tests"],
     queryFn: async (): Promise<AdminTest[]> => {
-      const { data, error } = await supabase
-        .from("tests")
-        .select("id, slug, title, description, status, updated_at")
-        .order("updated_at", { ascending: false });
-      if (error) throw error;
-      return (data ?? []).map((r) => mapTest(r as TestsRow));
+      const [testsRes, tqRes] = await Promise.all([
+        supabase
+          .from("tests")
+          .select("id, slug, title, description, status, updated_at")
+          .order("updated_at", { ascending: false }),
+        supabase
+          .from("test_questions")
+          .select("test_id, question_id, position")
+          .order("position", { ascending: true }),
+      ]);
+      if (testsRes.error) throw testsRes.error;
+      if (tqRes.error) throw tqRes.error;
+      const links = (tqRes.data ?? []) as Array<{ test_id: string; question_id: string }>;
+      const idsByTest = new Map<string, string[]>();
+      for (const link of links) {
+        const list = idsByTest.get(link.test_id) ?? [];
+        list.push(link.question_id);
+        idsByTest.set(link.test_id, list);
+      }
+      const qMeta = await fetchQuestionMeta(
+        Array.from(new Set(links.map((link) => link.question_id))),
+      );
+      return ((testsRes.data ?? []) as TestsRow[]).map((r) =>
+        mapTest(r, idsByTest.get(r.id) ?? [], qMeta),
+      );
     },
   });
 }
@@ -595,9 +699,9 @@ export function useAdminTest(id: string | undefined) {
       if (testRes.error) throw testRes.error;
       if (tqRes.error) throw tqRes.error;
       if (!testRes.data) return null;
-      const test = mapTest(testRes.data as TestsRow);
-      test.question_ids = (tqRes.data ?? []).map((r) => (r as { question_id: string }).question_id);
-      return test;
+      const questionIds = (tqRes.data ?? []).map((r) => (r as { question_id: string }).question_id);
+      const qMeta = await fetchQuestionMeta(questionIds);
+      return mapTest(testRes.data as TestsRow, questionIds, qMeta);
     },
   });
 }
@@ -660,12 +764,20 @@ export function useAdminCategories() {
   return useQuery({
     queryKey: ["admin", "categories"],
     queryFn: async (): Promise<AdminCategory[]> => {
-      const { data, error } = await supabase
-        .from("categories")
-        .select("id, name, slug, description, color")
-        .order("name", { ascending: true });
-      if (error) throw error;
-      return (data ?? []).map((r) => mapCategory(r as CategoriesRow));
+      const [catsRes, questionsRes] = await Promise.all([
+        supabase
+          .from("categories")
+          .select("id, name, slug, description, color")
+          .order("name", { ascending: true }),
+        supabase.from("questions").select("branch_slug"),
+      ]);
+      if (catsRes.error) throw catsRes.error;
+      if (questionsRes.error) throw questionsRes.error;
+      const perSlug = countByKey(
+        (questionsRes.data ?? []) as Array<{ branch_slug: string | null }>,
+        (q) => q.branch_slug,
+      );
+      return ((catsRes.data ?? []) as CategoriesRow[]).map((r) => mapCategory(r, perSlug));
     },
   });
 }
@@ -724,12 +836,20 @@ export function useAdminTopics() {
   return useQuery({
     queryKey: ["admin", "topics"],
     queryFn: async (): Promise<AdminTopic[]> => {
-      const { data, error } = await supabase
-        .from("topics")
-        .select("id, name, slug, description, color")
-        .order("name", { ascending: true });
-      if (error) throw error;
-      return (data ?? []).map((r) => mapTopic(r as TopicsRow));
+      const [topicsRes, trainingsRes] = await Promise.all([
+        supabase
+          .from("topics")
+          .select("id, name, slug, description, color")
+          .order("name", { ascending: true }),
+        supabase.from("trainings").select("topic_slug"),
+      ]);
+      if (topicsRes.error) throw topicsRes.error;
+      if (trainingsRes.error) throw trainingsRes.error;
+      const perSlug = countByKey(
+        (trainingsRes.data ?? []) as Array<{ topic_slug: string | null }>,
+        (t) => t.topic_slug,
+      );
+      return ((topicsRes.data ?? []) as TopicsRow[]).map((r) => mapTopic(r, perSlug));
     },
   });
 }
@@ -794,7 +914,7 @@ export function useAdminTrainings() {
     queryFn: async (): Promise<AdminTraining[]> => {
       const { data, error } = await supabase
         .from("trainings")
-        .select("id, title, description, topic_slug, status, created_at")
+        .select("id, title, description, topic_slug, status, created_at, estimated_minutes")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []).map((r) => mapTraining(r as TrainingsRow));
@@ -813,6 +933,7 @@ export function useCreateTraining() {
           description: input.description ?? null,
           topic_slug: input.topic ?? null,
           status: (input.status ?? "draft") as never,
+          estimated_minutes: input.duration_min ?? null,
         })
         .select()
         .single();
@@ -832,6 +953,7 @@ export function useUpdateTraining() {
       if (patch.description !== undefined) update.description = patch.description;
       if (patch.topic !== undefined) update.topic_slug = patch.topic;
       if (patch.status) update.status = patch.status;
+      if (patch.duration_min !== undefined) update.estimated_minutes = patch.duration_min;
       const { error } = await supabase.from("trainings").update(update).eq("id", id);
       if (error) throw error;
     },
@@ -1106,16 +1228,56 @@ export function useUpdateDSRStatus() {
 // Reports
 // ---------------------------------------------------------------------------
 
+const firstLine = (text: string) => text.split("\n")[0] ?? text;
+
+// Resolves human-readable labels for report targets. One bulk query per
+// target type actually present in the queue; unknown types fall back to
+// the raw id in mapReport.
+const fetchReportEnrichment = async (rows: ReportsRow[]): Promise<ReportEnrichment> => {
+  const idsOf = (type: string) =>
+    Array.from(new Set(rows.filter((r) => r.target_type === type).map((r) => r.target_id)));
+  const reporterIds = Array.from(
+    new Set(rows.map((r) => r.reporter_id).filter((v): v is string => Boolean(v))),
+  );
+  const userIds = Array.from(new Set([...idsOf("user"), ...reporterIds]));
+  const [questionsRes, trainingsRes, answersRes, profilesRes] = await Promise.all([
+    supabase.from("questions").select("id, prompt").in("id", idsOf("question")),
+    supabase.from("trainings").select("id, title").in("id", idsOf("training")),
+    supabase.from("answers").select("id, text").in("id", idsOf("answer")),
+    supabase.from("profiles").select("id, display_name, email").in("id", userIds),
+  ]);
+  for (const res of [questionsRes, trainingsRes, answersRes, profilesRes]) {
+    if (res.error) throw res.error;
+  }
+  const names = profileLabels((profilesRes.data ?? []) as ProfileLabelRow[]);
+  const targetLabels = new Map<string, string>();
+  for (const q of (questionsRes.data ?? []) as Array<{ id: string; prompt: string }>) {
+    targetLabels.set(`question:${q.id}`, firstLine(q.prompt));
+  }
+  for (const t of (trainingsRes.data ?? []) as Array<{ id: string; title: string }>) {
+    targetLabels.set(`training:${t.id}`, t.title);
+  }
+  for (const a of (answersRes.data ?? []) as Array<{ id: string; text: string }>) {
+    targetLabels.set(`answer:${a.id}`, a.text);
+  }
+  for (const [id, label] of names) {
+    if (label) targetLabels.set(`user:${id}`, label);
+  }
+  return { targetLabels, reporterNames: names };
+};
+
 export function useAdminReports() {
   return useQuery({
     queryKey: ["admin", "reports"],
     queryFn: async (): Promise<AdminReport[]> => {
       const { data, error } = await supabase
         .from("reports")
-        .select("id, target_type, target_id, reason, status, created_at")
+        .select("id, target_type, target_id, reason, status, reporter_id, created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []).map((r) => mapReport(r as ReportsRow));
+      const rows = (data ?? []) as ReportsRow[];
+      const enrich = await fetchReportEnrichment(rows);
+      return rows.map((r) => mapReport(r, enrich));
     },
   });
 }
@@ -1150,20 +1312,53 @@ export function useAdminUsers() {
   return useQuery({
     queryKey: ["admin", "users"],
     queryFn: async (): Promise<AdminUser[]> => {
-      const [profilesRes, rolesRes] = await Promise.all([
+      const [profilesRes, rolesRes, questionsRes, banEventsRes] = await Promise.all([
         supabase
           .from("profiles")
           .select("id, email, display_name, created_at")
           .order("created_at", { ascending: false }),
         supabase.from("user_roles").select("user_id, role"),
+        supabase.from("questions").select("author_id"),
+        // Ban state lives in auth.users (not PostgREST-readable); the only
+        // sanctioned write path is PATCH /api/admin/users/:id, which logs
+        // user_banned/user_unbanned to audit_log — so the latest of those
+        // two events per user IS the current ban state.
+        supabase
+          .from("audit_log")
+          .select("target_id, action, at")
+          .in("action", ["user_banned", "user_unbanned"])
+          .order("at", { ascending: false }),
       ]);
       if (profilesRes.error) throw profilesRes.error;
       if (rolesRes.error) throw rolesRes.error;
+      if (questionsRes.error) throw questionsRes.error;
+      if (banEventsRes.error) throw banEventsRes.error;
       const roleMap = new Map<string, string>(
         (rolesRes.data ?? []).map((r) => [(r as UserRolesRow).user_id, (r as UserRolesRow).role]),
       );
+      const questionsPerAuthor = countByKey(
+        (questionsRes.data ?? []) as Array<{ author_id: string | null }>,
+        (q) => q.author_id,
+      );
+      const banState = new Map<string, string>();
+      for (const evt of (banEventsRes.data ?? []) as Array<{
+        target_id: string | null;
+        action: string;
+      }>) {
+        if (evt.target_id && !banState.has(evt.target_id)) banState.set(evt.target_id, evt.action);
+      }
+      const bannedIds = new Set(
+        Array.from(banState.entries())
+          .filter(([, action]) => action === "user_banned")
+          .map(([id]) => id),
+      );
       return (profilesRes.data ?? []).map((p) =>
-        mapUser(p as ProfilesRow, roleMap.get((p as ProfilesRow).id)),
+        mapUser(
+          p as ProfilesRow,
+          roleMap.get((p as ProfilesRow).id),
+          questionsPerAuthor,
+          bannedIds,
+        ),
       );
     },
   });
@@ -1243,6 +1438,7 @@ export function useAdminDashboardStats() {
           .from("questions")
           .select("id", { count: "exact", head: true })
           .in("status", ["pending", "flagged"]),
+        supabase.from("answers").select("id", { count: "exact", head: true }),
         supabase.from("reports").select("id", { count: "exact", head: true }).eq("status", "open"),
         supabase.from("trainings").select("id", { count: "exact", head: true }),
         supabase.from("tests").select("id", { count: "exact", head: true }),
@@ -1266,6 +1462,7 @@ export function useAdminDashboardStats() {
         users,
         questions,
         pending,
+        answers,
         openReports,
         trainings,
         tests,
@@ -1275,14 +1472,11 @@ export function useAdminDashboardStats() {
       ] = counts;
       return {
         total_users: users.count ?? 0,
-        // TODO: derive when AH-12 schema enrichment lands (last_active_at)
-        active_users_7d: 0,
         total_questions: questions.count ?? 0,
         pending_review: pending.count ?? 0,
-        total_answers: 0,
+        total_answers: answers.count ?? 0,
         open_reports: openReports.count ?? 0,
         total_trainings: trainings.count ?? 0,
-        training_views: 0,
         total_tests: tests.count ?? 0,
         total_sessions: sessions.count ?? 0,
         pending_dsr: pendingDsr.count ?? 0,
@@ -1785,18 +1979,8 @@ export function useAdminActivity(limit = 20) {
           target_type: string | null;
           at: string;
         };
-        // TODO: derive when AH-12 schema enrichment lands (real event types)
-        const type: AdminActivityEvent["type"] =
-          r.target_type === "test"
-            ? "test_published"
-            : r.target_type === "report"
-              ? "report_filed"
-              : r.action === "user_signup"
-                ? "user_signup"
-                : "question_created";
         return {
           id: r.id,
-          type,
           actor: r.actor_name ?? "system",
           summary: `${r.action}${r.target_type ? ` ${r.target_type}` : ""}`,
           created_at: r.at,

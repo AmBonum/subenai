@@ -1,11 +1,8 @@
-// AH-11.6 carve-out — platform mock store, retained for
-// /app/tests/new + /app/library (questions library), the respondent flow
-// (`@/lib/respondent/mock-store`), and the composer/test-packs/seed paths.
-// The /app/* questions usage is an AH-12 schema-gap exemption: the
-// production `questions` table lacks `type` and `category` columns.
-// AH-14 finishes the schema enrichment and these consumers swap to
-// `useLibraryQuestions`; the respondent reads migrate via the
-// `get_test_by_share_id` RPC. After both, this file is deletable.
+// AH-11.6 carve-out — platform mock store. No production consumer remains
+// (AH-12 closed the last one: /app/library now reads the `questions` table
+// via `useLibraryQuestions`); retained purely as a Vitest fixture
+// (tests/routes/admin/audit.test.tsx + the seed-derived test utils).
+// Deletable once those tests get their own fixtures.
 import { useSyncExternalStore } from "react";
 import {
   CURRENT_USER_ID,

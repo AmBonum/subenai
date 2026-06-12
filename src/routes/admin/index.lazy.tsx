@@ -38,7 +38,6 @@ function AdminDashboardPage() {
         <StatCard
           label={t("stat_users")}
           value={s?.total_users ?? 0}
-          delta={12}
           icon={Users}
           tone="primary"
           testId="admin-stat-card-users"
@@ -46,7 +45,6 @@ function AdminDashboardPage() {
         <StatCard
           label={t("stat_tests")}
           value={s?.total_tests ?? 0}
-          delta={6}
           icon={ClipboardList}
           tone="success"
           testId="admin-stat-card-tests"
@@ -54,7 +52,6 @@ function AdminDashboardPage() {
         <StatCard
           label={t("stat_sessions")}
           value={s?.total_sessions ?? 0}
-          delta={18}
           icon={Activity}
           tone="primary"
           testId="admin-stat-card-sessions"
@@ -62,7 +59,6 @@ function AdminDashboardPage() {
         <StatCard
           label={t("stat_dsr_pending")}
           value={s?.pending_dsr ?? 0}
-          delta={-25}
           icon={ShieldAlert}
           tone="warning"
           testId="admin-stat-card-dsr-pending"

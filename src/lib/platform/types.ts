@@ -305,6 +305,7 @@ export interface HistoryItem {
 export interface LibraryQuestion {
   id: string;
   prompt: string;
+  type: QuestionType;
   branch_slug: string | null;
   difficulty: string | null;
   status: string;

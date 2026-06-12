@@ -112,6 +112,7 @@ const trainingRows = (): Row[] =>
     topic_slug: t.topic,
     status: t.status,
     created_at: t.updated_at,
+    estimated_minutes: t.duration_min,
   }));
 
 const reportRows = (): Row[] =>
@@ -121,6 +122,7 @@ const reportRows = (): Row[] =>
     target_id: r.target_id,
     reason: r.reason,
     status: r.status,
+    reporter_id: null,
     created_at: r.created_at,
   }));
 
@@ -139,14 +141,8 @@ const auditLogRows = (): Row[] =>
     id: a.id,
     actor_id: null,
     actor_name: a.actor,
-    action: a.summary.split(" ")[0] ?? a.type,
-    target_type: a.type.includes("test")
-      ? "test"
-      : a.type.includes("report")
-        ? "report"
-        : a.type.includes("training")
-          ? "training"
-          : "question",
+    action: a.summary,
+    target_type: null,
     target_id: a.id,
     pii_access: false,
     details: a.summary,
@@ -529,6 +525,7 @@ function syncAdminTablesFromMockStore(): void {
     topic_slug: t.topic,
     status: t.status,
     created_at: t.updated_at,
+    estimated_minutes: t.duration_min,
   }));
   adminMockTables.questions.rows = questions.map((q) => ({
     id: q.id,
@@ -553,6 +550,7 @@ function syncAdminTablesFromMockStore(): void {
     target_id: r.target_id,
     reason: r.reason,
     status: r.status,
+    reporter_id: null,
     created_at: r.created_at,
   }));
   adminMockTables.answer_sets.rows = answerSets.map((s) => ({
@@ -582,6 +580,27 @@ function syncAdminTablesFromMockStore(): void {
 
 export function seedAdminQueryClient(qc: QueryClient): void {
   syncAdminTablesFromMockStore();
+  // Derived lookups — mirror the bulk enrichment in queries.ts so the
+  // prefetched shapes match what the queryFn would produce from the same
+  // stub tables.
+  const authorNames = new Map(
+    adminMockTables.profiles.rows.map((p) => [
+      p.id as string,
+      ((p.display_name as string | null) ?? (p.email as string | null) ?? "") as string,
+    ]),
+  );
+  const answersBySet = new Map<string, number>();
+  for (const a of adminMockTables.answers.rows) {
+    const k = a.set_id as string;
+    answersBySet.set(k, (answersBySet.get(k) ?? 0) + 1);
+  }
+  const reportsByQuestion = new Map<string, number>();
+  for (const r of adminMockTables.reports.rows) {
+    if (r.target_type !== "question") continue;
+    const k = r.target_id as string;
+    reportsByQuestion.set(k, (reportsByQuestion.get(k) ?? 0) + 1);
+  }
+
   // Questions
   const questions: AdminQuestion[] = adminMockTables.questions.rows.map((r) => ({
     id: r.id as string,
@@ -589,12 +608,12 @@ export function seedAdminQueryClient(qc: QueryClient): void {
     excerpt: ((r.prompt as string) ?? "").slice(0, 140),
     body: (r.prompt as string) ?? "",
     author_id: (r.author_id as string) ?? "",
-    author_name: "",
+    author_name: ((r.author_id as string | null) && authorNames.get(r.author_id as string)) || "",
     categories: r.branch_slug ? [r.branch_slug as string] : [],
     status: (r.status as AdminQuestion["status"]) ?? "pending",
-    answers_count: 0,
-    votes: 0,
-    reports_count: 0,
+    answers_count:
+      ((r.answer_set_id as string | null) && answersBySet.get(r.answer_set_id as string)) || 0,
+    reports_count: reportsByQuestion.get(r.id as string) ?? 0,
     created_at: r.created_at as string,
     answer_set_id: (r.answer_set_id as string | undefined) ?? undefined,
     correct_answer_ids: [],
@@ -620,7 +639,6 @@ export function seedAdminQueryClient(qc: QueryClient): void {
     text: r.text as string,
     is_correct: r.is_correct as boolean,
     explanation: (r.explanation as string | null) ?? undefined,
-    created_at: new Date(0).toISOString(),
   }));
   qc.setQueryData(["admin", "answers"], answers);
 
@@ -633,11 +651,7 @@ export function seedAdminQueryClient(qc: QueryClient): void {
     categories: [],
     difficulty: "medium",
     status: (r.status as AdminTest["status"]) ?? "draft",
-    time_limit_min: 0,
-    pass_score: 60,
-    is_quick: false,
     question_ids: [],
-    attempts: 0,
     updated_at: r.updated_at as string,
   }));
   qc.setQueryData(["admin", "tests"], tests);
@@ -651,30 +665,41 @@ export function seedAdminQueryClient(qc: QueryClient): void {
       ...t,
       categories: seed?.categories ?? t.categories,
       difficulty: seed?.difficulty ?? t.difficulty,
-      time_limit_min: seed?.time_limit_min ?? t.time_limit_min,
-      pass_score: seed?.pass_score ?? t.pass_score,
       question_ids: seed?.question_ids ?? [],
     });
   }
 
-  // Categories + topics
+  // Categories + topics — counts derived from sibling tables, same as
+  // the queryFn enrichment.
+  const questionsPerSlug = new Map<string, number>();
+  for (const q of adminMockTables.questions.rows) {
+    const k = q.branch_slug as string | null;
+    if (!k) continue;
+    questionsPerSlug.set(k, (questionsPerSlug.get(k) ?? 0) + 1);
+  }
   const categories: AdminCategory[] = adminMockTables.categories.rows.map((r) => ({
     id: r.id as string,
     name: r.name as string,
     slug: r.slug as string,
     description: (r.description as string) ?? "",
     color: (r.color as string) ?? "#64748b",
-    questions_count: 0,
+    questions_count: questionsPerSlug.get(r.slug as string) ?? 0,
   }));
   qc.setQueryData(["admin", "categories"], categories);
 
+  const trainingsPerSlug = new Map<string, number>();
+  for (const t of adminMockTables.trainings.rows) {
+    const k = t.topic_slug as string | null;
+    if (!k) continue;
+    trainingsPerSlug.set(k, (trainingsPerSlug.get(k) ?? 0) + 1);
+  }
   const topics: AdminTopic[] = adminMockTables.topics.rows.map((r) => ({
     id: r.id as string,
     name: r.name as string,
     slug: r.slug as string,
     description: (r.description as string) ?? "",
     color: (r.color as string) ?? "#64748b",
-    trainings_count: 0,
+    trainings_count: trainingsPerSlug.get(r.slug as string) ?? 0,
   }));
   qc.setQueryData(["admin", "topics"], topics);
 
@@ -684,61 +709,75 @@ export function seedAdminQueryClient(qc: QueryClient): void {
     title: r.title as string,
     topic: (r.topic_slug as string) ?? "vseobecne",
     description: (r.description as string) ?? "",
-    duration_min: 0,
+    duration_min: (r.estimated_minutes as number | null) ?? 0,
     status: (r.status as AdminTraining["status"]) ?? "draft",
-    views: 0,
     updated_at: r.created_at as string,
   }));
   qc.setQueryData(["admin", "trainings"], trainings);
 
-  // Reports
+  // Reports — target labels derived from sibling tables (question prompt
+  // first line, training title, answer text, user profile label).
+  const questionPrompts = new Map(
+    adminMockTables.questions.rows.map((q) => [
+      q.id as string,
+      (((q.prompt as string) ?? "").split("\n")[0] ?? "") as string,
+    ]),
+  );
+  const trainingTitles = new Map(
+    adminMockTables.trainings.rows.map((t) => [t.id as string, t.title as string]),
+  );
+  const answerTexts = new Map(
+    adminMockTables.answers.rows.map((a) => [a.id as string, a.text as string]),
+  );
+  const reportLabel = (type: string, id: string): string => {
+    if (type === "question") return questionPrompts.get(id) ?? id;
+    if (type === "training") return trainingTitles.get(id) ?? id;
+    if (type === "answer") return answerTexts.get(id) ?? id;
+    if (type === "user") return authorNames.get(id) || id;
+    return id;
+  };
   const reports: AdminReport[] = adminMockTables.reports.rows.map((r) => ({
     id: r.id as string,
     target_type: r.target_type as AdminReport["target_type"],
     target_id: r.target_id as string,
-    target_label: r.target_id as string,
+    target_label: reportLabel(r.target_type as string, r.target_id as string),
     reason: r.reason as AdminReport["reason"],
     status: r.status as AdminReport["status"],
-    reporter_name: "",
+    reporter_name:
+      ((r.reporter_id as string | null) && authorNames.get(r.reporter_id as string)) || "",
     created_at: r.created_at as string,
   }));
   qc.setQueryData(["admin", "reports"], reports);
 
-  // Users (profiles join user_roles)
+  // Users (profiles join user_roles; questions_count derived)
   const roleMap = new Map<string, string>(
     adminMockTables.user_roles.rows.map((r) => [r.user_id as string, r.role as string]),
   );
+  const questionsPerAuthor = new Map<string, number>();
+  for (const q of adminMockTables.questions.rows) {
+    const k = q.author_id as string | null;
+    if (!k) continue;
+    questionsPerAuthor.set(k, (questionsPerAuthor.get(k) ?? 0) + 1);
+  }
   const users: AdminUser[] = adminMockTables.profiles.rows.map((p) => ({
     id: p.id as string,
     email: (p.email as string) ?? "",
     display_name: (p.display_name as string) ?? "",
     role: (roleMap.get(p.id as string) ?? "user") as AdminUser["role"],
     status: "active",
-    questions_count: 0,
+    questions_count: questionsPerAuthor.get(p.id as string) ?? 0,
     created_at: p.created_at as string,
-    last_active_at: p.created_at as string,
   }));
   qc.setQueryData(["admin", "users"], users);
 
   // Audit log + activity (default limit 100 / 20)
   qc.setQueryData(["admin", "audit_log", 100], adminMockTables.audit_log.rows);
-  const activity = adminMockTables.audit_log.rows.slice(0, 20).map((r) => {
-    const type =
-      r.target_type === "test"
-        ? "test_published"
-        : r.target_type === "report"
-          ? "report_filed"
-          : r.action === "user_signup"
-            ? "user_signup"
-            : "question_created";
-    return {
-      id: r.id as string,
-      type,
-      actor: (r.actor_name as string) ?? "system",
-      summary: `${r.action as string}${r.target_type ? ` ${r.target_type as string}` : ""}`,
-      created_at: r.at as string,
-    };
-  });
+  const activity = adminMockTables.audit_log.rows.slice(0, 20).map((r) => ({
+    id: r.id as string,
+    actor: (r.actor_name as string) ?? "system",
+    summary: `${r.action as string}${r.target_type ? ` ${r.target_type as string}` : ""}`,
+    created_at: r.at as string,
+  }));
   qc.setQueryData(["admin", "activity", 20], activity);
 
   // Respondents / DSR queue: empty until tests seed.
@@ -789,15 +828,13 @@ export function seedAdminQueryClient(qc: QueryClient): void {
   // Dashboard stats
   qc.setQueryData(["admin", "dashboard_stats"], {
     total_users: adminMockTables.profiles.rows.length,
-    active_users_7d: 0,
     total_questions: adminMockTables.questions.rows.length,
     pending_review: adminMockTables.questions.rows.filter(
       (r) => r.status === "pending" || r.status === "flagged",
     ).length,
-    total_answers: 0,
+    total_answers: adminMockTables.answers.rows.length,
     open_reports: adminMockTables.reports.rows.filter((r) => r.status === "open").length,
     total_trainings: adminMockTables.trainings.rows.length,
-    training_views: 0,
     total_tests: adminMockTables.tests.rows.length,
     total_sessions: 0,
     pending_dsr: 0,

@@ -30,7 +30,6 @@ const fixture: AdminQuestion = {
   categories: ["phishing"],
   status: "published",
   answers_count: 0,
-  votes: 0,
   reports_count: 0,
   created_at: new Date().toISOString(),
   answer_set_id: "set-1",

@@ -258,7 +258,9 @@ describe("RLS shape contracts — admin queries", () => {
   it("useAdminQuestions targets `questions` with a bounded column set (no PII fields)", async () => {
     const { result } = renderHook(() => useAdminQuestions(), { wrapper });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(log.current.table).toBe("questions");
+    // AH-12 enrichment fires follow-up lookups (profiles, answers, reports);
+    // the primary read is still the first from()/select() pair.
+    expect(fromCalls()).toContain("questions");
     const cols = selectArgs();
     expect(cols).not.toBe("*");
     // `prompt` body + i18n variants are expected; no email / ip_hash leakage.
@@ -314,7 +316,9 @@ describe("RLS shape contracts — admin queries", () => {
   it("useAdminReports uses a bounded column whitelist on reports", async () => {
     const { result } = renderHook(() => useAdminReports(), { wrapper });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(log.current.table).toBe("reports");
+    // AH-12 enrichment resolves target labels via follow-up lookups; the
+    // primary read is still the first from()/select() pair.
+    expect(fromCalls()).toContain("reports");
     const cols = selectArgs();
     expect(cols).not.toBe("*");
     expect(cols).toContain("target_type");

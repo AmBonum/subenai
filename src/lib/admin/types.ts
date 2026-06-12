@@ -14,7 +14,6 @@ export interface AdminUser {
   status: UserStatus;
   questions_count: number;
   created_at: string;
-  last_active_at: string;
 }
 
 export type QuestionStatus = "published" | "pending" | "flagged" | "archived";
@@ -29,7 +28,6 @@ export interface AdminQuestion {
   categories: string[];
   status: QuestionStatus;
   answers_count: number;
-  votes: number;
   reports_count: number;
   created_at: string;
   answer_set_id?: string;
@@ -53,7 +51,6 @@ export interface AdminAnswer {
   text: string;
   is_correct: boolean;
   explanation?: string;
-  created_at: string;
 }
 
 export interface AdminAnswerSet {
@@ -83,7 +80,6 @@ export interface AdminTraining {
   description: string;
   duration_min: number;
   status: TrainingStatus;
-  views: number;
   updated_at: string;
 }
 
@@ -121,17 +117,12 @@ export interface AdminTest {
   categories: string[];
   difficulty: TestDifficulty;
   status: TestStatus;
-  time_limit_min: number;
-  pass_score: number;
-  is_quick: boolean;
   question_ids: string[];
-  attempts: number;
   updated_at: string;
 }
 
 export interface AdminActivityEvent {
   id: string;
-  type: "question_created" | "test_published" | "report_filed" | "user_signup";
   actor: string;
   summary: string;
   created_at: string;
@@ -139,13 +130,11 @@ export interface AdminActivityEvent {
 
 export interface AdminDashboardStats {
   total_users: number;
-  active_users_7d: number;
   total_questions: number;
   pending_review: number;
   total_answers: number;
   open_reports: number;
   total_trainings: number;
-  training_views: number;
   total_tests: number;
   total_sessions: number;
   pending_dsr: number;

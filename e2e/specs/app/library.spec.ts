@@ -1,10 +1,38 @@
 import { test, expect } from "../../fixtures/base";
 import { setupEducator } from "../../setup/app-shell";
+import { seedQuestion } from "../../seed";
 import { AppLibraryPage } from "../../poms/app/AppLibraryPage";
+
+// Mirrors the legacy mock-store seed the page rendered before AH-12 moved
+// it onto the live `questions` table: 120 approved rows, ids qp_0001…,
+// categories cycling CATS, difficulty cycling easy/medium/hard.
+const LIBRARY_CATS = [
+  "phishing",
+  "eshop",
+  "seniori",
+  "ucto",
+  "sms",
+  "autoservis",
+  "verejne-sluzby",
+  "banky",
+  "heslá",
+  "socialne-siete",
+];
+
+const libraryQuestionRows = () =>
+  Array.from({ length: 120 }, (_, i) =>
+    seedQuestion({
+      id: `qp_${String(i + 1).padStart(4, "0")}`,
+      prompt: `Otázka #${i + 1}: Vyber správnu odpoveď k scenáru ${i + 1}`,
+      branch_slug: LIBRARY_CATS[i % LIBRARY_CATS.length],
+      difficulty: (["easy", "medium", "hard"] as const)[i % 3],
+      status: "approved",
+    }),
+  );
 
 test.describe("/app/library", () => {
   test.beforeEach(async ({ context, page }) => {
-    await setupEducator(context, page);
+    await setupEducator(context, page, { tables: { questions: libraryQuestionRows() } });
   });
 
   // TC-01: Page renders with toolbar and populated question grid
@@ -158,7 +186,7 @@ test.describe("/app/library", () => {
 
 test.describe("/app/library — mobile responsive @mobile", () => {
   test.beforeEach(async ({ context, page }) => {
-    await setupEducator(context, page);
+    await setupEducator(context, page, { tables: { questions: libraryQuestionRows() } });
   });
 
   test("toolbar wraps and grid degrades to a single column on Pixel 7", async ({ page }) => {

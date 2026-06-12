@@ -125,7 +125,6 @@ export const adminRepo = {
         categories: input.categories ?? ["vseobecny"],
         status: input.status ?? "pending",
         answers_count: 0,
-        votes: 0,
         reports_count: 0,
         created_at: nowISO(),
         answer_set_id: input.answer_set_id,
@@ -176,7 +175,6 @@ export const adminRepo = {
         status: input.status ?? "pending",
         questions_count: 0,
         created_at: nowISO(),
-        last_active_at: nowISO(),
       };
       state.users = [u, ...state.users];
       emit();
@@ -216,11 +214,7 @@ export const adminRepo = {
         categories: input.categories ?? ["vseobecny"],
         difficulty: input.difficulty ?? "easy",
         status: input.status ?? "draft",
-        time_limit_min: input.time_limit_min ?? 5,
-        pass_score: input.pass_score ?? 60,
-        is_quick: false,
         question_ids: input.question_ids ?? [],
-        attempts: 0,
         updated_at: nowISO(),
       };
       state.tests = [t, ...state.tests];
@@ -270,7 +264,6 @@ export const adminRepo = {
         description: input.description ?? "",
         duration_min: input.duration_min ?? 5,
         status: input.status ?? "draft",
-        views: 0,
         updated_at: nowISO(),
       };
       state.trainings = [t, ...state.trainings];
@@ -345,7 +338,6 @@ export const adminRepo = {
         text: input.text,
         is_correct: input.is_correct ?? false,
         explanation: input.explanation,
-        created_at: nowISO(),
       };
       state.answers = [a, ...state.answers];
       emit();

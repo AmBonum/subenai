@@ -133,7 +133,8 @@ const mapSession = (row: SessionsRow): Session => ({
   respondent_id: row.respondent_id ?? "",
   intake_data: (row.intake_data as Record<string, string>) ?? {},
   consent_given: row.consent_given,
-  // TODO: derive when AH-12 schema enrichment lands (join session_answers)
+  // Intentionally not loaded in list queries (would be an N+1 per row);
+  // the detail sheet joins session_answers via useTestSessionAnswers.
   answers: [],
   started_at: row.started_at,
   finished_at: row.finished_at,
@@ -258,6 +259,7 @@ const mapDSR = (row: DsrRequestsRow): DSRRequest => ({
 type QuestionsRow = {
   id: string;
   prompt: string;
+  type: LibraryQuestion["type"];
   branch_slug: string | null;
   difficulty: string | null;
   status: string;
@@ -267,6 +269,7 @@ type QuestionsRow = {
 const mapLibraryQuestion = (row: QuestionsRow): LibraryQuestion => ({
   id: row.id,
   prompt: row.prompt,
+  type: row.type,
   branch_slug: row.branch_slug,
   difficulty: row.difficulty,
   status: row.status,
@@ -1589,7 +1592,7 @@ export function useLibraryQuestions(branchSlug?: string) {
     queryFn: async (): Promise<LibraryQuestion[]> => {
       let q = supabase
         .from("questions")
-        .select("id, prompt, branch_slug, difficulty, status, created_at")
+        .select("id, prompt, type, branch_slug, difficulty, status, created_at")
         .eq("status", "approved")
         .order("created_at", { ascending: false });
       if (branchSlug) q = q.eq("branch_slug", branchSlug);

@@ -6,7 +6,6 @@ import {
   Download,
   Filter,
   MessageSquare,
-  ThumbsUp,
   Flag,
   Pencil,
   X,
@@ -22,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -81,7 +79,6 @@ function QuestionsPage() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<string>("all");
   const [category, setCategory] = useState<string>("all");
-  const [minVotes, setMinVotes] = useState(-50);
   const [reportedOnly, setReportedOnly] = useState(false);
   const [author, setAuthor] = useState<string>("all");
   const [page, setPage] = useState(1);
@@ -110,12 +107,11 @@ function QuestionsPage() {
       if (status !== "all" && q.status !== status) return false;
       if (category !== "all" && !q.categories.includes(category)) return false;
       if (author !== "all" && q.author_name !== author) return false;
-      if (q.votes < minVotes) return false;
       if (reportedOnly && q.reports_count === 0) return false;
       if (query && !q.title.toLowerCase().includes(query.toLowerCase())) return false;
       return true;
     });
-  }, [questions, query, status, category, author, minVotes, reportedOnly]);
+  }, [questions, query, status, category, author, reportedOnly]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
@@ -186,7 +182,6 @@ function QuestionsPage() {
     setStatus("all");
     setCategory("all");
     setAuthor("all");
-    setMinVotes(-50);
     setReportedOnly(false);
     setPage(1);
   };
@@ -200,7 +195,6 @@ function QuestionsPage() {
         { key: "categories", label: t("csv_branches") },
         { key: "status", label: t("csv_status") },
         { key: "author_name", label: t("csv_author") },
-        { key: "votes", label: t("csv_votes") },
         { key: "answers_count", label: t("csv_answers") },
         { key: "reports_count", label: t("csv_reports") },
         { key: "created_at", label: t("csv_created") },
@@ -330,16 +324,6 @@ function QuestionsPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs">{t("min_votes_label", { votes: minVotes })}</Label>
-                  <Slider
-                    min={-50}
-                    max={200}
-                    step={5}
-                    value={[minVotes]}
-                    onValueChange={(v) => setMinVotes(v[0])}
-                  />
-                </div>
                 <label className="flex cursor-pointer items-center gap-2 text-sm">
                   <Checkbox
                     checked={reportedOnly}
@@ -459,10 +443,6 @@ function QuestionsPage() {
                         <span className="inline-flex items-center gap-1">
                           <MessageSquare className="h-3 w-3" />
                           {q.answers_count}
-                        </span>
-                        <span className="inline-flex items-center gap-1">
-                          <ThumbsUp className="h-3 w-3" />
-                          {q.votes}
                         </span>
                         {q.reports_count > 0 && (
                           <span className="inline-flex items-center gap-1 text-destructive">
