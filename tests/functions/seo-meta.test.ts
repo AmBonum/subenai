@@ -17,15 +17,18 @@ const env: SeoMetaEnv = {
 };
 
 // Minimal static shell mirroring index.html's head tag set.
+// Mirrors index.html: the default metas carry data-seo-default (the SPA
+// drops that layer after hydration; the edge rewriter must tolerate and
+// preserve the marker).
 const SHELL = `<!doctype html><html lang="sk"><head>
 <title>subenai — default</title>
-<meta name="description" content="default description" />
-<meta property="og:title" content="subenai — default" />
-<meta property="og:description" content="default description" />
-<meta property="og:url" content="https://subenai.sk/" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="https://subenai.sk/og-default.png" />
-<meta name="twitter:image" content="https://subenai.sk/og-default.png" />
+<meta name="description" content="default description" data-seo-default />
+<meta property="og:title" content="subenai — default" data-seo-default />
+<meta property="og:description" content="default description" data-seo-default />
+<meta property="og:url" content="https://subenai.sk/" data-seo-default />
+<meta property="og:type" content="website" data-seo-default />
+<meta property="og:image" content="https://subenai.sk/og-default.png" data-seo-default />
+<meta name="twitter:image" content="https://subenai.sk/og-default.png" data-seo-default />
 </head><body><div id="root"></div></body></html>`;
 
 function htmlRequest(path: string): Request {

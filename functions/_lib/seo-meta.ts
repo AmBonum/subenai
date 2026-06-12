@@ -422,44 +422,51 @@ export function rewriteHtmlString(html: string, meta: RouteMeta): string {
   const canon = escapeHtml(meta.canonical);
   const type = escapeHtml(meta.ogType);
 
+  // The static shell's default metas carry `data-seo-default` (the SPA drops
+  // that whole layer after hydration — see __root.tsx). The regexes tolerate
+  // extra attributes, and every tag this rewriter emits KEEPS the marker so
+  // hydrated browsers replace the edge-written values with route head() ones
+  // instead of duplicating them. (HTMLRewriter's setAttribute path preserves
+  // the marker automatically.)
   let out = html
     .replace(/<title>[\s\S]*?<\/title>/i, `<title>${t}</title>`)
     .replace(
-      /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/i,
-      `<meta name="description" content="${d}" />`,
+      /<meta\s+name="description"\s+content="[^"]*"[^>]*\/?>/i,
+      `<meta name="description" content="${d}" data-seo-default />`,
     )
     .replace(
-      /<meta\s+property="og:title"\s+content="[^"]*"\s*\/?>/i,
-      `<meta property="og:title" content="${t}" />`,
+      /<meta\s+property="og:title"\s+content="[^"]*"[^>]*\/?>/i,
+      `<meta property="og:title" content="${t}" data-seo-default />`,
     )
     .replace(
-      /<meta\s+property="og:description"\s+content="[^"]*"\s*\/?>/i,
-      `<meta property="og:description" content="${d}" />`,
+      /<meta\s+property="og:description"\s+content="[^"]*"[^>]*\/?>/i,
+      `<meta property="og:description" content="${d}" data-seo-default />`,
     )
     .replace(
-      /<meta\s+property="og:url"\s+content="[^"]*"\s*\/?>/i,
-      `<meta property="og:url" content="${canon}" />`,
+      /<meta\s+property="og:url"\s+content="[^"]*"[^>]*\/?>/i,
+      `<meta property="og:url" content="${canon}" data-seo-default />`,
     )
     .replace(
-      /<meta\s+property="og:type"\s+content="[^"]*"\s*\/?>/i,
-      `<meta property="og:type" content="${type}" />`,
+      /<meta\s+property="og:type"\s+content="[^"]*"[^>]*\/?>/i,
+      `<meta property="og:type" content="${type}" data-seo-default />`,
     )
     .replace(
-      /<meta\s+property="og:image"\s+content="[^"]*"\s*\/?>/i,
-      `<meta property="og:image" content="${img}" />`,
+      /<meta\s+property="og:image"\s+content="[^"]*"[^>]*\/?>/i,
+      `<meta property="og:image" content="${img}" data-seo-default />`,
     )
     .replace(
-      /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/i,
-      `<meta name="twitter:image" content="${img}" />`,
+      /<meta\s+name="twitter:image"\s+content="[^"]*"[^>]*\/?>/i,
+      `<meta name="twitter:image" content="${img}" data-seo-default />`,
     );
 
   // Inject robots + canonical + twitter title/description + JSON-LD that
-  // the static shell doesn't carry, right before </head>.
+  // the static shell doesn't carry, right before </head>. Marked
+  // data-seo-default for the same hydration-replacement reason.
   const inject: string[] = [
-    `<meta name="robots" content="${escapeHtml(meta.robots)}" />`,
-    `<link rel="canonical" href="${canon}" />`,
-    `<meta name="twitter:title" content="${t}" />`,
-    `<meta name="twitter:description" content="${d}" />`,
+    `<meta name="robots" content="${escapeHtml(meta.robots)}" data-seo-default />`,
+    `<link rel="canonical" href="${canon}" data-seo-default />`,
+    `<meta name="twitter:title" content="${t}" data-seo-default />`,
+    `<meta name="twitter:description" content="${d}" data-seo-default />`,
   ];
   if (meta.jsonLd !== undefined) {
     inject.push(`<script type="application/ld+json">${jsonLdString(meta.jsonLd)}</script>`);

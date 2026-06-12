@@ -33,6 +33,28 @@ import { defineConfig, devices } from "@playwright/test";
  *
  * BASE_URL override:
  *   BASE_URL=https://subenai.sk npm run e2e
+ *
+ * ENVIRONMENT MATRIX (which suites need which servers) — 2026-06-12:
+ *
+ *   vite dev :8080 (npm run dev)
+ *     Default target for everything in e2e/specs/. Supabase REST/RPC and
+ *     /api endpoints are stubbed in-page via e2e/mocks; vite proxies any
+ *     UNMOCKED /api/* call to :8788 (vite.config.ts proxy).
+ *
+ *   wrangler pages dev :8788 (npm run dev:api — builds dist first)
+ *     Real CF Functions runtime. REQUIRED by suites that exercise the
+ *     Functions layer; these specs pin baseURL :8788 via test.use and
+ *     SKIP LOUDLY when :8788 is down:
+ *       auth/callback, auth/enroll-2fa, auth/verify-2fa,
+ *       composer/round-trip, edu/schools-howitworks-contract,
+ *       sponsorship (stripe flows additionally need npm run e2e:stripe).
+ *     Caveat: with wrangler UP, specs that leave /api/* unmocked stop
+ *     getting the fast proxy-ECONNREFUSED failure and start hitting real
+ *     Functions (which then talk to real Supabase). Specs must mock every
+ *     /api endpoint their page calls — never rely on the proxy being down.
+ *
+ *   One command, both servers, whole browser suite:
+ *     npm run e2e:full      (E2E_SERVERS=1 → webServer array below)
  */
 const BASE_URL = process.env.BASE_URL ?? "http://localhost:8080";
 const PROD_URL = "https://subenai.sk";
@@ -174,8 +196,27 @@ export default defineConfig({
   //   - the job runs only the `integration` project, which does not build
   //     the bundle and would otherwise fail with "Timed out waiting for
   //     config.webServer" because there's no `dist/` to preview.
-  webServer:
-    process.env.CI && !process.env.SKIP_WEBSERVER
+  // E2E_SERVERS=1 (npm run e2e:full) boots BOTH local servers — vite :8080
+  // and wrangler :8788 — so the wrangler-bound suites (see the environment
+  // matrix in the header) run instead of skipping. reuseExistingServer lets
+  // it piggyback on servers you already have up. dev:api builds dist first,
+  // hence the longer timeout.
+  webServer: process.env.E2E_SERVERS
+    ? [
+        {
+          command: "npm run dev",
+          url: "http://localhost:8080",
+          reuseExistingServer: true,
+          timeout: 120_000,
+        },
+        {
+          command: "npm run dev:api",
+          url: "http://localhost:8788",
+          reuseExistingServer: true,
+          timeout: 300_000,
+        },
+      ]
+    : process.env.CI && !process.env.SKIP_WEBSERVER
       ? {
           command: "npm run preview",
           url: BASE_URL,

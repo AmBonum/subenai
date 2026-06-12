@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HeadContent, Outlet, createRootRoute, useMatches } from "@tanstack/react-router";
 
@@ -22,6 +23,19 @@ const queryClient = new QueryClient({
 
 function RootComponent() {
   const matches = useMatches();
+  // SEO meta layering (decided 2026-06-12, see functions/_lib/seo-meta.ts):
+  //   1. crawlable routes for JS-less crawlers — the edge function REWRITES
+  //      the static index.html tags in place;
+  //   2. everything else JS-less — the static `data-seo-default` tags are
+  //      the fallback;
+  //   3. browsers — route `head()` is the runtime truth, so once the router
+  //      has hydrated we DROP the static layer. Without this every route
+  //      carried two og:title/og:description sets and first-meta-wins
+  //      crawlers (with JS) saw homepage values on subpages.
+  useEffect(() => {
+    // meta AND link (the edge function injects a marked canonical too).
+    document.querySelectorAll("[data-seo-default]").forEach((el) => el.remove());
+  }, []);
   const hideSiteHeader = matches.some(
     (m) => (m.staticData as { hideSiteHeader?: boolean } | undefined)?.hideSiteHeader === true,
   );
