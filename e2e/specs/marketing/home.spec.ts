@@ -277,8 +277,10 @@ test.describe("Homepage /", () => {
     });
   });
 
-  // TC-11: Slogan image renders and has a non-empty alt attribute
-  test("TC-11: Slogan image is visible with correct alt text and loads successfully", async ({
+  // TC-11: Slogan image renders and has a non-empty alt attribute.
+  // Skipped: the slogan section is commented out in src/routes/index.tsx
+  // (user request 2026-06-12). Re-enable together with the section.
+  test.skip("TC-11: Slogan image is visible with correct alt text and loads successfully", async ({
     page,
     marketingHome,
   }) => {

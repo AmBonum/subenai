@@ -605,11 +605,10 @@ function Index() {
           </Link>
         </section>
 
-        {/* Brand slogan banner — light SVG variant for current dark site
-            theme. When/if a light mode is introduced, swap to the dark
-            variant `/su-be-na-i-slogan-dark.svg` (already in public/).
-            SVG instead of PNG: vector scales crisply at any size and
-            cuts the bytes shipped to the client. */}
+        {/* Brand slogan banner — disabled on request (2026-06-12). Re-enable
+            by uncommenting; dark variant `/su-be-na-i-slogan-dark.svg` is in
+            public/ for the light theme. Re-enable e2e TC-11 in
+            e2e/specs/marketing/home.spec.ts together with this section.
         <section className="mt-20 flex justify-center" data-testid="home-slogan-section">
           <img
             src="/su-be-na-i-slogan-light.svg"
@@ -619,7 +618,7 @@ function Index() {
             loading="lazy"
             decoding="async"
           />
-        </section>
+        </section> */}
 
         {/* Akadémia — featured blog content (3 pillar articles) */}
         <BlogHomeSection />
