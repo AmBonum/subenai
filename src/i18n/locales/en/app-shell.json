@@ -140,7 +140,9 @@
       "owner": "Owner",
       "editor": "Editor",
       "viewer": "Viewer"
-    }
+    },
+    "invite_error": "Could not send the invitation. Please try again.",
+    "update_role_error": "Could not update the role. Please try again."
   },
   "notifications": {
     "page_header_eyebrow": "Notifications",

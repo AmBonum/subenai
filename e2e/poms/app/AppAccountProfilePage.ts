@@ -84,16 +84,14 @@ export class AppAccountProfilePage extends BasePage {
     return this.page.getByTestId("data-export-button");
   }
 
-  // Sonner toasts (portal-rendered, no testid hook) — verbatim Slovak
-  // copy is the user-facing contract asserted by the export specs.
+  // Sonner toasts — DataExportCard wraps the toast message in a data-testid
+  // span (added in the AA-05 negative-paths pass).
 
   get exportUnauthorizedToast() {
-    return this.page.getByText("Tvoja relácia vypršala — prihlás sa znova a skús to ešte raz.");
+    return this.page.getByTestId("toast-data-export-unauthorized-error");
   }
 
   get exportGenericErrorToast() {
-    return this.page.getByText(
-      "Export sa nepodaril. Skús to o chvíľu znova, alebo nám napíš na subenai.podpora@gmail.com.",
-    );
+    return this.page.getByTestId("toast-data-export-generic-error");
   }
 }

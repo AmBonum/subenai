@@ -166,9 +166,15 @@ function PendingState() {
     <section
       role="status"
       aria-live="polite"
+      data-testid="podakovanie-state-pending"
       className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center"
     >
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("pending_title")}</h1>
+      <h1
+        className="text-2xl font-bold tracking-tight text-foreground"
+        data-testid="podakovanie-pending-heading"
+      >
+        {t("pending_title")}
+      </h1>
       <p className="text-sm leading-relaxed text-muted-foreground">{t("pending_body")}</p>
       <div className="mx-auto h-2 w-32 overflow-hidden rounded-full bg-muted" aria-hidden="true">
         <div className="h-full w-1/3 animate-pulse bg-primary" />
@@ -209,15 +215,23 @@ function ReadyState({
   }`;
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6" data-testid="podakovanie-state-ready">
       <div className="space-y-3 rounded-2xl border border-primary/40 bg-card p-8 text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h1
+          className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+          data-testid="podakovanie-ready-heading"
+        >
           {greeting}
         </h1>
         <p className="text-base text-muted-foreground sm:text-lg">
-          {kindLabel}: <strong className="text-foreground">{amountLabel}</strong>
+          <span data-testid="podakovanie-ready-kind-label">{kindLabel}</span>:{" "}
+          <strong className="text-foreground" data-testid="podakovanie-ready-amount">
+            {amountLabel}
+          </strong>
         </p>
-        <p className="text-sm text-muted-foreground">{dateLabel}</p>
+        <p className="text-sm text-muted-foreground" data-testid="podakovanie-ready-date">
+          {dateLabel}
+        </p>
       </div>
 
       <div className="space-y-3 rounded-2xl border border-border/60 bg-card p-6">
@@ -227,13 +241,19 @@ function ReadyState({
             href={donation.invoice_pdf_url}
             target="_blank"
             rel="noopener noreferrer"
+            data-testid="podakovanie-ready-invoice-link"
             className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground hover:border-primary/40"
           >
             {t("invoice_download")}
             <span aria-hidden="true">↗</span>
           </a>
         ) : (
-          <p className="text-sm leading-relaxed text-muted-foreground">{t("invoice_pending")}</p>
+          <p
+            className="text-sm leading-relaxed text-muted-foreground"
+            data-testid="podakovanie-ready-invoice-pending"
+          >
+            {t("invoice_pending")}
+          </p>
         )}
         <p className="text-xs leading-relaxed text-muted-foreground">
           {t("invoice_issuer_prefix")} <strong>{t("invoice_issuer_entity")}</strong>
@@ -242,8 +262,16 @@ function ReadyState({
       </div>
 
       {isSubscription ? (
-        <div className="space-y-3 rounded-2xl border border-border/60 bg-card p-6">
-          <h2 className="text-lg font-semibold text-foreground">{t("subscription_heading")}</h2>
+        <div
+          className="space-y-3 rounded-2xl border border-border/60 bg-card p-6"
+          data-testid="podakovanie-subscription-block"
+        >
+          <h2
+            className="text-lg font-semibold text-foreground"
+            data-testid="podakovanie-subscription-heading"
+          >
+            {t("subscription_heading")}
+          </h2>
           <p className="text-sm leading-relaxed text-muted-foreground">
             {t("subscription_body_prefix")}
             <strong>{t("subscription_body_cancel")}</strong>
@@ -253,13 +281,18 @@ function ReadyState({
             type="button"
             onClick={onOpenPortal}
             disabled={portalSubmitting}
+            data-testid="podakovanie-manage-subscription-button"
             className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground hover:border-primary/40 disabled:opacity-50"
           >
             {portalSubmitting ? t("subscription_opening") : t("subscription_manage")}
             <span aria-hidden="true">→</span>
           </button>
           {portalError ? (
-            <p role="alert" className="text-sm text-foreground">
+            <p
+              role="alert"
+              data-testid="podakovanie-portal-error"
+              className="text-sm text-foreground"
+            >
               {t("subscription_error_prefix")}
               <code>{portalError}</code>
               {t("subscription_error_suffix")}
@@ -291,8 +324,16 @@ function ReadyState({
 function UnpaidState() {
   const t = tFor("podakovanie");
   return (
-    <section className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("unpaid_title")}</h1>
+    <section
+      className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center"
+      data-testid="podakovanie-state-unpaid"
+    >
+      <h1
+        className="text-2xl font-bold tracking-tight text-foreground"
+        data-testid="podakovanie-unpaid-heading"
+      >
+        {t("unpaid_title")}
+      </h1>
       <p className="text-sm leading-relaxed text-muted-foreground">
         {t("unpaid_body")}
         <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
@@ -313,8 +354,16 @@ function UnpaidState() {
 function TimeoutState() {
   const t = tFor("podakovanie");
   return (
-    <section className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("timeout_title")}</h1>
+    <section
+      className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center"
+      data-testid="podakovanie-state-timeout"
+    >
+      <h1
+        className="text-2xl font-bold tracking-tight text-foreground"
+        data-testid="podakovanie-timeout-heading"
+      >
+        {t("timeout_title")}
+      </h1>
       <p className="text-sm leading-relaxed text-muted-foreground">
         {t("timeout_body_prefix")}
         <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
@@ -329,8 +378,16 @@ function TimeoutState() {
 function NotFoundState() {
   const t = tFor("podakovanie");
   return (
-    <section className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("not_found_title")}</h1>
+    <section
+      className="space-y-4 rounded-2xl border border-border/60 bg-card p-8 text-center"
+      data-testid="podakovanie-state-not-found"
+    >
+      <h1
+        className="text-2xl font-bold tracking-tight text-foreground"
+        data-testid="podakovanie-not-found-heading"
+      >
+        {t("not_found_title")}
+      </h1>
       <p className="text-sm leading-relaxed text-muted-foreground">
         {t("not_found_body")}
         <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">
@@ -345,8 +402,16 @@ function NotFoundState() {
 function ErrorState() {
   const t = tFor("podakovanie");
   return (
-    <section className="space-y-4 rounded-2xl border border-destructive/60 bg-card p-8 text-center">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">{t("error_title")}</h1>
+    <section
+      className="space-y-4 rounded-2xl border border-destructive/60 bg-card p-8 text-center"
+      data-testid="podakovanie-state-error"
+    >
+      <h1
+        className="text-2xl font-bold tracking-tight text-foreground"
+        data-testid="podakovanie-error-heading"
+      >
+        {t("error_title")}
+      </h1>
       <p className="text-sm leading-relaxed text-muted-foreground">
         {t("error_body")}
         <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">

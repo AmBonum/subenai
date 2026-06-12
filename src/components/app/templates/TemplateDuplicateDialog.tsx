@@ -52,7 +52,11 @@ export function TemplateDuplicateDialog({
           onDuplicated?.();
         },
         onError: () => {
-          toast.error(t("dialogs.duplicate_error_toast"));
+          toast.error(
+            <span data-testid="toast-templates-duplicate-error">
+              {t("dialogs.duplicate_error_toast")}
+            </span>,
+          );
         },
       },
     );

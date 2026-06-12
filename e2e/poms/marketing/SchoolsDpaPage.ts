@@ -63,11 +63,28 @@ export class SchoolsDpaPage extends BasePage {
     return this.page.getByTestId("schools-dpa-form-submit");
   }
 
+  // Error state (role=alert, shown on submit failure)
+  get formStatus() {
+    return this.page.getByTestId("schools-dpa-form-status");
+  }
+
+  // Success state
+  get formSuccess() {
+    return this.page.getByTestId("schools-dpa-form-success");
+  }
+
   // Feature-flag-OFF branch — fallback
   get featureDisabledFallback() {
     return this.page.getByTestId("schools-dpa-feature-disabled");
   }
   get featureDisabledMailto() {
     return this.page.getByTestId("schools-dpa-feature-disabled-mailto");
+  }
+
+  async fillForm(opts: { name: string; email: string; school: string }): Promise<void> {
+    await this.formName.fill(opts.name);
+    await this.formEmail.fill(opts.email);
+    await this.formSchool.fill(opts.school);
+    await this.formConsent.check();
   }
 }

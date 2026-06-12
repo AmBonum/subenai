@@ -25,4 +25,9 @@ export class NotFoundPage {
   get subheading(): Locator {
     return this.page.getByTestId("not-found-body");
   }
+
+  /** Back-to-home CTA — the way out of the standalone 404 page. */
+  get homeCta(): Locator {
+    return this.page.getByTestId("not-found-home-cta");
+  }
 }

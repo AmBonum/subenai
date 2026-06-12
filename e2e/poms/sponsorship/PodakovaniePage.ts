@@ -97,6 +97,10 @@ export class PodakovaniePage extends BasePage {
     return this.page.getByTestId("podakovanie-portal-error");
   }
 
+  get portalErrorMailtoLink() {
+    return this.page.getByTestId("podakovanie-portal-error").locator('a[href^="mailto:"]');
+  }
+
   // ---------------------------------------------------------------------------
   // Other state headings
   // ---------------------------------------------------------------------------

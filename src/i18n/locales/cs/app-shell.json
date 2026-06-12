@@ -140,7 +140,9 @@
       "owner": "Owner",
       "editor": "Editor",
       "viewer": "Viewer"
-    }
+    },
+    "invite_error": "Pozvánku se nepodařilo odeslat. Zkus to znovu.",
+    "update_role_error": "Změnu role se nepodařilo uložit. Zkus to znovu."
   },
   "notifications": {
     "page_header_eyebrow": "Notifikace",

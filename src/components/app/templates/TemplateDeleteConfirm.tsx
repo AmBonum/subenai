@@ -39,7 +39,9 @@ export function TemplateDeleteConfirm({
         onOpenChange(false);
       },
       onError: () => {
-        toast.error(t("dialogs.delete_error_toast"));
+        toast.error(
+          <span data-testid="toast-templates-delete-error">{t("dialogs.delete_error_toast")}</span>,
+        );
       },
     });
   };

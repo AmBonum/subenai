@@ -58,4 +58,16 @@ export class AppTeamsPage extends BasePage {
   memberRemoveButton(memberId: string) {
     return this.page.getByTestId(`app-teams-member-remove-${memberId}`);
   }
+
+  get inviteErrorToast() {
+    return this.page.getByTestId("toast-teams-invite-error");
+  }
+
+  get updateRoleErrorToast() {
+    return this.page.getByTestId("toast-teams-update-role-error");
+  }
+
+  roleOption(roleName: "Owner" | "Editor" | "Viewer") {
+    return this.page.getByRole("option", { name: new RegExp(roleName, "i") });
+  }
 }

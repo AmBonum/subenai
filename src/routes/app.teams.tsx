@@ -84,7 +84,8 @@ function TeamsPage() {
           toast.success(t("invite_sent", { email }));
           setEmail("");
         },
-        onError: (err) => toast.error(err.message),
+        onError: () =>
+          toast.error(<span data-testid="toast-teams-invite-error">{t("invite_error")}</span>),
       },
     );
   };
@@ -191,7 +192,14 @@ function TeamsPage() {
                     onValueChange={(v) =>
                       updateRoleMut.mutate(
                         { id: m.id, role: v as Role },
-                        { onError: (err) => toast.error(err.message) },
+                        {
+                          onError: () =>
+                            toast.error(
+                              <span data-testid="toast-teams-update-role-error">
+                                {t("update_role_error")}
+                              </span>,
+                            ),
+                        },
                       )
                     }
                   >

@@ -84,11 +84,61 @@ export class AppTemplatesPage extends BasePage {
     return this.page.getByTestId(`templates-card-${id}-use-button`);
   }
 
+  actionMenuTrigger(id: string) {
+    return this.page.getByTestId(`templates-card-${id}-action-menu-trigger`);
+  }
+
+  duplicateActionMenuItem(id: string) {
+    return this.page.getByTestId(`templates-card-${id}-action-duplicate`);
+  }
+
+  deleteActionMenuItem(id: string) {
+    return this.page.getByTestId(`templates-card-${id}-action-delete`);
+  }
+
   get allCards() {
     // Card roots carry `data-template-card="root"` (also used by the
     // page's J/K keyboard navigation) — sub-elements share the
     // `templates-card-` testid prefix, so the data attribute is the only
     // selector that counts whole cards.
     return this.page.locator('[data-template-card="root"]');
+  }
+
+  // Duplicate dialog
+  get duplicateDialog() {
+    return this.page.getByTestId("templates-duplicate-dialog");
+  }
+
+  get duplicateTitleInput() {
+    return this.page.getByTestId("templates-duplicate-dialog-title-input");
+  }
+
+  get duplicateConfirmButton() {
+    return this.page.getByTestId("templates-duplicate-dialog-duplicate-button");
+  }
+
+  get duplicateCancelButton() {
+    return this.page.getByTestId("templates-duplicate-dialog-cancel-button");
+  }
+
+  get duplicateErrorToast() {
+    return this.page.getByTestId("toast-templates-duplicate-error");
+  }
+
+  // Delete dialog
+  get deleteDialog() {
+    return this.page.getByTestId("templates-delete-dialog");
+  }
+
+  get deleteConfirmButton() {
+    return this.page.getByTestId("templates-delete-dialog-confirm-button");
+  }
+
+  get deleteCancelButton() {
+    return this.page.getByTestId("templates-delete-dialog-cancel-button");
+  }
+
+  get deleteErrorToast() {
+    return this.page.getByTestId("toast-templates-delete-error");
   }
 }

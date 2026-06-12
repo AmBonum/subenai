@@ -44,11 +44,15 @@ export function DataExportCard() {
       });
 
       if (response.status === 401) {
-        toast.error(t("error_unauthorized"));
+        toast.error(
+          <span data-testid="toast-data-export-unauthorized-error">{t("error_unauthorized")}</span>,
+        );
         return;
       }
       if (!response.ok) {
-        toast.error(t("error_generic"));
+        toast.error(
+          <span data-testid="toast-data-export-generic-error">{t("error_generic")}</span>,
+        );
         return;
       }
 
@@ -65,7 +69,7 @@ export function DataExportCard() {
 
       toast.success(t("success_toast"));
     } catch {
-      toast.error(t("error_generic"));
+      toast.error(<span data-testid="toast-data-export-generic-error">{t("error_generic")}</span>);
     } finally {
       setPending(false);
     }
