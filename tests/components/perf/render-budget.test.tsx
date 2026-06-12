@@ -10,6 +10,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 
 import { QuestionPicker } from "@/components/composer/build/QuestionPicker";
 import type { Question } from "@/lib/quiz/bank/questions";
+import { recordMetric } from "../../perf/record-metric";
 
 function makeBank(n: number): Question[] {
   return Array.from({ length: n }, (_, i) => ({
@@ -49,6 +50,20 @@ describe("QuestionPicker — DOM stays bounded as the bank scales", () => {
     );
     const bigRows = screen.getByTestId("composer-picker-list").querySelectorAll("li").length;
 
+    recordMetric({
+      suite: "ui-render-budget",
+      name: "DOM rows @100-row bank",
+      metric: "dom-rows",
+      value: smallRows,
+      unit: "rows",
+    });
+    recordMetric({
+      suite: "ui-render-budget",
+      name: "DOM rows @5000-row bank",
+      metric: "dom-rows",
+      value: bigRows,
+      unit: "rows",
+    });
     expect(small).toBe(1);
     expect(smallRows).toBe(10);
     expect(bigRows).toBe(10);
@@ -80,6 +95,15 @@ describe("QuestionPicker — DOM stays bounded as the bank scales", () => {
       <QuestionPicker questions={makeBank(2000)} selectedIds={new Set()} onToggle={vi.fn()} />,
     );
     const elapsed = performance.now() - start;
+    recordMetric({
+      suite: "ui-render-budget",
+      name: "initial render @2000-row bank",
+      metric: "elapsed",
+      value: Math.round(elapsed),
+      unit: "ms",
+      budget: 1500,
+      pass: elapsed < 1500,
+    });
     // Pagination means this should be ~constant work. 1500ms is a loose
     // ceiling that only trips if rendering went O(bank) — not a timing assay.
     expect(elapsed).toBeLessThan(1500);

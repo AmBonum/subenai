@@ -11,6 +11,7 @@
 
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import { recordMetric } from "../../perf/record-metric";
 
 const DEFAULT_PAGE_SIZE = 10;
 // Loose ceilings: only trip if work went O(bank) instead of O(page).
@@ -34,6 +35,15 @@ test.describe("Performance smoke — composer question picker", () => {
     await expect(composer.pickerListItems).toHaveCount(DEFAULT_PAGE_SIZE);
     const elapsed = (await page.evaluate(() => performance.now())) - start;
 
+    recordMetric({
+      suite: "ui-perf",
+      name: "PERF-01 picker open (full bank)",
+      metric: "elapsed",
+      value: Math.round(elapsed),
+      unit: "ms",
+      budget: PICKER_OPEN_BUDGET_MS,
+      pass: elapsed < PICKER_OPEN_BUDGET_MS,
+    });
     expect(elapsed).toBeLessThan(PICKER_OPEN_BUDGET_MS);
   });
 
@@ -55,6 +65,15 @@ test.describe("Performance smoke — composer question picker", () => {
       await expect(composer.pickerListItems).toHaveCount(DEFAULT_PAGE_SIZE);
       worst = Math.max(worst, (await page.evaluate(() => performance.now())) - t0);
     }
+    recordMetric({
+      suite: "ui-perf",
+      name: "PERF-02 page nav (worst of 10 hops)",
+      metric: "elapsed",
+      value: Math.round(worst),
+      unit: "ms",
+      budget: PAGE_NAV_BUDGET_MS,
+      pass: worst < PAGE_NAV_BUDGET_MS,
+    });
     expect(worst).toBeLessThan(PAGE_NAV_BUDGET_MS);
   });
 
@@ -70,6 +89,13 @@ test.describe("Performance smoke — composer question picker", () => {
     // All rows now in the DOM — the count is the bank size, well over a page.
     const allCount = await composer.pickerListItems.count();
     expect(allCount).toBeGreaterThan(DEFAULT_PAGE_SIZE);
+    recordMetric({
+      suite: "ui-perf",
+      name: "PERF-03 full-bank render",
+      metric: "dom-rows",
+      value: allCount,
+      unit: "rows",
+    });
 
     // A scroll to the bottom of the long list must not jank the main thread
     // past the budget (catches a layout-thrash regression on the big list).
@@ -77,6 +103,15 @@ test.describe("Performance smoke — composer question picker", () => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await composer.pickerListItems.last().scrollIntoViewIfNeeded();
     const elapsed = (await page.evaluate(() => performance.now())) - t0;
+    recordMetric({
+      suite: "ui-perf",
+      name: "PERF-03 full-bank scroll-to-bottom",
+      metric: "elapsed",
+      value: Math.round(elapsed),
+      unit: "ms",
+      budget: PAGE_NAV_BUDGET_MS,
+      pass: elapsed < PAGE_NAV_BUDGET_MS,
+    });
     expect(elapsed).toBeLessThan(PAGE_NAV_BUDGET_MS);
   });
 });

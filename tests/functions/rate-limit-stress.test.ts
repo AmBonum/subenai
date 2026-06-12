@@ -16,6 +16,7 @@ import {
   type SupportRateLimitKV,
 } from "../../functions/_lib/security";
 import { onRequestPost } from "../../functions/api/tests/verify-password";
+import { recordMetric } from "../perf/record-metric";
 
 beforeEach(() => {
   security__test__.resetAll();
@@ -58,7 +59,17 @@ describe("ipRateLimit.consume — burst at the boundary", () => {
       Promise.resolve().then(() => ipRateLimit.consume("conc:key", limit, 3600)),
     );
     const settled = await Promise.all(calls);
-    expect(settled.filter(Boolean)).toHaveLength(limit);
+    const allowed = settled.filter(Boolean).length;
+    recordMetric({
+      suite: "stress-ratelimit",
+      name: "ipRateLimit 500 concurrent vs cap 50",
+      metric: "allowed",
+      value: allowed,
+      unit: "passes",
+      budget: limit,
+      pass: allowed === limit,
+    });
+    expect(allowed).toBe(limit);
   });
 });
 
@@ -202,6 +213,15 @@ describe("verify-password — rate-limit stress at the endpoint", () => {
     }
     const blocked = statuses.filter((s) => s === 429).length;
     const allowed = statuses.filter((s) => s === 401).length;
+    recordMetric({
+      suite: "stress-ratelimit",
+      name: "verify-password 60 IPs vs global cap 50",
+      metric: "allowed",
+      value: allowed,
+      unit: "passes",
+      budget: 50,
+      pass: allowed === 50,
+    });
     expect(allowed).toBe(50);
     expect(blocked).toBe(10);
   });
@@ -213,7 +233,17 @@ describe("verify-password — rate-limit stress at the endpoint", () => {
       Array.from({ length: 20 }, () => onRequestPost({ request: buildRequest(ip), env })),
     );
     const statuses = responses.map((r) => r.status);
-    expect(statuses.filter((s) => s === 401)).toHaveLength(5);
+    const admitted = statuses.filter((s) => s === 401).length;
+    recordMetric({
+      suite: "stress-ratelimit",
+      name: "verify-password 20 concurrent (1 IP) vs per-IP cap 5",
+      metric: "admitted",
+      value: admitted,
+      unit: "passes",
+      budget: 5,
+      pass: admitted === 5,
+    });
+    expect(admitted).toBe(5);
     expect(statuses.filter((s) => s === 429)).toHaveLength(15);
   });
 });

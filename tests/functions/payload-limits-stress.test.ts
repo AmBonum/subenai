@@ -10,6 +10,7 @@ import { onRequestPost as ticketCreate } from "../../functions/api/support-ticke
 import { onRequestPost as portalMagicLink } from "../../functions/api/portal-magic-link";
 import { onRequestGet as checkPassword } from "../../functions/api/tests/check-password";
 import { __test__ as security__test__ } from "../../functions/_lib/security";
+import { recordMetric } from "../perf/record-metric";
 
 beforeEach(() => {
   security__test__.resetAll();
@@ -94,6 +95,14 @@ describe("support-ticket-create — oversized fields reject before any side effe
     expect(r.status).toBe(400);
     expect((await r.json()).error).toBe("body_invalid");
     expect(fetchSpy).not.toHaveBeenCalled();
+    recordMetric({
+      suite: "stress-payload",
+      name: "support-ticket-create largest body rejected pre-side-effect",
+      metric: "payload-size",
+      value: huge.length,
+      unit: "bytes",
+      pass: r.status === 400 && fetchSpy.mock.calls.length === 0,
+    });
   });
 
   it("honeypot field set → silent 200 discard, no work done even with a huge body", async () => {
