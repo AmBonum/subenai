@@ -3879,6 +3879,658 @@ export const QUESTIONS: Question[] = [
     explanation:
       'Záložka (bookmark) v prehliadači je najbezpečnejší spôsob — priamo zasiane do prehliadača, nedá sa sfalšovať reklamou. Preskakovanie „Sponzorovaných" výsledkov je dobré, ale nie dostatočné — útočníci platia aj za organické SEO pozície.',
   },
+  // ============ E37 — DB-backed pack questions (ported 2026-06-12) ============
+  // These 30 questions were authored directly in the DB by the E37 unified
+  // migration (20260521280000) for the 6 newer packs (heslo-2fa, ai-deepfake,
+  // socialne-siete, rodicia, skoly, zdravotnictvo) and never existed in this
+  // bank. The composer, ?config= share URLs and /api/test-sets validation all
+  // resolve against THIS file, so the rows are ported here verbatim (prompt,
+  // options, visual, severity) with locally-authored explanations. Their DB
+  // UUIDs were minted from original slugs that were never recorded, so the
+  // uuid<->id bridge lives in an explicit map: src/lib/quiz/bank/db-ids.ts.
+  {
+    id: "e37-2fa-recovery-email-1",
+    category: "phishing",
+    difficulty: "medium",
+    prompt:
+      "Príde ti e-mail z poštovej schránky: „Niekto sa pokúsil obnoviť vaše heslo. Ak ste to neboli vy, kliknite sem a okamžite zabezpečte účet.” Reaguješ?",
+    visual: {
+      kind: "email",
+      from: "Google Bezpečnosť",
+      fromEmail: "no-reply@account-security-notice.com",
+      subject: "Pokus o obnovenie hesla — okamžitá akcia",
+      body: "Zaznamenali sme pokus o obnovenie hesla k vášmu účtu z adresy IP v Moldavsku. Ak ste to neboli vy, kliknite na tlačidlo nižšie a okamžite zabezpečte účet.",
+    },
+    options: [
+      bad("a", "Kliknem na tlačidlo „Zabezpečiť účet” — chcem reagovať rýchlo", "critical"),
+      ok("b", "Otvorím Gmail/Outlook ručne v prehliadači a skontrolujem aktivitu prihlásení"),
+      bad("c", "Odpoviem na e-mail, že to nebol som ja", "medium"),
+    ],
+    explanation:
+      "Útočník sám spustí „obnovenie hesla” a pošle ti falošný „zabezpečovací” link — `account-security-notice.com` nie je doména Googlu. Aktivitu prihlásení kontroluj vždy priamo v účte, nie cez link z e-mailu.",
+  },
+  {
+    id: "e37-2fa-passkey-vs-sms-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "Pri prihlásení do internet bankingu si zadal heslo. Banka ti ponúka dva spôsoby druhého overenia. Ktorý je bezpečnejší voči phishing stránke, ktorá vyzerá rovnako ako tvoja banka?",
+    options: [
+      bad("a", "SMS kód — vidím čo zadávam a môžem ho skontrolovať", "critical"),
+      ok("b", "Passkey alebo Face ID/Touch ID na telefóne"),
+      bad("c", "Obe sú rovnako bezpečné, ide len o pohodlie", "critical"),
+    ],
+    explanation:
+      "SMS kód vieš omylom zadať aj na phishingovej kópii banky — útočník ho v reálnom čase prepošle ďalej. Passkey je kryptograficky viazaný na pravú doménu, na falošnej stránke jednoducho nefunguje.",
+  },
+  {
+    id: "e37-2fa-hibp-fake-1",
+    category: "url",
+    difficulty: "medium",
+    prompt:
+      "Vidíš reklamu: „Vaše heslo bolo uniknuté pri úniku z LinkedIn. Skontrolujte si to na haveibeenpwned.help.” Klikneš a zadáš svoje heslo na overenie?",
+    visual: {
+      kind: "url",
+      url: "https://haveibeenpwned.help/check?utm=ad",
+    },
+    options: [
+      bad("a", "Áno — chcem zistiť, či som postihnutý", "critical"),
+      ok("b", "Nie — pravá služba je haveibeenpwned.com a NIKDY nepýta heslo, len e-mail"),
+      bad("c", "Zadám len e-mail bez hesla, to je bezpečné", "minor"),
+    ],
+    explanation:
+      "Pravá služba je `haveibeenpwned.com` a pýta len e-mail, nikdy heslo. Stránka, ktorá chce heslo „na overenie úniku”, ho práve zbiera.",
+  },
+  {
+    id: "e37-2fa-credential-stuffing-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "Pred rokom unikla databáza fóra, kde si používal rovnaké heslo ako do banky. Dnes banka odmietla tvoje prihlásenie a poslala SMS: „Prihlásenie z neznámeho zariadenia (Sofia, BG)”. Čo sa stalo?",
+    options: [
+      bad("a", "Banka má bezpečnostný problém, počkám pár dní", "critical"),
+      ok(
+        "b",
+        "Útočník skúsil môj e-mail + heslo z úniku aj v banke (credential stuffing). Okamžite zmením heslo a zapnem 2FA",
+      ),
+      bad("c", "Niekto si len pomýlil prihlasovacie údaje", "critical"),
+    ],
+    explanation:
+      "Credential stuffing: e-mail + heslo z úniku fóra útočník skúša vo všetkých službách. Preto sa heslá nikdy neopakujú — okamžite ho zmeň a zapni 2FA.",
+  },
+  {
+    id: "e37-2fa-oauth-consent-1",
+    category: "phishing",
+    difficulty: "hard",
+    prompt:
+      "Po kliknutí na link v e-maili sa zobrazí Google prihlásenie. Prihlásiš sa a Google ukáže obrazovku: „Aplikácia EmailHelper chce: čítať vaše e-maily, posielať e-maily vo vašom mene, spravovať kontakty.” Schvalíš?",
+    options: [
+      bad("a", "Áno — vyzerá to ako oficiálna Google obrazovka", "critical"),
+      ok("b", "Nie — žiadna seriózna aplikácia nepotrebuje plný prístup k mojím e-mailom"),
+      bad(
+        "c",
+        "Áno, ale len pre čítanie — Google mi dovolí vybrať len niektoré oprávnenia",
+        "critical",
+      ),
+    ],
+    explanation:
+      "OAuth consent phishing: prihlasovacia obrazovka je pravá Google, ale plný prístup k e-mailom a odosielaniu „vo tvojom mene” dáva útočníkovi kontrolu nad schránkou bez hesla. Oprávnenia čítaj vždy.",
+  },
+  {
+    id: "e37-2fa-banking-popup-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "Pracuješ v internet bankingu Tatra banky. Zrazu sa otvorí okno: „Vaše prihlásenie vypršalo. Pre pokračovanie sa znovu prihláste.” Pole na heslo je hneď v popupe. Zadáš heslo?",
+    visual: {
+      kind: "url",
+      url: "https://moja.tatrabanka.sk/...",
+      secure: true,
+    },
+    options: [
+      bad("a", "Áno — chcem pokračovať s prácou", "critical"),
+      ok(
+        "b",
+        "Zatvorím okno, obnovím stránku (F5) a prihlásim sa cez bežnú prihlasovaciu obrazovku banky",
+      ),
+      bad("c", "Otvorím inú záložku a zadám tam heslo do banky", "minor"),
+    ],
+    explanation:
+      "Popup s políčkom na heslo uprostred prihlásenej relácie je typický overlay útok (malvér alebo škodlivé rozšírenie). Banka ťa pri vypršaní vráti na štandardnú prihlasovaciu obrazovku — heslo zadávaj len tam.",
+  },
+  {
+    id: "e37-2fa-bitwarden-alert-1",
+    category: "honeypot",
+    difficulty: "medium",
+    prompt:
+      "Príde ti e-mail z Bitwarden: „Nová prihlasovacia aktivita: zariadenie Pixel 7, lokalita Bratislava, čas 14:23.” Tento týždeň si práve nastavil Bitwarden na novom telefóne. Reaguješ?",
+    visual: {
+      kind: "email",
+      from: "Bitwarden",
+      fromEmail: "no-reply@bitwarden.com",
+      subject: "Nová prihlasovacia aktivita",
+      body: "Zaznamenali sme prihlásenie z nového zariadenia. Zariadenie: Pixel 7. Lokalita: Bratislava, SK. Čas: 14:23 SEČ. Ak ste to neboli vy, navštívte Bitwarden a zmente master password.",
+    },
+    options: [
+      bad("a", "Toto je phishing — ignorujem a mažem", "minor"),
+      ok(
+        "b",
+        "Skontrolujem v Bitwarden aplikácii (Settings → Devices) — ak sa zariadenie zhoduje, OK; ak nie, zmením master password",
+      ),
+      bad("c", "Kliknem na link v e-maili a overím, či je to moje zariadenie", "critical"),
+    ],
+    explanation:
+      "Notifikácia sedí s tvojou skutočnou aktivitou a `no-reply@bitwarden.com` je pravá doména — správnosť ale over v aplikácii (Settings → Devices), nie klikom na link. Aj pravý formát e-mailu sa dá napodobniť.",
+  },
+  {
+    id: "e37-ai-spear-invoice-1",
+    category: "phishing",
+    difficulty: "hard",
+    prompt:
+      "Príde ti e-mail s predmetom „Projekt Atlas — finálna verzia faktúry”. V tele sa odvoláva na minulotýždňový workshop, na ktorom si bol, a na pravého kolegu Jana Nováka. Príloha: faktura_atlas.pdf. Otvoríš prílohu?",
+    visual: {
+      kind: "email",
+      from: "Jana Nováková",
+      fromEmail: "jana.novakova@atlas-projekt-2026.com",
+      subject: "Projekt Atlas — finálna verzia faktúry",
+      body: "Ahoj, posielam finálnu faktúru za workshop, ktorý sme robili minulý týždeň v Bratislave (15.05.). Pripomínam, že platba je do konca mesiaca. Ďakujem, Jana",
+    },
+    options: [
+      bad("a", "Áno — kontext sedí, e-mail pôsobí autenticky", "critical"),
+      ok(
+        "b",
+        "Napíšem Janovi na Slack/Teams (nie odpovedať na e-mail) a opýtam sa, či mi posielal faktúru",
+      ),
+      bad(
+        "c",
+        "Otvorím prílohu cez Google Drive preview — to je bezpečnejšie ako stiahnuť",
+        "medium",
+      ),
+    ],
+    explanation:
+      "AI spear-phishing skladá presný kontext (workshop, mená kolegov) z LinkedIn a webu firmy. Kontext už nie je dôkaz pravosti — prílohy over cez nezávislý kanál (Slack/Teams), nie odpoveďou na e-mail.",
+  },
+  {
+    id: "e37-ai-trading-bot-1",
+    category: "scenario",
+    difficulty: "medium",
+    prompt:
+      "Vidíš reklamu na Instagrame: „AI trading bot — 12 % mesačný výnos garantovaný. Náš ChatGPT-poháňaný algoritmus už zarobil 4 000 € pre 12 000 Slovákov.” Klikneš?",
+    options: [
+      bad("a", "Áno — 12 000 overeným Slovákom by som mohol dôverovať", "critical"),
+      ok(
+        "b",
+        "Nie — garantovaný výnos je vždy investičný podvod. Žiadny algoritmus, ani AI, nemá garantovaný zisk",
+      ),
+      bad("c", "Áno, ale vložím len 50 € ako test — keď to funguje, pridám viac", "critical"),
+    ],
+    explanation:
+      "„Garantovaný výnos” neexistuje — to je definícia investičného podvodu a AI marketing na tom nič nemení. Aj „test s 50 €” ťa dostane do ich systému a nasleduje nátlak na vyšší vklad.",
+  },
+  {
+    id: "e37-ai-dating-profile-1",
+    category: "scenario",
+    difficulty: "medium",
+    prompt:
+      "Na zoznamke matchneš s profilom: dokonalá tvár, 28 rokov, ostré detaily. V albume sú 3 fotky v rovnakom svetle bez akýchkoľvek záberov zo života (s rodinou, kamarátmi, z dovolenky). Reaguješ?",
+    options: [
+      bad("a", "Začnem si písať — profil je pekný a pôsobí dôveryhodne", "critical"),
+      ok(
+        "b",
+        "Reverse image search cez Google Lens / Bing. Skontrolujem znaky AI generovania (asymetrické uši, anomálie v pozadí). Ak fotka nikde inde nie je — blokujem",
+      ),
+      bad("c", "Požiadam o video hovor — to dokáže, že je skutočný", "minor"),
+    ],
+    explanation:
+      "AI generovaný profil: dokonalá tvár, rovnaké svetlo, žiadne zábery zo života. Video hovor už nestačí — deepfake beží aj naživo. Reverse image search a anomálie (uši, pozadie) sú spoľahlivejší filter.",
+  },
+  {
+    id: "e37-ai-voice-extortion-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "Príde ti správa s audio nahrávkou. Hlas, ktorý znie ako ty, hovorí kompromitujúce vety. Útočník píše: „Pošli 500 € v Bitcoine alebo nahrávku zverejním tvojim kontaktom.” Hlas znie skutočne. Zareaguješ?",
+    options: [
+      bad("a", "Zaplatím — nahrávka znie príliš autenticky, môže to byť reálne", "critical"),
+      ok(
+        "b",
+        "Neplatím. Hlas mohol byť klonovaný z mojich verejných videí (TikTok, IG, voicemail). Nahlásim na polícii (kybernetická kriminalita) a zablokujem",
+      ),
+      bad(
+        "c",
+        "Odpoviem útočníkovi a požiadam o ukážku celej nahrávky, aby som overil",
+        "critical",
+      ),
+    ],
+    explanation:
+      "Hlas sa dá naklonovať z pár sekúnd verejného videa. Platba ani komunikácia s vydieračom nič nezastavia — ulož dôkazy, blokuj a nahlás kybernetickú kriminalitu polícii.",
+  },
+  {
+    id: "e37-soc-meta-business-1",
+    category: "phishing",
+    difficulty: "hard",
+    prompt:
+      "Tvoja FB stránka má 12 000 sledovateľov. Príde DM od „Meta Business Help”: „Vaša stránka porušila pravidlá. Odvolajte sa do 24h, inak ju zrušíme.” Odkaz: https://meta-business-appeal.com/verify. Klikneš a prihlásiš sa?",
+    visual: {
+      kind: "url",
+      url: "https://meta-business-appeal.com/verify",
+    },
+    options: [
+      bad("a", "Áno — 24h je málo času, musím konať", "critical"),
+      ok(
+        "b",
+        "Nie — Meta ti správy o porušení posiela do Quality / Page Support priamo v Business Suite, nie cez DM. Skontrolujem tam",
+      ),
+      bad("c", "Zatelefonujem na číslo z DM, aby som overil", "critical"),
+    ],
+    explanation:
+      "Meta neposiela upozornenia o porušení pravidiel cez DM — nájdeš ich priamo v Business Suite (Page Support). `meta-business-appeal.com` je phishingová doména na krádež admin prístupu.",
+  },
+  {
+    id: "e37-soc-ig-help-center-1",
+    category: "phishing",
+    difficulty: "medium",
+    prompt:
+      "Dostaneš DM na Instagrame od účtu „instagram_help_center”: „Váš účet porušil naše pravidlá. Odvolajte sa cez tento formulár, inak váš účet zrušíme.” Link vedie na stránku, kde sa máš prihlásiť cez svoje IG údaje. Čo urobíš?",
+    visual: {
+      kind: "url",
+      url: "https://instagram-appeal-form.online/verify",
+    },
+    options: [
+      bad("a", "Vyplním formulár — nechcem stratiť účet", "critical"),
+      ok(
+        "b",
+        "Nahlásim DM ako spam, zablokujem účet. Skutočné Instagram správy o porušení nájdem v Settings → Account Status, nie cez DM",
+      ),
+      bad("c", "Odpoviem na DM s otázkou na detail porušenia", "medium"),
+    ],
+    explanation:
+      "Instagram ti oznámenia o porušení zobrazuje v Settings → Account Status, nikdy cez DM od „help center” účtu. Formulár chce len tvoje prihlasovacie údaje.",
+  },
+  {
+    id: "e37-soc-telegram-invest-1",
+    category: "scenario",
+    difficulty: "medium",
+    prompt:
+      "Niekto ťa pridal do Telegram skupiny „Investovanie SK — premium 2026”. Vidíš screenshoty zárobkov, „mentor” Andrew ponúka VIP signály za 200 € a 80 členov píše, ako už zarobili. Reakcia?",
+    options: [
+      bad("a", "Zaplatím 200 € — 80 ľudí potvrdzuje, že to funguje", "critical"),
+      ok(
+        "b",
+        "Opustím skupinu a nahlásim ju ako spam. 80 „nadšených členov” sú platení boti alebo komparzisti, classic pig-butchering",
+      ),
+      bad("c", "Napíšem mentorovi súkromne, aby som zistil viac", "critical"),
+    ],
+    explanation:
+      "Pig-butchering: screenshoty zárobkov a desiatky „spokojných členov” sú boti alebo komparz. Nikto cudzí ťa nepridáva do skupiny preto, aby ti zarobil peniaze.",
+  },
+  {
+    id: "e37-soc-fb-ad-eshop-1",
+    category: "url",
+    difficulty: "medium",
+    prompt:
+      "Vidíš sponzorovanú reklamu na FB: „Slovenská pošta výpredaj — Apple Watch za 49 €. Posledných 100 ks.” Doména v URL: slovenska-posta-shop.online. Platba kartou. Objednáš?",
+    visual: {
+      kind: "url",
+      url: "https://slovenska-posta-shop.online/apple-watch-49",
+    },
+    options: [
+      bad("a", "Áno — 49 € za hodinky je super deal, riskujem", "critical"),
+      ok(
+        "b",
+        "Nie — pravá Slovenská pošta nepredáva Apple Watch a doména .online je červená vlajka. Reklamu nahlásim FB ako podvod",
+      ),
+      bad("c", "Skontrolujem recenzie eshopu — ak sú dobré, objednám", "medium"),
+    ],
+    explanation:
+      "Slovenská pošta nepredáva elektroniku a „posledných 100 ks” je nátlak na rýchlu platbu. Falošný e-shop má aj falošné recenzie — `*.online` klon štátnej značky rovno nahlás.",
+  },
+  {
+    id: "e37-soc-messenger-kod-1",
+    category: "scenario",
+    difficulty: "medium",
+    prompt:
+      "Na Messengeri ti píše kamarát: „Ahoj, omylom som zadal tvoje číslo pri registrácii. Príde ti SMS s kódom, môžeš mi ho preposlať? Vďaka.” Kód príde. Pošleš?",
+    visual: {
+      kind: "sms",
+      sender: "Google",
+      body: "Váš overovací kód: 884213. Nikomu ho neposielajte.",
+    },
+    options: [
+      bad("a", "Áno — kamarát potrebuje pomoc, nič ma to nestojí", "critical"),
+      ok(
+        "b",
+        "Zatelefonujem kamarátovi cez bežné číslo (nie Messenger) a overím. SMS kód je pravdepodobne moje vlastné 2FA — útočník hackol jeho účet",
+      ),
+      bad("c", "Pošlem kód, ale dopíšem „len pre tebe, nedávaj ďalej”", "critical"),
+    ],
+    explanation:
+      "Účet kamaráta je hacknutý a kód, ktorý ti prišiel, je tvoje vlastné 2FA — preposlaním odovzdáš svoj účet. Over hlasom cez bežný telefonát, nie cez Messenger.",
+  },
+  {
+    id: "e37-soc-fb-2fa-mail-1",
+    category: "honeypot",
+    difficulty: "medium",
+    prompt:
+      "Príde ti e-mail z Facebook (security@facebookmail.com): „Práve si zapol dvojfaktorové overenie. Ak si to nebol ty, klikni sem.” Pred 5 minútami si naozaj 2FA zapínal. Reaguješ?",
+    visual: {
+      kind: "email",
+      from: "Facebook",
+      fromEmail: "security@facebookmail.com",
+      subject: "Dvojfaktorové overenie zapnuté",
+      body: "Práve si na svojom Facebook účte zapol dvojfaktorové overenie. Ak si to nebol ty, klikni sem a okamžite zabezpečte svoj účet.",
+    },
+    options: [
+      bad("a", "Toto je phishing — útočníci ma chcú odvrátiť. Mažem", "minor"),
+      ok(
+        "b",
+        "E-mail z @facebookmail.com je legitímny. Skontrolujem v FB → Settings → Security, či sa zhoduje. Ak áno, OK",
+      ),
+      bad("c", "Pre istotu kliknem na link v e-maili, aby som potvrdil", "critical"),
+    ],
+    explanation:
+      "`security@facebookmail.com` je skutočná odosielacia doména Facebooku a e-mail sedí s akciou, ktorú si práve urobil. Aj tak over v nastaveniach účtu — klik na link v e-maili nie je nikdy nutný.",
+  },
+  {
+    id: "e37-rod-sextortion-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "Tvoja 14-ročná dcéra ti vystrašene ukáže e-mail: „Máme tvoje intímne fotky. Pošli 200 € v Bitcoine, inak ich rozošleme tvojim kontaktom z Instagramu.” Vraj nikomu fotky neposlala. Čo robíš?",
+    visual: {
+      kind: "email",
+      from: "Anonym",
+      fromEmail: "anonym-247@proton.me",
+      subject: "Posledné varovanie",
+      body: "Máme tvoje intímne fotky. Máš 48 hodín. 200 € v Bitcoine na adresu: bc1q... Inak fotky rozošleme všetkým tvojim kontaktom na Instagrame.",
+    },
+    options: [
+      bad("a", "Zaplatíme — chceme to mať z hlavy a nechceme, aby sa rozšírilo", "critical"),
+      ok(
+        "b",
+        "Neplatíme. 99 % sextortion e-mailov je len strašenie bez reálnych fotiek. Uložíme dôkaz (screenshot), nahlásime na Internet hotline (Zodpovedne.sk) a polícii",
+      ),
+      bad("c", "Odpovieme útočníkovi, že to nahlásime, nech vie", "critical"),
+    ],
+    explanation:
+      "Hromadný sextortion bluf — fotky takmer nikdy neexistujú a platba len potvrdí, že adresa žije. Ulož dôkazy, nahlás cez Zodpovedne.sk (Internet hotline) a polícii; dieťa potrebuje podporu, nie výsluch.",
+  },
+  {
+    id: "e37-rod-grooming-1",
+    category: "scenario",
+    difficulty: "medium",
+    prompt:
+      "Pri kontrole dcérinho IG vidíš nové sledovanie: profil „Mia_13_BA”. V DM píše tvojej dcére: „Kde chodíš do školy? Bývam v Petržalke, môžeme sa stretnúť po vyučovaní.” Reaguješ?",
+    options: [
+      bad("a", "Necháme to byť — deti sa online spoznávajú, je to bežné", "critical"),
+      ok(
+        "b",
+        "Profil nahlásime IG (kategória: predator / grooming), zablokujeme. Pravdepodobne dospelý predátor sa vydáva za dieťa. Porozprávame sa s dcérou o stretnutiach z internetu",
+      ),
+      bad("c", "Napíšem samej Mii súkromne, kto je a odkiaľ pozná moju dcéru", "critical"),
+    ],
+    explanation:
+      "Dospelý predátor sa bežne vydáva za rovesníka — otázky na školu a návrh stretnutia sú typické grooming kroky. Nahlás profil, blokuj a otvor s dieťaťom tému stretnutí z internetu.",
+  },
+  {
+    id: "e37-rod-family-link-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "Pri kontrole router logu vidíš, že tvoj 13-ročný syn používa druhý Google účet (firmaXYZ@gmail.com), na ktorý sa nevzťahuje vaša Family Link kontrola. Akcia?",
+    options: [
+      bad("a", "Nič — chce súkromie, chápem", "critical"),
+      ok(
+        "b",
+        "Pokojne sa s ním porozprávame. Family Link sa dá obísť, no dôvody (čas a obsah), prečo ho používame, sú dôležitejšie ako nástroj. Dohodneme nové pravidlá",
+      ),
+      bad("c", "Okamžite mu zatvoríme Wi-Fi pre tablet, nech vie, čo to znamená", "minor"),
+    ],
+    explanation:
+      "Technická kontrola sa vždy dá obísť — druhý účet je signál, že pravidlám nerozumie alebo mu nevyhovujú. Trest bez rozhovoru ho naučí len lepšie sa skrývať.",
+  },
+  {
+    id: "e37-rod-disney-sms-1",
+    category: "phishing",
+    difficulty: "medium",
+    prompt:
+      "Príde ti SMS: „Vaše dieťa Lucia vyhralo víkend v Disneylandu Paris! Aktivujte vstupenku do 24h, inak prepadne: bit.ly/disney-prize-sk”. Reaguješ?",
+    visual: {
+      kind: "sms",
+      sender: "Disney-SK",
+      body: "Vaše dieťa Lucia vyhralo víkend v Disneylandu Paris! Aktivujte vstupenku do 24h, inak prepadne:",
+      link: "https://bit.ly/disney-prize-sk",
+    },
+    options: [
+      bad("a", "Áno — meno dcéry sedí, nemám čo stratiť, ide o výhru", "critical"),
+      ok(
+        "b",
+        "Nie — meno dcéry je zo môjho verejného FB profilu. Disney súťaže neoznamuje cez SMS s bit.ly linkom. SMS nahlásim ako podvod (operátor) a polícii",
+      ),
+      bad("c", "Pošlem link manželovi/manželke, nech sa pozrie", "minor"),
+    ],
+    explanation:
+      "Meno dieťaťa útočník vyčítal z verejných profilov — personalizácia nie je dôkaz. Skutočné súťaže neoznamujú výhru cez SMS s `bit.ly` linkom a 24-hodinový deadline je klasický nátlak.",
+  },
+  {
+    id: "e37-sko-edupage-1",
+    category: "phishing",
+    difficulty: "medium",
+    prompt:
+      "Príde ti ako učiteľovi e-mail: „EduPage — vaše prihlásenie vypršalo. Pre obnovu prístupu k triednej knihe sa znovu prihláste cez tento link.” Doména linku: portal.edupage-sk.com. Klikneš?",
+    visual: {
+      kind: "email",
+      from: "EduPage Support",
+      fromEmail: "no-reply@edupage-sk.com",
+      subject: "Obnovte prístup k triednej knihe",
+      body: "Vaše prihlásenie vypršalo. Pre obnovu prístupu k triednej knihe sa znovu prihláste cez tento link do 24h.",
+    },
+    options: [
+      bad("a", "Áno — koniec polroka, potrebujem prístup k triednej knihe", "critical"),
+      ok(
+        "b",
+        "Nie — pravá EduPage doména je portal.edupage.org. Otvorím EduPage cez záložku v prehliadači a prihlásim sa ručne",
+      ),
+      bad(
+        "c",
+        "Otvorím link na pracovnom notebooku — školské IT to vyrieši, ak je to phishing",
+        "critical",
+      ),
+    ],
+    explanation:
+      "Pravý EduPage beží na `edupage.org` — `edupage-sk.com` je klon na zber učiteľských prístupov k údajom žiakov. Prihlasuj sa cez vlastnú záložku, nie cez linky z e-mailov.",
+  },
+  {
+    id: "e37-sko-eu-dotacia-1",
+    category: "phishing",
+    difficulty: "medium",
+    prompt:
+      "Riaditeľke ZŠ príde e-mail: „EU dotácia pre digitalizáciu škôl 2026 — vaša škola bola predschválená na 18 000 €. Registrujte sa do piatka cez formulár (priložený).” Formulár pýta IBAN školy + jej rodné číslo. Reaguje?",
+    visual: {
+      kind: "email",
+      from: "EU Komisia — Digitalizácia škôl",
+      fromEmail: "grant-2026@eu-digitalisation-program.com",
+      subject: "Predschválená dotácia 18 000 €",
+      body: "Vaša škola bola predschválená na dotáciu 18 000 € z programu Digitálna Európa 2026. Registrujte sa cez priložený formulár do piatka 17:00. Neregistrované školy strácajú nárok.",
+    },
+    options: [
+      bad("a", "Vyplníme — termín je krátky, dotácia veľká, nemôžeme premeškať", "critical"),
+      ok(
+        "b",
+        "Overíme priamo cez MIRRI / Ministerstvo školstva (telefonát na overené číslo, nie z e-mailu). Dotácie sa nikdy nevyhlasujú e-mailom ad-hoc",
+      ),
+      bad("c", "Zavoláme na číslo uvedené v e-maile, aby sme overili", "critical"),
+    ],
+    explanation:
+      "Dotácie sa nevyhlasujú ad-hoc e-mailom s deadline do piatka. Over cez MIRRI / ministerstvo na čísle, ktoré si sám vyhľadáš — kontakt uvedený v podvodnom e-maile patrí útočníkovi.",
+  },
+  {
+    id: "e37-sko-vyzvednutie-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "Recepcii ZŠ volá muž: „Som otec Lucie K. zo 4.A. Manželka ochorela, nemôže prísť po dcéru. Akú má dnes poslednú hodinu a kde čaká po vyučovaní?” V triednej knihe je len matka uvedená ako kontakt. Reaguješ?",
+    visual: {
+      kind: "call",
+      caller: "„Otec Lucie K.”",
+      number: "+421 944 222 333",
+      hint: "Číslo nie je v triednej knihe ako kontakt",
+    },
+    options: [
+      bad("a", "Poviem informácie — otec má právo vedieť detaily o svojom dieťati", "critical"),
+      ok(
+        "b",
+        "Nepoviem nič. „Pán, prosím Vás, dohovorte sa s manželkou alebo s triednou učiteľkou. Informácie o žiakovi neposkytujeme telefonicky.” Zaznamenám hovor",
+      ),
+      bad("c", "Spýtam sa otca na rodné číslo dcéry, ak vie, poviem detaily", "critical"),
+    ],
+    explanation:
+      "Sociálne inžinierstvo na recepcii: rozvrh a miesto čakania dieťaťa sú presne to, čo útočník potrebuje. Informácie o žiakoch sa telefonicky neposkytujú — over cez kontakt v triednej knihe.",
+  },
+  {
+    id: "e37-zdr-erecept-overenie-1",
+    category: "phishing",
+    difficulty: "medium",
+    prompt:
+      "Lekárke v ambulancii príde e-mail: „NCZI — overenie prístupu k eReceptu. Pre pokračovanie v predpisovaní liekov sa do 24h overte cez tento link.” Doména: erecept-overenie.online. Klikne?",
+    visual: {
+      kind: "email",
+      from: "NCZI — eRecept",
+      fromEmail: "no-reply@erecept-overenie.online",
+      subject: "Overenie prístupu k eReceptu — 24h",
+      body: "Z dôvodu kontroly NCZI vás žiadame overiť prístup k eReceptu do 24 hodín. Bez overenia bude prístup pozastavený.",
+    },
+    options: [
+      bad("a", "Áno — bez prístupu nemôžem predpisovať, čas tlačí", "critical"),
+      ok(
+        "b",
+        "Nie — NCZI komunikuje len cez ehealth.gov.sk / nczisk.sk a nikdy nepýta opätovné overenie cez e-mail. Skontrolujem priamo v NCZI portáli alebo zavolám podpore",
+      ),
+      bad(
+        "c",
+        "Otvorím link na mobile (osobnom), aby som neohrozila počítač v ambulancii",
+        "critical",
+      ),
+    ],
+    explanation:
+      "NCZI nikdy nepýta „opätovné overenie” prístupu cez e-mailový link — `erecept-overenie.online` je phishing. Prístup kontroluj priamo na `ehealth.gov.sk` / `nczisk.sk`.",
+  },
+  {
+    id: "e37-zdr-vysledky-call-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "Recepcii ambulancie volá muž: „Som MUDr. Horváth z Onkologického ústavu, máme akútneho pacienta. Pošlite mi laboratórne výsledky pána Kováča (RČ XXXXXX/XXXX) na môj e-mail dr.horvath.onko@gmail.com.” Reaguje?",
+    visual: {
+      kind: "call",
+      caller: "„MUDr. Horváth”",
+      number: "+421 944 555 777",
+      hint: "Číslo nie je z domény Onkologického ústavu",
+    },
+    options: [
+      bad("a", "Pošle — kolega lekár pýta, ide o život pacienta", "critical"),
+      ok(
+        "b",
+        "Nepošle. „Pán doktor, pošlem to cez NCZI eZdravie / našu certifikovanú e-mailovú adresu, gmail.com nie je bezpečný kanál pre zdravotné údaje.” Overí MUDr. Horvátha cez oficiálny kontakt nemocnice",
+      ),
+      bad("c", "Pošle len anonymizované výsledky (bez mena), to je v poriadku", "medium"),
+    ],
+    explanation:
+      "Zdravotné údaje sa neposielajú na `gmail.com` ani na základe telefonátu — totožnosť lekára over cez oficiálnu linku nemocnice a použi certifikovaný kanál (eZdravie). Anonymizácia telefonát nelegitimizuje.",
+  },
+  {
+    id: "e37-zdr-iban-switch-1",
+    category: "phishing",
+    difficulty: "hard",
+    prompt:
+      "Účtovníčke kliniky príde e-mail od dlhoročného dodávateľa zdravotníckeho materiálu: „Zmenili sme banku, nový IBAN: SK21 1100 0000 0029 4612 3784. Faktúru z minulého týždňa (2 850 €) uhraďte na novú adresu.” Doména: dodavatel-sk@medicalsupplies-eu.com (predtým @medicalsupplies.sk). Reaguje?",
+    visual: {
+      kind: "email",
+      from: "MedicalSupplies SK",
+      fromEmail: "dodavatel-sk@medicalsupplies-eu.com",
+      subject: "Zmena bankového účtu — okamžite",
+      body: "Vážená pani účtovníčka, zmenili sme bankového partnera. Prosíme, faktúru č. 2026/0451 (2 850 €) uhraďte na nový IBAN: SK21 1100 0000 0029 4612 3784. Variabilný symbol ostáva. Ďakujem, Peter Kováč",
+    },
+    options: [
+      bad("a", "Uhradí — dodávateľ má právo zmeniť banku, nemusíme komplikovať", "critical"),
+      ok(
+        "b",
+        "Zavolá dodávateľovi cez overené číslo (zo zmluvy, NIE z e-mailu) a overí zmenu IBAN-u. Doména sa nevýrazne zmenila (.sk → -eu.com) — to je BEC útok",
+      ),
+      bad("c", "Uhradí, ale len 50 % ako test", "critical"),
+    ],
+    explanation:
+      "BEC / IBAN-switch: doména dodávateľa sa nenápadne zmenila (`.sk` → `-eu.com`). Každú zmenu účtu over telefonátom na číslo zo zmluvy — nikdy na kontakt z e-mailu. Čiastočná úhrada nie je test.",
+  },
+  {
+    id: "e37-zdr-makro-priloha-1",
+    category: "phishing",
+    difficulty: "hard",
+    prompt:
+      "Sestre na neurológii príde e-mail: „Konzultácia — CT vyšetrenie pacienta Nový. Príloha v Word formáte (.docx) s makrami. Prosíme o promptnú odpoveď.” Pacient „Nový” nie je v ich evidencii. Otvorí?",
+    visual: {
+      kind: "email",
+      from: "MUDr. Šimko",
+      fromEmail: "konzultacia@neuro-clinic-pp.com",
+      subject: "Konzultácia — CT pacient Nový",
+      body: "Dobrý deň, posielam CT pacienta Nový na konzultáciu. Príloha obsahuje makrá pre zobrazenie obrazov (Word). Prosím o promptnú odpoveď.",
+    },
+    options: [
+      bad("a", "Otvorí — môže to byť nový pacient z urgentu, makrá zapnem", "critical"),
+      ok(
+        "b",
+        "Neotvorí. Word s makrami od externého odosielateľa = klasický ransomware vektor. Nahlási IT klinikie a presunie e-mail do karantény",
+      ),
+      bad("c", "Otvorí len v Protected View bez povolenia makier", "medium"),
+    ],
+    explanation:
+      "Word príloha s makrami od externého odosielateľa je klasický ransomware vektor a nemocnice sú top cieľ. Ani Protected View nie je hradba, ak makrá nakoniec povolíš — e-mail patrí IT a do karantény.",
+  },
+  {
+    id: "e37-zdr-nczi-sms-1",
+    category: "phishing",
+    difficulty: "medium",
+    prompt:
+      "Pediatrovi príde SMS: „NCZI: Vaša licencia eRecept vyprší o 48h. Aktualizujte si ju, inak stratíte právo predpisovať: nczi-licencia.sk/update”. Aktualizuje?",
+    visual: {
+      kind: "sms",
+      sender: "NCZI-Info",
+      body: "Vaša licencia eRecept vyprší o 48h. Aktualizujte si ju, inak stratíte právo predpisovať:",
+      link: "https://nczi-licencia.sk/update",
+    },
+    options: [
+      bad("a", "Aktualizuje — bez licencie nemôžem predpisovať, naliehavé", "critical"),
+      ok(
+        "b",
+        "Nie — NCZI a SLEK neoznamujú vypršanie licencie cez SMS s linkom. Prihlási sa do ehealth.gov.sk priamo cez záložku v prehliadači a skontroluje",
+      ),
+      bad("c", "Pošle SMS adminovi kliniky na overenie", "medium"),
+    ],
+    explanation:
+      "NCZI ani SLEK neriešia licencie cez SMS s linkom — `nczi-licencia.sk` je doménový klon. Stav over prihlásením na `ehealth.gov.sk` cez vlastnú záložku.",
+  },
+  {
+    id: "e37-zdr-slovensko-sso-1",
+    category: "honeypot",
+    difficulty: "medium",
+    prompt:
+      "Pri prihlasovaní do eZdravia portálu sa zobrazí presmerovanie na slovensko.sk. URL: https://www.slovensko.sk/sk/eform-prihlasenie?service=ehealth. Pokračuješ?",
+    visual: {
+      kind: "url",
+      url: "https://www.slovensko.sk/sk/eform-prihlasenie?service=ehealth",
+      secure: true,
+    },
+    options: [
+      bad("a", "Nie — presmerovanie na inú doménu je podozrivé, zatvorím", "minor"),
+      ok(
+        "b",
+        "Áno — slovensko.sk je oficiálny štátny SSO. Cez tento bod sa autentikuje aj NCZI eZdravie pre lekárov. Pokračujem s eID",
+      ),
+      bad("c", "Áno — kliknem aj na druhé predložené presmerovanie z neznámej domény", "critical"),
+    ],
+    explanation:
+      "Presmerovanie na `slovensko.sk` je legitímne — je to oficiálne štátne SSO, cez ktoré sa prihlasuje aj eZdravie. Dôležitá je presná doména a HTTPS, nie reflexívne odmietnutie.",
+  },
 ];
 
 const TEST_SIZE = 15;

@@ -40,15 +40,8 @@ test.describe("/test/builder — composer pack chips (TC-22, TC-23, TC-24, TC-25
     await primeConsent(context, "all");
   });
 
-  // APP BUG (2026-06-12, tracked as spawned task "Fix composer pack chips
-  // against DB question IDs"): get_platform_pack_question_ids() returns
-  // UUIDs while the builder resolves them against the local text-id question
-  // bank, so every chip toggle adds ZERO questions (plus 30 DB-only
-  // questions have no local port, and the drift notice only fires on the
-  // first click). TC-22/23/24 are fixme until the reverse-mapping lands;
-  // TC-25 (zero-state copy) still asserts.
   // TC-22: Composer shows 15 pack chips; toggling a chip adds its question IDs to the pool.
-  test.fixme("TC-22: pack-chips section is visible with 15 chips; toggling heslo-2fa adds IDs", async ({
+  test("TC-22: pack-chips section is visible with 15 chips; toggling heslo-2fa adds IDs", async ({
     composer,
   }) => {
     await test.step("Open /test/builder", async () => {
@@ -82,9 +75,7 @@ test.describe("/test/builder — composer pack chips (TC-22, TC-23, TC-24, TC-25
   });
 
   // TC-23: Toggling a composer pack chip OFF removes its IDs.
-  test.fixme("TC-23: toggling heslo-2fa OFF reduces selection count back to 0", async ({
-    composer,
-  }) => {
+  test("TC-23: toggling heslo-2fa OFF reduces selection count back to 0", async ({ composer }) => {
     await test.step("Open /test/builder", async () => {
       await composer.open();
     });
@@ -117,7 +108,7 @@ test.describe("/test/builder — composer pack chips (TC-22, TC-23, TC-24, TC-25
   });
 
   // TC-24: Selecting more than 50 questions triggers the cap notification.
-  test.fixme("TC-24: activating enough pack chips to exceed 50 questions shows cap notice", async ({
+  test("TC-24: activating enough pack chips to exceed 50 questions shows cap notice", async ({
     composer,
   }) => {
     await test.step("Open /test/builder", async () => {

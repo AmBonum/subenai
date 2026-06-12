@@ -123,74 +123,70 @@ export function ComposerPage() {
       const pack = packs.find((p) => p.slug === slug);
       const packIds = packQuestionIds.get(slug);
       if (!pack || !packIds) return;
+      // Next sets are computed synchronously from current state — NOT via
+      // nested functional updaters. The previous shape read drift/cap
+      // counters captured inside a setSelectedIds updater nested in the
+      // setSelectedPackSlugs updater; React only evaluates those eagerly
+      // on the first state transition after mount, so the notice silently
+      // stopped firing on every subsequent toggle.
       setStaleNotice(null);
-      setSelectedPackSlugs((prev) => {
-        const next = new Set(prev);
-        if (next.has(slug)) {
-          next.delete(slug);
-          // Removing pack: drop its IDs but keep IDs still referenced by
-          // another active pack OR added manually (manual = present in
-          // prevIds but never in any pack's questionIds list).
-          setSelectedIds((prevIds) => {
-            const stillReferenced = new Set<string>();
-            for (const otherSlug of next) {
-              packQuestionIds.get(otherSlug)?.forEach((id) => stillReferenced.add(id));
-            }
-            const removed = new Set(packIds);
-            const result = new Set<string>();
-            for (const id of prevIds) {
-              if (!removed.has(id) || stillReferenced.has(id)) result.add(id);
-            }
-            return result;
-          });
-        } else {
-          next.add(slug);
-          // Adding pack: count drift (IDs from DB no longer in the bank)
-          // and enforce the 50-cap. Anything we couldn't fit due to cap
-          // is surfaced separately so the user understands why.
-          let drifted = 0;
-          let capped = 0;
-          setSelectedIds((prevIds) => {
-            const result = new Set(prevIds);
-            for (const id of packIds) {
-              if (!getQuestionById(id)) {
-                drifted += 1;
-                continue;
-              }
-              if (result.size >= COMPOSER_LIMITS.maxQuestions) {
-                capped += 1;
-                continue;
-              }
-              result.add(id);
-            }
-            return result;
-          });
-          // useState batches; we set the notice unconditionally and read
-          // the captured drift/capped after the setState callback returns.
-          if (drifted > 0 || capped > 0) {
-            const parts: string[] = [];
-            if (drifted > 0) {
-              parts.push(
-                t(drifted === 1 ? "pack_drift_singular" : "pack_drift_plural", { n: drifted }),
-              );
-            }
-            if (capped > 0) {
-              parts.push(
-                t(capped === 1 ? "pack_cap_singular" : "pack_cap_plural", {
-                  n: capped,
-                  max: COMPOSER_LIMITS.maxQuestions,
-                }),
-              );
-            }
-            setStaleNotice(
-              t("stale_pack_prefix", { title: pack.title, details: parts.join("; ") }),
+      const nextSlugs = new Set(selectedPackSlugs);
+      let nextIds: Set<string>;
+      if (nextSlugs.has(slug)) {
+        nextSlugs.delete(slug);
+        // Removing pack: drop its IDs but keep IDs still referenced by
+        // another active pack OR added manually (manual = present in
+        // selectedIds but never in any pack's questionIds list).
+        const stillReferenced = new Set<string>();
+        for (const otherSlug of nextSlugs) {
+          packQuestionIds.get(otherSlug)?.forEach((id) => stillReferenced.add(id));
+        }
+        const removed = new Set(packIds);
+        nextIds = new Set<string>();
+        for (const id of selectedIds) {
+          if (!removed.has(id) || stillReferenced.has(id)) nextIds.add(id);
+        }
+      } else {
+        nextSlugs.add(slug);
+        // Adding pack: count drift (IDs from DB no longer in the bank)
+        // and enforce the 50-cap. Anything we couldn't fit due to cap
+        // is surfaced separately so the user understands why.
+        let drifted = 0;
+        let capped = 0;
+        nextIds = new Set(selectedIds);
+        for (const id of packIds) {
+          if (!getQuestionById(id)) {
+            drifted += 1;
+            continue;
+          }
+          if (nextIds.size >= COMPOSER_LIMITS.maxQuestions) {
+            capped += 1;
+            continue;
+          }
+          nextIds.add(id);
+        }
+        if (drifted > 0 || capped > 0) {
+          const parts: string[] = [];
+          if (drifted > 0) {
+            parts.push(
+              t(drifted === 1 ? "pack_drift_singular" : "pack_drift_plural", { n: drifted }),
             );
           }
+          if (capped > 0) {
+            parts.push(
+              t(capped === 1 ? "pack_cap_singular" : "pack_cap_plural", {
+                n: capped,
+                max: COMPOSER_LIMITS.maxQuestions,
+              }),
+            );
+          }
+          setStaleNotice(t("stale_pack_prefix", { title: pack.title, details: parts.join("; ") }));
         }
-        return next;
-      });
+      }
+      setSelectedPackSlugs(nextSlugs);
+      setSelectedIds(nextIds);
     },
-    [packs, packQuestionIds, t],
+    [packs, packQuestionIds, selectedPackSlugs, selectedIds, t],
   );
 
   const toggleQuestion = useCallback((id: string) => {

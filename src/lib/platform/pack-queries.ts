@@ -197,7 +197,14 @@ export async function fetchPlatformPackQuestionIds(): Promise<Map<string, string
   const { data, error } = await supabase.rpc("get_platform_pack_question_ids");
   if (error) throw error;
   const rows = (data ?? []) as unknown as PackQuestionIdsRow[];
-  return new Map(rows.map((r) => [r.slug, r.question_ids]));
+  // The RPC returns question UUIDs (UUIDv5 of the bank slug) but the
+  // composer resolves ids against the local text-id bank — translate at
+  // the fetch boundary. Untranslatable ids pass through unchanged and
+  // surface as drift in the composer notice. Dynamic import keeps the
+  // bank out of the eager /tests chunk (this module sits in its loader).
+  const { getDbUuidToBankIdMap } = await import("@/lib/quiz/bank/db-ids");
+  const toBankId = await getDbUuidToBankIdMap();
+  return new Map(rows.map((r) => [r.slug, r.question_ids.map((id) => toBankId.get(id) ?? id)]));
 }
 
 export function usePlatformPackQuestionIds() {
