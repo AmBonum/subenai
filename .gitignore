@@ -74,3 +74,6 @@ public/blog/rss.xml
 
 # E36 audit visual baseline (binary PNGs, regenerated locally on demand)
 .audit-screenshots/
+
+# LinkedIn card renders (binary PNGs, regenerated via scripts/render-linkedin-cards.mjs)
+marketing/linkedin/rendered/
