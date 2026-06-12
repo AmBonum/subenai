@@ -188,27 +188,28 @@ test.describe("E46.3 — dossier route smoke", () => {
       },
       // The dossier route calls export_user_data_admin RPC; mock the
       // shape the hook expects (subject + records + generated_at).
+      // `records.profile` is a single object and `pending_erasure` rides
+      // inside `records` — mirrors AdminDossierResponse in
+      // src/lib/admin/queries.ts.
       rpcs: {
         export_user_data_admin: () => ({
           subject: { user_id: ALICE_ID, email: ALICE_EMAIL },
           generated_at: "2026-05-21T10:00:00Z",
           records: {
-            profiles: [
-              {
-                id: ALICE_ID,
-                email: ALICE_EMAIL,
-                display_name: "Alice",
-                created_at: "2026-04-01T00:00:00Z",
-              },
-            ],
-            profile_preferences: [],
-            user_roles: [{ user_id: ALICE_ID, role: "user" }],
+            profile: {
+              id: ALICE_ID,
+              email: ALICE_EMAIL,
+              display_name: "Alice",
+              avatar_initials: null,
+              created_at: "2026-04-01T00:00:00Z",
+            },
+            profile_preferences: null,
+            user_roles: [{ user_id: ALICE_ID, role: "user", assigned_by: null }],
             dsr_requests: [aliceDsrOpen],
             dpa_requests: [],
+            pending_erasure: null,
           },
         }),
-        // Pending erasure lookup — no pending row for Alice.
-        get_pending_erasure: () => null,
       },
     });
 

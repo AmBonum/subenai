@@ -4,16 +4,17 @@ import { stubPublicSponsors, makeSponsorRows } from "../../mocks/api/public-spon
 import { stubPortalMagicLink } from "../../mocks/api/portal-magic-link";
 
 // ---------------------------------------------------------------------------
-// /sponsors
+// /sponsors — merged page (M3): heading + hero + the full filterable grid.
+// The former /sponsors/all route is a redirect (covered in the last block).
 // ---------------------------------------------------------------------------
 
-test.describe("/sponsors — latest sponsors index", () => {
+test.describe("/sponsors — merged sponsor list", () => {
   test.beforeEach(async ({ context }) => {
     await primeConsent(context, "all");
   });
 
-  // TC-01: /sponsors renders page heading, hero text, accordion list, and "Celý zoznam s filtrami" link
-  test("TC-01: /sponsors renders heading, hero, accordion list, and all-link", async ({
+  // TC-01: /sponsors renders heading, hero, filters, and the card grid.
+  test("TC-01: /sponsors renders heading, hero, filters, and card grid", async ({
     page,
     sponsors,
   }) => {
@@ -80,15 +81,16 @@ test.describe("/sponsors — latest sponsors index", () => {
       await expect(sponsors.indexHero).toContainText("Vďaka týmto ľuďom funguje subenai");
     });
 
-    await test.step("Verify the latest-sponsors section is visible and contains five accordion items", async () => {
-      await expect(sponsors.indexLatestSection).toBeVisible();
-      await expect(sponsors.indexAccordionItems).toHaveCount(5);
+    await test.step("Verify all four filter controls are visible", async () => {
+      await expect(sponsors.filterName).toBeVisible();
+      await expect(sponsors.filterDateFrom).toBeVisible();
+      await expect(sponsors.filterDateTo).toBeVisible();
+      await expect(sponsors.filterStatus).toBeVisible();
     });
 
-    await test.step("Verify the 'Celý zoznam s filtrami' link pointing to /sponsors/all is visible", async () => {
-      await expect(sponsors.indexAllLink).toBeVisible();
-      await expect(sponsors.indexAllLink).toHaveText(/Celý zoznam s filtrami/);
-      await expect(sponsors.indexAllLink).toHaveAttribute("href", "/sponsors/all");
+    await test.step("Verify the card grid contains five items with the count status", async () => {
+      await expect(sponsors.allCardItems).toHaveCount(5);
+      await expect(sponsors.allCountStatus).toHaveText("Zobrazených 5 (všetkých 5)");
     });
   });
 
@@ -113,9 +115,9 @@ test.describe("/sponsors — latest sponsors index", () => {
       );
     });
 
-    await test.step("Verify the accordion list and all-link are not rendered", async () => {
-      await expect(sponsors.indexLatestSection).not.toBeAttached();
-      await expect(sponsors.indexAllLink).not.toBeAttached();
+    await test.step("Verify the card grid and filters are not rendered", async () => {
+      await expect(sponsors.allCardList).not.toBeAttached();
+      await expect(sponsors.filterName).not.toBeAttached();
     });
   });
 
@@ -145,8 +147,52 @@ test.describe("/sponsors — latest sponsors index", () => {
       await expect(sponsors.indexEmptyCta).toHaveAttribute("href", "/support");
     });
 
-    await test.step("Verify the accordion list is not rendered", async () => {
-      await expect(sponsors.indexLatestSection).not.toBeAttached();
+    await test.step("Verify the card grid and filters are not rendered", async () => {
+      await expect(sponsors.allCardList).not.toBeAttached();
+      await expect(sponsors.filterName).not.toBeAttached();
+    });
+  });
+
+  // TC-07: /sponsors — name filter with no matches shows filtered empty state
+  test("TC-07: /sponsors — name filter with no match shows empty filter state", async ({
+    page,
+    sponsors,
+  }) => {
+    await test.step("Stub Supabase with one record and navigate to /sponsors at 1280×800", async () => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await stubPublicSponsors(page, {
+        status: 200,
+        rows: [
+          {
+            id: "s1",
+            display_name: "Anna Novák",
+            display_link: null,
+            display_message: null,
+            created_at: "2026-04-01T00:00:00Z",
+            has_refund: false,
+          },
+        ],
+      });
+      await sponsors.open();
+    });
+
+    await test.step("Type 'zzz_no_match' into the name search input", async () => {
+      await sponsors.filterName.fill("zzz_no_match");
+    });
+
+    await test.step("Verify the card list disappears", async () => {
+      await expect(sponsors.allCardList).not.toBeAttached();
+    });
+
+    await test.step("Verify the empty-filter message is visible", async () => {
+      await expect(sponsors.allEmptyMessage).toBeVisible();
+      await expect(sponsors.allEmptyMessage).toHaveText(
+        "Nič nezodpovedá filtru. Skús iné meno alebo rok.",
+      );
+    });
+
+    await test.step("Verify the count status region is not shown", async () => {
+      await expect(sponsors.allCountStatus).not.toBeAttached();
     });
   });
 
@@ -172,8 +218,8 @@ test.describe("/sponsors — latest sponsors index", () => {
     });
   });
 
-  // TC-14: /sponsors — sponsor with has_refund=true renders "Vrátené" badge and strikethrough name
-  test("TC-14: /sponsors — refunded sponsor renders 'Vrátené' badge and strikethrough name", async ({
+  // TC-15: /sponsors — "Vrátené" badge and strikethrough render in the card grid
+  test("TC-15: /sponsors — refunded card shows 'Vrátené' badge, strikethrough, and refund note", async ({
     page,
     sponsors,
   }) => {
@@ -184,9 +230,9 @@ test.describe("/sponsors — latest sponsors index", () => {
         rows: [
           {
             id: "r1",
-            display_name: "Refunded Person",
+            display_name: "Refund Corp",
             display_link: null,
-            display_message: null,
+            display_message: "Test message",
             created_at: "2026-05-01T00:00:00Z",
             has_refund: true,
           },
@@ -195,26 +241,25 @@ test.describe("/sponsors — latest sponsors index", () => {
       await sponsors.open();
     });
 
-    await test.step("Click the accordion trigger for 'Refunded Person' to expand it", async () => {
-      await sponsors.accordionTrigger("Refunded Person").click();
+    await test.step("Verify the card for 'Refund Corp' is visible", async () => {
+      await expect(sponsors.allCardItems.first()).toBeVisible();
     });
 
-    await test.step("Verify the 'Vrátené' badge is visible", async () => {
-      await expect(sponsors.indexRefundBadge).toBeVisible();
-      await expect(sponsors.indexRefundBadge).toHaveText("Vrátené");
+    await test.step("Verify the 'Vrátené' badge inside the card has text 'Vrátené'", async () => {
+      await expect(sponsors.allRefundBadge).toBeVisible();
+      await expect(sponsors.allRefundBadge).toHaveText("Vrátené");
     });
 
-    await test.step("Verify the sponsor name has the line-through class applied", async () => {
-      const nameEl = sponsors.indexLatestSection.locator("span.line-through");
-      await expect(nameEl).toBeVisible();
-      await expect(nameEl).toContainText("Refunded Person");
+    await test.step("Verify the heading element for 'Refund Corp' has a line-through style class", async () => {
+      const nameHeading = sponsors.allCardList.locator("h2.line-through");
+      await expect(nameHeading).toBeVisible();
+      await expect(nameHeading).toContainText("Refund Corp");
     });
 
-    await test.step("Verify the expanded content contains the refund notice", async () => {
-      const content = sponsors.indexLatestSection.getByText(
-        /Príspevok bol vrátený na žiadosť prispievateľa\./,
+    await test.step("Verify the card contains the refund note text", async () => {
+      await expect(sponsors.allCardItems.first()).toContainText(
+        "Príspevok bol vrátený na žiadosť prispievateľa.",
       );
-      await expect(content).toBeVisible();
     });
   });
 
@@ -241,22 +286,110 @@ test.describe("/sponsors — latest sponsors index", () => {
       await sponsors.open();
     });
 
-    await test.step("Click the accordion trigger to expand 'Link Sponsor'", async () => {
-      await sponsors.accordionTrigger("Link Sponsor").click();
-    });
-
-    await test.step("Verify the external link has correct href, target=_blank, and rel with noopener and noreferrer", async () => {
-      const link = sponsors.indexLatestSection.locator('a[href="https://example.com"]');
+    await test.step("Verify the sponsor name links out with target=_blank and rel with noopener and noreferrer", async () => {
+      const link = sponsors.allCardList.locator('a[href="https://example.com"]');
       await expect(link).toBeVisible();
+      await expect(link).toContainText("Link Sponsor");
       await expect(link).toHaveAttribute("target", "_blank");
       const rel = await link.getAttribute("rel");
       expect(rel).toContain("noopener");
       expect(rel).toContain("noreferrer");
     });
+  });
 
-    await test.step("Verify the link's visible text is 'example.com' (scheme stripped)", async () => {
-      const link = sponsors.indexLatestSection.locator('a[href="https://example.com"]');
-      await expect(link).toContainText("example.com");
+  // TC-17: /sponsors — status filter "Prijaté" hides refunded records
+  test("TC-17: /sponsors — status filter 'Prijaté' hides refunded records", async ({
+    page,
+    sponsors,
+  }) => {
+    await test.step("Stub Supabase with one active and one refunded record, navigate to /sponsors at 1280×800", async () => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await stubPublicSponsors(page, {
+        status: 200,
+        rows: [
+          {
+            id: "a1",
+            display_name: "Active Sponsor",
+            display_link: null,
+            display_message: null,
+            created_at: "2026-05-01T00:00:00Z",
+            has_refund: false,
+          },
+          {
+            id: "r1",
+            display_name: "Refund Sponsor",
+            display_link: null,
+            display_message: null,
+            created_at: "2026-04-01T00:00:00Z",
+            has_refund: true,
+          },
+        ],
+      });
+      await sponsors.open();
+    });
+
+    await test.step("Change the status select to 'accepted' (option labelled 'Prijaté')", async () => {
+      await sponsors.filterStatus.selectOption("accepted");
+    });
+
+    await test.step("Verify the card for 'Active Sponsor' is visible", async () => {
+      await expect(sponsors.allCardList.getByText("Active Sponsor")).toBeVisible();
+    });
+
+    await test.step("Verify the card for 'Refund Sponsor' is not visible", async () => {
+      await expect(sponsors.allCardList.getByText("Refund Sponsor")).not.toBeAttached();
+    });
+
+    await test.step("Verify the count status text reads 'Zobrazených 1 z 2'", async () => {
+      await expect(sponsors.allCountStatus).toHaveText("Zobrazených 1 z 2");
+    });
+  });
+
+  // TC-18: /sponsors — date-range filter excludes records outside the range
+  test("TC-18: /sponsors — date-from filter excludes records before the date", async ({
+    page,
+    sponsors,
+  }) => {
+    await test.step("Stub Supabase with January and May records, navigate to /sponsors at 1280×800", async () => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await stubPublicSponsors(page, {
+        status: 200,
+        rows: [
+          {
+            id: "j1",
+            display_name: "January Sponsor",
+            display_link: null,
+            display_message: null,
+            created_at: "2026-01-15T00:00:00Z",
+            has_refund: false,
+          },
+          {
+            id: "m1",
+            display_name: "May Sponsor",
+            display_link: null,
+            display_message: null,
+            created_at: "2026-05-10T00:00:00Z",
+            has_refund: false,
+          },
+        ],
+      });
+      await sponsors.open();
+    });
+
+    await test.step("Set 'Od dátumu' filter to 2026-05-01", async () => {
+      await sponsors.filterDateFrom.fill("2026-05-01");
+    });
+
+    await test.step("Verify only the card for 'May Sponsor' is visible", async () => {
+      await expect(sponsors.allCardList.getByText("May Sponsor")).toBeVisible();
+    });
+
+    await test.step("Verify the card for 'January Sponsor' is not visible", async () => {
+      await expect(sponsors.allCardList.getByText("January Sponsor")).not.toBeAttached();
+    });
+
+    await test.step("Verify the count status text reads 'Zobrazených 1 z 2'", async () => {
+      await expect(sponsors.allCountStatus).toHaveText("Zobrazených 1 z 2");
     });
   });
 
@@ -284,8 +417,8 @@ test.describe("/sponsors — latest sponsors index", () => {
     });
   });
 
-  // TC-22: Mobile viewport (375×667) — /sponsors accordion renders without horizontal overflow
-  test("TC-22: Mobile 375×667 — /sponsors accordion renders without horizontal overflow", async ({
+  // TC-22: Mobile viewport (375×667) — /sponsors grid renders without horizontal overflow
+  test("TC-22: Mobile 375×667 — /sponsors grid renders without horizontal overflow", async ({
     page,
     sponsors,
   }) => {
@@ -298,17 +431,55 @@ test.describe("/sponsors — latest sponsors index", () => {
       await sponsors.open();
     });
 
-    await test.step("Verify the latest-sponsors section is visible within the viewport", async () => {
-      await expect(sponsors.indexLatestSection).toBeVisible();
+    await test.step("Verify the card grid is visible within the viewport", async () => {
+      await expect(sponsors.allCardList).toBeVisible();
     });
 
-    await test.step("Verify no horizontal overflow on the document", async () => {
+    await test.step("Verify no horizontal overflow on the page root", async () => {
       const hasOverflow = await sponsors.hasContentHorizontalOverflow("sponzori-index-root");
       expect(hasOverflow).toBe(false);
     });
 
-    await test.step("Verify the 'Celý zoznam s filtrami' link is visible", async () => {
-      await expect(sponsors.indexAllLink).toBeVisible();
+    await test.step("Verify the filter controls are visible", async () => {
+      await expect(sponsors.filterName).toBeVisible();
+    });
+  });
+
+  // TC-24: /sponsors — XSS payload in search query does not execute
+  test("TC-24: /sponsors — XSS payload in name filter does not execute", async ({
+    page,
+    sponsors,
+  }) => {
+    await test.step("Stub Supabase with one record and navigate to /sponsors at 1280×800", async () => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await stubPublicSponsors(page, {
+        status: 200,
+        rows: [
+          {
+            id: "x1",
+            display_name: "Safe Sponsor",
+            display_link: null,
+            display_message: null,
+            created_at: "2026-05-01T00:00:00Z",
+            has_refund: false,
+          },
+        ],
+      });
+      await sponsors.open();
+    });
+
+    await test.step("Type XSS payload into the filter-name input", async () => {
+      await sponsors.filterName.fill("<script>window.__xss=1</script>");
+    });
+
+    await test.step("Verify window.__xss is undefined in the page context", async () => {
+      const marker = await sponsors.xssMarker();
+      expect(marker).toBeUndefined();
+    });
+
+    await test.step("Verify the empty-filter message is displayed without injecting any markup", async () => {
+      await expect(sponsors.allEmptyMessage).toBeVisible();
+      await expect(sponsors.allEmptyMessage).toContainText("Nič nezodpovedá filtru.");
     });
   });
 
@@ -328,20 +499,20 @@ test.describe("/sponsors — latest sponsors index", () => {
 });
 
 // ---------------------------------------------------------------------------
-// /sponsors/all
+// /sponsors/all — legacy URL redirect (M3 merge)
 // ---------------------------------------------------------------------------
 
-test.describe("/sponsors/all — filterable sponsor list", () => {
+test.describe("/sponsors/all — redirects to /sponsors", () => {
   test.beforeEach(async ({ context }) => {
     await primeConsent(context, "all");
   });
 
-  // TC-02: /sponsors/all renders heading, filter controls, and the full card grid
-  test("TC-02: /sponsors/all renders heading, filters, card grid, and count status", async ({
+  // TC-02: the legacy URL lands on the merged /sponsors page with the grid.
+  test("TC-02: /sponsors/all redirects to /sponsors and renders the merged grid", async ({
     page,
     sponsors,
   }) => {
-    await test.step("Stub Supabase with three sponsor records and navigate to /sponsors/all at 1280×800", async () => {
+    await test.step("Stub Supabase with three records and navigate to the legacy /sponsors/all URL", async () => {
       await page.setViewportSize({ width: 1280, height: 800 });
       await stubPublicSponsors(page, {
         status: 200,
@@ -350,287 +521,13 @@ test.describe("/sponsors/all — filterable sponsor list", () => {
       await sponsors.openAll();
     });
 
-    await test.step("Verify document.title equals 'Všetci sponzori — subenai'", async () => {
-      await expect(page).toHaveTitle("Všetci sponzori — subenai");
-    });
-
-    await test.step("Verify the h1 heading 'Všetci sponzori' is visible", async () => {
-      await expect(sponsors.allHeading).toBeVisible();
-      await expect(sponsors.allHeading).toHaveText("Všetci sponzori");
-    });
-
-    await test.step("Verify all four filter controls are visible", async () => {
-      await expect(sponsors.filterName).toBeVisible();
-      await expect(sponsors.filterDateFrom).toBeVisible();
-      await expect(sponsors.filterDateTo).toBeVisible();
-      await expect(sponsors.filterStatus).toBeVisible();
-    });
-
-    await test.step("Verify the card list contains three items", async () => {
-      await expect(sponsors.allCardItems).toHaveCount(3);
-    });
-
-    await test.step("Verify the count status text reads 'Zobrazených 3 (všetkých 3)'", async () => {
-      await expect(sponsors.allCountStatus).toBeVisible();
-      await expect(sponsors.allCountStatus).toHaveText("Zobrazených 3 (všetkých 3)");
-    });
-  });
-
-  // TC-07: /sponsors/all — name filter with no matches shows filtered empty state
-  test("TC-07: /sponsors/all — name filter with no match shows empty filter state", async ({
-    page,
-    sponsors,
-  }) => {
-    await test.step("Stub Supabase with one record and navigate to /sponsors/all at 1280×800", async () => {
-      await page.setViewportSize({ width: 1280, height: 800 });
-      await stubPublicSponsors(page, {
-        status: 200,
-        rows: [
-          {
-            id: "s1",
-            display_name: "Anna Novák",
-            display_link: null,
-            display_message: null,
-            created_at: "2026-04-01T00:00:00Z",
-            has_refund: false,
-          },
-        ],
-      });
-      await sponsors.openAll();
-    });
-
-    await test.step("Type 'zzz_no_match' into the name search input", async () => {
-      await sponsors.filterName.fill("zzz_no_match");
-    });
-
-    await test.step("Verify the card list disappears", async () => {
-      await expect(sponsors.allCardList).not.toBeAttached();
-    });
-
-    await test.step("Verify the empty-filter message is visible", async () => {
-      await expect(sponsors.allEmptyMessage).toBeVisible();
-      await expect(sponsors.allEmptyMessage).toHaveText(
-        "Nič nezodpovedá filtru. Skús iné meno alebo rok.",
-      );
-    });
-
-    await test.step("Verify the count status region is not shown", async () => {
-      await expect(sponsors.allCountStatus).not.toBeAttached();
-    });
-  });
-
-  // TC-13: /sponsors/all — robots meta is "index, follow" and canonical points to /sponsors/all
-  test("TC-13: /sponsors/all — robots meta is 'index, follow' and canonical is correct", async ({
-    page,
-    sponsors,
-  }) => {
-    await test.step("Stub Supabase with empty array and navigate to /sponsors/all at 1280×800", async () => {
-      await page.setViewportSize({ width: 1280, height: 800 });
-      await stubPublicSponsors(page, { status: 200, rows: [] });
-      await sponsors.openAll();
-    });
-
-    await test.step("Verify meta[name='robots'] content equals 'index, follow'", async () => {
-      const robots = await sponsors.robotsContent();
-      expect(robots).toBe("index, follow");
-    });
-
-    await test.step("Verify link[rel='canonical'] href equals 'https://subenai.sk/sponsors/all'", async () => {
-      const canonical = await sponsors.canonicalHref();
-      expect(canonical).toBe("https://subenai.sk/sponsors/all");
-    });
-  });
-
-  // TC-15: /sponsors/all — "Vrátené" badge and strikethrough render in card grid
-  test("TC-15: /sponsors/all — refunded card shows 'Vrátené' badge, strikethrough, and refund note", async ({
-    page,
-    sponsors,
-  }) => {
-    await test.step("Stub Supabase with one refunded record and navigate to /sponsors/all at 1280×800", async () => {
-      await page.setViewportSize({ width: 1280, height: 800 });
-      await stubPublicSponsors(page, {
-        status: 200,
-        rows: [
-          {
-            id: "r1",
-            display_name: "Refund Corp",
-            display_link: null,
-            display_message: "Test message",
-            created_at: "2026-05-01T00:00:00Z",
-            has_refund: true,
-          },
-        ],
-      });
-      await sponsors.openAll();
-    });
-
-    await test.step("Verify the card for 'Refund Corp' is visible", async () => {
-      await expect(sponsors.allCardItems.first()).toBeVisible();
-    });
-
-    await test.step("Verify the 'Vrátené' badge inside the card has text 'Vrátené'", async () => {
-      await expect(sponsors.allRefundBadge).toBeVisible();
-      await expect(sponsors.allRefundBadge).toHaveText("Vrátené");
-    });
-
-    await test.step("Verify the heading element for 'Refund Corp' has a line-through style class", async () => {
-      const nameHeading = sponsors.allCardList.locator("h2.line-through");
-      await expect(nameHeading).toBeVisible();
-      await expect(nameHeading).toContainText("Refund Corp");
-    });
-
-    await test.step("Verify the card contains the refund note text", async () => {
-      await expect(sponsors.allCardItems.first()).toContainText(
-        "Príspevok bol vrátený na žiadosť prispievateľa.",
-      );
-    });
-  });
-
-  // TC-17: /sponsors/all — status filter "Prijaté" hides refunded records
-  test("TC-17: /sponsors/all — status filter 'Prijaté' hides refunded records", async ({
-    page,
-    sponsors,
-  }) => {
-    await test.step("Stub Supabase with one active and one refunded record, navigate to /sponsors/all at 1280×800", async () => {
-      await page.setViewportSize({ width: 1280, height: 800 });
-      await stubPublicSponsors(page, {
-        status: 200,
-        rows: [
-          {
-            id: "a1",
-            display_name: "Active Sponsor",
-            display_link: null,
-            display_message: null,
-            created_at: "2026-05-01T00:00:00Z",
-            has_refund: false,
-          },
-          {
-            id: "r1",
-            display_name: "Refund Sponsor",
-            display_link: null,
-            display_message: null,
-            created_at: "2026-04-01T00:00:00Z",
-            has_refund: true,
-          },
-        ],
-      });
-      await sponsors.openAll();
-    });
-
-    await test.step("Change the status select to 'accepted' (option labelled 'Prijaté')", async () => {
-      await sponsors.filterStatus.selectOption("accepted");
-    });
-
-    await test.step("Verify the card for 'Active Sponsor' is visible", async () => {
-      await expect(sponsors.allCardList.getByText("Active Sponsor")).toBeVisible();
-    });
-
-    await test.step("Verify the card for 'Refund Sponsor' is not visible", async () => {
-      await expect(sponsors.allCardList.getByText("Refund Sponsor")).not.toBeAttached();
-    });
-
-    await test.step("Verify the count status text reads 'Zobrazených 1 z 2'", async () => {
-      await expect(sponsors.allCountStatus).toHaveText("Zobrazených 1 z 2");
-    });
-  });
-
-  // TC-18: /sponsors/all — date-range filter excludes records outside the range
-  test("TC-18: /sponsors/all — date-from filter excludes records before the date", async ({
-    page,
-    sponsors,
-  }) => {
-    await test.step("Stub Supabase with January and May records, navigate to /sponsors/all at 1280×800", async () => {
-      await page.setViewportSize({ width: 1280, height: 800 });
-      await stubPublicSponsors(page, {
-        status: 200,
-        rows: [
-          {
-            id: "j1",
-            display_name: "January Sponsor",
-            display_link: null,
-            display_message: null,
-            created_at: "2026-01-15T00:00:00Z",
-            has_refund: false,
-          },
-          {
-            id: "m1",
-            display_name: "May Sponsor",
-            display_link: null,
-            display_message: null,
-            created_at: "2026-05-10T00:00:00Z",
-            has_refund: false,
-          },
-        ],
-      });
-      await sponsors.openAll();
-    });
-
-    await test.step("Set 'Od dátumu' filter to 2026-05-01", async () => {
-      await sponsors.filterDateFrom.fill("2026-05-01");
-    });
-
-    await test.step("Verify only the card for 'May Sponsor' is visible", async () => {
-      await expect(sponsors.allCardList.getByText("May Sponsor")).toBeVisible();
-    });
-
-    await test.step("Verify the card for 'January Sponsor' is not visible", async () => {
-      await expect(sponsors.allCardList.getByText("January Sponsor")).not.toBeAttached();
-    });
-
-    await test.step("Verify the count status text reads 'Zobrazených 1 z 2'", async () => {
-      await expect(sponsors.allCountStatus).toHaveText("Zobrazených 1 z 2");
-    });
-  });
-
-  // TC-24: /sponsors/all — XSS payload in search query does not execute
-  test("TC-24: /sponsors/all — XSS payload in name filter does not execute", async ({
-    page,
-    sponsors,
-  }) => {
-    await test.step("Stub Supabase with one record and navigate to /sponsors/all at 1280×800", async () => {
-      await page.setViewportSize({ width: 1280, height: 800 });
-      await stubPublicSponsors(page, {
-        status: 200,
-        rows: [
-          {
-            id: "x1",
-            display_name: "Safe Sponsor",
-            display_link: null,
-            display_message: null,
-            created_at: "2026-05-01T00:00:00Z",
-            has_refund: false,
-          },
-        ],
-      });
-      await sponsors.openAll();
-    });
-
-    await test.step("Type XSS payload into the filter-name input", async () => {
-      await sponsors.filterName.fill("<script>window.__xss=1</script>");
-    });
-
-    await test.step("Verify window.__xss is undefined in the page context", async () => {
-      const marker = await sponsors.xssMarker();
-      expect(marker).toBeUndefined();
-    });
-
-    await test.step("Verify the empty-filter message is displayed without injecting any markup", async () => {
-      await expect(sponsors.allEmptyMessage).toBeVisible();
-      await expect(sponsors.allEmptyMessage).toContainText("Nič nezodpovedá filtru.");
-    });
-  });
-
-  // TC-26: /sponsors/all — "← Späť na najnovších sponzorov" back link navigates to /sponsors
-  test("TC-26: /sponsors/all — back link navigates to /sponsors", async ({ page, sponsors }) => {
-    await test.step("Stub Supabase with empty array and navigate to /sponsors/all at 1280×800", async () => {
-      await page.setViewportSize({ width: 1280, height: 800 });
-      await stubPublicSponsors(page, { status: 200, rows: [] });
-      await sponsors.openAll();
-    });
-
-    await test.step("Click '← Späť na najnovších sponzorov' and verify navigation to /sponsors", async () => {
-      await sponsors.allBackLink.click();
+    await test.step("Verify the URL is /sponsors (no /all)", async () => {
       await expect(page).toHaveURL(/\/sponsors\/?$/);
+    });
+
+    await test.step("Verify the merged page heading and grid render", async () => {
+      await expect(sponsors.indexHeading).toHaveText("Naši sponzori");
+      await expect(sponsors.allCardItems).toHaveCount(3);
     });
   });
 });

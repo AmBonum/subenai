@@ -1,7 +1,7 @@
 import { test, expect } from "../../fixtures/base";
 import { setupAppShell } from "../../setup/app-shell";
 import { ADMIN_SESSION } from "../../fixtures/auth";
-import { seedTickets, cleanupSeeds } from "../../../tests/fixtures/seed-tickets";
+import { seedSupportTicket, supportTicketTables } from "../../seed";
 
 // E48-v3 — Sortable column headers in the admin tickets queue.
 //
@@ -11,30 +11,33 @@ import { seedTickets, cleanupSeeds } from "../../../tests/fixtures/seed-tickets"
 //   - third click → no sort indicator (reset), URL has no sort param for that col
 //   - clicking column A while B is sorted clears B's indicator (mutual exclusivity)
 //
-// Requires SUPABASE_SERVICE_ROLE_KEY + E2E_ALLOW_NONLOCAL_SEED=1 for prod.
+// Runs fully against the Supabase mock — the queue reads the
+// `support_tickets_with_assignees` view, so the seed populates both the
+// table and the view via `supportTicketTables`.
 
-const WORKER = Number(process.env.TEST_WORKER_INDEX ?? 0);
+const SORTABLE_COLUMNS = ["created_at", "subject", "status", "category"] as const;
 
-const SORTABLE_COLUMNS = ["created_at", "updated_at", "status", "category"] as const;
-
-let ticketIds: string[] = [];
-
-test.beforeAll(async () => {
-  ticketIds = await seedTickets(WORKER);
-});
-
-test.afterAll(async () => {
-  await cleanupSeeds(WORKER);
-});
+function buildRows() {
+  return [
+    seedSupportTicket({ status: "new", category: "bug", subject: "Alpha sort row" }),
+    seedSupportTicket({
+      status: "in_progress",
+      category: "question",
+      subject: "Beta sort row",
+      created_at: "2026-05-20T10:00:00.000Z",
+    }),
+  ];
+}
 
 test.describe("E48-v3 — sortable column headers in queue", () => {
   test.beforeEach(async ({ context, page }) => {
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
-      extras: { rpcs: { has_role: true } },
+      extras: {
+        tables: supportTicketTables(buildRows()),
+        rpcs: { has_role: true },
+      },
     });
-    // Suppress unused variable warning — ticketIds referenced to ensure seed ran
-    void ticketIds;
   });
 
   for (const column of SORTABLE_COLUMNS) {
@@ -46,20 +49,23 @@ test.describe("E48-v3 — sortable column headers in queue", () => {
       const sortBtn = adminTicketsQueue.columnSortButton(column);
       const sortIndicator = adminTicketsQueue.columnSortIndicator(column);
 
+      // The indicator is always rendered; its `data-direction` attribute
+      // carries the cycle state (none → asc → desc → none).
+
       // First click — ASC
       await sortBtn.click();
-      await expect(sortIndicator).toBeVisible();
-      expect(page.url()).toContain(`sort=${column}:asc`);
+      await expect(sortIndicator).toHaveAttribute("data-direction", "asc");
+      expect(decodeURIComponent(page.url())).toContain(`sort=${column}:asc`);
 
       // Second click — DESC
       await sortBtn.click();
-      await expect(sortIndicator).toBeVisible();
-      expect(page.url()).toContain(`sort=${column}:desc`);
+      await expect(sortIndicator).toHaveAttribute("data-direction", "desc");
+      expect(decodeURIComponent(page.url())).toContain(`sort=${column}:desc`);
 
       // Third click — no sort
       await sortBtn.click();
-      await expect(sortIndicator).toBeHidden();
-      expect(page.url()).not.toContain(`sort=${column}`);
+      await expect(sortIndicator).toHaveAttribute("data-direction", "none");
+      expect(decodeURIComponent(page.url())).not.toContain(`sort=${column}`);
     });
   }
 
@@ -71,12 +77,21 @@ test.describe("E48-v3 — sortable column headers in queue", () => {
 
     const [colA, colB] = SORTABLE_COLUMNS;
     await adminTicketsQueue.columnSortButton(colA).click();
-    await expect(adminTicketsQueue.columnSortIndicator(colA)).toBeVisible();
-    expect(page.url()).toContain(`sort=${colA}:asc`);
+    await expect(adminTicketsQueue.columnSortIndicator(colA)).toHaveAttribute(
+      "data-direction",
+      "asc",
+    );
+    expect(decodeURIComponent(page.url())).toContain(`sort=${colA}:asc`);
 
     await adminTicketsQueue.columnSortButton(colB).click();
-    await expect(adminTicketsQueue.columnSortIndicator(colB)).toBeVisible();
-    await expect(adminTicketsQueue.columnSortIndicator(colA)).toBeHidden();
-    expect(page.url()).not.toContain(`sort=${colA}`);
+    await expect(adminTicketsQueue.columnSortIndicator(colB)).toHaveAttribute(
+      "data-direction",
+      "asc",
+    );
+    await expect(adminTicketsQueue.columnSortIndicator(colA)).toHaveAttribute(
+      "data-direction",
+      "none",
+    );
+    expect(decodeURIComponent(page.url())).not.toContain(`sort=${colA}`);
   });
 });

@@ -367,4 +367,117 @@ test.describe("/app dashboard", () => {
       await expect(dash.statTestsValue).toHaveText("1");
     });
   });
+
+  // TC-11 (M4): the single "Pre teba" rail replaces the four retention
+  // cards — rows link into the /app/insights tabs.
+  test("TC-11: 'Pre teba' rail shows rows linking to insights tabs when loops have data", async ({
+    page,
+  }) => {
+    const test1 = seedTest({
+      owner_id: EDUCATOR_SESSION.user.id,
+      status: "published",
+      title: "E2E Published Test",
+    });
+    await setupEducator(page.context(), page, {
+      tables: {
+        tests: [test1],
+        sessions: [],
+        respondents: [],
+        user_digests: [
+          {
+            id: "digest-01",
+            period_start: "2026-05-12T00:00:00.000Z",
+            period_end: "2026-05-18T23:59:59.000Z",
+            stats: { sessions_count: 5, completion_rate: 80 },
+            generated_at: "2026-05-19T00:00:00.000Z",
+            opened_at: null,
+          },
+        ],
+        retest_reminders: [
+          {
+            id: "retest-01",
+            test_id: test1.id,
+            last_score: 72,
+            sessions_count: 3,
+            last_session_at: "2026-02-01T00:00:00.000Z",
+            remind_after: "2026-01-01",
+            dismissed_at: null,
+            snoozed_until: null,
+            retested_at: null,
+            test: { id: test1.id, title: "E2E Published Test", status: "published" },
+          },
+        ],
+        course_recommendations: [],
+      },
+      rpcs: {
+        get_peer_card: { has_data: false, reason: "insufficient_cohort" },
+      },
+    });
+
+    const dash = new AppDashboardPage(page);
+
+    await test.step("Open the dashboard", async () => {
+      await dash.open();
+    });
+
+    await test.step("Verify the 'Pre teba' rail card is visible with its title", async () => {
+      await expect(dash.insightsCard).toBeVisible();
+      await expect(dash.insightsCardTitle).toHaveText("Pre teba");
+    });
+
+    await test.step("Verify the digest row links to /app/insights?tab=digest", async () => {
+      await expect(dash.insightsCardLink("digest")).toHaveAttribute(
+        "href",
+        "/app/insights?tab=digest",
+      );
+    });
+
+    await test.step("Verify the retest row links to /app/insights?tab=retest", async () => {
+      await expect(dash.insightsCardLink("retest")).toHaveAttribute(
+        "href",
+        "/app/insights?tab=retest",
+      );
+    });
+
+    await test.step("Verify loops without data render no row (recommendations, peer)", async () => {
+      await expect(dash.insightsCardLink("recommendations")).toHaveCount(0);
+      await expect(dash.insightsCardLink("peer")).toHaveCount(0);
+    });
+  });
+
+  // TC-12 (M4): no retention data at all → the rail hides entirely, keeping
+  // the dashboard compact.
+  test("TC-12: 'Pre teba' rail is hidden when no retention loop has data", async ({ page }) => {
+    const test1 = seedTest({
+      owner_id: EDUCATOR_SESSION.user.id,
+      status: "published",
+    });
+    await setupEducator(page.context(), page, {
+      tables: {
+        tests: [test1],
+        sessions: [],
+        respondents: [],
+        user_digests: [],
+        retest_reminders: [],
+        course_recommendations: [],
+      },
+      rpcs: {
+        get_peer_card: { has_data: false, reason: "insufficient_cohort" },
+      },
+    });
+
+    const dash = new AppDashboardPage(page);
+
+    await test.step("Open the dashboard", async () => {
+      await dash.open();
+    });
+
+    await test.step("Verify the populated branch renders (stats visible)", async () => {
+      await expect(dash.statsSection).toBeVisible();
+    });
+
+    await test.step("Verify the 'Pre teba' rail is not attached", async () => {
+      await expect(dash.insightsCard).toHaveCount(0);
+    });
+  });
 });

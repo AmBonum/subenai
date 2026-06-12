@@ -91,14 +91,14 @@ test.describe("/blog/$slug — public article detail", () => {
     });
 
     await test.step("Verify the verbatim Slovak not-found copy", async () => {
-      await expect(article.notFoundTitle).toHaveText("tento článok neexistuje");
+      await expect(article.notFoundTitle).toHaveText("Tento článok neexistuje");
       await expect(article.notFoundDescription).toHaveText(
-        "možno bol presunutý alebo zmazaný. skús sa pozrieť na zoznam článkov.",
+        "Možno bol presunutý alebo zmazaný. Skús sa pozrieť na zoznam článkov.",
       );
     });
 
     await test.step("Verify the back link points to /blog", async () => {
-      await expect(article.notFoundBackLink).toHaveText("späť na blog");
+      await expect(article.notFoundBackLink).toHaveText("← Späť do akadémie");
       await expect(article.notFoundBackLink).toHaveAttribute("href", "/blog");
     });
 

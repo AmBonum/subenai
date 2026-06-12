@@ -30,6 +30,25 @@ import { IntakeFormPage } from "../../poms/edu/IntakeFormPage";
 import { ResultsGatePage } from "../../poms/edu/ResultsGatePage";
 import { QuizFlowPage } from "../../poms/quiz/QuizFlowPage";
 
+// Whole suite needs the CF Pages functions runtime (`npm run dev:api`,
+// wrangler on :8788 behind the vite /api proxy). Same runtime guard as
+// e2e/specs/security/api-headers-live.spec.ts — skip, don't fail, when
+// it isn't running.
+const WRANGLER_BASE = "http://localhost:8788";
+
+test.beforeEach(async ({ request }) => {
+  let reachable = false;
+  try {
+    reachable = (await request.head(WRANGLER_BASE)).status() > 0;
+  } catch {
+    reachable = false;
+  }
+  test.skip(
+    !reachable,
+    `Skipping: wrangler at ${WRANGLER_BASE} not reachable. Run \`npm run dev:api\` first.`,
+  );
+});
+
 // ---------------------------------------------------------------------------
 // Helpers — duplicated from schools-howitworks-contract.spec.ts because both
 // specs need them and the 3rd-reuser threshold for extraction hasn't been

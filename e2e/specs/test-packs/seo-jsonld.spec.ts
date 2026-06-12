@@ -1,5 +1,6 @@
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import { platformPacksAvailable, PACKS_SKIP_MESSAGE } from "../../fixtures/platform-packs";
 import type { DocumentHead } from "../../poms/shared/DocumentHead";
 
 /**
@@ -70,9 +71,11 @@ test.describe("/tests catalog — SEO JSON-LD blobs (TC-14)", () => {
   });
 
   test("ItemList carries non-empty itemListElement of /tests/<slug> URLs", async ({
+    request,
     docHead,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await testsDirectory.index.open();
     const blobs = await readJsonLdBlobs(docHead);
     const itemList = blobs.find((b) => b["@type"] === "ItemList");
@@ -106,9 +109,11 @@ test.describe("/tests/$slug — SEO JSON-LD blob (TC-15)", () => {
   });
 
   test("detail page emits Quiz JSON-LD with pack title + slug-canonical URL", async ({
+    request,
     docHead,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await testsDirectory.pack.open("heslo-2fa");
     const blobs = await readJsonLdBlobs(docHead);
     const quiz = blobs.find((b) => b["@type"] === "Quiz");
@@ -120,7 +125,12 @@ test.describe("/tests/$slug — SEO JSON-LD blob (TC-15)", () => {
     expect(url).toMatch(/\/tests\/heslo-2fa$/);
   });
 
-  test("detail page sets canonical link to the slug URL", async ({ docHead, testsDirectory }) => {
+  test("detail page sets canonical link to the slug URL", async ({
+    request,
+    docHead,
+    testsDirectory,
+  }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await testsDirectory.pack.open("heslo-2fa");
     const canonical = await docHead.canonicalHref();
     expect(canonical).toMatch(/\/tests\/heslo-2fa$/);

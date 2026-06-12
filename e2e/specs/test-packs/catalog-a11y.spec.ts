@@ -1,5 +1,6 @@
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import { platformPacksAvailable, PACKS_SKIP_MESSAGE } from "../../fixtures/platform-packs";
 
 /**
  * E37 — /tests catalog accessibility verification (Phase I outputs).
@@ -13,6 +14,13 @@ import { primeConsent } from "../../fixtures/consent";
  *   - aria-live="polite" on the result-count badge
  *   - <ul role="list"> wrapper around the grid
  */
+
+// Environment guard — these TCs read live pack rows (no mock layer);
+// skip loudly when the configured Supabase project has no published
+// platform packs. See e2e/fixtures/platform-packs.ts.
+test.beforeEach(async ({ request }) => {
+  test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
+});
 
 test.describe("/tests catalog — accessibility (Phase I)", () => {
   test.beforeEach(async ({ context }) => {

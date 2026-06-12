@@ -321,9 +321,9 @@ Admin reply auto-transition: replying from the detail composer flips `status →
 
 | ID | Title | Type | Spec file | POM(s) | Cleanup |
 |---|---|---|---|---|---|
-| H-01 | Anon submission → confirmation email: subject "Vašu žiadosť o podporu sme prijali — {ticketId}"; view URL with token; ticket id in body | integration | `email-contracts.spec.ts` | — | No |
-| H-02 | Admin reply → submitter notification: subject "Re: vaša žiadosť o podporu — {ticketId}"; view URL with FRESH token; admin reply body present | integration | `email-contracts.spec.ts` | — | No |
-| H-03 | Status transition to resolved → "Vaša žiadosť o podporu bola uzavretá — {ticketId}" email sent to submitter | integration | `email-contracts.spec.ts` | — | No |
+| H-01 | Anon submission → confirmation email: subject "Tvoju žiadosť o podporu sme prijali — {ticketId}"; view URL with token; ticket id in body | integration | `email-contracts.spec.ts` | — | No |
+| H-02 | Admin reply → submitter notification: subject "Re: tvoja žiadosť o podporu — {ticketId}"; view URL with FRESH token; admin reply body present | integration | `email-contracts.spec.ts` | — | No |
+| H-03 | Status transition to resolved → "Tvoja žiadosť o podporu bola uzavretá — {ticketId}" email sent to submitter | integration | `email-contracts.spec.ts` | — | No |
 | H-04 | Admin reply → other-admin notifier email dispatched when `notify_on_reply=true` in `admin_notification_preferences` | integration | `email-contracts.spec.ts` | — | No |
 | H-05 | Honeypot-discarded submission → NO email sent to either submitter or admin | integration | Covered by `E48-security.md` TC-03 (no DB write → no email) | — | — |
 | H-06 | Idempotency key on receipt email: retried submission with same ticket id does not double-send | integration | `email-contracts.spec.ts` | — | No |
@@ -931,7 +931,7 @@ Admin reply auto-transition: replying from the detail composer flips `status →
 - Playwright project: `unit`.
 
 **When** `supportTicketReceivedEmail({ ticketId: "abc-123", viewToken: "x".repeat(64), viewUrl: "https://subenai.sk/contact-form/ticket/...", subject: "Moja žiadosť", category: "bug" })` is called
-**Then** the returned `subject` string is exactly `"Vašu žiadosť o podporu sme prijali — abc-123"`
+**Then** the returned `subject` string is exactly `"Tvoju žiadosť o podporu sme prijali — abc-123"`
 **and** the returned `html` string contains "abc-123"
 **and** the returned `html` string contains the `viewUrl` value
 
@@ -943,7 +943,7 @@ Admin reply auto-transition: replying from the detail composer flips `status →
 - Same Vitest unit test context as TC-41.
 
 **When** `supportTicketReplyEmail({ ticketId: "abc-123", replyBody: "Odpoveď", adminName: "Admin", viewUrl: "https://..." })` is called
-**Then** the returned `subject` string is exactly `"Re: vaša žiadosť o podporu — abc-123"`
+**Then** the returned `subject` string is exactly `"Re: tvoja žiadosť o podporu — abc-123"`
 **and** the returned `html` string contains "Odpoveď" with line-break preservation (not stripped)
 
 ### TC-43: Resolved notification email subject contains ticket id
@@ -954,7 +954,7 @@ Admin reply auto-transition: replying from the detail composer flips `status →
 - Same Vitest unit test context.
 
 **When** `supportTicketResolvedEmail({ ticketId: "abc-123", viewUrl: "https://..." })` is called
-**Then** the returned `subject` string is exactly `"Vaša žiadosť o podporu bola uzavretá — abc-123"`
+**Then** the returned `subject` string is exactly `"Tvoja žiadosť o podporu bola uzavretá — abc-123"`
 **and** the returned `html` does not contain `<script>`
 
 ### TC-44: Audit log records every admin write action with correct actor_id and ticket_id
@@ -1020,7 +1020,7 @@ Admin reply auto-transition: replying from the detail composer flips `status →
   - Required additions to source (agent must add in the same PR): `admin-tickets-sort-header-{col}`, `admin-tickets-assignees-cell-{ticketId}`, `admin-tickets-queue-status-popover-{ticketId}`, `admin-tickets-bulk-select-{ticketId}`, `admin-tickets-bulk-actions-bar`, `admin-tickets-csv-export`, `admin-tickets-page-next`, `admin-tickets-page-prev`, `admin-sidebar-support-badge`, `admin-ticket-assignees-block`, `admin-ticket-admin-picker-button`, `admin-ticket-admin-picker-search`, `admin-ticket-admin-picker-option-{userId}`, `admin-ticket-assigned-chip-{userId}`, `admin-ticket-unassign-chip-{userId}`, `admin-ticket-self-assign-button`, `admin-ticket-self-unassign-button`, `admin-ticket-attachment-lightbox`, `admin-ticket-attachment-lightbox-prev`, `admin-ticket-attachment-lightbox-next`, `admin-ticket-attachment-lightbox-close`, `admin-ticket-attachment-lightbox-caption`, `admin-ticket-attachment-pdf-iframe-{attachmentId}`, `admin-ticket-internal-note-checkbox`, `admin-ticket-internal-note-badge-{messageId}`, `admin-ticket-delete-button`, `admin-ticket-delete-cancel-banner`, `admin-ticket-audit-log-section`, `admin-ticket-audit-log-entry-{action}`, `kontakt-view-ticket-link`, `kontakt-copy-ticket-id-button`, `kontakt-form-dropzone`, `kontakt-form-attachment-item-{n}`
 - **No flaky waits.** All waits use `waitFor({ state: "visible" })` on a specific locator or `expect.poll()` for captured requests. No `page.waitForTimeout()` calls. Performance assertions use `performance.now()` deltas, not arbitrary timeouts.
 - **Slovak strings asserted verbatim.** Every Slovak UI string in a TC is in quotation marks and sourced from the component file or story AC. Strings marked `TBD` must be resolved by reading the component source before the spec is written.
-  - Known verbatim Slovak strings cited in this plan: `"Žiadne žiadosti tohto typu"`, `"Vyčistiť filtre"`, `"Chýba bezpečnostný token"`, `"Odkaz už nie je platný"`, `"Nové"`, `"Začať riešiť"`, `"Čakám na používateľa"`, `"Uzavrieť"`, `"Znovu otvoriť"`, `"Archivovať"`, `"Označiť ako spam"`, `"Odoslať odpoveď"`, `"Uložiť poznámku"`, `"Interná poznámka (nepošle sa zákazníkovi)"`, `"Interná poznámka"`, `"Téma musí mať aspoň 5 znakov."`, `"Správa musí mať aspoň 20 znakov."`, `"Prevziať"`, `"Odhlásiť"`, `"Dostávať upozornenia z podpory"`, `"Uložiť zmeny"`, `"Nastavenia upozornení boli uložené."`, `"Vašu žiadosť o podporu sme prijali — {ticketId}"`, `"Re: vaša žiadosť o podporu — {ticketId}"`, `"Vaša žiadosť o podporu bola uzavretá — {ticketId}"`, `"Zadajte prvých 30 znakov témy"`
+  - Known verbatim Slovak strings cited in this plan: `"Žiadne žiadosti tohto typu"`, `"Vyčistiť filtre"`, `"Chýba bezpečnostný token"`, `"Odkaz už nie je platný"`, `"Nové"`, `"Začať riešiť"`, `"Čakám na používateľa"`, `"Uzavrieť"`, `"Znovu otvoriť"`, `"Archivovať"`, `"Označiť ako spam"`, `"Odoslať odpoveď"`, `"Uložiť poznámku"`, `"Interná poznámka (nepošle sa zákazníkovi)"`, `"Interná poznámka"`, `"Téma musí mať aspoň 5 znakov."`, `"Správa musí mať aspoň 20 znakov."`, `"Prevziať"`, `"Odhlásiť"`, `"Dostávať upozornenia z podpory"`, `"Uložiť zmeny"`, `"Nastavenia upozornení boli uložené."`, `"Tvoju žiadosť o podporu sme prijali — {ticketId}"`, `"Re: tvoja žiadosť o podporu — {ticketId}"`, `"Tvoja žiadosť o podporu bola uzavretá — {ticketId}"`, `"Zadajte prvých 30 znakov témy"`
   - TBD — agent must read the following source files for additional strings: `src/components/support/SupportContactForm.tsx` (rate-limit error message), reply composer error message, attachment error messages; the exact "Odoslať" button label; the exact "Zrušiť" cancel label in ConfirmDialog.
 - **Real test users where the flow truly requires DB state.** Integration tests using live DB (`SUPPORT_LIVE_DB=1`) rely on `audit-bot@subenai.test` or service-role-generated JWTs. E2e browser tests use `ADMIN_SESSION` / `ADMIN_AAL1_SESSION` mocked via `primeAuthSession`.
 - **Parallelism-safe.** Worker index embedded in every seed prefix. No spec shares mutable data with another spec's worker.

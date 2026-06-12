@@ -180,7 +180,7 @@ test.describe("/admin/security", () => {
     await test.step("Verify the low-backup warning is visible with the correct message", async () => {
       await expect(security.backupWarning).toBeVisible();
       await expect(security.backupWarning).toContainText(
-        "Máte málo nepoužitých kódov — odporúčame vygenerovať novú sadu.",
+        "Máš málo nepoužitých kódov — odporúčame vygenerovať novú sadu.",
       );
     });
   });

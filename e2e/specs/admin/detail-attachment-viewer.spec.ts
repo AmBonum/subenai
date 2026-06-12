@@ -1,54 +1,108 @@
+import type { BrowserContext } from "@playwright/test";
+
 import { test, expect } from "../../fixtures/base";
 import { setupAppShell } from "../../setup/app-shell";
 import { ADMIN_SESSION } from "../../fixtures/auth";
-import {
-  seedTickets,
-  seedAttachmentFiles,
-  cleanupSeeds,
-  cleanupSeedAttachmentFiles,
-  type AttachmentFixture,
-} from "../../../tests/fixtures/seed-tickets";
+import { seedSupportTicket, supportTicketTables } from "../../seed";
 
 // E48-v3 — attachment viewer on the admin ticket detail page.
 //
-// Seeds one ticket + 4 attachments (PNG, JPG, PDF x2) per worker, then
-// asserts:
-//   - image renders via <img> test-id
-//   - PDF renders via <iframe> embed test-id
-//   - clicking an image opens the lightbox
-//   - Esc closes the lightbox
-//   - download button is present per attachment
+// Seeds one ticket + 3 attachment rows (PNG, JPG, PDF) into the Supabase
+// mock, then asserts:
+//   - image renders via its test-id (first attachment is auto-expanded)
+//   - PDF renders via <iframe> embed test-id after expanding its card
+//   - filename + download button are present per attachment
+//   - clicking an image opens the lightbox; Esc / close button dismiss it
 //
-// These specs require SUPABASE_SERVICE_ROLE_KEY + seed env vars.
-// Set E2E_ALLOW_NONLOCAL_SEED=1 to run against production.
+// The signed-URL stack is two-step: `request_attachment_signed_url` RPC
+// returns Storage metadata, then the client calls Storage `object/sign`.
+// The RPC goes through the standard mock; the Storage endpoint + the
+// signed object GET are routed below.
 
-const WORKER = Number(process.env.TEST_WORKER_INDEX ?? 0);
+const NOW = "2026-05-21T10:00:00.000Z";
+const PNG_ID = "aaaa0001-0000-4000-8000-000000000001";
+const JPG_ID = "aaaa0002-0000-4000-8000-000000000002";
+const PDF_ID = "aaaa0003-0000-4000-8000-000000000003";
 
-let ticketIds: string[] = [];
-let attachments: AttachmentFixture[] = [];
+const TINY_PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+  "base64",
+);
 
-test.beforeAll(async () => {
-  ticketIds = await seedTickets(WORKER);
-  attachments = await seedAttachmentFiles(WORKER, [ticketIds[0]]);
-});
+interface AttachmentSeed {
+  id: string;
+  filename: string;
+  mime_type: string;
+}
 
-test.afterAll(async () => {
-  await cleanupSeedAttachmentFiles(WORKER);
-  await cleanupSeeds(WORKER);
-});
+const ATTACHMENTS: AttachmentSeed[] = [
+  { id: PNG_ID, filename: "small-image.png", mime_type: "image/png" },
+  { id: JPG_ID, filename: "medium-image.jpg", mime_type: "image/jpeg" },
+  { id: PDF_ID, filename: "document.pdf", mime_type: "application/pdf" },
+];
+
+function attachmentRow(ticketId: string, seed: AttachmentSeed) {
+  return {
+    id: seed.id,
+    ticket_id: ticketId,
+    message_id: null,
+    filename: seed.filename,
+    mime_type: seed.mime_type,
+    size_bytes: 12_345,
+    scan_status: "clean",
+    storage_path: `e2e/${ticketId}/${seed.filename}`,
+    created_at: NOW,
+  };
+}
+
+async function mockStorageSignedUrls(context: BrowserContext): Promise<void> {
+  await context.route("**/storage/v1/object/sign/**", async (route) => {
+    const request = route.request();
+    if (request.method() === "POST") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ signedURL: "/object/sign/support-attachments/e2e-mock?token=e2e" }),
+      });
+      return;
+    }
+    const isPdf = request.url().includes("pdf");
+    await route.fulfill({
+      status: 200,
+      contentType: isPdf ? "application/pdf" : "image/png",
+      body: isPdf ? Buffer.from("%PDF-1.4\n%%EOF") : TINY_PNG,
+    });
+  });
+}
+
+let ticketId = "";
 
 test.describe("E48-v3 — attachment viewer (admin detail page)", () => {
   test.beforeEach(async ({ context, page }) => {
+    const ticket = seedSupportTicket({ subject: "Attachment viewer ticket" });
+    ticketId = ticket.id as string;
+
+    await mockStorageSignedUrls(context);
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
+        tables: {
+          ...supportTicketTables([ticket]),
+          support_ticket_attachments: ATTACHMENTS.map((a) => attachmentRow(ticketId, a)),
+        },
         rpcs: {
           has_role: true,
           request_attachment_signed_url: (body: unknown) => {
-            const id = (body as Record<string, string>).p_attachment_id;
+            const { p_attachment_id, p_inline } = body as {
+              p_attachment_id: string;
+              p_inline?: boolean;
+            };
+            const seed = ATTACHMENTS.find((a) => a.id === p_attachment_id);
             return {
-              url: `https://example.com/signed/${id}`,
-              expires_at: new Date(Date.now() + 60_000).toISOString(),
+              storage_path: `e2e/${ticketId}/${seed?.filename ?? "unknown"}`,
+              filename: seed?.filename ?? "unknown",
+              mime_type: seed?.mime_type ?? "application/octet-stream",
+              inline: p_inline ?? false,
             };
           },
         },
@@ -56,52 +110,48 @@ test.describe("E48-v3 — attachment viewer (admin detail page)", () => {
     });
   });
 
-  test("image attachment renders as <img> with correct test-id", async ({ adminTicketDetail }) => {
-    const imageAttachment = attachments.find((a) => a.mimeType === "image/png");
-    if (!imageAttachment) test.skip();
-    await adminTicketDetail.open(ticketIds[0]);
+  test("image attachment renders with its test-id (first card auto-expanded)", async ({
+    adminTicketDetail,
+  }) => {
+    await adminTicketDetail.open(ticketId);
     await expect(adminTicketDetail.attachmentViewerRoot).toBeVisible();
-    await expect(adminTicketDetail.attachmentImage(imageAttachment!.attachmentId)).toBeVisible();
+    await expect(adminTicketDetail.attachmentImage(PNG_ID)).toBeVisible();
   });
 
-  test("PDF attachment renders as iframe embed", async ({ adminTicketDetail }) => {
-    const pdfAttachment = attachments.find((a) => a.mimeType === "application/pdf");
-    if (!pdfAttachment) test.skip();
-    await adminTicketDetail.open(ticketIds[0]);
-    await expect(adminTicketDetail.attachmentPdfEmbed(pdfAttachment!.attachmentId)).toBeVisible();
+  test("PDF attachment renders as iframe embed after expanding its card", async ({
+    adminTicketDetail,
+  }) => {
+    await adminTicketDetail.open(ticketId);
+    await expect(adminTicketDetail.attachmentViewerRoot).toBeVisible();
+    // Only the first attachment is expanded by default — expand the PDF.
+    await adminTicketDetail.attachmentToggle(PDF_ID).click();
+    await expect(adminTicketDetail.attachmentPdfEmbed(PDF_ID)).toBeVisible();
   });
 
   test("attachment filename and download button are present", async ({ adminTicketDetail }) => {
-    const att = attachments[0];
-    if (!att) test.skip();
-    await adminTicketDetail.open(ticketIds[0]);
-    await expect(adminTicketDetail.attachmentFilename(att.attachmentId)).toBeVisible();
-    await expect(adminTicketDetail.attachmentDownloadButton(att.attachmentId)).toBeVisible();
+    await adminTicketDetail.open(ticketId);
+    await expect(adminTicketDetail.attachmentFilename(PNG_ID)).toBeVisible();
+    await expect(adminTicketDetail.attachmentFilename(PNG_ID)).toHaveText("small-image.png");
+    await expect(adminTicketDetail.attachmentDownloadButton(PNG_ID)).toBeVisible();
   });
 
   test("clicking an image opens the lightbox", async ({ adminTicketDetail }) => {
-    const imageAttachment = attachments.find((a) => a.mimeType === "image/png");
-    if (!imageAttachment) test.skip();
-    await adminTicketDetail.open(ticketIds[0]);
-    await adminTicketDetail.attachmentImage(imageAttachment!.attachmentId).click();
+    await adminTicketDetail.open(ticketId);
+    await adminTicketDetail.attachmentImage(PNG_ID).click();
     await expect(adminTicketDetail.attachmentLightboxRoot).toBeVisible();
   });
 
   test("Esc closes the lightbox", async ({ adminTicketDetail, page }) => {
-    const imageAttachment = attachments.find((a) => a.mimeType === "image/png");
-    if (!imageAttachment) test.skip();
-    await adminTicketDetail.open(ticketIds[0]);
-    await adminTicketDetail.attachmentImage(imageAttachment!.attachmentId).click();
+    await adminTicketDetail.open(ticketId);
+    await adminTicketDetail.attachmentImage(PNG_ID).click();
     await expect(adminTicketDetail.attachmentLightboxRoot).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(adminTicketDetail.attachmentLightboxRoot).toBeHidden();
   });
 
   test("lightbox close button closes the lightbox", async ({ adminTicketDetail }) => {
-    const imageAttachment = attachments.find((a) => a.mimeType === "image/png");
-    if (!imageAttachment) test.skip();
-    await adminTicketDetail.open(ticketIds[0]);
-    await adminTicketDetail.attachmentImage(imageAttachment!.attachmentId).click();
+    await adminTicketDetail.open(ticketId);
+    await adminTicketDetail.attachmentImage(PNG_ID).click();
     await expect(adminTicketDetail.attachmentLightboxRoot).toBeVisible();
     await adminTicketDetail.attachmentLightboxCloseButton.click();
     await expect(adminTicketDetail.attachmentLightboxRoot).toBeHidden();

@@ -98,4 +98,22 @@ export class AppDashboardPage extends BasePage {
   get errorRetry() {
     return this.page.getByTestId("app-dashboard-error-retry");
   }
+
+  // ---- "Pre teba" insights rail (M4) ----
+
+  get insightsCard() {
+    return this.page.getByTestId("app-dashboard-insights-card");
+  }
+
+  get insightsCardTitle() {
+    return this.page.getByTestId("app-dashboard-insights-card-title");
+  }
+
+  insightsCardLink(tab: "digest" | "recommendations" | "retest" | "peer") {
+    return this.page.getByTestId(`app-dashboard-insights-card-link-${tab}`);
+  }
+
+  insightsCardSummary(tab: "digest" | "recommendations" | "retest" | "peer") {
+    return this.page.getByTestId(`app-dashboard-insights-card-summary-${tab}`);
+  }
 }

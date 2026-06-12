@@ -136,7 +136,7 @@ test.describe("Login page — happy paths", () => {
 
     await test.step("Verify the forgot-password link is visible", async () => {
       await expect(login.forgotPasswordLink).toBeVisible();
-      await expect(login.forgotPasswordLink).toHaveText("Zabudli ste heslo?");
+      await expect(login.forgotPasswordLink).toHaveText("Zabudol/a si heslo?");
     });
 
     await test.step("Verify the sign-up link is visible", async () => {
@@ -328,7 +328,7 @@ test.describe("Login page — negative scenarios", () => {
       await login.open();
     });
 
-    await test.step("Click the 'Zabudli ste heslo?' link", async () => {
+    await test.step("Click the 'Zabudol/a si heslo?' link", async () => {
       await login.forgotPasswordLink.click();
     });
 

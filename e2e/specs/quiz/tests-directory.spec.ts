@@ -2,6 +2,7 @@
 
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import { platformPacksAvailable, PACKS_SKIP_MESSAGE } from "../../fixtures/platform-packs";
 
 test.describe("Tests directory — catalog + pack landing", () => {
   test.beforeEach(async ({ context }) => {
@@ -13,7 +14,11 @@ test.describe("Tests directory — catalog + pack landing", () => {
   // ---------------------------------------------------------------------------
 
   // TC-01: Catalog page renders with all pack cards visible
-  test("TC-01: Catalog page renders with all pack cards visible", async ({ testsDirectory }) => {
+  test("TC-01: Catalog page renders with all pack cards visible", async ({
+    request,
+    testsDirectory,
+  }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await test.step("Open the /tests catalog page", async () => {
       await testsDirectory.index.open();
     });
@@ -32,8 +37,10 @@ test.describe("Tests directory — catalog + pack landing", () => {
 
   // TC-02: Each card displays title, question-count meta and is a link to /tests/$slug
   test("TC-02: Each card displays title, question-count meta and is a link to /tests/$slug", async ({
+    request,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await test.step("Open the /tests catalog page", async () => {
       await testsDirectory.index.open();
     });
@@ -57,9 +64,11 @@ test.describe("Tests directory — catalog + pack landing", () => {
 
   // TC-03: Clicking a pack card navigates to the correct pack landing URL
   test("TC-03: Clicking a pack card navigates to the correct pack landing URL", async ({
+    request,
     page,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await test.step("Open the /tests catalog page", async () => {
       await testsDirectory.index.open();
     });
@@ -80,8 +89,10 @@ test.describe("Tests directory — catalog + pack landing", () => {
 
   // TC-04: Valid slug — pack landing renders title, tagline, meta and the "Spustiť pack →" CTA
   test('TC-04: Valid slug — pack landing renders title, tagline, meta and the "Spustiť pack →" CTA', async ({
+    request,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await test.step("Navigate directly to /tests/eshop", async () => {
       await testsDirectory.pack.open("eshop");
     });

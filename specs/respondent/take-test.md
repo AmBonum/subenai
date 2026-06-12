@@ -32,7 +32,20 @@ three session RPCs:
    `question_id`) and fires one more submit.
 4. **Finalize** — answering the last question calls
    `finalize_respondent_session(p_session_id, p_score, p_session_token)`
-   once, then renders the thank-you card.
+   once, then renders the thank-you card. The card shows no score
+   (results belong to the test author) and offers the public quick test
+   as the exit CTA ("Otestuj si svoje scam radary — rýchly test
+   zadarmo" → `/test`) plus a close button.
+
+**Mid-take resume:** after `start_respondent_session` succeeds the flow
+snapshots `{ sessionId, sessionToken, intake, answers, qIdx,
+questionOrder }` into **sessionStorage** (key
+`iiq_respondent_session_v1:<shareId>`; sessionStorage by design — it dies
+with the tab so respondent PII never outlives the browsing session). A
+reload resumes the SAME session: intake is skipped, the saved question
+order and index are restored, and no second `start_respondent_session`
+fires. Re-submitting an answer is safe (`submit_respondent_answer`
+upserts on `(session_id, question_id)`). Finalize clears the snapshot.
 
 A password preflight (`/api/tests/check-password`) runs before the runner;
 it is a Cloudflare Pages Function not served by the Vite dev server, so the
@@ -62,10 +75,11 @@ stubbed open.
 **When** they tick the consent checkbox, submit the intake, pick a Q1
 option, click "Ďalej", type a free-text answer for Q2, and click "Odoslať".
 
-**Then** the thank-you card renders ("Hotovo!"),
-`start_respondent_session` was called once with `p_consent_given: true`,
-`submit_respondent_answer` exactly twice (Q1 then Q2), and
-`finalize_respondent_session` **exactly once**.
+**Then** the thank-you card renders ("Hotovo!") with the quick-test CTA
+("Otestuj si svoje scam radary — rýchly test zadarmo", `href="/test"`)
+and the close button ("Zatvoriť"); `start_respondent_session` was called
+once with `p_consent_given: true`, `submit_respondent_answer` exactly
+twice (Q1 then Q2), and `finalize_respondent_session` **exactly once**.
 
 ---
 
@@ -112,6 +126,27 @@ stage is NOT entered, and `start_respondent_session` was never called.
 
 **Then** the first question renders and `start_respondent_session` was
 called exactly once with `p_intake: { if_name: "Anna" }`.
+
+---
+
+### TC-07: Mid-test reload resumes the same session
+
+**Prerequisites:** Same seed as TC-01.
+
+**When** the respondent grants consent, starts the session, answers Q1,
+and **reloads the page** while Q2 is displayed.
+
+**Then** the flow resumes directly on Q2 — the intake stage is skipped
+(`respondent-flow-intake-submit-button` absent) and the saved index is
+restored from the sessionStorage snapshot.
+
+**When** they answer Q2 and finish.
+
+**Then** `start_respondent_session` was called exactly **once** total
+(asserted via the recording mock — the reload did NOT start a ghost
+session), `finalize_respondent_session` fired once with the ORIGINAL
+`p_session_id`, and `submit_respondent_answer` was called twice (Q1
+pre-reload, Q2 post-reload).
 
 ---
 

@@ -106,14 +106,14 @@ test.describe("/schools — senior marketing landing (E19)", () => {
   test("hero CTA navigates to /test/builder (Composer)", async ({ page, schools }) => {
     await schools.open();
     await schools.heroCta.click();
-    await expect(page).toHaveURL(/\/test\/zostav/);
+    await expect(page).toHaveURL(/\/test\/builder/);
   });
 
-  test("emits 4 JSON-LD blocks (EducationalOrg + HowTo + FAQPage + BreadcrumbList)", async ({
+  test("emits 5 JSON-LD blocks (site graph + EducationalOrg + HowTo + FAQPage + BreadcrumbList)", async ({
     schools,
   }) => {
     await schools.open();
-    await expect(schools.jsonLdScripts).toHaveCount(4);
+    await expect(schools.jsonLdScripts).toHaveCount(5);
   });
 
   test("page <title> + robots meta are SEO-correct", async ({ page, schools, docHead }) => {

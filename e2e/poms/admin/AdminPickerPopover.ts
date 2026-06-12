@@ -9,18 +9,18 @@ import { BasePage } from "../BasePage";
  */
 export class AdminPickerPopover extends BasePage {
   get root(): Locator {
-    return this.page.getByTestId("admin-picker-popover");
+    return this.page.getByTestId("admin-ticket-assignment-popover");
   }
 
   get searchInput(): Locator {
-    return this.page.getByTestId("admin-picker-search-input");
+    return this.page.getByTestId("admin-ticket-assignment-search");
   }
 
   adminOption(adminId: string): Locator {
-    return this.page.getByTestId(`admin-picker-option-${adminId}`);
+    return this.page.getByTestId(`admin-ticket-assignment-option-${adminId}`);
   }
 
   get emptyState(): Locator {
-    return this.page.getByTestId("admin-picker-empty-state");
+    return this.page.getByTestId("admin-ticket-assignment-empty");
   }
 }

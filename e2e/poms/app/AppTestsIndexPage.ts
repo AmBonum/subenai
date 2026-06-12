@@ -30,7 +30,7 @@ export class AppTestsIndexPage extends BasePage {
     return this.statusFilter.getByRole("tab", {
       name: new RegExp(
         value === "draft"
-          ? "Drafty"
+          ? "Koncepty"
           : value === "published"
             ? "Publikované"
             : value === "archived"
@@ -49,9 +49,27 @@ export class AppTestsIndexPage extends BasePage {
     return this.page.getByTestId("tests-list-clear-filters-button");
   }
 
-  // ---- Empty state -------------------------------------------------------
+  // ---- Empty states ------------------------------------------------------
+  /** Filter-empty: tests exist but none match the active filters. */
   get emptyState() {
     return this.page.getByTestId("tests-list-empty-state");
+  }
+
+  get emptyStateClearFilters() {
+    return this.page.getByTestId("tests-list-empty-state-clear-filters");
+  }
+
+  /** True-empty: the educator owns zero tests (first-run state). */
+  get emptyInitial() {
+    return this.page.getByTestId("tests-list-empty-initial");
+  }
+
+  get emptyInitialTitle() {
+    return this.page.getByTestId("tests-list-empty-initial-title");
+  }
+
+  get emptyInitialCta() {
+    return this.page.getByTestId("tests-list-empty-initial-cta");
   }
 
   // ---- List rows (parameterised by test id) ------------------------------
@@ -69,6 +87,40 @@ export class AppTestsIndexPage extends BasePage {
 
   rowShareButton(id: string) {
     return this.page.getByTestId(`tests-list-row-share-${id}`);
+  }
+
+  rowDuplicateButton(id: string) {
+    return this.page.getByTestId(`tests-list-row-duplicate-${id}`);
+  }
+
+  rowDeleteButton(id: string) {
+    return this.page.getByTestId(`tests-list-row-delete-${id}`);
+  }
+
+  rowAudienceBadge(id: string) {
+    return this.page.getByTestId(`tests-list-row-audience-${id}`);
+  }
+
+  // ---- Delete ConfirmDialog (shared app-shell dialog) ----------------------
+  get confirmDialog() {
+    return this.page.getByTestId("app-shell-confirm-dialog-root");
+  }
+
+  get confirmDialogTypedInput() {
+    return this.page.getByTestId("app-shell-confirm-dialog-typed-input");
+  }
+
+  get confirmDialogConfirm() {
+    return this.page.getByTestId("app-shell-confirm-dialog-confirm");
+  }
+
+  get confirmDialogCancel() {
+    return this.page.getByTestId("app-shell-confirm-dialog-cancel");
+  }
+
+  /** First sonner toast — duplicate/delete success + error feedback. */
+  get toast() {
+    return this.page.locator("[data-sonner-toast]").first();
   }
 
   // ---- All list row cards (for counting) ---------------------------------

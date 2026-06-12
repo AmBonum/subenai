@@ -75,7 +75,7 @@ test.describe("Site footer", () => {
         await expect(footer.columnObsahHeading).toHaveText("Obsah");
         await expect(footer.navLink("test")).toHaveText("Spustiť test");
         await expect(footer.navLink("test")).toHaveAttribute("href", "/test");
-        await expect(footer.navLink("testy")).toHaveText("Sada testov");
+        await expect(footer.navLink("testy")).toHaveText("Sady testov");
         await expect(footer.navLink("testy")).toHaveAttribute("href", "/tests");
         await expect(footer.navLink("skolenia")).toHaveText("Školenia");
         await expect(footer.navLink("skolenia")).toHaveAttribute("href", "/courses");
@@ -89,7 +89,7 @@ test.describe("Site footer", () => {
         await expect(footer.navLink("o-projekte")).toHaveAttribute("href", "/about");
         await expect(footer.navLink("kontakt")).toHaveText("Kontakt");
         await expect(footer.navLink("kontakt")).toHaveAttribute("href", "/contact");
-        await expect(footer.navLink("podpora")).toHaveText("Podporiť projekt");
+        await expect(footer.navLink("podpora")).toHaveText("Podpora projektu");
         await expect(footer.navLink("podpora")).toHaveAttribute("href", "/support");
         await expect(footer.navLink("sponzori")).toHaveText("Sponzori");
         await expect(footer.navLink("sponzori")).toHaveAttribute("href", "/sponsors");
@@ -217,7 +217,7 @@ test.describe("Site footer", () => {
         loadFired = false;
       });
 
-      await test.step("Click the Sada testov link in the Obsah column", async () => {
+      await test.step("Click the Sady testov link in the Obsah column", async () => {
         await footer.navLink("testy").click();
         await expect(page).toHaveURL(/\/tests$/);
       });
@@ -315,7 +315,7 @@ test.describe("Site footer", () => {
   // ---------------------------------------------------------------------------
 
   test.describe("Negative scenarios", () => {
-    test("TC-10: Footer is intentionally absent from the 404 page", async ({
+    test("TC-10: Footer renders on the 404 page (root-level footer mount)", async ({
       page,
       footer,
       notFound,
@@ -330,8 +330,8 @@ test.describe("Site footer", () => {
         await expect(notFound.subheading).toBeVisible();
       });
 
-      await test.step("Verify no footer element is present in the DOM", async () => {
-        await expect(footer.root).not.toBeAttached();
+      await test.step("Verify the footer is present (root layout renders it on every non-opted-out route)", async () => {
+        await expect(footer.root).toBeVisible();
       });
     });
 
@@ -507,7 +507,7 @@ test.describe("Site footer", () => {
         await expect(footer.versionLink).toBeFocused();
       });
 
-      await test.step("Tab through nav links: Spustiť test → Sada testov → Školenia → Pre školy", async () => {
+      await test.step("Tab through nav links: Spustiť test → Sady testov → Školenia → Šablóny testov → Pre školy → Akadémia", async () => {
         await page.keyboard.press("Tab");
         await expect(footer.navLink("test")).toBeFocused();
         await page.keyboard.press("Tab");
@@ -515,7 +515,11 @@ test.describe("Site footer", () => {
         await page.keyboard.press("Tab");
         await expect(footer.navLink("skolenia")).toBeFocused();
         await page.keyboard.press("Tab");
+        await expect(footer.navLink("sablony")).toBeFocused();
+        await page.keyboard.press("Tab");
         await expect(footer.navLink("skoly")).toBeFocused();
+        await page.keyboard.press("Tab");
+        await expect(footer.navLink("blog")).toBeFocused();
       });
 
       await test.step("Tab through Projekt column links", async () => {
@@ -570,7 +574,7 @@ test.describe("Site footer", () => {
       });
     });
 
-    test("TC-18: <footer> is nested inside <main> and lacks the contentinfo landmark — known a11y gap", async ({
+    test("TC-18: <footer> sits outside <main> and exposes the contentinfo landmark", async ({
       page,
       footer,
     }) => {
@@ -579,12 +583,12 @@ test.describe("Site footer", () => {
         await page.goto("/");
       });
 
-      await test.step("Verify the footer element is a descendant of main", async () => {
-        expect(await footer.isInsideMain()).toBe(true);
+      await test.step("Verify the footer element is NOT a descendant of main (rendered at the root layout level)", async () => {
+        expect(await footer.isInsideMain()).toBe(false);
       });
 
-      await test.step("Verify no contentinfo landmark role is exposed (footer inside main loses the implicit role)", async () => {
-        await expect(footer.contentInfoLandmark).toHaveCount(0);
+      await test.step("Verify exactly one contentinfo landmark is exposed (top-level footer keeps its implicit role)", async () => {
+        await expect(footer.contentInfoLandmark).toHaveCount(1);
       });
     });
 
@@ -609,9 +613,9 @@ test.describe("Site footer", () => {
         await expect(footer.root).toBeVisible();
       });
 
-      await test.step("SPA-navigate to /courses via the header nav link (second footer mount)", async () => {
-        await header.navLink("skolenia").click();
-        await expect(page).toHaveURL(/\/courses$/);
+      await test.step("SPA-navigate to /schools via the header nav link (second footer mount)", async () => {
+        await header.megaLink("pre_skoly").click();
+        await expect(page).toHaveURL(/\/schools$/);
         await expect(footer.root).toBeVisible();
       });
 

@@ -4,7 +4,9 @@ export type FooterNavSlug =
   | "test"
   | "testy"
   | "skolenia"
+  | "sablony"
   | "skoly"
+  | "blog"
   | "o-projekte"
   | "kontakt"
   | "podpora"
@@ -166,11 +168,10 @@ export class SiteFooter {
   }
 
   /**
-   * Page-wide `contentinfo` ARIA landmark. The footer is the element
-   * that would normally expose this role; when the footer is nested
-   * inside `<main>` (current state, see TC-18), the page exposes zero
-   * contentinfo landmarks. POM owns the locator so the spec can assert
-   * count without going through `page.getByRole`.
+   * Page-wide `contentinfo` ARIA landmark. The footer renders at the
+   * root layout level (outside `<main>`), so its implicit contentinfo
+   * role is exposed — TC-18 asserts exactly one landmark. POM owns the
+   * locator so the spec can assert count without `page.getByRole`.
    */
   get contentInfoLandmark(): Locator {
     return this.page.getByRole("contentinfo");

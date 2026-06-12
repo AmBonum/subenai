@@ -1,50 +1,74 @@
 # /app/templates — test plan
 
-**Component(s) under test:** `src/routes/app.templates.tsx`
-**Supabase table:** `templates` (read via `useTemplates`)
-**Route:** `/app/templates`
+**Component(s) under test:** `src/routes/app.templates.tsx`, `src/components/app/templates/TemplateCard.tsx`, `src/components/app/templates/TemplatesTabs.tsx`
+**Supabase table:** `templates` (read via `usePublicTemplates` / `useMyTemplates`)
+**Route:** `/app/templates` (`?tab=public|mine`, default `public`)
+
+---
+
+## Context
+
+E44 split the library into two tabs: **Verejné** (platform defaults with
+`owner_id = null` plus published public templates) and **Moje** (the educator's
+own copies). Cards render ownership/purpose/question-count badges, an optional
+public-page link (`/sablony/<slug>`), the primary "Použiť" CTA, and an action
+menu (Duplikovať / Upraviť / Vymazať / Odoslať na zverejnenie).
 
 ---
 
 ## Happy paths
 
-### TC-01: Empty state when no templates are available
+### TC-01: Empty public tab
 
-**Prerequisites:** Authenticated educator session; `templates` table seeded with 0 rows.
+**Prerequisites:** Authenticated educator session; `templates` seeded with 0 rows.
 
 **When** the user navigates to `/app/templates`
-**Then** `data-testid="templates-root"` is visible
-**and** the page heading contains "Šablóny"
-**and** `data-testid="templates-list-empty-state"` is visible
-**and** the empty-state card contains the text "Pre tento filter nemáme žiadne šablóny."
-**and** `data-testid="templates-list-search-input"` is visible
-**and** `data-testid="templates-list-category-filter"` is visible
+**Then** `templates-root` is visible, the header contains "Šablóny"
+**and** `templates-list-empty-state-public` is visible with the copy
+"Pre tento filter nemáme žiadne verejné šablóny. Skús zmeniť kategóriu alebo vyhľadávací výraz."
+**and** `templates-list-empty-state-mine` is NOT present
+
+### TC-02: Populated public tab
+
+**Prerequisites:** 2 public default templates seeded (`owner_id: null`, `status: "published"`).
+
+**Then** each `templates-card-<id>` renders its title, purpose badge (Slovak label
+from `purposes.*`), ownership badge "Predvolené", and — when `slug` is set —
+`templates-card-<id>-public-page-link` pointing at `/sablony/<slug>`
+
+### TC-03: "Použiť" navigates to the wizard
+
+**When** the user clicks `templates-card-<id>-use-button`
+**Then** the URL becomes `/app/tests/new?step=1&templateId=<id>`
+
+### TC-04: Search filter
+
+**When** the user types into `templates-list-search-input`
+**Then** only title-matching cards remain; a non-matching query surfaces the
+public empty state
+
+### TC-05: Category filter
+
+**When** the user picks a purpose in `templates-list-category-filter`
+(options `templates-list-category-option-<purpose>`)
+**Then** only cards with that `gdpr_purpose` remain
+
+### TC-06: Question-count badge plurals
+
+**Then** `templates-card-<id>-questions-count` renders Slovak plurals:
+1 → "1 otázka", 2–4 → "{n} otázky", 5+ → "{n} otázok"
+
+### TC-07: Mine tab
+
+**When** the user switches to `templates-tab-mine`
+**Then** owned copies render with ownership badge "Moja kópia"
+**and** with no copies the mine empty state shows
+"Ešte si si žiadnu šablónu nezduplikoval. Začni z verejnej knižnice." with the
+"Pozrieť verejné" CTA
 
 ---
 
-### TC-02: Populated state — template cards render name and category badge
+## Responsive (@mobile)
 
-**Prerequisites:** Authenticated educator session; `templates` table seeded with 2 rows:
-- `{ id: "tpl_001", title: "Onboarding kvíz", description: "...", question_ids: ["q1","q2"], gdpr_purpose: "HR" }`
-- `{ id: "tpl_002", title: "Zákaznícka spokojnosť", description: "...", question_ids: ["q3"], gdpr_purpose: "CX" }`
-
-**When** the user navigates to `/app/templates`
-**Then** `data-testid="templates-root"` is visible
-**and** `data-testid="templates-list-empty-state"` is NOT present
-**and** `data-testid="templates-list-row-tpl_001"` is visible and contains text "Onboarding kvíz"
-**and** `data-testid="templates-list-row-tpl_001"` contains the category text "HR"
-**and** `data-testid="templates-list-row-tpl_002"` is visible and contains text "Zákaznícka spokojnosť"
-**and** `data-testid="templates-list-row-tpl_002"` contains the category text "CX"
-
----
-
-## Edge cases
-
-### TC-03: Click "Použiť šablónu" navigates to /app/tests/new with templateId param
-
-**Prerequisites:** Authenticated educator session; `templates` table seeded with 1 row:
-- `{ id: "tpl_001", title: "Onboarding kvíz", description: "...", question_ids: ["q1"], gdpr_purpose: "HR" }`
-
-**When** the user navigates to `/app/templates`
-**and** the user clicks `data-testid="templates-row-use-tpl_001"` (labelled "Použiť šablónu")
-**Then** the page URL changes to `/app/tests/new` with query params `step=1` and `templateId=tpl_001`
+Cards stack into a single column on Pixel 7; the "Použiť" CTA is ≥44 px tall;
+no horizontal overflow.

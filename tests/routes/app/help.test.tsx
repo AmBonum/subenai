@@ -34,8 +34,13 @@ describe("/app/help", () => {
     expect(screen.getByTestId("app-help-page-header")).toBeInTheDocument();
     expect(screen.getByTestId("app-help-faq-list")).toBeInTheDocument();
     expect(screen.getByTestId("app-help-search-input")).toBeInTheDocument();
-    expect(screen.getByTestId("app-help-contact-cta")).toBeInTheDocument();
     expect(screen.getByTestId("app-help-faq-item-0")).toBeInTheDocument();
+    // E48 follow-up: the contact CTA routes to the in-app support form,
+    // not a mailto island.
+    expect(screen.getByTestId("app-help-contact-cta")).toHaveAttribute(
+      "data-to",
+      "/app/help/contact",
+    );
   });
 
   it("narrows the FAQ list when the search input is typed in", () => {
@@ -77,7 +82,10 @@ describe("/app/help", () => {
     });
     expect(screen.getByTestId("app-help-empty-state")).toBeInTheDocument();
     expect(screen.getByTestId("app-help-empty-title")).toBeInTheDocument();
-    expect(screen.getByTestId("app-help-empty-cta")).toBeInTheDocument();
+    expect(screen.getByTestId("app-help-empty-cta")).toHaveAttribute(
+      "data-to",
+      "/app/help/contact",
+    );
     expect(screen.queryByTestId("app-help-faq-list")).not.toBeInTheDocument();
   });
 });

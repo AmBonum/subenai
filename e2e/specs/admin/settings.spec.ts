@@ -2,13 +2,18 @@ import { test, expect } from "../../fixtures/base";
 import { setupAdmin } from "../../setup/app-shell";
 import { AdminSettingsPage } from "../../poms/admin/AdminSettingsPage";
 
+// E40 close-out — /admin/settings is a READ-ONLY GDPR/compliance
+// dashboard (DPA flow state, draft watermark, template version,
+// retention, sub-processor register, runbook links). The old
+// placeholder form (feature flags + deferred toast) no longer exists.
+
 test.describe("/admin/settings", () => {
-  // TC-01: Page renders the settings root, deferred notice, and all form sections
-  test("TC-01: page renders root, deferred notice, and all form sections", async ({
-    context,
-    page,
-  }) => {
+  test.beforeEach(async ({ context, page }) => {
     await setupAdmin(context, page);
+  });
+
+  // TC-01: page renders root, read-only notice, and the DPA section rows
+  test("TC-01: renders root, read-only notice, and all four DPA setting rows", async ({ page }) => {
     const settings = new AdminSettingsPage(page);
 
     await test.step("Navigate to /admin/settings", async () => {
@@ -19,99 +24,64 @@ test.describe("/admin/settings", () => {
       await expect(settings.root).toBeVisible();
     });
 
-    await test.step("Verify the deferred notice card is visible", async () => {
-      await expect(settings.deferredNotice).toBeVisible();
+    await test.step("Verify the read-only notice card is visible", async () => {
+      await expect(settings.readonlyNotice).toBeVisible();
+      await expect(settings.readonlyNotice).toContainText(
+        "Tieto hodnoty sú nastavené pri build-time",
+      );
     });
 
-    await test.step("Verify the settings form is visible", async () => {
-      await expect(settings.form).toBeVisible();
-    });
-
-    await test.step("Verify all three feature-flag switches are visible", async () => {
-      await expect(settings.featureFlagSwitch("ai_generator")).toBeVisible();
-      await expect(settings.featureFlagSwitch("audit_exports")).toBeVisible();
-      await expect(settings.featureFlagSwitch("trap_popup")).toBeVisible();
-    });
-
-    await test.step("Verify the retention input is visible", async () => {
-      await expect(settings.retentionInput).toBeVisible();
-    });
-
-    await test.step("Verify the primary-color input is visible", async () => {
-      await expect(settings.primaryColorInput).toBeVisible();
-    });
-
-    await test.step("Verify the submit button is visible and enabled", async () => {
-      await expect(settings.submitButton).toBeVisible();
-      await expect(settings.submitButton).toBeEnabled();
+    await test.step("Verify the DPA section renders all four setting rows", async () => {
+      await expect(settings.dpaSection).toBeVisible();
+      await expect(settings.dpaRow("flow")).toBeVisible();
+      await expect(settings.dpaRow("watermark")).toBeVisible();
+      await expect(settings.dpaRow("version")).toBeVisible();
+      await expect(settings.dpaRow("retention")).toBeVisible();
     });
   });
 
-  // TC-02: Submit fires the info toast
-  test("TC-02: clicking the submit button shows the deferred-backend info toast", async ({
-    context,
-    page,
-  }) => {
-    await setupAdmin(context, page);
+  // TC-02: sub-processor register lists the active third parties
+  test("TC-02: sub-processor register lists Supabase, Cloudflare, and Resend", async ({ page }) => {
     const settings = new AdminSettingsPage(page);
 
-    await test.step("Navigate to /admin/settings and confirm the form is visible", async () => {
+    await test.step("Navigate to /admin/settings", async () => {
       await settings.open();
-      await expect(settings.form).toBeVisible();
+      await expect(settings.subprocessorsSection).toBeVisible();
     });
 
-    await test.step('Click the submit button labelled "Uložiť"', async () => {
-      await settings.submit();
-    });
-
-    await test.step("Verify the info toast appears within 4 s with the deferred-backend message", async () => {
-      await expect(settings.toast).toBeVisible({ timeout: 4000 });
-      await expect(settings.toast).toContainText(
-        "Backend pre nastavenia ešte nie je nasadený, hodnoty sa neuložia po obnovení stránky.",
-      );
+    await test.step("Verify the three active sub-processors render", async () => {
+      await expect(settings.subprocessorsList).toBeVisible();
+      await expect(settings.subprocessor("supabase-inc")).toBeVisible();
+      await expect(settings.subprocessor("cloudflare-inc")).toBeVisible();
+      await expect(settings.subprocessor("resend-inc")).toBeVisible();
     });
   });
 
-  // TC-03: Toggle a feature flag switches the switch state
-  test("TC-03: toggling the audit_exports switch changes its checked state", async ({
-    context,
+  // TC-03: navigation links — notification prefs + runbook
+  test("TC-03: notifications link navigates to /admin/settings/notifications; runbook link points at GitHub", async ({
     page,
   }) => {
-    await setupAdmin(context, page);
     const settings = new AdminSettingsPage(page);
 
-    await test.step("Navigate to /admin/settings and confirm the form is visible", async () => {
+    await test.step("Navigate to /admin/settings", async () => {
       await settings.open();
-      await expect(settings.form).toBeVisible();
     });
 
-    await test.step("Verify audit_exports switch starts unchecked (default off)", async () => {
-      await expect(settings.featureFlagSwitch("audit_exports")).toHaveAttribute(
-        "aria-checked",
-        "false",
+    await test.step("Verify the runbook link points at the E40 runbook on GitHub", async () => {
+      await expect(settings.runbookSection).toBeVisible();
+      await expect(settings.runbookLink).toHaveAttribute(
+        "href",
+        "https://github.com/AmBonum/subenai/blob/main/tasks/E40-runbook.md",
       );
     });
 
-    await test.step("Click the audit_exports switch to turn it on", async () => {
-      await settings.featureFlagSwitch("audit_exports").click();
+    await test.step("Click the notifications settings link", async () => {
+      await expect(settings.notificationsSection).toBeVisible();
+      await settings.notificationsLink.click();
     });
 
-    await test.step("Verify audit_exports switch is now checked", async () => {
-      await expect(settings.featureFlagSwitch("audit_exports")).toHaveAttribute(
-        "aria-checked",
-        "true",
-      );
-    });
-
-    await test.step("Click the audit_exports switch again to turn it off", async () => {
-      await settings.featureFlagSwitch("audit_exports").click();
-    });
-
-    await test.step("Verify audit_exports switch returns to unchecked", async () => {
-      await expect(settings.featureFlagSwitch("audit_exports")).toHaveAttribute(
-        "aria-checked",
-        "false",
-      );
+    await test.step("Verify navigation to the notification preferences page", async () => {
+      await expect(page).toHaveURL(/\/admin\/settings\/notifications/);
     });
   });
 });

@@ -1,5 +1,6 @@
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import { platformPacksAvailable, PACKS_SKIP_MESSAGE } from "../../fixtures/platform-packs";
 
 /**
  * E37 — /tests/$slug detail page + related-pack strip.
@@ -19,9 +20,11 @@ test.describe("/tests/$slug — detail render + start flow + 404 + related", () 
 
   // TC-02 — Clicking a pack card navigates to the correct detail page.
   test("clicking a catalog card opens the detail URL for that slug", async ({
+    request,
     page,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await testsDirectory.index.open();
     await testsDirectory.index.clickPackCard("seniori");
     await expect(page).toHaveURL(/\/tests\/seniori$/);
@@ -30,8 +33,10 @@ test.describe("/tests/$slug — detail render + start flow + 404 + related", () 
 
   // TC-03 — Detail page renders hero, meta pills, and enabled start button.
   test("detail page renders hero + 3 meta pills + enabled start button", async ({
+    request,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await testsDirectory.pack.open("heslo-2fa");
     await expect(testsDirectory.pack.hero).toBeVisible();
     await expect(testsDirectory.pack.heading).toBeVisible();
@@ -44,9 +49,11 @@ test.describe("/tests/$slug — detail render + start flow + 404 + related", () 
 
   // TC-04 — Clicking start boots the TestFlow pack flow.
   test("clicking 'Spustiť pack' boots the quiz flow with the first question", async ({
+    request,
     page,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await testsDirectory.pack.open("heslo-2fa");
     await testsDirectory.pack.clickStart();
     // After click, the start button gives way to the TestFlow component.
@@ -74,8 +81,10 @@ test.describe("/tests/$slug — detail render + start flow + 404 + related", () 
 
   // TC-16 — Related-pack strip caps at 3 and excludes the current pack.
   test("related-pack strip shows ≤3 cards and never the current pack", async ({
+    request,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await testsDirectory.pack.open("seniori");
     await expect(testsDirectory.pack.relatedSection).toBeVisible();
     const relatedCount = await testsDirectory.pack.relatedCards().count();
@@ -90,8 +99,10 @@ test.describe("/tests/$slug — detail render + start flow + 404 + related", () 
 
   // TC-17 — Related-pack strip prefers same-industry siblings first.
   test("related-pack strip prefers same-industry siblings before fillers", async ({
+    request,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     // The selection algorithm: same-industry packs first, then fillers
     // from other industries, capped at 3. For a pack with at least one
     // same-industry sibling, the first related card should share its

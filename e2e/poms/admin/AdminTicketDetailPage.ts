@@ -54,14 +54,10 @@ export class AdminTicketDetailPage extends BasePage {
   // Generic FSM action mapper — accepts the *target* status the button
   // transitions to (e.g. "in_progress", "resolved", "archived",
   // "reopened"). Mirrors the four named getters below.
-  statusActionButton(target: "in_progress" | "resolved" | "reopened" | "archived"): Locator {
-    const map = {
-      in_progress: "start",
-      resolved: "resolve",
-      reopened: "reopen",
-      archived: "archive",
-    } as const;
-    return this.page.getByTestId(`admin-ticket-action-${map[target]}`);
+  statusActionButton(
+    target: "in_progress" | "waiting_user" | "resolved" | "reopened" | "archived",
+  ): Locator {
+    return this.page.getByTestId(`admin-ticket-status-action-${target}`);
   }
 
   /**
@@ -117,19 +113,19 @@ export class AdminTicketDetailPage extends BasePage {
 
   // FSM action buttons --------------------------------------------------
   get startButton(): Locator {
-    return this.page.getByTestId("admin-ticket-action-start");
+    return this.statusActionButton("in_progress");
   }
 
   get resolveButton(): Locator {
-    return this.page.getByTestId("admin-ticket-action-resolve");
+    return this.statusActionButton("resolved");
   }
 
   get reopenButton(): Locator {
-    return this.page.getByTestId("admin-ticket-action-reopen");
+    return this.statusActionButton("reopened");
   }
 
   get archiveButton(): Locator {
-    return this.page.getByTestId("admin-ticket-action-archive");
+    return this.statusActionButton("archived");
   }
 
   // Thread + composer ---------------------------------------------------
@@ -169,7 +165,11 @@ export class AdminTicketDetailPage extends BasePage {
 
   // Attachment viewer ---------------------------------------------------
   get attachmentViewerRoot(): Locator {
-    return this.page.getByTestId("admin-ticket-detail-attachment-viewer");
+    return this.page.getByTestId("admin-ticket-attachment-viewer");
+  }
+
+  attachmentToggle(attachmentId: string): Locator {
+    return this.page.getByTestId(`admin-ticket-attachment-toggle-${attachmentId}`);
   }
 
   attachmentItem(attachmentId: string): Locator {
@@ -202,7 +202,7 @@ export class AdminTicketDetailPage extends BasePage {
 
   // Assignees -----------------------------------------------------------
   get assigneesRoot(): Locator {
-    return this.page.getByTestId("admin-ticket-detail-assignees");
+    return this.page.getByTestId("admin-ticket-assignment-section");
   }
 
   assigneeChip(userId: string): Locator {
@@ -214,7 +214,10 @@ export class AdminTicketDetailPage extends BasePage {
   }
 
   get addAssigneeButton(): Locator {
-    return this.page.getByTestId("admin-ticket-assignee-add-button");
+    // Two render branches (empty vs chips) both emit this testid; only
+    // one is in the DOM at a time, but `.first()` keeps the locator
+    // strict-mode safe during optimistic re-renders.
+    return this.page.getByTestId("admin-ticket-assignment-add-trigger").first();
   }
 
   // Actions -------------------------------------------------------------

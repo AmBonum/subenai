@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import type { ComponentProps, JSX, ReactNode } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -14,6 +14,17 @@ vi.mock("@tanstack/react-router", async () => {
     createFileRoute: () => (config: unknown) => config,
     useNavigate: () => navigateMock,
     useSearch: () => ({ tab: "public" }),
+    // TemplateCard renders a router Link (public-page cross-link); a plain
+    // anchor keeps these route tests router-provider-free.
+    Link: ({
+      to,
+      children,
+      ...rest
+    }: { to: unknown; children?: ReactNode } & ComponentProps<"a">) => (
+      <a data-to={typeof to === "string" ? to : ""} {...rest}>
+        {children}
+      </a>
+    ),
   };
 });
 

@@ -60,7 +60,70 @@ describe("/app/tests/$testId (AH-5.3 editor)", () => {
     expect(screen.getByTestId("test-editor-tabs-questions")).toBeInTheDocument();
     expect(screen.getByTestId("test-editor-tabs-settings")).toBeInTheDocument();
     expect(screen.getByTestId("test-editor-share-button")).toBeInTheDocument();
+  });
+
+  // E50 status machine: publish only from draft, unpublish only from
+  // published, unarchive only from archived. SEED_TESTS status cycle is
+  // [published, published, published, draft, archived] → tst_002 published,
+  // tst_004 draft, tst_005 archived.
+  it("published test: shows Unpublish + Archive, hides Publish + Unarchive", () => {
+    params.testId = "tst_002";
+    render(<Page />);
+    expect(screen.getByTestId("test-editor-unpublish-button")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-archive-button")).toBeInTheDocument();
+    expect(screen.queryByTestId("test-editor-publish-button")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("test-editor-unarchive-button")).not.toBeInTheDocument();
+  });
+
+  it("draft test: shows Publish + Archive, hides Unpublish + Unarchive", () => {
+    params.testId = "tst_004";
+    render(<Page />);
     expect(screen.getByTestId("test-editor-publish-button")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-archive-button")).toBeInTheDocument();
+    expect(screen.queryByTestId("test-editor-unpublish-button")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("test-editor-unarchive-button")).not.toBeInTheDocument();
+  });
+
+  it("archived test: shows only Unarchive among lifecycle actions", () => {
+    params.testId = "tst_005";
+    render(<Page />);
+    expect(screen.getByTestId("test-editor-unarchive-button")).toBeInTheDocument();
+    expect(screen.queryByTestId("test-editor-publish-button")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("test-editor-unpublish-button")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("test-editor-archive-button")).not.toBeInTheDocument();
+  });
+
+  it("archive button opens the warning ConfirmDialog instead of mutating directly", () => {
+    params.testId = "tst_004";
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("test-editor-archive-button"));
+    const dialog = screen.getByTestId("app-shell-confirm-dialog-root");
+    expect(dialog).toBeInTheDocument();
+    expect(dialog.getAttribute("data-severity")).toBe("warning");
+  });
+
+  it("unpublish button opens the warning ConfirmDialog with the dead-link copy", () => {
+    params.testId = "tst_002";
+    render(<Page />);
+    fireEvent.click(screen.getByTestId("test-editor-unpublish-button"));
+    const dialog = screen.getByTestId("app-shell-confirm-dialog-root");
+    expect(dialog).toBeInTheDocument();
+    expect(dialog.getAttribute("data-severity")).toBe("warning");
+    expect(screen.getByTestId("app-shell-confirm-dialog-description").textContent).toMatch(
+      /odkaz prestane/i,
+    );
+  });
+
+  it("settings tab renders the intake-fields card and the audience chip", () => {
+    params.testId = "tst_002";
+    searchState.tab = "settings";
+    render(<Page />);
+    expect(screen.getByTestId("test-editor-intake-root")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-intake-name-toggle")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-intake-email-toggle")).toBeInTheDocument();
+    expect(screen.getByTestId("test-editor-audience-chip")).toBeInTheDocument();
+    // SEED_TESTS rows have audience_group_id: null → fallback chip copy.
+    expect(screen.getByTestId("test-editor-audience-chip").textContent).toMatch(/Bez skupiny/);
   });
 
   it("renders the Questions tab editor with count + add button", () => {

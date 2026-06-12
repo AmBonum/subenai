@@ -17,6 +17,15 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+// TemplateCard renders a router <Link> (public template page cross-link);
+// this component test has no router context, so shim it the same way the
+// other component suites do (see ResultsView.persist.test.tsx).
+vi.mock("@tanstack/react-router", () => ({
+  Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => (
+    <a data-testid={rest["data-testid"] as string | undefined}>{children}</a>
+  ),
+}));
+
 import { TemplateCard } from "@/components/app/templates/TemplateCard";
 import type { Template } from "@/lib/platform/types";
 

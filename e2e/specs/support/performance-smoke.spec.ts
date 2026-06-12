@@ -1,6 +1,42 @@
+import type { BrowserContext } from "@playwright/test";
 import { test, expect } from "../../fixtures/base";
 import { setupAppShell } from "../../setup/app-shell";
 import { ADMIN_SESSION } from "../../fixtures/auth";
+import { supportTicketTables } from "../../seed/support-tickets";
+
+const TINY_PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+  "base64",
+);
+
+// Storage sign + signed-object GET routes — same shape as
+// e2e/specs/admin/detail-attachment-viewer.spec.ts.
+async function mockStorageSignedUrls(context: BrowserContext): Promise<void> {
+  await context.route("**/storage/v1/object/sign/**", async (route) => {
+    if (route.request().method() === "POST") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ signedURL: "/object/sign/support-attachments/e2e-mock?token=e2e" }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 200, contentType: "image/png", body: TINY_PNG });
+  });
+}
+
+// RPC resolver for the two-step signed-URL stack (E48-v3).
+function signedUrlRpc(filename: string) {
+  return (body: unknown) => {
+    const { p_inline } = body as { p_inline?: boolean };
+    return {
+      storage_path: `${TICKET_ID}/${filename}`,
+      filename,
+      mime_type: "image/png",
+      inline: p_inline ?? false,
+    };
+  };
+}
 
 // E48 Wave 4 — performance smoke tests (J-01, J-02, J-03).
 //
@@ -17,22 +53,43 @@ import { ADMIN_SESSION } from "../../fixtures/auth";
 
 const TICKET_ID = "11111111-1111-4111-8111-111111111111";
 
+// Build a ticket row in the E48-v3 multi-assign schema — the queue and
+// detail read the `support_tickets_with_assignees` VIEW (submitter_*
+// columns + `assignees`); `supportTicketTables()` derives both arrays.
+function buildTicketRow(overrides: Partial<Record<string, unknown>> = {}) {
+  return {
+    id: TICKET_ID,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    status: "new",
+    category: "question",
+    source: "public_kontakt",
+    subject: "Perf smoke ticket",
+    body: "Performance smoke ticket body.",
+    submitter_user_id: null,
+    submitter_email: "perf@e2e.test",
+    submitter_name: "Perf User",
+    archived_at: null,
+    deleted_at: null,
+    resolved_at: null,
+    assignees: [],
+    ...overrides,
+  };
+}
+
 // Build N minimal ticket rows for the queue performance test.
 function buildQueueRows(count: number) {
-  return Array.from({ length: count }, (_, i) => ({
-    id: `${TICKET_ID.slice(0, -8)}${String(i).padStart(8, "0")}`,
-    subject: `[E2E-SEED-W0] perf smoke ticket ${i + 1}`,
-    status: "new" as const,
-    category: "question" as const,
-    requester_name: `Perf User ${i}`,
-    requester_email: `perf${i}@e2e.test`,
-    body: `Performance smoke ticket body ${i + 1}.`,
-    created_at: new Date(Date.now() - i * 60_000).toISOString(),
-    updated_at: new Date(Date.now() - i * 60_000).toISOString(),
-    view_token_hash: null,
-    view_token_expires_at: null,
-    view_token_invalidated_at: null,
-  }));
+  return Array.from({ length: count }, (_, i) =>
+    buildTicketRow({
+      id: `${TICKET_ID.slice(0, -8)}${String(i).padStart(8, "0")}`,
+      subject: `[E2E-SEED-W0] perf smoke ticket ${i + 1}`,
+      submitter_email: `perf${i}@e2e.test`,
+      submitter_name: `Perf User ${i}`,
+      body: `Performance smoke ticket body ${i + 1}.`,
+      created_at: new Date(Date.now() - i * 60_000).toISOString(),
+      updated_at: new Date(Date.now() - i * 60_000).toISOString(),
+    }),
+  );
 }
 
 // Build N message rows for the detail performance test.
@@ -53,8 +110,10 @@ function buildAttachmentRows(count: number) {
   return Array.from({ length: count }, (_, i) => ({
     id: `att-perf-${String(i).padStart(4, "0")}`,
     ticket_id: TICKET_ID,
+    message_id: null,
     filename: `perf-image-${i}.png`,
     mime_type: "image/png",
+    size_bytes: 12_345,
     scan_status: "clean" as const,
     storage_path: `${TICKET_ID}/perf-image-${i}.png`,
     created_at: new Date(Date.now() - i * 30_000).toISOString(),
@@ -70,10 +129,7 @@ test.describe("TC-45 / J-01: admin queue render performance with 50 tickets", ()
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
-        tables: {
-          support_tickets: buildQueueRows(50),
-          support_ticket_assignees: [],
-        },
+        tables: supportTicketTables(buildQueueRows(50)),
         rpcs: {
           has_role: true,
         },
@@ -116,34 +172,26 @@ test.describe("TC-45 / J-01: admin queue render performance with 50 tickets", ()
 
 test.describe("TC-46 / J-02: admin detail render performance with 20 messages + 10 attachments", () => {
   test.beforeEach(async ({ context, page }) => {
+    await mockStorageSignedUrls(context);
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
         tables: {
-          support_tickets: [
-            {
-              id: TICKET_ID,
+          ...supportTicketTables([
+            buildTicketRow({
               subject: "J-02 performance smoke ticket",
               status: "in_progress",
-              category: "question",
-              requester_name: "Perf User",
-              requester_email: "j02-perf@e2e.test",
+              submitter_email: "j02-perf@e2e.test",
               body: "J-02 base body.",
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-              view_token_hash: null,
-              view_token_expires_at: null,
-              view_token_invalidated_at: null,
-            },
-          ],
+            }),
+          ]),
           support_ticket_messages: buildMessageRows(20),
           support_ticket_attachments: buildAttachmentRows(10),
-          support_ticket_assignees: [],
         },
         rpcs: {
           has_role: true,
           // Return fake signed URLs for all attachment requests.
-          request_attachment_signed_url: "https://storage.example.test/signed/perf.png",
+          request_attachment_signed_url: signedUrlRpc("perf-image-0.png"),
         },
       },
     });
@@ -174,7 +222,7 @@ test.describe("TC-46 / J-02: admin detail render performance with 20 messages + 
 
     await test.step("Verify root and attachments section are visible", async () => {
       await expect(adminTicketDetail.root).toBeVisible();
-      await expect(adminTicketDetail.attachments).toBeVisible();
+      await expect(adminTicketDetail.attachmentViewerRoot).toBeVisible();
     });
   });
 });
@@ -187,41 +235,36 @@ test.describe("TC-47 / J-03: image thumbnails have loading=lazy", () => {
   const ATTACHMENT_IDS = ["att-lazy-0", "att-lazy-1", "att-lazy-2"];
 
   test.beforeEach(async ({ context, page }) => {
+    await mockStorageSignedUrls(context);
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
         tables: {
-          support_tickets: [
-            {
-              id: TICKET_ID,
+          ...supportTicketTables([
+            buildTicketRow({
               subject: "J-03 lazy loading test",
-              status: "new",
-              category: "question",
-              requester_name: "J03 User",
-              requester_email: "j03@e2e.test",
+              submitter_email: "j03@e2e.test",
+              submitter_name: "J03 User",
               body: "J-03 base body.",
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-              view_token_hash: null,
-              view_token_expires_at: null,
-              view_token_invalidated_at: null,
-            },
-          ],
-          support_ticket_messages: [],
+            }),
+          ]),
+          // Oldest-first display order — att-lazy-0 renders (and
+          // auto-expands) first.
           support_ticket_attachments: ATTACHMENT_IDS.map((id, i) => ({
             id,
             ticket_id: TICKET_ID,
+            message_id: null,
             filename: `lazy-image-${i}.png`,
             mime_type: "image/png",
+            size_bytes: 12_345,
             scan_status: "clean",
             storage_path: `${TICKET_ID}/lazy-image-${i}.png`,
-            created_at: new Date(Date.now() - i * 1000).toISOString(),
+            created_at: new Date(Date.now() - (ATTACHMENT_IDS.length - i) * 1000).toISOString(),
           })),
-          support_ticket_assignees: [],
         },
         rpcs: {
           has_role: true,
-          request_attachment_signed_url: "https://storage.example.test/signed/lazy.png",
+          request_attachment_signed_url: signedUrlRpc("lazy-image-0.png"),
         },
       },
     });
@@ -237,15 +280,19 @@ test.describe("TC-47 / J-03: image thumbnails have loading=lazy", () => {
     });
 
     await test.step("Wait for the attachments section to be visible", async () => {
-      await expect(adminTicketDetail.attachments).toBeVisible();
+      await expect(adminTicketDetail.attachmentViewerRoot).toBeVisible();
+      // Only expanded cards render an <img>, and the preview appears
+      // after the signed-URL round-trip — wait for the auto-expanded
+      // first attachment before snapshotting attributes.
+      await expect(adminTicketDetail.attachmentImage(ATTACHMENT_IDS[0])).toBeVisible();
     });
 
-    await test.step("Find all img elements inside admin-ticket-detail-attachments", async () => {
+    await test.step("Find all img elements inside admin-ticket-attachment-viewer", async () => {
       // Use evaluate to inspect all img elements inside the attachment section.
       // This cannot live in the spec as a locator chain — the evaluation of
       // attributes across multiple dynamic elements is environment-level.
       const lazyAttrs = await page.evaluate(() => {
-        const section = document.querySelector('[data-testid="admin-ticket-detail-attachments"]');
+        const section = document.querySelector('[data-testid="admin-ticket-attachment-viewer"]');
         if (!section) return [];
         return Array.from(section.querySelectorAll("img")).map((img) =>
           img.getAttribute("loading"),

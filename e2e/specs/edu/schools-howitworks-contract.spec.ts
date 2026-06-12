@@ -25,6 +25,35 @@ import { ComposerEduPage } from "../../poms/edu/ComposerEduPage";
 import { IntakeFormPage } from "../../poms/edu/IntakeFormPage";
 import { ResultsGatePage } from "../../poms/edu/ResultsGatePage";
 
+// Stable bank question IDs (slugs are the contract) — selected via the
+// step-2 picker so the suite doesn't depend on published platform packs.
+const EDU_QUESTION_IDS_5 = [
+  "p-sms-posta-1",
+  "p-sms-dpd-1",
+  "p-sms-tatra-1",
+  "p-sms-slsp-1",
+  "p-sms-csob-1",
+];
+
+// Whole suite needs the CF Pages functions runtime (`npm run dev:api`,
+// wrangler on :8788 behind the vite /api proxy). Same runtime guard as
+// e2e/specs/security/api-headers-live.spec.ts — skip, don't fail, when
+// it isn't running.
+const WRANGLER_BASE = "http://localhost:8788";
+
+test.beforeEach(async ({ request }) => {
+  let reachable = false;
+  try {
+    reachable = (await request.head(WRANGLER_BASE)).status() > 0;
+  } catch {
+    reachable = false;
+  }
+  test.skip(
+    !reachable,
+    `Skipping: wrangler at ${WRANGLER_BASE} not reachable. Run \`npm run dev:api\` first.`,
+  );
+});
+
 // ---------------------------------------------------------------------------
 // Dev-vars loader — provides JWT_SECRET for author cookie injection
 // ---------------------------------------------------------------------------
@@ -98,10 +127,11 @@ test.describe("Happy paths", () => {
       await page.setViewportSize({ width: 1280, height: 800 });
     });
 
-    await test.step("Select 5 questions by toggling the first pack chip", async () => {
-      // Use the pack-chip to select at least 5 questions in one click
-      await composer.firstPackChipButton.click();
-      // Wait for selection summary to show at least 5
+    await test.step("Select 5 questions from the bank picker", async () => {
+      // Bank selection works without published platform packs (the dev DB
+      // may have none) — pack-chip behaviour is covered by
+      // e2e/specs/test-packs/composer-pack-chips.spec.ts.
+      await composer.selectQuestions(EDU_QUESTION_IDS_5);
       await expect(composer.selectionSummaryText).not.toContainText("Vyber aspoň", {
         timeout: 5000,
       });
@@ -176,7 +206,7 @@ test.describe("Happy paths", () => {
 
     await test.step("Navigate to results URL and verify password gate", async () => {
       // Extract set ID from the respondent URL
-      const setIdMatch = respondentUrl.match(/\/test\/zostava\/([^/]+)/);
+      const setIdMatch = respondentUrl.match(/\/test\/builder\/([^/]+)/);
       const setId = setIdMatch?.[1] ?? "";
       await results.open(setId);
       await expect(results.authGate).toBeVisible();
@@ -405,9 +435,9 @@ test.describe("Negative scenarios", () => {
     const composer = new ComposerEduPage(page);
     await page.setViewportSize({ width: 1280, height: 800 });
 
-    await test.step("Open composer and select 5+ questions via first pack chip", async () => {
+    await test.step("Open composer and select 5 questions from the bank picker", async () => {
       await composer.open();
-      await composer.firstPackChipButton.click();
+      await composer.selectQuestions(EDU_QUESTION_IDS_5);
       await expect(composer.selectionSummaryText).not.toContainText("Vyber aspoň", {
         timeout: 5000,
       });
@@ -934,7 +964,7 @@ test.describe("Edge cases", () => {
 
     await test.step("Open composer, select questions, enable edu toggle, fill password", async () => {
       await composer.open();
-      await composer.firstPackChipButton.click();
+      await composer.selectQuestions(EDU_QUESTION_IDS_5);
       await expect(composer.selectionSummaryText).not.toContainText("Vyber aspoň", {
         timeout: 5000,
       });
@@ -1029,9 +1059,9 @@ test.describe("Edge cases", () => {
     const composer = new ComposerEduPage(page);
     await page.setViewportSize({ width: 1280, height: 800 });
 
-    await test.step("Open composer and select 5+ questions", async () => {
+    await test.step("Open composer and select 5 questions", async () => {
       await composer.open();
-      await composer.firstPackChipButton.click();
+      await composer.selectQuestions(EDU_QUESTION_IDS_5);
       await expect(composer.selectionSummaryText).not.toContainText("Vyber aspoň", {
         timeout: 5000,
       });

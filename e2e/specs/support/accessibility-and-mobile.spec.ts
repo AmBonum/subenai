@@ -1,3 +1,4 @@
+import type { BrowserContext } from "@playwright/test";
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
 import { setupAppShell } from "../../setup/app-shell";
@@ -15,20 +16,29 @@ import { mockSupportApi } from "../../mocks/api/support";
 const TICKET_ID = "11111111-1111-4111-8111-111111111111";
 const VIEW_TOKEN = "a".repeat(64);
 
-function buildTicketRow() {
+// E48-v3 multi-assign schema: the detail page reads the
+// `support_tickets_with_assignees` VIEW (submitter_* columns +
+// `assignees`), while badges/counts read the `support_tickets` TABLE —
+// both arrays must be seeded (same shape as admin-detail-render.spec.ts).
+function buildTicketRow(overrides: Partial<Record<string, unknown>> = {}) {
   return {
     id: TICKET_ID,
-    subject: "I-test ticket",
-    status: "new",
-    category: "question",
-    requester_name: "I Test User",
-    requester_email: "i-test@example.test",
-    body: "Toto je telo testovacieho tiketu pre I-sériu.",
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-    view_token_hash: null,
-    view_token_expires_at: null,
-    view_token_invalidated_at: null,
+    status: "new",
+    category: "question",
+    source: "public_kontakt",
+    subject: "I-test ticket",
+    body: "Toto je telo testovacieho tiketu pre I-sériu.",
+    submitter_user_id: null,
+    submitter_email: "i-test@example.test",
+    submitter_name: "I Test User",
+    archived_at: null,
+    deleted_at: null,
+    resolved_at: null,
+    assignees: [],
+    first_assignee_display_name: null,
+    ...overrides,
   };
 }
 
@@ -37,10 +47,32 @@ function buildMessageRow() {
     id: "msg-i-test-001",
     ticket_id: TICKET_ID,
     author_kind: "admin",
+    author_name: "Admin User",
     body: "Admin odpoveď pre I-sériu.",
     created_at: new Date().toISOString(),
     is_internal: false,
   };
+}
+
+const TINY_PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+  "base64",
+);
+
+// Storage sign + signed-object GET routes — same shape as
+// e2e/specs/admin/detail-attachment-viewer.spec.ts.
+async function mockStorageSignedUrls(context: BrowserContext): Promise<void> {
+  await context.route("**/storage/v1/object/sign/**", async (route) => {
+    if (route.request().method() === "POST") {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ signedURL: "/object/sign/support-attachments/e2e-mock?token=e2e" }),
+      });
+      return;
+    }
+    await route.fulfill({ status: 200, contentType: "image/png", body: TINY_PNG });
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -111,9 +143,10 @@ test.describe("I-02: keyboard-only navigation through admin detail page", () => 
       extras: {
         tables: {
           support_tickets: [buildTicketRow()],
+          support_tickets_with_assignees: [buildTicketRow()],
           support_ticket_messages: [buildMessageRow()],
-          support_ticket_assignees: [],
           support_ticket_attachments: [],
+          audit_log: [],
         },
         rpcs: {
           has_role: true,
@@ -140,8 +173,11 @@ test.describe("I-02: keyboard-only navigation through admin detail page", () => 
       // Tab enough times to reach the reply textarea — the exact count
       // depends on the DOM order, so we use keyboard.press repeatedly
       // and check that the textarea eventually becomes focused.
+      // The E48-v3 detail layout has more focusable controls before the
+      // composer (thread actions, attachment cards, sidebar) — 40 Tabs
+      // gives enough headroom to reach it.
       let focused = false;
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 40; i++) {
         await page.keyboard.press("Tab");
         const active = await page.evaluate(() =>
           document.activeElement?.getAttribute("data-testid"),
@@ -167,28 +203,43 @@ test.describe("I-02: keyboard-only navigation through admin detail page", () => 
 
 test.describe("I-04: role='dialog' on lightbox and confirm dialogs", () => {
   test.beforeEach(async ({ context, page }) => {
+    await mockStorageSignedUrls(context);
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
         tables: {
           support_tickets: [buildTicketRow()],
+          support_tickets_with_assignees: [buildTicketRow()],
           support_ticket_messages: [buildMessageRow()],
-          support_ticket_assignees: [],
           support_ticket_attachments: [
             {
               id: "att-i04-001",
               ticket_id: TICKET_ID,
+              message_id: null,
               filename: "i04-image.png",
               mime_type: "image/png",
+              size_bytes: 12_345,
               scan_status: "clean",
               storage_path: `${TICKET_ID}/i04-image.png`,
               created_at: new Date().toISOString(),
             },
           ],
+          audit_log: [],
         },
         rpcs: {
           has_role: true,
-          request_attachment_signed_url: "https://storage.example.test/signed/i04-image.png",
+          // Two-step signed-URL stack (E48-v3): the RPC returns Storage
+          // metadata, then the client calls Storage `object/sign`
+          // (routed in mockStorageSignedUrls above).
+          request_attachment_signed_url: (body: unknown) => {
+            const { p_inline } = body as { p_inline?: boolean };
+            return {
+              storage_path: `${TICKET_ID}/i04-image.png`,
+              filename: "i04-image.png",
+              mime_type: "image/png",
+              inline: p_inline ?? false,
+            };
+          },
         },
       },
     });
@@ -254,7 +305,8 @@ test.describe("I-05: aria-label on icon-only action buttons in queue", () => {
       extras: {
         tables: {
           support_tickets: [buildTicketRow()],
-          support_ticket_assignees: [],
+          support_tickets_with_assignees: [buildTicketRow()],
+          audit_log: [],
         },
         rpcs: {
           has_role: true,
@@ -295,9 +347,10 @@ test.describe("I-06: mobile 375×667 — queue and detail layout", () => {
       extras: {
         tables: {
           support_tickets: [buildTicketRow()],
+          support_tickets_with_assignees: [buildTicketRow()],
           support_ticket_messages: [buildMessageRow()],
-          support_ticket_assignees: [],
           support_ticket_attachments: [],
+          audit_log: [],
         },
         rpcs: {
           has_role: true,
@@ -364,16 +417,13 @@ test.describe("I-07: RTL text in subject and body without overflow", () => {
       session: ADMIN_SESSION,
       extras: {
         tables: {
-          support_tickets: [
-            {
-              ...buildTicketRow(),
-              subject: RTL_SUBJECT,
-              body: RTL_BODY,
-            },
+          support_tickets: [buildTicketRow({ subject: RTL_SUBJECT, body: RTL_BODY })],
+          support_tickets_with_assignees: [
+            buildTicketRow({ subject: RTL_SUBJECT, body: RTL_BODY }),
           ],
           support_ticket_messages: [],
-          support_ticket_assignees: [],
           support_ticket_attachments: [],
+          audit_log: [],
         },
         rpcs: {
           has_role: true,

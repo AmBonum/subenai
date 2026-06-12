@@ -9,9 +9,13 @@ vi.mock("@tanstack/react-router", () => ({
   Link: ({
     children,
     to,
+    search,
     ...rest
-  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { to?: string }) => (
-    <a href={to} {...rest}>
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    to?: string;
+    search?: Record<string, string>;
+  }) => (
+    <a href={search ? `${to}?${new URLSearchParams(search).toString()}` : to} {...rest}>
       {children}
     </a>
   ),
@@ -57,13 +61,13 @@ describe("/contact hub page", () => {
     expect(cta).toHaveAttribute("href", "/contact-form");
   });
 
-  it("renders 6 topic chips all linking to /contact-form", () => {
+  it("renders 6 topic chips deep-linking to /contact-form?topic=<slug>", () => {
     render(<KontaktPage />);
     const slugs = ["tech", "content", "sponsor", "gdpr", "press", "other"];
     slugs.forEach((slug) => {
       const chip = screen.getByTestId(`contact-topic-link-${slug}`);
       expect(chip).toBeInTheDocument();
-      expect(chip).toHaveAttribute("href", "/contact-form");
+      expect(chip).toHaveAttribute("href", `/contact-form?topic=${slug}`);
     });
   });
 

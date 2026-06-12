@@ -30,9 +30,9 @@ test.describe("Privacy /privacy", () => {
       await expect(privacy.heading).toContainText("Zásady ochrany súkromia");
     });
 
-    await test.step("Verify the processing-purpose table is visible with at least 9 data rows", async () => {
+    await test.step("Verify the processing-purpose table is visible with all 11 data rows", async () => {
       await expect(privacy.processingTable).toBeVisible();
-      await expect(privacy.processingTableRows).toHaveCount(9);
+      await expect(privacy.processingTableRows).toHaveCount(11);
     });
 
     await test.step("Verify the GDPR rights section heading is visible and contains the expected text", async () => {
@@ -41,16 +41,16 @@ test.describe("Privacy /privacy", () => {
     });
   });
 
-  // TC-02: `robots` meta is `index, follow` (noindex absent)
+  // TC-02: `robots` meta permits indexing (noindex absent)
   test("TC-02: robots meta is index, follow and title is non-empty", async ({ page, privacy }) => {
     await test.step("Navigate to /privacy at 1280×800", async () => {
       await page.setViewportSize({ width: 1280, height: 800 });
       await privacy.open();
     });
 
-    await test.step("Verify robots meta content equals 'index, follow'", async () => {
+    await test.step("Verify robots meta content equals 'index, follow, max-image-preview:large'", async () => {
       const content = await privacy.robotsContent();
-      expect(content).toBe("index, follow");
+      expect(content).toBe("index, follow, max-image-preview:large");
     });
 
     await test.step("Verify document.title is non-empty", async () => {
@@ -59,10 +59,13 @@ test.describe("Privacy /privacy", () => {
     });
   });
 
-  // TC-03: "← Späť na domov" link navigates to the homepage
+  // TC-03: "← Späť" smart back-link navigates to the homepage. The page
+  // uses SmartBackLink, which pops history when the visit came from
+  // within the app — arrive from / so "back" lands on / either way.
   test("TC-03: '← Späť na domov' link navigates to /", async ({ page, privacy }) => {
-    await test.step("Navigate to /privacy at 1280×800", async () => {
+    await test.step("Open the home page, then navigate to /privacy at 1280×800", async () => {
       await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto("/");
       await privacy.open();
     });
 
@@ -100,7 +103,7 @@ test.describe("Privacy /privacy", () => {
     });
   });
 
-  // TC-20: `/privacy` — section s8 callout "Ak ste respondent edu testu" is visible
+  // TC-20: `/privacy` — section s8 callout "Ak si respondent edu testu" is visible
   test("TC-20: Section s8 heading and callout are visible", async ({ page, privacy }) => {
     await test.step("Navigate to /privacy at 1280×800", async () => {
       await page.setViewportSize({ width: 1280, height: 800 });
@@ -114,7 +117,7 @@ test.describe("Privacy /privacy", () => {
 
     await test.step("Verify the callout block is visible and contains the expected text", async () => {
       await expect(privacy.s8Callout).toBeVisible();
-      await expect(privacy.s8Callout).toContainText("Ak ste respondent edu testu:");
+      await expect(privacy.s8Callout).toContainText("Ak si respondent edu testu:");
     });
   });
 });
@@ -207,9 +210,9 @@ test.describe("Cookies /cookies", () => {
       await cookies.open();
     });
 
-    await test.step("Verify robots meta content equals 'index, follow'", async () => {
+    await test.step("Verify robots meta content equals 'index, follow, max-image-preview:large'", async () => {
       const content = await cookies.robotsContent();
-      expect(content).toBe("index, follow");
+      expect(content).toBe("index, follow, max-image-preview:large");
     });
 
     await test.step("Verify the version line is visible and contains 'Verzia'", async () => {
@@ -374,7 +377,7 @@ test.describe("Changelog /changelog", () => {
     });
 
     await test.step("Verify document.title equals the expected string", async () => {
-      await expect(page).toHaveTitle("Zmeny a verzie — subenai");
+      await expect(page).toHaveTitle("Zmeny, novinky a verzie — subenai");
     });
 
     await test.step("Verify the h1 heading is visible and contains the correct text", async () => {

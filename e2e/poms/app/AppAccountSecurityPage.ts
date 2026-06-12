@@ -15,22 +15,49 @@ export class AppAccountSecurityPage extends BasePage {
     return this.page.getByTestId("app-account-security-page-header");
   }
 
+  // ---- Password change (real supabase.auth.updateUser flow) ---------------
   get passwordForm() {
     return this.page.getByTestId("app-account-security-password-form");
-  }
-
-  get currentPassword() {
-    return this.page.getByTestId("app-account-security-current-password");
   }
 
   get newPassword() {
     return this.page.getByTestId("app-account-security-new-password");
   }
 
+  get confirmPassword() {
+    return this.page.getByTestId("app-account-security-confirm-password");
+  }
+
   get submitPassword() {
     return this.page.getByTestId("app-account-security-submit-password");
   }
 
+  get passwordError() {
+    return this.page.getByTestId("app-account-security-password-error");
+  }
+
+  get reauthForgotLink() {
+    return this.page.getByTestId("app-account-security-reauth-forgot-link");
+  }
+
+  get forgotLink() {
+    return this.page.getByTestId("app-account-security-forgot-link");
+  }
+
+  /** Replaces the password form for accounts without an email identity. */
+  get oauthOnlyNotice() {
+    return this.page.getByTestId("app-account-security-oauth-only");
+  }
+
+  /**
+   * Removed fabricated "active sessions" card — kept as a locator so the
+   * spec can assert it stays gone.
+   */
+  get legacySessionsList() {
+    return this.page.getByTestId("app-account-security-sessions-list");
+  }
+
+  // ---- 2FA card ------------------------------------------------------------
   get twoFaActivateButton() {
     return this.page.getByTestId("app-account-security-2fa-activate-button");
   }
@@ -41,18 +68,6 @@ export class AppAccountSecurityPage extends BasePage {
 
   get twoFaDeactivateButton() {
     return this.page.getByTestId("app-account-security-2fa-deactivate-button");
-  }
-
-  get sessionsList() {
-    return this.page.getByTestId("app-account-security-sessions-list");
-  }
-
-  revoke(sessionId: string) {
-    return this.page.getByTestId(`app-account-security-revoke-${sessionId}`);
-  }
-
-  sessionRow(sessionId: string) {
-    return this.page.getByTestId(`app-account-security-session-row-${sessionId}`);
   }
 
   /** First Sonner toast notification rendered by the global Toaster. */

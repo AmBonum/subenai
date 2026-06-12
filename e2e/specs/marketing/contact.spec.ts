@@ -1,13 +1,20 @@
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import { TOPIC_SLUGS } from "../../poms/marketing/ContactPage";
+
+// /contact is a hub that routes everything to the web ticket form at
+// /contact-form. The main CTA opens the bare form; each of the six topic
+// cards deep-links with ?topic=<slug> which preselects the matching
+// category and prefills the subject on the form. The e-mail address
+// remains only as a plain-text fallback in the copy + operator card.
 
 test.describe("Contact page /contact", () => {
   // ---------------------------------------------------------------------------
   // Happy paths
   // ---------------------------------------------------------------------------
 
-  // TC-01: Page renders with correct title, heading, and all mailto links visible
-  test("TC-01: Page renders with correct title, heading, and all mailto links visible", async ({
+  // TC-01: Page renders with correct title, heading, form CTA, and topic links
+  test("TC-01: Page renders with correct title, heading, form CTA and all topic links", async ({
     page,
     contact,
   }) => {
@@ -25,18 +32,16 @@ test.describe("Contact page /contact", () => {
       await expect(contact.heading).toHaveText("Kontakt");
     });
 
-    await test.step("Verify the primary email link 'Napísať na subenai.podpora@gmail.com' is visible", async () => {
-      await expect(contact.mainEmailLink).toBeVisible();
+    await test.step("Verify the primary CTA 'Otvoriť kontaktný formulár' is visible", async () => {
+      await expect(contact.mainFormLink).toBeVisible();
+      await expect(contact.mainFormLink).toContainText("Otvoriť kontaktný formulár");
     });
 
     await test.step("Verify all six topic links are visible in the topics list", async () => {
       await expect(contact.topicsList).toBeVisible();
-      await expect(contact.topicLink("tech")).toBeVisible();
-      await expect(contact.topicLink("content")).toBeVisible();
-      await expect(contact.topicLink("sponsor")).toBeVisible();
-      await expect(contact.topicLink("gdpr")).toBeVisible();
-      await expect(contact.topicLink("press")).toBeVisible();
-      await expect(contact.topicLink("other")).toBeVisible();
+      for (const slug of TOPIC_SLUGS) {
+        await expect(contact.topicLink(slug)).toBeVisible();
+      }
     });
 
     await test.step("Verify the operator card with heading 'Prevádzkovateľ' is visible", async () => {
@@ -47,35 +52,36 @@ test.describe("Contact page /contact", () => {
     });
   });
 
-  // TC-02: Primary mailto link carries the correct pre-filled subject
-  test("TC-02: Primary mailto link carries the correct pre-filled subject", async ({ contact }) => {
-    await test.step("Open /contact at 1280×800", async () => {
+  // TC-02: Primary CTA links to the web form (no mailto)
+  test("TC-02: Primary CTA links to /contact-form, not a mailto", async ({ contact }) => {
+    await test.step("Open /contact", async () => {
       await contact.open();
     });
 
-    await test.step("Verify the href starts with 'mailto:subenai.podpora@gmail.com?' and decoded subject is 'subenai — Kontakt'", async () => {
-      const href = await contact.mainEmailLink.getAttribute("href");
-      expect(href).not.toBeNull();
-      expect(href!).toMatch(/^mailto:subenai\.podpora@gmail\.com\?/);
-      const subject = contact.decodeMailtoSubject(href!);
-      expect(subject).toBe("subenai — Kontakt");
+    await test.step("Verify the CTA href is '/contact-form'", async () => {
+      const href = await contact.mainFormLink.getAttribute("href");
+      expect(href).toBe("/contact-form");
     });
   });
 
-  // TC-03: Topic link "GDPR žiadosť" generates a mailto with the correct subject
-  test("TC-03: Topic link 'GDPR žiadosť' generates a mailto with the correct subject", async ({
+  // TC-03: Topic links deep-link to /contact-form?topic=<slug>
+  test("TC-03: All six topic links carry their ?topic= deep-link and are unique", async ({
     contact,
   }) => {
-    await test.step("Open /contact at 1280×800", async () => {
+    await test.step("Open /contact", async () => {
       await contact.open();
     });
 
-    await test.step("Verify the GDPR topic link href points to 'subenai.podpora@gmail.com' and decoded subject is 'subenai — GDPR žiadosť'", async () => {
-      const href = await contact.topicLink("gdpr").getAttribute("href");
-      expect(href).not.toBeNull();
-      expect(href!).toMatch(/^mailto:subenai\.podpora@gmail\.com\?/);
-      const subject = contact.decodeMailtoSubject(href!);
-      expect(subject).toBe("subenai — GDPR žiadosť");
+    await test.step("Verify each topic href is /contact-form?topic=<slug>", async () => {
+      const hrefs = await contact.allTopicHrefs();
+      for (const slug of TOPIC_SLUGS) {
+        expect(hrefs[slug]).toBe(`/contact-form?topic=${slug}`);
+      }
+    });
+
+    await test.step("Verify all six hrefs are distinct", async () => {
+      const hrefs = Object.values(await contact.allTopicHrefs());
+      expect(new Set(hrefs).size).toBe(6);
     });
   });
 
@@ -101,31 +107,33 @@ test.describe("Contact page /contact", () => {
     });
   });
 
-  // ---------------------------------------------------------------------------
-  // Negative scenarios
-  // ---------------------------------------------------------------------------
-
-  // TC-05: All six topic mailto hrefs decode to a non-empty unique `subject` parameter
-  test("TC-05: All six topic mailto hrefs decode to a non-empty and unique subject parameter", async ({
+  // TC-05: Clicking the GDPR topic card lands on the prefilled form
+  test("TC-05: GDPR topic card opens /contact-form with preselected category + prefilled subject", async ({
+    page,
     contact,
+    context,
+    kontakt,
   }) => {
-    await test.step("Open /contact", async () => {
+    await test.step("Prime consent and open /contact", async () => {
+      await primeConsent(context, "all");
       await contact.open();
     });
 
-    await test.step("Read all six topic link hrefs and verify each decoded subject is non-empty and starts with 'subenai — '", async () => {
-      const subjects = await contact.allTopicSubjects();
-      expect(subjects).toHaveLength(6);
-      for (const subject of subjects) {
-        expect(subject.length).toBeGreaterThan(0);
-        expect(subject.startsWith("subenai — ")).toBe(true);
-      }
+    await test.step("Click the GDPR topic card", async () => {
+      await contact.topicLink("gdpr").click();
     });
 
-    await test.step("Verify all six subjects are distinct (no two subjects are the same)", async () => {
-      const subjects = await contact.allTopicSubjects();
-      const unique = new Set(subjects);
-      expect(unique.size).toBe(6);
+    await test.step("Verify the browser navigated to /contact-form?topic=gdpr", async () => {
+      await expect(page).toHaveURL(/\/contact-form\?topic=gdpr$/);
+      await expect(kontakt.root).toBeVisible();
+    });
+
+    await test.step("Verify the subject is prefilled with 'GDPR žiadosť'", async () => {
+      await expect(kontakt.subjectInput).toHaveValue("GDPR žiadosť");
+    });
+
+    await test.step("Verify the category select shows 'Žiadosť o údaje (GDPR)'", async () => {
+      await expect(kontakt.categorySelect).toContainText("Žiadosť o údaje (GDPR)");
     });
   });
 
@@ -137,10 +145,8 @@ test.describe("Contact page /contact", () => {
       await contact.open();
     });
 
-    await test.step("Verify the text 'Ak ti tlačidlo nefunguje, skopíruj adresu ručne:' is visible", async () => {
-      await expect(
-        contact.root.getByText(/Ak ti tlačidlo nefunguje, skopíruj adresu ručne:/),
-      ).toBeVisible();
+    await test.step("Verify the text 'Ak radšej píšeš e-mail, naša adresa je' is visible", async () => {
+      await expect(contact.root.getByText(/Ak radšej píšeš e-mail, naša adresa je/)).toBeVisible();
     });
 
     await test.step("Verify the <code> element containing 'subenai.podpora@gmail.com' is visible", async () => {
@@ -171,17 +177,19 @@ test.describe("Contact page /contact", () => {
     });
   });
 
-  // TC-08: Operator GDPR mailto link in the card carries the GDPR subject
-  test("TC-08: Operator GDPR mailto link carries the GDPR subject", async ({ contact }) => {
+  // TC-08: Operator card shows the GDPR contact e-mail as plain text
+  test("TC-08: Operator card shows the GDPR contact e-mail as a plain-text code element", async ({
+    contact,
+  }) => {
     await test.step("Open /contact", async () => {
       await contact.open();
     });
 
-    await test.step("Verify the GDPR mailto link in the operator card has decoded subject 'subenai — GDPR žiadosť'", async () => {
-      const href = await contact.gdprEmailLink.getAttribute("href");
-      expect(href).not.toBeNull();
-      const subject = contact.decodeMailtoSubject(href!);
-      expect(subject).toBe("subenai — GDPR žiadosť");
+    await test.step("Verify the GDPR e-mail code in the operator card is visible and not a link", async () => {
+      await expect(contact.gdprEmailCode).toBeVisible();
+      await expect(contact.gdprEmailCode).toHaveText("subenai.podpora@gmail.com");
+      const isInsideAnchor = await contact.gdprEmailCode.evaluate((el) => el.closest("a") !== null);
+      expect(isInsideAnchor).toBe(false);
     });
   });
 
@@ -189,7 +197,7 @@ test.describe("Contact page /contact", () => {
   // Edge cases
   // ---------------------------------------------------------------------------
 
-  // TC-09: Page title and meta description are set; `robots` meta is `index, follow`
+  // TC-09: Page title and meta description are set; robots meta is index, follow
   test("TC-09: Page title, meta description, robots meta, and canonical link are correct", async ({
     page,
     contact,
@@ -205,7 +213,7 @@ test.describe("Contact page /contact", () => {
     await test.step("Verify <meta name='description'> content equals the expected description string", async () => {
       const content = await contact.metaDescriptionContent();
       expect(content).toBe(
-        "Napíš nám priamo na email. Technická pomoc, GDPR žiadosti, sponzorstvo aj všeobecné otázky. Odpovedáme typicky do 2 pracovných dní.",
+        "Napíš nám cez kontaktný formulár. Technická pomoc, GDPR žiadosti, sponzorstvo aj všeobecné otázky. Odpovedáme typicky do 2 pracovných dní.",
       );
     });
 
@@ -237,8 +245,8 @@ test.describe("Contact page /contact", () => {
       expect(hasOverflow).toBe(false);
     });
 
-    await test.step("Verify the primary mailto button is fully visible within the viewport", async () => {
-      await expect(contact.mainEmailLink).toBeVisible();
+    await test.step("Verify the primary form CTA is fully visible within the viewport", async () => {
+      await expect(contact.mainFormLink).toBeVisible();
     });
 
     await test.step("Verify the topics list renders in a single column (grid collapses on mobile)", async () => {
@@ -267,8 +275,8 @@ test.describe("Contact page /contact", () => {
     });
   });
 
-  // TC-12: All mailto links are keyboard-reachable and activatable
-  test("TC-12: All mailto links are keyboard-reachable and activatable", async ({
+  // TC-12: Links are keyboard-reachable and activatable
+  test("TC-12: Form CTA and topic links are keyboard-reachable and activatable", async ({
     page,
     contact,
     context,
@@ -282,11 +290,11 @@ test.describe("Contact page /contact", () => {
       await contact.open();
     });
 
-    await test.step("Tab through the page and verify the primary mailto link receives focus before topic links", async () => {
+    await test.step("Tab through the page and verify the primary form CTA receives focus before topic links", async () => {
       let mainFocused = false;
       for (let i = 0; i < 20; i++) {
         await page.keyboard.press("Tab");
-        const isFocused = await contact.mainEmailLink.evaluate(
+        const isFocused = await contact.mainFormLink.evaluate(
           (el) => el === document.activeElement,
         );
         if (isFocused) {
@@ -297,7 +305,7 @@ test.describe("Contact page /contact", () => {
       expect(mainFocused).toBe(true);
     });
 
-    await test.step("Tab to verify the first topic link (tech) receives focus after the primary link", async () => {
+    await test.step("Tab to verify the first topic link (tech) receives focus after the primary CTA", async () => {
       await page.keyboard.press("Tab");
       const isFocused = await contact
         .topicLink("tech")
@@ -305,37 +313,34 @@ test.describe("Contact page /contact", () => {
       expect(isFocused).toBe(true);
     });
 
-    await test.step("Verify pressing Enter on a focused mailto link does not throw a JavaScript error", async () => {
-      const errors: string[] = [];
-      page.on("console", (msg) => {
-        if (msg.type() === "error") errors.push(msg.text());
-      });
+    await test.step("Press Enter on the focused topic link and verify SPA navigation to the form", async () => {
       await page.keyboard.press("Enter");
-      expect(errors).toHaveLength(0);
+      await expect(page).toHaveURL(/\/contact-form\?topic=tech$/);
     });
   });
 
-  // TC-13: Slovak diacritics in subject lines encode correctly in the href
-  test("TC-13: Slovak diacritics in subject lines encode correctly and round-trip via decodeURIComponent", async ({
+  // TC-13: Truthful hero copy — the page no longer claims "no form, no ticket system"
+  test("TC-13: Hero copy describes the form honestly (request number + human reply)", async ({
     contact,
   }) => {
     await test.step("Open /contact", async () => {
       await contact.open();
     });
 
-    await test.step("Read the raw href of the GDPR topic link and verify it contains percent-encoded characters", async () => {
-      const href = await contact.topicLink("gdpr").getAttribute("href");
-      expect(href).not.toBeNull();
-      const qmark = href!.indexOf("?");
-      const rawQuery = href!.slice(qmark + 1);
-      expect(rawQuery).toMatch(/%[0-9A-Fa-f]{2}/);
+    await test.step("Verify the hero mentions the request number and a human e-mail reply", async () => {
+      await expect(
+        contact.root.getByText(/Dostaneš číslo žiadosti a odpoveď e-mailom/),
+      ).toBeVisible();
     });
 
-    await test.step("Verify decodeURIComponent of the subject value round-trips back to 'subenai — GDPR žiadosť' without data loss", async () => {
-      const href = await contact.topicLink("gdpr").getAttribute("href");
-      const subject = contact.decodeMailtoSubject(href!);
-      expect(subject).toBe("subenai — GDPR žiadosť");
-      expect(subject!.startsWith("subenai — ")).toBe(true);
+    await test.step("Verify the obsolete 'Žiadny formulár, žiadny ticket systém' claim is gone", async () => {
+      await expect(contact.root.getByText(/Žiadny formulár/)).toHaveCount(0);
+      await expect(contact.root.getByText(/žiadny ticket systém/)).toHaveCount(0);
+    });
+
+    await test.step("Verify no mailto link remains anywhere on the page", async () => {
+      const mailtoCount = await contact.root.locator('a[href^="mailto:"]').count();
+      expect(mailtoCount).toBe(0);
     });
   });
 
@@ -458,11 +463,9 @@ test.describe("Contact page /contact", () => {
     });
 
     await test.step("Verify all six topic links are present and have non-empty href values", async () => {
-      const slugs = ["tech", "content", "sponsor", "gdpr", "press", "other"] as const;
-      for (const slug of slugs) {
-        const href = await contact.topicLink(slug).getAttribute("href");
-        expect(href).not.toBeNull();
-        expect(href!.length).toBeGreaterThan(0);
+      const hrefs = await contact.allTopicHrefs();
+      for (const slug of TOPIC_SLUGS) {
+        expect(hrefs[slug]).toBeTruthy();
       }
     });
 

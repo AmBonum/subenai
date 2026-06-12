@@ -493,6 +493,7 @@ test.describe("Cookie consent banner — edge cases", () => {
     });
 
     await test.step("Attempt to click the 'necessary' switch", async () => {
+      await consentDialog.waitForEntranceAnimation();
       await consentDialog.toggle("necessary").click({ force: true });
     });
 

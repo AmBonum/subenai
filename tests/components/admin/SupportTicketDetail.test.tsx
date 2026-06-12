@@ -210,13 +210,16 @@ describe("SupportTicketDetail (E48-v2 PR-DETAIL)", () => {
     expect(sys.className).toContain("text-muted-foreground");
   });
 
+  // Mirrors the transition_ticket_status RPC FSM exactly
+  // (20260610102000_ticket_rpcs_unified_aal2.sql) — the UI must never offer
+  // a move the server rejects with invalid_transition.
   it.each([
-    ["new", ["in_progress", "resolved", "archived"]],
-    ["in_progress", ["waiting_user", "resolved", "archived"]],
+    ["new", ["in_progress"]],
+    ["in_progress", ["waiting_user", "resolved"]],
     ["waiting_user", ["in_progress", "resolved"]],
     ["resolved", ["reopened", "archived"]],
-    ["reopened", ["in_progress", "resolved"]],
-    ["archived", ["in_progress"]],
+    ["reopened", ["in_progress"]],
+    ["archived", ["reopened"]],
   ] as const)("shows FSM transitions %s -> %s", async (status, expected) => {
     state.ticket = baseTicket({ status });
     const SupportTicketDetail = await loadComponent();

@@ -61,15 +61,16 @@ describe("QueueStatusPopover (E48-v3)", () => {
     await waitFor(() =>
       expect(screen.getByTestId(`admin-tickets-row-status-popover-${T_ID}`)).toBeInTheDocument(),
     );
+    // Mirrors the transition_ticket_status RPC FSM: new → in_progress ONLY.
     expect(
       screen.getByTestId(`admin-tickets-row-status-option-${T_ID}-in_progress`),
     ).toBeInTheDocument();
     expect(
-      screen.getByTestId(`admin-tickets-row-status-option-${T_ID}-resolved`),
-    ).toBeInTheDocument();
+      screen.queryByTestId(`admin-tickets-row-status-option-${T_ID}-resolved`),
+    ).not.toBeInTheDocument();
     expect(
-      screen.getByTestId(`admin-tickets-row-status-option-${T_ID}-archived`),
-    ).toBeInTheDocument();
+      screen.queryByTestId(`admin-tickets-row-status-option-${T_ID}-archived`),
+    ).not.toBeInTheDocument();
   });
 
   it("popover for 'waiting_user' offers in_progress + resolved (no archive direct path)", async () => {
@@ -87,13 +88,17 @@ describe("QueueStatusPopover (E48-v3)", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("popover for 'archived' only offers in_progress (unarchive)", async () => {
+  it("popover for 'archived' only offers reopened (unarchive)", async () => {
     renderPopover("archived");
     fireEvent.click(screen.getByTestId(`admin-tickets-row-status-trigger-${T_ID}`));
     await waitFor(() => screen.getByTestId(`admin-tickets-row-status-popover-${T_ID}`));
+    // RPC FSM: archived → reopened (in_progress comes next, from reopened).
     expect(
-      screen.getByTestId(`admin-tickets-row-status-option-${T_ID}-in_progress`),
+      screen.getByTestId(`admin-tickets-row-status-option-${T_ID}-reopened`),
     ).toBeInTheDocument();
+    expect(
+      screen.queryByTestId(`admin-tickets-row-status-option-${T_ID}-in_progress`),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByTestId(`admin-tickets-row-status-option-${T_ID}-resolved`),
     ).not.toBeInTheDocument();
@@ -137,7 +142,7 @@ describe("QueueStatusPopover (E48-v3)", () => {
   });
 
   it("confirming the dialog fires the transition_ticket_status RPC with the target status", async () => {
-    renderPopover("new");
+    renderPopover("resolved");
     fireEvent.click(screen.getByTestId(`admin-tickets-row-status-trigger-${T_ID}`));
     await waitFor(() => screen.getByTestId(`admin-tickets-row-status-option-${T_ID}-archived`));
     fireEvent.click(screen.getByTestId(`admin-tickets-row-status-option-${T_ID}-archived`));

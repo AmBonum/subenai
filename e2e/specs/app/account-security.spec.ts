@@ -1,14 +1,46 @@
+import type { Page } from "@playwright/test";
+
 import { test, expect } from "../../fixtures/base";
 import { setupEducator } from "../../setup/app-shell";
 import { AppAccountSecurityPage } from "../../poms/app/AppAccountSecurityPage";
+
+// The password card drives the real supabase.auth.updateUser flow
+// (PUT /auth/v1/user). The auth fixture already fulfills every method on
+// **/auth/v1/user** with the session user; per-test routes below override
+// the PUT to capture the payload or simulate GoTrue error responses.
+
+interface CapturedPut {
+  body: Record<string, unknown> | null;
+}
+
+async function interceptPasswordPut(page: Page, captured: CapturedPut, userJson: string) {
+  await page.route("**/auth/v1/user**", async (route) => {
+    if (route.request().method() === "PUT") {
+      captured.body = route.request().postDataJSON() as Record<string, unknown>;
+    }
+    await route.fulfill({ status: 200, contentType: "application/json", body: userJson });
+  });
+}
+
+const EDUCATOR_USER_JSON = JSON.stringify({
+  id: "00000000-0000-0000-0000-000000000002",
+  email: "educator@e2e.test",
+  aud: "authenticated",
+  role: "authenticated",
+  app_metadata: { provider: "email", providers: ["email"] },
+  user_metadata: { has_role: ["educator"] },
+  identities: [{ provider: "email" }],
+  created_at: "2026-05-19T00:00:00.000Z",
+  updated_at: "2026-05-19T00:00:00.000Z",
+});
 
 test.describe("/app/account/security", () => {
   test.beforeEach(async ({ context, page }) => {
     await setupEducator(context, page);
   });
 
-  // TC-01: Page renders password form, sessions list, and 2FA activate CTA (no enrolled factor)
-  test("TC-01: renders password form, sessions list, and 2FA activate CTA when no factor enrolled", async ({
+  // TC-01: Page renders the real password form + fallback link; the old mock sessions card is gone
+  test("TC-01: renders password form, forgot-password fallback and 2FA CTA; no fabricated sessions card", async ({
     page,
   }) => {
     const sec = new AppAccountSecurityPage(page);
@@ -22,8 +54,14 @@ test.describe("/app/account/security", () => {
       await expect(sec.passwordForm).toBeVisible();
     });
 
-    await test.step("Verify the sessions list is visible", async () => {
-      await expect(sec.sessionsList).toBeVisible();
+    await test.step("Verify the /forgot-password fallback link is present", async () => {
+      await expect(sec.forgotLink).toBeVisible();
+      await expect(sec.forgotLink).toHaveAttribute("href", "/forgot-password");
+    });
+
+    await test.step("Verify the fabricated 'Aktívne sedenia' card no longer renders", async () => {
+      await expect(sec.legacySessionsList).toHaveCount(0);
+      await expect(sec.root).not.toContainText("Aktívne sedenia");
     });
 
     await test.step("Verify the 'Aktivovať 2FA' button is visible", async () => {
@@ -58,33 +96,8 @@ test.describe("/app/account/security", () => {
     });
   });
 
-  // TC-03: Clicking "Odhlásiť" on a non-current session shows the revocation toast
-  test("TC-03: clicking 'Odhlásiť' on session s2 shows 'Sedenie ukončené' toast", async ({
-    page,
-  }) => {
-    const sec = new AppAccountSecurityPage(page);
-
-    await test.step("Navigate to /app/account/security at 1280×800", async () => {
-      await page.setViewportSize({ width: 1280, height: 800 });
-      await sec.open();
-    });
-
-    await test.step("Verify the revoke button for session s2 is visible", async () => {
-      await expect(sec.revoke("s2")).toBeVisible();
-    });
-
-    await test.step("Click the 'Odhlásiť' button for session s2", async () => {
-      await sec.revoke("s2").click();
-    });
-
-    await test.step("Verify the 'Sedenie ukončené' toast is visible", async () => {
-      await expect(sec.toast).toBeVisible({ timeout: 4000 });
-      await expect(sec.toast).toContainText("Sedenie ukončené");
-    });
-  });
-
-  // TC-04: Submit button stays disabled while password fields mismatch
-  test("TC-04: 'Zmeniť heslo' submit stays disabled until the two password inputs match", async ({
+  // TC-03: Submit stays disabled until both password fields are filled
+  test("TC-03: 'Zmeniť heslo' submit stays disabled until both inputs are non-empty", async ({
     page,
   }) => {
     const sec = new AppAccountSecurityPage(page);
@@ -99,23 +112,15 @@ test.describe("/app/account/security", () => {
     });
 
     await test.step("Fill only the new-password field", async () => {
-      await sec.currentPassword.fill("Tajne-Heslo-2026!");
+      await sec.newPassword.fill("Tajne-Heslo-2026!");
     });
 
     await test.step("Verify the submit button stays disabled while the confirm is empty", async () => {
       await expect(sec.submitPassword).toBeDisabled();
     });
 
-    await test.step("Fill the confirm field with a non-matching value", async () => {
-      await sec.newPassword.fill("Tajne-Heslo-Inych");
-    });
-
-    await test.step("Verify the submit button is still disabled because the fields differ", async () => {
-      await expect(sec.submitPassword).toBeDisabled();
-    });
-
-    await test.step("Correct the confirm field so both inputs match", async () => {
-      await sec.newPassword.fill("Tajne-Heslo-2026!");
+    await test.step("Fill the confirm field", async () => {
+      await sec.confirmPassword.fill("Tajne-Heslo-2026!");
     });
 
     await test.step("Verify the submit button is now enabled", async () => {
@@ -123,60 +128,146 @@ test.describe("/app/account/security", () => {
     });
   });
 
-  // TC-05: Submitting matching passwords surfaces the AH-11 deferred toast
-  test("TC-05: submitting a matching password pair surfaces the AH-11 deferred toast", async ({
+  // TC-04: Mismatching passwords surface the inline Slovak error without any network call
+  test("TC-04: mismatching passwords show 'Heslá sa nezhodujú.' and skip the API call", async ({
     page,
   }) => {
     const sec = new AppAccountSecurityPage(page);
+    const captured: CapturedPut = { body: null };
 
-    await test.step("Navigate to /app/account/security at 1280×800", async () => {
+    await test.step("Navigate and intercept PUT /auth/v1/user", async () => {
       await page.setViewportSize({ width: 1280, height: 800 });
       await sec.open();
+      await interceptPasswordPut(page, captured, EDUCATOR_USER_JSON);
     });
 
-    await test.step("Fill the new-password and confirm fields with matching values", async () => {
-      await sec.currentPassword.fill("Tajne-Heslo-2026!");
+    await test.step("Fill mismatching passwords and submit", async () => {
       await sec.newPassword.fill("Tajne-Heslo-2026!");
-    });
-
-    await test.step("Click 'Zmeniť heslo'", async () => {
+      await sec.confirmPassword.fill("Ine-Heslo-2026!");
       await sec.submitPassword.click();
     });
 
-    await test.step("Verify the deferred toast is shown verbatim", async () => {
-      await expect(sec.toast).toBeVisible({ timeout: 4000 });
-      await expect(sec.toast).toContainText("Funkcia ešte nie je dostupná — backend pripravujeme.");
+    await test.step("Verify the mismatch error renders verbatim", async () => {
+      await expect(sec.passwordError).toBeVisible();
+      await expect(sec.passwordError).toHaveText("Heslá sa nezhodujú.");
     });
 
-    await test.step("Verify both password fields are cleared after submit", async () => {
-      await expect(sec.currentPassword).toHaveValue("");
-      await expect(sec.newPassword).toHaveValue("");
+    await test.step("Verify no PUT request reached the auth API", async () => {
+      expect(captured.body).toBeNull();
     });
   });
 
-  // TC-06: Current session row renders the "aktuálne" badge and has no revoke control
-  test("TC-06: current session row shows the 'aktuálne' badge and exposes no revoke button", async ({
+  // TC-05: Successful change PUTs the new password and confirms via toast
+  test("TC-05: submitting a valid password pair calls supabase updateUser and shows the success toast", async ({
+    page,
+  }) => {
+    const sec = new AppAccountSecurityPage(page);
+    const captured: CapturedPut = { body: null };
+
+    await test.step("Navigate and intercept PUT /auth/v1/user", async () => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await sec.open();
+      await interceptPasswordPut(page, captured, EDUCATOR_USER_JSON);
+    });
+
+    await test.step("Fill a valid matching password pair and submit", async () => {
+      await sec.newPassword.fill("Nove-Tajne-Heslo-2026");
+      await sec.confirmPassword.fill("Nove-Tajne-Heslo-2026");
+      await sec.submitPassword.click();
+    });
+
+    await test.step("Verify the success toast 'Heslo bolo zmenené.' appears", async () => {
+      await expect(sec.toast).toBeVisible({ timeout: 4000 });
+      await expect(sec.toast).toContainText("Heslo bolo zmenené.");
+    });
+
+    await test.step("Verify the PUT body carried the new password", async () => {
+      expect(captured.body).not.toBeNull();
+      expect(captured.body!.password).toBe("Nove-Tajne-Heslo-2026");
+    });
+
+    await test.step("Verify both password fields are cleared after the change", async () => {
+      await expect(sec.newPassword).toHaveValue("");
+      await expect(sec.confirmPassword).toHaveValue("");
+    });
+  });
+
+  // TC-06: GoTrue reauthentication error maps to the Slovak message with the /forgot-password path
+  test("TC-06: reauthentication-required error maps to a message linking /forgot-password", async ({
     page,
   }) => {
     const sec = new AppAccountSecurityPage(page);
 
-    await test.step("Navigate to /app/account/security at 1280×800", async () => {
+    await test.step("Navigate and stub PUT /auth/v1/user with a reauthentication_needed error", async () => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await sec.open();
+      await page.route("**/auth/v1/user**", async (route) => {
+        if (route.request().method() === "PUT") {
+          await route.fulfill({
+            status: 403,
+            contentType: "application/json",
+            body: JSON.stringify({
+              code: 403,
+              error_code: "reauthentication_needed",
+              msg: "Reauthentication needed.",
+            }),
+          });
+          return;
+        }
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: EDUCATOR_USER_JSON,
+        });
+      });
+    });
+
+    await test.step("Fill a valid matching password pair and submit", async () => {
+      await sec.newPassword.fill("Nove-Tajne-Heslo-2026");
+      await sec.confirmPassword.fill("Nove-Tajne-Heslo-2026");
+      await sec.submitPassword.click();
+    });
+
+    await test.step("Verify the reauthentication message with the /forgot-password link renders", async () => {
+      await expect(sec.passwordError).toBeVisible();
+      await expect(sec.passwordError).toContainText("Z bezpečnostných dôvodov");
+      await expect(sec.reauthForgotLink).toBeVisible();
+      await expect(sec.reauthForgotLink).toHaveAttribute("href", "/forgot-password");
+    });
+  });
+
+  // TC-07: OAuth-only account hides the password form and explains the Google path
+  test("TC-07: OAuth-only account sees the explanatory note instead of the password form", async ({
+    page,
+  }) => {
+    const sec = new AppAccountSecurityPage(page);
+
+    await test.step("Override GET /auth/v1/user with a Google-only identity", async () => {
+      await page.route("**/auth/v1/user**", async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            id: "00000000-0000-0000-0000-000000000002",
+            email: "educator@e2e.test",
+            aud: "authenticated",
+            role: "authenticated",
+            app_metadata: { provider: "google", providers: ["google"] },
+            user_metadata: { has_role: ["educator"] },
+            identities: [{ provider: "google" }],
+            created_at: "2026-05-19T00:00:00.000Z",
+            updated_at: "2026-05-19T00:00:00.000Z",
+          }),
+        });
+      });
       await page.setViewportSize({ width: 1280, height: 800 });
       await sec.open();
     });
 
-    await test.step("Verify the current session row (s1) is visible and labelled 'aktuálne'", async () => {
-      await expect(sec.sessionRow("s1")).toBeVisible();
-      await expect(sec.sessionRow("s1")).toContainText("aktuálne");
-    });
-
-    await test.step("Verify the current session has no revoke button", async () => {
-      await expect(sec.revoke("s1")).toHaveCount(0);
-    });
-
-    await test.step("Verify the non-current rows (s2, s3) DO expose a revoke button", async () => {
-      await expect(sec.revoke("s2")).toBeVisible();
-      await expect(sec.revoke("s3")).toBeVisible();
+    await test.step("Verify the OAuth-only notice replaces the password form", async () => {
+      await expect(sec.oauthOnlyNotice).toBeVisible();
+      await expect(sec.oauthOnlyNotice).toContainText("Prihlasuješ sa cez Google");
+      await expect(sec.passwordForm).toHaveCount(0);
     });
   });
 });
@@ -186,8 +277,8 @@ test.describe("/app/account/security @mobile", () => {
     await setupEducator(context, page);
   });
 
-  // TC-07: Password form and sessions list render full-width without horizontal overflow on mobile
-  test("TC-07: password form and sessions list render full-width on mobile without horizontal overflow", async ({
+  // TC-08: Password form renders full-width without horizontal overflow on mobile
+  test("TC-08: password form and 2FA CTA render full-width on mobile without horizontal overflow", async ({
     page,
   }) => {
     const sec = new AppAccountSecurityPage(page);
@@ -196,17 +287,16 @@ test.describe("/app/account/security @mobile", () => {
       await sec.open();
     });
 
-    await test.step("Verify the password form, sessions list, and 2FA CTA are visible", async () => {
+    await test.step("Verify the password form and 2FA CTA are visible", async () => {
       await expect(sec.passwordForm).toBeVisible();
-      await expect(sec.sessionsList).toBeVisible();
       await expect(sec.twoFaActivateButton).toBeVisible();
     });
 
     await test.step("Verify the password inputs span most of the viewport width", async () => {
-      const currentBox = await sec.currentPassword.boundingBox();
       const newBox = await sec.newPassword.boundingBox();
-      expect(currentBox?.width).toBeGreaterThan(300);
+      const confirmBox = await sec.confirmPassword.boundingBox();
       expect(newBox?.width).toBeGreaterThan(300);
+      expect(confirmBox?.width).toBeGreaterThan(300);
     });
 
     await test.step("Verify the document body does not horizontally overflow the viewport", async () => {

@@ -115,10 +115,12 @@ test.describe("Quiz flow /test", () => {
   // TC-05: Restart button returns to question 1
   test("TC-05: Restart button returns to question 1", async ({ quizFlow }) => {
     test.setTimeout(60_000);
-    // Re-enabled 2026-05-19: TestFlow.restart() now re-seeds questions
-    // from `dbQuestions` directly instead of clearing + refetching.
-    // This TC is the regression sentinel for the React Query stale-ref
-    // trap (see TestFlow.tsx restart() for the inline note).
+    // TestFlow.restart() force-refetches get_quick_test_questions (the
+    // RPC randomizes server-side via ORDER BY random(), so a refetch is
+    // what delivers the promised fresh batch) and seeds questions from
+    // the refetch result imperatively. This TC is the regression
+    // sentinel against the user getting stuck on the intro card after
+    // restart (see TestFlow.tsx restart() for the inline note).
     await test.step("Navigate to /test, wait for playing phase, and answer all 10 questions", async () => {
       await quizFlow.open();
       await quizFlow.waitForPlayingPhase();

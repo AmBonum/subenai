@@ -2,13 +2,18 @@ import { test, expect } from "../../fixtures/base";
 import { setupEducator } from "../../setup/app-shell";
 import { EDUCATOR_SESSION } from "../../fixtures/auth";
 import { seedTest } from "../../seed";
+import type { RpcContext } from "../../mocks/supabase";
 import { AppTestsIndexPage } from "../../poms/app/AppTestsIndexPage";
 
 test.describe("/app/tests", () => {
-  // TC-01: Empty state renders when educator has no tests
-  test("TC-01: empty state renders when educator has no tests", async ({ context, page }) => {
+  // TC-01: True-empty state (zero owned tests) renders the first-run card
+  // with a "Vytvoriť prvý test" CTA instead of the filter-empty copy.
+  test("TC-01: true-empty state renders the first-run card with a create CTA", async ({
+    context,
+    page,
+  }) => {
     await setupEducator(context, page, {
-      tables: { tests: [] },
+      tables: { tests: [], respondent_groups: [] },
     });
     const testsIndex = new AppTestsIndexPage(page);
 
@@ -21,13 +26,23 @@ test.describe("/app/tests", () => {
       await expect(testsIndex.newTestButton).toBeVisible();
     });
 
-    await test.step("Verify empty-state card is visible with correct text", async () => {
-      await expect(testsIndex.emptyState).toBeVisible();
-      await expect(testsIndex.emptyState).toHaveText("Žiadne testy v tomto filtri.");
+    await test.step("Verify the first-run empty card with headline + CTA", async () => {
+      await expect(testsIndex.emptyInitial).toBeVisible();
+      await expect(testsIndex.emptyInitialTitle).toHaveText("Zatiaľ nemáš žiadne testy.");
+      await expect(testsIndex.emptyInitialCta).toBeVisible();
+    });
+
+    await test.step("Verify the filter-empty card is NOT rendered", async () => {
+      await expect(testsIndex.emptyState).toHaveCount(0);
     });
 
     await test.step("Verify no test row cards are in the DOM", async () => {
       await expect(testsIndex.allListRows).toHaveCount(0);
+    });
+
+    await test.step("Click the CTA and verify it navigates to the wizard", async () => {
+      await testsIndex.emptyInitialCta.click();
+      await expect(page).toHaveURL(/\/app\/tests\/new/);
     });
   });
 
@@ -45,7 +60,7 @@ test.describe("/app/tests", () => {
     });
 
     await setupEducator(context, page, {
-      tables: { tests: [draft, published] },
+      tables: { tests: [draft, published], respondent_groups: [] },
     });
     const testsIndex = new AppTestsIndexPage(page);
 
@@ -82,7 +97,7 @@ test.describe("/app/tests", () => {
     });
 
     await setupEducator(context, page, {
-      tables: { tests: [draft, published] },
+      tables: { tests: [draft, published], respondent_groups: [] },
     });
     const testsIndex = new AppTestsIndexPage(page);
 
@@ -95,7 +110,7 @@ test.describe("/app/tests", () => {
       await expect(testsIndex.listRow(published.id)).toBeVisible();
     });
 
-    await test.step("Click the 'Drafty' status tab", async () => {
+    await test.step("Click the 'Koncepty' status tab", async () => {
       await testsIndex.statusTab("draft").click();
     });
 
@@ -111,7 +126,7 @@ test.describe("/app/tests", () => {
   // TC-04: "Nový test" button navigates to /app/tests/new
   test("TC-04: 'Nový test' button navigates to /app/tests/new", async ({ context, page }) => {
     await setupEducator(context, page, {
-      tables: { tests: [] },
+      tables: { tests: [], respondent_groups: [] },
     });
     const testsIndex = new AppTestsIndexPage(page);
 
@@ -137,7 +152,7 @@ test.describe("/app/tests", () => {
     });
 
     await setupEducator(context, page, {
-      tables: { tests: [t] },
+      tables: { tests: [t], respondent_groups: [] },
     });
     const testsIndex = new AppTestsIndexPage(page);
 
@@ -158,21 +173,9 @@ test.describe("/app/tests", () => {
     });
   });
 
-  // TC-06: Duplicate action calls rpc/duplicate_test and refreshes the list
-  //
-  // FINDING (2026-06-11): `useDuplicateTest` (src/lib/platform/queries.ts:525)
-  // wraps the `duplicate_test` RPC and invalidates ["user","tests"], but NO
-  // component consumes it — neither the /app/tests row cards
-  // (src/routes/app.tests.index.tsx renders only "Otvoriť" + "Zdielať") nor
-  // the /app/tests/$testId detail route expose a duplicate trigger. The
-  // i18n key "action_duplicate" ("Duplikovať") exists in
-  // src/i18n/locales/sk/tests.json but is only used by TemplateCard.
-  // Un-fixme once the UI trigger ships: seed one test, click the duplicate
-  // action (add `tests-list-row-duplicate-<id>` testid + POM getter), assert
-  // the RPC body is { p_test_id: <seeded id> } via a recording resolver and
-  // that the duplicated row appears after the ["user","tests"] invalidation
-  // refetch.
-  test.fixme("TC-06: duplicate action calls duplicate_test with the test id and the list refetches", async ({
+  // TC-06: Duplicate action calls rpc/duplicate_test and refreshes the list.
+  // (Un-fixme'd 2026-06-11 — the row action shipped with E50 review fix 5.)
+  test("TC-06: duplicate action calls duplicate_test with the test id and the list refetches", async ({
     context,
     page,
   }) => {
@@ -181,13 +184,93 @@ test.describe("/app/tests", () => {
       title: "Duplicate me",
       status: "published",
     });
+    const duplicateCalls: unknown[] = [];
     await setupEducator(context, page, {
-      tables: { tests: [t] },
-      rpcs: { duplicate_test: "tst_e2e_duplicate_copy" },
+      tables: { tests: [t], respondent_groups: [] },
+      rpcs: {
+        // Emulates the real duplicate_test: copies the row server-side and
+        // returns the new id so the invalidation refetch sees the copy.
+        duplicate_test: (body: unknown, ctx: RpcContext) => {
+          duplicateCalls.push(body);
+          const copy = seedTest({
+            id: "tst_e2e_duplicate_copy",
+            owner_id: EDUCATOR_SESSION.user.id,
+            title: "Duplicate me (kópia)",
+            status: "draft",
+          });
+          ctx.tables.tests.push(copy);
+          return "tst_e2e_duplicate_copy";
+        },
+      },
     });
     const testsIndex = new AppTestsIndexPage(page);
-    await testsIndex.open();
-    await expect(testsIndex.listRow(t.id)).toBeVisible();
-    // Blocked: no duplicate trigger exists in the UI (see FINDING above).
+
+    await test.step("Open /app/tests and verify the source row", async () => {
+      await testsIndex.open();
+      await expect(testsIndex.listRow(t.id)).toBeVisible();
+    });
+
+    await test.step("Click the 'Duplikovať' row action", async () => {
+      await testsIndex.rowDuplicateButton(t.id).click();
+    });
+
+    await test.step("Verify the RPC body and the success toast", async () => {
+      await expect(testsIndex.toast).toBeVisible();
+      await expect(testsIndex.toast).toContainText("Kópia testu vytvorená.");
+      expect(duplicateCalls).toEqual([{ p_test_id: t.id }]);
+    });
+
+    await test.step("Verify the copied row appears after the refetch", async () => {
+      await expect(testsIndex.listRow("tst_e2e_duplicate_copy")).toBeVisible();
+      await expect(testsIndex.rowTitle("tst_e2e_duplicate_copy")).toHaveText(
+        "Duplicate me (kópia)",
+      );
+    });
+  });
+
+  // TC-07: Delete action — destructive ConfirmDialog with typed-confirm on
+  // the test title; the row disappears after the DELETE + refetch.
+  test("TC-07: delete action requires typing the test title and removes the row", async ({
+    context,
+    page,
+  }) => {
+    const t = seedTest({
+      owner_id: EDUCATOR_SESSION.user.id,
+      title: "Delete me E2E",
+      status: "draft",
+    });
+    await setupEducator(context, page, {
+      tables: { tests: [t], respondent_groups: [] },
+    });
+    const testsIndex = new AppTestsIndexPage(page);
+
+    await test.step("Open /app/tests and verify the row", async () => {
+      await testsIndex.open();
+      await expect(testsIndex.listRow(t.id)).toBeVisible();
+    });
+
+    await test.step("Click the 'Vymazať' row action — the destructive dialog opens", async () => {
+      await testsIndex.rowDeleteButton(t.id).click();
+      await expect(testsIndex.confirmDialog).toBeVisible();
+      await expect(testsIndex.confirmDialog).toHaveAttribute("data-severity", "destructive");
+    });
+
+    await test.step("Verify confirm stays disabled until the exact title is typed", async () => {
+      await expect(testsIndex.confirmDialogConfirm).toBeDisabled();
+      await testsIndex.confirmDialogTypedInput.fill("wrong title");
+      await expect(testsIndex.confirmDialogConfirm).toBeDisabled();
+      await testsIndex.confirmDialogTypedInput.fill("Delete me E2E");
+      await expect(testsIndex.confirmDialogConfirm).toBeEnabled();
+    });
+
+    await test.step("Confirm the deletion", async () => {
+      await testsIndex.confirmDialogConfirm.click();
+    });
+
+    await test.step("Verify the row is gone and the success toast shows", async () => {
+      await expect(testsIndex.listRow(t.id)).toHaveCount(0);
+      await expect(testsIndex.toast).toBeVisible();
+      await expect(testsIndex.toast).toContainText("Test vymazaný.");
+    });
   });
 });

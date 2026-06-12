@@ -40,6 +40,10 @@ const ALL_ADMIN_TABLES_EMPTY = {
   retest_reminders: [],
   sessions: [],
   share_card_config: [],
+  support_ticket_attachments: [],
+  support_ticket_messages: [],
+  support_tickets: [],
+  support_tickets_with_assignees: [],
   team_members: [],
   teams: [],
   templates: [],
@@ -72,7 +76,9 @@ const PAGES: ReadonlyArray<AdminPageRow> = [
   { key: "users", url: "/admin/users" },
   { key: "categories", url: "/admin/categories" },
   { key: "reports", url: "/admin/reports" },
-  { key: "support", url: "/admin/support" },
+  // E48.6 — the sidebar "support" item points at the tickets queue;
+  // /admin/support is only a back-compat redirect to /admin/tickets.
+  { key: "support", url: "/admin/tickets" },
   { key: "blog", url: "/admin/blog" },
   { key: "pages", url: "/admin/pages" },
   { key: "navigation", url: "/admin/navigation" },
@@ -91,10 +97,6 @@ test.describe("AdminPageExplainer — every /admin/* route", () => {
       test("TC-01: explainer root renders after page load", async ({ context, page }) => {
         await setupAdmin(context, page, { tables: ALL_ADMIN_TABLES_EMPTY });
         const explainer = new AdminPageExplainerPom(page);
-
-        await test.step("Clear localStorage so prior persisted state cannot bleed in", async () => {
-          await page.evaluate(() => localStorage.clear());
-        });
 
         await test.step(`Navigate to ${row.url}`, async () => {
           await page.goto(row.url);
@@ -117,10 +119,6 @@ test.describe("AdminPageExplainer — every /admin/* route", () => {
         await setupAdmin(context, page, { tables: ALL_ADMIN_TABLES_EMPTY });
         const explainer = new AdminPageExplainerPom(page);
 
-        await test.step("Clear localStorage to start from a clean default", async () => {
-          await page.evaluate(() => localStorage.clear());
-        });
-
         await test.step(`Navigate to ${row.url}`, async () => {
           await page.goto(row.url);
         });
@@ -138,10 +136,6 @@ test.describe("AdminPageExplainer — every /admin/* route", () => {
       }) => {
         await setupAdmin(context, page, { tables: ALL_ADMIN_TABLES_EMPTY });
         const explainer = new AdminPageExplainerPom(page);
-
-        await test.step("Clear localStorage", async () => {
-          await page.evaluate(() => localStorage.clear());
-        });
 
         await test.step(`Navigate to ${row.url}`, async () => {
           await page.goto(row.url);
@@ -174,10 +168,6 @@ test.describe("AdminPageExplainer — every /admin/* route", () => {
         await setupAdmin(context, page, { tables: ALL_ADMIN_TABLES_EMPTY });
         const explainer = new AdminPageExplainerPom(page);
 
-        await test.step("Clear localStorage so the default really is collapsed", async () => {
-          await page.evaluate(() => localStorage.clear());
-        });
-
         await test.step(`Navigate to ${row.url}`, async () => {
           await page.goto(row.url);
         });
@@ -206,10 +196,6 @@ test.describe("AdminPageExplainer — every /admin/* route", () => {
   }) => {
     await setupAdmin(context, page, { tables: ALL_ADMIN_TABLES_EMPTY });
     const explainer = new AdminPageExplainerPom(page);
-
-    await test.step("Clear localStorage", async () => {
-      await page.evaluate(() => localStorage.clear());
-    });
 
     await test.step("Navigate to /admin/users", async () => {
       await page.goto("/admin/users");

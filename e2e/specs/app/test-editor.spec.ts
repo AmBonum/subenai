@@ -2,6 +2,7 @@ import { test, expect } from "../../fixtures/base";
 import { setupEducator } from "../../setup/app-shell";
 import { EDUCATOR_SESSION } from "../../fixtures/auth";
 import { seedTest } from "../../seed";
+import type { RpcContext } from "../../mocks/supabase";
 import { TestEditorPage } from "../../poms/app/TestEditorPage";
 
 const BASE_TEST = () =>
@@ -18,7 +19,20 @@ const BASE_TABLES = (t1: ReturnType<typeof seedTest>) => ({
   tests: [t1],
   test_questions: [],
   sessions: [],
+  respondent_groups: [],
 });
+
+// Emulates the publish_test RPC (20260611100000): flips the row to
+// published so the post-invalidation refetch observes the transition.
+const publishTestRpc = (body: unknown, ctx: RpcContext) => {
+  const id = (body as { p_test_id?: string } | null)?.p_test_id;
+  const row = (ctx.tables.tests ?? []).find((r) => r.id === id);
+  if (row) {
+    row.status = "published";
+    row.published_at = new Date().toISOString();
+  }
+  return (row?.version as number | undefined) ?? 1;
+};
 
 test.describe("/app/tests/$testId editor", () => {
   // TC-01: Editor renders page header title and status badge
@@ -108,10 +122,22 @@ test.describe("/app/tests/$testId editor", () => {
     });
   });
 
-  // TC-04: Publish button transitions status badge from "Koncept" to "Publikované"
-  test("TC-04: publish button transitions the status badge to 'Publikované'", async ({ page }) => {
+  // TC-04: Publish button (draft only) calls the publish_test RPC and the
+  // status badge transitions from "Koncept" to "Publikované"
+  test("TC-04: publish button transitions the status badge to 'Publikované' via publish_test", async ({
+    page,
+  }) => {
     const t1 = BASE_TEST();
-    await setupEducator(page.context(), page, { tables: BASE_TABLES(t1) });
+    const publishCalls: unknown[] = [];
+    await setupEducator(page.context(), page, {
+      tables: BASE_TABLES(t1),
+      rpcs: {
+        publish_test: (body: unknown, ctx: RpcContext) => {
+          publishCalls.push(body);
+          return publishTestRpc(body, ctx);
+        },
+      },
+    });
     const editor = new TestEditorPage(page);
 
     await test.step("Open the editor for the seeded test", async () => {
@@ -129,10 +155,22 @@ test.describe("/app/tests/$testId editor", () => {
     await test.step("Verify the status badge transitions to 'Publikované'", async () => {
       await expect(editor.statusBadge).toHaveText("Publikované");
     });
+
+    await test.step("Verify the publish_test RPC carried the test id", async () => {
+      expect(publishCalls).toEqual([{ p_test_id: "tst_002" }]);
+    });
+
+    await test.step("Verify the publish button is replaced by 'Zrušiť publikovanie'", async () => {
+      await expect(editor.publishButton).toHaveCount(0);
+      await expect(editor.unpublishButton).toBeVisible();
+    });
   });
 
-  // TC-05: Archive button is visible for a non-archived test and disappears after archive
-  test("TC-05: archive button is visible and disappears after archiving", async ({ page }) => {
+  // TC-05: Archive goes through a warning ConfirmDialog; after confirming,
+  // the archive button is replaced by "Obnoviť z archívu".
+  test("TC-05: archive opens a warning ConfirmDialog and archiving swaps the action to unarchive", async ({
+    page,
+  }) => {
     const t1 = BASE_TEST();
     await setupEducator(page.context(), page, { tables: BASE_TABLES(t1) });
     const editor = new TestEditorPage(page);
@@ -145,12 +183,20 @@ test.describe("/app/tests/$testId editor", () => {
       await expect(editor.archiveButton).toBeVisible();
     });
 
-    await test.step("Click the archive button", async () => {
+    await test.step("Click archive — the warning dialog opens with dead-link copy", async () => {
       await editor.archiveButton.click();
+      await expect(editor.confirmDialog).toBeVisible();
+      await expect(editor.confirmDialog).toHaveAttribute("data-severity", "warning");
+      await expect(editor.confirmDialog).toContainText("verejný odkaz okamžite prestane fungovať");
     });
 
-    await test.step("Verify the archive button disappears after the test is archived", async () => {
+    await test.step("Confirm the archive action", async () => {
+      await editor.confirmDialogConfirm.click();
+    });
+
+    await test.step("Verify archive disappears and unarchive appears", async () => {
       await expect(editor.archiveButton).toHaveCount(0);
+      await expect(editor.unarchiveButton).toBeVisible();
     });
   });
 
@@ -347,6 +393,167 @@ test.describe("/app/tests/$testId editor", () => {
 
     await test.step("Verify the Invite button is absent from a draft", async () => {
       await expect(editor.inviteButton).toHaveCount(0);
+    });
+  });
+
+  // ----- E50 — status-machine exits + zero-sessions empty states -----
+
+  // TC-12: Unpublish (published → draft) goes through a warning
+  // ConfirmDialog whose copy warns the /t/ link stops working.
+  test("TC-12: unpublish opens a warning dialog and returns the test to 'Koncept'", async ({
+    page,
+  }) => {
+    const t1 = seedTest({
+      id: "tst_002",
+      slug: "e2e-edit-target-pub",
+      share_id: "e2eShare1234",
+      owner_id: EDUCATOR_SESSION.user.id,
+      title: "Published editor target",
+      status: "published",
+    });
+    await setupEducator(page.context(), page, { tables: BASE_TABLES(t1) });
+    const editor = new TestEditorPage(page);
+
+    await test.step("Open the published test — unpublish is visible, publish is not", async () => {
+      await editor.open("tst_002");
+      await expect(editor.unpublishButton).toBeVisible();
+      await expect(editor.publishButton).toHaveCount(0);
+    });
+
+    await test.step("Click unpublish — warning dialog with dead-link copy", async () => {
+      await editor.unpublishButton.click();
+      await expect(editor.confirmDialog).toBeVisible();
+      await expect(editor.confirmDialog).toHaveAttribute("data-severity", "warning");
+      await expect(editor.confirmDialog).toContainText(
+        "Verejný odkaz prestane pre nových respondentov fungovať",
+      );
+    });
+
+    await test.step("Confirm and verify the badge returns to 'Koncept'", async () => {
+      await editor.confirmDialogConfirm.click();
+      await expect(editor.statusBadge).toHaveText("Koncept");
+      await expect(editor.publishButton).toBeVisible();
+    });
+  });
+
+  // TC-13: Unarchive (archived → draft) restores the draft actions.
+  test("TC-13: unarchive restores an archived test to 'Koncept' with draft actions", async ({
+    page,
+  }) => {
+    const t1 = seedTest({
+      id: "tst_002",
+      slug: "e2e-edit-target-arch",
+      share_id: "e2eShareArch",
+      owner_id: EDUCATOR_SESSION.user.id,
+      title: "Archived editor target",
+      status: "archived",
+    });
+    await setupEducator(page.context(), page, { tables: BASE_TABLES(t1) });
+    const editor = new TestEditorPage(page);
+
+    await test.step("Open the archived test — only unarchive among lifecycle actions", async () => {
+      await editor.open("tst_002");
+      await expect(editor.unarchiveButton).toBeVisible();
+      await expect(editor.publishButton).toHaveCount(0);
+      await expect(editor.archiveButton).toHaveCount(0);
+    });
+
+    await test.step("Click 'Obnoviť z archívu'", async () => {
+      await editor.unarchiveButton.click();
+    });
+
+    await test.step("Verify the test is a draft again with publish + archive available", async () => {
+      await expect(editor.statusBadge).toHaveText("Koncept");
+      await expect(editor.publishButton).toBeVisible();
+      await expect(editor.archiveButton).toBeVisible();
+    });
+  });
+
+  // TC-14: Zero-sessions empty state on a PUBLISHED test surfaces the
+  // share-link CTA.
+  test("TC-14: published test with 0 sessions shows the copy-link empty state", async ({
+    page,
+  }) => {
+    const t1 = seedTest({
+      id: "tst_002",
+      slug: "e2e-edit-target-pub2",
+      share_id: "e2eSharePub2",
+      owner_id: EDUCATOR_SESSION.user.id,
+      title: "Published empty target",
+      status: "published",
+    });
+    await setupEducator(page.context(), page, { tables: BASE_TABLES(t1) });
+    const editor = new TestEditorPage(page);
+
+    await test.step("Open the editor (Results tab is the default)", async () => {
+      await editor.open("tst_002");
+    });
+
+    await test.step("Verify the empty state carries the share CTA", async () => {
+      await expect(editor.sessionsEmpty).toBeVisible();
+      await expect(editor.sessionsEmpty).toContainText("Test zatiaľ nemá respondentov.");
+      await expect(editor.sessionsEmptyCopyLinkButton).toBeVisible();
+      await expect(editor.sessionsEmptyPublishButton).toHaveCount(0);
+    });
+  });
+
+  // TC-15: Zero-sessions empty state on a DRAFT test asks for publishing and
+  // the CTA publishes via publish_test.
+  test("TC-15: draft test with 0 sessions shows the publish empty state and the CTA publishes", async ({
+    page,
+  }) => {
+    const t1 = BASE_TEST();
+    await setupEducator(page.context(), page, {
+      tables: BASE_TABLES(t1),
+      rpcs: { publish_test: publishTestRpc },
+    });
+    const editor = new TestEditorPage(page);
+
+    await test.step("Open the editor (Results tab is the default)", async () => {
+      await editor.open("tst_002");
+    });
+
+    await test.step("Verify the empty state asks for publishing", async () => {
+      await expect(editor.sessionsEmpty).toBeVisible();
+      await expect(editor.sessionsEmpty).toContainText("Test ešte nie je publikovaný.");
+      await expect(editor.sessionsEmptyCopyLinkButton).toHaveCount(0);
+    });
+
+    await test.step("Click the publish CTA and verify the badge flips", async () => {
+      await editor.sessionsEmptyPublishButton.click();
+      await expect(editor.statusBadge).toHaveText("Publikované");
+    });
+  });
+
+  // TC-16: Settings tab — intake-fields card + audience chip render.
+  test("TC-16: settings tab renders the intake card and the audience fallback chip", async ({
+    page,
+  }) => {
+    const t1 = BASE_TEST();
+    await setupEducator(page.context(), page, { tables: BASE_TABLES(t1) });
+    const editor = new TestEditorPage(page);
+
+    await test.step("Open Settings", async () => {
+      await editor.open("tst_002");
+      await editor.tabSettings.click();
+    });
+
+    await test.step("Verify the intake card toggles render unchecked", async () => {
+      await expect(editor.intakeRoot).toBeVisible();
+      await expect(editor.intakeNameToggle).toHaveAttribute("data-state", "unchecked");
+      await expect(editor.intakeEmailToggle).toHaveAttribute("data-state", "unchecked");
+    });
+
+    await test.step("Toggle 'Meno' — the required checkbox unlocks", async () => {
+      await expect(editor.intakeNameRequired).toBeDisabled();
+      await editor.intakeNameToggle.click();
+      await expect(editor.intakeNameToggle).toHaveAttribute("data-state", "checked");
+      await expect(editor.intakeNameRequired).toBeEnabled();
+    });
+
+    await test.step("Verify the audience chip shows the no-group fallback", async () => {
+      await expect(editor.audienceChip).toBeVisible();
+      await expect(editor.audienceChip).toHaveText(/Bez skupiny/);
     });
   });
 });

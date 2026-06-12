@@ -8,6 +8,20 @@ vi.mock("@tanstack/react-router", async () => {
   return {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
+    // The empty-state CTA renders a <Link>; the real one needs a Router
+    // context this unit test doesn't mount.
+    Link: ({
+      to,
+      children,
+      ...rest
+    }: {
+      to?: string;
+      children?: React.ReactNode;
+    } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+      <a href={to} {...rest}>
+        {children}
+      </a>
+    ),
   };
 });
 

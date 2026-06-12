@@ -1,38 +1,40 @@
 import { test, expect } from "../../fixtures/base";
 import { setupAppShell } from "../../setup/app-shell";
 import { ADMIN_SESSION } from "../../fixtures/auth";
-import { seedTickets, cleanupSeeds } from "../../../tests/fixtures/seed-tickets";
+import { seedSupportTicket, supportTicketTables, supportTicketRpcs } from "../../seed";
 
 // E48-v3 — Inline status change from the queue row status badge.
 //
 // Asserts:
 //   - clicking the status badge on a row opens the status popover
-//   - the popover shows only valid FSM transitions for current status
-//   - clicking "Resolved" on a new ticket triggers ConfirmDialog
+//   - the popover lists only valid FSM transitions for the current status
+//   - terminal transitions (resolved) open a ConfirmDialog before the RPC
 //   - confirming updates the status persistently (row badge changes)
 //
-// Requires SUPABASE_SERVICE_ROLE_KEY + E2E_ALLOW_NONLOCAL_SEED=1 for prod.
+// Runs against the Supabase mock; `supportTicketRpcs` mutates both the
+// `support_tickets` table and the `support_tickets_with_assignees` view
+// so the post-mutation refetch observes the new status.
 
-const WORKER = Number(process.env.TEST_WORKER_INDEX ?? 0);
-
-let ticketIds: string[] = [];
-
-test.beforeAll(async () => {
-  ticketIds = await seedTickets(WORKER);
-});
-
-test.afterAll(async () => {
-  await cleanupSeeds(WORKER);
-});
+let newTicketId = "";
+let inProgressTicketId = "";
 
 test.describe("E48-v3 — inline status change from queue row", () => {
   test.beforeEach(async ({ context, page }) => {
+    const newTicket = seedSupportTicket({ status: "new", subject: "Inline status new" });
+    const inProgressTicket = seedSupportTicket({
+      status: "in_progress",
+      subject: "Inline status in progress",
+    });
+    newTicketId = newTicket.id as string;
+    inProgressTicketId = inProgressTicket.id as string;
+
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
+        tables: supportTicketTables([newTicket, inProgressTicket]),
         rpcs: {
           has_role: true,
-          transition_ticket_status: null,
+          ...supportTicketRpcs(),
         },
       },
     });
@@ -40,42 +42,41 @@ test.describe("E48-v3 — inline status change from queue row", () => {
 
   test("clicking status badge opens the status popover", async ({ adminTicketsQueue }) => {
     await adminTicketsQueue.open();
-    const newTicket = ticketIds[0];
-    await expect(adminTicketsQueue.row(newTicket)).toBeVisible();
-    await adminTicketsQueue.rowStatusTrigger(newTicket).click();
-    await expect(adminTicketsQueue.rowStatusOption(newTicket, "in_progress")).toBeVisible();
+    await expect(adminTicketsQueue.row(newTicketId)).toBeVisible();
+    await adminTicketsQueue.rowStatusTrigger(newTicketId).click();
+    await expect(adminTicketsQueue.rowStatusOption(newTicketId, "in_progress")).toBeVisible();
   });
 
   test("only valid FSM transitions are shown for a new ticket", async ({ adminTicketsQueue }) => {
     await adminTicketsQueue.open();
-    const newTicket = ticketIds[0];
-    await adminTicketsQueue.rowStatusTrigger(newTicket).click();
-    // new → in_progress is valid; new → archived is not a direct transition
-    await expect(adminTicketsQueue.rowStatusOption(newTicket, "in_progress")).toBeVisible();
-    await expect(adminTicketsQueue.rowStatusOption(newTicket, "resolved")).toBeHidden();
+    await adminTicketsQueue.rowStatusTrigger(newTicketId).click();
+    // Mirrors the transition_ticket_status RPC FSM: new → in_progress ONLY
+    // (resolved/archived become reachable later in the lifecycle).
+    await expect(adminTicketsQueue.rowStatusOption(newTicketId, "in_progress")).toBeVisible();
+    await expect(adminTicketsQueue.rowStatusOption(newTicketId, "resolved")).toBeHidden();
+    await expect(adminTicketsQueue.rowStatusOption(newTicketId, "archived")).toBeHidden();
+    await expect(adminTicketsQueue.rowStatusOption(newTicketId, "reopened")).toBeHidden();
+    await expect(adminTicketsQueue.rowStatusOption(newTicketId, "waiting_user")).toBeHidden();
   });
 
   test("clicking in_progress transition updates row status badge", async ({
     adminTicketsQueue,
-    page,
   }) => {
     await adminTicketsQueue.open();
-    const newTicket = ticketIds[0];
-    await adminTicketsQueue.rowStatusTrigger(newTicket).click();
-    await adminTicketsQueue.rowStatusOption(newTicket, "in_progress").click();
+    await expect(adminTicketsQueue.rowStatusTrigger(newTicketId)).toContainText("Nové");
+    await adminTicketsQueue.rowStatusTrigger(newTicketId).click();
+    await adminTicketsQueue.rowStatusOption(newTicketId, "in_progress").click();
 
-    // After the transition the badge should update. Allow a brief re-render.
-    await page.waitForTimeout(300);
-    await expect(adminTicketsQueue.rowStatusTrigger(newTicket)).toBeVisible();
+    // Intermediate transitions run without confirm; the refetched view
+    // row drives the badge text.
+    await expect(adminTicketsQueue.rowStatusTrigger(newTicketId)).toContainText("Riešim");
   });
 
   test("ConfirmDialog appears when transitioning to resolved", async ({ adminTicketsQueue }) => {
-    // Use an in_progress ticket (index 5 in seed = first in_progress batch)
-    const inProgressTicket = ticketIds[5];
     await adminTicketsQueue.open();
-    await adminTicketsQueue.rowStatusTrigger(inProgressTicket).click();
-    await expect(adminTicketsQueue.rowStatusOption(inProgressTicket, "resolved")).toBeVisible();
-    await adminTicketsQueue.rowStatusOption(inProgressTicket, "resolved").click();
+    await adminTicketsQueue.rowStatusTrigger(inProgressTicketId).click();
+    await expect(adminTicketsQueue.rowStatusOption(inProgressTicketId, "resolved")).toBeVisible();
+    await adminTicketsQueue.rowStatusOption(inProgressTicketId, "resolved").click();
     // A ConfirmDialog (role=alertdialog) must appear before the RPC fires.
     await expect(adminTicketsQueue.confirmDialog).toBeVisible();
     // Confirm

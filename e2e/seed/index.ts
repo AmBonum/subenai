@@ -31,3 +31,13 @@ export {
   type BlogPostRow,
 } from "./blog";
 export { seedEduTest, type SeedEduTestOptions, type SeedEduTestResult } from "./edu-test";
+export {
+  seedSupportTicket,
+  seedSupportTicketAdmin,
+  seedTicketAssignee,
+  supportTicketTables,
+  supportTicketRpcs,
+  type SupportTicketAdmin,
+  type SupportTicketAssigneeRow,
+  type SupportTicketRpcsOptions,
+} from "./support-tickets";

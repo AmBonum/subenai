@@ -27,7 +27,16 @@ export {
 } from "./envelope";
 
 type Row = Record<string, unknown>;
-type RpcResolver = unknown | ((body: unknown) => unknown);
+/**
+ * RPC resolvers optionally receive a context with the live seeded tables so
+ * a mocked SECURITY DEFINER RPC (e.g. `publish_test`) can mutate rows the
+ * way the real function would — subsequent table refetches then observe the
+ * side effect. Constant values and single-arg resolvers keep working.
+ */
+export interface RpcContext {
+  tables: Record<string, Row[]>;
+}
+type RpcResolver = unknown | ((body: unknown, ctx: RpcContext) => unknown);
 
 export interface MockSupabaseAuthConfig {
   session?: AuthSession;
@@ -171,7 +180,9 @@ export async function mockSupabase(page: Page, config: MockSupabaseConfig): Prom
       const resolver = rpcs[fn];
       const body = parseJsonBody(request);
       const value =
-        typeof resolver === "function" ? (resolver as (b: unknown) => unknown)(body) : resolver;
+        typeof resolver === "function"
+          ? (resolver as (b: unknown, ctx: RpcContext) => unknown)(body, { tables })
+          : resolver;
       await route.fulfill({
         status: 200,
         contentType: "application/json",

@@ -43,8 +43,14 @@ test.describe("/app/history", () => {
       await expect(history.emptyState).toBeVisible();
     });
 
-    await test.step("Verify the empty-state text reads 'Žiadne udalosti pre zvolené filtre.'", async () => {
-      await expect(history.emptyState).toHaveText("Žiadne udalosti pre zvolené filtre.");
+    await test.step("Verify the true-empty headline reads 'Zatiaľ žiadne udalosti'", async () => {
+      await expect(history.emptyNoDataTitle).toHaveText("Zatiaľ žiadne udalosti");
+      await expect(history.emptyState).toContainText("Vytvor test a história sa začne písať.");
+    });
+
+    await test.step("Verify the create-test CTA links to /app/tests/new", async () => {
+      await expect(history.emptyCreateTestCta).toHaveText("Vytvoriť test");
+      await expect(history.emptyCreateTestCta).toHaveAttribute("href", "/app/tests/new");
     });
 
     await test.step("Verify no row cards are rendered", async () => {

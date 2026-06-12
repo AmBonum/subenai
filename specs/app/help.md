@@ -22,7 +22,12 @@
 
 **and** the FAQ accordion list (`app-help-faq-list`) is visible and contains at least one item
 
-**and** the contact card (`app-help-contact-card`) is visible with subtitle text containing "support@subenai.sk" and a contact CTA button (`app-help-contact-cta`)
+**and** the contact card (`app-help-contact-card`) is visible with subtitle text containing "formulár podpory" and a contact CTA button (`app-help-contact-cta`)
+
+> 2026-06-11: both contact CTAs (contact card + search empty state) are
+> `<Link to="/app/help/contact">` — the former `mailto:support@subenai.sk`
+> anchors are gone; TC-06 additionally verifies the click navigates to the
+> in-app support form (`/app/help/contact`), labelled "Kontaktovať podporu".
 
 ---
 

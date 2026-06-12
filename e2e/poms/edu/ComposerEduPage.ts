@@ -23,6 +23,33 @@ export class ComposerEduPage extends BasePage {
     return this.page.getByTestId("composer-selection-summary");
   }
 
+  // ── Step 2 question picker (collapsed by default, E33 Phase 1) ──────────────
+
+  get step2Toggle() {
+    return this.page.getByTestId("composer-step-2-toggle");
+  }
+
+  get step2Picker() {
+    return this.page.getByTestId("composer-step-2-picker");
+  }
+
+  /** Bank checkbox — `pick-<questionId>` is the QuestionPicker input id. */
+  questionCheckbox(questionId: string) {
+    return this.page.locator(`#pick-${questionId}`);
+  }
+
+  /**
+   * Expand the picker and tick the given bank question IDs. Selection via
+   * the bank works without any published platform pack, unlike pack chips.
+   */
+  async selectQuestions(questionIds: string[]) {
+    await this.step2Toggle.click();
+    await this.step2Picker.waitFor({ state: "visible" });
+    for (const id of questionIds) {
+      await this.questionCheckbox(id).click();
+    }
+  }
+
   // ── Edu settings section ────────────────────────────────────────────────────
 
   get eduSettingsSection() {

@@ -32,6 +32,7 @@ export function seedTest(overrides: Partial<TestRow> = {}): TestRow {
     question_order_mode: "fixed",
     source_template_id: null,
     password_hash_version: 0,
+    audience_group_id: null,
     created_at: "2026-05-19T00:00:00.000Z",
     updated_at: "2026-05-19T00:00:00.000Z",
     ...overrides,

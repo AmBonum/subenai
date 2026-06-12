@@ -161,6 +161,11 @@ export class PodporaPage extends BasePage {
     return this.page.getByTestId("podpora-checkbox-consent-data");
   }
 
+  /** Discreet footer link to /manage-support for existing sponsors. */
+  get manageSupportLink(): Locator {
+    return this.page.getByTestId("podpora-manage-support-link");
+  }
+
   get submitButton(): Locator {
     return this.page.getByTestId("podpora-submit-button");
   }
@@ -249,9 +254,13 @@ export class PodporaPage extends BasePage {
   }
 
   async ogTitleContent(): Promise<string | null> {
-    return this.page.evaluate(
-      () => document.querySelector('meta[property="og:title"]')?.getAttribute("content") ?? null,
-    );
+    // Last one wins: the vite dev shell (index.html) carries a default
+    // og:title and the route head() appends its own — same dedupe
+    // strategy as metaDescriptionContent below.
+    return this.page.evaluate(() => {
+      const all = Array.from(document.querySelectorAll('meta[property="og:title"]'));
+      return all.at(-1)?.getAttribute("content") ?? null;
+    });
   }
 
   async metaDescriptionContent(): Promise<string | null> {

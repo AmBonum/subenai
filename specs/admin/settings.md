@@ -9,51 +9,56 @@
 
 ## Context
 
-The page renders global platform preferences in three sections (feature flags, data retention, branding) inside a single form. Because the backend is explicitly deferred, `onSubmit` fires a Sonner info toast rather than a real mutation. No Supabase table mocks are required.
+E40 close-out replaced the old placeholder form with a **read-only GDPR/compliance
+dashboard**. The page surfaces build-time env-var state (DPA flow, draft watermark),
+the DPA template version, the contact-data retention window, the sub-processor
+register (art. 28(3)(g) GDPR), a link to the per-admin notification preferences,
+and the E40 runbook link. There are no editable controls — changing a value requires
+a redeploy and/or SQL migration, per the runbook.
+
+No Supabase table mocks are required; all values are compiled in.
 
 ---
 
 ## Happy paths
 
-### TC-01: Page renders the settings root, deferred notice, and all form sections
+### TC-01: Page renders the root, read-only notice, and all four DPA rows
 
 **Prerequisites:** Admin session active; navigate to `/admin/settings`.
 
 **When** the page loads
 
-**Then** the settings root is visible  
-**and** the deferred notice card is visible  
-**and** the settings form is visible  
-**and** the feature-flags switch for `ai_generator` is visible  
-**and** the feature-flags switch for `audit_exports` is visible  
-**and** the feature-flags switch for `trap_popup` is visible  
-**and** the retention input is visible  
-**and** the branding primary-color input is visible  
-**and** the submit button is visible and enabled
+**Then** the settings root (`admin-settings-root`) is visible  
+**and** the read-only notice (`admin-settings-readonly-notice`) is visible and contains
+"Tieto hodnoty sú nastavené pri build-time"  
+**and** the DPA section (`admin-settings-dpa-section`) renders the four rows:
+`admin-settings-dpa-flow`, `admin-settings-dpa-watermark`, `admin-settings-dpa-version`,
+`admin-settings-dpa-retention`
 
 ---
 
-### TC-02: Submit fires the info toast
+### TC-02: Sub-processor register lists the active third parties
 
-**Prerequisites:** Admin session active; navigate to `/admin/settings`; the form is visible.
+**Prerequisites:** Admin session active; navigate to `/admin/settings`.
 
-**When** the user clicks the submit button labelled "Uložiť"
+**When** the page loads
 
-**Then** a Sonner toast appears within 4 s  
-**and** the toast contains the text "Backend pre nastavenia ešte nie je nasadený, hodnoty sa neuložia po obnovení stránky."
+**Then** the sub-processor section (`admin-settings-subprocessors-section`) is visible  
+**and** the list (`admin-settings-subprocessors-list`) renders
+`admin-settings-subprocessor-supabase-inc`, `admin-settings-subprocessor-cloudflare-inc`,
+and `admin-settings-subprocessor-resend-inc`
 
 ---
 
-## Edge cases
+### TC-03: Navigation links
 
-### TC-03: Toggle a feature flag switches the switch state
+**Prerequisites:** Admin session active; navigate to `/admin/settings`.
 
-**Prerequisites:** Admin session active; navigate to `/admin/settings`; the `audit_exports` switch is initially **off** (unchecked).
+**When** the page loads
 
-**When** the user clicks the `audit_exports` switch
+**Then** the runbook link (`admin-settings-runbook-link`) points at
+`https://github.com/AmBonum/subenai/blob/main/tasks/E40-runbook.md`
 
-**Then** the `audit_exports` switch becomes checked (aria-checked = "true")
+**When** the user clicks the notifications link (`admin-settings-notifications-link`)
 
-**When** the user clicks the `audit_exports` switch again
-
-**Then** the `audit_exports` switch returns to unchecked (aria-checked = "false")
+**Then** the URL becomes `/admin/settings/notifications`

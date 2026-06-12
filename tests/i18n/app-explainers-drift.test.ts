@@ -13,6 +13,7 @@ const EXPECTED_KEYS = [
   "library",
   "audiences",
   "history",
+  "insights",
   "notifications",
   "teams",
   "profile",
@@ -50,7 +51,7 @@ const enExplainers = (enApp as unknown as { explainers?: Json }).explainers;
 const csExplainers = (csApp as unknown as { explainers?: Json }).explainers;
 
 describe("app explainers — i18n shape (SK)", () => {
-  it("has the full set of 11 expected pageKeys (no missing, no extra)", () => {
+  it("has the full set of 12 expected pageKeys (no missing, no extra)", () => {
     expect(skExplainers, "explainers subtree missing from sk/app-explainers.json").toBeDefined();
     const actual = Object.keys(skExplainers as Record<string, unknown>).sort();
     const expected = [...EXPECTED_KEYS].sort();

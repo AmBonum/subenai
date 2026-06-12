@@ -3,10 +3,23 @@ import { BasePage } from "../BasePage";
 
 export type TopicSlug = "tech" | "content" | "sponsor" | "gdpr" | "press" | "other";
 
+export const TOPIC_SLUGS: readonly TopicSlug[] = [
+  "tech",
+  "content",
+  "sponsor",
+  "gdpr",
+  "press",
+  "other",
+] as const;
+
 /**
- * Contact page POM (`/contact`).
+ * Contact hub page POM (`/contact`).
  *
- * Covers every element asserted on in `e2e/specs/marketing/contact.spec.ts`.
+ * Since the E48 ticketing rework the page routes everything to the web
+ * form at `/contact-form` (main CTA + six topic deep-links carrying
+ * `?topic=<slug>`); the e-mail address remains only as a plain-text
+ * fallback. Covers every element asserted on in
+ * `e2e/specs/marketing/contact.spec.ts`.
  */
 export class ContactPage extends BasePage {
   static readonly PATH = "/contact" as const;
@@ -28,11 +41,11 @@ export class ContactPage extends BasePage {
   }
 
   // ---------------------------------------------------------------------------
-  // Main email section
+  // Main form CTA section
   // ---------------------------------------------------------------------------
 
-  get mainEmailLink(): Locator {
-    return this.page.getByTestId("contact-main-email-link");
+  get mainFormLink(): Locator {
+    return this.page.getByTestId("contact-main-form-link");
   }
 
   get emailFallback(): Locator {
@@ -63,8 +76,8 @@ export class ContactPage extends BasePage {
     return this.page.getByTestId("contact-privacy-link");
   }
 
-  get gdprEmailLink(): Locator {
-    return this.page.getByTestId("contact-gdpr-email-link");
+  get gdprEmailCode(): Locator {
+    return this.page.getByTestId("contact-gdpr-email-code");
   }
 
   // ---------------------------------------------------------------------------
@@ -106,39 +119,21 @@ export class ContactPage extends BasePage {
   }
 
   async ogMetaContent(property: string): Promise<string | null> {
-    return this.page.evaluate(
-      (prop) => document.querySelector(`meta[property="${prop}"]`)?.getAttribute("content") ?? null,
-      property,
-    );
+    // Route-level og:* tags are appended after the root defaults — take
+    // the last match, mirroring metaDescriptionContent.
+    return this.page.evaluate((prop) => {
+      const all = Array.from(document.querySelectorAll(`meta[property="${prop}"]`));
+      return all[all.length - 1]?.getAttribute("content") ?? null;
+    }, property);
   }
 
-  /**
-   * Returns the decoded `subject` query parameter from a mailto href string.
-   * Returns null if the href is not a mailto with a subject param.
-   */
-  decodeMailtoSubject(href: string): string | null {
-    const qmark = href.indexOf("?");
-    if (qmark === -1) return null;
-    const params = new URLSearchParams(href.slice(qmark + 1));
-    const raw = params.get("subject");
-    if (raw === null) return null;
-    return decodeURIComponent(raw);
-  }
-
-  /**
-   * Collects all six topic link hrefs from the DOM and returns them
-   * as an array of decoded subject strings.
-   */
-  async allTopicSubjects(): Promise<string[]> {
-    const slugs: TopicSlug[] = ["tech", "content", "sponsor", "gdpr", "press", "other"];
-    const subjects: string[] = [];
-    for (const slug of slugs) {
-      const href = await this.topicLink(slug).getAttribute("href");
-      if (!href) continue;
-      const subject = this.decodeMailtoSubject(href);
-      if (subject !== null) subjects.push(subject);
+  /** Collects all six topic link hrefs keyed by slug. */
+  async allTopicHrefs(): Promise<Record<TopicSlug, string | null>> {
+    const entries: Array<[TopicSlug, string | null]> = [];
+    for (const slug of TOPIC_SLUGS) {
+      entries.push([slug, await this.topicLink(slug).getAttribute("href")]);
     }
-    return subjects;
+    return Object.fromEntries(entries) as Record<TopicSlug, string | null>;
   }
 
   /** Returns the computed grid-template-columns for the topics list ul. */

@@ -74,13 +74,21 @@ test.describe("SK→EN URL redirects (public/_redirects)", () => {
   // Edge cases
   // ---------------------------------------------------------------------------
 
-  // TC-08: /sponzori/vsetci (sub-path, exact rule) redirects to /sponsors/all
-  test("TC-08: /sponzori/vsetci redirects to /sponsors/all (exact rule over splat)", async ({
+  // TC-08: /sponzori/vsetci (sub-path, exact rule) redirects straight to
+  // /sponsors (M3 merge — no /sponsors/all chain).
+  test("TC-08: /sponzori/vsetci redirects to /sponsors (exact rule over splat)", async ({
     request,
   }) => {
     const r = await request.fetch("/sponzori/vsetci", { maxRedirects: 0 });
     expect(r.status()).toBe(301);
-    expect(r.headers()["location"]).toBe("/sponsors/all");
+    expect(r.headers()["location"]).toBe("/sponsors");
+  });
+
+  // TC-08b: legacy /sponsors/all 301s to the merged /sponsors page.
+  test("TC-08b: /sponsors/all redirects to /sponsors", async ({ request }) => {
+    const r = await request.fetch("/sponsors/all", { maxRedirects: 0 });
+    expect(r.status()).toBe(301);
+    expect(r.headers()["location"]).toBe("/sponsors");
   });
 
   // TC-09: /testy permanently redirects to /tests

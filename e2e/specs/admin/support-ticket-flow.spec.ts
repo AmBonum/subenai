@@ -2,6 +2,7 @@ import { test, expect } from "../../fixtures/base";
 import { setupAppShell } from "../../setup/app-shell";
 import { ADMIN_SESSION } from "../../fixtures/auth";
 import { mockSupportApi, type MockSupportApiCaptures } from "../../mocks/api/support";
+import { supportTicketTables, supportTicketRpcs } from "../../seed";
 
 // E48 smoke test — admin side.
 //
@@ -45,16 +46,12 @@ test.describe("E48 smoke — admin queue + detail + reply", () => {
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
-        tables: {
-          support_tickets: [buildTicketRow()],
-          support_ticket_messages: [],
-          support_ticket_attachments: [],
-        },
+        tables: supportTicketTables([buildTicketRow()]),
         rpcs: {
           // Admins call has_role from RoleGuard middleware.
           has_role: true,
-          // FSM transitions go through this RPC. Return null (no error).
-          transition_ticket_status: null,
+          // FSM transitions mutate the seeded tables via RpcContext.
+          ...supportTicketRpcs(),
         },
       },
     });
@@ -75,9 +72,11 @@ test.describe("E48 smoke — admin queue + detail + reply", () => {
     await expect(adminTicketDetail.root).toBeVisible();
     await expect(adminTicketDetail.subject).toHaveText("Smoke test E48");
     await expect(adminTicketDetail.statusBadge).toContainText("Nové");
-    // status=new -> only "Začať riešiť" is shown.
+    // status=new — FSM (mirrors the transition_ticket_status RPC) offers
+    // ONLY "Začať riešiť"; resolve/reopen are reachable later.
     await expect(adminTicketDetail.startButton).toBeVisible();
     await expect(adminTicketDetail.resolveButton).toBeHidden();
+    await expect(adminTicketDetail.reopenButton).toBeHidden();
   });
 
   test("admin reply POSTs to the CF function with subject + body in payload", async ({

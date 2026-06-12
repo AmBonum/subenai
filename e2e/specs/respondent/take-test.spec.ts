@@ -137,6 +137,14 @@ test.describe("/t/:shareId — public respondent flow", () => {
       await expect(takeTest.thankYouTitle).toHaveText("Hotovo!");
     });
 
+    await test.step("Thank-you exit offers the quick-test CTA, not a bare close", async () => {
+      await expect(takeTest.thankYouQuickTestCta).toHaveText(
+        "Otestuj si svoje scam radary — rýchly test zadarmo",
+      );
+      await expect(takeTest.thankYouQuickTestCta).toHaveAttribute("href", "/test");
+      await expect(takeTest.thankYouCloseButton).toHaveText("Zatvoriť");
+    });
+
     await test.step("Verify RPC call counts and payloads", async () => {
       expect(log.start).toHaveLength(1);
       expect(log.start[0]).toMatchObject({ p_share_id: SHARE_ID, p_consent_given: true });
@@ -305,6 +313,42 @@ test.describe("/t/:shareId — public respondent flow", () => {
       await expect(takeTest.questionPrompt(0)).toBeVisible();
       expect(log.start).toHaveLength(1);
       expect(log.start[0]).toMatchObject({ p_intake: { if_name: "Anna" } });
+    });
+  });
+
+  // TC-07: Mid-test reload resumes the same session from sessionStorage
+  test("TC-07: mid-test reload resumes the same session without a second start RPC", async ({
+    page,
+  }) => {
+    const log = await setupTakeTest(page, { resolveResult: resolvedPayload() });
+    const takeTest = new TakeTestPage(page);
+
+    await test.step("Start the session and answer Q1", async () => {
+      await takeTest.open(SHARE_ID);
+      await takeTest.intakeConsentCheckbox.click();
+      await takeTest.intakeSubmitButton.click();
+      await takeTest.answerOption(0, 1).click();
+      await takeTest.nextButton.click();
+      await expect(takeTest.questionPrompt(1)).toBeVisible();
+      expect(log.start).toHaveLength(1);
+    });
+
+    await test.step("Reload the page — flow resumes on Q2, intake skipped", async () => {
+      await page.reload();
+      await expect(takeTest.questionPrompt(1)).toBeVisible();
+      await expect(takeTest.intakeSubmitButton).toHaveCount(0);
+    });
+
+    await test.step("Finish Q2 — same session finalized, NO second start_respondent_session", async () => {
+      await takeTest.answerInput(1).fill("Po reloade");
+      await takeTest.submitButton.click();
+      await expect(takeTest.thankYou).toBeVisible();
+      expect(log.start).toHaveLength(1);
+      expect(log.finalize).toHaveLength(1);
+      expect(log.finalize[0]).toMatchObject({ p_session_id: SESSION_ID });
+      // Q1 answer (submitted pre-reload) + Q2 (post-reload) — the upsert
+      // on (session_id, question_id) makes any re-submit idempotent.
+      expect(log.submit).toHaveLength(2);
     });
   });
 });

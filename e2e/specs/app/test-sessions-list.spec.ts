@@ -121,12 +121,15 @@ test.describe("/app/tests index — listing, filtering, navigation", () => {
     await expect(list.row("clr-2")).toBeVisible();
   });
 
-  test("NEG: zero owned tests renders the empty-state copy", async ({ page }) => {
+  test("NEG: zero owned tests renders the first-run empty card", async ({ page }) => {
     await setupEducator(page.context(), page, { tables: { tests: [] } });
     const list = new TestSessionsListPage(page);
     await list.open();
-    await expect(list.emptyState).toBeVisible();
-    await expect(list.emptyState).toContainText("Žiadne testy v tomto filtri.");
+    // True-empty (no tests at all) renders the dedicated first-run card,
+    // not the filter-miss empty state.
+    await expect(list.emptyInitial).toBeVisible();
+    await expect(list.emptyInitial).toContainText("Zatiaľ nemáš žiadne testy.");
+    await expect(list.emptyState).toHaveCount(0);
   });
 
   test("NEG: search query with no matches renders the empty-state", async ({ page }) => {

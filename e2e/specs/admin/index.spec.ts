@@ -8,6 +8,7 @@ const EMPTY_EXTRAS = {
     reports: [],
     trainings: [],
     dsr_requests: [],
+    dpa_requests: [],
     audit_log: [],
   },
 };
@@ -98,6 +99,7 @@ test.describe("Admin dashboard index", () => {
           questions: [],
           reports: [],
           trainings: [],
+          dpa_requests: [],
           audit_log: [],
         },
       });

@@ -1,5 +1,10 @@
 import { BasePage } from "../BasePage";
 
+/**
+ * /admin/settings — read-only GDPR / compliance dashboard (E40 close-out).
+ * Values come from build-time env vars + the DPA retention migration;
+ * the page renders badges, the sub-processor register, and runbook links.
+ */
 export class AdminSettingsPage extends BasePage {
   static readonly PATH = "/admin/settings" as const;
 
@@ -11,35 +16,43 @@ export class AdminSettingsPage extends BasePage {
     return this.page.getByTestId("admin-settings-root");
   }
 
-  get deferredNotice() {
-    return this.page.getByTestId("admin-settings-deferred-notice");
+  get readonlyNotice() {
+    return this.page.getByTestId("admin-settings-readonly-notice");
   }
 
-  get form() {
-    return this.page.getByTestId("admin-settings-form");
+  get dpaSection() {
+    return this.page.getByTestId("admin-settings-dpa-section");
   }
 
-  featureFlagSwitch(key: "ai_generator" | "audit_exports" | "trap_popup") {
-    return this.page.getByTestId(`admin-settings-feature-flag-${key}`);
+  dpaRow(key: "flow" | "watermark" | "version" | "retention") {
+    return this.page.getByTestId(`admin-settings-dpa-${key}`);
   }
 
-  get retentionInput() {
-    return this.page.getByTestId("admin-settings-retention-default-input");
+  get subprocessorsSection() {
+    return this.page.getByTestId("admin-settings-subprocessors-section");
   }
 
-  get primaryColorInput() {
-    return this.page.getByTestId("admin-settings-branding-primary-color");
+  get subprocessorsList() {
+    return this.page.getByTestId("admin-settings-subprocessors-list");
   }
 
-  get submitButton() {
-    return this.page.getByTestId("admin-settings-submit");
+  subprocessor(slug: string) {
+    return this.page.getByTestId(`admin-settings-subprocessor-${slug}`);
   }
 
-  get toast() {
-    return this.page.locator("[data-sonner-toast]").first();
+  get notificationsSection() {
+    return this.page.getByTestId("admin-settings-notifications-section");
   }
 
-  async submit() {
-    await this.submitButton.click();
+  get notificationsLink() {
+    return this.page.getByTestId("admin-settings-notifications-link");
+  }
+
+  get runbookSection() {
+    return this.page.getByTestId("admin-settings-runbook-section");
+  }
+
+  get runbookLink() {
+    return this.page.getByTestId("admin-settings-runbook-link");
   }
 }

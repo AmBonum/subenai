@@ -29,7 +29,7 @@ test.describe("/admin/answer-sets — index", () => {
     await test.step("Verify empty-state paragraph is visible with correct text", async () => {
       await expect(sets.emptyState).toBeVisible();
       await expect(sets.emptyState).toContainText(
-        'Žiadne sady. Vytvorte prvú kliknutím na „Nová sada".',
+        'Žiadne sady. Vytvor prvú kliknutím na „Nová sada".',
       );
     });
 

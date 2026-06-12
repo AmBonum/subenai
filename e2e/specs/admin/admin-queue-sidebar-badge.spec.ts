@@ -1,6 +1,7 @@
 import { test, expect } from "../../fixtures/base";
 import { setupAppShell } from "../../setup/app-shell";
 import { ADMIN_SESSION } from "../../fixtures/auth";
+import { supportTicketTables } from "../../seed";
 
 // E48 Wave-4 — row-click navigation and sidebar support badge.
 //
@@ -41,12 +42,7 @@ test.describe("Admin queue — row navigation and sidebar badge", () => {
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
-        tables: {
-          support_tickets: [buildTicketRow()],
-          support_ticket_messages: [],
-          support_ticket_attachments: [],
-          support_tickets_with_assignees: [],
-        },
+        tables: supportTicketTables([buildTicketRow()]),
         rpcs: {
           has_role: true,
         },

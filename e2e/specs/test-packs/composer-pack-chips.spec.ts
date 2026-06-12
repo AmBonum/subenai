@@ -1,5 +1,6 @@
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import { platformPacksAvailable, PACKS_SKIP_MESSAGE } from "../../fixtures/platform-packs";
 
 /**
  * E37 — Composer pack-chip DB read path (TC-22, TC-23, TC-24, TC-25).
@@ -26,6 +27,13 @@ import { primeConsent } from "../../fixtures/consent";
 
 const CONFIG_HESLO_2FA =
   "eyJxIjpbInAtc21zLXBvc3RhLTEiLCJwLXNtcy1kcGQtMSIsInAtc21zLXRhdHJhLTEiLCJwLXNtcy1zbHNwLTEiLCJwLXNtcy1jc29iLTEiXSwidCI6NzAsIm0iOjUsImwiOm51bGwsInMiOlsiaGVzbG8tMmZhIl19";
+
+// Environment guard — these TCs read live pack rows (no mock layer);
+// skip loudly when the configured Supabase project has no published
+// platform packs. See e2e/fixtures/platform-packs.ts.
+test.beforeEach(async ({ request }) => {
+  test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
+});
 
 test.describe("/test/builder — composer pack chips (TC-22, TC-23, TC-24, TC-25)", () => {
   test.beforeEach(async ({ context }) => {

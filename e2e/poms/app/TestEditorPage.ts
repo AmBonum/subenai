@@ -46,6 +46,66 @@ export class TestEditorPage extends BasePage {
     return this.page.getByTestId("test-editor-publish-button");
   }
 
+  // E50 status-machine exits.
+  get unpublishButton() {
+    return this.page.getByTestId("test-editor-unpublish-button");
+  }
+
+  get unarchiveButton() {
+    return this.page.getByTestId("test-editor-unarchive-button");
+  }
+
+  // Shared app-shell ConfirmDialog (archive / unpublish confirmations).
+  get confirmDialog() {
+    return this.page.getByTestId("app-shell-confirm-dialog-root");
+  }
+
+  get confirmDialogConfirm() {
+    return this.page.getByTestId("app-shell-confirm-dialog-confirm");
+  }
+
+  get confirmDialogCancel() {
+    return this.page.getByTestId("app-shell-confirm-dialog-cancel");
+  }
+
+  // E50 — Settings tab: audience chip + intake-fields card.
+  get audienceChip() {
+    return this.page.getByTestId("test-editor-audience-chip");
+  }
+
+  get intakeRoot() {
+    return this.page.getByTestId("test-editor-intake-root");
+  }
+
+  get intakeNameToggle() {
+    return this.page.getByTestId("test-editor-intake-name-toggle");
+  }
+
+  get intakeNameRequired() {
+    return this.page.getByTestId("test-editor-intake-name-required");
+  }
+
+  get intakeEmailToggle() {
+    return this.page.getByTestId("test-editor-intake-email-toggle");
+  }
+
+  get intakeEmailRequired() {
+    return this.page.getByTestId("test-editor-intake-email-required");
+  }
+
+  // E50 — Results tab zero-sessions empty state CTAs.
+  get sessionsEmpty() {
+    return this.page.getByTestId("test-sessions-list-empty");
+  }
+
+  get sessionsEmptyCopyLinkButton() {
+    return this.page.getByTestId("test-sessions-list-empty-copy-link-button");
+  }
+
+  get sessionsEmptyPublishButton() {
+    return this.page.getByTestId("test-sessions-list-empty-publish-button");
+  }
+
   get pageHeaderTitle() {
     return this.page.getByTestId("app-shell-page-header-title");
   }

@@ -36,6 +36,16 @@ const REAL_IDS_6 = [
   "p-sms-fedex-1",
 ];
 
+// 5 more stable bank IDs — REAL_IDS_6 + these cross the >10 threshold
+// that hides the URL-share button and forces the DB share path.
+const REAL_IDS_EXTRA_5 = [
+  "p-sms-2fa-1",
+  "p-sms-tax-1",
+  "p-email-netflix-1",
+  "p-email-microsoft-1",
+  "p-email-apple-1",
+];
+
 test.describe("Custom test composer", () => {
   test.beforeEach(async ({ context }) => {
     await primeConsent(context, "all");
@@ -79,24 +89,16 @@ test.describe("Custom test composer", () => {
     });
   });
 
-  // TC-02: Selecting ≤ 10 questions enables URL copy button; > 10 hides it
+  // TC-02: Selecting ≤ 10 questions enables URL copy button; > 10 hides it.
+  // Selection goes through individual bank checkboxes (the E33 Phase 1
+  // picker is collapsed by default — expand it first); pack-chip toggling
+  // is covered by e2e/specs/test-packs/composer-pack-chips.spec.ts.
   test("TC-02: URL copy button appears for ≤ 10 selected questions and disappears for > 10", async ({
     composer,
   }) => {
-    await test.step("Open /test/builder", async () => {
+    await test.step("Open /test/builder and expand the question picker", async () => {
       await composer.open();
-    });
-
-    await test.step("Toggle the eshop pack chip (14 questions) — forces DB share path", async () => {
-      await composer.togglePackChip("eshop");
-    });
-
-    await test.step("Verify URL copy button is not visible with 14 questions selected", async () => {
-      await expect(composer.urlCopyButton).toHaveCount(0);
-    });
-
-    await test.step("Toggle the eshop pack chip off to deselect all questions", async () => {
-      await composer.togglePackChip("eshop");
+      await composer.expandStep2Picker();
     });
 
     await test.step("Select 6 questions individually via checkboxes", async () => {
@@ -118,12 +120,9 @@ test.describe("Custom test composer", () => {
     });
 
     await test.step("Select 5 more questions to exceed the URL-share threshold (> 10)", async () => {
-      // Deselect the current 6, then select 11 unique ones.
-      // Easier: just toggle the eshop pack chip which adds 14 IDs total.
-      for (const id of REAL_IDS_6) {
+      for (const id of REAL_IDS_EXTRA_5) {
         await composer.questionCheckbox(id).click();
       }
-      await composer.togglePackChip("eshop");
     });
 
     await test.step("Verify URL copy button is gone for > 10 questions", async () => {
@@ -136,8 +135,9 @@ test.describe("Custom test composer", () => {
     page,
     composer,
   }) => {
-    await test.step("Open /test/builder", async () => {
+    await test.step("Open /test/builder and expand the question picker", async () => {
       await composer.open();
+      await composer.expandStep2Picker();
     });
 
     await test.step("Select 6 questions to meet the minimum and enable the button", async () => {
@@ -155,7 +155,7 @@ test.describe("Custom test composer", () => {
     });
 
     await test.step("Verify the URL stays at /test/builder (no navigation)", async () => {
-      await expect(page).toHaveURL(/\/test\/zostav/);
+      await expect(page).toHaveURL(/\/test\/builder/);
     });
   });
 
@@ -169,7 +169,8 @@ test.describe("Custom test composer", () => {
       await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
     });
 
-    await test.step("Select 6 questions so the URL copy button is visible", async () => {
+    await test.step("Expand the picker and select 6 questions so the URL copy button is visible", async () => {
+      await composer.expandStep2Picker();
       for (const id of REAL_IDS_6) {
         await composer.questionCheckbox(id).click();
       }
@@ -198,12 +199,15 @@ test.describe("Custom test composer", () => {
       await stubTestSets(page, { status: 201, body: { id: "test-set-e2e" } });
     });
 
-    await test.step("Open /test/builder", async () => {
+    await test.step("Open /test/builder and expand the question picker", async () => {
       await composer.open();
+      await composer.expandStep2Picker();
     });
 
-    await test.step("Toggle the eshop pack chip to select 14 questions (forces DB share)", async () => {
-      await composer.togglePackChip("eshop");
+    await test.step("Select 11 questions via checkboxes (> 10 forces the DB share path)", async () => {
+      for (const id of [...REAL_IDS_6, ...REAL_IDS_EXTRA_5]) {
+        await composer.questionCheckbox(id).click();
+      }
     });
 
     await test.step("Verify submit button is enabled", async () => {
@@ -215,7 +219,7 @@ test.describe("Custom test composer", () => {
     });
 
     await test.step("Verify the page navigates to /test/builder/test-set-e2e", async () => {
-      await expect(page).toHaveURL(/\/test\/zostava\/test-set-e2e/);
+      await expect(page).toHaveURL(/\/test\/builder\/test-set-e2e/);
     });
   });
 

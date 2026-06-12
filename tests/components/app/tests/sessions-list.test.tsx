@@ -47,6 +47,11 @@ vi.mock("@tanstack/react-router", () => ({
   ),
 }));
 
+const copyToClipboardMock = vi.fn(async (_text: string) => true);
+vi.mock("@/lib/browser/clipboard", () => ({
+  copyToClipboard: (text: string) => copyToClipboardMock(text),
+}));
+
 import { SessionsList } from "@/components/app/tests/SessionsList";
 
 function makeSession(overrides: Partial<Session> = {}): Session {
@@ -92,6 +97,40 @@ describe("SessionsList", () => {
     const empty = screen.getByTestId("test-sessions-list-empty");
     expect(empty).toBeInTheDocument();
     expect(empty.textContent).toMatch(/zatiaľ nemá respondentov/i);
+  });
+
+  // E50 review fix (7) — zero-sessions empty state surfaces the share link
+  // for published tests and a publish CTA for drafts.
+  it("published + 0 sessions: shows the share-link CTA and copies the /t/ URL", async () => {
+    useTestSessionsMock.mockReturnValue({ data: mkResp([], 0), isLoading: false });
+    render(<SessionsList testId="test-1" status="published" shareId="abc123XYZ0" />);
+    expect(screen.getByTestId("test-sessions-list-empty-published-title").textContent).toBe(
+      "Test zatiaľ nemá respondentov.",
+    );
+    fireEvent.click(screen.getByTestId("test-sessions-list-empty-copy-link-button"));
+    await waitFor(() => expect(copyToClipboardMock).toHaveBeenCalledTimes(1));
+    expect(copyToClipboardMock.mock.calls[0][0]).toMatch(/\/t\/abc123XYZ0$/);
+  });
+
+  it("draft + 0 sessions: shows the needs-publishing copy and fires the publish CTA", () => {
+    useTestSessionsMock.mockReturnValue({ data: mkResp([], 0), isLoading: false });
+    const onRequestPublish = vi.fn();
+    render(
+      <SessionsList
+        testId="test-1"
+        status="draft"
+        shareId="abc123XYZ0"
+        onRequestPublish={onRequestPublish}
+      />,
+    );
+    expect(screen.getByTestId("test-sessions-list-empty-draft-title").textContent).toBe(
+      "Test ešte nie je publikovaný.",
+    );
+    expect(
+      screen.queryByTestId("test-sessions-list-empty-copy-link-button"),
+    ).not.toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("test-sessions-list-empty-publish-button"));
+    expect(onRequestPublish).toHaveBeenCalledTimes(1);
   });
 
   it("renders rows with respondent identity, score, and a link to the detail route", () => {

@@ -8,13 +8,6 @@ import { BasePage } from "../BasePage";
 
 export type TestsIndexStatus = "all" | "published" | "draft" | "archived";
 
-const STATUS_LABEL: Record<TestsIndexStatus, RegExp> = {
-  all: /^Všetky/,
-  published: /^Publikované/,
-  draft: /^Drafty/,
-  archived: /^Archív/,
-};
-
 export class TestSessionsListPage extends BasePage {
   constructor(page: Page) {
     super(page);
@@ -52,6 +45,15 @@ export class TestSessionsListPage extends BasePage {
     return this.page.getByTestId("tests-list-empty-state");
   }
 
+  /** True-empty card — the educator owns zero tests (first-run state). */
+  get emptyInitial() {
+    return this.page.getByTestId("tests-list-empty-initial");
+  }
+
+  statusTab(status: TestsIndexStatus) {
+    return this.page.getByTestId(`tests-list-status-tab-${status}`);
+  }
+
   /** Every test card currently rendered. */
   get rows() {
     return this.page.locator(
@@ -76,7 +78,7 @@ export class TestSessionsListPage extends BasePage {
   }
 
   async pickStatus(status: TestsIndexStatus) {
-    await this.page.getByRole("tab", { name: STATUS_LABEL[status] }).click();
+    await this.statusTab(status).click();
   }
 
   async clearFilters() {

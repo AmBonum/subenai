@@ -28,16 +28,16 @@ test.describe("Robots policy — live", () => {
     expect(body).toMatch(/<urlset/i);
   });
 
-  test("TC-RB-03: legal pages permit indexing (rendered <meta robots>)", async ({ page }) => {
+  test("TC-RB-03: legal pages permit indexing (rendered <meta robots>)", async ({
+    page,
+    docHead,
+  }) => {
     for (const route of ["/privacy", "/cookies", "/about"]) {
       await page.goto(route);
-      // Reading <head> via page.evaluate() is a page-level (environment)
-      // action — the head is not a user-facing element and never gets a
-      // POM. Per CLAUDE.md POM rules, environment access stays in-spec.
-      const content = await page.evaluate(() => {
-        const meta = document.head.querySelector('meta[name="robots"]');
-        return meta?.getAttribute("content") ?? null;
-      });
+      // docHead POM auto-waits for the meta to attach — a bare
+      // page.evaluate raced HeadContent's client-side render and read
+      // an empty head (flaky undefined, 2026-06-12).
+      const content = await docHead.robotsContent();
       expect(content?.toLowerCase(), `${route} should permit indexing — got "${content}"`).toMatch(
         /index/,
       );

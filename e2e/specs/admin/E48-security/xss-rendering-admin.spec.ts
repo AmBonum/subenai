@@ -52,6 +52,7 @@ test.describe("E48 security — stored XSS rendering (admin side)", () => {
       extras: {
         tables: {
           support_tickets: [xssTicket()],
+          support_tickets_with_assignees: [xssTicket()],
           support_ticket_messages: [],
           support_ticket_attachments: [],
         },

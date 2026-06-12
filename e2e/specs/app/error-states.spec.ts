@@ -38,9 +38,10 @@ test.describe("/app — error states", () => {
     // Shell + page header still mount — proves no crash.
     await expect(shell.root).toBeVisible();
     await expect(shell.pageHeaderTitle).toBeVisible();
-    // Empty fallback rendered. Verbatim Slovak per CLAUDE.md.
+    // Empty fallback rendered. Verbatim Slovak per CLAUDE.md. The card
+    // also carries the "Vyčistiť filtre" reset button, so containText.
     await expect(tests.emptyState).toBeVisible();
-    await expect(tests.emptyState).toHaveText("Žiadne testy v tomto filtri.");
+    await expect(tests.emptyState).toContainText("Žiadne testy v tomto filtri.");
   });
 
   test("/app/audiences renders shell + empty fallback when respondent_groups returns 500", async ({

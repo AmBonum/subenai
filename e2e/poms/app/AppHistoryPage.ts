@@ -15,6 +15,18 @@ export class AppHistoryPage extends BasePage {
     return this.page.getByTestId("history-empty-state");
   }
 
+  get emptyNoDataTitle() {
+    return this.page.getByTestId("history-empty-no-data-title");
+  }
+
+  get emptyCreateTestCta() {
+    return this.page.getByTestId("history-empty-create-test-cta");
+  }
+
+  get emptyClearFiltersButton() {
+    return this.page.getByTestId("history-empty-clear-filters-button");
+  }
+
   get testFilter() {
     return this.page.getByTestId("history-test-filter");
   }

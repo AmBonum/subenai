@@ -13,6 +13,10 @@ import { AppPageExplainerPom } from "../../poms/user/AppPageExplainerPom";
  * src/components/app, src/lib, src/hooks, src/integrations. The
  * explainer itself does not query Supabase — this exists only so the
  * surrounding page renders without 500-ing on an unmocked table.
+ *
+ * `profiles` and `profile_preferences` are deliberately ABSENT: the
+ * setupEducator base seed provides the onboarded profile rows, and an
+ * empty override here would re-trigger the onboarding gate on /app.
  */
 const ALL_APP_TABLES_EMPTY = {
   answer_sets: [],
@@ -31,8 +35,6 @@ const ALL_APP_TABLES_EMPTY = {
   dsr_requests: [],
   mfa_backup_codes: [],
   notifications: [],
-  profile_preferences: [],
-  profiles: [],
   questions: [],
   quick_test_config: [],
   reports: [],
@@ -53,6 +55,14 @@ const ALL_APP_TABLES_EMPTY = {
   user_roles: [],
 };
 
+// RPC-backed lists some pages render through (mock 404s unknown RPCs,
+// which would flip the page into its error state instead of empty).
+const ALL_APP_RPCS_EMPTY = {
+  list_my_test_sets: [],
+};
+
+const EXPLAINER_EXTRAS = { tables: ALL_APP_TABLES_EMPTY, rpcs: ALL_APP_RPCS_EMPTY };
+
 interface AppPageRow {
   key: string;
   url: string;
@@ -70,6 +80,7 @@ const PAGES: ReadonlyArray<AppPageRow> = [
   { key: "library", url: "/app/library" },
   { key: "audiences", url: "/app/audiences" },
   { key: "history", url: "/app/history" },
+  { key: "insights", url: "/app/insights" },
   { key: "notifications", url: "/app/notifications" },
   { key: "teams", url: "/app/teams" },
   { key: "profile", url: "/app/account/profile" },
@@ -81,12 +92,8 @@ test.describe("AppPageExplainer — every /app/* menu route", () => {
     test.describe(`${row.key} (${row.url})`, () => {
       // TC-01: root is visible after page load
       test("TC-01: explainer root renders after page load", async ({ context, page }) => {
-        await setupEducator(context, page, { tables: ALL_APP_TABLES_EMPTY });
+        await setupEducator(context, page, EXPLAINER_EXTRAS);
         const explainer = new AppPageExplainerPom(page);
-
-        await test.step("Clear localStorage so prior persisted state cannot bleed in", async () => {
-          await page.evaluate(() => localStorage.clear());
-        });
 
         await test.step(`Navigate to ${row.url}`, async () => {
           await page.goto(row.url);
@@ -106,12 +113,8 @@ test.describe("AppPageExplainer — every /app/* menu route", () => {
         context,
         page,
       }) => {
-        await setupEducator(context, page, { tables: ALL_APP_TABLES_EMPTY });
+        await setupEducator(context, page, EXPLAINER_EXTRAS);
         const explainer = new AppPageExplainerPom(page);
-
-        await test.step("Clear localStorage to start from a clean default", async () => {
-          await page.evaluate(() => localStorage.clear());
-        });
 
         await test.step(`Navigate to ${row.url}`, async () => {
           await page.goto(row.url);
@@ -128,12 +131,8 @@ test.describe("AppPageExplainer — every /app/* menu route", () => {
         context,
         page,
       }) => {
-        await setupEducator(context, page, { tables: ALL_APP_TABLES_EMPTY });
+        await setupEducator(context, page, EXPLAINER_EXTRAS);
         const explainer = new AppPageExplainerPom(page);
-
-        await test.step("Clear localStorage", async () => {
-          await page.evaluate(() => localStorage.clear());
-        });
 
         await test.step(`Navigate to ${row.url}`, async () => {
           await page.goto(row.url);
@@ -163,12 +162,8 @@ test.describe("AppPageExplainer — every /app/* menu route", () => {
         context,
         page,
       }) => {
-        await setupEducator(context, page, { tables: ALL_APP_TABLES_EMPTY });
+        await setupEducator(context, page, EXPLAINER_EXTRAS);
         const explainer = new AppPageExplainerPom(page);
-
-        await test.step("Clear localStorage so the default really is collapsed", async () => {
-          await page.evaluate(() => localStorage.clear());
-        });
 
         await test.step(`Navigate to ${row.url}`, async () => {
           await page.goto(row.url);
@@ -196,12 +191,8 @@ test.describe("AppPageExplainer — every /app/* menu route", () => {
     context,
     page,
   }) => {
-    await setupEducator(context, page, { tables: ALL_APP_TABLES_EMPTY });
+    await setupEducator(context, page, EXPLAINER_EXTRAS);
     const explainer = new AppPageExplainerPom(page);
-
-    await test.step("Clear localStorage", async () => {
-      await page.evaluate(() => localStorage.clear());
-    });
 
     await test.step("Navigate to /app/tests", async () => {
       await page.goto("/app/tests");

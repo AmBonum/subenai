@@ -71,7 +71,7 @@ export class AdminTicketsQueuePage extends BasePage {
   }
 
   rowLink(ticketId: string): Locator {
-    return this.page.getByTestId(`admin-tickets-row-link-${ticketId}`);
+    return this.page.getByTestId(`admin-tickets-row-open-link-${ticketId}`);
   }
 
   statusFilter(status: string): Locator {
@@ -79,7 +79,8 @@ export class AdminTicketsQueuePage extends BasePage {
   }
 
   get assignedColumnHeader(): Locator {
-    return this.page.getByTestId("admin-tickets-col-assigned");
+    // The "Pridelení" header is a SortableHeader like every other column.
+    return this.page.getByTestId("admin-tickets-sort-assigned");
   }
 
   rowAssignedAvatars(ticketId: string): Locator {

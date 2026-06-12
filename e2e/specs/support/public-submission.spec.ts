@@ -166,7 +166,7 @@ test.describe("Public submission — /contact-form", () => {
     await test.step("Verify user-facing Slovak error contains expected text", async () => {
       await expect(kontakt.submitError).toBeVisible();
       await expect(kontakt.submitError).toContainText(
-        "Z tejto IP adresy ste odoslali príliš veľa žiadostí. Skúste neskôr.",
+        "Z tejto IP adresy si poslal/a priveľa žiadostí. Skús to neskôr.",
       );
     });
   });

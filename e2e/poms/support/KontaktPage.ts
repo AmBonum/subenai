@@ -91,6 +91,11 @@ export class KontaktPage extends BasePage {
     return this.page.getByTestId("kontakt-success-ticket-id");
   }
 
+  /** Tokenized read-only thread link rendered in the success state. */
+  get successThreadLink(): Locator {
+    return this.page.getByTestId("kontakt-success-thread-link");
+  }
+
   // Attachment picker (requires onAttachmentUpload prop wired) ----------
   get attachmentDropzone(): Locator {
     return this.page.getByTestId("kontakt-form-attachments");

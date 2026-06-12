@@ -1,11 +1,12 @@
 import { test, expect } from "../../fixtures/base";
 import { setupEducator } from "../../setup/app-shell";
-import { AppDigestPage } from "../../poms/app/AppDigestPage";
-import { AppRecommendationsPage } from "../../poms/app/AppRecommendationsPage";
-import { AppRetestPage } from "../../poms/app/AppRetestPage";
-import { AppPeerPage } from "../../poms/app/AppPeerPage";
+import { AppInsightsPage } from "../../poms/app/AppInsightsPage";
 
 // ---------------------------------------------------------------------------
+// M4 — the four retention loops live under /app/insights as tabs
+// (?tab=digest|recommendations|retest|peer). Old single-list routes
+// redirect; section markup keeps the pre-merge data-testids.
+//
 // Shared seed helpers — plain objects matching the PostgREST row shape.
 // No factory functions exist yet for these tables; kept inline so the
 // mock envelope receives exactly the columns each query selects.
@@ -72,32 +73,37 @@ function makeRetestReminderRow(overrides: Record<string, unknown> = {}) {
 }
 
 // ---------------------------------------------------------------------------
-// Section A — /app/digest
+// Section A — digest tab
 // ---------------------------------------------------------------------------
 
-test.describe("/app/digest", () => {
+test.describe("/app/insights?tab=digest", () => {
   // TC-01: Empty state when the user has no digest history.
   test("TC-01: empty state renders when user_digests is empty", async ({ page }) => {
     await setupEducator(page.context(), page, {
       tables: { user_digests: [] },
     });
 
-    const digest = new AppDigestPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/digest", async () => {
-      await digest.open();
+    await test.step("Open /app/insights?tab=digest", async () => {
+      await insights.open("digest");
+    });
+
+    await test.step("Verify the digest tab is active and its panel visible", async () => {
+      await expect(insights.tab("digest")).toHaveAttribute("data-state", "active");
+      await expect(insights.panel("digest")).toBeVisible();
     });
 
     await test.step("Verify the empty-state card is visible", async () => {
-      await expect(digest.emptyState).toBeVisible();
+      await expect(insights.digestEmptyState).toBeVisible();
     });
 
     await test.step("Verify the empty-state title reads 'Zatiaľ žiadny súhrn'", async () => {
-      await expect(digest.emptyTitle).toHaveText("Zatiaľ žiadny súhrn");
+      await expect(insights.digestEmptyTitle).toHaveText("Zatiaľ žiadny súhrn");
     });
 
-    await test.step("Verify the page-header eyebrow reads 'Súhrn'", async () => {
-      await expect(digest.pageHeaderEyebrow).toHaveText("Súhrn");
+    await test.step("Verify the page-header eyebrow reads 'Pre teba'", async () => {
+      await expect(insights.pageHeaderEyebrow).toHaveText("Pre teba");
     });
   });
 
@@ -108,26 +114,26 @@ test.describe("/app/digest", () => {
       tables: { user_digests: [row] },
     });
 
-    const digest = new AppDigestPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/digest", async () => {
-      await digest.open();
+    await test.step("Open /app/insights?tab=digest", async () => {
+      await insights.open("digest");
     });
 
     await test.step("Verify the digest list is visible", async () => {
-      await expect(digest.list).toBeVisible();
+      await expect(insights.digestList).toBeVisible();
     });
 
     await test.step("Verify the digest card for the seeded row is visible", async () => {
-      await expect(digest.card(row.id as string)).toBeVisible();
+      await expect(insights.digestCard(row.id as string)).toBeVisible();
     });
 
     await test.step("Verify the sessions stat shows '5 dokončení'", async () => {
-      await expect(digest.cardSessions(row.id as string)).toHaveText("5 dokončení");
+      await expect(insights.digestCardSessions(row.id as string)).toHaveText("5 dokončení");
     });
 
     await test.step("Verify the completion stat shows 'Úspešnosť 80%'", async () => {
-      await expect(digest.cardCompletion(row.id as string)).toHaveText("Úspešnosť 80%");
+      await expect(insights.digestCardCompletion(row.id as string)).toHaveText("Úspešnosť 80%");
     });
   });
 
@@ -150,18 +156,18 @@ test.describe("/app/digest", () => {
       tables: { user_digests: [row] },
     });
 
-    const digest = new AppDigestPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/digest", async () => {
-      await digest.open();
+    await test.step("Open /app/insights?tab=digest", async () => {
+      await insights.open("digest");
     });
 
     await test.step("Verify the top-test section is visible", async () => {
-      await expect(digest.cardTopTest(row.id as string)).toBeVisible();
+      await expect(insights.digestCardTopTest(row.id as string)).toBeVisible();
     });
 
     await test.step("Verify the 'Pozri detail' CTA links to /app/tests/{testId}", async () => {
-      await expect(digest.cardTopTestCta(row.id as string)).toHaveAttribute(
+      await expect(insights.digestCardTopTestCta(row.id as string)).toHaveAttribute(
         "href",
         `/app/tests/${testId}`,
       );
@@ -170,28 +176,32 @@ test.describe("/app/digest", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Section B — /app/recommendations
+// Section B — recommendations tab
 // ---------------------------------------------------------------------------
 
-test.describe("/app/recommendations", () => {
+test.describe("/app/insights?tab=recommendations", () => {
   // TC-04: Empty state when no course recommendations exist.
   test("TC-04: empty state renders when course_recommendations is empty", async ({ page }) => {
     await setupEducator(page.context(), page, {
       tables: { course_recommendations: [] },
     });
 
-    const recs = new AppRecommendationsPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/recommendations", async () => {
-      await recs.open();
+    await test.step("Open /app/insights?tab=recommendations", async () => {
+      await insights.open("recommendations");
+    });
+
+    await test.step("Verify the recommendations tab is active", async () => {
+      await expect(insights.tab("recommendations")).toHaveAttribute("data-state", "active");
     });
 
     await test.step("Verify the empty-state card is visible", async () => {
-      await expect(recs.emptyState).toBeVisible();
+      await expect(insights.recommendationsEmptyState).toBeVisible();
     });
 
     await test.step("Verify the empty-state title reads 'Zatiaľ žiadne odporúčania'", async () => {
-      await expect(recs.emptyTitle).toHaveText("Zatiaľ žiadne odporúčania");
+      await expect(insights.recommendationsEmptyTitle).toHaveText("Zatiaľ žiadne odporúčania");
     });
   });
 
@@ -204,22 +214,24 @@ test.describe("/app/recommendations", () => {
       tables: { course_recommendations: [row] },
     });
 
-    const recs = new AppRecommendationsPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/recommendations", async () => {
-      await recs.open();
+    await test.step("Open /app/insights?tab=recommendations", async () => {
+      await insights.open("recommendations");
     });
 
     await test.step("Verify the recommendations list is visible", async () => {
-      await expect(recs.list).toBeVisible();
+      await expect(insights.recommendationsList).toBeVisible();
     });
 
     await test.step("Verify the card title shows the training title", async () => {
-      await expect(recs.cardTitle(row.id as string)).toHaveText("Kritické myslenie — základy");
+      await expect(insights.recommendationsCardTitle(row.id as string)).toHaveText(
+        "Kritické myslenie — základy",
+      );
     });
 
     await test.step("Verify the reason badge shows 'Nový obsah'", async () => {
-      await expect(recs.cardReason(row.id as string)).toHaveText("Nový obsah");
+      await expect(insights.recommendationsCardReason(row.id as string)).toHaveText("Nový obsah");
     });
   });
 
@@ -230,14 +242,14 @@ test.describe("/app/recommendations", () => {
       tables: { course_recommendations: [row] },
     });
 
-    const recs = new AppRecommendationsPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/recommendations", async () => {
-      await recs.open();
+    await test.step("Open /app/insights?tab=recommendations", async () => {
+      await insights.open("recommendations");
     });
 
     await test.step("Verify the 'Pozri kurz' CTA has the correct href", async () => {
-      await expect(recs.cardViewCta(row.id as string)).toHaveAttribute(
+      await expect(insights.recommendationsCardViewCta(row.id as string)).toHaveAttribute(
         "href",
         "/courses/kriticke-myslenie-zaklady",
       );
@@ -246,28 +258,32 @@ test.describe("/app/recommendations", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Section C — /app/retest
+// Section C — retest tab
 // ---------------------------------------------------------------------------
 
-test.describe("/app/retest", () => {
+test.describe("/app/insights?tab=retest", () => {
   // TC-07: Empty state when no retest reminders exist.
   test("TC-07: empty state renders when retest_reminders is empty", async ({ page }) => {
     await setupEducator(page.context(), page, {
       tables: { retest_reminders: [] },
     });
 
-    const retest = new AppRetestPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/retest", async () => {
-      await retest.open();
+    await test.step("Open /app/insights?tab=retest", async () => {
+      await insights.open("retest");
+    });
+
+    await test.step("Verify the retest tab is active", async () => {
+      await expect(insights.tab("retest")).toHaveAttribute("data-state", "active");
     });
 
     await test.step("Verify the empty-state card is visible", async () => {
-      await expect(retest.emptyState).toBeVisible();
+      await expect(insights.retestEmptyState).toBeVisible();
     });
 
     await test.step("Verify the empty-state title reads 'Zatiaľ žiadne pripomienky'", async () => {
-      await expect(retest.emptyTitle).toHaveText("Zatiaľ žiadne pripomienky");
+      await expect(insights.retestEmptyTitle).toHaveText("Zatiaľ žiadne pripomienky");
     });
   });
 
@@ -280,22 +296,22 @@ test.describe("/app/retest", () => {
       tables: { retest_reminders: [row] },
     });
 
-    const retest = new AppRetestPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/retest", async () => {
-      await retest.open();
+    await test.step("Open /app/insights?tab=retest", async () => {
+      await insights.open("retest");
     });
 
     await test.step("Verify the due section is visible", async () => {
-      await expect(retest.dueSection).toBeVisible();
+      await expect(insights.retestDueSection).toBeVisible();
     });
 
     await test.step("Verify the reminder card shows the test title 'Finančná gramotnosť'", async () => {
-      await expect(retest.cardTitle(row.id as string)).toHaveText("Finančná gramotnosť");
+      await expect(insights.retestCardTitle(row.id as string)).toHaveText("Finančná gramotnosť");
     });
 
     await test.step("Verify the 'Spustiť retest' CTA links to /app/tests/{test_id}", async () => {
-      await expect(retest.cardRunCta(row.id as string)).toHaveAttribute(
+      await expect(insights.retestCardRunCta(row.id as string)).toHaveAttribute(
         "href",
         `/app/tests/${row.test_id as string}`,
       );
@@ -312,27 +328,27 @@ test.describe("/app/retest", () => {
       tables: { retest_reminders: [row] },
     });
 
-    const retest = new AppRetestPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/retest", async () => {
-      await retest.open();
+    await test.step("Open /app/insights?tab=retest", async () => {
+      await insights.open("retest");
     });
 
     await test.step("Verify the upcoming section is visible", async () => {
-      await expect(retest.upcomingSection).toBeVisible();
+      await expect(insights.retestUpcomingSection).toBeVisible();
     });
 
     await test.step("Verify the due-in label contains 'Splatné o'", async () => {
-      await expect(retest.cardDueIn(row.id as string)).toContainText("Splatné o");
+      await expect(insights.retestCardDueIn(row.id as string)).toContainText("Splatné o");
     });
   });
 });
 
 // ---------------------------------------------------------------------------
-// Section D — /app/peer
+// Section D — peer tab
 // ---------------------------------------------------------------------------
 
-test.describe("/app/peer", () => {
+test.describe("/app/insights?tab=peer", () => {
   // TC-10: Insufficient-cohort empty state when RPC returns has_data: false.
   test("TC-10: insufficient-cohort card shown when get_peer_card returns has_data: false", async ({
     page,
@@ -343,24 +359,28 @@ test.describe("/app/peer", () => {
       },
     });
 
-    const peer = new AppPeerPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/peer", async () => {
-      await peer.open();
+    await test.step("Open /app/insights?tab=peer", async () => {
+      await insights.open("peer");
+    });
+
+    await test.step("Verify the peer tab is active", async () => {
+      await expect(insights.tab("peer")).toHaveAttribute("data-state", "active");
     });
 
     await test.step("Verify the insufficient-cohort card is visible", async () => {
-      await expect(peer.emptyInsufficientCard).toBeVisible();
+      await expect(insights.peerEmptyInsufficientCard).toBeVisible();
     });
 
     await test.step("Verify the body text reads the expected message", async () => {
-      await expect(peer.emptyInsufficientBody).toHaveText(
+      await expect(insights.peerEmptyInsufficientBody).toHaveText(
         "Zatiaľ máme málo dát na porovnanie. Vráť sa o pár týždňov.",
       );
     });
 
     await test.step("Verify the percentile card is NOT rendered", async () => {
-      await expect(peer.percentileCard).toHaveCount(0);
+      await expect(insights.peerPercentileCard).toHaveCount(0);
     });
   });
 
@@ -382,26 +402,26 @@ test.describe("/app/peer", () => {
       },
     });
 
-    const peer = new AppPeerPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/peer", async () => {
-      await peer.open();
+    await test.step("Open /app/insights?tab=peer", async () => {
+      await insights.open("peer");
     });
 
     await test.step("Verify the percentile card is visible", async () => {
-      await expect(peer.percentileCard).toBeVisible();
+      await expect(insights.peerPercentileCard).toBeVisible();
     });
 
     await test.step("Verify the percentile headline contains '75. percentil'", async () => {
-      await expect(peer.percentileHeadline).toContainText("75. percentil");
+      await expect(insights.peerPercentileHeadline).toContainText("75. percentil");
     });
 
     await test.step("Verify the user score value contains '68%'", async () => {
-      await expect(peer.scoreUserValue).toContainText("68%");
+      await expect(insights.peerScoreUserValue).toContainText("68%");
     });
 
     await test.step("Verify the cohort score value contains '52%'", async () => {
-      await expect(peer.scoreCohortValue).toContainText("52%");
+      await expect(insights.peerScoreCohortValue).toContainText("52%");
     });
   });
 
@@ -423,22 +443,80 @@ test.describe("/app/peer", () => {
       },
     });
 
-    const peer = new AppPeerPage(page);
+    const insights = new AppInsightsPage(page);
 
-    await test.step("Open /app/peer", async () => {
-      await peer.open();
+    await test.step("Open /app/insights?tab=peer", async () => {
+      await insights.open("peer");
     });
 
     await test.step("Verify the download button is visible", async () => {
-      await expect(peer.shareDownloadButton).toBeVisible();
+      await expect(insights.peerShareDownloadButton).toBeVisible();
     });
 
     await test.step("Verify the download button label reads 'Stiahnuť ako obrázok'", async () => {
-      await expect(peer.shareDownloadButton).toContainText("Stiahnuť ako obrázok");
+      await expect(insights.peerShareDownloadButton).toContainText("Stiahnuť ako obrázok");
     });
 
     await test.step("Verify the privacy note is visible", async () => {
-      await expect(peer.privacyNote).toBeVisible();
+      await expect(insights.peerPrivacyNote).toBeVisible();
     });
   });
+});
+
+// ---------------------------------------------------------------------------
+// Section E — tab switching + legacy-route redirects
+// ---------------------------------------------------------------------------
+
+test.describe("/app/insights — tabs and legacy redirects", () => {
+  // TC-13: Default tab is digest; clicking another tab updates ?tab=.
+  test("TC-13: digest is the default tab and clicking 'Retesty' updates the URL", async ({
+    page,
+  }) => {
+    await setupEducator(page.context(), page, {
+      tables: { user_digests: [], retest_reminders: [] },
+    });
+
+    const insights = new AppInsightsPage(page);
+
+    await test.step("Open /app/insights without a ?tab param", async () => {
+      await insights.open();
+    });
+
+    await test.step("Verify the digest tab is active by default", async () => {
+      await expect(insights.tab("digest")).toHaveAttribute("data-state", "active");
+      await expect(insights.digestRoot).toBeVisible();
+    });
+
+    await test.step("Click the 'Retesty' tab and verify ?tab=retest + retest section", async () => {
+      await insights.tab("retest").click();
+      await expect(page).toHaveURL(/\/app\/insights\?tab=retest/);
+      await expect(insights.retestRoot).toBeVisible();
+    });
+  });
+
+  // TC-14: Old routes redirect to the matching insights tab (deep links keep working).
+  for (const [oldPath, tab] of [
+    ["/app/digest", "digest"],
+    ["/app/recommendations", "recommendations"],
+    ["/app/retest", "retest"],
+    ["/app/peer", "peer"],
+  ] as const) {
+    test(`TC-14: legacy ${oldPath} redirects to /app/insights?tab=${tab}`, async ({ page }) => {
+      await setupEducator(page.context(), page, {
+        tables: { user_digests: [], retest_reminders: [], course_recommendations: [] },
+        rpcs: { get_peer_card: { has_data: false, reason: "insufficient_cohort" } },
+      });
+
+      const insights = new AppInsightsPage(page);
+
+      await test.step(`Navigate to the legacy ${oldPath} URL`, async () => {
+        await page.goto(oldPath, { waitUntil: "domcontentloaded" });
+      });
+
+      await test.step(`Verify the URL is /app/insights?tab=${tab} and the tab is active`, async () => {
+        await expect(page).toHaveURL(new RegExp(`/app/insights\\?tab=${tab}`));
+        await expect(insights.tab(tab)).toHaveAttribute("data-state", "active");
+      });
+    });
+  }
 });

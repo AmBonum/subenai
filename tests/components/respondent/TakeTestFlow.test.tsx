@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import type { ReactNode } from "react";
 
 const rpcMock = vi.fn();
 
@@ -7,6 +8,16 @@ vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     rpc: (...args: unknown[]) => rpcMock(...args),
   },
+}));
+
+// Thank-you stage renders a router <Link> (quick-test CTA); the component
+// is rendered without a RouterProvider here.
+vi.mock("@tanstack/react-router", () => ({
+  Link: ({ children, to, ...rest }: { children: ReactNode; to: string }) => (
+    <a href={to} {...rest}>
+      {children}
+    </a>
+  ),
 }));
 
 import { TakeTestFlow } from "@/components/respondent/TakeTestFlow";
@@ -80,9 +91,12 @@ async function completeIntake() {
   fireEvent.click(screen.getByTestId("respondent-flow-intake-submit-button"));
 }
 
+const STORAGE_KEY = `iiq_respondent_session_v1:${TEST_SHARE_ID}`;
+
 describe("TakeTestFlow — Supabase RPC wiring", () => {
   beforeEach(() => {
     rpcMock.mockReset();
+    window.sessionStorage.clear();
   });
 
   it("calls start_respondent_session on intake submit and advances to questions", async () => {
@@ -185,5 +199,112 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
     const finalize = rpcMock.mock.calls.find((c) => c[0] === "finalize_respondent_session");
     expect(finalize).toBeDefined();
     expect((finalize![1] as { p_score: number }).p_score).toBe(50);
+  });
+});
+
+describe("TakeTestFlow — mid-take resume via sessionStorage", () => {
+  const SAVED_SESSION = {
+    sessionId: TEST_SESSION_ID,
+    sessionToken: TEST_SESSION_TOKEN,
+    intake: { if_name: "Anna" },
+    answers: [{ question_id: "qp_0001", value: "Možnosť A", is_correct: true, time_ms: 1234 }],
+    qIdx: 1,
+    questionOrder: ["qp_0001", "qp_0002"],
+  };
+
+  beforeEach(() => {
+    rpcMock.mockReset();
+    window.sessionStorage.clear();
+  });
+
+  it("snapshots the session to sessionStorage after intake (resume seed)", async () => {
+    rpcMock.mockResolvedValueOnce({
+      data: { session_id: TEST_SESSION_ID, session_token: TEST_SESSION_TOKEN },
+      error: null,
+    });
+    renderFlow({ questions: QUESTIONS });
+    await completeIntake();
+    await waitFor(() => {
+      expect(screen.getByTestId("respondent-flow-question-0-prompt")).toBeInTheDocument();
+    });
+    const saved = JSON.parse(window.sessionStorage.getItem(STORAGE_KEY)!);
+    expect(saved.sessionId).toBe(TEST_SESSION_ID);
+    expect(saved.sessionToken).toBe(TEST_SESSION_TOKEN);
+    expect(saved.qIdx).toBe(0);
+    expect(saved.questionOrder).toEqual(["qp_0001", "qp_0002"]);
+    expect(saved.intake).toEqual({ if_name: "Anna" });
+  });
+
+  it("resumes the saved session — no second start_respondent_session, same session finalized, entry cleared", async () => {
+    window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(SAVED_SESSION));
+    rpcMock.mockResolvedValue({ data: null, error: null });
+    renderFlow({ questions: QUESTIONS });
+
+    // Intake is skipped — resumes straight on Q2 (display index 1).
+    expect(screen.getByTestId("respondent-flow-question-1-prompt")).toBeInTheDocument();
+    expect(screen.queryByTestId("respondent-flow-intake-submit-button")).not.toBeInTheDocument();
+
+    // Answer Q2 and finish.
+    fireEvent.click(
+      screen.getByTestId("respondent-flow-question-1-answer-1").querySelector("input")!,
+    );
+    fireEvent.click(screen.getByTestId("respondent-flow-submit-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("respondent-flow-thank-you")).toBeInTheDocument();
+    });
+
+    const calls = rpcMock.mock.calls.map((c) => c[0]);
+    expect(calls).not.toContain("start_respondent_session");
+    const finalize = rpcMock.mock.calls.find((c) => c[0] === "finalize_respondent_session");
+    expect(finalize).toBeDefined();
+    expect((finalize![1] as { p_session_id: string }).p_session_id).toBe(TEST_SESSION_ID);
+    // Restored Q1 answer (correct) + Q2 (unscored) → deduped 1/2 = 50.
+    expect((finalize![1] as { p_score: number }).p_score).toBe(50);
+
+    // Finalize clears the saved entry — a later visit starts fresh.
+    expect(window.sessionStorage.getItem(STORAGE_KEY)).toBeNull();
+  });
+
+  it("ignores a malformed saved entry and starts at intake", () => {
+    window.sessionStorage.setItem(STORAGE_KEY, "{not-json");
+    renderFlow({ questions: QUESTIONS });
+    expect(screen.getByTestId("respondent-flow-intake-submit-button")).toBeInTheDocument();
+  });
+});
+
+describe("TakeTestFlow — thank-you exit", () => {
+  beforeEach(() => {
+    rpcMock.mockReset();
+    window.sessionStorage.clear();
+  });
+
+  it("offers the quick-test CTA to /test plus a close button", async () => {
+    window.sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        sessionId: TEST_SESSION_ID,
+        sessionToken: TEST_SESSION_TOKEN,
+        intake: { if_name: "Anna" },
+        answers: [{ question_id: "qp_0001", value: "Možnosť A", is_correct: true, time_ms: 1 }],
+        qIdx: 1,
+        questionOrder: ["qp_0001", "qp_0002"],
+      }),
+    );
+    rpcMock.mockResolvedValue({ data: null, error: null });
+    renderFlow({ questions: QUESTIONS });
+    fireEvent.click(
+      screen.getByTestId("respondent-flow-question-1-answer-0").querySelector("input")!,
+    );
+    fireEvent.click(screen.getByTestId("respondent-flow-submit-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("respondent-flow-thank-you")).toBeInTheDocument();
+    });
+
+    const cta = screen.getByTestId("respondent-flow-thank-you-quick-test-cta");
+    expect(cta).toHaveAttribute("href", "/test");
+    expect(cta).toHaveTextContent("Otestuj si svoje scam radary — rýchly test zadarmo");
+    expect(screen.getByTestId("respondent-flow-thank-you-close-button")).toHaveTextContent(
+      "Zatvoriť",
+    );
   });
 });

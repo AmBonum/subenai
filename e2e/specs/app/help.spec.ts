@@ -31,9 +31,9 @@ test.describe("/app/help", () => {
       await expect(help.faqItem(0)).toBeVisible();
     });
 
-    await test.step("Verify contact card is visible with CTA and subtitle", async () => {
+    await test.step("Verify contact card is visible with the form CTA and subtitle", async () => {
       await expect(help.contactCard).toBeVisible();
-      await expect(help.contactSubtitle).toContainText("support@subenai.sk");
+      await expect(help.contactSubtitle).toContainText("formulár podpory");
       await expect(help.contactCta).toBeVisible();
     });
   });
@@ -126,9 +126,9 @@ test.describe("/app/help", () => {
       await expect(help.emptyStateTitle).toContainText("xyzzy_no_match_42");
     });
 
-    await test.step("Verify the empty-state CTA links to mailto:support@subenai.sk", async () => {
+    await test.step("Verify the empty-state CTA links to the in-app support form", async () => {
       await expect(help.emptyStateCta).toBeVisible();
-      await expect(help.emptyStateCta).toHaveAttribute("href", "mailto:support@subenai.sk");
+      await expect(help.emptyStateCta).toHaveAttribute("href", "/app/help/contact");
     });
   });
 
@@ -158,22 +158,27 @@ test.describe("/app/help", () => {
     });
   });
 
-  // TC-06: Contact CTA links to the mailto support address
-  test("TC-06: contact CTA links to mailto:support@subenai.sk", async ({ page }) => {
+  // TC-06: Contact CTA links to the in-app support form (mailto island removed)
+  test("TC-06: contact CTA links to /app/help/contact and navigates there", async ({ page }) => {
     const help = new AppHelpPage(page);
 
     await test.step("Navigate to /app/help", async () => {
       await help.open();
     });
 
-    await test.step("Verify the contact CTA is visible and uses the mailto: scheme", async () => {
+    await test.step("Verify the contact CTA is visible and points at the form route", async () => {
       await expect(help.contactCta).toBeVisible();
-      await expect(help.contactCta).toHaveAttribute("href", "mailto:support@subenai.sk");
+      await expect(help.contactCta).toHaveAttribute("href", "/app/help/contact");
     });
 
     await test.step("Verify the contact CTA label reads the i18n Slovak copy", async () => {
-      // i18n: help.contact_button = "Kontaktovať support"
-      await expect(help.contactCta).toContainText("Kontaktovať support");
+      // i18n: help.contact_button = "Kontaktovať podporu"
+      await expect(help.contactCta).toContainText("Kontaktovať podporu");
+    });
+
+    await test.step("Click the CTA and verify the support form route renders", async () => {
+      await help.contactCta.click();
+      await expect(page).toHaveURL(/\/app\/help\/contact$/);
     });
   });
 });

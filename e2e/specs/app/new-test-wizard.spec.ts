@@ -3,19 +3,23 @@ import type { BrowserContext, Page } from "@playwright/test";
 import { test, expect } from "../../fixtures/base";
 import { setupEducator } from "../../setup/app-shell";
 import { seedQuestion, type QuestionRow } from "../../seed";
+import type { RpcContext } from "../../mocks/supabase";
 import { NewTestWizardPage } from "../../poms/app/NewTestWizardPage";
 
 // Test plan: specs/app/new-test-wizard.md
 //
 // Step 3 questions come from the `questions` table via useLibraryQuestions
-// (QuestionPickerDialog). Publish = INSERT into `tests` (the mock generates
-// the id via `generateIds`) followed by RPC replace_test_questions carrying
-// the picked question ids in order.
+// (QuestionPickerDialog). Publish (E50) is three-phase: INSERT into `tests`
+// with status='draft' (the mock generates the id via `generateIds`), RPC
+// replace_test_questions carrying the picked question ids in order, then
+// RPC publish_test which atomically flips status='published' + writes the
+// test_versions snapshot — only then does step 4 render the share link.
 
 interface WizardSetup {
   q1: QuestionRow;
   q2: QuestionRow;
   replaceCalls: unknown[];
+  publishCalls: unknown[];
 }
 
 async function setupWizard(
@@ -26,6 +30,7 @@ async function setupWizard(
   const q1 = seedQuestion({ status: "approved", prompt: "Prvá e2e otázka" });
   const q2 = seedQuestion({ status: "approved", prompt: "Druhá e2e otázka" });
   const replaceCalls: unknown[] = [];
+  const publishCalls: unknown[] = [];
   await setupEducator(context, page, {
     tables: {
       templates: [],
@@ -40,13 +45,25 @@ async function setupWizard(
             replaceCalls.push(body);
             return null;
           },
+          // Emulates the real publish_test: flips the inserted draft row to
+          // published so refetches observe the new status.
+          publish_test: (body: unknown, ctx: RpcContext) => {
+            publishCalls.push(body);
+            const id = (body as { p_test_id?: string } | null)?.p_test_id;
+            const row = (ctx.tables.tests ?? []).find((r) => r.id === id);
+            if (row) {
+              row.status = "published";
+              row.published_at = new Date().toISOString();
+            }
+            return (row?.version as number | undefined) ?? 1;
+          },
         },
     errors: opts.replaceRpcFails
       ? { replace_test_questions: { status: 500, message: "replace failed (e2e)" } }
       : {},
     generateIds: ["tests"],
   });
-  return { q1, q2, replaceCalls };
+  return { q1, q2, replaceCalls, publishCalls };
 }
 
 async function pickQuestions(wizard: NewTestWizardPage, ids: string[]): Promise<void> {
@@ -195,11 +212,12 @@ test.describe("/app/tests/new wizard", () => {
   });
 
   // TC-04: Happy publish — replace_test_questions carries both ids in order
-  test("TC-04: publish inserts the test and calls replace_test_questions with both question ids in order", async ({
+  // and publish_test runs on the same test id before step 4 renders.
+  test("TC-04: publish inserts the test, replaces questions in order, and calls publish_test", async ({
     context,
     page,
   }) => {
-    const { q1, q2, replaceCalls } = await setupWizard(context, page);
+    const { q1, q2, replaceCalls, publishCalls } = await setupWizard(context, page);
     const wizard = new NewTestWizardPage(page);
 
     await test.step("Complete steps 1 and 2", async () => {
@@ -228,6 +246,12 @@ test.describe("/app/tests/new wizard", () => {
       expect(body.p_question_ids).toEqual([q1.id, q2.id]);
       expect(body.p_test_id).toEqual(expect.any(String));
       expect(body.p_test_id.length).toBeGreaterThan(0);
+    });
+
+    await test.step("Verify publish_test ran once on the same test id", async () => {
+      expect(publishCalls).toHaveLength(1);
+      const replaceBody = replaceCalls[0] as { p_test_id: string };
+      expect(publishCalls[0]).toEqual({ p_test_id: replaceBody.p_test_id });
     });
   });
 
@@ -282,16 +306,61 @@ test.describe("/app/tests/new wizard", () => {
       await wizard.stepNext(3).click();
     });
 
-    await test.step("Verify the error toast carries the RPC error message", async () => {
-      // Actual behavior: onError → toast.error(err.message) — the raw
-      // Supabase error message, not a localized Slovak string.
+    await test.step("Verify the error toast shows the localized Slovak fallback", async () => {
+      // E50 review fix (9): unknown errors map to the generic Slovak
+      // fallback instead of the raw Supabase error message.
       await expect(wizard.toast).toBeVisible();
-      await expect(wizard.toast).toContainText("replace failed (e2e)");
+      await expect(wizard.toast).toContainText("Nepodarilo sa to, skús to znova.");
     });
 
     await test.step("Verify the wizard does NOT show success (no step 4)", async () => {
       await expect(wizard.stepRoot(4)).toHaveCount(0);
       await expect(wizard.stepRoot(3)).toBeVisible();
+    });
+  });
+
+  // TC-07: Back-navigation from step 4 must NOT create a duplicate test —
+  // re-clicking "Publikovať" reuses the created test id (update + replace +
+  // re-publish on the SAME row).
+  test("TC-07: re-publishing after going back from step 4 reuses the created test (no duplicate row)", async ({
+    context,
+    page,
+  }) => {
+    const { q1, q2, replaceCalls, publishCalls } = await setupWizard(context, page);
+    const wizard = new NewTestWizardPage(page);
+
+    await test.step("Complete the wizard to reach step 4", async () => {
+      await wizard.open();
+      await wizard.titleInput.fill("E2E Re-publish Test");
+      await wizard.stepNext(1).click();
+      await expect(wizard.stepRoot(2)).toBeVisible();
+      await wizard.stepNext(2).click();
+      await expect(wizard.stepRoot(3)).toBeVisible();
+      await pickQuestions(wizard, [q1.id]);
+      await wizard.stepNext(3).click();
+      await expect(wizard.stepRoot(4)).toBeVisible();
+    });
+
+    await test.step("Go back to step 3, add the second question, publish again", async () => {
+      await wizard.stepBack(4).click();
+      await expect(wizard.stepRoot(3)).toBeVisible();
+      await wizard.addQuestionButton.click();
+      await expect(wizard.pickerDialog).toBeVisible();
+      await wizard.pickerRowCheckbox(q2.id).click();
+      await wizard.pickerSubmitButton.click();
+      await wizard.stepNext(3).click();
+      await expect(wizard.stepRoot(4)).toBeVisible();
+    });
+
+    await test.step("Verify both publish + replace calls targeted the SAME test id", async () => {
+      expect(publishCalls).toHaveLength(2);
+      expect(replaceCalls).toHaveLength(2);
+      const ids = new Set(
+        [...publishCalls, ...replaceCalls].map((b) => (b as { p_test_id: string }).p_test_id),
+      );
+      expect(ids.size).toBe(1);
+      const second = replaceCalls[1] as { p_question_ids: string[] };
+      expect(second.p_question_ids).toEqual([q1.id, q2.id]);
     });
   });
 });

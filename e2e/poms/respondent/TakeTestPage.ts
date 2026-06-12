@@ -108,4 +108,12 @@ export class TakeTestPage extends BasePage {
   get thankYouSubtitle() {
     return this.page.getByTestId("respondent-flow-thank-you-subtitle");
   }
+
+  get thankYouQuickTestCta() {
+    return this.page.getByTestId("respondent-flow-thank-you-quick-test-cta");
+  }
+
+  get thankYouCloseButton() {
+    return this.page.getByTestId("respondent-flow-thank-you-close-button");
+  }
 }

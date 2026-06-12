@@ -1,7 +1,8 @@
 import type { Locator, Page } from "@playwright/test";
 
 /**
- * 404 page POM — `__root.tsx` `NotFoundComponent`.
+ * 404 page POM — `src/components/layout/NotFoundPage.tsx` (E22 senior
+ * 404 surface: kicker + h1 + body + suggestion cards).
  *
  * Renders for any unknown route. Intentionally does NOT include
  * `<Footer>`; tests that assert footer absence on 404 use this POM
@@ -10,11 +11,18 @@ import type { Locator, Page } from "@playwright/test";
 export class NotFoundPage {
   constructor(private readonly page: Page) {}
 
+  /** The h1 — Slovak copy "Stránka nenájdená". */
   get heading(): Locator {
-    return this.page.getByRole("heading", { name: "404" });
+    return this.page.getByTestId("not-found-title");
   }
 
+  /** Kicker line above the h1 — carries the literal "404". */
+  get kicker(): Locator {
+    return this.page.getByTestId("not-found-kicker");
+  }
+
+  /** Body paragraph under the h1. */
   get subheading(): Locator {
-    return this.page.getByText("Stránka nenájdená");
+    return this.page.getByTestId("not-found-body");
   }
 }

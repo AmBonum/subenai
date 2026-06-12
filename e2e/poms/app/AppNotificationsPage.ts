@@ -31,6 +31,10 @@ export class AppNotificationsPage extends BasePage {
     return this.page.getByTestId("app-notifications-empty-state");
   }
 
+  get emptyHint() {
+    return this.page.getByTestId("app-notifications-empty-hint");
+  }
+
   row(id: string) {
     return this.page.getByTestId(`app-notifications-row-${id}`);
   }

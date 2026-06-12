@@ -50,7 +50,10 @@ describe("supportTicketReceivedEmail", () => {
   it("does NOT render the view link when viewUrl is undefined (authenticated submitter)", () => {
     const t = supportTicketReceivedEmail(base);
     expect(t.html).not.toContain("Zobraziť vlákno");
-    expect(t.html).toContain("Moje žiadosti");
+    // Truthful fallback — there is no in-app ticket list, so the email
+    // only promises an e-mail reply.
+    expect(t.html).toContain("Odpovieme ti e-mailom na adresu tvojho účtu.");
+    expect(t.html).not.toContain("Moje žiadosti");
   });
 
   it("plain-text fallback includes ticketId + subject + category label", () => {

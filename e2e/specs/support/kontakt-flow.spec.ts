@@ -71,6 +71,14 @@ test.describe("E48 smoke — public anon flow", () => {
     await expect(kontakt.successState).toBeVisible();
     await expect(kontakt.successTicketId).toHaveText(TICKET_ID);
 
+    // The success state surfaces the tokenized thread link directly so
+    // the submitter does not depend on the email arriving.
+    await expect(kontakt.successThreadLink).toBeVisible();
+    await expect(kontakt.successThreadLink).toHaveAttribute(
+      "href",
+      `/contact-form/ticket/${TICKET_ID}?token=${VIEW_TOKEN}`,
+    );
+
     // Wire-contract assertion: the form POSTed exactly what the CF
     // function expects (no leaked extra fields, honeypot stayed empty).
     expect(captures.ticketCreateRequests).toHaveLength(1);
@@ -131,6 +139,6 @@ test.describe("E48 smoke — public anon flow", () => {
     });
 
     await expect(kontakt.submitError).toBeVisible();
-    await expect(kontakt.submitError).toContainText(/príliš veľa žiadostí/i);
+    await expect(kontakt.submitError).toContainText(/priveľa žiadostí/i);
   });
 });

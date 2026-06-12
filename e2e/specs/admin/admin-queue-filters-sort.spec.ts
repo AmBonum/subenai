@@ -1,6 +1,7 @@
 import { test, expect } from "../../fixtures/base";
 import { setupAppShell } from "../../setup/app-shell";
 import { ADMIN_SESSION } from "../../fixtures/auth";
+import { supportTicketTables } from "../../seed";
 
 // E48 Wave-4 — admin queue filter chips, search, URL persistence.
 //
@@ -62,11 +63,7 @@ test.describe("Admin queue — filters, search, URL persistence", () => {
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
-        tables: {
-          support_tickets: [buildTicketRow()],
-          support_ticket_messages: [],
-          support_ticket_attachments: [],
-        },
+        tables: supportTicketTables([buildTicketRow()]),
         rpcs: {
           has_role: true,
         },
@@ -132,11 +129,7 @@ test.describe("Admin queue — filters, search, URL persistence", () => {
       await setupAppShell(page.context(), page, {
         session: ADMIN_SESSION,
         extras: {
-          tables: {
-            support_tickets: [buildTicketRow(), buildInProgressTicketRow()],
-            support_ticket_messages: [],
-            support_ticket_attachments: [],
-          },
+          tables: supportTicketTables([buildTicketRow(), buildInProgressTicketRow()]),
           rpcs: { has_role: true },
         },
       });
@@ -158,7 +151,7 @@ test.describe("Admin queue — filters, search, URL persistence", () => {
     });
 
     await test.step("Verify the URL contains status=new", async () => {
-      expect(page.url()).toContain("status=new");
+      expect(decodeURIComponent(page.url())).toContain('status=["new"]');
     });
   });
 
@@ -177,7 +170,7 @@ test.describe("Admin queue — filters, search, URL persistence", () => {
     });
 
     await test.step("Verify the URL still contains category=bug", async () => {
-      expect(page.url()).toContain("category=bug");
+      expect(decodeURIComponent(page.url())).toContain('category=["bug"]');
     });
   });
 
@@ -196,8 +189,8 @@ test.describe("Admin queue — filters, search, URL persistence", () => {
     });
 
     await test.step("Verify the URL preserves both filter params", async () => {
-      expect(page.url()).toContain("status=new");
-      expect(page.url()).toContain("category=bug");
+      expect(decodeURIComponent(page.url())).toContain('status=["new"]');
+      expect(decodeURIComponent(page.url())).toContain('category=["bug"]');
     });
   });
 
@@ -217,8 +210,8 @@ test.describe("Admin queue — filters, search, URL persistence", () => {
     });
 
     await test.step("Verify the URL still carries status=new and category=bug after reload", async () => {
-      expect(page.url()).toContain("status=new");
-      expect(page.url()).toContain("category=bug");
+      expect(decodeURIComponent(page.url())).toContain('status=["new"]');
+      expect(decodeURIComponent(page.url())).toContain('category=["bug"]');
     });
 
     await test.step("Verify the 'Nové' filter chip is still active (aria-pressed=true)", async () => {
@@ -259,7 +252,9 @@ test.describe("Admin queue — filters, search, URL persistence", () => {
     });
 
     await test.step("Verify the URL has been redirected to the new sort param", async () => {
-      await expect.poll(() => page.url(), { timeout: 2000 }).toContain("sort=status:asc");
+      await expect
+        .poll(() => decodeURIComponent(page.url()), { timeout: 2000 })
+        .toContain("sort=status:asc");
     });
 
     await test.step("Verify the queue renders normally (no blank page)", async () => {

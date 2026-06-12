@@ -1,5 +1,9 @@
 import { BasePage } from "../BasePage";
 
+/**
+ * /app/templates — public/mine tabbed template library (E44).
+ * Cards are <TemplateCard> instances with `templates-card-<id>-*` testids.
+ */
 export class AppTemplatesPage extends BasePage {
   static readonly PATH = "/app/templates" as const;
 
@@ -23,37 +27,68 @@ export class AppTemplatesPage extends BasePage {
     return this.page.getByTestId("templates-list-category-filter");
   }
 
-  /** Filter-miss empty state (rows exist, but the search/category filter matches nothing). */
-  get emptyState() {
-    return this.page.getByTestId("templates-list-empty-state");
+  categoryFilterOption(value: string) {
+    return this.page.getByTestId(`templates-list-category-option-${value}`);
   }
 
-  /** Zero-rows empty state — the templates table itself is empty (production DB state). */
-  get emptyStateNoTemplates() {
-    return this.page.getByTestId("templates-list-empty-state-no-templates");
+  get resultCount() {
+    return this.page.getByTestId("templates-list-result-count");
   }
 
-  get emptyStateNoTemplatesCta() {
-    return this.page.getByTestId("templates-list-empty-state-no-templates-cta");
+  // Tabs -----------------------------------------------------------------
+  get tabPublic() {
+    return this.page.getByTestId("templates-tab-public");
   }
 
-  templateRow(id: string) {
-    return this.page.getByTestId(`templates-list-row-${id}`);
+  get tabMine() {
+    return this.page.getByTestId("templates-tab-mine");
+  }
+
+  // Empty states ----------------------------------------------------------
+  /** Public tab — zero rows OR active filter matches nothing. */
+  get emptyStatePublic() {
+    return this.page.getByTestId("templates-list-empty-state-public");
+  }
+
+  /** Mine tab — no copies yet, or filter matches nothing. */
+  get emptyStateMine() {
+    return this.page.getByTestId("templates-list-empty-state-mine");
+  }
+
+  // Cards -----------------------------------------------------------------
+  card(id: string) {
+    return this.page.getByTestId(`templates-card-${id}`);
+  }
+
+  cardTitle(id: string) {
+    return this.page.getByTestId(`templates-card-${id}-title`);
+  }
+
+  cardQuestionsCount(id: string) {
+    return this.page.getByTestId(`templates-card-${id}-questions-count`);
+  }
+
+  cardPurposeBadge(id: string) {
+    return this.page.getByTestId(`templates-card-${id}-purpose-badge`);
+  }
+
+  cardOwnershipBadge(id: string) {
+    return this.page.getByTestId(`templates-card-${id}-ownership-badge`);
+  }
+
+  cardPublicPageLink(id: string) {
+    return this.page.getByTestId(`templates-card-${id}-public-page-link`);
   }
 
   useButton(id: string) {
-    return this.page.getByTestId(`templates-row-use-${id}`);
+    return this.page.getByTestId(`templates-card-${id}-use-button`);
   }
 
-  get allRows() {
-    return this.page.locator('[data-testid^="templates-list-row-"]');
-  }
-
-  /**
-   * A Radix Select option in the open category-filter dropdown. SelectItem
-   * carries no testid, so role+name is the locator (precedence #2).
-   */
-  categoryFilterOption(name: string) {
-    return this.page.getByRole("option", { name, exact: true });
+  get allCards() {
+    // Card roots carry `data-template-card="root"` (also used by the
+    // page's J/K keyboard navigation) — sub-elements share the
+    // `templates-card-` testid prefix, so the data attribute is the only
+    // selector that counts whole cards.
+    return this.page.locator('[data-template-card="root"]');
   }
 }

@@ -177,6 +177,7 @@ export class AppShellPage extends BasePage {
    * testid hook — verbatim Slovak text is the user-facing contract.
    */
   get signedOutToast() {
-    return this.page.getByText("Boli ste odhlásení.");
+    // Verbatim from marketing.json `user_menu.signed_out_toast` (tykanie sweep).
+    return this.page.getByText("Bol/a si odhlásený/á.");
   }
 }

@@ -14,6 +14,7 @@ type ResolvedResponse = { data: unknown; error: unknown };
 
 let insertedValues: Record<string, unknown> | null = null;
 let insertResponse: ResolvedResponse = { data: null, error: null };
+let updatedValues: { patch: Record<string, unknown>; match: Record<string, unknown> } | null = null;
 const rpcMock = vi.fn<(fn: string, args: Record<string, unknown>) => Promise<ResolvedResponse>>();
 
 vi.mock("@/integrations/supabase/client", () => ({
@@ -27,6 +28,12 @@ vi.mock("@/integrations/supabase/client", () => ({
           }),
         };
       },
+      update: (patch: Record<string, unknown>) => ({
+        eq: (col: string, val: unknown) => {
+          updatedValues = { patch, match: { [col]: val } };
+          return Promise.resolve({ data: null, error: null });
+        },
+      }),
     }),
     rpc: (fn: string, args: Record<string, unknown>) => rpcMock(fn, args),
     auth: {
@@ -38,6 +45,9 @@ vi.mock("@/integrations/supabase/client", () => ({
 import {
   useCreateTest,
   useDuplicateTest,
+  usePublishTest,
+  useUnarchiveTest,
+  useUnpublishTest,
   useUpdateTestQuestionOrder,
 } from "@/lib/platform/queries";
 
@@ -53,6 +63,7 @@ function wrapper({ children }: { children: React.ReactNode }) {
 
 beforeEach(() => {
   insertedValues = null;
+  updatedValues = null;
   insertResponse = { data: { id: "new-test-1", share_id: "abc123XYZ0" }, error: null };
   rpcMock.mockReset();
   rpcMock.mockResolvedValue({ data: null, error: null });
@@ -119,5 +130,55 @@ describe("useDuplicateTest", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(rpcMock).toHaveBeenCalledWith("duplicate_test", { p_test_id: "test-1" });
     expect(result.current.data).toBe("copied-id");
+  });
+});
+
+describe("useCreateTest audience persistence (E50)", () => {
+  it("persists audience_group_id on the INSERT instead of leaking it into segmentation", async () => {
+    const { result } = renderHook(() => useCreateTest(), { wrapper });
+    result.current.mutate({
+      owner_id: "usr_me",
+      title: "T",
+      audience_group_id: "grp-1",
+    });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(insertedValues?.audience_group_id).toBe("grp-1");
+    expect(insertedValues?.segmentation).toBeUndefined();
+  });
+});
+
+describe("usePublishTest (E50)", () => {
+  it("publishes through the publish_test RPC and returns the live version", async () => {
+    rpcMock.mockResolvedValue({ data: 2, error: null });
+    const { result } = renderHook(() => usePublishTest(), { wrapper });
+    result.current.mutate("test-1");
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(rpcMock).toHaveBeenCalledWith("publish_test", { p_test_id: "test-1" });
+    expect(result.current.data).toBe(2);
+  });
+
+  it("surfaces an RPC failure (e.g. test_archived) as a mutation error", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: "test_archived" } });
+    const { result } = renderHook(() => usePublishTest(), { wrapper });
+    result.current.mutate("test-1");
+    await waitFor(() => expect(result.current.isError).toBe(true));
+  });
+});
+
+describe("status exits (E50)", () => {
+  it("useUnpublishTest sets status back to draft", async () => {
+    const { result } = renderHook(() => useUnpublishTest(), { wrapper });
+    result.current.mutate("test-1");
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(updatedValues?.patch.status).toBe("draft");
+    expect(updatedValues?.match).toEqual({ id: "test-1" });
+  });
+
+  it("useUnarchiveTest restores an archived test to draft", async () => {
+    const { result } = renderHook(() => useUnarchiveTest(), { wrapper });
+    result.current.mutate("test-9");
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(updatedValues?.patch.status).toBe("draft");
+    expect(updatedValues?.match).toEqual({ id: "test-9" });
   });
 });

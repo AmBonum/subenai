@@ -1,5 +1,6 @@
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import { platformPacksAvailable, PACKS_SKIP_MESSAGE } from "../../fixtures/platform-packs";
 
 /**
  * E37 — DB-backed /tests catalog: render + filter + sort + empty state.
@@ -14,6 +15,13 @@ import { primeConsent } from "../../fixtures/consent";
  * POM-only locators (per .claude/CLAUDE.md). The `testsDirectory` fixture
  * exposes `index` (catalog) and `pack` (detail) page objects.
  */
+
+// Environment guard — these TCs read live pack rows (no mock layer);
+// skip loudly when the configured Supabase project has no published
+// platform packs. See e2e/fixtures/platform-packs.ts.
+test.beforeEach(async ({ request }) => {
+  test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
+});
 
 test.describe("/tests catalog — render + filter + sort", () => {
   test.beforeEach(async ({ context }) => {

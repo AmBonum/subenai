@@ -2,49 +2,37 @@ import { test, expect } from "../../fixtures/base";
 import { setupAppShell } from "../../setup/app-shell";
 import { ADMIN_SESSION } from "../../fixtures/auth";
 import {
-  seedTickets,
-  seedAdminUsers,
-  cleanupSeeds,
-  cleanupSeedAdminUsers,
-  type AdminFixture,
-} from "../../../tests/fixtures/seed-tickets";
+  seedSupportTicket,
+  seedSupportTicketAdmin,
+  supportTicketTables,
+  supportTicketRpcs,
+  type SupportTicketAdmin,
+} from "../../seed";
 
 // E48-v3 — AdminPicker popover UX: search, empty state, keyboard nav, Esc.
 //
-// Seeds 1 ticket + 5 admin users per worker so there are enough options
-// to exercise search + keyboard navigation. Set E2E_ALLOW_NONLOCAL_SEED=1
-// to run against production.
+// Seeds 1 ticket + 5 admin users into the Supabase mock so there are
+// enough options to exercise search + keyboard navigation. The picker
+// reads the directory from the `list_admin_users` RPC.
 
-const WORKER = Number(process.env.TEST_WORKER_INDEX ?? 0);
-
-let ticketIds: string[] = [];
-let admins: AdminFixture[] = [];
-
-test.beforeAll(async () => {
-  ticketIds = await seedTickets(WORKER);
-  admins = await seedAdminUsers(WORKER);
-});
-
-test.afterAll(async () => {
-  await cleanupSeedAdminUsers(WORKER);
-  await cleanupSeeds(WORKER);
-});
+let ticketId = "";
+let admins: SupportTicketAdmin[] = [];
 
 test.describe("E48-v3 — AdminPicker popover UX", () => {
   test.beforeEach(async ({ context, page }) => {
+    admins = Array.from({ length: 5 }, (_, i) =>
+      seedSupportTicketAdmin({ display_name: `Seed Admin ${i + 1}` }),
+    );
+    const ticket = seedSupportTicket({ subject: "Picker ticket" });
+    ticketId = ticket.id as string;
+
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
+        tables: supportTicketTables([ticket]),
         rpcs: {
           has_role: true,
-          list_admin_users: () =>
-            admins.map((a) => ({
-              user_id: a.userId,
-              email: a.email,
-              display_name: a.displayName,
-            })),
-          get_ticket_assignees: () => [],
-          assign_admin_to_ticket: () => null,
+          ...supportTicketRpcs({ admins }),
         },
       },
     });
@@ -54,26 +42,24 @@ test.describe("E48-v3 — AdminPicker popover UX", () => {
     adminTicketDetail,
     adminPickerPopover,
   }) => {
-    await adminTicketDetail.open(ticketIds[0]);
+    await adminTicketDetail.open(ticketId);
     await adminTicketDetail.addAssigneeButton.click();
     await expect(adminPickerPopover.root).toBeVisible();
     await expect(adminPickerPopover.searchInput).toBeVisible();
   });
 
   test("search input filters admin options", async ({ adminTicketDetail, adminPickerPopover }) => {
-    await adminTicketDetail.open(ticketIds[0]);
+    await adminTicketDetail.open(ticketId);
     await adminTicketDetail.addAssigneeButton.click();
     await expect(adminPickerPopover.root).toBeVisible();
 
-    const targetAdmin = admins[1];
-    const nameFragment = `Seed Admin 2 W${WORKER}`.substring(0, 10);
-    await adminPickerPopover.searchInput.fill(nameFragment);
-    await expect(adminPickerPopover.adminOption(targetAdmin.userId)).toBeVisible();
-    await expect(adminPickerPopover.adminOption(admins[3].userId)).toBeHidden();
+    await adminPickerPopover.searchInput.fill("Seed Admin 2");
+    await expect(adminPickerPopover.adminOption(admins[1].user_id)).toBeVisible();
+    await expect(adminPickerPopover.adminOption(admins[3].user_id)).toBeHidden();
   });
 
   test("nonsense query shows empty state", async ({ adminTicketDetail, adminPickerPopover }) => {
-    await adminTicketDetail.open(ticketIds[0]);
+    await adminTicketDetail.open(ticketId);
     await adminTicketDetail.addAssigneeButton.click();
     await expect(adminPickerPopover.root).toBeVisible();
     await adminPickerPopover.searchInput.fill("zzznomatch99999");
@@ -81,7 +67,7 @@ test.describe("E48-v3 — AdminPicker popover UX", () => {
   });
 
   test("Esc closes the picker", async ({ adminTicketDetail, adminPickerPopover, page }) => {
-    await adminTicketDetail.open(ticketIds[0]);
+    await adminTicketDetail.open(ticketId);
     await adminTicketDetail.addAssigneeButton.click();
     await expect(adminPickerPopover.root).toBeVisible();
     await page.keyboard.press("Escape");
@@ -93,7 +79,7 @@ test.describe("E48-v3 — AdminPicker popover UX", () => {
     adminPickerPopover,
     page,
   }) => {
-    await adminTicketDetail.open(ticketIds[0]);
+    await adminTicketDetail.open(ticketId);
     await adminTicketDetail.addAssigneeButton.click();
     await expect(adminPickerPopover.root).toBeVisible();
 

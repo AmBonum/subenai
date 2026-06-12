@@ -5,6 +5,36 @@ import userEvent from "@testing-library/user-event";
 // E48.3 regression fix — /kontakt page mounts Turnstile and sends
 // turnstile_token in the POST body.
 
+// The route component renders <Link> in the success state (tokenized
+// thread link) — mock the router so the page renders without a
+// RouterProvider, serializing `search` into the href for assertions.
+vi.mock("@tanstack/react-router", () => ({
+  createFileRoute:
+    () =>
+    <T,>(opts: T) =>
+      opts,
+  Link: ({
+    children,
+    to,
+    params,
+    search,
+    ...rest
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    to?: string;
+    params?: Record<string, string>;
+    search?: Record<string, string>;
+  }) => {
+    let href = to ?? "";
+    for (const [k, v] of Object.entries(params ?? {})) href = href.replace(`$${k}`, v);
+    if (search) href += `?${new URLSearchParams(search).toString()}`;
+    return (
+      <a href={href} {...rest}>
+        {children}
+      </a>
+    );
+  },
+}));
+
 // Mock TurnstileWidget so tests don't need a real Cloudflare script.
 vi.mock("@/components/common/TurnstileWidget", () => ({
   TurnstileWidget: ({ onToken }: { onToken: (t: string | null) => void }) => {
@@ -100,7 +130,40 @@ describe("KontaktPage — Turnstile integration", () => {
     expect(body).toMatchObject({ turnstile_token: "mock-token-abc" });
     expect(body.subject).toBe("Test subject");
 
-    // Success state is shown.
+    // Success state is shown, including the tokenized thread link.
     await waitFor(() => expect(screen.getByTestId("kontakt-success-state")).toBeInTheDocument());
+    expect(screen.getByTestId("kontakt-success-thread-link")).toHaveAttribute(
+      "href",
+      `/contact-form/ticket/tkt-789?token=${"v".repeat(64)}`,
+    );
+  });
+});
+
+describe("KontaktPage — ?topic= prefill from /contact topic cards", () => {
+  it("preselects the category and prefills the subject for topic=gdpr", () => {
+    vi.stubGlobal("fetch", vi.fn());
+    render(<KontaktPage topic="gdpr" />);
+    expect(screen.getByTestId("kontakt-form-subject-input")).toHaveValue("GDPR žiadosť");
+    expect(screen.getByTestId("kontakt-form-category-select")).toHaveTextContent(
+      "Žiadosť o údaje (GDPR)",
+    );
+  });
+
+  it("maps topic=tech to the bug category with the tech subject", () => {
+    vi.stubGlobal("fetch", vi.fn());
+    render(<KontaktPage topic="tech" />);
+    expect(screen.getByTestId("kontakt-form-subject-input")).toHaveValue("Technická pomoc");
+    expect(screen.getByTestId("kontakt-form-category-select")).toHaveTextContent(
+      "Chyba alebo problém",
+    );
+  });
+
+  it("leaves subject and category empty without a topic", () => {
+    vi.stubGlobal("fetch", vi.fn());
+    render(<KontaktPage />);
+    expect(screen.getByTestId("kontakt-form-subject-input")).toHaveValue("");
+    expect(screen.getByTestId("kontakt-form-category-select")).toHaveTextContent(
+      "Vyberte kategóriu",
+    );
   });
 });

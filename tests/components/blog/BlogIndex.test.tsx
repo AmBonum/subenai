@@ -233,7 +233,7 @@ describe("/blog index — negative paths", () => {
     render(<BlogIndexPage />);
     const err = screen.getByTestId("blog-index-error");
     expect(err).toHaveAttribute("role", "alert");
-    expect(err).toHaveTextContent("články sa nepodarilo načítať");
+    expect(err).toHaveTextContent("Články sa nepodarilo načítať");
   });
 
   it("TC-12: empty data shows the empty-state copy", () => {

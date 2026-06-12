@@ -2,11 +2,9 @@ import type { Locator, Page } from "@playwright/test";
 import { BasePage } from "../BasePage";
 
 /**
- * POM for the /sponsors index page and /sponsors/all filterable list.
- *
- * Both routes are covered here because they share the same data domain
- * (public_sponsors) and test plan file. The `open()` method defaults to
- * /sponsors; call `openAll()` for /sponsors/all.
+ * POM for the merged /sponsors page (M3): page chrome + the full
+ * filterable sponsor grid live on one route. The legacy /sponsors/all
+ * URL only exists as a redirect — `openAll()` is kept to exercise it.
  *
  * Locator strategy: data-testid first (§ Test IDs in CLAUDE.md).
  */
@@ -22,12 +20,13 @@ export class SponsorsPage extends BasePage {
     await this.goto(SponsorsPage.PATH);
   }
 
+  /** Navigates to the legacy URL; the app redirects to /sponsors. */
   async openAll(): Promise<void> {
     await this.goto(SponsorsPage.PATH_ALL);
   }
 
   // ---------------------------------------------------------------------------
-  // /sponsors index — structural
+  // Page chrome
   // ---------------------------------------------------------------------------
 
   get indexRoot(): Locator {
@@ -46,14 +45,6 @@ export class SponsorsPage extends BasePage {
     return this.page.getByTestId("sponzori-index-hero");
   }
 
-  get indexLatestSection(): Locator {
-    return this.page.getByTestId("sponzori-index-latest-section");
-  }
-
-  get indexAllLink(): Locator {
-    return this.page.getByTestId("sponzori-index-all-link");
-  }
-
   get indexFooterNote(): Locator {
     return this.page.getByTestId("sponzori-index-footer-note");
   }
@@ -63,7 +54,7 @@ export class SponsorsPage extends BasePage {
   }
 
   // ---------------------------------------------------------------------------
-  // /sponsors index — state panels
+  // State panels
   // ---------------------------------------------------------------------------
 
   get indexError(): Locator {
@@ -87,54 +78,7 @@ export class SponsorsPage extends BasePage {
   }
 
   // ---------------------------------------------------------------------------
-  // /sponsors index — accordion (Radix UI Accordion rendered as region)
-  // The accordion is inside the `sponzori-index-latest-section` region.
-  // AccordionItem triggers are buttons within the Accordion's region element.
-  // ---------------------------------------------------------------------------
-
-  get indexAccordion(): Locator {
-    return this.indexLatestSection
-      .getByRole("group")
-      .or(this.indexLatestSection.locator("[aria-label]"))
-      .first();
-  }
-
-  get indexAccordionItems(): Locator {
-    return this.indexLatestSection.locator("[data-radix-collection-item]");
-  }
-
-  /** Returns the AccordionTrigger button for the item with the given display name. */
-  accordionTrigger(displayName: string): Locator {
-    return this.indexLatestSection.getByRole("button", { name: new RegExp(displayName, "i") });
-  }
-
-  /** The refund badge inside the index accordion. */
-  get indexRefundBadge(): Locator {
-    return this.page.getByTestId("sponzori-refund-badge");
-  }
-
-  // ---------------------------------------------------------------------------
-  // /sponsors/all — structural
-  // ---------------------------------------------------------------------------
-
-  get allRoot(): Locator {
-    return this.page.getByTestId("sponzori-vsetci-root");
-  }
-
-  get allBackLink(): Locator {
-    return this.page.getByTestId("sponzori-vsetci-back-link");
-  }
-
-  get allHeading(): Locator {
-    return this.page.getByTestId("sponzori-vsetci-heading");
-  }
-
-  get allFooterNote(): Locator {
-    return this.page.getByTestId("sponzori-vsetci-footer-note");
-  }
-
-  // ---------------------------------------------------------------------------
-  // /sponsors/all — filters
+  // Filters
   // ---------------------------------------------------------------------------
 
   get filterName(): Locator {
@@ -154,7 +98,7 @@ export class SponsorsPage extends BasePage {
   }
 
   // ---------------------------------------------------------------------------
-  // /sponsors/all — results
+  // Results grid
   // ---------------------------------------------------------------------------
 
   get allResults(): Locator {
@@ -171,10 +115,6 @@ export class SponsorsPage extends BasePage {
 
   get allCardItems(): Locator {
     return this.allCardList.locator("li");
-  }
-
-  get allError(): Locator {
-    return this.page.getByTestId("sponzori-vsetci-error");
   }
 
   get allEmpty(): Locator {

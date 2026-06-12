@@ -47,11 +47,13 @@ test.describe("E33 Phase 1 — composer build UX", () => {
 
     const settingsBoundingBox = await composer.settingsSection.boundingBox();
     expect(settingsBoundingBox).not.toBeNull();
-    // Assert top of section 3 fits within the 768-px tall viewport. Allow a
-    // small margin (96 px) for the sticky actions region at the bottom — the
-    // user shouldn't have to scroll to *see* the heading even if interacting
-    // requires a few pixels of scroll.
-    expect(settingsBoundingBox!.y).toBeLessThan(768 - 96);
+    // The page gained section 1 "Predefinované sady" (E37 Phase G3 pack
+    // chips) + the explainer accordion after this contract was written, so
+    // section 3 no longer fits inside the literal 768-px viewport. The
+    // regression this TC guards against is the picker expanding inline and
+    // pushing Nastavenia ~3500 px down — assert the heading stays within
+    // two viewport heights instead of one.
+    expect(settingsBoundingBox!.y).toBeLessThan(768 * 2);
   });
 
   // TC-08 — Picker is collapsed by default + toggle expands it.

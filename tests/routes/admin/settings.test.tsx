@@ -9,6 +9,9 @@ vi.mock("@tanstack/react-router", async () => {
     ...actual,
     createFileRoute: () => (config: unknown) => config,
     createLazyFileRoute: () => (config: unknown) => config,
+    // The lazy route component hosts a child Outlet (tickets/users/settings
+    // pattern); unit tests render the parent page directly with no child.
+    useChildMatches: () => [],
     Link: ({
       to,
       children,

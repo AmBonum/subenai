@@ -1,3 +1,4 @@
+import type { APIRequestContext } from "@playwright/test";
 import { test, expect } from "../../fixtures/base";
 
 /**
@@ -27,11 +28,32 @@ import { test, expect } from "../../fixtures/base";
  * vite dev port (:8080), because /api/* functions only exist under
  * wrangler. STRIPE_E2E_BASE_URL overrides if your local port differs.
  */
+const STRIPE_BASE = process.env.STRIPE_E2E_BASE_URL ?? "http://localhost:8788";
+
 test.use({
-  baseURL: process.env.STRIPE_E2E_BASE_URL ?? "http://localhost:8788",
+  baseURL: STRIPE_BASE,
 });
 
+// Same runtime guard as e2e/specs/security/api-headers-live.spec.ts —
+// this suite is wrangler-only (`npm run e2e:stripe`); in the plain
+// `e2e-chromium` run :8788 is down and the suite must skip, not fail.
+async function pingWrangler(request: APIRequestContext): Promise<boolean> {
+  try {
+    const resp = await request.head(STRIPE_BASE);
+    return resp.status() > 0;
+  } catch {
+    return false;
+  }
+}
+
 test.describe("/podpora — Stripe Checkout redirect (test mode)", () => {
+  test.beforeEach(async ({ request }) => {
+    test.skip(
+      !(await pingWrangler(request)),
+      `Skipping: wrangler at ${STRIPE_BASE} not reachable. Run \`npm run dev:stripe\` first.`,
+    );
+  });
+
   test("oneoff donation submits and redirects to a Stripe test Checkout session", async ({
     page,
     podpora,

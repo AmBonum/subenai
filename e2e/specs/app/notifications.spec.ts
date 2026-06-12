@@ -29,6 +29,12 @@ test.describe("/app/notifications", () => {
       await expect(notifs.emptyState).toHaveText("Žiadne notifikácie");
     });
 
+    await test.step("Verify the orienting hint under the empty state", async () => {
+      await expect(notifs.emptyHint).toHaveText(
+        "Tu uvidíš nové dokončenia testov a pripomienky retestov.",
+      );
+    });
+
     await test.step("Verify mark-all button is NOT rendered (no unread count)", async () => {
       await expect(notifs.markAll).toHaveCount(0);
     });

@@ -291,7 +291,7 @@ describe("POST /api/support-ticket-create — email dispatch (E48.5)", () => {
     expect(emailCall).toBeDefined();
     const body = JSON.parse((emailCall![1] as RequestInit).body as string) as { html: string };
     expect(body.html).not.toContain("Zobraziť vlákno");
-    expect(body.html).toContain("Moje žiadosti");
+    expect(body.html).toContain("Odpovieme ti e-mailom na adresu tvojho účtu.");
   });
 
   it("does not block the response when email dispatch fails", async () => {

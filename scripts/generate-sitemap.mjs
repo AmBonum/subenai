@@ -27,7 +27,6 @@ const STATIC_ROUTES = [
   { loc: "/contact-form", priority: "0.5", changefreq: "yearly" },
   { loc: "/support", priority: "0.6", changefreq: "monthly" },
   { loc: "/sponsors", priority: "0.4", changefreq: "weekly" },
-  { loc: "/sponsors/all", priority: "0.3", changefreq: "weekly" },
   { loc: "/manage-support", priority: "0.3", changefreq: "yearly" },
   { loc: "/changelog", priority: "0.4", changefreq: "weekly" },
   { loc: "/test/builder", priority: "0.7", changefreq: "monthly" },

@@ -1,5 +1,6 @@
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
+import { platformPacksAvailable, PACKS_SKIP_MESSAGE } from "../../fixtures/platform-packs";
 
 /**
  * E37 — mobile viewport (375x667) catalog usability.
@@ -45,8 +46,10 @@ test.describe("/tests catalog — 375x667 mobile viewport (TC-29)", () => {
   });
 
   test("touch targets on sort + filter chips remain ≥44px at narrow viewport", async ({
+    request,
     testsDirectory,
   }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await testsDirectory.index.open();
     const sortBox = await testsDirectory.index.sortSelect.boundingBox();
     expect(sortBox).not.toBeNull();
@@ -58,7 +61,11 @@ test.describe("/tests catalog — 375x667 mobile viewport (TC-29)", () => {
     }
   });
 
-  test("pack card grid stacks single-column on narrow viewport", async ({ testsDirectory }) => {
+  test("pack card grid stacks single-column on narrow viewport", async ({
+    request,
+    testsDirectory,
+  }) => {
+    test.skip(!(await platformPacksAvailable(request)), PACKS_SKIP_MESSAGE);
     await testsDirectory.index.open();
     // The catalog grid uses Tailwind responsive classes that collapse to
     // 1-column under sm. Two adjacent cards on a 375px viewport should

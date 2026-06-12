@@ -66,15 +66,32 @@ describe("matchRoute", () => {
     expect(matchRoute("/sablony/skola")).toEqual({ kind: "template", slug: "skola" });
   });
 
-  it("ignores index pages and unknown / deep paths", () => {
-    expect(matchRoute("/blog")).toBeNull();
+  it("matches the static one-segment index routes", () => {
+    for (const path of [
+      "/blog",
+      "/courses",
+      "/tests",
+      "/test",
+      "/sablony",
+      "/about",
+      "/support",
+      "/contact",
+    ]) {
+      expect(matchRoute(path)).toEqual({ kind: "static-index", slug: path.slice(1) });
+    }
+  });
+
+  it("ignores the root, unknown index pages and deep paths", () => {
     expect(matchRoute("/")).toBeNull();
+    expect(matchRoute("/login")).toBeNull();
+    expect(matchRoute("/privacy")).toBeNull();
     expect(matchRoute("/blog/foo/bar")).toBeNull();
     expect(matchRoute("/app/dashboard")).toBeNull();
   });
 
   it("tolerates a trailing slash", () => {
     expect(matchRoute("/blog/phishing-101/")).toEqual({ kind: "blog", slug: "phishing-101" });
+    expect(matchRoute("/blog/")).toEqual({ kind: "static-index", slug: "blog" });
   });
 });
 
@@ -207,6 +224,31 @@ describe("resolveMeta", () => {
     expect(tpl?.title).toContain("šablóna");
     expect(tpl?.canonical).toBe("https://subenai.sk/sablony/skola");
   });
+
+  it("returns static index meta without hitting the network", async () => {
+    const spy = vi.spyOn(globalThis, "fetch");
+    const blog = await resolveMeta(env, { kind: "static-index", slug: "blog" });
+    expect(blog).toMatchObject({
+      title: "akadémia subenai — návody o internetových podvodoch",
+      canonical: "https://subenai.sk/blog",
+      ogType: "website",
+      robots: "index, follow, max-image-preview:large",
+    });
+    const about = await resolveMeta(env, { kind: "static-index", slug: "about" });
+    expect(about?.title).toBe("O projekte — subenai");
+    expect(about?.canonical).toBe("https://subenai.sk/about");
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("keeps /test noindex (verbatim from the route head)", async () => {
+    const take = await resolveMeta(env, { kind: "static-index", slug: "test" });
+    expect(take?.robots).toBe("noindex");
+    expect(take?.title).toBe("Test prebieha · subenai");
+  });
+
+  it("returns null for an unknown static-index slug", async () => {
+    expect(await resolveMeta(env, { kind: "static-index", slug: "nope" })).toBeNull();
+  });
 });
 
 describe("handleSeoMeta orchestration", () => {
@@ -232,6 +274,28 @@ describe("handleSeoMeta orchestration", () => {
     expect(body).toContain("<title>Phishing 101 | subenai</title>");
     expect(body).toContain('property="og:image" content="https://cdn.example/og.png"');
     expect(res.headers.get("Cache-Control")).toContain("s-maxage=300");
+  });
+
+  it("rewrites the /blog index shell with static meta and no Supabase call", async () => {
+    const spy = vi.spyOn(globalThis, "fetch");
+    const res = await handleSeoMeta(htmlRequest("/blog"), env, shellResponse());
+    expect(res.status).toBe(200);
+    expect(res.headers.get("x-seo-meta")).toBe("rewrite");
+    expect(spy).not.toHaveBeenCalled();
+    const body = await res.text();
+    expect(body).toContain("<title>akadémia subenai — návody o internetových podvodoch</title>");
+    expect(body).toContain('rel="canonical" href="https://subenai.sk/blog"');
+  });
+
+  it("rewrites /sablony and /support index shells with their own titles", async () => {
+    const sablony = await handleSeoMeta(htmlRequest("/sablony"), env, shellResponse());
+    expect(await sablony.text()).toContain(
+      "<title>Test šablóny: bezplatné kvízy o online podvodoch | subenai</title>",
+    );
+    const support = await handleSeoMeta(htmlRequest("/support"), env, shellResponse());
+    const supportBody = await support.text();
+    expect(supportBody).toContain("<title>Podpora projektu — subenai</title>");
+    expect(supportBody).toContain('rel="canonical" href="https://subenai.sk/support"');
   });
 
   it("passes an asset request straight through untouched", async () => {

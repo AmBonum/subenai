@@ -2,6 +2,7 @@ import { test, expect } from "../../fixtures/base";
 import { setupAppShell } from "../../setup/app-shell";
 import { ADMIN_SESSION } from "../../fixtures/auth";
 import { mockSupportApi, type MockSupportApiCaptures } from "../../mocks/api/support";
+import { supportTicketRpcs } from "../../seed";
 
 // E48 Wave-4 — admin ticket detail page render, reply, transitions,
 // confirm dialogs, typed-confirm gate.
@@ -71,27 +72,39 @@ function buildMessageRow(overrides: Partial<Record<string, unknown>> = {}) {
 test.describe("Admin ticket detail — render, reply, transitions", () => {
   let captures: MockSupportApiCaptures;
 
-  test.beforeEach(async ({ context, page }) => {
-    captures = await mockSupportApi(context, {
-      ticketReplyResponse: { message_id: "msg-new-001" },
-    });
-
+  // Transition TCs (D-09/D-10) need a ticket in a status whose FSM offers the
+  // action under test — re-registering the mock supersedes the beforeEach seed
+  // (Playwright routes: last registered wins).
+  async function seedDetail(
+    context: Parameters<typeof setupAppShell>[0],
+    page: Parameters<typeof setupAppShell>[1],
+    status: string,
+  ) {
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
         tables: {
-          support_tickets: [buildTicketRow()],
+          support_tickets: [buildTicketRow({ status })],
+          support_tickets_with_assignees: [buildTicketRow({ status })],
           support_ticket_messages: [buildMessageRow()],
           support_ticket_attachments: [],
           audit_log: [],
         },
         rpcs: {
           has_role: true,
-          transition_ticket_status: null,
+          ...supportTicketRpcs(),
           get_ticket_thread_for_view_token: null,
         },
       },
     });
+  }
+
+  test.beforeEach(async ({ context, page }) => {
+    captures = await mockSupportApi(context, {
+      ticketReplyResponse: { message_id: "msg-new-001" },
+    });
+
+    await seedDetail(context, page, "new");
   });
 
   // D-01: detail renders subject, status badge, requester, category, created_at
@@ -213,6 +226,7 @@ test.describe("Admin ticket detail — render, reply, transitions", () => {
       extras: {
         tables: {
           support_tickets: [buildTicketRow()],
+          support_tickets_with_assignees: [buildTicketRow()],
           support_ticket_messages: [
             buildMessageRow({ id: "msg-internal-seed", is_internal: true }),
           ],
@@ -221,7 +235,7 @@ test.describe("Admin ticket detail — render, reply, transitions", () => {
         },
         rpcs: {
           has_role: true,
-          transition_ticket_status: null,
+          ...supportTicketRpcs(),
           get_ticket_thread_for_view_token: null,
         },
       },
@@ -263,18 +277,21 @@ test.describe("Admin ticket detail — render, reply, transitions", () => {
       await expect(adminTicketDetail.statusActionButton("in_progress")).toBeVisible();
     });
 
-    await test.step("Verify the 'Uzavrieť' / resolve action is also visible for new tickets (FSM allows it)", async () => {
-      // Per FSM in ticket-labels.ts: new → resolved is allowed (needsConfirm=true).
-      // The test verifies the button is rendered; confirming or cancelling is D-09.
-      await expect(adminTicketDetail.statusActionButton("resolved")).toBeVisible();
+    await test.step("Verify the resolve action is HIDDEN for new tickets", async () => {
+      // FSM (mirrors transition_ticket_status RPC): new → in_progress only.
+      // resolved is reachable only from in_progress / waiting_user.
+      await expect(adminTicketDetail.statusActionButton("resolved")).toHaveCount(0);
     });
   });
 
   // D-09 / TC-13: "Uzavrieť" transition opens ConfirmDialog; cancelling leaves status unchanged
   test("D-09 / TC-13: clicking 'Označiť ako vyriešené' opens ConfirmDialog; cancelling leaves status unchanged", async ({
+    context,
+    page,
     adminTicketDetail,
   }) => {
-    await test.step("Open the ticket detail page", async () => {
+    await test.step("Open the detail page for an 'in_progress' ticket", async () => {
+      await seedDetail(context, page, "in_progress");
       await adminTicketDetail.open(TICKET_ID);
     });
 
@@ -294,16 +311,19 @@ test.describe("Admin ticket detail — render, reply, transitions", () => {
       await expect(adminTicketDetail.confirmDialogRoot).toBeHidden();
     });
 
-    await test.step("Verify the status badge still shows 'Nové' (unchanged)", async () => {
-      await expect(adminTicketDetail.statusBadge).toContainText("Nové");
+    await test.step("Verify the status badge still shows 'V riešení' (unchanged)", async () => {
+      await expect(adminTicketDetail.statusBadge).toContainText("V riešení");
     });
   });
 
   // D-10: "Archivovať" transition shows ConfirmDialog severity='warning'; confirms changes badge
   test("D-10: clicking 'Archivovať' opens warning ConfirmDialog; confirming changes status badge", async ({
+    context,
+    page,
     adminTicketDetail,
   }) => {
-    await test.step("Open the detail page for a 'new' ticket", async () => {
+    await test.step("Open the detail page for a 'resolved' ticket (archive is resolved → archived)", async () => {
+      await seedDetail(context, page, "resolved");
       await adminTicketDetail.open(TICKET_ID);
     });
 

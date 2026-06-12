@@ -2,51 +2,41 @@ import { test, expect } from "../../fixtures/base";
 import { setupAppShell } from "../../setup/app-shell";
 import { ADMIN_SESSION } from "../../fixtures/auth";
 import {
-  seedTickets,
-  seedAdminUsers,
-  seedTicketAssignments,
-  cleanupSeeds,
-  cleanupSeedAdminUsers,
-  type AdminFixture,
-} from "../../../tests/fixtures/seed-tickets";
+  seedSupportTicket,
+  seedSupportTicketAdmin,
+  seedTicketAssignee,
+  supportTicketTables,
+  type SupportTicketAdmin,
+} from "../../seed";
 
 // E48-v3 — Assigned column in the admin tickets queue.
 //
-// Seeds 5 tickets with a deterministic distribution: 0/1/2/3/5 assignees
-// (as produced by `seedTicketAssignments` idx 0–4). Asserts:
-//   - tickets[0]: no avatar stack rendered (0 assignees)
-//   - tickets[1]: 1 avatar shown, no overflow chip
-//   - tickets[2]: 2 avatars, no overflow chip
-//   - tickets[3]: 3 avatars (or overflow if UI caps at 3)
-//   - tickets[4]: overflow chip visible (5 assignees > typical cap)
-//
-// Requires SUPABASE_SERVICE_ROLE_KEY + E2E_ALLOW_NONLOCAL_SEED=1 for prod.
-
-const WORKER = Number(process.env.TEST_WORKER_INDEX ?? 0);
+// Seeds 4 tickets with a deterministic assignee distribution (0/1/2/5)
+// against the Supabase mock and asserts the AssigneesCell render
+// branches:
+//   - 0 assignees → the cell renders the "—" placeholder (no avatars)
+//   - 1 assignee  → avatar + name, no overflow chip
+//   - 2 assignees → avatar stack, no overflow chip (cap is 3)
+//   - 5 assignees → avatar stack + "+2" overflow chip
 
 let ticketIds: string[] = [];
-let admins: AdminFixture[] = [];
-
-test.beforeAll(async () => {
-  ticketIds = await seedTickets(WORKER);
-  admins = await seedAdminUsers(WORKER);
-  await seedTicketAssignments(
-    WORKER,
-    ticketIds.slice(0, 5),
-    admins.map((a) => a.userId),
-  );
-});
-
-test.afterAll(async () => {
-  await cleanupSeedAdminUsers(WORKER);
-  await cleanupSeeds(WORKER);
-});
+let admins: SupportTicketAdmin[] = [];
 
 test.describe("E48-v3 — Assigned column in queue table", () => {
   test.beforeEach(async ({ context, page }) => {
+    admins = Array.from({ length: 5 }, () => seedSupportTicketAdmin());
+    const tickets = [0, 1, 2, 5].map((assigneeCount, i) =>
+      seedSupportTicket({
+        subject: `Assigned column ticket ${i}`,
+        assignees: admins.slice(0, assigneeCount).map((a) => seedTicketAssignee(a)),
+      }),
+    );
+    ticketIds = tickets.map((t) => t.id as string);
+
     await setupAppShell(context, page, {
       session: ADMIN_SESSION,
       extras: {
+        tables: supportTicketTables(tickets),
         rpcs: { has_role: true },
       },
     });
@@ -57,9 +47,11 @@ test.describe("E48-v3 — Assigned column in queue table", () => {
     await expect(adminTicketsQueue.assignedColumnHeader).toBeVisible();
   });
 
-  test("ticket with 0 assignees shows no avatar stack", async ({ adminTicketsQueue }) => {
+  test("ticket with 0 assignees shows the em-dash placeholder", async ({ adminTicketsQueue }) => {
     await adminTicketsQueue.open();
-    await expect(adminTicketsQueue.rowAssignedAvatars(ticketIds[0])).toBeHidden();
+    // The cell testid is shared between the placeholder and avatar
+    // branches — assert on the rendered content instead of visibility.
+    await expect(adminTicketsQueue.rowAssignedAvatars(ticketIds[0])).toHaveText("—");
   });
 
   test("ticket with 1 assignee shows avatar stack, no overflow chip", async ({
@@ -67,6 +59,9 @@ test.describe("E48-v3 — Assigned column in queue table", () => {
   }) => {
     await adminTicketsQueue.open();
     await expect(adminTicketsQueue.rowAssignedAvatars(ticketIds[1])).toBeVisible();
+    await expect(adminTicketsQueue.rowAssignedAvatars(ticketIds[1])).toContainText(
+      admins[0].display_name,
+    );
     await expect(adminTicketsQueue.rowAssignedOverflowChip(ticketIds[1])).toBeHidden();
   });
 
@@ -75,12 +70,14 @@ test.describe("E48-v3 — Assigned column in queue table", () => {
   }) => {
     await adminTicketsQueue.open();
     await expect(adminTicketsQueue.rowAssignedAvatars(ticketIds[2])).toBeVisible();
+    await expect(adminTicketsQueue.rowAssignedAvatars(ticketIds[2])).not.toHaveText("—");
     await expect(adminTicketsQueue.rowAssignedOverflowChip(ticketIds[2])).toBeHidden();
   });
 
   test("ticket with 5 assignees shows overflow chip", async ({ adminTicketsQueue }) => {
     await adminTicketsQueue.open();
-    await expect(adminTicketsQueue.rowAssignedAvatars(ticketIds[4])).toBeVisible();
-    await expect(adminTicketsQueue.rowAssignedOverflowChip(ticketIds[4])).toBeVisible();
+    await expect(adminTicketsQueue.rowAssignedAvatars(ticketIds[3])).toBeVisible();
+    await expect(adminTicketsQueue.rowAssignedOverflowChip(ticketIds[3])).toBeVisible();
+    await expect(adminTicketsQueue.rowAssignedOverflowChip(ticketIds[3])).toHaveText("+2");
   });
 });

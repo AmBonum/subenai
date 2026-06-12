@@ -49,14 +49,22 @@ async function readWebAppJsonLd(docHead: DocumentHead): Promise<JsonLdWebApp> {
   // a no-op; on Vite dev the route chunk has to load + head() runs in the
   // client after mount, which takes 1–3 s on a warm server / longer cold.
   //
-  // The locator is .filter({ hasText: "WebApplication" }) rather than nth()
-  // because the page already emits two root-template JSON-LD blocks
-  // (Organization, WebSite) and the per-route emission order is an
-  // implementation detail we don't want to depend on.
-  const webAppScript = docHead.jsonLdScripts.filter({ hasText: '"WebApplication"' });
-  await webAppScript.waitFor({ state: "attached", timeout: 15_000 });
-
-  const raw = await webAppScript.first().textContent();
+  // We scan textContent of every JSON-LD script rather than using
+  // .filter({ hasText }) — Playwright's text matching skips <script>
+  // elements (broke on the 1.60 upgrade), and the page already emits
+  // root-template blocks (Organization, WebSite) so the per-route
+  // emission order is an implementation detail we don't depend on.
+  let raw: string | undefined;
+  await expect
+    .poll(
+      async () => {
+        const all = await docHead.jsonLdScripts.allTextContents();
+        raw = all.find((t) => t.includes('"WebApplication"'));
+        return raw !== undefined;
+      },
+      { timeout: 15_000, message: "WebApplication JSON-LD block never attached" },
+    )
+    .toBe(true);
   if (!raw) throw new Error("WebApplication JSON-LD block exists but is empty");
 
   // The block may be either a single object {"@type": "WebApplication", ...}

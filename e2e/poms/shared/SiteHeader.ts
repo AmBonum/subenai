@@ -4,15 +4,9 @@ import type { Locator, Page } from "@playwright/test";
  * Mega-menu slugs (Phase 1, D1). Items either render as a flat link
  * (`MegaLinkSlug`) or as a hover trigger that opens a panel (`MegaTriggerSlug`).
  */
-export type MegaLinkSlug = "rychly_test" | "pre_skoly" | "podpora";
+export type MegaLinkSlug = "pre_skoly" | "blog" | "podpora";
 export type MegaTriggerSlug = "testy" | "skolenia";
 export type MegaSlug = MegaLinkSlug | MegaTriggerSlug;
-
-/**
- * Legacy slug — kept so existing specs keep type-checking against `navLink()`
- * while we migrate them. New specs MUST use `megaLink` / `megaTrigger`.
- */
-export type NavSlug = "testy" | "skolenia" | "podpora" | "kontakt";
 
 /**
  * Site header POM. Every element the spec asserts on has a getter or
@@ -21,10 +15,9 @@ export type NavSlug = "testy" | "skolenia" | "podpora" | "kontakt";
  *
  * Locator strategy is `data-testid` first, role/name second.
  *
- * Phase 1 (mega-menu): the desktop nav is now a Radix `NavigationMenu` with
- * 5 top-level items, two of which (`testy`, `skolenia`) open hover panels.
- * `navLink()` is preserved as a deprecated alias for the cross-cutting spec
- * suite — see method docs below.
+ * Phase 1 (mega-menu): the desktop nav is a Radix `NavigationMenu` with
+ * 5 top-level items, two of which (`testy`, `skolenia`) open hover panels;
+ * the rest (`pre_skoly`, `blog`, `podpora`) are flat links.
  */
 export class SiteHeader {
   constructor(private readonly page: Page) {}
@@ -80,25 +73,6 @@ export class SiteHeader {
   /** Individual sub-link inside a hover panel. */
   megaPanelLink(slug: MegaTriggerSlug, linkKey: string): Locator {
     return this.page.getByTestId(`header-mega-panel-link-${slug}-${linkKey}`);
-  }
-
-  /**
-   * @deprecated Phase 1 mega-menu replaces `header-nav-link-<slug>` with
-   * `header-mega-link-<slug>` (flat) or `header-mega-trigger-<slug>` (panel).
-   * This alias maps the legacy slug to whichever new locator applies so the
-   * cross-cutting spec suite stays type-clean during migration. `"kontakt"`
-   * has been removed from the top nav (per D1) and points at a locator that
-   * will never match — callers asserting on it must be updated.
-   */
-  navLink(slug: NavSlug): Locator {
-    if (slug === "testy" || slug === "skolenia") {
-      return this.megaTrigger(slug);
-    }
-    if (slug === "podpora") {
-      return this.megaLink("podpora");
-    }
-    // "kontakt" — removed from top nav in Phase 1.
-    return this.page.getByTestId(`header-nav-link-${slug}`);
   }
 
   /** Wrapper div for the desktop LocaleSwitcher slot (always in DOM; empty while flag is off). */
@@ -165,7 +139,7 @@ export class SiteHeader {
    * use `sheetNavTrigger` to expand the accordion section, then
    * `sheetNavPanelLink` for sub-links.
    */
-  sheetNavLink(slug: NavSlug | MegaLinkSlug): Locator {
+  sheetNavLink(slug: MegaLinkSlug): Locator {
     return this.page.getByTestId(`header-mobile-nav-link-${slug}`);
   }
 
@@ -190,6 +164,10 @@ export class SiteHeader {
   async openMobileMenu(): Promise<void> {
     await this.hamburgerTrigger.click();
     await this.sheet.waitFor({ state: "visible" });
+    // Wait out the slide-in animation — interacting (click / Escape) while
+    // the sheet still animates races Radix focus management and Playwright's
+    // element-stability check (flaky TC-12 / TC-17, 2026-06-12).
+    await this.sheet.evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
   }
 
   async closeMobileMenu(): Promise<void> {

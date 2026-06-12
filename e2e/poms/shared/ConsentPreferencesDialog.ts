@@ -65,4 +65,13 @@ export class ConsentPreferencesDialog {
   async clickRejectAll(): Promise<void> {
     await this.rejectAllButton.click();
   }
+
+  /**
+   * Wait out the Radix dialog entrance animation — clicking a control
+   * mid-animation computes a stale click point ("element is outside of
+   * the viewport" flake, TC-14 2026-06-12).
+   */
+  async waitForEntranceAnimation(): Promise<void> {
+    await this.root.evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
+  }
 }

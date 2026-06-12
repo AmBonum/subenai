@@ -31,6 +31,14 @@ export class AppLibraryPage extends BasePage {
     return this.page.getByTestId("library-empty-state");
   }
 
+  get emptyNoDataTitle() {
+    return this.page.getByTestId("library-empty-no-data-title");
+  }
+
+  get emptyClearFiltersButton() {
+    return this.page.getByTestId("library-empty-clear-filters-button");
+  }
+
   questionRow(id: string) {
     return this.page.getByTestId(`library-row-${id}`);
   }

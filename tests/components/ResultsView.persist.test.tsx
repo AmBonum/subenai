@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import type { AnswerRecord, ScoreResult } from "@/lib/quiz/score/scoring";
 import { ConsentProvider } from "@/hooks/useConsent";
@@ -159,5 +159,75 @@ describe("ResultsView.persistResult — edu share URL (BUG-share-link)", () => {
     )) as HTMLInputElement;
     expect(shareInput.value).toContain(`/test/builder/${TEST_SET_ID}`);
     expect(shareInput.value).not.toMatch(/\/r\/[A-Z0-9]{8}/);
+  });
+
+  it("shows the edu-specific alert on persist failure; retry delivers and clears it", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: false, status: 500, text: vi.fn().mockResolvedValue("err") })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: vi.fn().mockResolvedValue({}) });
+    vi.stubGlobal("fetch", fetchMock);
+
+    renderEduResults();
+    const message = await screen.findByTestId("quiz-results-persist-error-message");
+    expect(message).toHaveTextContent("Tvoj výsledok sa nepodarilo doručiť autorovi testu");
+
+    fireEvent.click(screen.getByTestId("quiz-results-persist-retry"));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+    await waitFor(() =>
+      expect(screen.queryByTestId("quiz-results-persist-error")).not.toBeInTheDocument(),
+    );
+    const shareInput = (await screen.findByTestId(
+      "quiz-results-share-url",
+      {},
+      { timeout: 3000 },
+    )) as HTMLInputElement;
+    expect(shareInput.value).toContain(`/test/builder/${TEST_SET_ID}`);
+  });
+
+  it("keeps the alert visible when the retry also fails (no silent swallow)", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue({ ok: false, status: 500, text: vi.fn().mockResolvedValue("err") });
+    vi.stubGlobal("fetch", fetchMock);
+
+    renderEduResults();
+    await screen.findByTestId("quiz-results-persist-error");
+    fireEvent.click(screen.getByTestId("quiz-results-persist-retry"));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+    expect(screen.getByTestId("quiz-results-persist-error")).toBeInTheDocument();
+  });
+});
+
+describe("ResultsView.persistResult — public insert failure alert + retry", () => {
+  it("shows the public alert when the attempts INSERT fails; retry succeeds and emits the share link", async () => {
+    insertSpy.mockReset();
+    insertSpy
+      .mockResolvedValueOnce({ error: { message: "boom" } })
+      .mockResolvedValueOnce({ error: null });
+
+    renderResults(baseResult, [makeAnswer(0)]);
+    const message = await screen.findByTestId("quiz-results-persist-error-message");
+    expect(message).toHaveTextContent("Výsledok sa nepodarilo uložiť");
+
+    fireEvent.click(screen.getByTestId("quiz-results-persist-retry"));
+    await waitFor(() => expect(insertSpy).toHaveBeenCalledTimes(2));
+    await waitFor(() =>
+      expect(screen.queryByTestId("quiz-results-persist-error")).not.toBeInTheDocument(),
+    );
+    const shareInput = (await screen.findByTestId(
+      "quiz-results-share-url",
+      {},
+      { timeout: 3000 },
+    )) as HTMLInputElement;
+    expect(shareInput.value).toMatch(/\/r\/[A-Z0-9]{8}/);
+  });
+
+  it("shows the alert when the insert THROWS (network-level) instead of swallowing the rejection", async () => {
+    insertSpy.mockReset();
+    insertSpy.mockRejectedValueOnce(new Error("network down"));
+
+    renderResults(baseResult, [makeAnswer(0)]);
+    expect(await screen.findByTestId("quiz-results-persist-error")).toBeInTheDocument();
   });
 });

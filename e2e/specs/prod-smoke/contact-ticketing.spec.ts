@@ -75,6 +75,11 @@ test.describe("prod smoke — /kontakt full pipeline", () => {
       timeout: 15_000,
     });
 
+    // Copy assertion tracks the tykanie rewrite (2026-06-11). NOTE: this
+    // passes against prod only after the rewrite deploys; until then prod
+    // still serves the old "Vašu žiadosť sme prijali" heading.
+    await expect(kontakt.successState).toContainText("Tvoju žiadosť sme prijali");
+
     const ticketId = await kontakt.successTicketId.textContent();
     // A real ticket_id is a UUID v4 from the DB — 8-4-4-4-12 hex groups.
     expect(ticketId?.trim()).toMatch(
