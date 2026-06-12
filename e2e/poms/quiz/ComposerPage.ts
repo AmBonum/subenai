@@ -125,8 +125,63 @@ export class ComposerPage extends BasePage {
     return this.page.getByTestId("composer-picker-selected-count");
   }
 
+  get pickerFilterCount() {
+    return this.page.getByTestId("composer-picker-filter-count");
+  }
+
+  get pickerList() {
+    return this.page.getByTestId("composer-picker-list");
+  }
+
+  /** Visible question rows on the current page (one <li> per question). */
+  get pickerListItems() {
+    return this.pickerList.locator("li");
+  }
+
   questionCheckbox(questionId: string) {
     return this.page.locator(`#pick-${questionId}`);
+  }
+
+  // ── Question picker pagination ────────────────────────────────────────────────
+
+  /** Page-size <select> (10 / 25 / 50 / Všetky). Default value is "10". */
+  get pickerPageSize() {
+    return this.page.getByTestId("composer-picker-page-size");
+  }
+
+  /** Pager nav wrapper — only present when filtered.length spans >1 page. */
+  get pickerPager() {
+    return this.page.getByTestId("composer-picker-pager");
+  }
+
+  get pickerPrev() {
+    return this.page.getByTestId("composer-picker-prev");
+  }
+
+  get pickerNext() {
+    return this.page.getByTestId("composer-picker-next");
+  }
+
+  /** "Strana {page} z {total}" status text. */
+  get pickerPageStatus() {
+    return this.page.getByTestId("composer-picker-page-status");
+  }
+
+  /** Set the page size by its <option> value: "10" | "25" | "50" | "all". */
+  async setPickerPageSize(value: "10" | "25" | "50" | "all") {
+    await this.pickerPageSize.selectOption(value);
+  }
+
+  /**
+   * Pagination-aware question select. A specific bank id may sit on any
+   * page (default 10/page), so switch the picker to "show all" first,
+   * then tick by stable `#pick-<id>`. Use inside an expanded picker.
+   */
+  async selectQuestion(questionId: string) {
+    if ((await this.pickerPageSize.inputValue()) !== "all") {
+      await this.setPickerPageSize("all");
+    }
+    await this.questionCheckbox(questionId).click();
   }
 
   // ── Actions region ───────────────────────────────────────────────────────────

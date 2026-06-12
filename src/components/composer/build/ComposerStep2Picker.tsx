@@ -92,7 +92,9 @@ export function ComposerStep2Picker({ questions, selectedIds, onToggle }: Props)
           aria-controls="composer-step-2-picker"
           className="inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:bg-primary/15 sm:w-auto sm:justify-start"
         >
-          {expanded ? t("step_2_close_picker") : t("step_2_open_picker")}
+          {expanded
+            ? t("step_2_close_picker")
+            : t("step_2_open_picker", { count: questions.length })}
           <ChevronDown
             className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`}
             aria-hidden="true"

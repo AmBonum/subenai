@@ -373,7 +373,9 @@ export function ComposerPage() {
             className="mt-3 text-base text-muted-foreground sm:text-lg"
           >
             {t("intro_v2_prefix")}
-            <strong className="text-foreground">{t("intro_v2_count")}</strong>
+            <strong className="text-foreground">
+              {t("intro_v2_count", { count: QUESTIONS.length })}
+            </strong>
             {t("intro_v2_suffix")}
           </p>
         </header>

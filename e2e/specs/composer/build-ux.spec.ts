@@ -89,7 +89,7 @@ test.describe("E33 Phase 1 — composer build UX", () => {
     await expect(composer.step2Picker).toHaveCount(0);
     await expect(composer.pickerSearch).toHaveCount(0);
     await expect(composer.step2Toggle).toHaveAttribute("aria-expanded", "false");
-    await expect(composer.step2Toggle).toContainText("Vybrať z banky (243 otázok)");
+    await expect(composer.step2Toggle).toContainText("Vybrať z banky (268 otázok)");
   });
 
   // TC-09 — Eyebrow + intro_v2 copy renders verbatim.
@@ -112,7 +112,7 @@ test.describe("E33 Phase 1 — composer build UX", () => {
     // concatenated visible text. The <strong> wrapping the count is a
     // typographic detail, not part of the contract.
     await expect(composer.intro).toContainText("Vyber zo");
-    await expect(composer.intro).toContainText("243 otázok");
+    await expect(composer.intro).toContainText("268 otázok");
     await expect(composer.intro).toContainText("phishing v e-shope");
     await expect(composer.intro).toContainText("Žiadna registrácia, žiadny LMS.");
   });

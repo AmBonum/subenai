@@ -1,10 +1,21 @@
-import { useMemo, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { Category, Difficulty, Question } from "@/lib/quiz/bank/questions";
 import { COMPOSER_LIMITS } from "@/lib/quiz/composer";
 import { tFor } from "@/i18n/quiz";
 
 const ALL_CATEGORIES: Category[] = ["phishing", "url", "fake_vs_real", "scenario", "honeypot"];
 const ALL_DIFFICULTIES: Difficulty[] = ["easy", "medium", "hard"];
+
+// Pagination — the bank is ~268 questions; rendering all of them at once
+// (even with content-visibility virtualization) buried the section-3
+// settings and made the list impossible to skim. Default to 10/page with
+// a user-selectable size + prev/next nav. `ALL` is a sentinel for the
+// "show everything" option (keeps the old behaviour one click away).
+const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
+const ALL_PAGE_SIZE = "all" as const;
+const DEFAULT_PAGE_SIZE = 10;
+type PageSize = (typeof PAGE_SIZE_OPTIONS)[number] | typeof ALL_PAGE_SIZE;
 
 interface Props {
   questions: Question[];
@@ -17,6 +28,8 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
   const [activeCategories, setActiveCategories] = useState<Set<Category>>(new Set());
   const [activeDifficulties, setActiveDifficulties] = useState<Set<Difficulty>>(new Set());
   const [search, setSearch] = useState("");
+  const [pageSize, setPageSize] = useState<PageSize>(DEFAULT_PAGE_SIZE);
+  const [page, setPage] = useState(1);
 
   const categoryLabel = (c: Category) => t(`categories.${c}`);
   const difficultyLabel = (d: Difficulty) => t(`difficulties.${d}`);
@@ -30,6 +43,21 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
       return true;
     });
   }, [questions, activeCategories, activeDifficulties, search]);
+
+  // Any narrowing of the result set (filter toggle, search, page-size
+  // change) snaps the view back to page 1 — otherwise the user could be
+  // stranded on an empty page 7 after a search that yields 3 rows.
+  useEffect(() => {
+    setPage(1);
+  }, [activeCategories, activeDifficulties, search, pageSize]);
+
+  const totalPages =
+    pageSize === ALL_PAGE_SIZE ? 1 : Math.max(1, Math.ceil(filtered.length / pageSize));
+  // Clamp defensively: filtered.length can shrink between renders.
+  const currentPage = Math.min(page, totalPages);
+  const pageStart = pageSize === ALL_PAGE_SIZE ? 0 : (currentPage - 1) * pageSize;
+  const pageEnd = pageSize === ALL_PAGE_SIZE ? filtered.length : pageStart + pageSize;
+  const pageItems = filtered.slice(pageStart, pageEnd);
 
   const atMax = selectedIds.size >= COMPOSER_LIMITS.maxQuestions;
 
@@ -83,7 +111,7 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-sm">
+      <div className="flex flex-col gap-2 text-sm sm:flex-row sm:items-center sm:justify-between">
         <p
           aria-live="polite"
           data-testid="composer-picker-selected-count"
@@ -91,9 +119,36 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
         >
           {t("selected_count", { count: selectedIds.size, max: COMPOSER_LIMITS.maxQuestions })}
         </p>
-        <p className="text-xs text-muted-foreground">
-          {t("filter_count", { shown: filtered.length, total: questions.length })}
-        </p>
+        <div className="flex items-center gap-3">
+          <p data-testid="composer-picker-filter-count" className="text-xs text-muted-foreground">
+            {t("filter_count", { shown: filtered.length, total: questions.length })}
+          </p>
+          <div className="flex items-center gap-1.5">
+            <label htmlFor="picker-page-size" className="text-xs font-medium text-muted-foreground">
+              {t("per_page_label")}
+            </label>
+            <select
+              id="picker-page-size"
+              data-testid="composer-picker-page-size"
+              value={String(pageSize)}
+              onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                setPageSize(
+                  e.target.value === ALL_PAGE_SIZE
+                    ? ALL_PAGE_SIZE
+                    : (Number(e.target.value) as PageSize),
+                )
+              }
+              className="rounded-lg border border-border bg-background px-2 py-1 text-xs text-foreground"
+            >
+              {PAGE_SIZE_OPTIONS.map((size) => (
+                <option key={size} value={String(size)}>
+                  {size}
+                </option>
+              ))}
+              <option value={ALL_PAGE_SIZE}>{t("per_page_all")}</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       {filtered.length === 0 ? (
@@ -101,8 +156,8 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
           {t("empty")}
         </p>
       ) : (
-        <ul className="space-y-2" role="list">
-          {filtered.map((q) => {
+        <ul className="space-y-2" role="list" data-testid="composer-picker-list">
+          {pageItems.map((q) => {
             const selected = selectedIds.has(q.id);
             const disabled = !selected && atMax;
             return (
@@ -147,6 +202,42 @@ export function QuestionPicker({ questions, selectedIds, onToggle }: Props) {
           })}
         </ul>
       )}
+
+      {filtered.length > 0 && pageSize !== ALL_PAGE_SIZE && totalPages > 1 ? (
+        <nav
+          data-testid="composer-picker-pager"
+          aria-label={t("pager_aria")}
+          className="flex items-center justify-between gap-2"
+        >
+          <button
+            type="button"
+            data-testid="composer-picker-prev"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage <= 1}
+            className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-primary/40 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+            {t("pager_prev")}
+          </button>
+          <span
+            data-testid="composer-picker-page-status"
+            aria-live="polite"
+            className="text-xs font-medium text-muted-foreground"
+          >
+            {t("pager_status", { page: currentPage, total: totalPages })}
+          </span>
+          <button
+            type="button"
+            data-testid="composer-picker-next"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage >= totalPages}
+            className="inline-flex items-center gap-1 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground transition-colors hover:border-primary/40 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {t("pager_next")}
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </nav>
+      ) : null}
     </div>
   );
 }

@@ -103,7 +103,7 @@ test.describe("Custom test composer", () => {
 
     await test.step("Select 6 questions individually via checkboxes", async () => {
       for (const id of REAL_IDS_6) {
-        await composer.questionCheckbox(id).click();
+        await composer.selectQuestion(id);
       }
     });
 
@@ -121,7 +121,7 @@ test.describe("Custom test composer", () => {
 
     await test.step("Select 5 more questions to exceed the URL-share threshold (> 10)", async () => {
       for (const id of REAL_IDS_EXTRA_5) {
-        await composer.questionCheckbox(id).click();
+        await composer.selectQuestion(id);
       }
     });
 
@@ -142,7 +142,7 @@ test.describe("Custom test composer", () => {
 
     await test.step("Select 6 questions to meet the minimum and enable the button", async () => {
       for (const id of REAL_IDS_6) {
-        await composer.questionCheckbox(id).click();
+        await composer.selectQuestion(id);
       }
     });
 
@@ -172,7 +172,7 @@ test.describe("Custom test composer", () => {
     await test.step("Expand the picker and select 6 questions so the URL copy button is visible", async () => {
       await composer.expandStep2Picker();
       for (const id of REAL_IDS_6) {
-        await composer.questionCheckbox(id).click();
+        await composer.selectQuestion(id);
       }
     });
 
@@ -206,7 +206,7 @@ test.describe("Custom test composer", () => {
 
     await test.step("Select 11 questions via checkboxes (> 10 forces the DB share path)", async () => {
       for (const id of [...REAL_IDS_6, ...REAL_IDS_EXTRA_5]) {
-        await composer.questionCheckbox(id).click();
+        await composer.selectQuestion(id);
       }
     });
 

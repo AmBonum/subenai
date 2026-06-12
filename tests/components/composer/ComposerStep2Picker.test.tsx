@@ -5,7 +5,7 @@ vi.mock("@/i18n/quiz", () => ({
   tFor: () => (key: string, vars?: Record<string, unknown>) => {
     const map: Record<string, string> = {
       step_2_zero_state_cta: "Začni výberom z balíkov vyššie alebo si pridaj otázky →",
-      step_2_open_picker: "Vybrať z banky (243 otázok)",
+      step_2_open_picker: `Vybrať z banky (${vars?.count} otázok)`,
       step_2_close_picker: "Hotovo, zavri výber",
       step_2_summary_singular: `${vars?.count} vybraná otázka`,
       step_2_summary_few: `${vars?.count} vybrané otázky`,

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QuestionPicker } from "@/components/composer/build/QuestionPicker";
 import type { Question } from "@/lib/quiz/bank/questions";
@@ -127,10 +127,15 @@ describe("QuestionPicker — toggle behaviour", () => {
     const selected = new Set(big.slice(0, ceiling).map((q) => q.id));
     render(<QuestionPicker questions={big} selectedIds={selected} onToggle={vi.fn()} />);
 
-    const stillSelectedCheckbox = screen.getByRole("checkbox", { name: /Bulk question 0/ });
+    // The cap is a global selection concern, but the list paginates at
+    // 10/page — switch to "Všetky" so both the selected #0 and the
+    // would-be-over #51 are in the DOM at once.
+    fireEvent.change(screen.getByTestId("composer-picker-page-size"), { target: { value: "all" } });
+
+    const stillSelectedCheckbox = screen.getByRole("checkbox", { name: /Bulk question 0\b/ });
     expect(stillSelectedCheckbox).not.toBeDisabled();
 
-    const wouldBeOver = screen.getByRole("checkbox", { name: /Bulk question 51/ });
+    const wouldBeOver = screen.getByRole("checkbox", { name: /Bulk question 51\b/ });
     expect(wouldBeOver).toBeDisabled();
   });
 });
