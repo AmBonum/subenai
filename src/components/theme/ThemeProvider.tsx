@@ -6,10 +6,11 @@
 // `.dark` class on <html> so Tailwind's `@custom-variant dark (&:is(.dark *))`
 // and the `.dark { ... }` palette in styles.css take effect.
 //
-// SSR: the inline no-flash script in `__root.tsx`'s head applies `.dark`
-// before first paint, so this provider only has to keep the class in sync
-// after hydration. The initial state reads the same localStorage key so
-// the two never disagree.
+// No-flash: the inline script in `index.html`'s head applies `.dark`
+// before first paint (this app client-mounts via src/main.tsx, so a
+// route-level head() script would run too late). This provider only has
+// to keep the class in sync afterwards. The initial state reads the same
+// localStorage key so the two never disagree.
 /* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
