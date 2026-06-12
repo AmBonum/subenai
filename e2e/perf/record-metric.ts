@@ -12,6 +12,8 @@ export interface PerfMetric {
   value: number;
   unit: string;
   budget?: number;
+  /** "max" (default): budget is a ceiling. "min": budget is a floor (throughput). */
+  dir?: "min" | "max";
   pass?: boolean;
 }
 

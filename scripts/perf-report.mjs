@@ -56,6 +56,9 @@ function summarize(metrics) {
       metric: m.metric,
       unit: m.unit,
       budget: m.budget ?? null,
+      // "max" (default) = budget is a ceiling, lower is better (latency).
+      // "min" = budget is a floor, higher is better (throughput).
+      dir: m.dir ?? "max",
       samples: [],
       pass: true,
     };
@@ -76,8 +79,16 @@ function summarize(metrics) {
       const max = Math.max(...v);
       const mean = Math.round(v.reduce((s, x) => s + x, 0) / v.length);
       const p95 = pct(v, 95);
-      const headroom =
-        rec.budget != null && rec.budget > 0 ? Math.round((1 - max / rec.budget) * 100) : null;
+      // Headroom = how much margin to the budget. Only meaningful for
+      // ceiling metrics; floor metrics (throughput) report the multiple of
+      // the floor instead, ceiling ones the % below the cap.
+      let headroom = null;
+      if (rec.budget != null && rec.budget > 0) {
+        headroom =
+          rec.dir === "min"
+            ? `${(min / rec.budget).toFixed(0)}×floor`
+            : `${Math.round((1 - max / rec.budget) * 100)}%`;
+      }
       rows.push({
         name: rec.name,
         metric: rec.metric,
@@ -118,7 +129,7 @@ function renderMarkdown(summary, stampIso) {
     for (const r of s.rows) {
       const u = r.unit;
       const b = r.budget != null ? `${r.budget} ${u}` : "—";
-      const h = r.headroomPct != null ? `${r.headroomPct}%` : "—";
+      const h = r.headroomPct != null ? r.headroomPct : "—";
       lines.push(
         `| ${r.name} · ${r.metric} | ${r.samples} | ${r.min} | ${r.mean} | ${r.max} | ${r.p95} ${u} | ${b} | ${h} | ${r.pass ? "✅" : "❌"} |`,
       );
