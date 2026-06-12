@@ -162,4 +162,30 @@ describe("GET /api/donation-status — negative paths", () => {
     expect(body.sponsor_display_name).toBe("Anna");
     expect(body.has_customer).toBe(true);
   });
+
+  it("subscription invoice: resolves the donation via invoice.payments (Stripe >=17 shape)", async () => {
+    // Regression guard: the old code read invoice.payment_intent (removed in
+    // Stripe >=17), so subscription donors stayed stuck on "pending". The
+    // donations row is keyed by the payment_intent embedded in the invoice's
+    // payments ApiList — if the function reads the right path, status=ready.
+    const SUB_PI = "pi_sub_777";
+    stubFetch({
+      stripeSession: {
+        ...PAID_SESSION,
+        mode: "subscription",
+        payment_intent: null,
+        invoice: {
+          id: "in_1",
+          payments: { data: [{ payment: { payment_intent: SUB_PI } }] },
+        },
+      },
+      donationsRows: [{ ...DONATION_ROW, kind: "subscription_invoice" }],
+    });
+    const r = await onRequestGet({ request: buildRequest(SESSION_ID), env });
+    expect(r.status).toBe(200);
+    const body = await r.json();
+    expect(body.status).toBe("ready");
+    expect(body.is_subscription).toBe(true);
+    expect(body.donation?.kind).toBe("subscription_invoice");
+  });
 });

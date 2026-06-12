@@ -161,5 +161,11 @@ export async function onRequestGet(ctx: RequestContext): Promise<Response> {
 
 function readInvoicePaymentIntent(invoice: Stripe.Invoice | string | null): string | null {
   if (!invoice || typeof invoice === "string") return null;
-  return readId(invoice.payment_intent);
+  // Stripe ≥17 removed `invoice.payment_intent` in favour of the
+  // `invoice.payments` ApiList — read the first payment's payment_intent id
+  // (subscription invoices currently have exactly one). Mirrors
+  // stripe-webhook.ts:181. The old field-access returned undefined under
+  // the pinned API version, leaving subscription donors stuck on the
+  // "pending" thank-you state because the donation row never resolved.
+  return readId(invoice.payments?.data?.[0]?.payment?.payment_intent);
 }
