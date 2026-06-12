@@ -208,6 +208,15 @@ export class TestEditorPage extends BasePage {
     return this.page.getByTestId("test-editor-password-clear-button");
   }
 
+  get passwordHint() {
+    return this.page.getByTestId("test-editor-password-hint");
+  }
+
+  /** First Sonner toast — password set/change/clear feedback + RPC errors. */
+  get toast() {
+    return this.page.locator("[data-sonner-toast]").first();
+  }
+
   // E45 Phase 3 — Invite button (currently "Pripravujeme" gated; see also
   // src/lib/feature-gates.ts).
   get inviteButton() {

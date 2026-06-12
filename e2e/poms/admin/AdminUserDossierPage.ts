@@ -72,4 +72,65 @@ export class AdminUserDossierPage extends BasePage {
   get emptyState() {
     return this.page.getByTestId("admin-user-dossier-empty");
   }
+
+  // ── Pending-erasure banner (D-3 hard-delete grace window) ──────────
+  get pendingHeading() {
+    return this.page.getByTestId("admin-user-dossier-pending-banner");
+  }
+
+  get cancelPendingButton() {
+    return this.page.getByTestId("admin-user-dossier-cancel-pending-button");
+  }
+
+  // ── Art. 16 rectification dialog ───────────────────────────────────
+  get rectifyTrigger() {
+    return this.page.getByTestId("admin-user-dossier-rectify-display-name");
+  }
+
+  get rectifyDialog() {
+    return this.page.getByTestId("admin-user-dossier-rectify-dialog");
+  }
+
+  get rectifyInput() {
+    return this.page.getByTestId("admin-user-dossier-rectify-input");
+  }
+
+  get rectifyConfirm() {
+    return this.page.getByTestId("admin-user-dossier-rectify-confirm");
+  }
+
+  get rectifyCancel() {
+    return this.page.getByTestId("admin-user-dossier-rectify-cancel");
+  }
+
+  // ── Shared typed-confirm AlertDialog (anonymize + hard-delete) ─────
+  get confirmDialog() {
+    return this.page.getByTestId("app-shell-confirm-dialog-root");
+  }
+
+  get confirmTypedInput() {
+    return this.page.getByTestId("app-shell-confirm-dialog-typed-input");
+  }
+
+  get confirmButton() {
+    return this.page.getByTestId("app-shell-confirm-dialog-confirm");
+  }
+
+  get confirmCancel() {
+    return this.page.getByTestId("app-shell-confirm-dialog-cancel");
+  }
+
+  /** First Sonner toast rendered by the global Toaster. */
+  get toast() {
+    return this.page.locator("[data-sonner-toast]").first();
+  }
+
+  /**
+   * Drive a typed-confirm flow: open dialog is assumed already visible;
+   * types `value` into the gate input and clicks confirm.
+   */
+  async typeConfirmAndSubmit(value: string) {
+    await this.confirmTypedInput.fill(value);
+    await this.confirmButton.click();
+  }
 }

@@ -341,6 +341,132 @@ test.describe("/app/tests/$testId editor", () => {
     });
   });
 
+  // TC-09a: Setting a password fires hash_test_password, surfaces the
+  // success toast, clears the inputs, and the status flips to "set" once
+  // the test query refetches. The mock RPC mutates the seeded row's
+  // password_hash so the post-invalidation read observes the transition.
+  test("TC-09a: setting a password fires the RPC, toasts success, flips status to 'set'", async ({
+    page,
+  }) => {
+    const t1 = BASE_TEST();
+    await setupEducator(page.context(), page, {
+      tables: BASE_TABLES(t1),
+      rpcs: {
+        hash_test_password: (body: unknown, ctx: RpcContext) => {
+          const id = (body as { test_id?: string } | null)?.test_id;
+          const row = (ctx.tables.tests ?? []).find((r) => r.id === id);
+          if (row) {
+            row.password_hash = "$2a$10$stub-bcrypt-hash-not-real";
+            row.password_hash_version = 3;
+          }
+          return 3;
+        },
+      },
+    });
+    const editor = new TestEditorPage(page);
+
+    await test.step("Open Settings for an unset test", async () => {
+      await editor.open("tst_002");
+      await editor.tabSettings.click();
+      await expect(editor.passwordStatus).toHaveAttribute("data-has-password", "false");
+    });
+
+    await test.step("Enter a valid matching password and submit", async () => {
+      await editor.passwordInput.fill("good-password-1");
+      await editor.passwordConfirm.fill("good-password-1");
+      await expect(editor.passwordSubmit).toBeEnabled();
+      await editor.passwordSubmit.click();
+    });
+
+    await test.step("Success toast + inputs cleared + status now 'set'", async () => {
+      await expect(editor.toast).toContainText(
+        "Heslo nastavené. Respondenti ho musia zadať pred vyplnením.",
+      );
+      await expect(editor.passwordInput).toHaveValue("");
+      await expect(editor.passwordStatus).toHaveAttribute("data-has-password", "true");
+      await expect(editor.passwordClear).toBeVisible();
+    });
+  });
+
+  // TC-09b: Clearing a password fires clear_test_password, toasts success,
+  // and the status flips back to "unset" (test re-opened via share link).
+  test("TC-09b: clearing a password fires the RPC, toasts success, flips status to 'unset'", async ({
+    page,
+  }) => {
+    const t1 = seedTest({
+      id: "tst_002",
+      slug: "e2e-edit-target-clear",
+      share_id: "e2e-share-clear",
+      owner_id: EDUCATOR_SESSION.user.id,
+      title: "Clear target",
+      status: "draft",
+      password_hash: "$2a$10$stub-bcrypt-hash-not-real",
+      password_hash_version: 3,
+    });
+    await setupEducator(page.context(), page, {
+      tables: BASE_TABLES(t1),
+      rpcs: {
+        clear_test_password: (body: unknown, ctx: RpcContext) => {
+          const id = (body as { test_id?: string } | null)?.test_id;
+          const row = (ctx.tables.tests ?? []).find((r) => r.id === id);
+          if (row) {
+            row.password_hash = null;
+            row.password_hash_version = null;
+          }
+          return 0;
+        },
+      },
+    });
+    const editor = new TestEditorPage(page);
+
+    await test.step("Open Settings for a locked test", async () => {
+      await editor.open("tst_002");
+      await editor.tabSettings.click();
+      await expect(editor.passwordStatus).toHaveAttribute("data-has-password", "true");
+    });
+
+    await test.step("Click Clear", async () => {
+      await editor.passwordClear.click();
+    });
+
+    await test.step("Success toast + status now 'unset' + Clear button gone", async () => {
+      await expect(editor.toast).toContainText(
+        "Heslo zrušené. Test je opäť otvorený cez share link.",
+      );
+      await expect(editor.passwordStatus).toHaveAttribute("data-has-password", "false");
+      await expect(editor.passwordClear).toHaveCount(0);
+    });
+  });
+
+  // TC-09c: A server-side rejection (e.g. not the owner) is mapped from the
+  // deterministic RPC error key to the localized toast — the status stays
+  // unchanged because the mutation never succeeded.
+  test("TC-09c: a hash_test_password RPC error surfaces the mapped Slovak toast", async ({
+    page,
+  }) => {
+    const t1 = BASE_TEST();
+    await setupEducator(page.context(), page, {
+      tables: BASE_TABLES(t1),
+      errors: {
+        hash_test_password: { status: 403, code: "P0001", message: "not_owner" },
+      },
+    });
+    const editor = new TestEditorPage(page);
+
+    await test.step("Open Settings + submit a valid password", async () => {
+      await editor.open("tst_002");
+      await editor.tabSettings.click();
+      await editor.passwordInput.fill("good-password-1");
+      await editor.passwordConfirm.fill("good-password-1");
+      await editor.passwordSubmit.click();
+    });
+
+    await test.step("The mapped not-owner error toast appears + status unchanged", async () => {
+      await expect(editor.toast).toContainText("Nemáš oprávnenie meniť heslo tohto testu.");
+      await expect(editor.passwordStatus).toHaveAttribute("data-has-password", "false");
+    });
+  });
+
   // ----- E45 Phase 3 — Invite button "Pripravujeme" gate -----
 
   // TC-10: Invite button on a PUBLISHED test renders with the
