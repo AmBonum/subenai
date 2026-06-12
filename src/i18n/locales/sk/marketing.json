@@ -164,6 +164,12 @@
   "locale_switcher": {
     "aria_label": "Jazyk / Language"
   },
+  "theme": {
+    "aria_label": "Vzhľad",
+    "light": "Svetlý",
+    "dark": "Tmavý",
+    "system": "Systém"
+  },
   "podpora": {
     "back_home": "← Späť na domov",
     "title": "Podpora projektu",

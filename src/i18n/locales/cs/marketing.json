@@ -159,6 +159,12 @@
   "locale_switcher": {
     "aria_label": "Jazyk / Language"
   },
+  "theme": {
+    "aria_label": "Vzhled",
+    "light": "Světlý",
+    "dark": "Tmavý",
+    "system": "Systém"
+  },
   "podpora": {
     "back_home": "← Zpět na domů",
     "title": "Podpora projektu",

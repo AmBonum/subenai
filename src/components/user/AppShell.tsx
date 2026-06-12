@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { useCurrentProfile, useNotifications } from "@/lib/platform/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { LocaleSwitcher } from "@/components/i18n/LocaleSwitcher";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Toaster } from "@/components/ui/sonner";
 import { tFor } from "@/i18n/app-shell";
@@ -292,6 +293,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             {/* Slot is empty while LOCALE_SWITCHER_ENABLED = false */}
             <div data-testid="app-shell-header-locale">
               <LocaleSwitcher />
+            </div>
+            <div data-testid="app-shell-header-theme">
+              <ThemeToggle />
             </div>
             <div
               className="flex items-center gap-2 rounded-full border border-border/60 bg-card py-1 pl-1 pr-3"

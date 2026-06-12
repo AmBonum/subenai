@@ -10,7 +10,14 @@ import { Footer } from "@/components/layout/Footer";
 import { NotFoundPage } from "@/components/layout/NotFoundPage";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { LocaleProvider } from "@/i18n/locale-context";
+
+// No-flash note: the synchronous theme bootstrap that applies `.dark`
+// before first paint lives in the static document shell (`index.html`),
+// not here — this app mounts as a client SPA (`src/main.tsx`), so a
+// route-level `head()` script would only run after hydration, too late to
+// prevent a flash. ThemeProvider below keeps the class in sync at runtime.
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -58,22 +65,24 @@ function RootComponent() {
   );
   return (
     <QueryClientProvider client={queryClient}>
-      <LocaleProvider>
-        {/* Renders the <title> + <meta> from every matched route's `head()`
+      <ThemeProvider>
+        <LocaleProvider>
+          {/* Renders the <title> + <meta> from every matched route's `head()`
             into the document head. Without this, route-level head config
             (noindex on /app + /admin + /auth/*, page titles on every nav)
             is silently dropped — production gap discovered 2026-05-19
             during Phase 4 auth E2E (TC-17 forgot-password). */}
-        <HeadContent />
-        <GoogleAnalyticsManager />
-        {!hideSiteHeader && <SiteHeader />}
-        <Outlet />
-        {!hideSiteFooter && <Footer />}
-        <ConsentBanner />
-        <ConsentPreferencesDialog />
-        {!isInsidePrivateShell && <Toaster position="top-center" />}
-        <SignedOutFlash />
-      </LocaleProvider>
+          <HeadContent />
+          <GoogleAnalyticsManager />
+          {!hideSiteHeader && <SiteHeader />}
+          <Outlet />
+          {!hideSiteFooter && <Footer />}
+          <ConsentBanner />
+          <ConsentPreferencesDialog />
+          {!isInsidePrivateShell && <Toaster position="top-center" />}
+          <SignedOutFlash />
+        </LocaleProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeAll, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render as rtlRender, screen } from "@testing-library/react";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
+
+const render = (ui: Parameters<typeof rtlRender>[0]) => rtlRender(ui, { wrapper: ThemeProvider });
 
 beforeAll(() => {
   if (typeof window !== "undefined" && !window.matchMedia) {

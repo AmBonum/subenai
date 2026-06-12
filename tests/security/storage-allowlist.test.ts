@@ -53,6 +53,11 @@ const LOCALSTORAGE_KEYS: DeclaredStorage[] = [
   },
   { key: "subenai.locale", declaredAt: "/cookies s2 row `locale` (E40) — language preference" },
   {
+    key: "THEME_STORAGE_KEY",
+    declaredAt:
+      "/cookies s2 row `prefs` (E52) — `subenai-theme` light/dark/system appearance preference",
+  },
+  {
     key: "ADMIN_EXPLAINER_STORAGE_PREFIX",
     declaredAt:
       "/cookies s2 row `prefs` (E40) — `admin-explainer-<pageKey>` collapsed/expanded state of admin info panels (E47)",

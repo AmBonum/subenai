@@ -68,7 +68,89 @@
 }
 
 :root {
+  color-scheme: light;
   --radius: 0.875rem;
+
+  /* Light palette — the brand's first light theme. Lime stays the
+     primary, darkened from the dark-mode 0.88 to 0.72 so white
+     `--primary-foreground` text clears WCAG AA on the button fill.
+     Neutrals carry the same blue-violet hue (~265) as the dark theme
+     so the brand reads consistent across modes. */
+  --background: oklch(0.99 0.005 250);
+  --foreground: oklch(0.2 0.03 265);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.03 265);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.03 265);
+
+  /* Acid lime — primary "spustiť test" energy. Darkened for AA: white
+     text on oklch(0.72 0.19 130) ≈ 4.7:1. */
+  --primary: oklch(0.72 0.19 130);
+  --primary-foreground: oklch(0.99 0.01 250);
+
+  --secondary: oklch(0.95 0.01 265);
+  --secondary-foreground: oklch(0.25 0.03 265);
+
+  --muted: oklch(0.96 0.008 265);
+  --muted-foreground: oklch(0.45 0.02 260);
+
+  --accent: oklch(0.55 0.2 25);
+  --accent-foreground: oklch(0.99 0.01 250);
+
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.99 0.01 250);
+
+  --success: oklch(0.55 0.16 150);
+  --success-foreground: oklch(0.99 0.01 250);
+
+  --warning: oklch(0.62 0.16 70);
+  --warning-foreground: oklch(0.99 0.01 250);
+
+  --border: oklch(0.9 0.01 265);
+  --input: oklch(0.9 0.01 265);
+  --ring: oklch(0.72 0.19 130);
+
+  --primary-glow: oklch(0.62 0.18 152);
+  --chart-1: oklch(0.62 0.19 128);
+  --chart-2: oklch(0.6 0.17 152);
+  --chart-3: oklch(0.55 0.16 200);
+  --chart-4: oklch(0.65 0.15 75);
+  --chart-5: oklch(0.58 0.2 15);
+
+  --sidebar: oklch(0.97 0.006 265);
+  --sidebar-foreground: oklch(0.3 0.025 260);
+  --sidebar-primary: oklch(0.72 0.19 130);
+  --sidebar-primary-foreground: oklch(0.99 0.01 250);
+  --sidebar-accent: oklch(0.94 0.01 265);
+  --sidebar-accent-foreground: oklch(0.25 0.03 265);
+  --sidebar-border: oklch(0.2 0.03 265 / 8%);
+  --sidebar-ring: oklch(0.72 0.19 130 / 60%);
+
+  --hero-gradient: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      oklch(0.72 0.19 130 / 0.18),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 80% 100%,
+      oklch(0.55 0.2 25 / 0.12),
+      transparent 65%
+    ),
+    linear-gradient(180deg, oklch(0.99 0.005 250), oklch(0.96 0.01 265));
+  --accent-gradient: linear-gradient(
+    135deg,
+    oklch(0.72 0.19 130),
+    oklch(0.62 0.16 165)
+  );
+  --glow-shadow: 0 0 50px -12px oklch(0.72 0.19 130 / 0.35);
+  --card-shadow: 0 20px 50px -24px oklch(0.2 0.03 265 / 0.18),
+    0 1px 0 0 oklch(1 0 0 / 0.6) inset;
+}
+
+.dark {
+  color-scheme: dark;
 
   /* Dark, electric, slightly brutalist palette */
   --background: oklch(0.16 0.03 265);
@@ -177,15 +259,21 @@
        oklch() inside data:image/svg+xml. */
   input[type="date"] {
     accent-color: var(--primary);
-    color-scheme: dark;
   }
+  /* Light theme: a darker lime (#5a9410) reads on the white field; the
+     popup chrome follows the OS light scheme. */
   input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
     opacity: 1;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b8ff3d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a9410' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
     background-size: 16px 16px;
     background-repeat: no-repeat;
     background-position: center;
+  }
+  /* Dark theme: brighter lime (#b8ff3d ≈ oklch(0.88 0.22 130)) on the
+     dark field, matching the logo gradient's first stop. */
+  .dark input[type="date"]::-webkit-calendar-picker-indicator {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b8ff3d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
   }
 }
 

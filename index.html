@@ -2,6 +2,22 @@
 <html lang="sk">
   <head>
     <script>
+      // No-flash theme bootstrap (E52). Runs before first paint: reads the
+      // persisted light/dark/system choice and adds `.dark` to <html> so the
+      // dark palette in styles.css applies with zero flash on load. Mirrors
+      // the runtime logic in ThemeProvider. Kept as a static literal so the
+      // post-build CSP extractor (scripts/extract-csp-hashes.mjs) can hash it.
+      (function () {
+        try {
+          var t = localStorage.getItem("subenai-theme") || "system";
+          var d =
+            t === "dark" ||
+            (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (d) document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
+    <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);

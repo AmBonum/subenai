@@ -159,6 +159,12 @@
   "locale_switcher": {
     "aria_label": "Jazyk / Language"
   },
+  "theme": {
+    "aria_label": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
   "podpora": {
     "back_home": "← Back to home",
     "title": "Support the project",
