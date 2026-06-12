@@ -136,6 +136,31 @@ describe("HomeFaqSection — expand/collapse all toggle", () => {
   });
 });
 
+describe("HomeFaqSection — single chevron per trigger", () => {
+  // Regression: the category trigger used to render its own ChevronDown
+  // on top of the built-in one from ui/accordion.tsx → two stacked
+  // chevrons per row. Exactly ONE chevron (the built-in) must render.
+  it("a collapsed category trigger renders exactly one chevron icon", () => {
+    render(<HomeFaqSection sections={SECTIONS} />);
+    const trigger = screen.getByTestId("home-faq-category-trigger-rychly_test");
+    expect(trigger.querySelectorAll("svg")).toHaveLength(1);
+  });
+
+  it("an expanded category keeps one chevron on the title row and one per question", () => {
+    render(<HomeFaqSection sections={SECTIONS} />);
+    fireEvent.click(screen.getByTestId("home-faq-category-trigger-rychly_test"));
+    expect(
+      screen.getByTestId("home-faq-category-trigger-rychly_test").querySelectorAll("svg"),
+    ).toHaveLength(1);
+    const questions = screen.getByTestId("home-faq-questions-rychly_test");
+    const questionTriggers = within(questions).getAllByRole("button");
+    expect(questionTriggers).toHaveLength(3);
+    for (const qt of questionTriggers) {
+      expect(qt.querySelectorAll("svg")).toHaveLength(1);
+    }
+  });
+});
+
 describe("HomeFaqSection — docs link", () => {
   it("renders an Akadémia cross-link below the accordion", () => {
     render(<HomeFaqSection sections={SECTIONS} />);

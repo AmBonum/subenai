@@ -24,6 +24,17 @@ describe("FaqAccordion — E26 shared senior FAQ ui component", () => {
     });
   });
 
+  // Regression: the trigger used to hide ALL direct-child svgs via
+  // [&>svg]:hidden (hiding its own custom chevron along with the
+  // built-in one) → no visible chevron at all. Exactly ONE chevron
+  // (the built-in from ui/accordion.tsx) must render, unhidden.
+  it("each trigger renders exactly one visible chevron icon", () => {
+    render(<FaqAccordion {...baseProps} />);
+    const trigger = screen.getByTestId("demo-faq-trigger-q1");
+    expect(trigger.querySelectorAll("svg")).toHaveLength(1);
+    expect(trigger.className).not.toContain("[&>svg]:hidden");
+  });
+
   it("attaches stable anchor IDs per item from anchorPrefix", () => {
     render(<FaqAccordion {...baseProps} />);
     expect(screen.getByTestId("demo-faq-item-q1")).toHaveAttribute("id", "anchor-demo-q-q1");

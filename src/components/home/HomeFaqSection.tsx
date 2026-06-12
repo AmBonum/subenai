@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronDown } from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
 
 import {
@@ -126,7 +125,7 @@ export function HomeFaqSection({
             data-testid={`${testIdPrefix}-category-${section.slug}`}
           >
             <AccordionTrigger
-              className="text-left text-base font-semibold hover:no-underline [&[data-state=open]>svg]:rotate-180"
+              className="text-left text-base font-semibold hover:no-underline"
               data-testid={`${testIdPrefix}-category-trigger-${section.slug}`}
             >
               <span className="flex flex-1 items-center justify-between gap-3 pr-3">
@@ -138,10 +137,6 @@ export function HomeFaqSection({
                   {formatQuestionCount(section.items.length)}
                 </span>
               </span>
-              <ChevronDown
-                className="size-4 shrink-0 text-muted-foreground transition-transform duration-200"
-                aria-hidden="true"
-              />
             </AccordionTrigger>
             <AccordionContent className="pb-4">
               <Accordion

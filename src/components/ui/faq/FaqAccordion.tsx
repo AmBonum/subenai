@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { ChevronDown, type LucideIcon } from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 
 import {
   Accordion,
@@ -166,7 +166,7 @@ export function FaqAccordion({
               data-testid={`${testIdPrefix}-item-${item.key}`}
             >
               <AccordionTrigger
-                className="group/trigger gap-3 text-left text-base font-semibold hover:no-underline [&[data-state=open]>svg]:rotate-180 [&>svg]:hidden"
+                className="gap-3 text-left text-base font-semibold hover:no-underline hover:[&>svg]:text-primary"
                 data-testid={`${testIdPrefix}-trigger-${item.key}`}
               >
                 <span className="flex flex-1 items-start gap-3">
@@ -192,10 +192,6 @@ export function FaqAccordion({
                     </span>
                   </span>
                 </span>
-                <ChevronDown
-                  className="size-4 shrink-0 text-muted-foreground transition-transform duration-200 group-hover/trigger:text-primary"
-                  aria-hidden="true"
-                />
               </AccordionTrigger>
               <AccordionContent
                 className="pl-10 text-sm leading-relaxed text-muted-foreground"
