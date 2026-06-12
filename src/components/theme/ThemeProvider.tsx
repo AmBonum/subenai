@@ -1,16 +1,8 @@
-// Light / Dark / System theme state for the whole app.
-//
-// `theme` is the user's choice (persisted to localStorage under
-// `subenai-theme`); `resolvedTheme` is the concrete mode after resolving
-// "system" against the OS preference. On every change we toggle the
-// `.dark` class on <html> so Tailwind's `@custom-variant dark (&:is(.dark *))`
-// and the `.dark { ... }` palette in styles.css take effect.
-//
-// No-flash: the inline script in `index.html`'s head applies `.dark`
-// before first paint (this app client-mounts via src/main.tsx, so a
-// route-level head() script would run too late). This provider only has
-// to keep the class in sync afterwards. The initial state reads the same
-// localStorage key so the two never disagree.
+// No-flash invariant: the inline script in `index.html`'s head applies
+// `.dark` before first paint (this app client-mounts via src/main.tsx, so
+// a route-level head() script would run too late). It must stay in exact
+// lockstep with this provider: same storage key, same "system" default,
+// same matchMedia query.
 /* eslint-disable react-refresh/only-export-components */
 import {
   createContext,

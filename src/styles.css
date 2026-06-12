@@ -1,7 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Match the .dark element itself too, not just descendants — otherwise a
+   dark: utility placed directly on <html> would silently never apply. */
+@custom-variant dark (&:is(.dark, .dark *));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

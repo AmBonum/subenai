@@ -99,6 +99,30 @@ describe("ThemeProvider", () => {
     expect(isDark()).toBe(false);
   });
 
+  it("an OS change while the theme is pinned does NOT flip the class", async () => {
+    const mm = installMatchMedia(false);
+    const user = userEvent.setup();
+    render(
+      <ThemeProvider>
+        <ThemeToggle />
+      </ThemeProvider>,
+    );
+
+    await user.click(screen.getByTestId("theme-toggle-trigger"));
+    await user.click(await screen.findByTestId("theme-toggle-option-light"));
+    expect(isDark()).toBe(false);
+
+    mm.emit(true);
+    expect(isDark()).toBe(false);
+
+    await user.click(screen.getByTestId("theme-toggle-trigger"));
+    await user.click(await screen.findByTestId("theme-toggle-option-dark"));
+    expect(isDark()).toBe(true);
+
+    mm.emit(false);
+    expect(isDark()).toBe(true);
+  });
+
   it("rehydrates the persisted choice on mount", () => {
     installMatchMedia(false);
     window.localStorage.setItem(THEME_STORAGE_KEY, "dark");

@@ -1,8 +1,6 @@
-// Light / Dark / System picker. Dropdown trigger shows the icon for the
-// active *choice* (sun / moon / monitor); the menu lists all three with a
-// check on the current one. Slovak labels via the marketing `theme`
-// namespace (eager-loaded, so it works in both the public header and the
-// /app shell without a second bundle).
+// Labels come from the marketing `theme` namespace because it is
+// eager-loaded — the toggle renders in the public header and the /app
+// shell without pulling a second i18n bundle.
 import { Check, Monitor, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
