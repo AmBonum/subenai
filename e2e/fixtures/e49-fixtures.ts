@@ -25,7 +25,11 @@ export type Uuid = string;
 // Users — must match `supabase/scripts/seed-e49-e2e-users.sql`.
 // ---------------------------------------------------------------------------
 
-export const E49_PASSWORD = "E2E-e49-pwd-do-not-reuse";
+// LOCAL Docker Supabase only. The literal default is fine for the
+// throwaway local stack; for any shared/remote project the password
+// must come from the env override and never be committed (2026-06-12
+// security audit — the old literal was seeded to prod and burned).
+export const E49_PASSWORD = process.env.E2E_E49_PASSWORD ?? "E2E-e49-pwd-do-not-reuse";
 
 export const E49_USERS = {
   educatorA: {

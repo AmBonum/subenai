@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { jsonLdString } from "@/lib/seo/json-ld";
 
 import { SITE_ORIGIN } from "@/config/site";
 import { supabase } from "@/integrations/supabase/client";
@@ -86,7 +87,7 @@ export const Route = createFileRoute("/s/$slug")({
       scripts: [
         {
           type: "application/ld+json",
-          children: JSON.stringify({
+          children: jsonLdString({
             "@context": "https://schema.org",
             "@type": "WebPage",
             name: page.title,

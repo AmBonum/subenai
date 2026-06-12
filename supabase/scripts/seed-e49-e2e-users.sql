@@ -2,8 +2,11 @@
 -- E49 e2e test users — TU-A, TU-B, TU-Resp, TU-Admin
 -- ============================================================================
 --
--- Run once per Supabase project (local OR prod) via the dashboard SQL editor.
--- Idempotent: re-running ON CONFLICT-merges existing rows.
+-- LOCAL Docker Supabase ONLY (a guard below refuses to run where the
+-- prod-only audit-bot account exists). Idempotent: re-running
+-- ON CONFLICT-merges existing rows. The prod-smoke canary needs ONLY
+-- TU-A on prod — provision it deliberately with a 1Password secret via
+-- the documented overrides, never with the local default password.
 --
 -- Reconciles pre-existing accounts: if any e2e email already lives under a
 -- non-deterministic UUID (e.g. a developer signed up through the UI before
@@ -30,12 +33,14 @@
 -- shared with manual audits per `.claude/CLAUDE.md`. Deleting / overwriting
 -- it would break that flow.
 --
--- Credentials (stable; mirrored in `e2e/fixtures/e49-fixtures.ts`)
+-- Credentials (stable e-mails; mirrored in `e2e/fixtures/e49-fixtures.ts`)
 -- ----------------------------------------------------------------
---   TU-A:     e2e-e49-educator-a@subenai.test  /  E2E-e49-pwd-do-not-reuse
---   TU-B:     e2e-e49-educator-b@subenai.test  /  E2E-e49-pwd-do-not-reuse
---   TU-Resp:  e2e-e49-respondent@subenai.test  /  E2E-e49-pwd-do-not-reuse
---   TU-Admin: e2e-e49-admin@subenai.test       /  E2E-e49-pwd-do-not-reuse
+--   TU-A:     e2e-e49-educator-a@subenai.test
+--   TU-B:     e2e-e49-educator-b@subenai.test
+--   TU-Resp:  e2e-e49-respondent@subenai.test
+--   TU-Admin: e2e-e49-admin@subenai.test
+-- Password: local default baked into the DO block below; overridable via
+-- `SET app.e49_seed_password = '...'` (mandatory for anything non-local).
 --
 -- UUIDs are deterministic and shaped `e2e0001-e49a-4001-8001-*` so the
 -- teardown can prefix-match via the canonical list in
@@ -45,7 +50,15 @@ BEGIN;
 
 DO $$
 DECLARE
-  v_password text := 'E2E-e49-pwd-do-not-reuse';
+  -- LOCAL-ONLY default. For any non-local project the password MUST be
+  -- injected per session and never committed:
+  --   SET app.e49_seed_password = '<from 1Password>';
+  -- (2026-06-12 security audit: the previous literal lived in this PUBLIC
+  -- repo while the accounts existed on prod — burned and rotated.)
+  v_password text := coalesce(
+    nullif(current_setting('app.e49_seed_password', true), ''),
+    'E2E-e49-pwd-do-not-reuse'
+  );
   v_users    jsonb := jsonb_build_array(
     jsonb_build_object(
       'id',          'e2e00001-e49a-4001-8001-0000aaaaaa01',
@@ -78,6 +91,21 @@ DECLARE
   v_display  text;
   v_is_admin boolean;
 BEGIN
+  -- PRODUCTION GUARD (2026-06-12 security audit). audit-bot exists only
+  -- on the production project, so its presence identifies prod. Seeding
+  -- well-known e2e accounts (one of them admin-role) onto prod with a
+  -- repo-committed default password is exactly the incident this guard
+  -- prevents. To intentionally provision the prod-smoke TU-A account,
+  -- set BOTH a real secret password AND the explicit override:
+  --   SET app.e49_seed_password = '<from 1Password>';
+  --   SET app.e49_seed_allow_prod = 'yes';
+  IF EXISTS (SELECT 1 FROM auth.users WHERE email = 'audit-bot@subenai.test')
+     AND coalesce(current_setting('app.e49_seed_allow_prod', true), '') <> 'yes' THEN
+    RAISE EXCEPTION 'E49 seed: this project looks like PRODUCTION (audit-bot exists). '
+      'This seed is LOCAL-ONLY. To provision prod-smoke users intentionally, set '
+      'app.e49_seed_password to a real secret AND app.e49_seed_allow_prod = ''yes''.';
+  END IF;
+
   FOR v_user IN SELECT * FROM jsonb_array_elements(v_users)
   LOOP
     v_user_id  := (v_user->>'id')::uuid;

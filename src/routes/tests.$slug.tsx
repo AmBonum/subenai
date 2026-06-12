@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { jsonLdString } from "@/lib/seo/json-ld";
 import { lazy, Suspense, useState } from "react";
 import { ListChecks, Target, Building2 } from "lucide-react";
 
@@ -68,7 +69,7 @@ export const Route = createFileRoute("/tests/$slug")({
       scripts: [
         {
           type: "application/ld+json",
-          children: JSON.stringify(buildPackQuizJsonLd(pack)),
+          children: jsonLdString(buildPackQuizJsonLd(pack)),
         },
       ],
     };

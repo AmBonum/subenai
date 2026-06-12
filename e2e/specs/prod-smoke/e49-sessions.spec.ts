@@ -25,6 +25,13 @@ test.skip(
   "prod smoke only — set CI_PROD_SMOKE=1 to enable (hits production)",
 );
 
+// The TU-A password was rotated out of the repo (2026-06-12 security
+// audit) — it now arrives only via the E2E_E49_PROD_PASSWORD secret.
+test.skip(
+  !process.env.E2E_E49_PROD_PASSWORD,
+  "E2E_E49_PROD_PASSWORD not set — TU-A credentials come from 1Password / the GitHub Actions secret, never the repo",
+);
+
 test.describe("E49 prod-smoke — /app/tests respondent drill-down", () => {
   test("PS-01: TU-A signs in via /login and lands inside the app shell", async ({ page }) => {
     const pom = new E49ProdSmokePage(page);

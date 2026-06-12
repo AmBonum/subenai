@@ -22,7 +22,12 @@ import { BasePage } from "../BasePage";
 export const E49_PRODSMOKE = {
   ownerId: "e2e00001-e49a-4001-8001-0000aaaaaa01",
   ownerEmail: "e2e-e49-educator-a@subenai.test",
-  ownerPassword: "E2E-e49-pwd-do-not-reuse",
+  // SECURITY (2026-06-12 audit): the original literal shipped in this
+  // PUBLIC repo and was seeded to prod — burned + rotated. The rotated
+  // password lives in 1Password ("subenai e2e-e49 prod") and the
+  // E2E_E49_PROD_PASSWORD GitHub Actions secret; it must never be
+  // committed. The spec skips loudly when the env var is absent.
+  ownerPassword: process.env.E2E_E49_PROD_PASSWORD ?? "",
   testId: "e2e00001-e49a-4001-8001-7e57cab00500",
   shareId: "e2e-e49-prodsmoke-canary",
   title: "E49 prod-smoke canary",

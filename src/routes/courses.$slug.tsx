@@ -1,4 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { jsonLdString } from "@/lib/seo/json-ld";
 import { buildCourseJsonLd } from "@/lib/seo/course-jsonld";
 import { buildBreadcrumbJsonLd } from "@/lib/seo/breadcrumb-jsonld";
 import { SITE_ORIGIN } from "@/config/site";
@@ -49,11 +50,11 @@ export const Route = createFileRoute("/courses/$slug")({
       scripts: [
         {
           type: "application/ld+json",
-          children: JSON.stringify(buildCourseJsonLd(course)),
+          children: jsonLdString(buildCourseJsonLd(course)),
         },
         {
           type: "application/ld+json",
-          children: JSON.stringify(
+          children: jsonLdString(
             buildBreadcrumbJsonLd([
               { name: t("breadcrumb_home"), url: SITE_ORIGIN },
               { name: t("breadcrumb_courses"), url: `${SITE_ORIGIN}/courses` },

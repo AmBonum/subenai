@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { jsonLdString } from "@/lib/seo/json-ld";
 import type { TestPack } from "@/content/test-packs";
 import { fetchPlatformPacks } from "@/lib/platform/pack-queries";
 import { buildTestsFaqJsonLd } from "@/lib/seo/tests-faq-schema";
@@ -44,7 +45,7 @@ export const Route = createFileRoute("/tests/")({
       scripts: [
         {
           type: "application/ld+json",
-          children: JSON.stringify({
+          children: jsonLdString({
             "@context": "https://schema.org",
             "@type": "ItemList",
             name: t("list_name"),
@@ -58,7 +59,7 @@ export const Route = createFileRoute("/tests/")({
         },
         {
           type: "application/ld+json",
-          children: JSON.stringify(
+          children: jsonLdString(
             buildTestsFaqJsonLd(
               (key) => t(`faq_${key}`),
               (key) => t(`faq_a${key.slice(1)}`),

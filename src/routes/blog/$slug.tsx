@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { jsonLdString } from "@/lib/seo/json-ld";
 
 import { SITE_ORIGIN } from "@/config/site";
 import { supabase } from "@/integrations/supabase/client";
@@ -83,11 +84,11 @@ export const Route = createFileRoute("/blog/$slug")({
       scripts: [
         {
           type: "application/ld+json",
-          children: JSON.stringify(buildArticleJsonLd(post)),
+          children: jsonLdString(buildArticleJsonLd(post)),
         },
         {
           type: "application/ld+json",
-          children: JSON.stringify(buildBreadcrumbJsonLd(post)),
+          children: jsonLdString(buildBreadcrumbJsonLd(post)),
         },
       ],
     };
