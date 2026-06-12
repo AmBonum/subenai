@@ -12,8 +12,9 @@
 // Title + description are Slovak because they are user-facing content the
 // assistant quotes verbatim in answers. Redirect-only routes
 // (/app/digest, /app/recommendations → /app/insights) and transient flows
-// (onboarding, auth callbacks, dynamic share pages) are intentionally
-// absent.
+// (onboarding, auth callbacks, dynamic share pages), and the /docs/app/*
+// stubs (src/lib/docs/manifest.ts — no real content yet) are
+// intentionally absent.
 
 export type RouteAudience = "public" | "app";
 

@@ -42,7 +42,7 @@ const MANIFEST_PATH = resolve(ROOT, ".rag-index-manifest.json");
 // `@cf/baai/bge-m3` emits 1,024-dimensional vectors. Vectorize free tier
 // caps STORED dimensions at 5,000,000; we assert at 3,500,000 (30 %
 // headroom), i.e. max ⌊3,500,000 / 1,024⌋ = 3,417 chunks. The current
-// corpus is ~2,3xx chunks ≈ 2.4 M stored dimensions.
+// corpus is 1,786 chunks ≈ 1.83 M stored dimensions (52 % of budget).
 // ---------------------------------------------------------------------------
 export const EMBEDDING_DIMENSIONS = 1024;
 export const MAX_STORED_DIMENSIONS = 3_500_000;

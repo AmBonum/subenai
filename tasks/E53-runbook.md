@@ -31,6 +31,15 @@ npx wrangler vectorize create scam-chat-rag --dimensions=1024 --metric=cosine
 or dashboard: **Workers & Pages** → **Vectorize** → **Create index** →
 name `scam-chat-rag`, dimensions `1024`, metric `cosine`.
 
+**REQUIRED before the first upsert** — create the metadata index for
+`audience`, otherwise the role-disclosure filter (anon → public only)
+silently matches nothing it should exclude:
+
+```bash
+npx wrangler vectorize create-metadata-index scam-chat-rag \
+  --property-name=audience --type=string
+```
+
 Capacity math (asserted by the index script on every run): the corpus
 is currently 1,786 chunks × 1,024 dims ≈ **1.83 M stored dimensions**;
 the script fails the build above **3.5 M** (30 % headroom under the 5 M
