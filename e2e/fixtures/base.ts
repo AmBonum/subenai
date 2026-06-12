@@ -5,6 +5,7 @@ import { ConsentBanner } from "../poms/shared/ConsentBanner";
 import { ConsentPreferencesDialog } from "../poms/shared/ConsentPreferencesDialog";
 import { SiteHeader } from "../poms/shared/SiteHeader";
 import { SiteFooter } from "../poms/shared/SiteFooter";
+import { ThemeControls } from "../poms/shared/ThemeControls";
 import { NotFoundPage } from "../poms/shared/NotFoundPage";
 import { DocumentHead } from "../poms/shared/DocumentHead";
 import { HomePage } from "../poms/quiz/HomePage";
@@ -96,6 +97,7 @@ type Fixtures = {
   consentDialog: ConsentPreferencesDialog;
   header: SiteHeader;
   footer: SiteFooter;
+  themeControls: ThemeControls;
   notFound: NotFoundPage;
   docHead: DocumentHead;
   podpora: PodporaPage;
@@ -164,6 +166,9 @@ export const test = base.extend<Fixtures>({
   },
   footer: async ({ page }, use) => {
     await use(new SiteFooter(page));
+  },
+  themeControls: async ({ page }, use) => {
+    await use(new ThemeControls(page));
   },
   notFound: async ({ page }, use) => {
     await use(new NotFoundPage(page));
