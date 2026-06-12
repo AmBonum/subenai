@@ -86,26 +86,4 @@ export class ThemeControls {
   get skipLink(): Locator {
     return this.page.getByTestId("skip-to-content-link");
   }
-
-  // ---------------------------------------------------------------------------
-  // Actions
-  // ---------------------------------------------------------------------------
-
-  async selectTheme(mode: ThemeMode): Promise<void> {
-    await this.themeToggleTrigger.click();
-    await this.themeToggleOption(mode).click();
-    await this.themeToggleMenu.waitFor({ state: "hidden" });
-  }
-
-  async selectFont(size: FontSizeOption): Promise<void> {
-    await this.a11yMenuTrigger.click();
-    await this.a11yFontOption(size).click();
-    await this.a11yMenu.waitFor({ state: "hidden" });
-  }
-
-  async selectMotion(state: MotionOption): Promise<void> {
-    await this.a11yMenuTrigger.click();
-    await this.a11yMotionOption(state).click();
-    await this.a11yMenu.waitFor({ state: "hidden" });
-  }
 }

@@ -69,6 +69,7 @@ test.describe("Theme — light/dark/system (E52)", () => {
       await themeControls.themeToggleTrigger.click();
       await expect(themeControls.themeToggleOption("light")).toHaveText(/Svetlý/);
       await themeControls.themeToggleOption("light").click();
+      await expect(themeControls.themeToggleMenu).toBeHidden();
     });
 
     await test.step("Verify .dark is removed and 'light' is persisted", async () => {
