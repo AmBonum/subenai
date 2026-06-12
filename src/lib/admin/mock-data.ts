@@ -120,7 +120,6 @@ export const mockUsers: AdminUser[] = NAMES.map((name, i) => ({
   status: i === 4 ? "suspended" : i === 7 ? "pending" : "active",
   questions_count: Math.floor(seed(i) * 40),
   created_at: daysAgo(Math.floor(seed(i + 1) * 365)),
-  last_active_at: daysAgo(Math.floor(seed(i + 2) * 30)),
 }));
 
 // ---- Answer sets & answers ----------------------------------------------
