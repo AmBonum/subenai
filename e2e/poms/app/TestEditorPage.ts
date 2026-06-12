@@ -98,12 +98,8 @@ export class TestEditorPage extends BasePage {
     return this.page.getByTestId("test-sessions-list-export-csv-button");
   }
 
-  /**
-   * Sonner toast element. The toast has no data-testid by design (3rd-party);
-   * acceptable last-resort per CLAUDE.md for verbatim Slovak copy assertion.
-   */
-  get sonnerToast() {
-    return this.page.locator("[data-sonner-toast]");
+  get exportCsvErrorToast() {
+    return this.page.getByTestId("toast-export-csv-error");
   }
 
   get sessionsEmpty() {

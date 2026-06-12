@@ -1101,7 +1101,7 @@ test.describe("E. App educator shell — CSV export error", () => {
     });
 
     await test.step("Verify sonner toast with verbatim copy", async () => {
-      await expect(testEditor.sonnerToast).toContainText("Export zlyhal. Skús to znova.");
+      await expect(testEditor.exportCsvErrorToast).toHaveText("Export zlyhal. Skús to znova.");
     });
 
     await test.step("Verify the export button remains enabled", async () => {

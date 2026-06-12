@@ -31,7 +31,8 @@
     "not_published": "This test is not yet published.",
     "rate_limited": "Too many attempts from this IP. Please try again later.",
     "back_home": "Back to home",
-    "submit_failed": "Could not submit the answer. Please try again."
+    "submit_failed": "Could not submit the answer. Please try again.",
+    "start_failed": "Could not start the test. Please try again."
   },
   "password_gate": {
     "title": "This test is password-protected",

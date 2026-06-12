@@ -129,7 +129,7 @@ export function TakeTestFlow({
       setQuestionStart(Date.now());
       setStage("questions");
     } catch {
-      setSubmitError(tErr("submit_failed"));
+      setSubmitError(tErr("start_failed"));
     } finally {
       setSubmitting(false);
     }

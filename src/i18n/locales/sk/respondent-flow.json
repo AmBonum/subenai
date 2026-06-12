@@ -31,7 +31,8 @@
     "not_published": "Tento test ešte nie je publikovaný.",
     "rate_limited": "Príliš veľa pokusov z tejto IP. Skús to neskôr.",
     "back_home": "Späť na úvod",
-    "submit_failed": "Nepodarilo sa odoslať odpoveď. Skús to znova."
+    "submit_failed": "Nepodarilo sa odoslať odpoveď. Skús to znova.",
+    "start_failed": "Test sa nepodarilo spustiť. Skús to znova."
   },
   "password_gate": {
     "title": "Test je chránený heslom",

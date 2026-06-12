@@ -118,12 +118,14 @@ describe("TakeTestFlow — Supabase RPC wiring", () => {
     });
   });
 
-  it("shows a submit error when start_respondent_session fails", async () => {
+  it("shows the start-specific error copy when start_respondent_session fails", async () => {
     rpcMock.mockResolvedValueOnce({ data: null, error: { message: "test_not_found" } });
     renderFlow();
     await completeIntake();
     await waitFor(() => {
-      expect(screen.getByTestId("respondent-flow-submit-error")).toBeInTheDocument();
+      expect(screen.getByTestId("respondent-flow-submit-error")).toHaveTextContent(
+        "Test sa nepodarilo spustiť. Skús to znova.",
+      );
     });
   });
 

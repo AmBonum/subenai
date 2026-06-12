@@ -153,9 +153,8 @@ list without that respondent → delete again → row gone, error alert gone.
 **ERR-15 — /app sessions CSV export failure shows the toast.**
 Use the educator app-shell fixture (setupAppShell) + mocked sessions list.
 Stub `GET **/api/tests/export-sessions*` → 500. Click
-`test-sessions-list-export-csv-button` → assert a sonner toast with „Export
-zlyhal. Skús to znova.“ (text locator inside a POM getter — the toast has no
-testid; acceptable as the documented last-resort for verbatim Slovak copy).
+`test-sessions-list-export-csv-button` → assert the toast message
+(`toast-export-csv-error`) reads „Export zlyhal. Skús to znova.“ verbatim.
 Button remains enabled.
 
 ---

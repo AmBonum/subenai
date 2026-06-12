@@ -113,9 +113,13 @@ export function SessionsList({ testId, status, shareId, onRequestPublish }: Prop
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      toast.success(t("export_csv_success", { count: total }));
+      toast.success(
+        <span data-testid="toast-export-csv-success">
+          {t("export_csv_success", { count: total })}
+        </span>,
+      );
     } catch {
-      toast.error(t("export_csv_error"));
+      toast.error(<span data-testid="toast-export-csv-error">{t("export_csv_error")}</span>);
     }
   };
 
