@@ -11,17 +11,25 @@ function readPublic(file: string): string {
 describe("AH-9.9 sitemap.xml", () => {
   const xml = readPublic("sitemap.xml");
 
-  it("includes the seeded published CMS slug /s/<slug>", () => {
-    expect(xml).toContain("https://subenai.sk/s/o-projekte-rozsirene");
+  it("includes the DB-backed pack detail pages /tests/<slug>", () => {
+    // Since 2026-06-12 the committed sitemap is regenerated WITH prod
+    // Supabase env vars (set -a; source .env; npm run build) so it
+    // carries live data: 15 platform packs + per-article blog URLs.
+    // Prod cms_pages is empty, so no /s/<slug> entries — the route
+    // noindexes missing slugs and listing them would point crawlers
+    // at 404s. When the first real CMS page is published, regenerate.
+    expect(xml).toContain("https://subenai.sk/tests/heslo-2fa");
+    expect(xml).toContain("https://subenai.sk/tests/seniori");
+  });
+
+  it("does not include /s/<slug> pages that are unpublished in prod", () => {
+    expect(xml).not.toMatch(/<loc>https:\/\/subenai\.sk\/s\//);
   });
 
   it("E30 — generator script exports both Supabase + mock CMS loaders", () => {
-    // Sanity-check the senior fix: the generator must still produce
-    // the well-known seed slug even when Supabase env vars are
-    // missing (CI without secrets / offline build). The committed
-    // sitemap is itself proof — it was generated WITHOUT env vars
-    // and still contains /s/o-projekte-rozsirene from the mock
-    // fallback.
+    // The generator must still handle missing Supabase env vars
+    // (CI without secrets / offline build) via the mock fallback
+    // instead of failing the build.
     const generatorSrc = readFileSync(resolve(ROOT, "scripts", "generate-sitemap.mjs"), "utf-8");
     expect(generatorSrc).toContain("loadCmsPublishedSlugsFromSupabase");
     expect(generatorSrc).toContain("loadCmsPublishedSlugsFromMock");
