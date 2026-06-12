@@ -151,6 +151,14 @@
   --glow-shadow: 0 0 50px -12px oklch(0.72 0.19 130 / 0.35);
   --card-shadow: 0 20px 50px -24px oklch(0.2 0.03 265 / 0.18),
     0 1px 0 0 oklch(1 0 0 / 0.6) inset;
+
+  /* Composed from per-theme vars, so one definition serves both modes.
+     Fill gradient sits UNDER dark-ink icons (text-primary-foreground);
+     the text-clipped variant needs darker stops in light mode because
+     the ~0.72-L fill lime reads at only ~2.3:1 as text on white. */
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
+  --gradient-text-primary: linear-gradient(135deg, oklch(0.55 0.17 130), oklch(0.5 0.16 152));
+  --shadow-elegant: 0 10px 30px -10px color-mix(in oklab, var(--primary) 40%, transparent);
 }
 
 .dark {
@@ -233,6 +241,9 @@
   --glow-shadow: 0 0 60px -10px oklch(0.88 0.22 130 / 0.55);
   --card-shadow: 0 20px 50px -20px oklch(0 0 0 / 0.6),
     0 1px 0 0 oklch(1 0 0 / 0.05) inset;
+
+  /* On dark the bright fill lime doubles fine as text. */
+  --gradient-text-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
 }
 
 @layer base {
@@ -250,6 +261,14 @@
   ::selection {
     background: oklch(0.88 0.22 130 / 0.35);
     color: var(--color-foreground);
+  }
+
+  /* E52 a11y — token-based focus ring visible in both themes. Components
+     with their own focus-visible utilities (shadcn `outline-none` + ring)
+     override this in the later utilities layer. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 
   /* Brand-tinted native date input.
@@ -294,6 +313,12 @@
   .shadow-card {
     box-shadow: var(--shadow-card);
   }
+  .text-gradient-primary {
+    background-image: var(--gradient-text-primary);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
   .text-balance {
     text-wrap: balance;
   }
@@ -334,6 +359,21 @@
   100% { transform: scale(1); }
 }
 .animate-otp-success { animation: otp-success 0.45s ease-out both; }
+
+/* E52 a11y — reduced motion. Keyed off the `.reduce-motion` class ONLY:
+   AccessibilityProvider (and the index.html no-flash bootstrap) resolve the
+   OS `prefers-reduced-motion` preference into this class when the stored
+   choice is "system", so there is a single source of truth instead of a
+   duplicated media query. Keyframes above stay defined — they are
+   neutralized, not removed. */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
 
 @media print {
   /* Print-friendly layout for course one-pagers and policy pages.
