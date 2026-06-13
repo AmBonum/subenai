@@ -31,17 +31,26 @@ const SECTION_KEYS: SectionKey[] = [
   "security",
 ];
 
-// Chip text uses the full-saturation hue (light enough to clear ~7:1 against
-// the dark card background). The previously-used `*-foreground` tokens are
-// dark — designed for SOLID swatches — and rendered the chip labels nearly
-// invisible on the 10–15 % tinted backgrounds.
-const SECTION_TONE: Record<SectionKey, string> = {
-  added: "border-success/50 bg-success/15 text-success",
-  changed: "border-primary/50 bg-primary/15 text-primary",
-  fixed: "border-warning/50 bg-warning/15 text-warning",
-  removed: "border-destructive/50 bg-destructive/15 text-destructive",
-  deprecated: "border-muted bg-muted text-muted-foreground",
-  security: "border-destructive/60 bg-destructive/20 text-destructive",
+// Badge palette. The text uses the full-saturation semantic hue, which is dark
+// in the light theme and light in the dark theme — clearing AA against the
+// matching 12 % tint in both. The leading dot is the solid hue at full
+// strength so the category reads at a glance even before the label.
+const SECTION_TONE: Record<SectionKey, { chip: string; dot: string }> = {
+  added: { chip: "border-success/40 bg-success/12 text-success", dot: "bg-success" },
+  changed: { chip: "border-primary/40 bg-primary/12 text-primary", dot: "bg-primary" },
+  fixed: { chip: "border-warning/45 bg-warning/12 text-warning", dot: "bg-warning" },
+  removed: {
+    chip: "border-destructive/40 bg-destructive/12 text-destructive",
+    dot: "bg-destructive",
+  },
+  deprecated: {
+    chip: "border-border bg-muted text-muted-foreground",
+    dot: "bg-muted-foreground",
+  },
+  security: {
+    chip: "border-destructive/55 bg-destructive/15 text-destructive",
+    dot: "bg-destructive",
+  },
 };
 
 export const Route = createLazyFileRoute("/changelog")({
@@ -57,31 +66,36 @@ function ZmenyPage() {
   const latestEntry = entries[0];
   return (
     <div className="min-h-screen bg-background">
-      <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
-        <header className="mb-10">
+      <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-20">
+        <header className="mb-14">
           <Link
             to="/"
             data-testid="changelog-back-home"
             aria-label={t("zmeny.back_home_aria")}
-            className={`inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground ${FOCUS_RING}`}
+            className={`inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground ${FOCUS_RING}`}
           >
             <span aria-hidden>←</span> {t("zmeny.back_home")}
           </Link>
+          <p className="mt-8 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            {t("zmeny.kicker")}
+          </p>
           <h1
             data-testid="changelog-heading"
-            className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
+            className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
           >
             {t("zmeny.title")}
           </h1>
           <p
             data-testid="changelog-lead"
-            className="mt-3 text-base text-muted-foreground sm:text-lg"
+            className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
             {t("zmeny.lead")}
             {latestEntry ? (
               <>
                 {t("zmeny.last_deploy_prefix")}
-                <time dateTime={latestEntry.date}>{formatDate(latestEntry.date)}</time>
+                <time className="text-foreground" dateTime={latestEntry.date}>
+                  {formatDate(latestEntry.date)}
+                </time>
                 {t("zmeny.last_deploy_version", { version: latestEntry.version })}
               </>
             ) : null}
@@ -91,14 +105,18 @@ function ZmenyPage() {
         {entries.length === 0 ? (
           <p
             data-testid="changelog-empty"
-            className="rounded-2xl border border-border/60 bg-card p-6 text-sm text-muted-foreground"
+            className="rounded-2xl border border-border/60 bg-card p-8 text-center text-sm text-muted-foreground"
           >
             {t("zmeny.empty")}
           </p>
         ) : (
-          <ol data-testid="changelog-list" className="space-y-8" aria-label={t("zmeny.list_aria")}>
-            {entries.map((entry) => (
-              <VersionBlock key={entry.version} entry={entry} />
+          <ol
+            data-testid="changelog-list"
+            aria-label={t("zmeny.list_aria")}
+            className="relative ms-2 border-s border-border/70 sm:ms-3"
+          >
+            {entries.map((entry, i) => (
+              <VersionBlock key={entry.version} entry={entry} isLatest={i === 0} index={i} />
             ))}
           </ol>
         )}
@@ -107,7 +125,15 @@ function ZmenyPage() {
   );
 }
 
-function VersionBlock({ entry }: { entry: ChangelogEntry }) {
+function VersionBlock({
+  entry,
+  isLatest,
+  index,
+}: {
+  entry: ChangelogEntry;
+  isLatest: boolean;
+  index: number;
+}) {
   const t = tFor("marketing");
   const sections = SECTION_KEYS.filter((key) => entry[key].length > 0);
   const anchor = `v${entry.version}`;
@@ -116,17 +142,27 @@ function VersionBlock({ entry }: { entry: ChangelogEntry }) {
     <li
       id={anchor}
       data-testid={`changelog-entry-${anchor}`}
-      className="space-y-4 rounded-2xl border border-border/60 bg-card p-6 sm:p-8 scroll-mt-24"
+      style={{ animationDelay: `${Math.min(index, 6) * 60}ms` }}
+      className="relative scroll-mt-24 ps-7 pb-12 last:pb-0 motion-safe:animate-[changelog-rise_0.5s_ease-out_both] sm:ps-10"
     >
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 className="group text-xl font-bold text-foreground">
+      <span
+        aria-hidden
+        className={`absolute -start-[6.5px] top-1.5 size-3 rounded-full ring-4 ring-background ${
+          isLatest ? "bg-primary" : "border-2 border-border bg-card"
+        }`}
+      />
+
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <h2 className="group inline-flex">
           <a
             href={`#${anchor}`}
             data-testid={`changelog-entry-permalink-${anchor}`}
             aria-label={t("zmeny.permalink_aria", { version: entry.version })}
-            className={`inline-flex items-baseline gap-2 hover:underline underline-offset-2 ${FOCUS_RING}`}
+            className={`inline-flex items-center gap-2 ${FOCUS_RING}`}
           >
-            subenai {entry.version}
+            <span className="rounded-md border border-border/70 bg-muted/60 px-2 py-0.5 font-mono text-sm font-semibold text-foreground transition-colors group-hover:border-primary/50">
+              {entry.version}
+            </span>
             <span
               aria-hidden
               className="text-base font-normal text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
@@ -135,44 +171,63 @@ function VersionBlock({ entry }: { entry: ChangelogEntry }) {
             </span>
           </a>
         </h2>
-        <time
-          dateTime={entry.date}
-          data-testid={`changelog-entry-date-${anchor}`}
-          className="text-sm text-muted-foreground"
-        >
-          {formatDate(entry.date)}
-        </time>
+        {isLatest ? (
+          <span
+            data-testid={`changelog-entry-latest-${anchor}`}
+            className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/12 px-2.5 py-0.5 text-xs font-semibold text-primary"
+          >
+            <span aria-hidden className="size-1.5 rounded-full bg-primary" />
+            {t("zmeny.latest_badge")}
+          </span>
+        ) : null}
       </div>
+
+      <time
+        dateTime={entry.date}
+        data-testid={`changelog-entry-date-${anchor}`}
+        className="mt-2 block text-sm font-medium text-muted-foreground"
+      >
+        {formatDate(entry.date)}
+      </time>
 
       {sections.length === 0 ? (
         <p
           data-testid={`changelog-entry-empty-${anchor}`}
-          className="text-sm text-muted-foreground"
+          className="mt-4 text-sm italic text-muted-foreground"
         >
           {t("zmeny.empty_version")}
         </p>
       ) : (
-        sections.map((key) => (
-          <section
-            key={key}
-            data-testid={`changelog-section-${anchor}-${key}`}
-            className="space-y-2"
-          >
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <span
-                data-testid={`changelog-section-chip-${anchor}-${key}`}
-                className={`inline-flex rounded-md border px-2 py-0.5 text-xs font-bold uppercase tracking-wide ${SECTION_TONE[key]}`}
-              >
-                {sectionLabel(t, key)}
-              </span>
-            </h3>
-            <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-card-foreground">
-              {entry[key].map((item, i) => (
-                <li key={i} dangerouslySetInnerHTML={{ __html: renderInline(item) }} />
-              ))}
-            </ul>
-          </section>
-        ))
+        <div className="mt-5 space-y-5">
+          {sections.map((key) => (
+            <section
+              key={key}
+              data-testid={`changelog-section-${anchor}-${key}`}
+              className="space-y-2.5"
+            >
+              <h3>
+                <span
+                  data-testid={`changelog-section-chip-${anchor}-${key}`}
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[0.7rem] font-bold uppercase tracking-wide ${SECTION_TONE[key].chip}`}
+                >
+                  <span aria-hidden className={`size-1.5 rounded-full ${SECTION_TONE[key].dot}`} />
+                  {sectionLabel(t, key)}
+                </span>
+              </h3>
+              <ul className="space-y-2 text-sm leading-relaxed text-card-foreground">
+                {entry[key].map((item, i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <span
+                      aria-hidden
+                      className="mt-[0.5em] size-1 shrink-0 rounded-full bg-muted-foreground/50"
+                    />
+                    <span dangerouslySetInnerHTML={{ __html: renderInline(item) }} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
       )}
     </li>
   );
@@ -209,8 +264,11 @@ function renderInline(value: string): string {
     .replace(
       /`([^`]+)`/g,
       (_, code) =>
-        `<code class="rounded bg-muted px-1 py-0.5 text-xs text-foreground">${code}</code>`,
+        `<code class="rounded bg-muted px-1 py-0.5 font-mono text-xs text-foreground">${code}</code>`,
     )
-    .replace(/\*\*([^*]+)\*\*/g, (_, bold) => `<strong class="text-foreground">${bold}</strong>`)
+    .replace(
+      /\*\*([^*]+)\*\*/g,
+      (_, bold) => `<strong class="font-semibold text-foreground">${bold}</strong>`,
+    )
     .replace(/\*([^*]+)\*/g, (_, em) => `<em>${em}</em>`);
 }

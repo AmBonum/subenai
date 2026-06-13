@@ -360,6 +360,11 @@
 }
 .animate-otp-success { animation: otp-success 0.45s ease-out both; }
 
+@keyframes changelog-rise {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: none; }
+}
+
 /* E52 a11y — reduced motion. Keyed off the `.reduce-motion` class ONLY:
    AccessibilityProvider (and the index.html no-flash bootstrap) resolve the
    OS `prefers-reduced-motion` preference into this class when the stored

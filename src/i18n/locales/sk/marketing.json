@@ -843,6 +843,8 @@
     "jsonld_description": "Verejný changelog projektu subenai s prehľadom všetkých verzií, nových funkcií, opráv a bezpečnostných aktualizácií. Žiadne tiché updaty.",
     "back_home": "Späť na domov",
     "back_home_aria": "Späť na domovskú stránku",
+    "kicker": "Verejný changelog",
+    "latest_badge": "Najnovšie",
     "title": "Zmeny a verzie",
     "lead": "Každú zmenu v subenai zverejňujeme — nové funkcie, opravy aj bezpečnostné úpravy. Žiadne tiché updaty.",
     "last_deploy_prefix": " Naposledy nasadené ",

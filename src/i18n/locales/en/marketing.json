@@ -643,6 +643,8 @@
     "meta_description": "Public changelog for the subenai project — what was added, changed and fixed in each version. Updated with every deploy.",
     "jsonld_name": "Changelog — subenai",
     "back_home": "← Back to home",
+    "kicker": "Public changelog",
+    "latest_badge": "Latest",
     "title": "Changelog",
     "lead": "A public list of what has changed in the project over the past period.",
     "last_deploy_prefix": " Last deploy: ",
