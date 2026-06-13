@@ -32,7 +32,10 @@ export interface ChatMessage {
 
 export interface PhotoEvidence {
   id: string;
+  /** Downscaled thumbnail for the chat strip. */
   dataUrl: string;
+  /** Full-res original for the police-report PDF (local only, never uploaded). */
+  originalDataUrl: string;
   findings: string | null;
   status: "analyzing" | "done" | "error" | "skipped";
 }
@@ -139,7 +142,13 @@ export function useScamChat(getTurnstileToken: () => string | null): UseScamChat
       const id = nextId();
       setPhotos((prev) => [
         ...prev,
-        { id, dataUrl: downscaled.dataUrl, findings: null, status: "analyzing" },
+        {
+          id,
+          dataUrl: downscaled.dataUrl,
+          originalDataUrl: downscaled.originalDataUrl,
+          findings: null,
+          status: "analyzing",
+        },
       ]);
       const res = await uploadPhoto(downscaled.blob, index);
       setPhotos((prev) =>

@@ -6,7 +6,7 @@
 export type TriageRisk = "low" | "medium" | "high";
 
 export interface ScamReportEvidencePhoto {
-  /** data: URL from a local File — never an uploaded original. */
+  /** Full-res data: URL of the local original File — never uploaded. */
   dataUrl: string;
   /** Model-extracted findings for this photo (E53.5). */
   findings: string;

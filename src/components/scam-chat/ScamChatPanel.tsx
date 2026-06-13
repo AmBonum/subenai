@@ -213,7 +213,8 @@ function TriageBlock({ triage, photos }: { triage: TriageAssessment; photos: Pho
         nextSteps: triage.next_steps,
         photos: photos
           .filter((p) => p.status === "done")
-          .map((p) => ({ dataUrl: p.dataUrl, findings: p.findings ?? "" })),
+          // Full-res original for the report; chat keeps the downscaled thumb.
+          .map((p) => ({ dataUrl: p.originalDataUrl, findings: p.findings ?? "" })),
       });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");

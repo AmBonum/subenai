@@ -19,16 +19,23 @@ export function precheckPhoto(file: File): PhotoPrecheckError | null {
 }
 
 export interface DownscaledPhoto {
-  /** Downscaled JPEG blob to upload for analysis. */
+  /** Downscaled JPEG blob — the ONLY thing uploaded (for vision analysis). */
   blob: Blob;
-  /** data: URL thumbnail kept locally for chat + PDF embedding. */
+  /** Downscaled data: URL — the chat thumbnail. */
   dataUrl: string;
+  /**
+   * Full-resolution data: URL of the ORIGINAL file, kept locally for the
+   * police-report PDF only. Never uploaded — a police filing wants the
+   * evidence at original quality, while analysis only needs the ≤1600px copy.
+   */
+  originalDataUrl: string;
 }
 
 // Downscales the longest edge to ≤ PHOTO_MAX_DIMENSION and re-encodes as
 // JPEG. Screenshots (the dominant evidence type) stay legible. Runs fully
 // client-side via a canvas; no bytes leave until the explicit upload.
 export async function downscalePhoto(file: File): Promise<DownscaledPhoto> {
+  const originalDataUrl = await readFileAsDataUrl(file);
   const bitmap = await loadBitmap(file);
   const scale = Math.min(1, PHOTO_MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
   const width = Math.max(1, Math.round(bitmap.width * scale));
@@ -46,7 +53,16 @@ export async function downscalePhoto(file: File): Promise<DownscaledPhoto> {
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("encode_failed"))), "image/jpeg", 0.82);
   });
   const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
-  return { blob, dataUrl };
+  return { blob, dataUrl, originalDataUrl };
+}
+
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error("read_failed"));
+    reader.readAsDataURL(file);
+  });
 }
 
 async function loadBitmap(file: File): Promise<ImageBitmap | HTMLImageElement> {
