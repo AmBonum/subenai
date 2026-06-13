@@ -1,6 +1,7 @@
 // E53.7 — rate limits, quotas + neuron budget ledger: limit boundaries,
 // soft model switch, hard fail-closed 429 (verbatim string), day
-// rollover, missing-KV fail-closed, concurrent overshoot tolerance.
+// rollover, missing-KV → 503 service_unavailable (distinct from quota),
+// concurrent overshoot tolerance.
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
@@ -13,6 +14,7 @@ import {
   DEFAULT_HARD_NEURONS,
   DEFAULT_SOFT_NEURONS,
   FAIL_CLOSED_MESSAGE,
+  SERVICE_UNAVAILABLE_MESSAGE,
   LEDGER_TTL_SECONDS,
 } from "../../functions/_lib/scam-chat/budget";
 import { NEURON_ESTIMATES } from "../../functions/_lib/scam-chat/run-ai";
@@ -81,10 +83,10 @@ describe("neuron ledger (unit)", () => {
     expect(todayStamp(now)).toBe("2026-06-14");
   });
 
-  it("missing KV fails CLOSED (status hard, loud log) — free-tier overrun impossible", async () => {
+  it("missing KV → status 'unconfigured' (loud log) — no spend, distinct from quota", async () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const ledger = createNeuronLedger(undefined, { soft: 100, hard: 200 });
-    expect(await ledger.status()).toBe("hard");
+    expect(await ledger.status()).toBe("unconfigured");
     await expect(ledger.record(10)).resolves.toBeUndefined();
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("FAILS CLOSED"));
   });
@@ -166,7 +168,7 @@ describe("gateway budget integration", () => {
     expect(env.SCAM_CHAT_KV.store.get(`sc:neurons:${today()}`)).toBe(String(expected));
   });
 
-  it("missing KV binding → ledger fails closed at the gateway (429 verbatim, zero AI calls)", async () => {
+  it("missing KV binding → 503 service_unavailable at the gateway (zero AI calls)", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     const env: Env & { AI: ReturnType<typeof makeAi> } = {
       ...baseEnv(),
@@ -174,8 +176,10 @@ describe("gateway budget integration", () => {
       SUPPORT_RATE_LIMIT_KV: undefined,
     };
     const res = await onRequestPost({ request: buildRequest({ message: "Je toto podvod?" }), env });
-    expect(res.status).toBe(429);
-    expect(((await res.json()) as { message: string }).message).toBe(FAIL_CLOSED_MESSAGE);
+    expect(res.status).toBe(503);
+    const body = (await res.json()) as { error: string; message: string };
+    expect(body.error).toBe("service_unavailable");
+    expect(body.message).toBe(SERVICE_UNAVAILABLE_MESSAGE);
     expect(env.AI.calls).toHaveLength(0);
   });
 });
@@ -247,14 +251,14 @@ describe("rate limits", () => {
     const make = () =>
       ({ ...baseEnv(), SCAM_CHAT_KV: undefined, SUPPORT_RATE_LIMIT_KV: undefined }) as Env;
     // 10 in-memory slots for this IP; the 11th must be rate-limited
-    // BEFORE the ledger 429 — proving the in-memory fallback engaged.
+    // BEFORE the ledger's 503 — proving the in-memory fallback engaged.
     for (let i = 0; i < 10; i += 1) {
       const res = await onRequestPost({
         request: buildRequest({ message: "Je toto podvod?" }, { ip: "198.51.100.50" }),
         env: make(),
       });
-      expect(res.status).toBe(429); // ledger fail-closed
-      expect(((await res.json()) as { error: string }).error).toBe("quota_exhausted");
+      expect(res.status).toBe(503); // ledger unconfigured (no spend possible)
+      expect(((await res.json()) as { error: string }).error).toBe("service_unavailable");
     }
     const res = await onRequestPost({
       request: buildRequest({ message: "Je toto podvod?" }, { ip: "198.51.100.50" }),

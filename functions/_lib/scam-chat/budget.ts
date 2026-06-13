@@ -16,12 +16,19 @@ import { parsePositiveInt, type SupportRateLimitKV } from "../security";
 export const FAIL_CLOSED_MESSAGE =
   "Asistent má dnes plno. Skúste to, prosím, zajtra — alebo si zatiaľ pozrite naše kurzy o podvodoch.";
 
+// Shown when the KV binding is missing/unreadable — a configuration fault,
+// NOT exhausted budget. Kept distinct from FAIL_CLOSED_MESSAGE so an
+// unwired binding never masquerades as "out of tokens" (it once cost hours
+// of misdiagnosis). The gateway pairs this with HTTP 503 + a loud log.
+export const SERVICE_UNAVAILABLE_MESSAGE =
+  "Asistent je dočasne nedostupný. Skúste to, prosím, o chvíľu.";
+
 export const DEFAULT_SOFT_NEURONS = 5_000;
 export const DEFAULT_HARD_NEURONS = 8_500;
 export const LEDGER_TTL_SECONDS = 86_400;
 const INCIDENT_TTL_SECONDS = 7 * 86_400;
 
-export type LedgerStatus = "ok" | "soft" | "hard";
+export type LedgerStatus = "ok" | "soft" | "hard" | "unconfigured";
 
 export interface NeuronLedger {
   status(): Promise<LedgerStatus>;
@@ -59,7 +66,7 @@ export function createNeuronLedger(
     );
     return {
       async status() {
-        return "hard";
+        return "unconfigured";
       },
       async record() {},
     };

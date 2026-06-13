@@ -19,6 +19,7 @@ import {
   createNeuronLedger,
   FAIL_CLOSED_MESSAGE,
   resolveThresholds,
+  SERVICE_UNAVAILABLE_MESSAGE,
 } from "../../_lib/scam-chat/budget";
 import {
   analyzePhoto,
@@ -113,6 +114,12 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
 
   const ledger = createNeuronLedger(kv, resolveThresholds(env));
   const budgetStatus = await ledger.status();
+  if (budgetStatus === "unconfigured") {
+    return jsonResponse(503, {
+      error: "service_unavailable",
+      message: SERVICE_UNAVAILABLE_MESSAGE,
+    });
+  }
   if (budgetStatus === "hard") {
     return jsonResponse(429, { error: "quota_exhausted", message: FAIL_CLOSED_MESSAGE });
   }
