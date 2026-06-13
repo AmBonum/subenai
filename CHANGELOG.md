@@ -7,105 +7,26 @@ detailov, ciest k súborom alebo technického žargónu.
 Formát vychádza zo [Keep a Changelog 1.1](https://keepachangelog.com/en/1.1.0/).
 Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
-## [Unreleased] — 2026-05-22
+## [Unreleased]
 
-### Vylepšené
-- **Potvrdzovací e-mail po odoslaní žiadosti o podporu** teraz obsahuje presnú kópiu vašej správy: tému, kategóriu, meno (ak ste ho zadali) a samotný text správy.
-- **Footer transakčných e-mailov** teraz správne odkazuje na `podpora@subenai.sk` namiesto zavádzajúceho "Odpovedz priamo na tento e-mail" (e-mail je posielaný z `noreply@subenai.sk`).
+## [1.15.0] — 2026-06-13
 
 ### Pridané
-- **Podvodový poradca — AI asistent na podvody.** Nový plávajúci pomocník, ktorý odpovie na otázky o podvodoch, dokáže preveriť podozrivú správu či situáciu a voliteľne posúdiť priložené fotky (napr. screenshot podvodnej SMS, max 5). Ak z preverenia vyjde podozrenie, asistent vie priamo vo vašom prehliadači vygenerovať PDF hlásenie pre políciu. **Rozhovor neukladáme** — žije iba v otvorenej karte a zatvorením zmizne; fotky sa analyzujú a vzápätí zahodia, na server posielame iba zmenšené kópie, nikdy originály. Pred prvým použitím vás asistent upozorní, aby ste doň nepísali rodné číslo ani heslá. (2026-06-13)
-- **Svetlý a tmavý režim + nastavenia prístupnosti.** Vzhľad stránky si môžete prepnúť na svetlý, tmavý alebo podľa systému. V novom paneli prístupnosti viete zväčšiť písmo a obmedziť animácie (rešpektujeme aj systémové „obmedziť pohyb"). Voľby si pamätáme medzi návštevami. (2026-06-13)
-- **Detail respondenta v `/app/tests/$testId`**: záložka Výsledky teraz zobrazuje stránkovaný zoznam respondentov s filtrom podľa stavu, vyhľadávaním podľa mena a e‑mailu, a triedením podľa skóre alebo času začatia. Kliknutím na "Otvoriť detail" sa otvorí bočný panel s úplným prehľadom: identita respondenta, skóre, čas, IP audit ref a všetky odpovede s farebným označením správnych a nesprávnych. Sumár nad zoznamom prináša tri KPI karty (Spolu respondentov, Dokončené, Priemerné skóre). (2026-05-22)
-- **Export respondentov do CSV** priamo zo záložky Výsledky. Súbor je v UTF‑8 (s BOM, aby Excel správne otvoril diakritiku), bezpečne escapovaný proti CSV injection útokom (formuly začínajúce `=`, `+`, `-`, `@` sú prefixované apostrofom), a obmedzený limitmi proti zneužitiu (50 exportov denne na autora, 100 na IP za hodinu). Export je auditovaný. (2026-05-22)
-- Admin panel: v ľavom menu pri "Žiadosti podpory" sa zobrazuje červený badge s počtom ticketov, ktoré potrebujú pozornosť (status nový alebo znovu otvorený). Aktualizuje sa automaticky každú minútu. (2026-05-22)
-
-### Bezpečnosť
-- CSP rozšírená o Supabase Storage origin v `img-src` a `frame-src` aby admin mohol vidieť prílohy (image + PDF) priamo v detail page bez sťahovania.
-
-### Refactor (interné)
-- Hooky súvisiace s ticketmi podpory v admin paneli sa presunuli z `src/lib/admin/queries.ts` do `src/lib/admin/queries-tickets.ts`. Pôvodný import path naďalej funguje cez deprecation shim — refactor je transparentný pre existujúci kód.
-
-### Pridané (admin)
-- Admin môže exportovať žiadosti podpory ako CSV súbor — server-side endpoint s ochranou pred CSV injection a rate-limit 1/min.
-- **Interné poznámky vo vlákne podpornej žiadosti.** Admin môže pri písaní odpovede zaškrtnúť „Interná poznámka (nepošle sa zákazníkovi)" — správa sa uloží do vlákna len pre tím podpory, zákazník ju v e-maile ani vo svojom prehľade vlákna nikdy neuvidí, žiadny e-mail sa neodošle a stav žiadosti sa nemení. V admin paneli sú interné poznámky vizuálne odlíšené žltohnedým pozadím a štítkom „Interná poznámka". (2026-05-22)
-
-### Pridané (interné)
-- Prod-smoke kanárik pre E49 Phase 1c-4: nový Playwright spec `e2e/specs/prod-smoke/e49-sessions.spec.ts` (8 TCs, PS-01..PS-08 — sign-in TU-A → `/app/tests` → otvorenie canary testu → KPI karty → sessions list → side-sheet open/close → CSV export 200 → sign-out), POM `E49ProdSmokePage`, idempotentný SQL seed `supabase/scripts/seed-e49-prodsmoke-data.sql` (1 test + 3 questions + 3 sessions + 6 answers s prefixom `e2e-e49-prodsmoke-`) a GitHub Actions workflow `.github/workflows/e49-prod-smoke.yml` (workflow_dispatch + push na main pri zmene relevantných ciest) s `if: always()` teardown psql krokom, ktorý vždy vyčistí `e2e-e49-prodsmoke-%` riadky aj po zlyhanom behu.
-- Test pokrytie pre E49 Phase 1c-3 (Layer A — mock-UI): rozšírený `test-sessions-detail.spec.ts` z 19 → ~45 TCs (status/sort filtre, side-sheet rendering detaily, not-found vetvy, null score / null finished_at / score-0 / score-100 / stale-question / dlhé mená / RTL edge shapes, kombinované filter+sort+search, escape/escape-reload, portal cleanup), nový `test-sessions-list.spec.ts` (12 TCs pre `/app/tests` index) a `csv-injection.spec.ts` (UI XSS sweep + serializeCsvRow contract). POM rozšírený o `scoreFormatted`, `staleQuestion`, `rowLabel` a `TestSessionsList` POM. `seedE49TestWithSessions` `extended:true` flag pridáva 6 nových fixtures. Mock supabase envelope: `or=(...)` filter parser + `intake_data->>name` JSON-path accessor + pre-slice count v `Content-Range`. Source: `SessionDetailSheet` vždy renderuje skóre s formatted span, hidené identity v not-found vetve, stale-question placeholder; `SessionsList` truncate + title attribute pre dlhé mená.
-- Test infraštruktúra pre E49 Phase 1c-2: nový Playwright projekt `e2e-live-supabase` (live local Supabase + built bundle + wrangler CF Functions) so setup/teardown lifecycle (boot `supabase start`, seed E49 useri + data, rebuild bundle, spawn preview + wrangler, cleanup po behu). ~20 nových integračných TCs: RLS kontrakty (NEG-02, SEC-19, 2 pozitívne round-tripy), CSV export API (auth/origin/404/rate-limit/download contract/CSV-injection battery), real PostgREST `or()` + JSON-path ilike filtre (POS-11/12/13), audit_log contract (POS + NEG-20 rate-limited zápis nezapisuje audit riadok).
-- Test infraštruktúra pre E49 Phase 1c-1: deterministickí test-useri (TU-A/B/Resp/Admin), idempotentný SQL seed pre 9 testov + ~75 sessions + ~50 session_answers, CLI runner (`--apply` / `--cleanup` / `--verify`), TS fixture konstanty a global teardown integrácia. Bez nových scenárov — pure infra pre 1c-2/1c-3/1c-4.
-- Test infraštruktúra pre E48-v2: SQL seed helper s worker-isolation prefixom, security regression suite (XSS + CSV injection battery).
-- Reusable `AdminPicker` komponent pre výber adminov v dropdowne (search + listbox). Pripravený na použitie v PR-DETAIL a budúcich admin features.
-- Test infra pre E48-v3: seed helper pre admin users + ticket assignments + attachment fixtures; XSS payload battery pre display_name a filename.
-- Podpora viacerých priradených adminov na ticket (junction table + RPC). Predtým len jeden admin per ticket; teraz neobmedzene.
-- Príloh viewer pripravený na inline render (image/PDF) cez nový p_inline parameter v signed URL RPC.
-- TODO: po aplikácii migrácie 20260522170000 v Supabase doplniť späť schema-invariants assertions pre support_ticket_assignees + 3 nové RPCs + p_inline parameter v request_attachment_signed_url. Sledujte follow-up PR.
-- Wave 3 E2E suite: 8 Playwright specs + 4 integration specs covering multi-assignment, attachment viewer, queue extensions (Assigned column, inline status, sortable headers), admin picker. SQL-driven seed + cleanup pattern.
-- Wave 4 admin coverage: 4 nové Playwright specs (admin-detail-render, admin-queue-filters-sort, admin-queue-csv-export, admin-queue-sidebar-badge) pokrývajúce filtre, vyhľadávanie, sidebar badge, status-machine prechody, ConfirmDialog severity, typed-confirm gate. POMs `AdminTicketDetailPage` + `AdminTicketsQueuePage` rozšírené o getter pre confirm dialog, kebab menu, CSV export options, sidebar badge.
-
-### Pridané (bezpečnosť)
-- E48-v3 security regression suite: XSS battery proti admin display_name (5 payloadov), picker search (5), attachment filename (5), signed URL injection. RLS verification proti junction table + 3 nové RPCs.
-- E48-v4 Wave 4 public-flow test suite: nové Playwright specs (`public-submission`, `kontakt-view-token-thread`) + rozšírený `ticket-create` integration o boundary scenáre (subject 201, body 5001, body whitespace). POMs `KontaktPage` + `KontaktTicketViewPage` doplnené o attachment getters a fix pre Radix Select interaction.
-- E48-v4 Wave 4 test suite: RLS + concurrency + notifications + a11y + performance smoke. Nové integračné testy pre súbežné priradenie adminov (idempotentný PK), rotáciu view tokenu, autorizáciu pre anon/AAL1/user na nových RLS-chránených tabuľkách a pohľadoch (support_ticket_assignees, support_tickets_with_assignees, list_admin_users, storage bucket). Testy dostupnosti (keyboard nav, aria-label, role=dialog, RTL overflow, mobile 375 px). Výkonnostný smoke (queue 50 ticketov &lt; 2 s, detail 20 správ + 10 príloh &lt; 3 s, lazy loading). Emailové kontrakty pre confirmation, reply a resolved notifikáciu.
-
-### Opravené (interné)
-- Re-enabled schema-invariants assertions for E48-v3 after migration applied to prod.
-- Replaced stale useAssignToMe hook (wrote to dropped assigned_to column) with useAssignAdminToTicket throughout the queue UI.
-- Test infra: pridaný `pdf-lib` do `node_modules` (balík bol v `dependencies` v package.json, ale chýbal v node_modules), čím Vitest mohol importovať `functions/_lib/attachment-sanitize.ts` (predtým zlyhával počas test-collect fázy — ~2 testy v každom PR).
-
-### Opravené
-- **Opravený admin reply email — odkaz na vlákno teraz obsahuje view_token (rotácia tokenu pri každej odpovedi pre vyššiu bezpečnosť).** (2026-05-22)
-- **Opravený TOCTOU trigger pre prílohy v podporných žiadostiach.** Produkčné nahrávanie súborov zlyhalo s chybou 500 kvôli neplatnej kombinácii `aggregate + FOR UPDATE` v PostgreSQL. Trigger teraz zamyká radok rodičovskej podpornej žiadosti namiesto súboru, čím sa serializujú konkurentné nahrávania a cap je korektne vynútený.
+- **Podvodový poradca — AI pomocník na podvody.** Na úvodnej stránke nájdete nového plávajúceho pomocníka. Odpovie na otázky o podvodoch, pomôže preveriť podozrivú správu alebo situáciu a vie posúdiť aj priložené fotky (napríklad screenshot podozrivej SMS, najviac 5). Keď z preverenia vyjde podozrenie, pripraví priamo vo vašom prehliadači prehľadné PDF zhrnutie, ktoré si môžete vziať na políciu. **Rozhovor neukladáme** — žije len v otvorenej karte a po zatvorení zmizne; fotky sa po posúdení hneď zahodia a originál z vášho zariadenia nikdy neodchádza. Pred prvým použitím vás pomocník upozorní, aby ste doň nepísali rodné číslo ani heslá.
+- **Svetlý a tmavý režim.** Vzhľad stránky si prepnete na svetlý, tmavý alebo „podľa systému" — tlačidlom v hlavičke. Voľbu si zapamätáme na ďalšiu návštevu.
+- **Nastavenia prístupnosti.** Nový panel v hlavičke, kde si zväčšíte písmo alebo obmedzíte animácie. Stránka rešpektuje aj systémové nastavenie „obmedziť pohyb", má výrazné zvýraznenie pri ovládaní klávesnicou a odkaz „Preskočiť na obsah" pre čítačky obrazovky.
+- **Prehľad respondentov pri vašich testoch.** V detaile testu (záložka Výsledky) pribudol prehľadný zoznam ľudí, ktorí test vyplnili — s vyhľadávaním podľa mena či e-mailu, filtrovaním podľa stavu a zoradením podľa skóre alebo času. Kliknutím otvoríte bočný panel s celým prehľadom odpovedí, kde sú správne a nesprávne farebne odlíšené. Nad zoznamom nájdete tri rýchle čísla: počet respondentov, dokončené a priemerné skóre.
+- **Stiahnutie respondentov do CSV** priamo z výsledkov testu — súbor sa správne otvorí aj s diakritikou v Exceli.
 
 ### Zmenené
-- **Stránka `/contact` zostáva ako rozcestník na kontakt.** Hlavný CTA tlačidlo
-  „Napísať" a všetkých 6 tematických čipov (technika, obsah, sponzorstvo, GDPR,
-  tlač, iné) teraz otvárajú formulár na `/contact-form` namiesto e-mailového
-  odkazu `mailto:`. Formulár umožňuje odoslať správu bez nutnosti otvárať
-  e-mailového klienta.
-- **Formulár na kontaktovanie podpory je teraz dostupný na `/contact-form`.**
-  Pôvodná adresa `/kontakt` presmerúva na novú URL. Odkaz na zobrazenie vlákna
-  v potvrdzovacom e-maile tiež ukazuje na novú adresu.
+- **Potvrdzovací e-mail po odoslaní žiadosti o podporu** teraz obsahuje kópiu vašej správy — tému, kategóriu, meno (ak ste ho uviedli) aj samotný text, takže máte po ruke, čo ste poslali.
 
-### Pridané
-- **Verejná knižnica testov — 6 nových bezpečnostných packov (E37).** Stránka
-  `/tests` má po novom 15 test packov namiesto pôvodných 9. Nové
-  pribudli: **Heslá a 2FA**, **AI a deepfake**, **Sociálne siete**,
-  **Rodičia**, **Školy**, **Zdravotníctvo**. Celkovo 30 nových otázok
-  pokrývajúcich aktuálne hrozby — od kompromitovaných FB účtov a
-  Discord podvodov cez AI-personalizovaný phishing až po falošné
-  EduPage prihlasovanie a e-recept podvody. Každý pack je zadarmo,
-  bez registrácie, výsledok hneď.
-- **Vyhľadávač a katalóg `/tests` má nové UX vylepšenia (E37 Phase I).**
-  Filtračné chip-y a triediaca rolovacia ponuka majú väčšiu plochu
-  pre dotyk (≥44 px) — koniec s mis-tap-mi na mobile. Klávesnicová
-  navigácia má viditeľný focus ring. Pribudol počet zobrazených
-  testov vedľa triedenia (`"X testov"`) a sr-only nadpis pre čítače
-  obrazovky. Ak filter zúži zoznam na nulu, priamo v empty state je
-  tlačidlo *„Vyčistiť filter"* — netreba scrollovať hore.
-- **Slovenský copy hygiene na `/tests` packoch (E37 Phase G1).** Z titulov
-  a popisov packov sme odstránili zostávajúce anglické a české slová
-  (`scam-y`, `vektory`, `Backoffice`, `operatívci`) a z titulov pre
-  vekové cieľové skupiny zmizli zátvorky (*Seniori (55+)* →
-  *Seniori*, *Študenti (16+)* → *Študenti*, *Žiaci (do 16 rokov)* →
-  *Žiaci*). Texty znejú prirodzenejšie a v SERP-e zaberajú menej
-  miesta.
-- **Kontaktný formulár a centrum žiadostí o podporu (E48).** Na stránke
-  `/kontakt` môžu po novom napísať aj neprihlásení návštevníci — stačí
-  e-mail, predmet a krátky popis. Prihlásení používatelia majú v `/app`
-  rovnaký formulár pod položkou *Pomoc → Kontakt*. Po odoslaní príde na
-  váš e-mail potvrdenie aj odkaz, kde si môžete priebeh žiadosti
-  prezerať bez prihlasovania (odkaz je viazaný na bezpečnostný token a
-  platí 90 dní). Tím podpory odpovedá z administrácie a každá odpoveď
-  vám príde aj e-mailom. Prílohy (obrázky a PDF) sú obmedzené na
-  dôveryhodné typy a každý súbor sa interne sanitizuje pred uložením.
-- **Per-admin nastavenia upozornení z podpory** v
-  `/admin/settings/notifications`. Hlavný prepínač, kanály (e-mail +
-  v aplikácii), frekvencia (okamžite / hodinový súhrn / denný súhrn /
-  vypnuté) a prepínače pre každú z 7 kategórií žiadostí. Nastavenia
-  platia iba pre váš účet — nikto vrátane adminov ich nemôže meniť za
-  vás.
+### Opravené
+- **Časté otázky** na úvodnej stránke aj na stránke testov mali pri každej položke dve šípky vedľa seba — teraz je tam jedna, čistá.
+- **Stránka so zoznamom zmien** (táto stránka) orezávala dlhšie body uprostred vety — teraz sa zobrazujú celé.
+- **Kotvy „#" pri nadpisoch v článkoch** sú viditeľné rovno, nie až keď nad ne prejdete myšou — ľahšie sa odkazuje na konkrétnu časť textu.
+- **Karty „Vyber si, kde pokračovať"** na stránke pre školy mali dvojitú šípku; nechali sme jednu.
+- **Odpoveď podpory v e-maile** teraz vždy vedie na správne vlákno (bezpečný odkaz sa pri každej odpovedi obnoví).
 
 ## [1.14.4] — 2026-05-21
 

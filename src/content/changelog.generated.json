@@ -1,5 +1,29 @@
 [
   {
+    "version": "1.15.0",
+    "date": "2026-06-13",
+    "added": [
+      "**Podvodový poradca — AI pomocník na podvody.** Na úvodnej stránke nájdete nového plávajúceho pomocníka. Odpovie na otázky o podvodoch, pomôže preveriť podozrivú správu alebo situáciu a vie posúdiť aj priložené fotky (napríklad screenshot podozrivej SMS, najviac 5). Keď z preverenia vyjde podozrenie, pripraví priamo vo vašom prehliadači prehľadné PDF zhrnutie, ktoré si môžete vziať na políciu. **Rozhovor neukladáme** — žije len v otvorenej karte a po zatvorení zmizne; fotky sa po posúdení hneď zahodia a originál z vášho zariadenia nikdy neodchádza. Pred prvým použitím vás pomocník upozorní, aby ste doň nepísali rodné číslo ani heslá.",
+      "**Svetlý a tmavý režim.** Vzhľad stránky si prepnete na svetlý, tmavý alebo „podľa systému\" — tlačidlom v hlavičke. Voľbu si zapamätáme na ďalšiu návštevu.",
+      "**Nastavenia prístupnosti.** Nový panel v hlavičke, kde si zväčšíte písmo alebo obmedzíte animácie. Stránka rešpektuje aj systémové nastavenie „obmedziť pohyb\", má výrazné zvýraznenie pri ovládaní klávesnicou a odkaz „Preskočiť na obsah\" pre čítačky obrazovky.",
+      "**Prehľad respondentov pri vašich testoch.** V detaile testu (záložka Výsledky) pribudol prehľadný zoznam ľudí, ktorí test vyplnili — s vyhľadávaním podľa mena či e-mailu, filtrovaním podľa stavu a zoradením podľa skóre alebo času. Kliknutím otvoríte bočný panel s celým prehľadom odpovedí, kde sú správne a nesprávne farebne odlíšené. Nad zoznamom nájdete tri rýchle čísla: počet respondentov, dokončené a priemerné skóre.",
+      "**Stiahnutie respondentov do CSV** priamo z výsledkov testu — súbor sa správne otvorí aj s diakritikou v Exceli."
+    ],
+    "changed": [
+      "**Potvrdzovací e-mail po odoslaní žiadosti o podporu** teraz obsahuje kópiu vašej správy — tému, kategóriu, meno (ak ste ho uviedli) aj samotný text, takže máte po ruke, čo ste poslali."
+    ],
+    "fixed": [
+      "**Časté otázky** na úvodnej stránke aj na stránke testov mali pri každej položke dve šípky vedľa seba — teraz je tam jedna, čistá.",
+      "**Stránka so zoznamom zmien** (táto stránka) orezávala dlhšie body uprostred vety — teraz sa zobrazujú celé.",
+      "**Kotvy „#\" pri nadpisoch v článkoch** sú viditeľné rovno, nie až keď nad ne prejdete myšou — ľahšie sa odkazuje na konkrétnu časť textu.",
+      "**Karty „Vyber si, kde pokračovať\"** na stránke pre školy mali dvojitú šípku; nechali sme jednu.",
+      "**Odpoveď podpory v e-maile** teraz vždy vedie na správne vlákno (bezpečný odkaz sa pri každej odpovedi obnoví)."
+    ],
+    "removed": [],
+    "deprecated": [],
+    "security": []
+  },
+  {
     "version": "1.14.4",
     "date": "2026-05-21",
     "added": [
