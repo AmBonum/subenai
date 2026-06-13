@@ -94,6 +94,11 @@
           "purpose": "Sponzorské platby (faktura, AML, účetnictví)",
           "basis": "Plnění smlouvy + zákon č. 431/2002 Z. z. / čl. 6 odst. 1 písm. b) a c) GDPR",
           "retention": "10 let"
+        },
+        "scam_chat": {
+          "purpose": "AI Poradce pro podvody — odpovědi na otázky o podvodech, prověření podezření (triage) a volitelná analýza přiložených fotek (max 5, zmenšené na ≤ 1600 px)",
+          "basis": "Souhlas / čl. 6 odst. 1 písm. a GDPR (asistenta otevíráte dobrovolně); abuse-prevention počítadla na základě oprávněného zájmu / čl. 6 odst. 1 písm. f GDPR",
+          "retention": "Bez uchovávání — text konverzace ani fotky neukládáme. Fotky se analyzují během požadavku a vzápětí se zahodí; záložní cesta (zatím vypnutá) má tvrdý limit ≤ 30 minut. PDF pro policii se generuje lokálně ve vašem prohlížeči."
         }
       }
     },
@@ -242,16 +247,32 @@
       "callout_code": "subenai.podpora@gmail.com",
       "callout_suffix": " — pomůžeme vám autora identifikovat a postoupíme žádost."
     },
+    "s_scam": {
+      "heading": "9. AI Poradce pro podvody",
+      "intro_prefix": "Na stránce nabízíme volitelného ",
+      "intro_emph": "AI Poradce pro podvody",
+      "intro_suffix": " — asistenta, který odpovídá na otázky o podvodech, dokáže prověřit podezřelou zprávu či situaci (triage) a volitelně posoudit přiložené fotky (např. screenshot podvodné SMS). Asistenta otevíráte dobrovolně; dokud ho neotevřete, nic se nezpracovává.",
+      "processor_label": "Zprostředkovatel inference:",
+      "processor_text": " odpovědi generuje Cloudflare Workers AI (Cloudflare, Inc.) — náš hostingový zpracovatel podle čl. 28 GDPR (DPA + SCC); inference je zde nový účel zpracování. Účelem je pomoc při prevenci podvodů.",
+      "no_transcript_label": "Neukládáme konverzaci:",
+      "no_transcript_text": " obsah konverzace žije jen v paměti vašeho prohlížeče po dobu otevřené karty a zavřením karty zaniká. Nezapisujeme ho do databáze, logů ani jinam — neexistuje žádný přepis (transcript) konverzace.",
+      "photos_label": "Fotky (max 5):",
+      "photos_text": " na server posíláme jen zmenšenou kopii (≤ 1600 px), nikdy originál. Fotka se analyzuje přímo během požadavku a její byty se vzápětí zahodí. Maximální doba uchování je 30 minut a uplatní se jen na záložní cestě (zatím vypnuté) jako tvrdý limit; běžná cesta zahazuje data okamžitě.",
+      "pdf_label": "PDF pro policii:",
+      "pdf_text": " hlášení pro policii (jméno, časová osa, důkazy) se sestavuje a generuje výhradně lokálně ve vašem prohlížeči. Na naše servery se žádná jeho kopie neodesílá ani neukládá.",
+      "sensitive_label": "Citlivé údaje:",
+      "sensitive_text": " před prvním použitím asistent zobrazí upozornění, abyste do něj nepsali rodné číslo ani hesla. Vzhledem k nulovému uchovávání (výše) případné citlivé detaily neopouštějí okno zpracování (max 30 minut v nejhorším případě)."
+    },
     "s9": {
-      "heading": "9. Bezpečnost",
+      "heading": "10. Bezpečnost",
       "text": "Komunikace probíhá přes HTTPS (TLS 1.3), údaje v Supabase jsou šifrovány at-rest i in-transit, přístup k databázi je chráněn Row Level Security politikami. Stripe-hostované formuláře karetních údajů jsou PCI DSS Level 1 certifikované — naše servery žádné karetní údaje nikdy nevidí. Hesla autorů edu sad ukládáme výhradně jako bcrypt hashe (pgcrypto, cost factor 10) — původní heslo neukládáme nikde."
     },
     "s10": {
-      "heading": "10. Změny těchto zásad",
+      "heading": "11. Změny těchto zásad",
       "text": "Při podstatné změně zásad vám zobrazíme nový cookie banner se žádostí o nový souhlas (zvýšením verze záznamu). Drobné jazykové úpravy zveřejňujeme bez upozornění. Aktuální verze má vždy uveden datum u názvu dokumentu."
     },
     "s11": {
-      "heading": "11. Související dokumenty",
+      "heading": "12. Související dokumenty",
       "prefix": "Detailní seznam cookies a úložiště je v ",
       "link": "zásadách používání cookies",
       "suffix": "."
@@ -339,7 +360,11 @@
           "purpose": "Stripe test podpory cookies v prohlížeči (žádné osobní údaje)",
           "duration": "relace"
         }
-      }
+      },
+      "scam_note_label": "AI Poradce pro podvody:",
+      "scam_note_prefix": " asistent neukládá do vašeho zařízení žádné cookies ani localStorage/sessionStorage — konverzace žije jen v paměti otevřené karty a zavřením zaniká. Proto pro něj nepřibývá žádná kategorie úložiště. Podrobnosti o zpracování najdete v ",
+      "scam_note_link": "zásadách ochrany soukromí",
+      "scam_note_suffix": "."
     },
     "s3": {
       "heading": "3. Třetí strany (zpracovatelé)",
