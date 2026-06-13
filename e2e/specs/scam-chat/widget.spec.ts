@@ -117,7 +117,7 @@ test.describe("scam-chat widget", () => {
     await expect(scamChat.lastAssistantMessage).toContainText("Registráciou");
   });
 
-  test("SC-07b: widget works for signed-in users inside the /app shell", async ({
+  test("SC-07b: widget works on the home page for signed-in users too", async ({
     page,
     context,
     scamChat,
@@ -128,21 +128,27 @@ test.describe("scam-chat widget", () => {
       citations: ["/app/notifications"],
     });
 
-    await scamChat.openHost("/app");
+    // The launcher is home-only (product decision 2026-06-13); a signed-in
+    // visitor on the home page gets it just like an anonymous one.
+    await scamChat.openHost("/");
     await expect(scamChat.launcher).toBeVisible();
     await scamChat.openFromLauncher();
     await scamChat.send("kde si nastavím notifikácie?");
     await expect(scamChat.lastAssistantMessage).toContainText("/app/notifications");
   });
 
-  // AC 7 — admin shell never mounts the launcher (epic non-goal: no
-  // admin-facing chat). __root.tsx gates it with `!isInsideAdmin`. Auth is
-  // primed as admin so /admin actually renders rather than redirecting to
-  // /login (a public route that legitimately carries the launcher).
+  // The launcher is HOME-ONLY (product decision 2026-06-13). __root.tsx
+  // gates it with `isHomePage`. It must be absent everywhere else — both on
+  // the /admin shell and on ordinary public routes.
   test("SC-07c: launcher is ABSENT on the /admin shell", async ({ page, context, scamChat }) => {
     await setupAdmin(context, page);
     await scamChat.openHost("/admin");
     await expect(page).toHaveURL(/\/admin/);
+    await expect(scamChat.launcher).toHaveCount(0);
+  });
+
+  test("SC-07d: launcher is ABSENT on non-home public routes", async ({ scamChat }) => {
+    await scamChat.openHost("/test");
     await expect(scamChat.launcher).toHaveCount(0);
   });
 

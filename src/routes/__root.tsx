@@ -66,9 +66,9 @@ function RootComponent() {
   const isInsidePrivateShell = matches.some(
     (m) => m.routeId.startsWith("/app") || m.routeId.startsWith("/admin"),
   );
-  // E53.3 — the scam-chat launcher rides every public route and the /app
-  // shell, but never /admin (no admin-facing chat per the epic non-goals).
-  const isInsideAdmin = matches.some((m) => m.routeId.startsWith("/admin"));
+  // E53.3 — the scam-chat launcher appears ONLY on the home page (product
+  // decision 2026-06-13). The index route is the single match with id "/".
+  const isHomePage = matches.some((m) => m.routeId === "/");
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
@@ -98,7 +98,7 @@ function RootComponent() {
             <ConsentBanner />
             <ConsentPreferencesDialog />
             {!isInsidePrivateShell && <Toaster position="top-center" />}
-            {!isInsideAdmin && <ScamChatWidget />}
+            {isHomePage && <ScamChatWidget />}
             <SignedOutFlash />
           </LocaleProvider>
         </AccessibilityProvider>
