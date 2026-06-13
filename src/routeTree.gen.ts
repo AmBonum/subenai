@@ -14,6 +14,7 @@ import { Route as SponsorsRouteImport } from './routes/sponsors'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SchoolsRouteImport } from './routes/schools'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PomocnikRouteImport } from './routes/pomocnik'
 import { Route as ManageSupportRouteImport } from './routes/manage-support'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
@@ -141,6 +142,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/privacy.lazy').then((d) => d.Route))
+const PomocnikRoute = PomocnikRouteImport.update({
+  id: '/pomocnik',
+  path: '/pomocnik',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ManageSupportRoute = ManageSupportRouteImport.update({
   id: '/manage-support',
   path: '/manage-support',
@@ -733,6 +739,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/manage-support': typeof ManageSupportRoute
+  '/pomocnik': typeof PomocnikRoute
   '/privacy': typeof PrivacyRoute
   '/schools': typeof SchoolsRoute
   '/signup': typeof SignupRoute
@@ -839,6 +846,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/manage-support': typeof ManageSupportRoute
+  '/pomocnik': typeof PomocnikRoute
   '/privacy': typeof PrivacyRoute
   '/schools': typeof SchoolsRoute
   '/signup': typeof SignupRoute
@@ -943,6 +951,7 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/manage-support': typeof ManageSupportRoute
+  '/pomocnik': typeof PomocnikRoute
   '/privacy': typeof PrivacyRoute
   '/schools': typeof SchoolsRoute
   '/signup': typeof SignupRoute
@@ -1053,6 +1062,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/manage-support'
+    | '/pomocnik'
     | '/privacy'
     | '/schools'
     | '/signup'
@@ -1159,6 +1169,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/manage-support'
+    | '/pomocnik'
     | '/privacy'
     | '/schools'
     | '/signup'
@@ -1262,6 +1273,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/manage-support'
+    | '/pomocnik'
     | '/privacy'
     | '/schools'
     | '/signup'
@@ -1371,6 +1383,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   ManageSupportRoute: typeof ManageSupportRoute
+  PomocnikRoute: typeof PomocnikRoute
   PrivacyRoute: typeof PrivacyRoute
   SchoolsRoute: typeof SchoolsRoute
   SignupRoute: typeof SignupRoute
@@ -1439,6 +1452,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pomocnik': {
+      id: '/pomocnik'
+      path: '/pomocnik'
+      fullPath: '/pomocnik'
+      preLoaderRoute: typeof PomocnikRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/manage-support': {
@@ -2435,6 +2455,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   ManageSupportRoute: ManageSupportRoute,
+  PomocnikRoute: PomocnikRoute,
   PrivacyRoute: PrivacyRoute,
   SchoolsRoute: SchoolsRoute,
   SignupRoute: SignupRoute,

@@ -17,7 +17,8 @@ export type AiPurpose =
   | "gate_topic_output"
   | "embed"
   | "generate_main"
-  | "generate_degraded";
+  | "generate_degraded"
+  | "vision";
 
 export const NEURON_ESTIMATES: Record<AiPurpose, number> = {
   gate_topic_input: 20,
@@ -26,6 +27,8 @@ export const NEURON_ESTIMATES: Record<AiPurpose, number> = {
   embed: 1,
   generate_main: 140,
   generate_degraded: 45,
+  // §Cost: ~40–60 neurons / downscaled photo.
+  vision: 55,
 };
 
 export type AiRunner = (

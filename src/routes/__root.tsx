@@ -10,6 +10,7 @@ import { Footer } from "@/components/layout/Footer";
 import { NotFoundPage } from "@/components/layout/NotFoundPage";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SkipToContentLink } from "@/components/layout/SkipToContentLink";
+import { ScamChatWidget } from "@/components/scam-chat/ScamChatWidget";
 import { Toaster } from "@/components/ui/sonner";
 import { AccessibilityProvider } from "@/components/theme/AccessibilityProvider";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
@@ -65,6 +66,9 @@ function RootComponent() {
   const isInsidePrivateShell = matches.some(
     (m) => m.routeId.startsWith("/app") || m.routeId.startsWith("/admin"),
   );
+  // E53.3 — the scam-chat launcher rides every public route and the /app
+  // shell, but never /admin (no admin-facing chat per the epic non-goals).
+  const isInsideAdmin = matches.some((m) => m.routeId.startsWith("/admin"));
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
@@ -94,6 +98,7 @@ function RootComponent() {
             <ConsentBanner />
             <ConsentPreferencesDialog />
             {!isInsidePrivateShell && <Toaster position="top-center" />}
+            {!isInsideAdmin && <ScamChatWidget />}
             <SignedOutFlash />
           </LocaleProvider>
         </AccessibilityProvider>

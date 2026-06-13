@@ -18,6 +18,12 @@ export const scamChatRequestSchema = z.object({
   message: z.string().min(1),
   history: z.array(historyItemSchema).default([]),
   turnstile_token: z.string().optional(),
+  // E53.4 — when the user clicks "Preveriť podozrenie" the client forces
+  // triage mode; otherwise the input gate may classify a triage opener.
+  mode: z.enum(["chat", "triage"]).optional(),
+  // E53.5 — structured photo findings the client attaches to the turn so
+  // the assessment can reference image evidence without re-uploading bytes.
+  photo_findings: z.array(z.string()).max(5).optional(),
 });
 
 export type ScamChatRequest = z.infer<typeof scamChatRequestSchema>;
@@ -54,10 +60,22 @@ export function sanitizeHistory(history: HistoryItem[]): ChatTurn[] {
   return turns.slice(-MAX_HISTORY_TURNS);
 }
 
+export interface TriageAssessment {
+  risk: "low" | "medium" | "high";
+  indicators: string[];
+  timeline: string[];
+  evidence: string[];
+  next_steps: string[];
+}
+
 export interface ScamChatResponseBody {
   ok: true;
   reply: string;
   citations: string[];
   refusal: "off_topic" | "unsafe" | null;
   degraded: boolean;
+  // E53.4 — present only on triage turns that parsed into structured JSON.
+  // null when triage was requested but the model returned only prose
+  // (graceful text-only fallback — `reply` still carries the answer).
+  triage?: TriageAssessment | null;
 }

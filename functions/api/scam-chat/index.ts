@@ -49,12 +49,14 @@ import {
   type RetrievedChunk,
   type VectorizeIndexBinding,
 } from "../../_lib/scam-chat/retrieval";
+import { buildTriageSystemPrompt, isTriageOpener, runTriage } from "../../_lib/scam-chat/triage";
 import { createAiRunner, type AiBinding } from "../../_lib/scam-chat/run-ai";
 import {
   findCapViolation,
   sanitizeHistory,
   scamChatRequestSchema,
   type ScamChatResponseBody,
+  type TriageAssessment,
 } from "../../_lib/scam-chat/schema";
 import {
   consumeRateLimit,
@@ -217,15 +219,70 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   const generationModel = degraded
     ? (env.SCAM_CHAT_DEGRADED_MODEL ?? DEFAULT_DEGRADED_MODEL)
     : (env.SCAM_CHAT_MAIN_MODEL ?? DEFAULT_MAIN_MODEL);
+  const purpose = degraded ? "generate_degraded" : "generate_main";
+
+  // E53.4 — triage activates on the explicit client flag or a triage-style
+  // opener. Photo findings (E53.5) ride inside the user turn as text.
+  const triageMode = payload.mode === "triage" || isTriageOpener(payload.message);
+  const userContent = wrapUserMessage(composeUserTurn(payload.message, payload.photo_findings));
+
+  if (triageMode) {
+    let outcome: { assessment: TriageAssessment | null; reply: string };
+    try {
+      outcome = await runTriage(runAi, generationModel, purpose, [
+        { role: "system", content: buildTriageSystemPrompt(canary, chunks) },
+        ...history.map((turn) => ({ role: turn.role, content: wrapHistoryItem(turn.content) })),
+        { role: "user", content: userContent },
+      ]);
+    } catch {
+      return chatResponse({
+        reply: GENERIC_FALLBACK,
+        citations: [],
+        refusal: null,
+        degraded,
+        triage: null,
+      });
+    }
+    const reply = outcome.reply.trim();
+    const gate = await runOutputGate(runAi, gateModel, reply, canary);
+    if (gate.kind === "admin") {
+      return chatResponse({
+        reply: ADMIN_REFUSAL,
+        citations: [],
+        refusal: null,
+        degraded,
+        triage: null,
+      });
+    }
+    if (gate.kind === "blocked") {
+      await recordIncident(kv, gate.reason);
+      return chatResponse({
+        reply: GENERIC_FALLBACK,
+        citations: [],
+        refusal: null,
+        degraded,
+        triage: null,
+      });
+    }
+    const { finalReply, citations } = enforceCitation(reply, chunks);
+    return chatResponse({
+      reply: finalReply,
+      citations,
+      refusal: null,
+      degraded,
+      triage: outcome.assessment,
+    });
+  }
+
   const messages = [
     { role: "system", content: buildSystemPrompt(canary, chunks) },
     ...history.map((turn) => ({ role: turn.role, content: wrapHistoryItem(turn.content) })),
-    { role: "user", content: wrapUserMessage(payload.message) },
+    { role: "user", content: userContent },
   ];
 
   let generationRaw: unknown;
   try {
-    generationRaw = await runAi(degraded ? "generate_degraded" : "generate_main", generationModel, {
+    generationRaw = await runAi(purpose, generationModel, {
       messages,
       max_tokens: 800,
     });
@@ -245,6 +302,16 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
 
   const { finalReply, citations } = enforceCitation(reply, chunks);
   return chatResponse({ reply: finalReply, citations, refusal: null, degraded });
+}
+
+// E53.5 — fold photo findings into the user turn as untrusted text. The
+// findings are model-extracted descriptions (no bytes); they live inside
+// the same data tags as the message so the prompt's untrusted-data rule
+// covers them.
+function composeUserTurn(message: string, photoFindings: string[] | undefined): string {
+  if (!photoFindings || photoFindings.length === 0) return message;
+  const lines = photoFindings.map((f, i) => `Fotka ${i + 1}: ${f}`).join("\n");
+  return `${message}\n\nPriložené dôkazy (popis z fotiek):\n${lines}`;
 }
 
 // AC E53.2: on-topic answers include ≥ 1 citation URL from retrieved
