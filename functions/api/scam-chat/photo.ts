@@ -166,6 +166,9 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
       notice: "Fotku sa nepodarilo analyzovať. Skúste inú alebo pokračujte textom.",
     });
   } finally {
+    // Persist this call's neuron spend in one batched write (runs on both
+    // the success and analysis-failure paths).
+    await ledger.commit();
     // Bytes are discarded with the request scope; the explicit delete fires
     // immediately after analysis so the fallback TTL is only a backstop.
     if (fallbackEnabled) await deletePhotoFallback(kv, fallbackKey);

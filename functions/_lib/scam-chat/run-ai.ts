@@ -43,7 +43,8 @@ export function createAiRunner(ai: AiBinding, ledger: NeuronLedger): AiRunner {
       return await ai.run(model, inputs);
     } finally {
       // Record in finally — spend happened even if the call threw mid-way.
-      await ledger.record(NEURON_ESTIMATES[purpose]);
+      // In-memory accumulate; the gateway's commit() persists it once.
+      ledger.record(NEURON_ESTIMATES[purpose]);
     }
   };
 }

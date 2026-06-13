@@ -54,29 +54,44 @@ describe("neuron ledger (unit)", () => {
     const kv = makeKv();
     const ledger = createNeuronLedger(kv, { soft: 100, hard: 200 });
     expect(await ledger.status()).toBe("ok");
-    await ledger.record(99);
+    ledger.record(99);
+    await ledger.commit();
     expect(await ledger.status()).toBe("ok");
-    await ledger.record(1);
+    ledger.record(1);
+    await ledger.commit();
     expect(await ledger.status()).toBe("soft");
-    await ledger.record(100);
+    ledger.record(100);
+    await ledger.commit();
     expect(await ledger.status()).toBe("hard");
   });
 
-  it("writes day-stamped keys with TTL 86400", async () => {
+  it("commit batches accumulated records into a single day-stamped write", async () => {
     const kv = makeKv();
     const ledger = createNeuronLedger(kv, { soft: 100, hard: 200 });
-    await ledger.record(10);
-    expect(kv.puts).toHaveLength(1);
+    ledger.record(20);
+    ledger.record(25);
+    ledger.record(10);
+    expect(kv.puts).toHaveLength(0); // nothing persisted until commit
+    await ledger.commit();
+    expect(kv.puts).toHaveLength(1); // one write for the whole turn
     expect(kv.puts[0].key).toBe(`sc:neurons:${today()}`);
     expect(kv.puts[0].ttl).toBe(LEDGER_TTL_SECONDS);
-    expect(kv.store.get(`sc:neurons:${today()}`)).toBe("10");
+    expect(kv.store.get(`sc:neurons:${today()}`)).toBe("55");
+  });
+
+  it("commit is a no-op when nothing was recorded", async () => {
+    const kv = makeKv();
+    const ledger = createNeuronLedger(kv, { soft: 100, hard: 200 });
+    await ledger.commit();
+    expect(kv.puts).toHaveLength(0);
   });
 
   it("rolls over at the UTC day boundary", async () => {
     const kv = makeKv();
     let now = new Date("2026-06-13T23:59:00Z");
     const ledger = createNeuronLedger(kv, { soft: 100, hard: 200 }, () => now);
-    await ledger.record(500);
+    ledger.record(500);
+    await ledger.commit();
     expect(await ledger.status()).toBe("hard");
     now = new Date("2026-06-14T00:01:00Z");
     expect(await ledger.status()).toBe("ok");
@@ -87,7 +102,8 @@ describe("neuron ledger (unit)", () => {
     const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const ledger = createNeuronLedger(undefined, { soft: 100, hard: 200 });
     expect(await ledger.status()).toBe("unconfigured");
-    await expect(ledger.record(10)).resolves.toBeUndefined();
+    ledger.record(10);
+    await expect(ledger.commit()).resolves.toBeUndefined();
     expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining("FAILS CLOSED"));
   });
 
@@ -97,11 +113,15 @@ describe("neuron ledger (unit)", () => {
     expect(await ledger.status()).toBe("hard");
   });
 
-  it("tolerates concurrent read-then-write overshoot (undercount, like security.ts)", async () => {
+  it("tolerates concurrent commit overshoot across isolates (undercount, like security.ts)", async () => {
     const kv = makeKv();
-    const ledger = createNeuronLedger(kv, { soft: 100, hard: 200 });
-    await Promise.all([ledger.record(10), ledger.record(10)]);
-    // Both raced reads saw 0; the counter undercounts by one increment.
+    // Two isolates each meter one turn and commit; both read 0 before either
+    // wrote, so the last commit wins and the counter undercounts by one turn.
+    const a = createNeuronLedger(kv, { soft: 100, hard: 200 });
+    const b = createNeuronLedger(kv, { soft: 100, hard: 200 });
+    a.record(10);
+    b.record(10);
+    await Promise.all([a.commit(), b.commit()]);
     expect(kv.store.get(`sc:neurons:${today()}`)).toBe("10");
   });
 
@@ -156,7 +176,7 @@ describe("gateway budget integration", () => {
     expect(res.status).toBe(429);
   });
 
-  it("every AI call is metered: a full turn records the summed estimates", async () => {
+  it("every AI call is metered: a full turn records the summed estimates in ONE write", async () => {
     const env = baseEnv();
     await onRequestPost({ request: buildRequest({ message: "Je toto podvod?" }), env });
     const expected =
@@ -166,6 +186,9 @@ describe("gateway budget integration", () => {
       NEURON_ESTIMATES.generate_main +
       NEURON_ESTIMATES.gate_topic_output;
     expect(env.SCAM_CHAT_KV.store.get(`sc:neurons:${today()}`)).toBe(String(expected));
+    // Batched: the 5 AI calls produce a single neuron-ledger write, not 5.
+    const ledgerWrites = env.SCAM_CHAT_KV.puts.filter((p) => p.key === `sc:neurons:${today()}`);
+    expect(ledgerWrites).toHaveLength(1);
   });
 
   it("missing KV binding → 503 service_unavailable at the gateway (zero AI calls)", async () => {

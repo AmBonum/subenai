@@ -192,123 +192,130 @@ export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   }
   const degraded = budgetStatus === "soft";
 
-  const role = await resolveRole(request, env);
-  const history = sanitizeHistory(payload.history);
-  const runAi = createAiRunner(env.AI, ledger);
+  try {
+    const role = await resolveRole(request, env);
+    const history = sanitizeHistory(payload.history);
+    const runAi = createAiRunner(env.AI, ledger);
 
-  const gateModel = env.SCAM_CHAT_GATE_MODEL ?? DEFAULT_GATE_MODEL;
-  const verdict = await runInputGate(
-    runAi,
-    { gate: gateModel, guard: env.SCAM_CHAT_GUARD_MODEL ?? DEFAULT_GUARD_MODEL },
-    payload.message,
-  );
-  if (verdict === "off_topic") {
-    return chatResponse({
-      reply: OFF_TOPIC_REFUSAL,
-      citations: [],
-      refusal: "off_topic",
-      degraded,
-    });
-  }
-  if (verdict === "unsafe") {
-    return chatResponse({ reply: UNSAFE_REFUSAL, citations: [], refusal: "unsafe", degraded });
-  }
-
-  const chunks = await retrieveContext(
-    runAi,
-    env.SCAM_CHAT_EMBED_MODEL ?? DEFAULT_EMBED_MODEL,
-    env.SCAM_CHAT_INDEX,
-    payload.message,
-    role,
-  );
-
-  const canary = resolveCanary(env.SCAM_CHAT_CANARY);
-  const generationModel = degraded
-    ? (env.SCAM_CHAT_DEGRADED_MODEL ?? DEFAULT_DEGRADED_MODEL)
-    : (env.SCAM_CHAT_MAIN_MODEL ?? DEFAULT_MAIN_MODEL);
-  const purpose = degraded ? "generate_degraded" : "generate_main";
-
-  // E53.4 — triage activates on the explicit client flag or a triage-style
-  // opener. Photo findings (E53.5) ride inside the user turn as text.
-  const triageMode = payload.mode === "triage" || isTriageOpener(payload.message);
-  const userContent = wrapUserMessage(composeUserTurn(payload.message, payload.photo_findings));
-
-  if (triageMode) {
-    let outcome: { assessment: TriageAssessment | null; reply: string };
-    try {
-      outcome = await runTriage(runAi, generationModel, purpose, [
-        { role: "system", content: buildTriageSystemPrompt(canary, chunks) },
-        ...history.map((turn) => ({ role: turn.role, content: wrapHistoryItem(turn.content) })),
-        { role: "user", content: userContent },
-      ]);
-    } catch {
+    const gateModel = env.SCAM_CHAT_GATE_MODEL ?? DEFAULT_GATE_MODEL;
+    const verdict = await runInputGate(
+      runAi,
+      { gate: gateModel, guard: env.SCAM_CHAT_GUARD_MODEL ?? DEFAULT_GUARD_MODEL },
+      payload.message,
+    );
+    if (verdict === "off_topic") {
       return chatResponse({
-        reply: GENERIC_FALLBACK,
+        reply: OFF_TOPIC_REFUSAL,
         citations: [],
-        refusal: null,
+        refusal: "off_topic",
         degraded,
-        triage: null,
       });
     }
-    const reply = outcome.reply.trim();
-    const gate = await runOutputGate(runAi, gateModel, reply, canary);
-    if (gate.kind === "admin") {
+    if (verdict === "unsafe") {
+      return chatResponse({ reply: UNSAFE_REFUSAL, citations: [], refusal: "unsafe", degraded });
+    }
+
+    const chunks = await retrieveContext(
+      runAi,
+      env.SCAM_CHAT_EMBED_MODEL ?? DEFAULT_EMBED_MODEL,
+      env.SCAM_CHAT_INDEX,
+      payload.message,
+      role,
+    );
+
+    const canary = resolveCanary(env.SCAM_CHAT_CANARY);
+    const generationModel = degraded
+      ? (env.SCAM_CHAT_DEGRADED_MODEL ?? DEFAULT_DEGRADED_MODEL)
+      : (env.SCAM_CHAT_MAIN_MODEL ?? DEFAULT_MAIN_MODEL);
+    const purpose = degraded ? "generate_degraded" : "generate_main";
+
+    // E53.4 — triage activates on the explicit client flag or a triage-style
+    // opener. Photo findings (E53.5) ride inside the user turn as text.
+    const triageMode = payload.mode === "triage" || isTriageOpener(payload.message);
+    const userContent = wrapUserMessage(composeUserTurn(payload.message, payload.photo_findings));
+
+    if (triageMode) {
+      let outcome: { assessment: TriageAssessment | null; reply: string };
+      try {
+        outcome = await runTriage(runAi, generationModel, purpose, [
+          { role: "system", content: buildTriageSystemPrompt(canary, chunks) },
+          ...history.map((turn) => ({ role: turn.role, content: wrapHistoryItem(turn.content) })),
+          { role: "user", content: userContent },
+        ]);
+      } catch {
+        return chatResponse({
+          reply: GENERIC_FALLBACK,
+          citations: [],
+          refusal: null,
+          degraded,
+          triage: null,
+        });
+      }
+      const reply = outcome.reply.trim();
+      const gate = await runOutputGate(runAi, gateModel, reply, canary);
+      if (gate.kind === "admin") {
+        return chatResponse({
+          reply: ADMIN_REFUSAL,
+          citations: [],
+          refusal: null,
+          degraded,
+          triage: null,
+        });
+      }
+      if (gate.kind === "blocked") {
+        await recordIncident(kv, gate.reason);
+        return chatResponse({
+          reply: GENERIC_FALLBACK,
+          citations: [],
+          refusal: null,
+          degraded,
+          triage: null,
+        });
+      }
+      const { finalReply, citations } = enforceCitation(reply, chunks);
       return chatResponse({
-        reply: ADMIN_REFUSAL,
-        citations: [],
+        reply: finalReply,
+        citations,
         refusal: null,
         degraded,
-        triage: null,
+        triage: outcome.assessment,
       });
+    }
+
+    const messages = [
+      { role: "system", content: buildSystemPrompt(canary, chunks) },
+      ...history.map((turn) => ({ role: turn.role, content: wrapHistoryItem(turn.content) })),
+      { role: "user", content: userContent },
+    ];
+
+    let generationRaw: unknown;
+    try {
+      generationRaw = await runAi(purpose, generationModel, {
+        messages,
+        max_tokens: 800,
+      });
+    } catch {
+      return chatResponse({ reply: GENERIC_FALLBACK, citations: [], refusal: null, degraded });
+    }
+    const reply = extractResponseText(generationRaw).trim();
+
+    const gate = await runOutputGate(runAi, gateModel, reply, canary);
+    if (gate.kind === "admin") {
+      return chatResponse({ reply: ADMIN_REFUSAL, citations: [], refusal: null, degraded });
     }
     if (gate.kind === "blocked") {
       await recordIncident(kv, gate.reason);
-      return chatResponse({
-        reply: GENERIC_FALLBACK,
-        citations: [],
-        refusal: null,
-        degraded,
-        triage: null,
-      });
+      return chatResponse({ reply: GENERIC_FALLBACK, citations: [], refusal: null, degraded });
     }
+
     const { finalReply, citations } = enforceCitation(reply, chunks);
-    return chatResponse({
-      reply: finalReply,
-      citations,
-      refusal: null,
-      degraded,
-      triage: outcome.assessment,
-    });
+    return chatResponse({ reply: finalReply, citations, refusal: null, degraded });
+  } finally {
+    // One batched KV write per turn (vs one per AI call) — keeps high
+    // traffic under the free-tier 1,000 writes/day cap. Runs on every exit
+    // path: off-topic/unsafe refusals, fallbacks, and the happy path.
+    await ledger.commit();
   }
-
-  const messages = [
-    { role: "system", content: buildSystemPrompt(canary, chunks) },
-    ...history.map((turn) => ({ role: turn.role, content: wrapHistoryItem(turn.content) })),
-    { role: "user", content: userContent },
-  ];
-
-  let generationRaw: unknown;
-  try {
-    generationRaw = await runAi(purpose, generationModel, {
-      messages,
-      max_tokens: 800,
-    });
-  } catch {
-    return chatResponse({ reply: GENERIC_FALLBACK, citations: [], refusal: null, degraded });
-  }
-  const reply = extractResponseText(generationRaw).trim();
-
-  const gate = await runOutputGate(runAi, gateModel, reply, canary);
-  if (gate.kind === "admin") {
-    return chatResponse({ reply: ADMIN_REFUSAL, citations: [], refusal: null, degraded });
-  }
-  if (gate.kind === "blocked") {
-    await recordIncident(kv, gate.reason);
-    return chatResponse({ reply: GENERIC_FALLBACK, citations: [], refusal: null, degraded });
-  }
-
-  const { finalReply, citations } = enforceCitation(reply, chunks);
-  return chatResponse({ reply: finalReply, citations, refusal: null, degraded });
 }
 
 // E53.5 — fold photo findings into the user turn as untrusted text. The

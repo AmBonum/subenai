@@ -32,7 +32,13 @@ export type LedgerStatus = "ok" | "soft" | "hard" | "unconfigured";
 
 export interface NeuronLedger {
   status(): Promise<LedgerStatus>;
-  record(neurons: number): Promise<void>;
+  // Accumulates spend in memory (synchronous, free). Persisted only by
+  // commit(), so one chat turn = one KV write instead of one per AI call —
+  // keeps high traffic under the free-tier 1,000 writes/day cap.
+  record(neurons: number): void;
+  // Flushes the accumulated spend in a single read-then-write. Idempotent:
+  // a no-op when nothing was recorded. Call once per request (a finally).
+  commit(): Promise<void>;
 }
 
 export function todayStamp(now: Date = new Date()): string {
@@ -68,10 +74,12 @@ export function createNeuronLedger(
       async status() {
         return "unconfigured";
       },
-      async record() {},
+      record() {},
+      async commit() {},
     };
   }
   const key = () => `sc:neurons:${todayStamp(now())}`;
+  let pending = 0;
   return {
     async status() {
       const raw = await kv.get(key());
@@ -82,16 +90,22 @@ export function createNeuronLedger(
       if (used >= thresholds.soft) return "soft";
       return "ok";
     },
-    async record(neurons) {
+    record(neurons) {
+      pending += neurons;
+    },
+    async commit() {
+      if (pending <= 0) return;
       // Read-then-write like consumeRateLimit in security.ts: concurrent
-      // isolates can undercount by one increment per race. For a budget
+      // isolates can undercount by one batched commit per race. For a budget
       // with 15 % headroom (8,500 of 10,000) that tolerance is fine; an
       // exact counter would need Durable Objects.
       const k = key();
       const raw = await kv.get(k);
       const used = raw ? Number.parseInt(raw, 10) : 0;
-      const next = (Number.isFinite(used) ? used : 0) + neurons;
-      await kv.put(k, String(next), { expirationTtl: LEDGER_TTL_SECONDS });
+      await kv.put(k, String((Number.isFinite(used) ? used : 0) + pending), {
+        expirationTtl: LEDGER_TTL_SECONDS,
+      });
+      pending = 0;
     },
   };
 }
