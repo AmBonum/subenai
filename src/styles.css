@@ -271,6 +271,17 @@
     outline-offset: 2px;
   }
 
+  /* Tailwind v4 Preflight dropped v3's `button { cursor: pointer }` reset,
+     so every <button> (the scam-advisor FAB, dialog actions, icon buttons)
+     fell back to the default arrow. Restore the hand cursor for genuinely
+     clickable controls; links keep the UA pointer. Disabled controls are
+     excluded so they read as inert. In @layer base, explicit `cursor-*`
+     utilities (e.g. menu items' `cursor-default`) still win. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
   /* Brand-tinted native date input.
      - accent-color tints the Chromium picker popup chrome (today highlight,
        selected day, hover ring) to match the acid-lime brand.
