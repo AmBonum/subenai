@@ -423,6 +423,10 @@ export class WorkersAiEmbeddingClient implements EmbeddingClient {
   }
 }
 
+// Vectorize v2 caps id-list payloads at 20 per request (get_by_ids /
+// delete_by_ids both return 40007 "too many ids in payload" above this).
+const VECTORIZE_ID_BATCH = 20;
+
 export class VectorizeRestClient implements VectorIndexClient {
   private readonly base: string;
 
@@ -436,11 +440,11 @@ export class VectorizeRestClient implements VectorIndexClient {
 
   async fetchContentHashes(ids: string[]): Promise<Map<string, string>> {
     const hashes = new Map<string, string>();
-    for (let i = 0; i < ids.length; i += 100) {
+    for (let i = 0; i < ids.length; i += VECTORIZE_ID_BATCH) {
       const result = await cfRequest<Array<{ id: string; metadata?: { content_hash?: string } }>>(
         `${this.base}/get_by_ids`,
         this.apiToken,
-        JSON.stringify({ ids: ids.slice(i, i + 100) }),
+        JSON.stringify({ ids: ids.slice(i, i + VECTORIZE_ID_BATCH) }),
       );
       for (const vector of result ?? []) {
         if (vector.metadata?.content_hash) hashes.set(vector.id, vector.metadata.content_hash);
@@ -455,7 +459,13 @@ export class VectorizeRestClient implements VectorIndexClient {
   }
 
   async deleteByIds(ids: string[]): Promise<void> {
-    await cfRequest(`${this.base}/delete_by_ids`, this.apiToken, JSON.stringify({ ids }));
+    for (let i = 0; i < ids.length; i += VECTORIZE_ID_BATCH) {
+      await cfRequest(
+        `${this.base}/delete_by_ids`,
+        this.apiToken,
+        JSON.stringify({ ids: ids.slice(i, i + VECTORIZE_ID_BATCH) }),
+      );
+    }
   }
 }
 

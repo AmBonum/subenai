@@ -15,15 +15,18 @@ import {
   MAX_HISTORY_TURNS,
   type HistoryItem,
 } from "../../functions/_lib/scam-chat/schema";
+import { FAIL_CLOSED_MESSAGE } from "../../functions/_lib/scam-chat/budget";
 import { __test__ as security__test__ } from "../../functions/_lib/security";
 import {
   baseEnv,
   buildRequest,
   makeAi,
+  makeKv,
   makeVectorize,
   today,
   CANARY,
   MAIN_MODEL,
+  DEGRADED_MODEL,
   generationCalls,
 } from "./scam-chat-helpers";
 
@@ -115,6 +118,13 @@ describe("payload caps + schema", () => {
 
   it("returns 500 not_configured when the AI binding is missing", async () => {
     const env = { ...baseEnv(), AI: undefined };
+    const res = await onRequestPost({ request: buildRequest({ message: "ok?" }), env });
+    expect(res.status).toBe(500);
+    expect(((await res.json()) as { error: string }).error).toBe("not_configured");
+  });
+
+  it("returns 500 not_configured when the Vectorize index binding is missing", async () => {
+    const env = { ...baseEnv(), SCAM_CHAT_INDEX: undefined };
     const res = await onRequestPost({ request: buildRequest({ message: "ok?" }), env });
     expect(res.status).toBe(500);
     expect(((await res.json()) as { error: string }).error).toBe("not_configured");
@@ -360,5 +370,121 @@ describe("output gate", () => {
     const body = (await res.json()) as { reply: string };
     expect(body.reply).toBe(GENERIC_FALLBACK);
     expect(generationCalls(ai)).toHaveLength(1);
+  });
+});
+
+describe("rate limits + neuron budget", () => {
+  const IP = "203.0.113.77";
+
+  it("per-IP burst limit reached → 429 rate_limited (try again in minutes)", async () => {
+    const env = baseEnv({ SCAM_CHAT_KV: makeKv({ [`rl:sc-10m:${IP}:${today()}`]: "10" }) });
+    const res = await onRequestPost({ request: buildRequest({ message: "Je toto podvod?" }), env });
+    expect(res.status).toBe(429);
+    const body = (await res.json()) as { error: string; message: string };
+    expect(body.error).toBe("rate_limited");
+    expect(body.message).toBe("Príliš veľa správ za sebou. Skúste to, prosím, o pár minút.");
+    // Fail fast: no AI work once the burst cap is hit.
+    expect(env.AI.calls).toHaveLength(0);
+  });
+
+  it("per-IP daily limit reached → 429 rate_limited (try again tomorrow)", async () => {
+    const env = baseEnv({ SCAM_CHAT_KV: makeKv({ [`rl:sc-day:${IP}:${today()}`]: "40" }) });
+    const res = await onRequestPost({ request: buildRequest({ message: "Je toto podvod?" }), env });
+    expect(res.status).toBe(429);
+    const body = (await res.json()) as { error: string; message: string };
+    expect(body.error).toBe("rate_limited");
+    expect(body.message).toBe("Dnešný limit správ bol vyčerpaný. Skúste to, prosím, zajtra.");
+  });
+
+  it("global daily cap reached → 429 quota_exhausted with the fail-closed message", async () => {
+    const env = baseEnv({ SCAM_CHAT_KV: makeKv({ [`rl:sc-global:all:${today()}`]: "400" }) });
+    const res = await onRequestPost({ request: buildRequest({ message: "Je toto podvod?" }), env });
+    expect(res.status).toBe(429);
+    const body = (await res.json()) as { error: string; message: string };
+    expect(body.error).toBe("quota_exhausted");
+    expect(body.message).toBe(FAIL_CLOSED_MESSAGE);
+  });
+
+  it("neuron hard threshold → 429 quota_exhausted before any AI spend", async () => {
+    const env = baseEnv({ SCAM_CHAT_KV: makeKv({ [`sc:neurons:${today()}`]: "9000" }) });
+    const res = await onRequestPost({ request: buildRequest({ message: "Je toto podvod?" }), env });
+    expect(res.status).toBe(429);
+    expect(((await res.json()) as { error: string }).error).toBe("quota_exhausted");
+    expect(env.AI.calls).toHaveLength(0);
+  });
+
+  it("neuron soft threshold → degrades generation to the 8B model and flags degraded", async () => {
+    const ai = makeAi();
+    const env = baseEnv({ AI: ai, SCAM_CHAT_KV: makeKv({ [`sc:neurons:${today()}`]: "6000" }) });
+    const res = await onRequestPost({ request: buildRequest({ message: "Je toto podvod?" }), env });
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { degraded: boolean };
+    expect(body.degraded).toBe(true);
+    const gen = generationCalls(ai);
+    expect(gen).toHaveLength(1);
+    expect(gen[0].model).toBe(DEGRADED_MODEL);
+  });
+
+  it("under both thresholds → main 70B model, not degraded", async () => {
+    const ai = makeAi();
+    const env = baseEnv({ AI: ai });
+    const res = await onRequestPost({ request: buildRequest({ message: "Je toto podvod?" }), env });
+    const body = (await res.json()) as { degraded: boolean };
+    expect(body.degraded).toBe(false);
+    expect(generationCalls(ai)[0].model).toBe(MAIN_MODEL);
+  });
+});
+
+describe("photo findings + multi-turn", () => {
+  function userTurn(ai: ReturnType<typeof makeAi>): string {
+    const messages = generationCalls(ai)[0].inputs.messages as Array<{
+      role: string;
+      content: string;
+    }>;
+    const last = messages[messages.length - 1];
+    expect(last.role).toBe("user");
+    return last.content;
+  }
+
+  it("folds attached photo findings into the user turn sent to generation", async () => {
+    const ai = makeAi();
+    const env = baseEnv({ AI: ai });
+    const res = await onRequestPost({
+      request: buildRequest({
+        message: "Je tento e-mail podvod?",
+        photo_findings: ["Screenshot SMS s odkazom na falošnú stránku banky."],
+      }),
+      env,
+    });
+    expect(res.status).toBe(200);
+    const content = userTurn(ai);
+    expect(content).toContain("Priložené dôkazy");
+    expect(content).toContain("Fotka 1: Screenshot SMS s odkazom na falošnú stránku banky.");
+  });
+
+  it("includes the prior conversation turns in the generation messages", async () => {
+    const ai = makeAi();
+    const env = baseEnv({ AI: ai });
+    const res = await onRequestPost({
+      request: buildRequest({
+        message: "A čo táto druhá SMS?",
+        history: [
+          { role: "user", content: "Predošlá otázka o phishingu." },
+          { role: "assistant", content: "Áno, znie to ako phishing." },
+        ],
+      }),
+      env,
+    });
+    expect(res.status).toBe(200);
+    const messages = generationCalls(ai)[0].inputs.messages as Array<{
+      role: string;
+      content: string;
+    }>;
+    const serialized = JSON.stringify(messages);
+    expect(serialized).toContain("Predošlá otázka o phishingu.");
+    expect(serialized).toContain("Áno, znie to ako phishing.");
+    // System prompt + 2 history turns + the new user turn.
+    expect(messages).toHaveLength(4);
+    expect(messages[0].role).toBe("system");
   });
 });
