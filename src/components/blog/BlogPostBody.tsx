@@ -173,7 +173,7 @@ export function BlogPostBody({ mdx }: { mdx: string }) {
               >
                 <a
                   href={`#${id}`}
-                  className="opacity-0 transition-opacity group-hover:opacity-100"
+                  className="opacity-70 transition-opacity hover:opacity-100"
                   aria-label="odkaz na túto sekciu"
                 >
                   <span className="text-primary">#</span>{" "}
@@ -191,7 +191,7 @@ export function BlogPostBody({ mdx }: { mdx: string }) {
               >
                 <a
                   href={`#${id}`}
-                  className="opacity-0 transition-opacity group-hover:opacity-100"
+                  className="opacity-70 transition-opacity hover:opacity-100"
                   aria-label="odkaz na túto sekciu"
                 >
                   <span className="text-primary">#</span>{" "}
