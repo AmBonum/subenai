@@ -66,4 +66,23 @@ describe("parseChangelog", () => {
     expect(versions[0].fixed).toEqual(["C"]);
     expect(versions[0].removed).toEqual(["D"]);
   });
+
+  it("folds a soft-wrapped bullet's continuation lines into one entry", () => {
+    // Regression: hard-wrapped bullets in CHANGELOG.md used to be cut at
+    // the first physical line, truncating entries mid-sentence and leaving
+    // unclosed **bold** markers rendering literally on /changelog.
+    const md = `## [1.0.0] — 2026-01-01\n### Added\n- **Bold lead** that keeps going\n  onto a second line, and even\n  a third one.\n- Second item\n`;
+    const versions = parseChangelog(md);
+    expect(versions[0].added).toEqual([
+      "**Bold lead** that keeps going onto a second line, and even a third one.",
+      "Second item",
+    ]);
+    expect((versions[0].added[0].match(/\*\*/g) ?? []).length % 2).toBe(0);
+  });
+
+  it("a blank line closes a bullet so following prose is not folded in", () => {
+    const md = `## [1.0.0] — 2026-01-01\n### Added\n- item one\n\nstray prose\n- item two\n`;
+    const versions = parseChangelog(md);
+    expect(versions[0].added).toEqual(["item one", "item two"]);
+  });
 });

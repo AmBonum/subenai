@@ -721,7 +721,7 @@ odpoveď alebo presmerovanie tam, kde ju nájdeš.
   zobrazí karta s odkazom na článok, ak je nejaký pre danú sadu
   tagovaný. Symetrický náprotivok karty, ktorá už mesiace existovala
   na detaile školení.
-- **FAQ sekcie sú teraz *senior-level*** — na `/tests` aj `/courses`:
+- **FAQ sekcie sú teraz senior-level** — na `/tests` aj `/courses`:
   ikona pri každej otázke pre rýchlu orientáciu (peniaze, čas,
   publikum, súkromie, zdieľanie), *„Najčastejšia"* odznak pri prvej
   otázke, *rozbaliť/zbaliť všetko* tlačítko, a hlavne **deep-link

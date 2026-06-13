@@ -48,6 +48,12 @@ export function parseChangelog(markdown) {
   const versions = [];
   let current = null;
   let currentSection = null;
+  // Reference to the bullet currently being built, so soft-wrapped
+  // continuation lines (a hard-wrapped bullet spans several physical
+  // lines in CHANGELOG.md) fold back into it instead of being dropped —
+  // dropping them truncated entries mid-sentence and left unclosed
+  // `**bold**` markers rendering literally.
+  let openBullet = null;
 
   for (const raw of lines) {
     const line = raw.trimEnd();
@@ -56,6 +62,7 @@ export function parseChangelog(markdown) {
       /^##\s+\[(?<v>[^\]]+)\](?:\s+[-—–]\s+(?<d>\d{4}-\d{2}-\d{2}))?\s*$/,
     );
     if (versionMatch) {
+      openBullet = null;
       const version = versionMatch.groups.v.trim();
       const date = versionMatch.groups.d?.trim() ?? null;
       if (version.toLowerCase() === "unreleased") {
@@ -83,14 +90,27 @@ export function parseChangelog(markdown) {
 
     const sectionMatch = line.match(/^###\s+(?<s>\S+)\s*$/);
     if (sectionMatch) {
+      openBullet = null;
       const key = SECTION_ALIASES[sectionMatch.groups.s.toLowerCase()];
       currentSection = key && current ? key : null;
       continue;
     }
 
-    const bulletMatch = line.match(/^-\s+(?<t>.+?)\s*$/);
+    const bulletMatch = line.match(/^[-*]\s+(?<t>.+?)\s*$/);
     if (bulletMatch && current && currentSection) {
-      current[currentSection].push(bulletMatch.groups.t);
+      const list = current[currentSection];
+      list.push(bulletMatch.groups.t);
+      openBullet = { list, index: list.length - 1 };
+      continue;
+    }
+
+    // A blank line closes the open bullet; a non-blank, non-structural
+    // line is a soft-wrap continuation and folds into it with a space.
+    if (line.trim() === "") {
+      openBullet = null;
+    } else if (openBullet) {
+      openBullet.list[openBullet.index] =
+        `${openBullet.list[openBullet.index]} ${line.trim()}`.trim();
     }
   }
 
