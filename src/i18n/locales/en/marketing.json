@@ -651,6 +651,7 @@
     "last_deploy_version": " (version {version}).",
     "empty": "No versions yet.",
     "list_aria": "Version list",
+    "summary_aria": "Version contents",
     "empty_version": "(empty version — internal changes only)",
     "kind_added": "Added",
     "kind_changed": "Changed",

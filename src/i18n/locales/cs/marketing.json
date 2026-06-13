@@ -651,6 +651,7 @@
     "last_deploy_version": " (verze {version}).",
     "empty": "Zatím žádné verze.",
     "list_aria": "Seznam verzí",
+    "summary_aria": "Obsah verze",
     "empty_version": "(prázdná verze — jen interní změny)",
     "kind_added": "Přidáno",
     "kind_changed": "Změněno",

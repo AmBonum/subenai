@@ -851,6 +851,7 @@
     "last_deploy_version": ", verzia {version}.",
     "empty": "Zatiaľ žiadne verzie.",
     "list_aria": "Zoznam verzií",
+    "summary_aria": "Obsah verzie",
     "empty_version": "(prázdna verzia — len interné zmeny)",
     "kind_added": "Pridané",
     "kind_changed": "Zmenené",

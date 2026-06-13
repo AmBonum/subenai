@@ -205,6 +205,29 @@ export class ChangelogPage extends BasePage {
     });
   }
 
+  // Accordion behaviour: each version is a collapsible item. The trigger is
+  // the single button inside its <li>; its content panel has role="region"
+  // and is unmounted while collapsed.
+  private item(index: number): Locator {
+    return this.list.locator(":scope > li").nth(index);
+  }
+
+  triggerAt(index: number): Locator {
+    return this.item(index).getByRole("button");
+  }
+
+  contentAt(index: number): Locator {
+    return this.item(index).getByRole("region");
+  }
+
+  async isExpandedAt(index: number): Promise<boolean> {
+    return (await this.triggerAt(index).getAttribute("aria-expanded")) === "true";
+  }
+
+  async anchorAt(index: number): Promise<string> {
+    return (await this.item(index).getAttribute("id")) ?? "";
+  }
+
   async xssWindowProp(): Promise<unknown> {
     return this.page.evaluate(() => (window as unknown as Record<string, unknown>).__xss);
   }

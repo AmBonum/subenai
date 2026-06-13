@@ -525,6 +525,70 @@ test.describe("Changelog /changelog", () => {
     });
   });
 
+  // TC-22: only the newest version is expanded by default; older ones are
+  // collapsed (single-open accordion).
+  test("TC-22: Newest version expanded by default, older versions collapsed", async ({
+    page,
+    changelog,
+  }) => {
+    await test.step("Navigate to /changelog at 1280×800", async () => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await changelog.open();
+    });
+
+    await test.step("Newest entry is expanded and its content is visible", async () => {
+      expect(await changelog.isExpandedAt(0)).toBe(true);
+      await expect(changelog.contentAt(0)).toBeVisible();
+    });
+
+    await test.step("The next entry is collapsed and its content is hidden", async () => {
+      expect(await changelog.listItems.count()).toBeGreaterThan(1);
+      expect(await changelog.isExpandedAt(1)).toBe(false);
+      await expect(changelog.contentAt(1)).toBeHidden();
+    });
+  });
+
+  // TC-23: opening an older version collapses the newest — only one panel
+  // open at a time.
+  test("TC-23: Opening an older version collapses the newest (single-open)", async ({
+    page,
+    changelog,
+  }) => {
+    await test.step("Navigate to /changelog at 1280×800", async () => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await changelog.open();
+    });
+
+    await test.step("Open the second version", async () => {
+      await changelog.triggerAt(1).click();
+    });
+
+    await test.step("Second version is now open and the newest has collapsed", async () => {
+      expect(await changelog.isExpandedAt(1)).toBe(true);
+      expect(await changelog.isExpandedAt(0)).toBe(false);
+    });
+  });
+
+  // TC-24: a deep link to a collapsed version opens AND scrolls to it.
+  test("TC-24: Deep link expands and reveals the targeted version", async ({ page, changelog }) => {
+    let anchor = "";
+    await test.step("Read the anchor of the second (collapsed) version", async () => {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await changelog.open();
+      anchor = await changelog.anchorAt(1);
+      expect(anchor).toMatch(/^v\d/);
+    });
+
+    await test.step("Navigate directly to that anchor", async () => {
+      await changelog.open(`#${anchor}`);
+    });
+
+    await test.step("The targeted version is expanded and its content is visible", async () => {
+      expect(await changelog.isExpandedAt(1)).toBe(true);
+      await expect(changelog.contentAt(1)).toBeVisible();
+    });
+  });
+
   // TC-21: Console is clean on all three legal pages (no JS errors at load)
   test("TC-21: No console errors on /privacy, /cookies, or /changelog", async ({ page }) => {
     const errors: string[] = [];
