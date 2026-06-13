@@ -18,8 +18,21 @@ export const GENERIC_FALLBACK =
 export function extractResponseText(raw: unknown): string {
   if (typeof raw === "string") return raw;
   if (raw && typeof raw === "object") {
-    const response = (raw as { response?: unknown }).response;
-    if (typeof response === "string") return response;
+    const obj = raw as Record<string, unknown>;
+    // Workers AI's OpenAI-compatible runtime returns the answer under
+    // choices[0].message.content and sets `response` to the PARSED value —
+    // an object when the model emitted JSON (e.g. {"on_topic": true}). The
+    // old { response: "<text>" } string shape only survives for some models,
+    // so read choices first, then a string `response`, then stringify an
+    // object `response`. Returning "" here is what silently failed every gate
+    // closed in production.
+    const choices = obj.choices;
+    if (Array.isArray(choices) && choices.length > 0) {
+      const content = (choices[0] as { message?: { content?: unknown } }).message?.content;
+      if (typeof content === "string") return content;
+    }
+    if (typeof obj.response === "string") return obj.response;
+    if (obj.response && typeof obj.response === "object") return JSON.stringify(obj.response);
   }
   return "";
 }

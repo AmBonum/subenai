@@ -36,6 +36,24 @@ export interface MockAi {
 export const DEFAULT_REPLY =
   "Toto vyzerá ako phishing — neklikajte na odkaz. Viac v článku /blog/phishing-priklady.";
 
+// Workers AI's OpenAI-compatible runtime returns chat output under
+// choices[0].message.content (a string) and `response` as the PARSED value
+// — an object when the model emitted JSON. The mock mirrors this exactly so
+// the suite exercises the real extraction path; mocking the old
+// { response: "<string>" } shape is what let the prod gate bug ship green.
+function aiEnvelope(content: string): Record<string, unknown> {
+  let parsed: unknown = content;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    parsed = content;
+  }
+  return {
+    choices: [{ index: 0, finish_reason: "stop", message: { role: "assistant", content } }],
+    response: parsed,
+  };
+}
+
 // The mock distinguishes call kinds the same way the pipeline shapes
 // them: embeddings by model id, Llama Guard by model id, topic gates by
 // the strict-JSON "on_topic" instruction (input vs output by data tag),
@@ -48,20 +66,20 @@ export function makeAi(script: AiScript = {}): MockAi {
       calls.push({ model, inputs });
       if (model.includes("bge")) return { data: [[0.1, 0.2, 0.3]] };
       if (model.includes("llama-guard")) {
-        if (script.guard === "unsafe") return { response: "unsafe\nS9" };
-        if (script.guard === "garbage") return { response: "???" };
-        return { response: "safe" };
+        if (script.guard === "unsafe") return aiEnvelope("unsafe\nS9");
+        if (script.guard === "garbage") return aiEnvelope("???");
+        return aiEnvelope("safe");
       }
       const text = JSON.stringify(inputs);
       if (text.includes("on_topic")) {
         const verdict = text.includes("assistant_reply")
           ? (script.outputTopic ?? true)
           : (script.inputTopic ?? true);
-        if (verdict === "garbage") return { response: "no json here" };
-        return { response: JSON.stringify({ on_topic: verdict }) };
+        if (verdict === "garbage") return aiEnvelope("no json here");
+        return aiEnvelope(JSON.stringify({ on_topic: verdict }));
       }
       if (script.failGeneration) throw new Error("model exploded");
-      return { response: script.reply ?? DEFAULT_REPLY };
+      return aiEnvelope(script.reply ?? DEFAULT_REPLY);
     },
   };
 }
