@@ -26,7 +26,18 @@
 // disclosed implicitly in Phase B but formalised here). Existing
 // users must re-decide because (a) the categories disclosure changed
 // and (b) the controller→processor map widened.
-export const CONSENT_VERSION = "1.7.0";
+//
+// E53.8 — bumped 1.7.0 → 1.8.0 when /privacy gained section 9 "AI
+// Podvodový poradca": a new processing purpose (fraud-prevention
+// assistance) with Cloudflare Workers AI as the inference processor — a
+// new purpose on an already-disclosed hosting processor. The disclosure
+// also states zero conversation-transcript retention, ≤ 30-min photo
+// max-retention (downscaled copies only, primary path discards
+// immediately), and client-side-only police-report PDF generation. No
+// new storage category (the widget is React-state only — see /cookies
+// s2 note), but the processing-purpose disclosure changed, so existing
+// users must re-decide.
+export const CONSENT_VERSION = "1.8.0";
 export const CONSENT_STORAGE_KEY = "iiq_consent";
 
 export type ConsentCategory = "necessary" | "preferences" | "analytics" | "marketing";

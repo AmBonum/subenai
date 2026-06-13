@@ -17,6 +17,7 @@ vi.mock("@tanstack/react-router", () => ({
 
 import { RespondentIntakeForm } from "@/components/composer/edu/intake/RespondentIntakeForm";
 import { ConsentProvider } from "@/hooks/useConsent";
+import { CONSENT_VERSION } from "@/lib/consent";
 
 beforeEach(() => {
   vi.restoreAllMocks();
@@ -113,7 +114,7 @@ describe("RespondentIntakeForm", () => {
     window.localStorage.setItem(
       "iiq_consent",
       JSON.stringify({
-        version: "1.7.0",
+        version: CONSENT_VERSION,
         timestamp: new Date().toISOString(),
         categories: { necessary: true, preferences: true, analytics: false, marketing: false },
       }),
@@ -156,7 +157,7 @@ describe("RespondentIntakeForm", () => {
     window.localStorage.setItem(
       "iiq_consent",
       JSON.stringify({
-        version: "1.7.0",
+        version: CONSENT_VERSION,
         timestamp: new Date().toISOString(),
         categories: { necessary: true, preferences: true, analytics: false, marketing: false },
       }),
@@ -174,7 +175,7 @@ describe("RespondentIntakeForm", () => {
     window.localStorage.setItem(
       "iiq_consent",
       JSON.stringify({
-        version: "1.7.0",
+        version: CONSENT_VERSION,
         timestamp: new Date().toISOString(),
         categories: { necessary: true, preferences: true, analytics: false, marketing: false },
       }),

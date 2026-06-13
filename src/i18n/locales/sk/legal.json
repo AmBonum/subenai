@@ -104,6 +104,11 @@
           "purpose": "Verejná publikácia vlastnej šablóny v knižnici /sablony (zachytený autorský údaj — meno alebo prezývka — z profilu v momente schválenia administrátorom; obsah šablóny: názov, popis, otázky)",
           "basis": "Súhlas autora pri odoslaní + oprávnený záujem na uvedení autora podľa licencie CC BY 4.0 / čl. 6 ods. 1 písm. a a f GDPR; AI predkontrola obsahu (Claude Haiku 4.5) je sprostredkovateľské spracovanie podľa čl. 28 GDPR — viď sekcia 4",
           "retention": "Trvanie publikácie + 12 mesiacov po stiahnutí. Schválené šablóny ostávajú verejné kým ich autor alebo administrátor nestiahne; autorský údaj sa drží aj po zmazaní účtu (CC BY 4.0 vyžaduje uvedenie autora pre tých, ktorí si šablónu fork-li). Zamietnuté/withdrawn submissions sa anonymizujú do 12 mesiacov."
+        },
+        "scam_chat": {
+          "purpose": "AI Podvodový poradca — odpovede na otázky o podvodoch, preverenie podozrenia (triage) a voliteľná analýza priložených fotiek (max 5, zmenšené na ≤ 1600 px)",
+          "basis": "Súhlas / čl. 6 ods. 1 písm. a GDPR (asistenta otvárate dobrovoľne); abuse-prevention počítadlá na základe oprávneného záujmu / čl. 6 ods. 1 písm. f GDPR",
+          "retention": "Bez uchovávania — text rozhovoru ani fotky neukladáme. Fotky sa analyzujú počas požiadavky a vzápätí sa zahodia; záložná cesta (zatiaľ vypnutá) má tvrdý limit ≤ 30 minút. PDF pre políciu sa generuje lokálne vo vašom prehliadači."
         }
       }
     },
@@ -255,16 +260,32 @@
       "callout_suffix": " — pomôžeme vám autora identifikovať a postúpime žiadosť.",
       "schools_link_prefix": "Viac o nastavení edu testu pre školu nájdeš na stránke Pre školy"
     },
+    "s_scam": {
+      "heading": "9. AI Podvodový poradca",
+      "intro_prefix": "Na stránke ponúkame voliteľného ",
+      "intro_emph": "AI Podvodového poradcu",
+      "intro_suffix": " — asistenta, ktorý odpovedá na otázky o podvodoch, dokáže preveriť podozrivú správu či situáciu (triage) a voliteľne posúdiť priložené fotky (napr. screenshot podvodnej SMS). Asistenta otvárate dobrovoľne; kým ho neotvoríte, nič sa nespracúva.",
+      "processor_label": "Sprostredkovateľ inferencie:",
+      "processor_text": " odpovede generuje Cloudflare Workers AI (Cloudflare, Inc.) — náš hostingový sprostredkovateľ podľa čl. 28 GDPR (DPA + SCC), inferencia je tu nový účel spracúvania. Účelom je pomoc pri prevencii podvodov.",
+      "no_transcript_label": "Neukladáme rozhovor:",
+      "no_transcript_text": " obsah konverzácie žije iba v pamäti vášho prehliadača počas otvorenej karty a zatvorením karty zaniká. Nezapisujeme ho do databázy, logov ani inde — neexistuje žiadny prepis (transcript) rozhovoru.",
+      "photos_label": "Fotky (max 5):",
+      "photos_text": " na server posielame iba zmenšenú kópiu (≤ 1600 px), nikdy originál. Fotka sa analyzuje priamo počas požiadavky a jej bajty sa vzápätí zahodia. Maximálna doba uchovania je 30 minút a uplatní sa len na záložnej ceste (zatiaľ vypnutej) ako tvrdý limit; bežná cesta zahadzuje dáta okamžite.",
+      "pdf_label": "PDF pre políciu:",
+      "pdf_text": " hlásenie pre políciu (meno, časová os, dôkazy) sa zostavuje a generuje výhradne lokálne vo vašom prehliadači. Na naše servery sa žiadna jeho kópia neodosiela ani neukladá.",
+      "sensitive_label": "Citlivé údaje:",
+      "sensitive_text": " pred prvým použitím asistent zobrazí upozornenie, aby ste doň nepísali rodné číslo ani heslá. Vzhľadom na nulové uchovávanie (vyššie) prípadné citlivé detaily neopúšťajú okno spracúvania (max 30 minút v najhoršom prípade)."
+    },
     "s9": {
-      "heading": "9. Bezpečnosť",
+      "heading": "10. Bezpečnosť",
       "text": "Komunikácia prebieha cez HTTPS (TLS 1.3), údaje v Supabase sú šifrované at-rest aj in-transit, prístup k databáze je chránený Row Level Security politikami. Stripe-hostované formuláre kartových údajov sú PCI DSS Level 1 certifikované — naše servery žiadne kartové údaje nikdy nevidia. Heslá autorov edu zostáv ukladáme výlučne ako bcrypt hashe (pgcrypto, cost factor 10) — pôvodné heslo neukladáme nikde."
     },
     "s10": {
-      "heading": "10. Zmeny týchto zásad",
+      "heading": "11. Zmeny týchto zásad",
       "text": "Pri podstatnej zmene zásad ti zobrazíme nový cookie banner so žiadosťou o nový súhlas (zvýšením verzie záznamu). Drobné jazykové úpravy zverejňujeme bez upozornenia. Aktuálna verzia má vždy uvedený dátum pri názve dokumentu."
     },
     "s11": {
-      "heading": "11. Súvisiace dokumenty",
+      "heading": "12. Súvisiace dokumenty",
       "prefix": "Detailný zoznam cookies a úložiska je v ",
       "link": "zásadách používania cookies",
       "suffix": "."
@@ -295,6 +316,10 @@
       "stripe_category_prefix": "Nevyhnutné pre platbu (iba na ",
       "stripe_category_code": "/support",
       "stripe_category_suffix": ")",
+      "scam_note_label": "AI Podvodový poradca:",
+      "scam_note_prefix": " asistent neukladá do tvojho zariadenia žiadne cookies ani localStorage/sessionStorage — rozhovor žije iba v pamäti otvorenej karty a zatvorením zaniká. Preto preň nepribúda žiadna kategória úložiska. Podrobnosti o spracúvaní nájdeš v ",
+      "scam_note_link": "zásadách ochrany súkromia",
+      "scam_note_suffix": ".",
       "rows": {
         "consent": {
           "category": "Nevyhnutné",

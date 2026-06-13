@@ -161,6 +161,17 @@ function CookiesPage() {
                   </tbody>
                 </table>
               </div>
+              <p
+                data-testid="cookies-scam-note"
+                className="pt-2 text-sm leading-relaxed text-muted-foreground"
+              >
+                <strong className="text-foreground">{t("s2.scam_note_label")}</strong>
+                {t("s2.scam_note_prefix")}
+                <Link to={ROUTES.privacy} className="underline underline-offset-2">
+                  {t("s2.scam_note_link")}
+                </Link>
+                {t("s2.scam_note_suffix")}
+              </p>
             </section>
 
             <section

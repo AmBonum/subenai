@@ -15,8 +15,8 @@ describe("CONSENT_VERSION (AH-7.1)", () => {
     window.localStorage.clear();
   });
 
-  it("is pinned at 1.7.0 — bumped by E44 Phase D for public template publication (Anthropic recipient + CC BY 4.0 license disclosure)", () => {
-    expect(CONSENT_VERSION).toBe("1.7.0");
+  it("is pinned at 1.8.0 — bumped by E53.8 for the AI scam-chat assistant (Cloudflare Workers AI inference purpose + no-retention/client-side-PDF disclosure)", () => {
+    expect(CONSENT_VERSION).toBe("1.8.0");
   });
 
   it("re-shows the banner when a stored 1.3.0 record is encountered", () => {
@@ -34,7 +34,7 @@ describe("CONSENT_VERSION (AH-7.1)", () => {
   it("returns the freshly-saved record when version matches", () => {
     saveConsent(ALL_ACCEPTED);
     const rec = loadConsent();
-    expect(rec?.version).toBe("1.7.0");
+    expect(rec?.version).toBe("1.8.0");
     expect(rec?.categories.analytics).toBe(true);
   });
 });

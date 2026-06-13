@@ -19,6 +19,7 @@ const PROCESSING_ROW_KEYS = [
   "sponsorship",
   "dpa",
   "templates_public",
+  "scam_chat",
 ] as const;
 
 // E21.3 — section IDs are the contract for the on-page TOC + deep
@@ -34,6 +35,7 @@ const TOC_ITEMS: DocTocItem[] = [
   { id: "privacy-s6", label: "Profilovanie" },
   { id: "privacy-s7", label: "Sponzorovanie" },
   { id: "privacy-s8", label: "Education mode" },
+  { id: "privacy-s-scam", label: "AI Podvodový poradca" },
   { id: "privacy-s9", label: "Bezpečnosť" },
   { id: "privacy-s10", label: "Zmeny zásad" },
   { id: "privacy-s11", label: "Súvisiace dokumenty" },
@@ -548,6 +550,44 @@ function PrivacyPage() {
                   <ExternalLink className="size-3" aria-hidden="true" />
                 </Link>
               </p>
+            </section>
+
+            <section
+              id="privacy-s-scam"
+              className="scroll-mt-24 space-y-2"
+              aria-labelledby="privacy-s-scam-heading"
+              data-testid="privacy-section-s-scam"
+            >
+              <h2 id="privacy-s-scam-heading" className="text-xl font-semibold">
+                {t("s_scam.heading")}
+              </h2>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {t("s_scam.intro_prefix")}
+                <strong>{t("s_scam.intro_emph")}</strong>
+                {t("s_scam.intro_suffix")}
+              </p>
+              <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
+                <li>
+                  <strong>{t("s_scam.processor_label")}</strong>
+                  {t("s_scam.processor_text")}
+                </li>
+                <li>
+                  <strong>{t("s_scam.no_transcript_label")}</strong>
+                  {t("s_scam.no_transcript_text")}
+                </li>
+                <li>
+                  <strong>{t("s_scam.photos_label")}</strong>
+                  {t("s_scam.photos_text")}
+                </li>
+                <li>
+                  <strong>{t("s_scam.pdf_label")}</strong>
+                  {t("s_scam.pdf_text")}
+                </li>
+                <li>
+                  <strong>{t("s_scam.sensitive_label")}</strong>
+                  {t("s_scam.sensitive_text")}
+                </li>
+              </ul>
             </section>
 
             <section
