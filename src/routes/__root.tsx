@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HeadContent, Outlet, createRootRoute, useMatches } from "@tanstack/react-router";
 
@@ -8,6 +8,7 @@ import { GoogleAnalyticsManager } from "@/components/analytics/GoogleAnalyticsMa
 import { SignedOutFlash } from "@/components/auth/SignedOutFlash";
 import { Footer } from "@/components/layout/Footer";
 import { NotFoundPage } from "@/components/layout/NotFoundPage";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SkipToContentLink } from "@/components/layout/SkipToContentLink";
 import { ScamChatWidget } from "@/components/scam-chat/ScamChatWidget";
@@ -69,6 +70,9 @@ function RootComponent() {
   // E53.3 — the scam-chat launcher appears ONLY on the home page (product
   // decision 2026-06-13). The index route is the single match with id "/".
   const isHomePage = matches.some((m) => m.routeId === "/");
+  // E56 — mobile bottom-nav + desktop hamburger share one menu sheet; the open
+  // state is lifted here so either trigger drives the same sheet in SiteHeader.
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
@@ -86,7 +90,9 @@ function RootComponent() {
               own pair, so an unconditional wrapper here would duplicate
               the `main` id. */}
             {!hideSiteHeader && <SkipToContentLink />}
-            {!hideSiteHeader && <SiteHeader />}
+            {!hideSiteHeader && (
+              <SiteHeader menuOpen={mobileMenuOpen} onMenuOpenChange={setMobileMenuOpen} />
+            )}
             {hideSiteHeader ? (
               <Outlet />
             ) : (
@@ -95,6 +101,15 @@ function RootComponent() {
               </div>
             )}
             {!hideSiteFooter && <Footer />}
+            {/* E56 — spacer so the fixed mobile bottom-nav never covers the
+                footer / last content. Mirrors the bar height; desktop = 0. */}
+            {!hideSiteHeader && <div className="h-16 lg:hidden" aria-hidden="true" />}
+            {!hideSiteHeader && (
+              <MobileBottomNav
+                menuOpen={mobileMenuOpen}
+                onOpenMenu={() => setMobileMenuOpen(true)}
+              />
+            )}
             <ConsentBanner />
             <ConsentPreferencesDialog />
             {!isInsidePrivateShell && <Toaster position="top-center" />}

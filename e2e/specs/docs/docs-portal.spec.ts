@@ -35,8 +35,12 @@ test.describe("Docs portal (anonymous)", () => {
   }) => {
     await page.goto("/");
     if (await consent.isVisible()) await consent.rejectAll();
-    // login stays in the top bar; Dokumentácia moved into the hamburger sidebar
+    // login stays in the top bar; Dokumentácia lives in the shared menu sheet
     await expect(header.navLogin).toHaveAttribute("href", "/login");
+    // E56 — the sheet opens from the bottom-nav Menu button on mobile, so
+    // drop to a mobile viewport before opening it (the bottom nav is hidden
+    // from `lg` up).
+    await page.setViewportSize({ width: 375, height: 667 });
     await header.openMobileMenu();
     await expect(header.sheetDocsLink).toHaveAttribute("href", "/docs");
   });

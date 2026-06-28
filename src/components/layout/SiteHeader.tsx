@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { LayoutDashboard, LogOut, Menu, UserCog, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from "@/components/ui/sheet";
@@ -111,15 +111,21 @@ function computeActiveSlug(pathname: string): string | null {
   return bestSlug;
 }
 
-export function SiteHeader() {
+export interface SiteHeaderProps {
+  // E56 — the mobile-menu sheet's open state is lifted to the root layout so
+  // the mobile bottom-nav "Menu" tab and the desktop hamburger share one sheet.
+  menuOpen: boolean;
+  onMenuOpenChange: (open: boolean) => void;
+}
+
+export function SiteHeader({ menuOpen, onMenuOpenChange }: SiteHeaderProps) {
   const { pathname } = useLocation();
-  const [open, setOpen] = useState(false);
   const { isAuthenticated } = useAuth();
   const t = tFor("header");
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+    onMenuOpenChange(false);
+  }, [pathname, onMenuOpenChange]);
 
   const activeSlug = computeActiveSlug(pathname);
   const ctaLong = t("cta.long");
@@ -134,18 +140,19 @@ export function SiteHeader() {
       data-testid="header-root"
       className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
-      {/* Mobile: a 3-column grid so the bar reads logo · CTA · hamburger,
-          evenly spread and centered. From lg it switches to the standard
-          flex bar (logo left, cluster right). */}
+      {/* E56 — on mobile the primary nav lives in the bottom tab bar
+          (MobileBottomNav), so the top bar slims to just the logo. From lg the
+          standard flex bar returns: logo left, quick-links + CTA + hamburger
+          right. */}
       <nav
         data-testid="header-nav"
         aria-label={t("main_nav_aria")}
-        className="mx-auto grid max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3 sm:py-4 lg:flex lg:justify-between"
+        className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:py-4"
       >
         <Link
           to={ROUTES.home}
           data-testid="header-logo-link"
-          className="flex shrink-0 items-center justify-self-start"
+          className="flex shrink-0 items-center"
           aria-label={t("logo_aria")}
         >
           {/* Compact S-mark on small screens, the wordmark from lg+ (paired
@@ -155,24 +162,11 @@ export function SiteHeader() {
           <img src="/logo.svg" alt="subenai" className="hidden h-10 w-auto lg:block" />
         </Link>
 
-        {/* Centered CTA — mobile only (the grid's middle column). From lg the
-            CTA lives in the right cluster instead. */}
-        <Link
-          to={CTA_TO}
-          data-testid="header-cta-mobile-bar"
-          aria-label={ctaLong}
-          className="inline-flex items-center justify-self-center gap-1.5 whitespace-nowrap rounded-2xl bg-accent-gradient px-4 py-2 text-sm font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.99] lg:hidden"
-        >
-          {t("cta.short")}
-          <span aria-hidden="true">→</span>
-        </Link>
-
-        {/* Right cluster. The flat quick-links (Pre školy a lektorov,
-            Akadémia, Podpora projektu) appear from lg; the boxed items —
-            the Sady testov / Školenia dropdowns, the theme + a11y controls
-            and Dokumentácia — live in the hamburger sidebar at every width
-            so the bar stays clean. The hamburger is always visible. */}
-        <div className="flex items-center justify-self-end gap-2 sm:gap-3">
+        {/* Right cluster — desktop only. The flat quick-links + login/user, the
+            CTA pill and the hamburger sidebar (Sady testov panel, Dokumentácia,
+            theme, a11y) appear from lg. On mobile this cluster is empty; the
+            bottom tab bar carries Domov / Testy / Test / Akadémia / Menu. */}
+        <div className="flex items-center gap-2 sm:gap-3">
           <div data-testid="header-desktop-nav" className="hidden items-center gap-1 lg:flex">
             <MegaMenu items={desktopLinks} activeSlug={activeSlug} />
             {!isAuthenticated && (
@@ -192,13 +186,13 @@ export function SiteHeader() {
             <CtaPill ariaLabel={ctaLong} />
           </div>
 
-          {/* Hamburger — always visible. Opens the sidebar holding the full
-              navigation, the dropdown sections, Dokumentácia, theme, a11y,
-              locale and (on small screens) login + CTA. */}
-          <Sheet open={open} onOpenChange={setOpen}>
+          {/* Hamburger — desktop only (mobile opens this same sheet from the
+              bottom-nav "Menu" tab via the lifted open state). Holds the
+              Sady testov panel, Dokumentácia, theme, a11y, locale and login. */}
+          <Sheet open={menuOpen} onOpenChange={onMenuOpenChange}>
             <SheetTrigger
               data-testid="header-mobile-trigger"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground transition-colors hover:bg-card"
+              className="hidden h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground transition-colors hover:bg-card lg:inline-flex"
               aria-label={t("open_menu_aria")}
             >
               <Menu className="h-5 w-5" aria-hidden="true" />
