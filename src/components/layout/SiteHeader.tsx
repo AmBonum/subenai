@@ -161,29 +161,29 @@ export function SiteHeader() {
       <nav
         data-testid="header-nav"
         aria-label={t("main_nav_aria")}
-        className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:py-4"
+        className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:py-4"
       >
         <Link
           to={ROUTES.home}
           data-testid="header-logo-link"
-          className="flex items-center"
+          className="flex shrink-0 items-center"
           aria-label={t("logo_aria")}
         >
-          {/* Below lg: show only the favicon S-mark — the mega-menu eats
-              the horizontal budget at md and the full wordmark would wrap.
-              From lg+ the layout has room for the wordmark. */}
-          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-9 w-9 lg:hidden" />
-          <img src="/logo.svg" alt="subenai" className="hidden lg:block h-10 w-auto" />
+          {/* Compact S-mark until the full nav appears (xl), the wordmark
+              from xl+ where there is room. `shrink-0` keeps the logo from
+              being squeezed out when the nav is wide. */}
+          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-9 w-9 xl:hidden" />
+          <img src="/logo.svg" alt="subenai" className="hidden h-10 w-auto xl:block" />
         </Link>
 
-        {/* Desktop mega-menu — shown at ≥820px. The default `md:` (768px)
-            breakpoint caused horizontal overflow on tablets in portrait
-            (nav + CTA ≈ 848px > 768px viewport, 2026-05-19 finding from
-            Phase 5 e2e support TC-16). 820px is where the contents
-            actually fit without wrap. */}
+        {/* Full desktop nav — only from xl (1280px), where the 5 mega
+            items + secondary links + CTA genuinely fit. Below xl the bar
+            collapses to logo + CTA + hamburger (the sheet holds the full
+            nav). The previous 820px breakpoint overflowed at 1024–1280:
+            logo squeezed out, "Prihlásiť sa" wrapped, CTA clipped. */}
         <div
           data-testid="header-desktop-nav"
-          className="hidden items-center gap-1 min-[820px]:flex min-[820px]:gap-2"
+          className="hidden items-center gap-1 xl:flex xl:gap-1.5"
         >
           <MegaMenu items={MEGA_ITEMS} activeSlug={activeSlug} />
           {/* Slot is empty while LOCALE_SWITCHER_ENABLED = false */}
@@ -199,7 +199,7 @@ export function SiteHeader() {
           <Link
             to={ROUTES.docs}
             data-testid="header-nav-docs"
-            className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground lg:inline-flex"
+            className="inline-flex whitespace-nowrap text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             {t("nav.docs")}
           </Link>
@@ -207,7 +207,7 @@ export function SiteHeader() {
             <Link
               to={ROUTES.login}
               data-testid="header-nav-login"
-              className="hidden text-sm font-medium text-foreground transition-opacity hover:opacity-80 lg:inline-flex"
+              className="inline-flex whitespace-nowrap text-sm font-medium text-foreground transition-opacity hover:opacity-80"
             >
               {t("nav.login")}
             </Link>
@@ -216,12 +216,12 @@ export function SiteHeader() {
           {isAuthenticated && <HeaderUserMenu />}
         </div>
 
-        {/* Mobile hamburger — shown below 820px (paired with the desktop
-            nav's `min-[820px]:flex`; see comment above). */}
+        {/* Hamburger — shown below xl (paired with the desktop nav's
+            `xl:flex`). Holds the full nav + docs + login + CTA in the sheet. */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger
             data-testid="header-mobile-trigger"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground transition-colors hover:bg-card min-[820px]:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground transition-colors hover:bg-card xl:hidden"
             aria-label={t("open_menu_aria")}
           >
             <Menu className="h-5 w-5" aria-hidden="true" />
@@ -453,7 +453,7 @@ function CtaPill({ ariaLabel }: { ariaLabel: string }) {
       className="ml-1 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-2xl bg-accent-gradient px-4 py-2 text-sm font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.99]"
     >
       {t("cta.split_prefix")}
-      <span data-testid="header-cta-pill-long-suffix" className="hidden lg:inline">
+      <span data-testid="header-cta-pill-long-suffix" className="hidden 2xl:inline">
         {t("cta.split_middle")}
       </span>
       {t("cta.split_suffix")}
