@@ -1,6 +1,8 @@
 # PLAN — E55: Academy (merge /blog + /courses → /academy, interactive)
 
-**Status:** 🟡 Design approved 2026-06-28, awaiting implementation-plan kickoff
+**Status:** ✅ Done 2026-06-28 — E55.1–E55.7 implemented, merged to the branch.
+The academy lesson import SQL (`supabase/backfills/20260628_academy_import_lessons.sql`)
+runs against prod Supabase manually after merge.
 **Branch:** `feature/E55-academy`
 **Brainstorm:** approved by owner 2026-06-28 (this doc is the design spec)
 
@@ -209,20 +211,21 @@ owner runs the import SQL.
 
 ## Story breakdown (implementation-plan seed)
 
-- **E55.1** — Schema: `blog_posts` columns + types regen + invariants test.
-- **E55.2** — Shortcode renderer + `AcademyQuiz` (reuse quiz engine) + unit/a11y.
-- **E55.3** — `/academy` routes (index, $slug, category, author) + index filters;
-  queries renamed/extended; SEO JSON-LD per `content_type`.
-- **E55.4** — **Editorial copy-edit of every course (per § Content quality
-  gate)** by a dedicated subagent + shared Slovak glossary, corrections applied
-  to source; THEN Course→DB migration script + converter (+ golden tests) +
-  SQL out. The migration must not run on un-edited copy.
-- **E55.5** — `_redirects` + delete `/blog`+`/courses` routes/components +
-  repoint nav/footer/home/internal links + sitemap + RSS.
-- **E55.6** — Test consolidation: blog+courses → academy (unit + e2e/POM),
-  remove obsolete; full green loop.
-- **E55.7** — Final editorial proofread pass over ALL migrated lessons (+ the
-  82 articles' English-term glosses), closing the content quality gate.
+- ~~**E55.1** — Schema: `blog_posts` columns + types regen + invariants test.~~ ✅
+- ~~**E55.2** — Shortcode renderer + `AcademyQuiz` (reuse quiz engine) + unit/a11y.~~ ✅
+- ~~**E55.3** — `/academy` routes (index, $slug, category, author) + index filters;
+  queries renamed/extended; SEO JSON-LD per `content_type`.~~ ✅
+- ~~**E55.4** — Editorial copy-edit of every course (7 parallel korektor
+  subagents) + shared Slovak glossary, applied to source; Course→Markdown
+  converter + `[[visual:…]]` shortcode + course→row mapper (golden tests) +
+  idempotent import SQL generator.~~ ✅
+- ~~**E55.5** — `_redirects` (301) + delete `/blog`+`/courses` routes +
+  repoint nav (merge to one "Akadémia") / footer / home / internal links +
+  sitemap + RSS (→ /academy/rss.xml).~~ ✅
+- ~~**E55.6** — Test consolidation: blog+courses → academy (unit + e2e/POM),
+  remove obsolete; full green loop.~~ ✅
+- ~~**E55.7** — Final editorial proofread pass over all migrated lessons +
+  deterministic content-quality gate (`academy-lesson-quality.test.ts`).~~ ✅
 
 Sequencing: E55.1 → E55.2 ∥ E55.3 → E55.4 (edit → migrate) → E55.5 → E55.6 →
 E55.7.
