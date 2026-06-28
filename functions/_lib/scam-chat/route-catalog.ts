@@ -53,16 +53,10 @@ export const ROUTE_CATALOG: RouteCatalogEntry[] = [
     audience: "public",
   },
   {
-    path: "/courses",
-    title: "Kurzy",
-    description:
-      "Bezplatné kurzy o podvodoch — phishing, podvodné SMS a telefonáty, falošné e-shopy, investičné podvody a ďalšie.",
-    audience: "public",
-  },
-  {
-    path: "/blog",
+    path: "/academy",
     title: "Akadémia",
-    description: "Články o aktuálnych podvodoch na Slovensku a praktické návody, ako sa chrániť.",
+    description:
+      "Bezplatné interaktívne kurzy a články o podvodoch — phishing, podvodné SMS a telefonáty, falošné e-shopy, investičné podvody a praktické návody, ako sa chrániť.",
     audience: "public",
   },
   {

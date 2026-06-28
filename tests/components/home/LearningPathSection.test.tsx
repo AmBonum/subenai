@@ -28,9 +28,12 @@ describe("LearningPathSection", () => {
     expect(screen.getByTestId("home-learning-path-link-step1")).toHaveAttribute("data-to", "/test");
     expect(screen.getByTestId("home-learning-path-link-step2")).toHaveAttribute(
       "data-to",
-      "/courses",
+      "/academy",
     );
-    expect(screen.getByTestId("home-learning-path-link-step3")).toHaveAttribute("data-to", "/blog");
+    expect(screen.getByTestId("home-learning-path-link-step3")).toHaveAttribute(
+      "data-to",
+      "/academy",
+    );
   });
 
   it("renders the footer CTA pointing at /test", () => {

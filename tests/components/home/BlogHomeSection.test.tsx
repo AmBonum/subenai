@@ -57,7 +57,7 @@ describe("BlogHomeSection — render", () => {
     expect(within(section).getByTestId("home-blog-description")).toBeInTheDocument();
     expect(within(section).getByTestId("home-blog-cta-secondary")).toHaveAttribute(
       "data-to",
-      "/blog",
+      "/academy",
     );
   });
 
@@ -75,7 +75,7 @@ describe("BlogHomeSection — render", () => {
 
   it("renders the mobile primary CTA as a /blog link", () => {
     render(<BlogHomeSection />);
-    expect(screen.getByTestId("home-blog-cta-primary")).toHaveAttribute("data-to", "/blog");
+    expect(screen.getByTestId("home-blog-cta-primary")).toHaveAttribute("data-to", "/academy");
   });
 
   it("section is labelled via aria-labelledby for screen readers", () => {

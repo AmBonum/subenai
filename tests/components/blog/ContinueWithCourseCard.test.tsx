@@ -49,11 +49,11 @@ describe("ContinueWithCourseCard", () => {
     );
   });
 
-  it("CTA links to /courses/$slug with the right slug", () => {
+  it("CTA links to /academy/$slug with the right slug", () => {
     render(<ContinueWithCourseCard courseSlug={SAMPLE_COURSE.slug} />);
     expect(screen.getByTestId("blog-continue-with-course-cta")).toHaveAttribute(
       "data-to",
-      "/courses/$slug",
+      "/academy/$slug",
     );
   });
 

@@ -111,7 +111,7 @@ describe("BlogSearchEmptyState — suggestions + pillars", () => {
       />,
     );
     const chip = screen.getByTestId("blog-search-empty-suggestion-phishing-a-emaily");
-    expect(chip).toHaveAttribute("data-to", "/blog/kategoria/$slug");
+    expect(chip).toHaveAttribute("data-to", "/academy/category/$slug");
   });
 
   it("renders fallback pillar cards", () => {

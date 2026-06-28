@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, Compass, GraduationCap, Home, Map } from "lucide-react";
+import { ArrowRight, BookOpen, Compass, Home, Map } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { ROUTES } from "@/config/routes";
@@ -37,19 +37,12 @@ const SUGGESTIONS: Suggestion[] = [
     accent: "primary",
   },
   {
+    // E55 — courses + blog unified into the academy hub (single card).
     testId: "academy",
-    to: "blog",
+    to: "academy",
     icon: BookOpen,
     titleKey: "not_found_suggestions.academy_title",
     descKey: "not_found_suggestions.academy_desc",
-    accent: "default",
-  },
-  {
-    testId: "courses",
-    to: "skolenia",
-    icon: GraduationCap,
-    titleKey: "not_found_suggestions.courses_title",
-    descKey: "not_found_suggestions.courses_desc",
     accent: "default",
   },
   {
