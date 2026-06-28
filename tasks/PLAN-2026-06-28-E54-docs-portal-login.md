@@ -1,6 +1,8 @@
 # PLAN — E54: Docs portal + login surfacing
 
-**Status:** 🟡 Design approved 2026-06-28, awaiting implementation-plan kickoff
+**Status:** 🚧 Phase 1 implemented 2026-06-28 — E54.1–E54.5 done (login nav,
+docs engine, auth-docs rendering, public docs + first batch, e2e). Complete
+public-feature content + admin docs deferred to incremental follow-ups.
 **Branch:** `feature/E54-docs-portal-login`
 **Brainstorm:** approved by owner 2026-06-28 (this doc is the design spec)
 
