@@ -28,10 +28,16 @@ test.describe("Docs portal (anonymous)", () => {
     await expect(page).toHaveURL(/\/login/);
   });
 
-  test("the header exposes the docs + login entry points", async ({ page, header, consent }) => {
+  test("the header exposes login in the bar and docs in the sidebar", async ({
+    page,
+    header,
+    consent,
+  }) => {
     await page.goto("/");
     if (await consent.isVisible()) await consent.rejectAll();
-    await expect(header.navDocs).toHaveAttribute("href", "/docs");
+    // login stays in the top bar; Dokumentácia moved into the hamburger sidebar
     await expect(header.navLogin).toHaveAttribute("href", "/login");
+    await header.openMobileMenu();
+    await expect(header.sheetDocsLink).toHaveAttribute("href", "/docs");
   });
 });

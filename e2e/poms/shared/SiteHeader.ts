@@ -75,11 +75,6 @@ export class SiteHeader {
     return this.page.getByTestId(`header-mega-panel-link-${slug}-${linkKey}`);
   }
 
-  /** Wrapper div for the desktop LocaleSwitcher slot (always in DOM; empty while flag is off). */
-  get desktopLocaleSlot(): Locator {
-    return this.page.getByTestId("header-desktop-locale");
-  }
-
   /** Wrapper div for the mobile sheet LocaleSwitcher slot (always in DOM; empty while flag is off). */
   get mobileLocaleSlot(): Locator {
     return this.page.getByTestId("header-mobile-locale");
@@ -107,11 +102,6 @@ export class SiteHeader {
   /** Long-form suffix ("rýchly ") visible only at lg breakpoints. */
   get ctaPillLongSuffix(): Locator {
     return this.page.getByTestId("header-cta-pill-long-suffix");
-  }
-
-  /** E54 — public docs link (desktop). Always present. */
-  get navDocs(): Locator {
-    return this.page.getByTestId("header-nav-docs");
   }
 
   /** E54 — login link (desktop). Present only when signed out. */

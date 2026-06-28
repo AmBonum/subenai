@@ -152,6 +152,11 @@ export function SiteHeader() {
 
   const activeSlug = computeActiveSlug(pathname);
   const ctaLong = t("cta.long");
+  // Desktop top bar shows only the flat sections (Pre školy a lektorov,
+  // Akadémia, Podpora projektu). The dropdown sections (Sady testov,
+  // Školenia), the theme/a11y controls and Dokumentácia live in the
+  // hamburger sidebar — see MEGA_ITEMS / the sheet below.
+  const desktopLinks = MEGA_ITEMS.filter((item) => !item.panel);
 
   return (
     <header
@@ -169,124 +174,108 @@ export function SiteHeader() {
           className="flex shrink-0 items-center"
           aria-label={t("logo_aria")}
         >
-          {/* Compact S-mark until the full nav appears (xl), the wordmark
-              from xl+ where there is room. `shrink-0` keeps the logo from
-              being squeezed out when the nav is wide. */}
-          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-9 w-9 xl:hidden" />
-          <img src="/logo.svg" alt="subenai" className="hidden h-10 w-auto xl:block" />
+          {/* Compact S-mark on small screens, the wordmark from lg+ (paired
+              with the desktop quick-links). `shrink-0` stops the logo being
+              squeezed when the bar fills up. */}
+          <img src="/favicon.svg" alt="" aria-hidden="true" className="h-9 w-9 lg:hidden" />
+          <img src="/logo.svg" alt="subenai" className="hidden h-10 w-auto lg:block" />
         </Link>
 
-        {/* Full desktop nav — only from xl (1280px), where the 5 mega
-            items + secondary links + CTA genuinely fit. Below xl the bar
-            collapses to logo + CTA + hamburger (the sheet holds the full
-            nav). The previous 820px breakpoint overflowed at 1024–1280:
-            logo squeezed out, "Prihlásiť sa" wrapped, CTA clipped. */}
-        <div
-          data-testid="header-desktop-nav"
-          className="hidden items-center gap-1 xl:flex xl:gap-1.5"
-        >
-          <MegaMenu items={MEGA_ITEMS} activeSlug={activeSlug} />
-          {/* Slot is empty while LOCALE_SWITCHER_ENABLED = false */}
-          <div data-testid="header-desktop-locale">
-            <LocaleSwitcher />
+        {/* Right cluster. The flat quick-links (Pre školy a lektorov,
+            Akadémia, Podpora projektu) appear from lg; the boxed items —
+            the Sady testov / Školenia dropdowns, the theme + a11y controls
+            and Dokumentácia — live in the hamburger sidebar at every width
+            so the bar stays clean. CTA + hamburger are always visible. */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div data-testid="header-desktop-nav" className="hidden items-center gap-1 lg:flex">
+            <MegaMenu items={desktopLinks} activeSlug={activeSlug} />
+            {!isAuthenticated && (
+              <Link
+                to={ROUTES.login}
+                data-testid="header-nav-login"
+                className="ml-1 inline-flex whitespace-nowrap text-sm font-medium text-foreground transition-opacity hover:opacity-80"
+              >
+                {t("nav.login")}
+              </Link>
+            )}
+            {isAuthenticated && <HeaderUserMenu />}
           </div>
-          <div data-testid="header-desktop-theme">
-            <ThemeToggle />
-          </div>
-          <div data-testid="header-desktop-a11y">
-            <AccessibilityMenu />
-          </div>
-          <Link
-            to={ROUTES.docs}
-            data-testid="header-nav-docs"
-            className="inline-flex whitespace-nowrap text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {t("nav.docs")}
-          </Link>
-          {!isAuthenticated && (
-            <Link
-              to={ROUTES.login}
-              data-testid="header-nav-login"
-              className="inline-flex whitespace-nowrap text-sm font-medium text-foreground transition-opacity hover:opacity-80"
-            >
-              {t("nav.login")}
-            </Link>
-          )}
+
           <CtaPill ariaLabel={ctaLong} />
-          {isAuthenticated && <HeaderUserMenu />}
-        </div>
 
-        {/* Hamburger — shown below xl (paired with the desktop nav's
-            `xl:flex`). Holds the full nav + docs + login + CTA in the sheet. */}
-        <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger
-            data-testid="header-mobile-trigger"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground transition-colors hover:bg-card xl:hidden"
-            aria-label={t("open_menu_aria")}
-          >
-            <Menu className="h-5 w-5" aria-hidden="true" />
-          </SheetTrigger>
-          <SheetContent
-            data-testid="header-mobile-sheet"
-            side="right"
-            className="flex w-screen max-w-full flex-col gap-0 border-l border-border/60 bg-background p-0 sm:max-w-md [&>button]:hidden"
-          >
-            <SheetTitle className="sr-only">{t("mobile_nav_title")}</SheetTitle>
-            <div className="flex items-center justify-between border-b border-border/40 px-5 py-4">
-              <Link
-                to={ROUTES.home}
-                data-testid="header-mobile-logo-link"
-                aria-label={t("logo_aria")}
-                className="inline-flex items-center"
-              >
-                <img src="/logo.svg" alt="subenai" className="h-8 w-auto" />
-              </Link>
-              <SheetClose
-                data-testid="header-mobile-close"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground hover:bg-card"
-                aria-label={t("close_menu_aria")}
-              >
-                <X className="h-5 w-5" aria-hidden="true" />
-              </SheetClose>
-            </div>
-
-            <MobileMenu items={MEGA_ITEMS} activeSlug={activeSlug} />
-
-            <div className="flex flex-col gap-3 border-t border-border/40 px-5 py-5">
-              {isAuthenticated && <MobileUserSection />}
-              <Link
-                to={ROUTES.docs}
-                data-testid="header-mobile-docs"
-                className="inline-flex w-full items-center justify-center rounded-2xl border border-border/60 px-6 py-3 text-base font-semibold text-foreground hover:bg-card"
-              >
-                {t("nav.docs")}
-              </Link>
-              {!isAuthenticated && (
+          {/* Hamburger — always visible. Opens the sidebar holding the full
+              navigation, the dropdown sections, Dokumentácia, theme, a11y,
+              locale and (on small screens) login + CTA. */}
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger
+              data-testid="header-mobile-trigger"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground transition-colors hover:bg-card"
+              aria-label={t("open_menu_aria")}
+            >
+              <Menu className="h-5 w-5" aria-hidden="true" />
+            </SheetTrigger>
+            <SheetContent
+              data-testid="header-mobile-sheet"
+              side="right"
+              className="flex w-screen max-w-full flex-col gap-0 border-l border-border/60 bg-background p-0 sm:max-w-md [&>button]:hidden"
+            >
+              <SheetTitle className="sr-only">{t("mobile_nav_title")}</SheetTitle>
+              <div className="flex items-center justify-between border-b border-border/40 px-5 py-4">
                 <Link
-                  to={ROUTES.login}
-                  data-testid="header-mobile-login"
+                  to={ROUTES.home}
+                  data-testid="header-mobile-logo-link"
+                  aria-label={t("logo_aria")}
+                  className="inline-flex items-center"
+                >
+                  <img src="/logo.svg" alt="subenai" className="h-8 w-auto" />
+                </Link>
+                <SheetClose
+                  data-testid="header-mobile-close"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground hover:bg-card"
+                  aria-label={t("close_menu_aria")}
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </SheetClose>
+              </div>
+
+              <MobileMenu items={MEGA_ITEMS} activeSlug={activeSlug} />
+
+              <div className="flex flex-col gap-3 border-t border-border/40 px-5 py-5">
+                {isAuthenticated && <MobileUserSection />}
+                <Link
+                  to={ROUTES.docs}
+                  data-testid="header-mobile-docs"
                   className="inline-flex w-full items-center justify-center rounded-2xl border border-border/60 px-6 py-3 text-base font-semibold text-foreground hover:bg-card"
                 >
-                  {t("nav.login")}
+                  {t("nav.docs")}
                 </Link>
-              )}
-              <div className="flex justify-center gap-3" data-testid="header-mobile-locale">
-                <LocaleSwitcher variant="outline" />
-                <ThemeToggle variant="outline" />
-                <AccessibilityMenu variant="outline" />
+                {!isAuthenticated && (
+                  <Link
+                    to={ROUTES.login}
+                    data-testid="header-mobile-login"
+                    className="inline-flex w-full items-center justify-center rounded-2xl border border-border/60 px-6 py-3 text-base font-semibold text-foreground hover:bg-card"
+                  >
+                    {t("nav.login")}
+                  </Link>
+                )}
+                <div className="flex justify-center gap-3" data-testid="header-mobile-locale">
+                  <LocaleSwitcher variant="outline" />
+                  <ThemeToggle variant="outline" />
+                  <AccessibilityMenu variant="outline" />
+                </div>
+                <Link
+                  to={CTA_TO}
+                  data-testid="header-mobile-cta"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-6 py-4 text-base font-bold text-primary-foreground shadow-glow"
+                  aria-label={ctaLong}
+                >
+                  {t("cta.short")}
+                  <span aria-hidden="true">→</span>
+                </Link>
               </div>
-              <Link
-                to={CTA_TO}
-                data-testid="header-mobile-cta"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-gradient px-6 py-4 text-base font-bold text-primary-foreground shadow-glow"
-                aria-label={ctaLong}
-              >
-                {t("cta.short")}
-                <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-          </SheetContent>
-        </Sheet>
+            </SheetContent>
+          </Sheet>
+        </div>
       </nav>
     </header>
   );

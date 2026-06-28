@@ -95,21 +95,21 @@ describe("SiteHeader auth-aware nav (E36 A2: avatar+dropdown)", () => {
     expect(screen.getByTestId("header-mobile-trigger")).toBeInTheDocument();
   });
 
-  // E54.1 — login is built but was undiscoverable; surface it in the nav.
-  // Desktop links are always in the DOM; the mobile links live inside the
-  // Radix Sheet (rendered only when open) and are covered by the e2e suite.
-  it("shows desktop login + docs links when unauthenticated", () => {
+  // E54.1 — login surfaced in the desktop bar. Per the header redesign,
+  // Dokumentácia (and the Sady testov / Školenia dropdowns, theme + a11y)
+  // moved OUT of the top bar into the hamburger sidebar; only the flat
+  // quick-links + login + CTA stay in the bar.
+  it("shows the desktop login link and keeps docs out of the top bar", () => {
     authStateRef.current = { isAuthenticated: false, isAdmin: false };
     render(<SiteHeader />);
     expect(screen.getByTestId("header-nav-login")).toHaveAttribute("href", "/login");
-    expect(screen.getByTestId("header-nav-docs")).toHaveAttribute("href", "/docs");
+    // docs lives in the sidebar now, not the top bar
+    expect(screen.queryByTestId("header-nav-docs")).not.toBeInTheDocument();
   });
 
-  it("hides the login link when authenticated but keeps the docs link", () => {
+  it("hides the desktop login link when authenticated", () => {
     authStateRef.current = { isAuthenticated: true, isAdmin: false };
     render(<SiteHeader />);
     expect(screen.queryByTestId("header-nav-login")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("header-mobile-login")).not.toBeInTheDocument();
-    expect(screen.getByTestId("header-nav-docs")).toHaveAttribute("href", "/docs");
   });
 });
