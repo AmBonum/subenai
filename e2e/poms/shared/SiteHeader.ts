@@ -109,6 +109,16 @@ export class SiteHeader {
     return this.page.getByTestId("header-cta-pill-long-suffix");
   }
 
+  /** E54 — public docs link (desktop). Always present. */
+  get navDocs(): Locator {
+    return this.page.getByTestId("header-nav-docs");
+  }
+
+  /** E54 — login link (desktop). Present only when signed out. */
+  get navLogin(): Locator {
+    return this.page.getByTestId("header-nav-login");
+  }
+
   // ---------------------------------------------------------------------------
   // Mobile sheet
   // ---------------------------------------------------------------------------
@@ -155,6 +165,16 @@ export class SiteHeader {
 
   get sheetCtaLink(): Locator {
     return this.page.getByTestId("header-mobile-cta");
+  }
+
+  /** E54 — public docs link inside the mobile sheet. */
+  get sheetDocsLink(): Locator {
+    return this.page.getByTestId("header-mobile-docs");
+  }
+
+  /** E54 — login link inside the mobile sheet (signed-out only). */
+  get sheetLoginLink(): Locator {
+    return this.page.getByTestId("header-mobile-login");
   }
 
   // ---------------------------------------------------------------------------
