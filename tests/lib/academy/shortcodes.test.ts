@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { parseAcademyBody } from "@/lib/academy/shortcodes";
+import { encodeVisual } from "@/lib/academy/visual-shortcode";
+import type { Visual } from "@/lib/quiz/bank/questions";
 
 describe("parseAcademyBody", () => {
   it("splits prose and a quiz shortcode into ordered blocks", () => {
@@ -27,5 +29,20 @@ describe("parseAcademyBody", () => {
   it("leaves an unrecognised shortcode as Markdown text (no crash)", () => {
     const blocks = parseAcademyBody("[[unknown:x]]");
     expect(blocks).toEqual([{ kind: "md", text: "[[unknown:x]]" }]);
+  });
+
+  it("decodes a [[visual:…]] shortcode into a visual block between prose", () => {
+    const visual: Visual = { kind: "sms", sender: "DPD", body: "Balík čaká", link: "http://x.io" };
+    const blocks = parseAcademyBody(`Pred.\n\n${encodeVisual(visual)}\n\nPo.`);
+    expect(blocks).toEqual([
+      { kind: "md", text: "Pred." },
+      { kind: "visual", visual },
+      { kind: "md", text: "Po." },
+    ]);
+  });
+
+  it("leaves a corrupt visual payload as Markdown text (no crash)", () => {
+    const blocks = parseAcademyBody("[[visual:b64:!!!notbase64!!!]]");
+    expect(blocks).toEqual([{ kind: "md", text: "[[visual:b64:!!!notbase64!!!]]" }]);
   });
 });
