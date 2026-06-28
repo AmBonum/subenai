@@ -1,0 +1,41 @@
+name: Mutation testing
+
+# Stryker on the highest-stakes logic (consent, E53 neuron ledger, E53
+# gates) — proves the tests would actually CATCH a regression, not just that
+# they run. Slow (~2 min/file), so it is weekly + on-demand, never a PR gate.
+# Report-only (break:null): surfaces the mutation score + surviving mutants
+# as an artifact without failing the build.
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "0 4 * * 1" # Mondays 04:00 UTC
+
+concurrency:
+  group: mutation-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  mutation:
+    name: Stryker (critical files)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Stryker
+        run: npm run mutation
+      - name: Upload mutation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-report-${{ github.run_id }}
+          path: reports/mutation/
+          retention-days: 30
