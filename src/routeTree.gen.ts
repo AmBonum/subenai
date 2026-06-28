@@ -34,6 +34,7 @@ import { Route as ContactFormIndexRouteImport } from './routes/contact-form.inde
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AcademyIndexRouteImport } from './routes/academy.index'
 import { Route as ThankYouSessionIdRouteImport } from './routes/thank-you.$sessionId'
 import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
 import { Route as TestBuilderRouteImport } from './routes/test.builder'
@@ -87,6 +88,7 @@ import { Route as AdminDpaRequestsRouteImport } from './routes/admin/dpa-request
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
+import { Route as AcademySlugRouteImport } from './routes/academy.$slug'
 import { Route as TestBuilderIndexRouteImport } from './routes/test.builder.index'
 import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
 import { Route as AppEduTestsIndexRouteImport } from './routes/app.edu-tests.index'
@@ -114,6 +116,8 @@ import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$page
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
 import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
 import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
+import { Route as AcademyCategorySlugRouteImport } from './routes/academy.category.$slug'
+import { Route as AcademyAuthorSlugRouteImport } from './routes/academy.author.$slug'
 import { Route as TestBuilderIdIndexRouteImport } from './routes/test.builder.$id.index'
 import { Route as TestBuilderIdResultsRouteImport } from './routes/test.builder.$id.results'
 import { Route as TestBuilderIdResultsAttemptIdRouteImport } from './routes/test.builder.$id.results.$attemptId'
@@ -246,6 +250,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any).lazy(() => import('./routes/admin/index.lazy').then((d) => d.Route))
+const AcademyIndexRoute = AcademyIndexRouteImport.update({
+  id: '/academy/',
+  path: '/academy/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/academy.index.lazy').then((d) => d.Route))
 const ThankYouSessionIdRoute = ThankYouSessionIdRouteImport.update({
   id: '/thank-you/$sessionId',
   path: '/thank-you/$sessionId',
@@ -537,6 +546,11 @@ const AdminAnswerSetsRoute = AdminAnswerSetsRouteImport.update({
   path: '/answer-sets',
   getParentRoute: () => AdminRoute,
 } as any)
+const AcademySlugRoute = AcademySlugRouteImport.update({
+  id: '/academy/$slug',
+  path: '/academy/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/academy.$slug.lazy').then((d) => d.Route))
 const TestBuilderIndexRoute = TestBuilderIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -709,6 +723,20 @@ const AdminAnswerSetsSetIdRoute = AdminAnswerSetsSetIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/answer-sets.$setId.lazy').then((d) => d.Route),
 )
+const AcademyCategorySlugRoute = AcademyCategorySlugRouteImport.update({
+  id: '/academy/category/$slug',
+  path: '/academy/category/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/academy.category.$slug.lazy').then((d) => d.Route),
+)
+const AcademyAuthorSlugRoute = AcademyAuthorSlugRouteImport.update({
+  id: '/academy/author/$slug',
+  path: '/academy/author/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/academy.author.$slug.lazy').then((d) => d.Route),
+)
 const TestBuilderIdIndexRoute = TestBuilderIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -757,6 +785,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/sponsors': typeof SponsorsRoute
   '/support': typeof SupportRoute
+  '/academy/$slug': typeof AcademySlugRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -810,6 +839,7 @@ export interface FileRoutesByFullPath {
   '/test/builder': typeof TestBuilderRouteWithChildren
   '/tests/$slug': typeof TestsSlugRoute
   '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
+  '/academy/': typeof AcademyIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
@@ -819,6 +849,8 @@ export interface FileRoutesByFullPath {
   '/sablony/': typeof SablonyIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
+  '/academy/author/$slug': typeof AcademyAuthorSlugRoute
+  '/academy/category/$slug': typeof AcademyCategorySlugRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
@@ -866,6 +898,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/sponsors': typeof SponsorsRoute
   '/support': typeof SupportRoute
+  '/academy/$slug': typeof AcademySlugRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dpa-requests': typeof AdminDpaRequestsRoute
@@ -915,6 +948,7 @@ export interface FileRoutesByTo {
   '/t/$shareId': typeof TShareIdRoute
   '/tests/$slug': typeof TestsSlugRoute
   '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
+  '/academy': typeof AcademyIndexRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/blog': typeof BlogIndexRoute
@@ -924,6 +958,8 @@ export interface FileRoutesByTo {
   '/sablony': typeof SablonyIndexRoute
   '/test': typeof TestIndexRoute
   '/tests': typeof TestsIndexRoute
+  '/academy/author/$slug': typeof AcademyAuthorSlugRoute
+  '/academy/category/$slug': typeof AcademyCategorySlugRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
@@ -973,6 +1009,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/sponsors': typeof SponsorsRoute
   '/support': typeof SupportRoute
+  '/academy/$slug': typeof AcademySlugRoute
   '/admin/answer-sets': typeof AdminAnswerSetsRouteWithChildren
   '/admin/audit': typeof AdminAuditRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -1026,6 +1063,7 @@ export interface FileRoutesById {
   '/test/builder': typeof TestBuilderRouteWithChildren
   '/tests/$slug': typeof TestsSlugRoute
   '/thank-you/$sessionId': typeof ThankYouSessionIdRoute
+  '/academy/': typeof AcademyIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/blog/': typeof BlogIndexRoute
@@ -1035,6 +1073,8 @@ export interface FileRoutesById {
   '/sablony/': typeof SablonyIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
+  '/academy/author/$slug': typeof AcademyAuthorSlugRoute
+  '/academy/category/$slug': typeof AcademyCategorySlugRoute
   '/admin/answer-sets/$setId': typeof AdminAnswerSetsSetIdRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
@@ -1086,6 +1126,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/sponsors'
     | '/support'
+    | '/academy/$slug'
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
@@ -1139,6 +1180,7 @@ export interface FileRouteTypes {
     | '/test/builder'
     | '/tests/$slug'
     | '/thank-you/$sessionId'
+    | '/academy/'
     | '/admin/'
     | '/app/'
     | '/blog/'
@@ -1148,6 +1190,8 @@ export interface FileRouteTypes {
     | '/sablony/'
     | '/test/'
     | '/tests/'
+    | '/academy/author/$slug'
+    | '/academy/category/$slug'
     | '/admin/answer-sets/$setId'
     | '/admin/blog/$id'
     | '/admin/blog/new'
@@ -1195,6 +1239,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/sponsors'
     | '/support'
+    | '/academy/$slug'
     | '/admin/audit'
     | '/admin/categories'
     | '/admin/dpa-requests'
@@ -1244,6 +1289,7 @@ export interface FileRouteTypes {
     | '/t/$shareId'
     | '/tests/$slug'
     | '/thank-you/$sessionId'
+    | '/academy'
     | '/admin'
     | '/app'
     | '/blog'
@@ -1253,6 +1299,8 @@ export interface FileRouteTypes {
     | '/sablony'
     | '/test'
     | '/tests'
+    | '/academy/author/$slug'
+    | '/academy/category/$slug'
     | '/admin/answer-sets/$setId'
     | '/admin/blog/$id'
     | '/admin/blog/new'
@@ -1301,6 +1349,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/sponsors'
     | '/support'
+    | '/academy/$slug'
     | '/admin/answer-sets'
     | '/admin/audit'
     | '/admin/categories'
@@ -1354,6 +1403,7 @@ export interface FileRouteTypes {
     | '/test/builder'
     | '/tests/$slug'
     | '/thank-you/$sessionId'
+    | '/academy/'
     | '/admin/'
     | '/app/'
     | '/blog/'
@@ -1363,6 +1413,8 @@ export interface FileRouteTypes {
     | '/sablony/'
     | '/test/'
     | '/tests/'
+    | '/academy/author/$slug'
+    | '/academy/category/$slug'
     | '/admin/answer-sets/$setId'
     | '/admin/blog/$id'
     | '/admin/blog/new'
@@ -1413,6 +1465,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   SponsorsRoute: typeof SponsorsRoute
   SupportRoute: typeof SupportRoute
+  AcademySlugRoute: typeof AcademySlugRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -1431,6 +1484,7 @@ export interface RootRouteChildren {
   TestBuilderRoute: typeof TestBuilderRouteWithChildren
   TestsSlugRoute: typeof TestsSlugRoute
   ThankYouSessionIdRoute: typeof ThankYouSessionIdRoute
+  AcademyIndexRoute: typeof AcademyIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
   ContactFormIndexRoute: typeof ContactFormIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
@@ -1438,6 +1492,8 @@ export interface RootRouteChildren {
   SablonyIndexRoute: typeof SablonyIndexRoute
   TestIndexRoute: typeof TestIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
+  AcademyAuthorSlugRoute: typeof AcademyAuthorSlugRoute
+  AcademyCategorySlugRoute: typeof AcademyCategorySlugRoute
   BlogAutorSlugRoute: typeof BlogAutorSlugRoute
   BlogKategoriaSlugRoute: typeof BlogKategoriaSlugRoute
   ContactFormTicketIdRoute: typeof ContactFormTicketIdRoute
@@ -1619,6 +1675,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/academy/': {
+      id: '/academy/'
+      path: '/academy'
+      fullPath: '/academy/'
+      preLoaderRoute: typeof AcademyIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/thank-you/$sessionId': {
       id: '/thank-you/$sessionId'
@@ -1991,6 +2054,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnswerSetsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/academy/$slug': {
+      id: '/academy/$slug'
+      path: '/academy/$slug'
+      fullPath: '/academy/$slug'
+      preLoaderRoute: typeof AcademySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/test/builder/': {
       id: '/test/builder/'
       path: '/'
@@ -2179,6 +2249,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/answer-sets/$setId'
       preLoaderRoute: typeof AdminAnswerSetsSetIdRouteImport
       parentRoute: typeof AdminAnswerSetsRoute
+    }
+    '/academy/category/$slug': {
+      id: '/academy/category/$slug'
+      path: '/academy/category/$slug'
+      fullPath: '/academy/category/$slug'
+      preLoaderRoute: typeof AcademyCategorySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/academy/author/$slug': {
+      id: '/academy/author/$slug'
+      path: '/academy/author/$slug'
+      fullPath: '/academy/author/$slug'
+      preLoaderRoute: typeof AcademyAuthorSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/test/builder/$id/': {
       id: '/test/builder/$id/'
@@ -2501,6 +2585,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   SponsorsRoute: SponsorsRoute,
   SupportRoute: SupportRoute,
+  AcademySlugRoute: AcademySlugRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   BlogSlugRoute: BlogSlugRoute,
@@ -2519,6 +2604,7 @@ const rootRouteChildren: RootRouteChildren = {
   TestBuilderRoute: TestBuilderRouteWithChildren,
   TestsSlugRoute: TestsSlugRoute,
   ThankYouSessionIdRoute: ThankYouSessionIdRoute,
+  AcademyIndexRoute: AcademyIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
   ContactFormIndexRoute: ContactFormIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
@@ -2526,6 +2612,8 @@ const rootRouteChildren: RootRouteChildren = {
   SablonyIndexRoute: SablonyIndexRoute,
   TestIndexRoute: TestIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
+  AcademyAuthorSlugRoute: AcademyAuthorSlugRoute,
+  AcademyCategorySlugRoute: AcademyCategorySlugRoute,
   BlogAutorSlugRoute: BlogAutorSlugRoute,
   BlogKategoriaSlugRoute: BlogKategoriaSlugRoute,
   ContactFormTicketIdRoute: ContactFormTicketIdRoute,
