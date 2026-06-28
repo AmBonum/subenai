@@ -4,6 +4,7 @@ import { test as base } from "@playwright/test";
 import { ConsentBanner } from "../poms/shared/ConsentBanner";
 import { ConsentPreferencesDialog } from "../poms/shared/ConsentPreferencesDialog";
 import { SiteHeader } from "../poms/shared/SiteHeader";
+import { DocsPortal } from "../poms/docs/DocsPortal";
 import { SiteFooter } from "../poms/shared/SiteFooter";
 import { ThemeControls } from "../poms/shared/ThemeControls";
 import { NotFoundPage } from "../poms/shared/NotFoundPage";
@@ -101,6 +102,7 @@ type Fixtures = {
   themeControls: ThemeControls;
   notFound: NotFoundPage;
   docHead: DocumentHead;
+  docsPortal: DocsPortal;
   podpora: PodporaPage;
   podakovanie: PodakovaniePage;
   stripeCheckout: StripeCheckoutPage;
@@ -165,6 +167,9 @@ export const test = base.extend<Fixtures>({
   },
   header: async ({ page }, use) => {
     await use(new SiteHeader(page));
+  },
+  docsPortal: async ({ page }, use) => {
+    await use(new DocsPortal(page));
   },
   footer: async ({ page }, use) => {
     await use(new SiteFooter(page));

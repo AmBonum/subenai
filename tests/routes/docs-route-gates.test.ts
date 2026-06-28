@@ -118,9 +118,16 @@ describe("/docs/admin/$slug loader", () => {
 });
 
 describe("/docs/app/$slug loader", () => {
-  it("returns the slug when APP_DOCS has an entry", () => {
-    const out = appSlugLoader({ params: { slug: "dashboard" } });
-    expect(out).toEqual({ slug: "dashboard" });
+  it("returns the slug + manifest entry when APP_DOCS has an entry", () => {
+    // E54.3 — the loader now also returns the discriminated entry so the
+    // component can pick the explainer renderer vs the stub.
+    const out = appSlugLoader({ params: { slug: "dashboard" } }) as {
+      slug: string;
+      entry: { kind: string; explainerKey?: string };
+    };
+    expect(out.slug).toBe("dashboard");
+    expect(out.entry.kind).toBe("explainer");
+    expect(out.entry.explainerKey).toBe("dashboard");
   });
 
   it("throws notFound() when slug is unknown", () => {

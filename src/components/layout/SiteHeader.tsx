@@ -196,6 +196,22 @@ export function SiteHeader() {
           <div data-testid="header-desktop-a11y">
             <AccessibilityMenu />
           </div>
+          <Link
+            to={ROUTES.docs}
+            data-testid="header-nav-docs"
+            className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground lg:inline-flex"
+          >
+            {t("nav.docs")}
+          </Link>
+          {!isAuthenticated && (
+            <Link
+              to={ROUTES.login}
+              data-testid="header-nav-login"
+              className="hidden text-sm font-medium text-foreground transition-opacity hover:opacity-80 lg:inline-flex"
+            >
+              {t("nav.login")}
+            </Link>
+          )}
           <CtaPill ariaLabel={ctaLong} />
           {isAuthenticated && <HeaderUserMenu />}
         </div>
@@ -238,6 +254,22 @@ export function SiteHeader() {
 
             <div className="flex flex-col gap-3 border-t border-border/40 px-5 py-5">
               {isAuthenticated && <MobileUserSection />}
+              <Link
+                to={ROUTES.docs}
+                data-testid="header-mobile-docs"
+                className="inline-flex w-full items-center justify-center rounded-2xl border border-border/60 px-6 py-3 text-base font-semibold text-foreground hover:bg-card"
+              >
+                {t("nav.docs")}
+              </Link>
+              {!isAuthenticated && (
+                <Link
+                  to={ROUTES.login}
+                  data-testid="header-mobile-login"
+                  className="inline-flex w-full items-center justify-center rounded-2xl border border-border/60 px-6 py-3 text-base font-semibold text-foreground hover:bg-card"
+                >
+                  {t("nav.login")}
+                </Link>
+              )}
               <div className="flex justify-center gap-3" data-testid="header-mobile-locale">
                 <LocaleSwitcher variant="outline" />
                 <ThemeToggle variant="outline" />

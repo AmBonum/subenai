@@ -10,7 +10,9 @@
       "skolenia": "Školenia",
       "podpora": "Podporiť projekt",
       "kontakt": "Kontakt",
-      "app": "Moje testy"
+      "app": "Moje testy",
+      "docs": "Dokumentácia",
+      "login": "Prihlásiť sa"
     },
     "user_menu": {
       "trigger_aria": "Otvoriť menu používateľa",
