@@ -9900,3 +9900,15 @@ DROP POLICY IF EXISTS support_ticket_assignees_admin_select ON public.support_ti
 CREATE POLICY support_ticket_assignees_admin_select ON public.support_ticket_assignees
   FOR SELECT TO authenticated
   USING (public.has_role(auth.uid(), 'admin') AND public.is_aal2());
+
+-- ============================================================================
+-- E55.1 — Academy: unify courses into blog_posts (additive, idempotent).
+-- ============================================================================
+ALTER TABLE public.blog_posts
+  ADD COLUMN IF NOT EXISTS content_type text NOT NULL DEFAULT 'article'
+    CHECK (content_type IN ('article', 'lesson')),
+  ADD COLUMN IF NOT EXISTS difficulty text
+    CHECK (difficulty IN ('beginner', 'advanced')),
+  ADD COLUMN IF NOT EXISTS estimated_minutes integer,
+  ADD COLUMN IF NOT EXISTS hero_emoji text;
+CREATE INDEX IF NOT EXISTS idx_blog_posts_content_type ON public.blog_posts (content_type);

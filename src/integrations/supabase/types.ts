@@ -476,6 +476,10 @@ export type Database = {
           sources_jsonb: Json;
           related_course_slug: string | null;
           related_test_slug: string | null;
+          content_type: string;
+          difficulty: string | null;
+          estimated_minutes: number | null;
+          hero_emoji: string | null;
           status: Database["public"]["Enums"]["test_status"];
           published_at: string | null;
           created_at: string;
@@ -504,6 +508,10 @@ export type Database = {
           sources_jsonb?: Json;
           related_course_slug?: string | null;
           related_test_slug?: string | null;
+          content_type?: string;
+          difficulty?: string | null;
+          estimated_minutes?: number | null;
+          hero_emoji?: string | null;
           status?: Database["public"]["Enums"]["test_status"];
           published_at?: string | null;
           created_at?: string;
@@ -532,6 +540,10 @@ export type Database = {
           sources_jsonb?: Json;
           related_course_slug?: string | null;
           related_test_slug?: string | null;
+          content_type?: string;
+          difficulty?: string | null;
+          estimated_minutes?: number | null;
+          hero_emoji?: string | null;
           status?: Database["public"]["Enums"]["test_status"];
           published_at?: string | null;
           created_at?: string;
