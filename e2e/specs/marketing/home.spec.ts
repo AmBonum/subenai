@@ -65,9 +65,9 @@ test.describe("Homepage /", () => {
       await expect(marketingHome.featureCardTesty).toHaveAttribute("href", "/tests");
     });
 
-    await test.step("Verify the Bezplatné školenia card is visible and links to /courses", async () => {
+    await test.step("Verify the Bezplatné školenia card is visible and links to /academy", async () => {
       await expect(marketingHome.featureCardSkolenia).toBeVisible();
-      await expect(marketingHome.featureCardSkolenia).toHaveAttribute("href", "/courses");
+      await expect(marketingHome.featureCardSkolenia).toHaveAttribute("href", "/academy");
     });
 
     await test.step("Verify the O projekte card is visible and links to /about", async () => {

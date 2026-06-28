@@ -77,8 +77,8 @@ test.describe("Site footer", () => {
         await expect(footer.navLink("test")).toHaveAttribute("href", "/test");
         await expect(footer.navLink("testy")).toHaveText("Sady testov");
         await expect(footer.navLink("testy")).toHaveAttribute("href", "/tests");
-        await expect(footer.navLink("skolenia")).toHaveText("Školenia");
-        await expect(footer.navLink("skolenia")).toHaveAttribute("href", "/courses");
+        await expect(footer.navLink("academy")).toHaveText("Akadémia");
+        await expect(footer.navLink("academy")).toHaveAttribute("href", "/academy");
         await expect(footer.navLink("skoly")).toHaveText("Pre školy");
         await expect(footer.navLink("skoly")).toHaveAttribute("href", "/schools");
       });
@@ -171,7 +171,7 @@ test.describe("Site footer", () => {
     }) => {
       await test.step("Set desktop viewport (1280×800) and open /courses", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto("/courses");
+        await page.goto("/academy");
       });
 
       await test.step("Verify the brand block is rendered", async () => {
@@ -507,19 +507,17 @@ test.describe("Site footer", () => {
         await expect(footer.versionLink).toBeFocused();
       });
 
-      await test.step("Tab through nav links: Spustiť test → Sady testov → Školenia → Šablóny testov → Pre školy → Akadémia", async () => {
+      await test.step("Tab through nav links: Spustiť test → Sady testov → Akadémia → Šablóny testov → Pre školy", async () => {
         await page.keyboard.press("Tab");
         await expect(footer.navLink("test")).toBeFocused();
         await page.keyboard.press("Tab");
         await expect(footer.navLink("testy")).toBeFocused();
         await page.keyboard.press("Tab");
-        await expect(footer.navLink("skolenia")).toBeFocused();
+        await expect(footer.navLink("academy")).toBeFocused();
         await page.keyboard.press("Tab");
         await expect(footer.navLink("sablony")).toBeFocused();
         await page.keyboard.press("Tab");
         await expect(footer.navLink("skoly")).toBeFocused();
-        await page.keyboard.press("Tab");
-        await expect(footer.navLink("blog")).toBeFocused();
       });
 
       await test.step("Tab through Projekt column links", async () => {

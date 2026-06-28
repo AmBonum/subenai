@@ -8,7 +8,6 @@ import { mockSupportApi } from "../../mocks/api/support";
 import { mockSupabase } from "../../mocks/supabase";
 import { setupAppShell } from "../../setup/app-shell";
 import { DsrFormPage } from "../../poms/user/DsrFormPage";
-import { BlogPostPage } from "../../poms/blog/BlogPostPage";
 
 // Public-surface negative paths — failure states and 404s for donation
 // thank-you, contact form, schools DPA, DSR form, and blog/CMS slugs.
@@ -440,13 +439,13 @@ test.describe("E. Blog and CMS page 404s", () => {
     });
   });
 
-  // PUB-13: unknown blog post slug renders the post-not-found state
-  test("PUB-13: unknown /blog/<slug> renders the post-not-found state with a back link", async ({
+  // PUB-13: unknown /academy/<slug> renders the global 404 (E55 — the loader
+  // throws notFound() for a missing entry, surfacing the app 404 surface).
+  test("PUB-13: unknown /academy/<slug> renders the global 404 page", async ({
     page,
+    notFound,
   }) => {
-    const blogPost = new BlogPostPage(page);
-
-    await test.step("Mock Supabase blog_posts as empty and navigate to /blog/neexistujuci-clanok", async () => {
+    await test.step("Mock Supabase blog_posts as empty and navigate to /academy/neexistujuci-clanok", async () => {
       await mockSupabase(page, {
         tables: {
           blog_posts: [],
@@ -454,22 +453,15 @@ test.describe("E. Blog and CMS page 404s", () => {
           blog_authors: [],
         },
       });
-      await blogPost.openSlug("neexistujuci-clanok");
+      await page.goto("/academy/neexistujuci-clanok", { waitUntil: "domcontentloaded" });
     });
 
-    await test.step("Verify the not-found title reads 'Tento článok neexistuje'", async () => {
-      await expect(blogPost.notFoundTitle).toBeVisible();
-      await expect(blogPost.notFoundTitle).toHaveText("Tento článok neexistuje");
+    await test.step("Verify the global 404 heading is visible", async () => {
+      await expect(notFound.heading).toBeVisible();
     });
 
-    await test.step("Verify the not-found description is visible", async () => {
-      await expect(blogPost.notFoundDescription).toBeVisible();
-      await expect(blogPost.notFoundDescription).toContainText("Možno bol presunutý alebo zmazaný");
-    });
-
-    await test.step("Verify the back link to /blog is visible and correct", async () => {
-      await expect(blogPost.notFoundBackLink).toBeVisible();
-      await expect(blogPost.notFoundBackLink).toHaveText("← Späť do akadémie");
+    await test.step("Verify the back-to-home CTA renders (not a blank dead-end)", async () => {
+      await expect(notFound.homeCta).toBeVisible();
     });
   });
 });

@@ -1,12 +1,13 @@
 // spec: specs/cross-cutting/site-header-and-menu.md
 //
-// Updated 2026-06-12 to the mega-menu IA (Phase 1, D1): the desktop nav is
-// a Radix NavigationMenu with 5 top-level items — two hover/click triggers
-// ("Sady testov" → testy, "Školenia" → skolenia) and three flat links
-// ("Pre školy a lektorov" → /schools, "Akadémia" → /blog,
-// "Podpora projektu" → /support). "Kontakt" left the top nav. The mobile
-// sheet renders panel items as accordions and flat items as links. The
-// desktop/mobile breakpoint is 820 px (tablet-overflow fix, 2026-05-19).
+// Updated 2026-06-28 for the E55 academy cutover: the desktop nav is a Radix
+// NavigationMenu with 4 top-level items — one hover/click trigger
+// ("Sady testov" → testy) and three flat links ("Akadémia" → /academy,
+// "Pre školy a lektorov" → /schools, "Podpora projektu" → /support). The
+// "Školenia" panel is gone (/courses + /blog merged into the single flat
+// "akademia" link → /academy). The mobile sheet renders the panel item as an
+// accordion and flat items as links. The desktop/mobile breakpoint is 820 px
+// (tablet-overflow fix, 2026-05-19).
 
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
@@ -21,7 +22,7 @@ test.describe("Site header and responsive navigation menu", () => {
   // ---------------------------------------------------------------------------
 
   test.describe("Happy paths", () => {
-    test("TC-01: All five desktop nav items are visible and route to their targets", async ({
+    test("TC-01: All four desktop nav items are visible and route to their targets", async ({
       page,
       header,
     }) => {
@@ -30,13 +31,12 @@ test.describe("Site header and responsive navigation menu", () => {
         await page.goto("/");
       });
 
-      await test.step("Verify the desktop nav shows both mega triggers and all three flat links", async () => {
+      await test.step("Verify the desktop nav shows the mega trigger and all three flat links", async () => {
         await expect(header.nav).toBeVisible();
         await expect(header.megaTrigger("testy")).toBeVisible();
         await expect(header.megaTrigger("testy")).toHaveText(/Sady testov/);
-        await expect(header.megaTrigger("skolenia")).toHaveText(/Školenia/);
+        await expect(header.megaLink("akademia")).toHaveText(/Akadémia/);
         await expect(header.megaLink("pre_skoly")).toHaveText(/Pre školy a lektorov/);
-        await expect(header.megaLink("blog")).toHaveText(/Akadémia/);
         await expect(header.megaLink("podpora")).toHaveText(/Podpora projektu/);
       });
 
@@ -47,24 +47,16 @@ test.describe("Site header and responsive navigation menu", () => {
         await expect(page).toHaveURL(/\/tests$/);
       });
 
-      await test.step('Return home, open "Školenia" and verify "Všetky kurzy" routes to /courses', async () => {
+      await test.step('Return home, click "Akadémia" and verify it routes to /academy', async () => {
         await page.goto("/");
-        await header.megaTrigger("skolenia").hover();
-        await expect(header.megaPanel("skolenia")).toBeVisible();
-        await header.megaPanelLink("skolenia", "all").click();
-        await expect(page).toHaveURL(/\/courses$/);
+        await header.megaLink("akademia").click();
+        await expect(page).toHaveURL(/\/academy$/);
       });
 
       await test.step('Return home, click "Pre školy a lektorov" and verify it routes to /schools', async () => {
         await page.goto("/");
         await header.megaLink("pre_skoly").click();
         await expect(page).toHaveURL(/\/schools$/);
-      });
-
-      await test.step('Return home, click "Akadémia" and verify it routes to /blog', async () => {
-        await page.goto("/");
-        await header.megaLink("blog").click();
-        await expect(page).toHaveURL(/\/blog$/);
       });
 
       await test.step('Return home, click "Podpora projektu" and verify it routes to /support', async () => {
@@ -135,9 +127,8 @@ test.describe("Site header and responsive navigation menu", () => {
         await expect(header.sheetCloseButton).toBeVisible();
         await expect(header.sheetLogoLink).toBeVisible();
         await expect(header.sheetNavTrigger("testy")).toHaveText(/Sady testov/);
-        await expect(header.sheetNavTrigger("skolenia")).toHaveText(/Školenia/);
+        await expect(header.sheetNavLink("akademia")).toHaveText(/Akadémia/);
         await expect(header.sheetNavLink("pre_skoly")).toHaveText(/Pre školy a lektorov/);
-        await expect(header.sheetNavLink("blog")).toHaveText(/Akadémia/);
         await expect(header.sheetNavLink("podpora")).toHaveText(/Podpora projektu/);
         await expect(header.sheetCtaLink).toBeVisible();
         await expect(header.sheetCtaLink).toHaveText(/Spustiť test/);
@@ -172,23 +163,22 @@ test.describe("Site header and responsive navigation menu", () => {
     });
 
     test("TC-06: Active route is highlighted in the desktop nav", async ({ page, header }) => {
-      await test.step("Set desktop viewport and open /courses", async () => {
+      await test.step("Set desktop viewport and open /academy", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto("/courses");
+        await page.goto("/academy");
       });
 
-      await test.step('Verify only "Školenia" carries the active foreground class', async () => {
-        await expect(header.megaTrigger("skolenia")).toHaveClass(/text-foreground/);
+      await test.step('Verify only "Akadémia" carries the active foreground class', async () => {
+        await expect(header.megaLink("akademia")).toHaveClass(/text-foreground/);
         await expect(header.megaTrigger("testy")).toHaveClass(/text-muted-foreground/);
         await expect(header.megaLink("pre_skoly")).toHaveClass(/text-muted-foreground/);
-        await expect(header.megaLink("blog")).toHaveClass(/text-muted-foreground/);
         await expect(header.megaLink("podpora")).toHaveClass(/text-muted-foreground/);
       });
 
       await test.step('Navigate to /support and verify the active highlight follows to "Podpora projektu"', async () => {
         await page.goto("/support");
         await expect(header.megaLink("podpora")).toHaveClass(/text-foreground/);
-        await expect(header.megaTrigger("skolenia")).toHaveClass(/text-muted-foreground/);
+        await expect(header.megaLink("akademia")).toHaveClass(/text-muted-foreground/);
       });
     });
 
@@ -203,25 +193,23 @@ test.describe("Site header and responsive navigation menu", () => {
 
       await test.step('Verify only "Sady testov" is highlighted, the other items remain muted', async () => {
         await expect(header.megaTrigger("testy")).toHaveClass(/text-foreground/);
-        await expect(header.megaTrigger("skolenia")).toHaveClass(/text-muted-foreground/);
+        await expect(header.megaLink("akademia")).toHaveClass(/text-muted-foreground/);
         await expect(header.megaLink("pre_skoly")).toHaveClass(/text-muted-foreground/);
-        await expect(header.megaLink("blog")).toHaveClass(/text-muted-foreground/);
         await expect(header.megaLink("podpora")).toHaveClass(/text-muted-foreground/);
       });
     });
 
     test("TC-08: Active route is highlighted inside the mobile Sheet", async ({ page, header }) => {
-      await test.step("Set mobile viewport, open /courses and open the sheet", async () => {
+      await test.step("Set mobile viewport, open /academy and open the sheet", async () => {
         await page.setViewportSize({ width: 375, height: 667 });
-        await page.goto("/courses");
+        await page.goto("/academy");
         await header.openMobileMenu();
       });
 
-      await test.step('Verify only the "Školenia" accordion trigger has the active background', async () => {
-        await expect(header.sheetNavTrigger("skolenia")).toHaveClass(/bg-primary\/10/);
+      await test.step('Verify only the "Akadémia" flat link has the active background', async () => {
+        await expect(header.sheetNavLink("akademia")).toHaveClass(/bg-primary\/10/);
         await expect(header.sheetNavTrigger("testy")).not.toHaveClass(/bg-primary\/10/);
         await expect(header.sheetNavLink("pre_skoly")).not.toHaveClass(/bg-primary\/10/);
-        await expect(header.sheetNavLink("blog")).not.toHaveClass(/bg-primary\/10/);
         await expect(header.sheetNavLink("podpora")).not.toHaveClass(/bg-primary\/10/);
       });
     });
@@ -268,18 +256,16 @@ test.describe("Site header and responsive navigation menu", () => {
       await test.step("Verify the header, every nav item and the CTA are still rendered", async () => {
         await expect(header.root).toBeVisible();
         await expect(header.megaTrigger("testy")).toBeVisible();
-        await expect(header.megaTrigger("skolenia")).toBeVisible();
+        await expect(header.megaLink("akademia")).toBeVisible();
         await expect(header.megaLink("pre_skoly")).toBeVisible();
-        await expect(header.megaLink("blog")).toBeVisible();
         await expect(header.megaLink("podpora")).toBeVisible();
         await expect(header.ctaPill).toBeVisible();
       });
 
       await test.step("Verify no nav item claims the active state on a 404 route", async () => {
         await expect(header.megaTrigger("testy")).toHaveClass(/text-muted-foreground/);
-        await expect(header.megaTrigger("skolenia")).toHaveClass(/text-muted-foreground/);
+        await expect(header.megaLink("akademia")).toHaveClass(/text-muted-foreground/);
         await expect(header.megaLink("pre_skoly")).toHaveClass(/text-muted-foreground/);
-        await expect(header.megaLink("blog")).toHaveClass(/text-muted-foreground/);
         await expect(header.megaLink("podpora")).toHaveClass(/text-muted-foreground/);
       });
     });
@@ -322,9 +308,8 @@ test.describe("Site header and responsive navigation menu", () => {
 
       await test.step("Verify no nav item is highlighted and the CTA carries no active background", async () => {
         await expect(header.megaTrigger("testy")).toHaveClass(/text-muted-foreground/);
-        await expect(header.megaTrigger("skolenia")).toHaveClass(/text-muted-foreground/);
+        await expect(header.megaLink("akademia")).toHaveClass(/text-muted-foreground/);
         await expect(header.megaLink("pre_skoly")).toHaveClass(/text-muted-foreground/);
-        await expect(header.megaLink("blog")).toHaveClass(/text-muted-foreground/);
         await expect(header.megaLink("podpora")).toHaveClass(/text-muted-foreground/);
         await expect(header.ctaPill).not.toHaveClass(/bg-primary\/10/);
       });
@@ -398,15 +383,13 @@ test.describe("Site header and responsive navigation menu", () => {
         await expect(header.logoLink).toBeFocused();
       });
 
-      await test.step("Tab through the nav items in order (Sady testov → Školenia → Pre školy a lektorov → Akadémia → Podpora projektu)", async () => {
+      await test.step("Tab through the nav items in order (Sady testov → Akadémia → Pre školy a lektorov → Podpora projektu)", async () => {
         await page.keyboard.press("Tab");
         await expect(header.megaTrigger("testy")).toBeFocused();
         await page.keyboard.press("Tab");
-        await expect(header.megaTrigger("skolenia")).toBeFocused();
+        await expect(header.megaLink("akademia")).toBeFocused();
         await page.keyboard.press("Tab");
         await expect(header.megaLink("pre_skoly")).toBeFocused();
-        await page.keyboard.press("Tab");
-        await expect(header.megaLink("blog")).toBeFocused();
         await page.keyboard.press("Tab");
         await expect(header.megaLink("podpora")).toBeFocused();
       });
@@ -477,8 +460,8 @@ test.describe("Site header and responsive navigation menu", () => {
       });
 
       await test.step('Click "Akadémia" inside the sheet and verify the sheet auto-closed', async () => {
-        await header.sheetNavLink("blog").click();
-        await expect(page).toHaveURL(/\/blog$/);
+        await header.sheetNavLink("akademia").click();
+        await expect(page).toHaveURL(/\/academy$/);
         await expect(header.sheet).toBeHidden();
       });
 
@@ -498,9 +481,8 @@ test.describe("Site header and responsive navigation menu", () => {
 
       await test.step("Verify no nav item claims the active state for a hash-only path", async () => {
         await expect(header.megaTrigger("testy")).toHaveClass(/text-muted-foreground/);
-        await expect(header.megaTrigger("skolenia")).toHaveClass(/text-muted-foreground/);
+        await expect(header.megaLink("akademia")).toHaveClass(/text-muted-foreground/);
         await expect(header.megaLink("pre_skoly")).toHaveClass(/text-muted-foreground/);
-        await expect(header.megaLink("blog")).toHaveClass(/text-muted-foreground/);
         await expect(header.megaLink("podpora")).toHaveClass(/text-muted-foreground/);
       });
     });
@@ -509,13 +491,13 @@ test.describe("Site header and responsive navigation menu", () => {
       page,
       header,
     }) => {
-      await test.step("Set desktop viewport and open /courses", async () => {
+      await test.step("Set desktop viewport and open /academy", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto("/courses");
+        await page.goto("/academy");
       });
 
       await test.step("Scroll the page down by 1000 px", async () => {
-        // mouse.wheel instead of evaluate(scrollBy): the /courses route can
+        // mouse.wheel instead of evaluate(scrollBy): the /academy route can
         // still be settling its router context right after goto, and a
         // destroyed execution context kills evaluate (flake, 2026-06-12).
         await expect(header.root).toBeVisible();
@@ -549,24 +531,24 @@ test.describe("Site header and responsive navigation menu", () => {
       });
     });
 
-    test("TC-23: Path-prefix collision — /courses/$slug highlights only Školenia, never Sady testov", async ({
+    test("TC-23: Path-prefix collision — /academy/$slug highlights only Akadémia, never Sady testov", async ({
       page,
       header,
     }) => {
-      await test.step("Set desktop viewport and open /courses/sms-smishing", async () => {
+      await test.step("Set desktop viewport and open /academy/sms-smishing", async () => {
         await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto("/courses/sms-smishing");
+        await page.goto("/academy/sms-smishing");
       });
 
-      await test.step('Verify only "Školenia" is highlighted', async () => {
-        await expect(header.megaTrigger("skolenia")).toHaveClass(/text-foreground/);
+      await test.step('Verify only "Akadémia" is highlighted', async () => {
+        await expect(header.megaLink("akademia")).toHaveClass(/text-foreground/);
         await expect(header.megaTrigger("testy")).toHaveClass(/text-muted-foreground/);
       });
 
       await test.step('Navigate to /tests/eshop and verify the highlight follows to "Sady testov"', async () => {
         await page.goto("/tests/eshop");
         await expect(header.megaTrigger("testy")).toHaveClass(/text-foreground/);
-        await expect(header.megaTrigger("skolenia")).toHaveClass(/text-muted-foreground/);
+        await expect(header.megaLink("akademia")).toHaveClass(/text-muted-foreground/);
       });
     });
   });
