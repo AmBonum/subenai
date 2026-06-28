@@ -43,6 +43,13 @@ domovskej stránke. Registráciu nepotrebuješ.
    nesprávna.
 3. Na konci dostaneš **skóre** a zhrnutie, kde sa zlepšiť.
 
+![Obrazovka otázky počas testu: vľavo hore ukazovateľ priebehu „Otázka 1 / 10", vpravo hore odpočítavajúca časomiera, v strede simulovaná situácia (tu adresný riadok prehliadača s URL) a pod ňou tlačidlá s možnosťami odpovede.](/img/docs/test-flow.png#themed)
+
+Na obrazovke otázky vidíš: **vľavo hore priebeh** („Otázka 1 / 10"), **vpravo
+hore časomieru**, v strede **simulovanú situáciu** (SMS, e-mail alebo — ako
+tu — adresný riadok s URL) a pod ňou **možnosti odpovede**. Po kliknutí na
+možnosť dostaneš hneď spätnú väzbu s vysvetlením a pokračuješ ďalej.
+
 **Tip:** výsledok sa dá zdieľať odkazom. Ak sa prihlásiš, test sa uloží do
 tvojej histórie.`,
   },
@@ -74,7 +81,16 @@ romantické scamy a ďalšie.
 
 Každý kurz má **príklady z praxe**, **červené vlajky** (na čo si dať pozor) a
 **checklist**, čo robiť a čomu sa vyhnúť. Sú zadarmo a dostupné bez
-prihlásenia.`,
+prihlásenia.
+
+Všetky kurzy aj články nájdeš na jednom mieste v **[Akadémii](/academy)**:
+
+![Stránka Akadémia: hore prepínač „Všetko / Kurzy / Články" a pole na vyhľadávanie, pod ním mriežka kariet — každá karta ukazuje, či ide o kurz alebo článok, jeho obtiažnosť a odhadovaný čas čítania.](/img/docs/academy.png#themed)
+
+Hore prepneš medzi **Všetko / Kurzy / Články** alebo **vyhľadáš** tému; každá
+karta ukazuje **typ** (Kurz alebo Článok), **obtiažnosť** (začiatočník /
+pokročilý) a **odhadovaný čas**. Kliknutím otvoríš celý kurz aj s
+interaktívnymi príkladmi.`,
   },
   {
     slug: "ucet",
@@ -88,8 +104,28 @@ prihlásenia.`,
 - možnosť **vytvárať vlastné testy** a zostavy otázok,
 - nástroje pre firmy a lektorov.
 
-Prihlásiš sa cez **„Prihlásiť sa"** v hlavičke. Podporujeme prihlásenie
-e-mailom a **dvojfaktorové overenie (2FA)** pre vyššiu bezpečnosť.`,
+## Prihlásenie
+
+Prihlásiš sa cez **„Prihlásiť sa"** v hlavičke. Môžeš použiť **e-mail a
+heslo** alebo **Pokračovať cez Google**:
+
+![Prihlasovacia obrazovka: tlačidlo „Pokračovať cez Google", oddeľovač „alebo" a pod ním polia E-mail a Heslo s tlačidlom „Prihlásiť sa"; naspodku odkazy „Zabudol/a si heslo?" a „Vytvoriť účet".](/img/docs/login.png#themed)
+
+Nemáš účet? Cez **„Vytvoriť účet"** sa zaregistruješ. Pre vyššiu bezpečnosť
+podporujeme **dvojfaktorové overenie (2FA)** — zapneš si ho v nastaveniach
+účtu.
+
+## Nastavenia účtu
+
+Po prihlásení nájdeš nastavenia v sekcii **Účet**. V záložke **Profil**
+upravíš zobrazované meno, e-mail a iniciály avatara:
+
+![Sekcia Účet → Profil: záložky Profil / Bezpečnosť / GDPR; karta „Osobné údaje" s náhľadom avatara, poľami Zobrazované meno, E-mail, Iniciály avatara a ID účtu; nižšie karta „Heslo a 2FA" a karta „Stiahnutie tvojich údajov (JSON)".](/img/docs/account-profile.png#themed)
+
+- **Profil** — meno, e-mail, avatar.
+- **Bezpečnosť** — zmena hesla a **2FA**.
+- **GDPR** — žiadosti o údaje a [výmaz](/docs/vymazanie-udajov); priamo v
+  Profile si vieš **stiahnuť všetky svoje údaje (JSON)** (GDPR čl. 15 a 20).`,
   },
   {
     slug: "faq",
