@@ -71,13 +71,13 @@ describe("SiteHeader auth-aware nav (E36 A2: avatar+dropdown)", () => {
 
   it("hides the user menu trigger when unauthenticated", () => {
     authStateRef.current = { isAuthenticated: false, isAdmin: false };
-    render(<SiteHeader />);
+    render(<SiteHeader menuOpen={false} onMenuOpenChange={() => {}} />);
     expect(screen.queryByTestId("header-user-menu-trigger")).not.toBeInTheDocument();
   });
 
   it("shows the avatar pill (user menu trigger) when authenticated", () => {
     authStateRef.current = { isAuthenticated: true, isAdmin: false };
-    render(<SiteHeader />);
+    render(<SiteHeader menuOpen={false} onMenuOpenChange={() => {}} />);
     const trigger = screen.getByTestId("header-user-menu-trigger");
     expect(trigger).toBeInTheDocument();
     // E36 C1: aria-label embeds the signed-in user's name (WCAG 4.1.2)
@@ -89,7 +89,7 @@ describe("SiteHeader auth-aware nav (E36 A2: avatar+dropdown)", () => {
   });
 
   it("preserves CTA and core header test-ids regardless of auth state (CTA stays even when signed in)", () => {
-    render(<SiteHeader />);
+    render(<SiteHeader menuOpen={false} onMenuOpenChange={() => {}} />);
     expect(screen.getByTestId("header-root")).toBeInTheDocument();
     expect(screen.getByTestId("header-cta-pill")).toBeInTheDocument();
     expect(screen.getByTestId("header-mobile-trigger")).toBeInTheDocument();
@@ -101,7 +101,7 @@ describe("SiteHeader auth-aware nav (E36 A2: avatar+dropdown)", () => {
   // quick-links + login + CTA stay in the bar.
   it("shows the desktop login link and keeps docs out of the top bar", () => {
     authStateRef.current = { isAuthenticated: false, isAdmin: false };
-    render(<SiteHeader />);
+    render(<SiteHeader menuOpen={false} onMenuOpenChange={() => {}} />);
     expect(screen.getByTestId("header-nav-login")).toHaveAttribute("href", "/login");
     // docs lives in the sidebar now, not the top bar
     expect(screen.queryByTestId("header-nav-docs")).not.toBeInTheDocument();
@@ -109,7 +109,7 @@ describe("SiteHeader auth-aware nav (E36 A2: avatar+dropdown)", () => {
 
   it("hides the desktop login link when authenticated", () => {
     authStateRef.current = { isAuthenticated: true, isAdmin: false };
-    render(<SiteHeader />);
+    render(<SiteHeader menuOpen={false} onMenuOpenChange={() => {}} />);
     expect(screen.queryByTestId("header-nav-login")).not.toBeInTheDocument();
   });
 });

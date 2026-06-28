@@ -59,6 +59,14 @@
       "split_prefix": "Take the ",
       "split_middle": "quick ",
       "split_suffix": "test"
+    },
+    "bottom_nav": {
+      "home": "Home",
+      "tests": "Tests",
+      "academy": "Academy",
+      "quicktest": "Test",
+      "menu": "Menu",
+      "aria": "Bottom navigation"
     }
   },
   "footer": {

@@ -61,6 +61,14 @@
       "split_prefix": "Spustiť ",
       "split_middle": "rýchly ",
       "split_suffix": "test"
+    },
+    "bottom_nav": {
+      "home": "Domov",
+      "tests": "Testy",
+      "academy": "Akadémia",
+      "quicktest": "Test",
+      "menu": "Menu",
+      "aria": "Spodná navigácia"
     }
   },
   "footer": {
