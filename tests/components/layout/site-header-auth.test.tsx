@@ -49,8 +49,14 @@ vi.mock("@tanstack/react-router", async () => {
     await vi.importActual<typeof import("@tanstack/react-router")>("@tanstack/react-router");
   return {
     ...actual,
-    Link: ({ children, ...rest }: { children: React.ReactNode } & Record<string, unknown>) => (
-      <a {...(rest as Record<string, unknown>)}>{children}</a>
+    Link: ({
+      children,
+      to,
+      ...rest
+    }: { children: React.ReactNode; to?: string } & Record<string, unknown>) => (
+      <a href={typeof to === "string" ? to : undefined} {...(rest as Record<string, unknown>)}>
+        {children}
+      </a>
     ),
     useLocation: () => ({ pathname: "/" }),
   };
@@ -87,5 +93,23 @@ describe("SiteHeader auth-aware nav (E36 A2: avatar+dropdown)", () => {
     expect(screen.getByTestId("header-root")).toBeInTheDocument();
     expect(screen.getByTestId("header-cta-pill")).toBeInTheDocument();
     expect(screen.getByTestId("header-mobile-trigger")).toBeInTheDocument();
+  });
+
+  // E54.1 — login is built but was undiscoverable; surface it in the nav.
+  // Desktop links are always in the DOM; the mobile links live inside the
+  // Radix Sheet (rendered only when open) and are covered by the e2e suite.
+  it("shows desktop login + docs links when unauthenticated", () => {
+    authStateRef.current = { isAuthenticated: false, isAdmin: false };
+    render(<SiteHeader />);
+    expect(screen.getByTestId("header-nav-login")).toHaveAttribute("href", "/login");
+    expect(screen.getByTestId("header-nav-docs")).toHaveAttribute("href", "/docs");
+  });
+
+  it("hides the login link when authenticated but keeps the docs link", () => {
+    authStateRef.current = { isAuthenticated: true, isAdmin: false };
+    render(<SiteHeader />);
+    expect(screen.queryByTestId("header-nav-login")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("header-mobile-login")).not.toBeInTheDocument();
+    expect(screen.getByTestId("header-nav-docs")).toHaveAttribute("href", "/docs");
   });
 });

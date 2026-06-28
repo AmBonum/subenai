@@ -10,6 +10,8 @@
 // fully migrated.
 export const ROUTES = {
   home: "/",
+  login: "/login",
+  docs: "/docs",
   test: "/test",
   testy: "/tests",
   testySlug: "/tests/$slug",
