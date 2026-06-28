@@ -49,4 +49,23 @@ describe("BlogPostBody callouts", () => {
     const { container } = render(<BlogPostBody mdx={mdx} />);
     expect(container.querySelector("table")).toBeInTheDocument();
   });
+
+  it("renders a plain image as a single <img>", () => {
+    const { container } = render(<BlogPostBody mdx={"![popis](/img/docs/x.png)"} />);
+    const imgs = container.querySelectorAll("img");
+    expect(imgs).toHaveLength(1);
+    expect(imgs[0]).toHaveAttribute("src", "/img/docs/x.png");
+    expect(screen.queryByTestId("markdown-themed-image")).not.toBeInTheDocument();
+  });
+
+  it("renders a #themed image as a light/dark pair toggled by the dark class", () => {
+    const { container } = render(<BlogPostBody mdx={"![popis](/img/docs/x.png#themed)"} />);
+    expect(screen.getByTestId("markdown-themed-image")).toBeInTheDocument();
+    const light = container.querySelector('img[data-theme="light"]');
+    const dark = container.querySelector('img[data-theme="dark"]');
+    expect(light).toHaveAttribute("src", "/img/docs/x.png");
+    expect(light?.className).toContain("dark:hidden");
+    expect(dark).toHaveAttribute("src", "/img/docs/x-dark.png");
+    expect(dark?.className).toContain("dark:block");
+  });
 });

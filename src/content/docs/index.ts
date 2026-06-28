@@ -291,7 +291,7 @@ Ak máš účet, výmaz prebieha cez vstavaný formulár (žiadny e-mail tam-a-s
 4. Žiadosť sa objaví v **histórii** s termínom vybavenia a stavom, ktorý
    môžeš sledovať.
 
-![Formulár „GDPR žiadosť (DSR)" v sekcii Účet: výber typu žiadosti (vrátane „Výmaz — čl. 17"), pole pre spresnenie a história podaných žiadostí so stavom a termínom vybavenia.](/img/docs/dsr-form.png)
+![Formulár „GDPR žiadosť (DSR)" v sekcii Účet: výber typu žiadosti (vrátane „Výmaz — čl. 17"), pole pre spresnenie a história podaných žiadostí so stavom a termínom vybavenia.](/img/docs/dsr-form.png#themed)
 
 **Termín:** žiadosť vybavíme **najneskôr do 30 dní** (zákonná lehota GDPR),
 spravidla skôr. Stav uvidíš priamo vo formulári.

@@ -146,6 +146,59 @@ function detectCallout(children: ReactNode): CalloutMatch | null {
   return { tone: match.tone, label: match.label, rest };
 }
 
+const THEMED_SUFFIX = "#themed";
+
+// Markdown image renderer. A `#themed` fragment on the src opts the image
+// into a light/dark pair (E57): the author commits `<name>.png` (light) +
+// `<name>-dark.png` (dark) and we render BOTH, toggling visibility with the
+// class-based `dark:` variant — so a documentation screenshot always matches
+// the theme the reader currently has set. Plain images render unchanged.
+function MarkdownImage({ src, alt }: { src?: string; alt?: string }) {
+  const caption = alt ? (
+    <figcaption className="mt-2 text-center text-sm text-muted-foreground">{alt}</figcaption>
+  ) : null;
+
+  if (typeof src === "string" && src.endsWith(THEMED_SUFFIX)) {
+    const light = src.slice(0, -THEMED_SUFFIX.length);
+    const dark = light.replace(/\.(png|jpe?g|webp|avif)$/i, "-dark.$1");
+    return (
+      <figure className="my-8" data-testid="markdown-themed-image">
+        <img
+          src={light}
+          alt={alt ?? ""}
+          loading="lazy"
+          data-theme="light"
+          className="block w-full rounded-xl border border-border dark:hidden"
+        />
+        <img
+          src={dark}
+          alt={alt ?? ""}
+          loading="lazy"
+          data-theme="dark"
+          className="hidden w-full rounded-xl border border-border dark:block"
+        />
+        {caption}
+      </figure>
+    );
+  }
+
+  return (
+    <figure className="my-8">
+      {/* `auto 16/9` reserves a 16:9 box before the image loads (kills the
+          CLS of dimension-less markdown images) but switches to the intrinsic
+          ratio once metadata arrives — no cropping for non-16:9 images. */}
+      <img
+        src={src}
+        alt={alt ?? ""}
+        loading="lazy"
+        style={{ aspectRatio: "auto 16 / 9" }}
+        className="w-full rounded-xl border border-border"
+      />
+      {caption}
+    </figure>
+  );
+}
+
 export function BlogPostBody({ mdx }: { mdx: string }) {
   // Per-render id counter so duplicate headings get -2, -3 suffixes
   // matching the TOC's dedupe (both use the same slugifier).
@@ -264,26 +317,7 @@ export function BlogPostBody({ mdx }: { mdx: string }) {
             <th className="px-4 py-3 text-left font-semibold text-foreground">{children}</th>
           ),
           td: ({ children }) => <td className="px-4 py-3 align-top">{children}</td>,
-          img: ({ src, alt }) => (
-            <figure className="my-8">
-              {/* `auto 16/9` reserves a 16:9 box before the image loads
-                  (kills the CLS of dimension-less markdown images) but
-                  switches to the intrinsic ratio once metadata arrives —
-                  no cropping or letterboxing for non-16:9 images. */}
-              <img
-                src={src}
-                alt={alt ?? ""}
-                loading="lazy"
-                style={{ aspectRatio: "auto 16 / 9" }}
-                className="w-full rounded-xl border border-border"
-              />
-              {alt && (
-                <figcaption className="mt-2 text-center text-sm text-muted-foreground">
-                  {alt}
-                </figcaption>
-              )}
-            </figure>
-          ),
+          img: ({ src, alt }) => <MarkdownImage src={src} alt={alt} />,
         }}
       >
         {mdx}
