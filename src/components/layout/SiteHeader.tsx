@@ -59,48 +59,19 @@ const MEGA_ITEMS: readonly MegaMenuItemDef[] = [
     },
   },
   {
-    slug: "skolenia",
+    // E55 — /courses + /blog unified into one Academy hub. A single flat
+    // top-bar link keeps it prominent; the hub page carries the rich
+    // browsing (Kurzy / Články tabs + search), so no desktop dropdown.
+    slug: "akademia",
     labelKey: "label",
     descKey: "desc",
-    panel: {
-      sections: [
-        {
-          headingKey: "panel_section_kurzy",
-          links: [
-            { key: "all", labelKey: "panel_link_all", href: ROUTES.skolenia },
-            {
-              key: "email_phishing",
-              labelKey: "panel_link_email_phishing",
-              href: "/courses/email-phishing",
-            },
-            {
-              key: "sms_smishing",
-              labelKey: "panel_link_sms_smishing",
-              href: "/courses/sms-smishing",
-            },
-            { key: "vishing", labelKey: "panel_link_vishing", href: "/courses/vishing" },
-          ],
-        },
-      ],
-      featured: {
-        labelKey: "panel_featured",
-        href: ROUTES.skoly,
-        icon: "GraduationCap",
-        tone: "schools",
-      },
-    },
+    href: ROUTES.academy,
   },
   {
     slug: "pre_skoly",
     labelKey: "label",
     descKey: "desc",
     href: ROUTES.skoly,
-  },
-  {
-    slug: "blog",
-    labelKey: "label",
-    descKey: "desc",
-    href: ROUTES.blog,
   },
   {
     slug: "podpora",

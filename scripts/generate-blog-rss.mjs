@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-// Build-time RSS 2.0 feed generator for /blog.
+// Build-time RSS 2.0 feed generator for /academy.
 //
 // Queries Supabase via PostgREST (anon publishable key — RLS already
 // filters to status='published' AND published_at <= now()). Writes
-// public/blog/rss.xml; Vite copies it to dist/client/blog/rss.xml on
-// build so /blog/rss.xml resolves at the CF edge.
+// public/academy/rss.xml; Vite copies it to dist/client/academy/rss.xml on
+// build so /academy/rss.xml resolves at the CF edge.
 //
 // Env vars (accepts both CF Pages-style VITE_ prefix and bare):
 //   VITE_SUPABASE_URL or SUPABASE_URL — Supabase project URL
@@ -28,7 +28,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const ORIGIN = "https://subenai.sk";
-const OUTPUT = resolve(ROOT, "public/blog/rss.xml");
+const OUTPUT = resolve(ROOT, "public/academy/rss.xml");
 const MAX_ITEMS = 50;
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
@@ -89,8 +89,8 @@ const items = posts
   .map(
     (p) => `    <item>
       <title>${escapeXml(p.title)}</title>
-      <link>${ORIGIN}/blog/${p.slug}</link>
-      <guid isPermaLink="true">${ORIGIN}/blog/${p.slug}</guid>
+      <link>${ORIGIN}/academy/${p.slug}</link>
+      <guid isPermaLink="true">${ORIGIN}/academy/${p.slug}</guid>
       <description>${escapeXml(p.excerpt ?? "")}</description>
       <pubDate>${new Date(p.published_at).toUTCString()}</pubDate>
       <category>${escapeXml(p.category?.name ?? "blog")}</category>
@@ -102,13 +102,13 @@ const items = posts
 const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>subenai blog</title>
-    <link>${ORIGIN}/blog</link>
-    <description>Blog o internetových podvodoch, scam-awareness a digitálnej bezpečnosti pre slovenských čitateľov.</description>
+    <title>subenai akadémia</title>
+    <link>${ORIGIN}/academy</link>
+    <description>Akadémia o internetových podvodoch — kurzy a články o digitálnej bezpečnosti pre slovenských čitateľov.</description>
     <language>sk-SK</language>
     <copyright>© ${new Date().getFullYear()} subenai</copyright>
     <lastBuildDate>${buildDate}</lastBuildDate>
-    <atom:link href="${ORIGIN}/blog/rss.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="${ORIGIN}/academy/rss.xml" rel="self" type="application/rss+xml" />
 ${items}
   </channel>
 </rss>
@@ -117,5 +117,5 @@ ${items}
 await mkdir(dirname(OUTPUT), { recursive: true });
 await writeFile(OUTPUT, rss, "utf8");
 console.log(
-  `[blog-rss] Wrote ${posts.length} item${posts.length === 1 ? "" : "s"} → public/blog/rss.xml`,
+  `[blog-rss] Wrote ${posts.length} item${posts.length === 1 ? "" : "s"} → public/academy/rss.xml`,
 );

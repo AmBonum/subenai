@@ -29,9 +29,7 @@ import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
 import { Route as SablonyIndexRouteImport } from './routes/sablony.index'
 import { Route as DocsIndexRouteImport } from './routes/docs.index'
-import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as ContactFormIndexRouteImport } from './routes/contact-form.index'
-import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AcademyIndexRouteImport } from './routes/academy.index'
@@ -49,8 +47,6 @@ import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
 import { Route as DocsAppRouteImport } from './routes/docs.app'
 import { Route as DocsAdminRouteImport } from './routes/docs.admin'
 import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
-import { Route as CoursesSlugRouteImport } from './routes/courses.$slug'
-import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AppTemplatesRouteImport } from './routes/app.templates'
@@ -100,8 +96,6 @@ import { Route as TestBuilderIdRouteImport } from './routes/test.builder.$id'
 import { Route as DocsAppSlugRouteImport } from './routes/docs.app.$slug'
 import { Route as DocsAdminSlugRouteImport } from './routes/docs.admin.$slug'
 import { Route as ContactFormTicketIdRouteImport } from './routes/contact-form.ticket.$id'
-import { Route as BlogKategoriaSlugRouteImport } from './routes/blog/kategoria/$slug'
-import { Route as BlogAutorSlugRouteImport } from './routes/blog/autor/$slug'
 import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
 import { Route as AppTestsTestIdRouteImport } from './routes/app.tests.$testId'
 import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
@@ -225,21 +219,11 @@ const DocsIndexRoute = DocsIndexRouteImport.update({
   path: '/docs/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/docs.index.lazy').then((d) => d.Route))
-const CoursesIndexRoute = CoursesIndexRouteImport.update({
-  id: '/courses/',
-  path: '/courses/',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/courses.index.lazy').then((d) => d.Route))
 const ContactFormIndexRoute = ContactFormIndexRouteImport.update({
   id: '/contact-form/',
   path: '/contact-form/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/blog/index.lazy').then((d) => d.Route))
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -327,16 +311,6 @@ const DocsSlugRoute = DocsSlugRouteImport.update({
   path: '/docs/$slug',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/docs.$slug.lazy').then((d) => d.Route))
-const CoursesSlugRoute = CoursesSlugRouteImport.update({
-  id: '/courses/$slug',
-  path: '/courses/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/courses.$slug.lazy').then((d) => d.Route))
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/blog/$slug.lazy').then((d) => d.Route))
 const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
   id: '/auth/reset-password',
   path: '/auth/reset-password',
@@ -622,20 +596,6 @@ const ContactFormTicketIdRoute = ContactFormTicketIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/contact-form.ticket.$id.lazy').then((d) => d.Route),
 )
-const BlogKategoriaSlugRoute = BlogKategoriaSlugRouteImport.update({
-  id: '/blog/kategoria/$slug',
-  path: '/blog/kategoria/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/blog/kategoria/$slug.lazy').then((d) => d.Route),
-)
-const BlogAutorSlugRoute = BlogAutorSlugRouteImport.update({
-  id: '/blog/autor/$slug',
-  path: '/blog/autor/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/blog/autor/$slug.lazy').then((d) => d.Route),
-)
 const AppTestsNewRoute = AppTestsNewRouteImport.update({
   id: '/tests/new',
   path: '/tests/new',
@@ -823,8 +783,6 @@ export interface FileRoutesByFullPath {
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
-  '/blog/$slug': typeof BlogSlugRoute
-  '/courses/$slug': typeof CoursesSlugRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/docs/admin': typeof DocsAdminRouteWithChildren
   '/docs/app': typeof DocsAppRouteWithChildren
@@ -842,9 +800,7 @@ export interface FileRoutesByFullPath {
   '/academy/': typeof AcademyIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
-  '/blog/': typeof BlogIndexRoute
   '/contact-form/': typeof ContactFormIndexRoute
-  '/courses/': typeof CoursesIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/sablony/': typeof SablonyIndexRoute
   '/test/': typeof TestIndexRoute
@@ -865,8 +821,6 @@ export interface FileRoutesByFullPath {
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
-  '/blog/autor/$slug': typeof BlogAutorSlugRoute
-  '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/contact-form/ticket/$id': typeof ContactFormTicketIdRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
@@ -933,8 +887,6 @@ export interface FileRoutesByTo {
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
-  '/blog/$slug': typeof BlogSlugRoute
-  '/courses/$slug': typeof CoursesSlugRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/docs/admin': typeof DocsAdminRouteWithChildren
   '/docs/app': typeof DocsAppRouteWithChildren
@@ -951,9 +903,7 @@ export interface FileRoutesByTo {
   '/academy': typeof AcademyIndexRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
-  '/blog': typeof BlogIndexRoute
   '/contact-form': typeof ContactFormIndexRoute
-  '/courses': typeof CoursesIndexRoute
   '/docs': typeof DocsIndexRoute
   '/sablony': typeof SablonyIndexRoute
   '/test': typeof TestIndexRoute
@@ -974,8 +924,6 @@ export interface FileRoutesByTo {
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
-  '/blog/autor/$slug': typeof BlogAutorSlugRoute
-  '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/contact-form/ticket/$id': typeof ContactFormTicketIdRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
@@ -1047,8 +995,6 @@ export interface FileRoutesById {
   '/app/templates': typeof AppTemplatesRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
-  '/blog/$slug': typeof BlogSlugRoute
-  '/courses/$slug': typeof CoursesSlugRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/docs/admin': typeof DocsAdminRouteWithChildren
   '/docs/app': typeof DocsAppRouteWithChildren
@@ -1066,9 +1012,7 @@ export interface FileRoutesById {
   '/academy/': typeof AcademyIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
-  '/blog/': typeof BlogIndexRoute
   '/contact-form/': typeof ContactFormIndexRoute
-  '/courses/': typeof CoursesIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/sablony/': typeof SablonyIndexRoute
   '/test/': typeof TestIndexRoute
@@ -1089,8 +1033,6 @@ export interface FileRoutesById {
   '/app/legal/dsr': typeof AppLegalDsrRoute
   '/app/tests/$testId': typeof AppTestsTestIdRouteWithChildren
   '/app/tests/new': typeof AppTestsNewRoute
-  '/blog/autor/$slug': typeof BlogAutorSlugRoute
-  '/blog/kategoria/$slug': typeof BlogKategoriaSlugRoute
   '/contact-form/ticket/$id': typeof ContactFormTicketIdRoute
   '/docs/admin/$slug': typeof DocsAdminSlugRoute
   '/docs/app/$slug': typeof DocsAppSlugRoute
@@ -1164,8 +1106,6 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/auth/callback'
     | '/auth/reset-password'
-    | '/blog/$slug'
-    | '/courses/$slug'
     | '/docs/$slug'
     | '/docs/admin'
     | '/docs/app'
@@ -1183,9 +1123,7 @@ export interface FileRouteTypes {
     | '/academy/'
     | '/admin/'
     | '/app/'
-    | '/blog/'
     | '/contact-form/'
-    | '/courses/'
     | '/docs/'
     | '/sablony/'
     | '/test/'
@@ -1206,8 +1144,6 @@ export interface FileRouteTypes {
     | '/app/legal/dsr'
     | '/app/tests/$testId'
     | '/app/tests/new'
-    | '/blog/autor/$slug'
-    | '/blog/kategoria/$slug'
     | '/contact-form/ticket/$id'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
@@ -1274,8 +1210,6 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/auth/callback'
     | '/auth/reset-password'
-    | '/blog/$slug'
-    | '/courses/$slug'
     | '/docs/$slug'
     | '/docs/admin'
     | '/docs/app'
@@ -1292,9 +1226,7 @@ export interface FileRouteTypes {
     | '/academy'
     | '/admin'
     | '/app'
-    | '/blog'
     | '/contact-form'
-    | '/courses'
     | '/docs'
     | '/sablony'
     | '/test'
@@ -1315,8 +1247,6 @@ export interface FileRouteTypes {
     | '/app/legal/dsr'
     | '/app/tests/$testId'
     | '/app/tests/new'
-    | '/blog/autor/$slug'
-    | '/blog/kategoria/$slug'
     | '/contact-form/ticket/$id'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
@@ -1387,8 +1317,6 @@ export interface FileRouteTypes {
     | '/app/templates'
     | '/auth/callback'
     | '/auth/reset-password'
-    | '/blog/$slug'
-    | '/courses/$slug'
     | '/docs/$slug'
     | '/docs/admin'
     | '/docs/app'
@@ -1406,9 +1334,7 @@ export interface FileRouteTypes {
     | '/academy/'
     | '/admin/'
     | '/app/'
-    | '/blog/'
     | '/contact-form/'
-    | '/courses/'
     | '/docs/'
     | '/sablony/'
     | '/test/'
@@ -1429,8 +1355,6 @@ export interface FileRouteTypes {
     | '/app/legal/dsr'
     | '/app/tests/$testId'
     | '/app/tests/new'
-    | '/blog/autor/$slug'
-    | '/blog/kategoria/$slug'
     | '/contact-form/ticket/$id'
     | '/docs/admin/$slug'
     | '/docs/app/$slug'
@@ -1468,8 +1392,6 @@ export interface RootRouteChildren {
   AcademySlugRoute: typeof AcademySlugRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
-  BlogSlugRoute: typeof BlogSlugRoute
-  CoursesSlugRoute: typeof CoursesSlugRoute
   DocsSlugRoute: typeof DocsSlugRoute
   DocsAdminRoute: typeof DocsAdminRouteWithChildren
   DocsAppRoute: typeof DocsAppRouteWithChildren
@@ -1485,17 +1407,13 @@ export interface RootRouteChildren {
   TestsSlugRoute: typeof TestsSlugRoute
   ThankYouSessionIdRoute: typeof ThankYouSessionIdRoute
   AcademyIndexRoute: typeof AcademyIndexRoute
-  BlogIndexRoute: typeof BlogIndexRoute
   ContactFormIndexRoute: typeof ContactFormIndexRoute
-  CoursesIndexRoute: typeof CoursesIndexRoute
   DocsIndexRoute: typeof DocsIndexRoute
   SablonyIndexRoute: typeof SablonyIndexRoute
   TestIndexRoute: typeof TestIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
   AcademyAuthorSlugRoute: typeof AcademyAuthorSlugRoute
   AcademyCategorySlugRoute: typeof AcademyCategorySlugRoute
-  BlogAutorSlugRoute: typeof BlogAutorSlugRoute
-  BlogKategoriaSlugRoute: typeof BlogKategoriaSlugRoute
   ContactFormTicketIdRoute: typeof ContactFormTicketIdRoute
 }
 
@@ -1641,25 +1559,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/courses/': {
-      id: '/courses/'
-      path: '/courses'
-      fullPath: '/courses/'
-      preLoaderRoute: typeof CoursesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/contact-form/': {
       id: '/contact-form/'
       path: '/contact-form'
       fullPath: '/contact-form/'
       preLoaderRoute: typeof ContactFormIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/': {
-      id: '/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -1779,20 +1683,6 @@ declare module '@tanstack/react-router' {
       path: '/docs/$slug'
       fullPath: '/docs/$slug'
       preLoaderRoute: typeof DocsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/courses/$slug': {
-      id: '/courses/$slug'
-      path: '/courses/$slug'
-      fullPath: '/courses/$slug'
-      preLoaderRoute: typeof CoursesSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/reset-password': {
@@ -2136,20 +2026,6 @@ declare module '@tanstack/react-router' {
       path: '/contact-form/ticket/$id'
       fullPath: '/contact-form/ticket/$id'
       preLoaderRoute: typeof ContactFormTicketIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/kategoria/$slug': {
-      id: '/blog/kategoria/$slug'
-      path: '/blog/kategoria/$slug'
-      fullPath: '/blog/kategoria/$slug'
-      preLoaderRoute: typeof BlogKategoriaSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/autor/$slug': {
-      id: '/blog/autor/$slug'
-      path: '/blog/autor/$slug'
-      fullPath: '/blog/autor/$slug'
-      preLoaderRoute: typeof BlogAutorSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/tests/new': {
@@ -2588,8 +2464,6 @@ const rootRouteChildren: RootRouteChildren = {
   AcademySlugRoute: AcademySlugRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
-  BlogSlugRoute: BlogSlugRoute,
-  CoursesSlugRoute: CoursesSlugRoute,
   DocsSlugRoute: DocsSlugRoute,
   DocsAdminRoute: DocsAdminRouteWithChildren,
   DocsAppRoute: DocsAppRouteWithChildren,
@@ -2605,17 +2479,13 @@ const rootRouteChildren: RootRouteChildren = {
   TestsSlugRoute: TestsSlugRoute,
   ThankYouSessionIdRoute: ThankYouSessionIdRoute,
   AcademyIndexRoute: AcademyIndexRoute,
-  BlogIndexRoute: BlogIndexRoute,
   ContactFormIndexRoute: ContactFormIndexRoute,
-  CoursesIndexRoute: CoursesIndexRoute,
   DocsIndexRoute: DocsIndexRoute,
   SablonyIndexRoute: SablonyIndexRoute,
   TestIndexRoute: TestIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
   AcademyAuthorSlugRoute: AcademyAuthorSlugRoute,
   AcademyCategorySlugRoute: AcademyCategorySlugRoute,
-  BlogAutorSlugRoute: BlogAutorSlugRoute,
-  BlogKategoriaSlugRoute: BlogKategoriaSlugRoute,
   ContactFormTicketIdRoute: ContactFormTicketIdRoute,
 }
 export const routeTree = rootRouteImport

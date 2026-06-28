@@ -19,7 +19,7 @@ const TODAY = new Date().toISOString().slice(0, 10);
 const STATIC_ROUTES = [
   { loc: "/", priority: "1.0", changefreq: "weekly" },
   { loc: "/tests", priority: "0.9", changefreq: "weekly" },
-  { loc: "/courses", priority: "0.9", changefreq: "weekly" },
+  { loc: "/academy", priority: "0.9", changefreq: "daily" },
   { loc: "/cookies", priority: "0.3", changefreq: "yearly" },
   { loc: "/privacy", priority: "0.3", changefreq: "yearly" },
   { loc: "/about", priority: "0.5", changefreq: "monthly" },
@@ -31,7 +31,6 @@ const STATIC_ROUTES = [
   { loc: "/changelog", priority: "0.4", changefreq: "weekly" },
   { loc: "/test/builder", priority: "0.7", changefreq: "monthly" },
   { loc: "/schools", priority: "0.7", changefreq: "monthly" },
-  { loc: "/blog", priority: "0.8", changefreq: "daily" },
   { loc: "/sablony", priority: "0.8", changefreq: "weekly" },
   // E54 — public docs portal. Keep these slugs in sync with the registry in
   // src/content/docs/index.ts (asserted by tests/seo/docs-sitemap.test.ts).
@@ -299,10 +298,16 @@ const templates = await loadPublishedTemplateSlugs();
 // Static routes carry no lastmod: stamping the build date claimed every
 // page changed on every deploy, which teaches crawlers to distrust the
 // field. Dynamic entries keep lastmod sourced from real content data.
+// E55 — courses are now academy lessons (/academy/$slug). The static
+// content/courses dir keeps them in the sitemap even on credential-less
+// builds; once the import SQL runs they also surface via the blog_posts
+// query below, so we dedupe by slug to avoid duplicate <url> entries.
+const courseSlugSet = new Set(courses.map((c) => c.slug));
+
 const urls = [
   ...STATIC_ROUTES,
   ...courses.map((c) => ({
-    loc: `/courses/${c.slug}`,
+    loc: `/academy/${c.slug}`,
     priority: "0.8",
     changefreq: "monthly",
     lastmod: c.lastmod,
@@ -320,16 +325,18 @@ const urls = [
     lastmod: (c.updated_at ?? TODAY).slice(0, 10),
   })),
   ...BLOG_CATEGORY_SLUGS.map((slug) => ({
-    loc: `/blog/kategoria/${slug}`,
+    loc: `/academy/category/${slug}`,
     priority: "0.6",
     changefreq: slug === "news-a-trendy" ? "daily" : "weekly",
   })),
-  ...blogPosts.map((post) => ({
-    loc: `/blog/${post.slug}`,
-    priority: PILLAR_SLUGS.has(post.slug) ? "0.7" : "0.5",
-    changefreq: "monthly",
-    lastmod: (post.updated_at ?? post.published_at ?? TODAY).slice(0, 10),
-  })),
+  ...blogPosts
+    .filter((post) => !courseSlugSet.has(post.slug))
+    .map((post) => ({
+      loc: `/academy/${post.slug}`,
+      priority: PILLAR_SLUGS.has(post.slug) ? "0.7" : "0.5",
+      changefreq: "monthly",
+      lastmod: (post.updated_at ?? post.published_at ?? TODAY).slice(0, 10),
+    })),
   ...templates.map((tpl) => ({
     loc: `/sablony/${tpl.slug}`,
     priority: "0.6",

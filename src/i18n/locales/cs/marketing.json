@@ -40,15 +40,9 @@
         "panel_link_sablony": "Šablony testů",
         "panel_featured": "Nové otázky tento měsíc →"
       },
-      "skolenia": {
-        "label": "Školení",
-        "desc": "Bezplatné krátké kurzy — phishing, smishing, BEC. České i slovenské scénáře, bez žargonu.",
-        "panel_section_kurzy": "Kurzy",
-        "panel_link_all": "Všechny kurzy",
-        "panel_link_email_phishing": "E-mailový phishing",
-        "panel_link_sms_smishing": "SMS smishing",
-        "panel_link_vishing": "Vishing",
-        "panel_featured": "Pro školy a HR"
+      "akademia": {
+        "label": "Akademie",
+        "desc": "Interaktivní kurzy a články o podvodech — nauč se je rozpoznat na reálných příkladech."
       },
       "pre_skoly": {
         "label": "Pro školy a lektory",

@@ -40,7 +40,7 @@ export function CourseCard({ course, relatedArticle }: CourseCardProps) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card/70 transition hover:border-primary/50 hover:bg-card focus-within:ring-2 focus-within:ring-primary"
     >
       <Link
-        to="/courses/$slug"
+        to="/academy/$slug"
         params={{ slug: course.slug }}
         className="block focus:outline-none"
         aria-label={course.title}
@@ -74,7 +74,7 @@ export function CourseCard({ course, relatedArticle }: CourseCardProps) {
           </div>
         </div>
         <Link
-          to="/courses/$slug"
+          to="/academy/$slug"
           params={{ slug: course.slug }}
           className="focus:outline-none"
           data-testid={`courses-card-title-link-${course.slug}`}
@@ -96,7 +96,7 @@ export function CourseCard({ course, relatedArticle }: CourseCardProps) {
         </p>
         {relatedArticle && (
           <Link
-            to="/blog/$slug"
+            to="/academy/$slug"
             params={{ slug: relatedArticle.slug }}
             data-testid={`courses-card-related-article-${course.slug}`}
             className="mt-3 flex items-start gap-2 rounded-lg border border-primary/30 bg-primary/5 p-2.5 text-xs transition hover:bg-primary/10"

@@ -50,7 +50,7 @@ export function CategoryBadge({
   }
   return (
     <Link
-      to="/blog/kategoria/$slug"
+      to="/academy/category/$slug"
       params={{ slug }}
       className={`${base} transition-transform hover:scale-105`}
       style={style}

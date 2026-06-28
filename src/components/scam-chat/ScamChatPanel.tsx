@@ -322,7 +322,7 @@ function QuotaState() {
       </p>
       <div className="flex flex-wrap gap-2">
         <Button asChild size="sm" variant="secondary">
-          <Link to="/courses" data-testid="scam-chat-quota-courses">
+          <Link to="/academy" data-testid="scam-chat-quota-courses">
             {t("quota_courses")}
           </Link>
         </Button>

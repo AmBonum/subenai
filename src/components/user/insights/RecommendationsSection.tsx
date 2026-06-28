@@ -134,7 +134,7 @@ function RecommendationCard({ rec, t }: CardProps) {
               asChild
               data-testid={`app-recommendations-card-view-${rec.id}`}
             >
-              <Link to="/courses/$slug" params={{ slug }} onClick={onClickCourse}>
+              <Link to="/academy/$slug" params={{ slug }} onClick={onClickCourse}>
                 {t("view_course_cta")}
                 <ArrowRight className="ml-1 h-3 w-3" />
               </Link>

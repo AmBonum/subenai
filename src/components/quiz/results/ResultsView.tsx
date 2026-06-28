@@ -416,7 +416,7 @@ export function ResultsView({
                 {variant.relatedCourses.map(({ label, slug }) => (
                   <Link
                     key={slug}
-                    to="/courses/$slug"
+                    to="/academy/$slug"
                     params={{ slug }}
                     className="block text-sm text-primary underline-offset-2 hover:underline"
                   >

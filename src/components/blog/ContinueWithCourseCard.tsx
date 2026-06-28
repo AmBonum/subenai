@@ -59,7 +59,7 @@ export function ContinueWithCourseCard({ courseSlug }: ContinueWithCourseCardPro
           </p>
         </div>
         <Link
-          to="/courses/$slug"
+          to="/academy/$slug"
           params={{ slug: course.slug }}
           className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-success/60 bg-success/10 px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-success/20"
           data-testid="blog-continue-with-course-cta"
