@@ -45,6 +45,7 @@ const STATIC_ROUTES = [
   { loc: "/docs/vlastne-testy", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/pre-skoly", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/akademia", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/vymazanie-udajov", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/zdielanie-vysledkov", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/pomocnik", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/podpora-projektu", priority: "0.5", changefreq: "monthly" },
