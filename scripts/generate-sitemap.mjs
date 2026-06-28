@@ -42,6 +42,16 @@ const STATIC_ROUTES = [
   { loc: "/docs/kurzy", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/ucet", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/faq", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/firemne-testy", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/vlastne-testy", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/pre-skoly", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/akademia", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/zdielanie-vysledkov", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/pomocnik", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/podpora-projektu", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/sukromie-a-data", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/kontakt", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/zmeny", priority: "0.5", changefreq: "monthly" },
 ];
 
 // E16.3 — blog category archive pages. The 15 categories are seeded in
