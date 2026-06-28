@@ -208,21 +208,124 @@ Podporu vieš kedykoľvek spravovať alebo zrušiť.`,
   {
     slug: "sukromie-a-data",
     title: "Súkromie a dáta",
-    description: "Aké údaje spracúvame a aké máš práva.",
+    description:
+      "Aké údaje spracúvame, ako dlho ich uchovávame a aké máš práva podľa GDPR a slovenských zákonov.",
     order: 14,
     category: "Projekt a súkromie",
-    body: `Súkromie berieme vážne. Rýchly test sa dá spraviť **bez registrácie** a
-bez ukladania odpovedí na server. Prihlásením získaš históriu — vtedy sa
-výsledky ukladajú k tvojmu účtu.
+    body: `Súkromie berieme vážne a držíme sa zásady **minimalizácie údajov** —
+spracúvame len to, čo je nevyhnutné na fungovanie služby. Táto stránka
+zhŕňa, čo o tebe vieme, prečo, ako dlho to uchovávame a čo s tým môžeš
+urobiť. Úplné a záväzné znenie nájdeš v [Ochrane súkromia](/privacy);
+nastavenie meraní rieši [Cookies](/cookies).
 
-Podrobnosti o spracúvaní údajov, cookies a tvojich právach (vrátane žiadostí
-o prístup či výmaz) nájdeš na stránkach **Ochrana súkromia** a **Cookies**.`,
+## Čo spracúvame
+
+**Rýchly test bez prihlásenia.** Test [spustíš](/docs/ako-spravit-test) bez
+registrácie. Tvoje odpovede sa ukladajú ako jeden anonymný „pokus" s
+náhodným identifikátorom (\`share_id\`) — slúži len na to, aby si vedel
+[zdieľať svoj výsledok](/docs/zdielanie-vysledkov) odkazom. K tomuto pokusu
+nie je pripojené tvoje meno ani e-mail.
+
+**Prihlásený účet.** Ak sa [prihlásiš](/docs/ucet), ukladáme:
+
+- **e-mail** (prihlásenie, dôležité oznámenia),
+- **zobrazované meno** (nepovinné),
+- **históriu výsledkov** testov pripojenú k tvojmu účtu.
+
+**Podpora projektu.** Ak [projekt podporíš](/docs/podpora-projektu),
+platbu spracúva poskytovateľ platobnej brány — **čísla kariet u nás nikdy
+neuvidíme ani neukladáme**. Uchovávame len doklad o platbe potrebný podľa
+zákona o účtovníctve.
+
+## Ako dlho údaje uchovávame
+
+Uchovávanie nie je nekonečné — beží **automaticky** každý deň:
+
+| Údaj | Lehota | Čo sa stane |
+| --- | --- | --- |
+| Výsledky testov (pokusy) | 36 mesiacov | natrvalo sa zmažú |
+| Anti-cheat metadáta | 12 mesiacov | anonymizujú sa |
+| Meno/e-mail respondenta (edu) | 12 mesiacov | anonymizujú sa |
+| Účtovné doklady o platbe | podľa zákona (~10 r.) | uchovávajú sa |
+
+Tieto lehoty vynucuje denná automatická úloha — nie je to len sľub na
+papieri.
+
+## Tvoje práva (GDPR)
+
+Máš právo na **prístup, opravu, výmaz, obmedzenie, prenosnosť a námietku**.
+Ako si ich uplatniť — vrátane **úplného vymazania účtu a dát** — má vlastný,
+podrobný návod:
+
+**➡️ [Vymazanie údajov a účtu](/docs/vymazanie-udajov)**
+
+Otázky o súkromí vieš poslať aj cez [kontakt](/docs/kontakt).`,
+  },
+  {
+    slug: "vymazanie-udajov",
+    title: "Vymazanie údajov a účtu",
+    description:
+      "Krok za krokom, ako požiadať o výmaz svojich údajov — transparentne, podľa GDPR a slovenských zákonov.",
+    order: 15,
+    category: "Projekt a súkromie",
+    body: `Máš **právo na výmaz** („právo byť zabudnutý", GDPR čl. 17). Tu nájdeš
+presne to, ako oň požiadať, čo sa zmaže, čo musíme zo zákona ponechať a
+dokedy je to hotové. Žiadne skryté kroky.
+
+## 1. Anonymný test — zmažeš si ho sám hneď
+
+Ak si robil test **bez prihlásenia**, tvoj výsledok nie je viazaný na žiadnu
+identitu. Na stránke s výsledkom (alebo cez [zdieľací odkaz](/docs/zdielanie-vysledkov))
+nájdeš tlačidlo **„Zmazať môj výsledok"** — klikneš a pokus sa **okamžite a
+natrvalo** odstráni z našej databázy. Nepotrebuješ účet ani e-mail.
+
+## 2. Prihlásený účet — žiadosť o výmaz
+
+Ak máš účet, výmaz prebieha cez vstavaný formulár (žiadny e-mail tam-a-späť):
+
+1. Prihlás sa a otvor **[Žiadosti o údaje](/app/legal/dsr)** (v sekcii
+   *Účet*).
+2. V poli **Typ žiadosti** zvoľ **„Výmaz"**.
+3. Voliteľne pripíš poznámku a **Odošli**. Tvoj e-mail je predvyplnený a
+   uzamknutý — žiadosť tak nemôže podať nikto za teba.
+4. Žiadosť sa objaví v **histórii** s termínom vybavenia a stavom, ktorý
+   môžeš sledovať.
+
+**Termín:** žiadosť vybavíme **najneskôr do 30 dní** (zákonná lehota GDPR),
+spravidla skôr. Stav uvidíš priamo vo formulári.
+
+> **Pripravujeme:** plne automatické **„Vymazať účet"** priamo v nastaveniach
+> účtu s **30-dňovou lehotou na rozmyslenie** (do tej doby sa dá výmaz
+> zrušiť). Po jej uplynutí systém tvoje údaje odstráni automaticky, bez
+> zásahu človeka.
+
+## 3. Čo sa vymaže a čo musíme ponechať
+
+**Vymaže sa:**
+
+- tvoj účet, e-mail a zobrazované meno,
+- história výsledkov a všetky pokusy pripojené k účtu,
+- profilové nastavenia.
+
+**Zo zákona musíme dočasne ponechať:**
+
+- **účtovné doklady o platbách** (ak si projekt podporil) — slovenský zákon
+  o účtovníctve vyžaduje ich archiváciu (~10 rokov). Tieto doklady ďalej
+  nepoužívame na nič iné a po uplynutí lehoty sa tiež zmažú.
+
+Aj bez žiadosti sa väčšina údajov odstráni **automaticky** podľa lehôt v
+sekcii [Súkromie a dáta](/docs/sukromie-a-data).
+
+## 4. Niečo nesedí?
+
+Ak si myslíš, že s tvojimi údajmi nakladáme nesprávne, [napíš nám](/docs/kontakt).
+Máš tiež právo obrátiť sa na **Úrad na ochranu osobných údajov SR**.`,
   },
   {
     slug: "kontakt",
     title: "Kontakt a podpora",
     description: "Ako nás kontaktovať a získať pomoc.",
-    order: 15,
+    order: 16,
     category: "Projekt a súkromie",
     body: `Ak potrebuješ pomoc alebo máš otázku, napíš nám cez **kontaktný
 formulár** dostupný v pätičke webu. Môžeš priložiť aj snímky obrazovky.
@@ -234,7 +337,7 @@ požiadaviek.`,
     slug: "zmeny",
     title: "Novinky a zmeny",
     description: "Prehľad nového obsahu a vylepšení.",
-    order: 16,
+    order: 17,
     category: "Projekt a súkromie",
     body: `Priebežne pridávame nové testy, kurzy, články a vylepšenia. Prehľad
 zmien a noviniek nájdeš na stránke **Zmeny**.

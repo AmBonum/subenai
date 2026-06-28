@@ -72,8 +72,13 @@ export function BlogPostCard({ post, variant = "default" }: BlogPostCardProps) {
           />
         </div>
         <h3
-          className={`font-bold tracking-tight text-foreground transition-colors group-hover:text-primary ${
-            isFeatured ? "text-2xl md:text-3xl" : "text-lg md:text-xl"
+          // hyphens-auto + break-words so a very long Slovak word
+          // ("rozpoznávanie") wraps instead of forcing the title past the
+          // card's overflow-hidden edge; the featured size is a notch
+          // smaller so long pillar titles stay fully visible.
+          lang="sk"
+          className={`font-bold tracking-tight text-foreground transition-colors hyphens-auto [overflow-wrap:anywhere] group-hover:text-primary ${
+            isFeatured ? "text-xl md:text-2xl" : "text-lg md:text-xl"
           }`}
           data-testid={`blog-post-card-title-${post.slug}`}
         >
