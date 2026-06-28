@@ -41,6 +41,11 @@ export class DocsPortal extends BasePage {
     return this.page.getByTestId("docs-article-title");
   }
 
+  /** An image embedded in the article Markdown body, located by its src. */
+  bodyImage(src: string): Locator {
+    return this.articleRoot.locator(`img[src="${src}"]`);
+  }
+
   get explainerRoot(): Locator {
     return this.page.getByTestId("docs-explainer-root");
   }
