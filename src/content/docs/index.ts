@@ -225,9 +225,13 @@ ostatní si môžu rovnaký test spraviť tiež.`,
 mu situáciu („snaží sa ma niekto podviesť?") a dostaneš zrozumiteľné
 posúdenie rizika a odporúčané ďalšie kroky.
 
-Rozhovor **neukladáme** — zatvorením karty sa zmaže. Nepíš doň rodné číslo ani
-heslá. Pri vyššom riziku ti poradca odporučí kontaktovať políciu. Nájdeš ho
-ako **Pomocník**.`,
+![Podvodový poradca: hore upozornenie, že rozhovor spracúva AI a neukladá sa, pod ním pole „Opíšte situáciu alebo sa spýtajte…" a tlačidlá „Odoslať", „Preveriť podozrenie" a „Pridať fotku".](/img/docs/pomocnik.png#themed)
+
+Na obrazovke máš **pole na opis situácie**, tlačidlo **„Odoslať"**, režim
+**„Preveriť podozrenie"** a **„Pridať fotku"** (môžeš priložiť snímku
+podozrivej správy). Hore je vždy pripomienka, že **rozhovor neukladáme** —
+zatvorením karty sa zmaže. Nepíš doň rodné číslo ani heslá. Pri vyššom riziku
+ti poradca odporučí kontaktovať políciu.`,
   },
   {
     slug: "podpora-projektu",

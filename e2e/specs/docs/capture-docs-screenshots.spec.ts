@@ -9,6 +9,7 @@ import { AppAccountProfilePage } from "../../poms/app/AppAccountProfilePage";
 import { LoginPage } from "../../poms/auth/LoginPage";
 import { QuizFlowPage } from "../../poms/quiz/QuizFlowPage";
 import { AcademyIndexPage } from "../../poms/academy/AcademyIndexPage";
+import { ScamChatPage } from "../../poms/scam-chat/ScamChat";
 
 // E57 — generates the documentation screenshots WITHOUT prod writes, a
 // password, or Docker: the existing e2e mock layer (mocked Supabase auth +
@@ -77,6 +78,12 @@ test.describe("docs screenshots (mocked surfaces, light + dark)", () => {
     await page.goto("/academy");
     await shootBothThemes(page, "academy", async () => {
       await academy.root.waitFor({ state: "visible" });
+    });
+
+    const chat = new ScamChatPage(page);
+    await page.goto("/pomocnik");
+    await shootBothThemes(page, "pomocnik", async () => {
+      await chat.input.waitFor({ state: "visible" });
     });
   });
 
