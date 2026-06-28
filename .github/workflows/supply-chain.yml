@@ -53,7 +53,10 @@ jobs:
       # once the backlog is triaged. esbuild is already pinned via overrides
       # (see package.json) for a known build-tooling CVE.
       - name: Run Trivy (filesystem)
-        uses: aquasecurity/trivy-action@0.28.0
+        # Pinned to a commit SHA (supply-chain safety, mirrors the
+        # dorny/paths-filter pin in e2e.yml). Bump via the v-tags at
+        # github.com/aquasecurity/trivy-action/releases.
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: fs
           scan-ref: .
