@@ -9,7 +9,11 @@ import { AppAccountProfilePage } from "../../poms/app/AppAccountProfilePage";
 import { LoginPage } from "../../poms/auth/LoginPage";
 import { QuizFlowPage } from "../../poms/quiz/QuizFlowPage";
 import { AcademyIndexPage } from "../../poms/academy/AcademyIndexPage";
+import { AcademyEntryPage } from "../../poms/academy/AcademyEntryPage";
 import { ScamChatPage } from "../../poms/scam-chat/ScamChat";
+import { HomePage } from "../../poms/quiz/HomePage";
+import { TestsIndexPage } from "../../poms/quiz/TestsDirectoryPage";
+import { KontaktPage } from "../../poms/support/KontaktPage";
 
 // E57 — generates the documentation screenshots WITHOUT prod writes, a
 // password, or Docker: the existing e2e mock layer (mocked Supabase auth +
@@ -85,6 +89,37 @@ test.describe("docs screenshots (mocked surfaces, light + dark)", () => {
     await shootBothThemes(page, "pomocnik", async () => {
       await chat.input.waitFor({ state: "visible" });
     });
+
+    const home = new HomePage(page);
+    await page.goto("/");
+    await shootBothThemes(page, "home", async () => {
+      await home.heroHeading.waitFor({ state: "visible" });
+    });
+
+    const packs = new TestsIndexPage(page);
+    await page.goto("/tests");
+    await shootBothThemes(page, "test-packs", async () => {
+      await packs.grid.waitFor({ state: "visible" });
+    });
+
+    // A lesson's realistic scam mockup ("example z praxe") in context.
+    const lesson = new AcademyEntryPage(page);
+    await page.goto("/academy/email-phishing");
+    await shootBothThemes(page, "lesson-example", async () => {
+      await lesson.root.waitFor({ state: "visible" });
+      await lesson.visual.first().scrollIntoViewIfNeeded();
+    });
+
+    const contact = new KontaktPage(page);
+    await page.goto("/contact-form");
+    await shootBothThemes(
+      page,
+      "contact",
+      async () => {
+        await contact.root.waitFor({ state: "visible" });
+      },
+      true,
+    );
   });
 
   test("signed-in — account profile, DSR form", async ({ context, page }) => {

@@ -19,6 +19,11 @@ interaktívne testy, ktoré preveria, ako rozpoznáš phishing, podvodné SMS,
 falošné e-shopy či investičné scamy — a vzdelávacie kurzy, ktoré ťa naučia
 brániť sa.
 
+![Úvodná stránka subenai s výzvou „Otestuj sa skôr, než ťa otestuje podvodník", tlačidlom „Spustiť test" a kartami so štatistikami (počet otázok, časový limit, zadarmo).](/img/docs/home.png#themed)
+
+Hneď z úvodnej stránky [spustíš rýchly test](/docs/ako-spravit-test) jedným
+tlačidlom — bez registrácie.
+
 **Pre koho je to:**
 
 - **Verejnosť** — sprav si rýchly test a zisti svoje slabé miesta.
@@ -83,7 +88,14 @@ Každý kurz má **príklady z praxe**, **červené vlajky** (na čo si dať poz
 **checklist**, čo robiť a čomu sa vyhnúť. Sú zadarmo a dostupné bez
 prihlásenia.
 
-Všetky kurzy aj články nájdeš na jednom mieste v **[Akadémii](/academy)**:
+Príklady sú **realistické ukážky** — napríklad presná napodobenina podvodného
+e-mailu aj s nenápadnou falošnou doménou, ktorú sa učíš odhaliť:
+
+![Ukážka z kurzu Email phishing: realistický podvodný e-mail „Bezpečnostné upozornenie — overte sa do 24 hodín" od „Slovenská sporiteľňa" z falošnej domény slsp-bezpecnost.online, s nátlakovým textom a tlačidlom „Overiť účet".](/img/docs/lesson-example.png#themed)
+
+Anglické pojmy (phishing, scam…) majú v texte slovenské vysvetlenie v
+zátvorke. Všetky kurzy aj články nájdeš na jednom mieste v
+**[Akadémii](/academy)**:
 
 ![Stránka Akadémia: hore prepínač „Všetko / Kurzy / Články" a pole na vyhľadávanie, pod ním mriežka kariet — každá karta ukazuje, či ide o kurz alebo článok, jeho obtiažnosť a odhadovaný čas čítania.](/img/docs/academy.png#themed)
 
@@ -156,11 +168,14 @@ zameranými na hrozby ich oboru — napríklad e-shop, gastro, IT, zdravotníctv
 či financie.
 
 Každý balík obsahuje reálne situácie relevantné pre dané odvetvie. Verejné
-balíky nájdeš v sekcii **Testy**; po výbere balíka dostaneš test rovnako ako
-pri rýchlom teste, len s cielenými otázkami.
+balíky nájdeš v sekcii **[Testy](/tests)**; po výbere balíka dostaneš test
+rovnako ako pri rýchlom teste, len s cielenými otázkami.
 
-**Tip:** výsledky pomáhajú identifikovať, kde tím potrebuje doškolenie — na to
-nadväzujú kurzy.`,
+![Sekcia Testy: nadpis „Otestuj svoju brànžu", odznaky „Anonymne / 5 minút / Zadarmo" a filter „Pre koho je test" s odvetviami (Školy, Zdravotníctvo, Heslá a 2FA, Seniori, Študenti, E-shop, Gastro, IT…), pod ním mriežka kariet s balíkmi testov.](/img/docs/test-packs.png#themed)
+
+Hore filtruješ balíky **podľa odvetvia a publika**; každá karta je jeden
+pripravený test. **Tip:** výsledky pomáhajú identifikovať, kde tím potrebuje
+doškolenie — na to nadväzujú [kurzy](/docs/kurzy).`,
   },
   {
     slug: "vlastne-testy",
@@ -369,11 +384,17 @@ Máš tiež právo obrátiť sa na **Úrad na ochranu osobných údajov SR**.`,
     description: "Ako nás kontaktovať a získať pomoc.",
     order: 16,
     category: "Projekt a súkromie",
-    body: `Ak potrebuješ pomoc alebo máš otázku, napíš nám cez **kontaktný
-formulár** dostupný v pätičke webu. Môžeš priložiť aj snímky obrazovky.
+    body: `Ak potrebuješ pomoc alebo máš otázku, napíš nám cez **[kontaktný
+formulár](/contact-form)** dostupný aj v pätičke webu:
 
-Prihlásení používatelia majú podporu priamo v aplikácii a vidia stav svojich
-požiadaviek.`,
+![Kontaktný formulár „Kontaktuj nás" s poľami Téma, Kategória, Správa, E-mail a nepovinné Meno, možnosťou priložiť prílohy (PNG/JPEG/PDF) a tlačidlom „Odoslať žiadosť".](/img/docs/contact.png#themed)
+
+Vyplníš **tému, kategóriu a správu**, uvedieš **e-mail** (na odpoveď) a
+voliteľne **priložíš snímky obrazovky** podozrivej správy. Odpovedáme spravidla
+do dvoch pracovných dní.
+
+Prihlásení používatelia majú podporu priamo v aplikácii a vidia **stav svojich
+požiadaviek**.`,
   },
   {
     slug: "zmeny",
