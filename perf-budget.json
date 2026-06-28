@@ -1,0 +1,16 @@
+{
+  "_comment": "Gzipped JS budgets in kB, enforced by scripts/check-bundle-budget.mjs. Baselined 2026-06-28 from a clean build with ~10-12% headroom. Bump a value ONLY for an intentional, reviewed size increase, with a reason in the commit. Re-baseline numbers via `npm run build:budget -- --report`.",
+  "totalGzipKb": 1750,
+  "defaultChunkGzipKb": 30,
+  "chunks": {
+    "react-pdf.browser": 520,
+    "index": 270,
+    "vendor-charts": 120,
+    "vendor-react": 90,
+    "courses-content": 75,
+    "_slug.lazy": 62,
+    "questions": 60,
+    "vendor-radix": 48,
+    "vendor-tanstack": 45
+  }
+}

@@ -40,6 +40,8 @@
     "perf:view": "gunzip -c reports/perf-latest.md.gz",
     "load": "node scripts/load-test.mjs",
     "audit:bundle": "scripts/check-bundle-no-trackers.sh dist",
+    "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
+    "check:bundle-budget:report": "node scripts/check-bundle-budget.mjs --report",
     "check:bundle-no-mocks": "node scripts/check-bundle-no-mocks.mjs",
     "check:bundle-no-secrets": "node scripts/check-bundle-no-secrets.mjs",
     "db:verify:staging": "ENV_FILE=.env.staging bash scripts/verify-supabase-migration.sh",
