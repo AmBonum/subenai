@@ -27,6 +27,7 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "retention:dry-run": "DRY_RUN=1 node scripts/run-retention.mjs",
     "rag:index": "tsx scripts/build-rag-index.ts",
+    "e53:redteam": "tsx scripts/e53-redteam-eval.ts",
     "e2e": "playwright test",
     "e2e:full": "E2E_SERVERS=1 playwright test --project=e2e-chromium",
     "e2e:integration": "playwright test --project=integration",
