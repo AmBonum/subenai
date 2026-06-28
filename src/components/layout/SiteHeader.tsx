@@ -163,15 +163,18 @@ export function SiteHeader() {
       data-testid="header-root"
       className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
+      {/* Mobile: a 3-column grid so the bar reads logo · CTA · hamburger,
+          evenly spread and centered. From lg it switches to the standard
+          flex bar (logo left, cluster right). */}
       <nav
         data-testid="header-nav"
         aria-label={t("main_nav_aria")}
-        className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:py-4"
+        className="mx-auto grid max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-3 px-4 py-3 sm:py-4 lg:flex lg:justify-between"
       >
         <Link
           to={ROUTES.home}
           data-testid="header-logo-link"
-          className="flex shrink-0 items-center"
+          className="flex shrink-0 items-center justify-self-start"
           aria-label={t("logo_aria")}
         >
           {/* Compact S-mark on small screens, the wordmark from lg+ (paired
@@ -181,12 +184,24 @@ export function SiteHeader() {
           <img src="/logo.svg" alt="subenai" className="hidden h-10 w-auto lg:block" />
         </Link>
 
+        {/* Centered CTA — mobile only (the grid's middle column). From lg the
+            CTA lives in the right cluster instead. */}
+        <Link
+          to={CTA_TO}
+          data-testid="header-cta-mobile-bar"
+          aria-label={ctaLong}
+          className="inline-flex items-center justify-self-center gap-1.5 whitespace-nowrap rounded-2xl bg-accent-gradient px-4 py-2 text-sm font-bold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03] active:scale-[0.99] lg:hidden"
+        >
+          {t("cta.short")}
+          <span aria-hidden="true">→</span>
+        </Link>
+
         {/* Right cluster. The flat quick-links (Pre školy a lektorov,
             Akadémia, Podpora projektu) appear from lg; the boxed items —
             the Sady testov / Školenia dropdowns, the theme + a11y controls
             and Dokumentácia — live in the hamburger sidebar at every width
-            so the bar stays clean. CTA + hamburger are always visible. */}
-        <div className="flex items-center gap-2 sm:gap-3">
+            so the bar stays clean. The hamburger is always visible. */}
+        <div className="flex items-center justify-self-end gap-2 sm:gap-3">
           <div data-testid="header-desktop-nav" className="hidden items-center gap-1 lg:flex">
             <MegaMenu items={desktopLinks} activeSlug={activeSlug} />
             {!isAuthenticated && (
@@ -201,7 +216,10 @@ export function SiteHeader() {
             {isAuthenticated && <HeaderUserMenu />}
           </div>
 
-          <CtaPill ariaLabel={ctaLong} />
+          {/* CTA in the bar from lg+ (mobile uses the centered one above). */}
+          <div className="hidden lg:flex">
+            <CtaPill ariaLabel={ctaLong} />
+          </div>
 
           {/* Hamburger — always visible. Opens the sidebar holding the full
               navigation, the dropdown sections, Dokumentácia, theme, a11y,
