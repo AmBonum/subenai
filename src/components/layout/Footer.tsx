@@ -118,7 +118,7 @@ export function Footer() {
   return (
     <footer
       data-testid="footer-root"
-      className="mx-auto mt-24 w-full max-w-5xl border-t border-border/60 pt-12 pb-8"
+      className="mx-auto mt-24 w-full max-w-5xl border-t border-border/60 px-4 pt-12 pb-8 sm:px-6 lg:px-8"
     >
       <div className="grid gap-10 text-center sm:grid-cols-2 sm:text-left md:grid-cols-4">
         <div className="flex flex-col items-center gap-3 sm:items-start">
