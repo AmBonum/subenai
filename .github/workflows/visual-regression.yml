@@ -1,0 +1,82 @@
+name: Visual regression
+
+# Playwright toHaveScreenshot diffing on stable public pages — catches the
+# class of bug the assertion suite is blind to (Tailwind v4 Preflight
+# regressions, token changes, layout shifts; cf. the "restore pointer cursor"
+# fix in git history).
+#
+# Baselines are OS-specific and CI is Linux, so they MUST be seeded in CI, not
+# committed from a dev's machine. This job is self-seeding: when no -linux
+# baseline exists it generates + uploads them and passes with a notice; once
+# the artifact is committed under
+# e2e/visual/public-pages.spec.ts-snapshots/, subsequent runs diff against it.
+# Non-blocking by design (separate workflow, not a required check) so a real
+# visual diff surfaces for review without wedging auto-merge.
+on:
+  pull_request: {}
+  workflow_dispatch:
+    inputs:
+      update_baselines:
+        description: "Force-regenerate baselines and upload them"
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: visual-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    name: Screenshot diff
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+      - name: Install Playwright (chromium)
+        run: npx playwright install --with-deps chromium
+      - name: Build
+        run: npm run build
+      - name: Decide seed vs compare
+        id: mode
+        shell: bash
+        run: |
+          have=$(find e2e/visual -name '*-linux.png' 2>/dev/null | wc -l)
+          if [ "${{ inputs.update_baselines }}" = "true" ] || [ "$have" -eq 0 ]; then
+            echo "flag=--update-snapshots" >> "$GITHUB_OUTPUT"
+            echo "::notice::No committed VR baselines (or update forced) — seeding. Download the visual-baselines artifact and commit it under e2e/visual/public-pages.spec.ts-snapshots/ to gate future PRs."
+          else
+            echo "flag=" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run visual project
+        run: npx playwright test --project=visual ${{ steps.mode.outputs.flag }}
+      - name: Upload baselines (when seeding)
+        if: always() && steps.mode.outputs.flag == '--update-snapshots'
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-baselines-${{ github.run_id }}
+          path: e2e/visual/**/*.png
+          retention-days: 30
+      - name: Upload diff report (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14

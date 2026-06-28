@@ -174,6 +174,15 @@ export default defineConfig({
       use: { baseURL: "http://localhost:8080" },
     },
     {
+      // Visual regression. NOT part of `npm run e2e` (own workflow); served by
+      // the same preview webServer the CI config boots. Baselines are
+      // OS-specific — run with --update-snapshots in the CI OS (Linux) to seed
+      // or refresh. See .github/workflows/visual-regression.yml.
+      name: "visual",
+      testMatch: ["e2e/visual/**/*.spec.ts"],
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
       name: "audit-screenshots",
       // Side-channel project for the E36 A3 visual audit. NOT part of
       // `npm run e2e`; invoked manually with
