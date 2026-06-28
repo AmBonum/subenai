@@ -49,7 +49,7 @@ export const romanceScamsCourse: Course = {
     },
     {
       kind: "example",
-      heading: `Príbeh #4 — „investícia spolu" (kombinácia s E5.8)`,
+      heading: `Príbeh #4 — „investícia spolu"`,
       visual: {
         kind: "text",
         label: `Konverzácia, 14. týždeň`,
@@ -115,7 +115,7 @@ export const romanceScamsCourse: Course = {
       ],
       dont: [
         `Neposielať peniaze niekomu, koho si nevidel/a osobne, bez výnimky.`,
-        `Nezdieľať intímne fotky / video — žiadny krásny vzťah ich nevyžaduje na týždeň 6.`,
+        `Nezdieľať intímne fotky / video — žiadny krásny vzťah ich nevyžaduje už v šiestom týždni.`,
         `Nepripájať sa k „spoločnej investičnej platforme", ktorú odporúča online partner.`,
         `Neplatiť pri sextortion — vyžiada si ďalšiu sumu, a ďalšiu.`,
         `Nezatajiť to rodine zo studu — práve to útočník chce, aby si zostal/a izolovaný/á.`,

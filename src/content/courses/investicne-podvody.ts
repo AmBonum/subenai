@@ -15,7 +15,7 @@ export const investmentScamsCourse: Course = {
     {
       kind: "intro",
       heading: `Investičný podvod nie je „blbosť pre dôchodcov"`,
-      body: `Krypto a AI-trading scamy (podvody) sa cielia presne na opačnú demografiu — 25 až 55 rokov, technicky zruční, ale finančne neistí. Ponuka je vždy rovnaká: zaručený výnos, exkluzívny prístup a presvedčivá známa tvár (Elon Musk, Andrej Kiska, Boris Kollár). V skutočnosti ide o profesionálny podvod riadený z call-centra, ktorý ťa povedie tri týždne za ruku — kým ti účet nevybielia.`,
+      body: `Krypto a AI-trading scamy (podvody) sa cielia na inú demografiu, než by si čakal — 25 až 55 rokov, technicky zruční, ale finančne neistí. Ponuka je vždy rovnaká: zaručený výnos, exkluzívny prístup a presvedčivá známa tvár (Elon Musk, Andrej Kiska, Boris Kollár). V skutočnosti ide o profesionálny podvod riadený z call-centra, ktorý ťa povedie tri týždne za ruku — kým ti účet nevybielia.`,
     },
     {
       kind: "example",

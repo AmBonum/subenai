@@ -2,7 +2,7 @@ import type { Course } from "./_schema";
 
 export const pigButcheringCourse: Course = {
   slug: "pig-butchering-podvod",
-  title: "Šafránové prasiatko — najdrahší podvod súčasnosti",
+  title: "Pig butchering — najdrahší podvod súčasnosti",
   tagline:
     "Najdrahší podvod súčasnosti: cudzinec na WhatsApp, falošný krypto účet, fingované zisky — a koniec, keď si vyberieš.",
   category: "investicie",
@@ -15,7 +15,7 @@ export const pigButcheringCourse: Course = {
   sections: [
     {
       kind: "intro",
-      heading: 'Čo je „šafránové prasiatko"?',
+      heading: 'Čo je „pig butchering"?',
       body: `Pig butchering (doslova „vykŕmiť a zabiť") je kombinovaný podvod, pri ktorom útočník najprv buduje vzťah s obeťou — romantický alebo priateľský — a potom ju lákavými investičnými „príležitosťami" pozvoľna oberá o celé úspory. Nie je to rýchly útok: trvá týždne až mesiace. Podľa Europolu je dnes táto schéma zodpovedná za väčšinu z miliárd eur ročne strácaných na investičných podvodoch v EÚ. Cieľ: ľudia v každom veku — od vysokoškolských študentov po dôchodcov.`,
     },
     {

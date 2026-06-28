@@ -62,7 +62,7 @@ export const pribehyObetiCourse: Course = {
         subject: "URGENT — akvizícia, len medzi nami",
         body: `Mária, riešim akvizíciu v Rakúsku, právnici nestihli pripraviť papiere. Potrebujem rýchly prevod 52 000 € na predbežnú zálohu, zdôvodním na pondelkovom calle. IBAN AT89… Sprav to dnes do 16:00, nik nesmie vedieť kým nepodpíšeme.`,
       },
-      commentary: `Po prevode si Mária na chodbe všimla CEO — opýtala sa na akvizíciu. „Akú akvizíciu?" Doména firma-eu.com oproti reálnej firma-sk.eu. Útočník mal navyše 8-sekundový hlasový deepfake (umelo vygenerované falošné video či hlas) z videa CEO na LinkedIne ako „potvrdenie". 52 000 € išlo do Hongkongu. Tomuto typu útoku cez kompromitovaný firemný e-mail sa hovorí BEC (podvod cez kompromitovaný firemný e-mail). Ponaučenie: každý prevod nad limit musí mať druhé schválenie. CEO „súrne a tajne" = vždy podvod.`,
+      commentary: `Po prevode si Mária na chodbe všimla CEO — opýtala sa na akvizíciu. „Akú akvizíciu?" Doména firma-eu.com oproti reálnej firma.sk. Útočník mal navyše 8-sekundový hlasový deepfake (umelo vygenerované falošné video či hlas) z videa CEO na LinkedIne ako „potvrdenie". 52 000 € išlo do Hongkongu. Tomuto typu útoku cez kompromitovaný firemný e-mail sa hovorí BEC (podvod cez kompromitovaný firemný e-mail). Ponaučenie: každý prevod nad limit musí mať druhé schválenie. CEO „súrne a tajne" = vždy podvod.`,
     },
     {
       kind: "redflags",

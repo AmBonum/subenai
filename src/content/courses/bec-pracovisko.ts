@@ -55,7 +55,7 @@ export const becWorkplaceCourse: Course = {
     },
     {
       kind: "example",
-      heading: `Typ #4 — phishing CEO účtu cez Microsoft 365 spoof`,
+      heading: `Typ #4 — phishing (podvodné vylákanie údajov) CEO účtu cez Microsoft 365 spoof`,
       visual: {
         kind: "email",
         from: "Microsoft 365 Security",

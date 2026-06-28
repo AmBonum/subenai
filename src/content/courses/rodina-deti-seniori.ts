@@ -117,7 +117,7 @@ export const rodinaDetiSenioriCourse: Course = {
         `Nikdy nedovoľ starým rodičom inštalovať „pomocné" appky (TeamViewer, AnyDesk) z telefonického návodu.`,
         `Netrestajte dieťa za to, že vám povedalo o sextortion / podvode — potrestáte tým budúce priznania.`,
         `Nečítajte tínedžerovi správy bez jeho vedomia — buď sa s vami baví, alebo s falošnou „Luciou".`,
-        `Nedávajte deťom kartu rodiča s NFC (bezkontaktná platba) bez limitu — nastavte vreckové na vlastnú detskú kartu (Mintos Kids, Revolut <18).`,
+        `Nedávajte deťom kartu rodiča s NFC (bezkontaktná platba) bez limitu — nastavte vreckové na vlastnú detskú kartu (napríklad Revolut <18).`,
       ],
     },
     {

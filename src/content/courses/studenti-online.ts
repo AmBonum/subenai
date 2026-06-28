@@ -44,7 +44,7 @@ export const studentiOnlineCourse: Course = {
         label: `Steam chat — „obchodník" s CS:GO knife`,
         body: `Predám AWP Dragon Lore za 280 € (cena na Steam Market 410 €). Použijeme dôveryhodného middlemana — môj kamarát Steam moderátor, jeho profil: steamcommunity.com.trade-secure.net/profile/xyz`,
       },
-      commentary: `Steam neexistujú „middleman moderátori". Doména steamcommunity.com.trade-secure.net je phishing — skutočná je len steamcommunity.com. Cieľ: zobrať ti účet aj s celým inventárom (často hodnota 500–5 000 €).`,
+      commentary: `Na Steame neexistujú „middleman moderátori". Doména steamcommunity.com.trade-secure.net je phishing — skutočná je len steamcommunity.com. Cieľ: zobrať ti účet aj s celým inventárom (často hodnota 500–5 000 €).`,
     },
     {
       kind: "example",

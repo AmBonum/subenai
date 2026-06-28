@@ -397,7 +397,7 @@ Klasická schéma „chargeback" (spätné stiahnutie platby) alebo „falošný
 ## Pravidlá pre kupujúceho
 
 - ✅ Vec si vždy obhliadni osobne pred akoukoľvek platbou.
-- ✅ Auto pred kúpou skontroluj cez OEAVK / cez servisné číslo.
+- ✅ Auto pred kúpou skontroluj cez kontrolu VIN (číslo karosérie) a servisnú históriu.
 - ✅ Nájom bytu — fyzická prehliadka, nájomná zmluva pred prevodom depozitu.
 - ❌ Záloha na účet predávajúceho cez prevod, ktorého neuvidíš osobne.
 - ❌ Komunikácia mimo platformy — Bazoš/FB má aspoň minimálnu kontrolu.
@@ -581,7 +581,7 @@ VALUES (
   $exc$Reklamy s deepfake Elonom, pump & dump tokeny a „AI brokeri" — 5 schém, ktorými ťa pripravia o 10 000 € a viac.$exc$,
   $body$## Investičný podvod nie je „blbosť pre dôchodcov"
 
-Krypto a AI-trading scamy (podvody) sa cielia presne na opačnú demografiu — 25 až 55 rokov, technicky zruční, ale finančne neistí. Ponuka je vždy rovnaká: zaručený výnos, exkluzívny prístup a presvedčivá známa tvár (Elon Musk, Andrej Kiska, Boris Kollár). V skutočnosti ide o profesionálny podvod riadený z call-centra, ktorý ťa povedie tri týždne za ruku — kým ti účet nevybielia.
+Krypto a AI-trading scamy (podvody) sa cielia na inú demografiu, než by si čakal — 25 až 55 rokov, technicky zruční, ale finančne neistí. Ponuka je vždy rovnaká: zaručený výnos, exkluzívny prístup a presvedčivá známa tvár (Elon Musk, Andrej Kiska, Boris Kollár). V skutočnosti ide o profesionálny podvod riadený z call-centra, ktorý ťa povedie tri týždne za ruku — kým ti účet nevybielia.
 
 ## Schéma #1 — deepfake reklama na Instagrame
 
@@ -712,7 +712,7 @@ Iné podanie, rovnaký scenár. „Ropná plošina" — exotická lokácia, neov
 
 „Profesionálna katastrofa" je psychologická páka — chcel by si pomôcť. Ale advokáti nikdy nepýtajú zálohu cez prevod od cudzieho človeka v zahraničí. Súdne spory v Nemecku riešia poisťovne lekárov, nie partnerky obvinených.
 
-## Príbeh #4 — „investícia spolu" (kombinácia s E5.8)
+## Príbeh #4 — „investícia spolu"
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiS29udmVyesOhY2lhLCAxNC4gdMO9xb5kZcWIIiwiYm9keSI6IktyaXN0w61uYSwgMzksIGZpbmFuxI1uw6EgcG9yYWRrecWIYSB6byBTaW5nYXB1cnU6IOKAnk1pbMOhxI1paywgbcOhbSBwcmUgbsOhcyBwbMOhbi4gTcO0aiBicm9rZXIgbcOhIGV4a2x1esOtdm55IHByw61zdHVwIGsgQUktdHJhZGluZyBwbGF0Zm9ybWUsIGt0b3LDoSB6YXJvYsOtIDggJSBtZXNhxI1uZS4gUHJldmVkaWVtZSBzcG9sdSA2IDAwMCBFVVIgYSB6YSByb2sgc2kga8O6cGltZSBieXQuIFBvxaFsZW0gdGkgbGluaywgamEgaWRlbSA2IDAwMCwgdHkgNCAwMDAsIE9LP1wiIn0=]]
 
@@ -765,7 +765,7 @@ Sextortion (vydieranie intímnym obsahom) často nadväzuje na romance scam aleb
 ### ❌ Nerob
 
 - Neposielať peniaze niekomu, koho si nevidel/a osobne, bez výnimky.
-- Nezdieľať intímne fotky / video — žiadny krásny vzťah ich nevyžaduje na týždeň 6.
+- Nezdieľať intímne fotky / video — žiadny krásny vzťah ich nevyžaduje už v šiestom týždni.
 - Nepripájať sa k „spoločnej investičnej platforme", ktorú odporúča online partner.
 - Neplatiť pri sextortion — vyžiada si ďalšiu sumu, a ďalšiu.
 - Nezatajiť to rodine zo studu — práve to útočník chce, aby si zostal/a izolovaný/á.
@@ -829,7 +829,7 @@ Klasický CEO Fraud. Doména 'firma-sk.co' (skutočná je 'firma.sk'). Štýl je
 
 Pridáva autoritu („právnik", „M&A") a izoláciu („nehovor s kolegami"). „Embargo" je psychologický trik — útočník vie, že callback by ho odhalil. Žiadny advokát nedonúti účtovníka k prevodu bez podpísanej zmluvy a bez možnosti overiť ho s CEO.
 
-## Typ #4 — phishing CEO účtu cez Microsoft 365 spoof
+## Typ #4 — phishing (podvodné vylákanie údajov) CEO účtu cez Microsoft 365 spoof
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiTWljcm9zb2Z0IDM2NSBTZWN1cml0eSIsImZyb21FbWFpbCI6Im5vLXJlcGx5QG0zNjUtYWNjb3VudC1zZWN1cml0eS5jb20iLCJzdWJqZWN0IjoiVmHFoWUgaGVzbG8gTWljcm9zb2Z0IDM2NSB2eXByxaHDrSBvIDI0aCDigJQgb2thbcW+aXTDoSBha2NpYSBwb3RyZWJuw6EiLCJib2R5IjoiQ0VPL2FkbWluOiB2YcWhZSBoZXNsbyBrIE1pY3Jvc29mdCAzNjUgw7rEjXR1IHZ5cHLFocOtIG8gMjQgaG9kw61uLiBBYnkgc3RlIHphY2hvdmFsaSBwcsOtc3R1cCBrIE91dGxvb2ssIE9uZURyaXZlIGEgVGVhbXMsIHBvdHZyxI90ZSBzw7rEjWFzbsOpIGhlc2xvIGNleiBuacW+xaFpZSB1dmVkZW7DvSBvZGthei4iLCJjdGEiOiJaYWNob3ZhxaUgcHLDrXN0dXAifQ==]]
 
@@ -1436,10 +1436,10 @@ VALUES (
   $slug$pig-butchering-podvod$slug$, 'sk',
   (SELECT id FROM public.blog_categories WHERE slug = $cat$digitalna-bezpecnost$cat$),
   (SELECT id FROM public.blog_authors WHERE slug = $auth$subenai-editorial$auth$),
-  $title$Šafránové prasiatko — najdrahší podvod súčasnosti$title$,
+  $title$Pig butchering — najdrahší podvod súčasnosti$title$,
   $sub$Najdrahší podvod súčasnosti: cudzinec na WhatsApp, falošný krypto účet, fingované zisky — a koniec, keď si vyberieš.$sub$,
   $exc$Najdrahší podvod súčasnosti: cudzinec na WhatsApp, falošný krypto účet, fingované zisky — a koniec, keď si vyberieš.$exc$,
-  $body$## Čo je „šafránové prasiatko"?
+  $body$## Čo je „pig butchering"?
 
 Pig butchering (doslova „vykŕmiť a zabiť") je kombinovaný podvod, pri ktorom útočník najprv buduje vzťah s obeťou — romantický alebo priateľský — a potom ju lákavými investičnými „príležitosťami" pozvoľna oberá o celé úspory. Nie je to rýchly útok: trvá týždne až mesiace. Podľa Europolu je dnes táto schéma zodpovedná za väčšinu z miliárd eur ročne strácaných na investičných podvodoch v EÚ. Cieľ: ľudia v každom veku — od vysokoškolských študentov po dôchodcov.
 
@@ -2186,7 +2186,7 @@ Volajúci tvrdí, že počítač babky je „nakazený vírusom", potrebuje inš
 - Nikdy nedovoľ starým rodičom inštalovať „pomocné" appky (TeamViewer, AnyDesk) z telefonického návodu.
 - Netrestajte dieťa za to, že vám povedalo o sextortion / podvode — potrestáte tým budúce priznania.
 - Nečítajte tínedžerovi správy bez jeho vedomia — buď sa s vami baví, alebo s falošnou „Luciou".
-- Nedávajte deťom kartu rodiča s NFC (bezkontaktná platba) bez limitu — nastavte vreckové na vlastnú detskú kartu (Mintos Kids, Revolut <18).
+- Nedávajte deťom kartu rodiča s NFC (bezkontaktná platba) bez limitu — nastavte vreckové na vlastnú detskú kartu (napríklad Revolut <18).
 
 ## Reálny scenár — babka a „vnuk Maťo"
 
@@ -2245,7 +2245,7 @@ Skutočný Discord Nitro link je vždy discord.gift/xxxxx. Doména discord-nitro
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiU3RlYW0gY2hhdCDigJQg4oCeb2JjaG9kbsOta1wiIHMgQ1M6R08ga25pZmUiLCJib2R5IjoiUHJlZMOhbSBBV1AgRHJhZ29uIExvcmUgemEgMjgwIOKCrCAoY2VuYSBuYSBTdGVhbSBNYXJrZXQgNDEwIOKCrCkuIFBvdcW+aWplbWUgZMO0dmVyeWhvZG7DqWhvIG1pZGRsZW1hbmEg4oCUIG3DtGoga2FtYXLDoXQgU3RlYW0gbW9kZXLDoXRvciwgamVobyBwcm9maWw6IHN0ZWFtY29tbXVuaXR5LmNvbS50cmFkZS1zZWN1cmUubmV0L3Byb2ZpbGUveHl6In0=]]
 
-Steam neexistujú „middleman moderátori". Doména steamcommunity.com.trade-secure.net je phishing — skutočná je len steamcommunity.com. Cieľ: zobrať ti účet aj s celým inventárom (často hodnota 500–5 000 €).
+Na Steame neexistujú „middleman moderátori". Doména steamcommunity.com.trade-secure.net je phishing — skutočná je len steamcommunity.com. Cieľ: zobrať ti účet aj s celým inventárom (často hodnota 500–5 000 €).
 
 ## Vzor #4 — „Investícia do krypta s mentorom"
 
@@ -2358,7 +2358,7 @@ Volal „vnuk Maroš" — hlas presne ako jeho, plač, autonehoda na D1, 12 200 
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiVG9tw6HFoSBIb2xlYyDigJQgQ0VPIiwiZnJvbUVtYWlsIjoidG9tYXMuaG9sZWNAZmlybWEtZXUuY29tIiwic3ViamVjdCI6IlVSR0VOVCDigJQgYWt2aXrDrWNpYSwgbGVuIG1lZHppIG5hbWkiLCJib2R5IjoiTcOhcmlhLCByaWXFoWltIGFrdml6w61jaXUgdiBSYWvDunNrdSwgcHLDoXZuaWNpIG5lc3RpaGxpIHByaXByYXZpxaUgcGFwaWVyZS4gUG90cmVidWplbSByw71jaGx5IHByZXZvZCA1MiAwMDAg4oKsIG5hIHByZWRiZcW+bsO6IHrDoWxvaHUsIHpkw7R2b2Ruw61tIG5hIHBvbmRlbGtvdm9tIGNhbGxlLiBJQkFOIEFUODnigKYgU3ByYXYgdG8gZG5lcyBkbyAxNjowMCwgbmlrIG5lc21pZSB2ZWRpZcWlIGvDvW0gbmVwb2Rww63FoWVtZS4ifQ==]]
 
-Po prevode si Mária na chodbe všimla CEO — opýtala sa na akvizíciu. „Akú akvizíciu?" Doména firma-eu.com oproti reálnej firma-sk.eu. Útočník mal navyše 8-sekundový hlasový deepfake (umelo vygenerované falošné video či hlas) z videa CEO na LinkedIne ako „potvrdenie". 52 000 € išlo do Hongkongu. Tomuto typu útoku cez kompromitovaný firemný e-mail sa hovorí BEC (podvod cez kompromitovaný firemný e-mail). Ponaučenie: každý prevod nad limit musí mať druhé schválenie. CEO „súrne a tajne" = vždy podvod.
+Po prevode si Mária na chodbe všimla CEO — opýtala sa na akvizíciu. „Akú akvizíciu?" Doména firma-eu.com oproti reálnej firma.sk. Útočník mal navyše 8-sekundový hlasový deepfake (umelo vygenerované falošné video či hlas) z videa CEO na LinkedIne ako „potvrdenie". 52 000 € išlo do Hongkongu. Tomuto typu útoku cez kompromitovaný firemný e-mail sa hovorí BEC (podvod cez kompromitovaný firemný e-mail). Ponaučenie: každý prevod nad limit musí mať druhé schválenie. CEO „súrne a tajne" = vždy podvod.
 
 ## Spoločné menovatele všetkých 4 príbehov
 

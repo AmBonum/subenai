@@ -92,7 +92,10 @@ Po vyplnení čísla karty + CVV a OTP — kupec zmizne, z karty sa stráca 850 
       heading: "Pravidlá pre kupujúceho",
       items: [
         { good: true, text: `Vec si vždy obhliadni osobne pred akoukoľvek platbou.` },
-        { good: true, text: `Auto pred kúpou skontroluj cez OEAVK / cez servisné číslo.` },
+        {
+          good: true,
+          text: `Auto pred kúpou skontroluj cez kontrolu VIN (číslo karosérie) a servisnú históriu.`,
+        },
         {
           good: true,
           text: `Nájom bytu — fyzická prehliadka, nájomná zmluva pred prevodom depozitu.`,
