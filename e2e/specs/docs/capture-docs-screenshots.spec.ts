@@ -17,6 +17,10 @@ import { KontaktPage } from "../../poms/support/KontaktPage";
 import { ComposerPage } from "../../poms/quiz/ComposerPage";
 import { SchoolsPage } from "../../poms/marketing/SchoolsPage";
 import { SponsorsPage } from "../../poms/marketing/SponsorsPage";
+import { PrivacyPage } from "../../poms/marketing/PrivacyPage";
+import { ChangelogPage } from "../../poms/marketing/ChangelogPage";
+import { ShareResultPage } from "../../poms/quiz/ShareResultPage";
+import { stubAttemptsByShareId, makeAttemptRow } from "../../mocks/supabase/attempts";
 
 // E57 — generates the documentation screenshots WITHOUT prod writes, a
 // password, or Docker: the existing e2e mock layer (mocked Supabase auth +
@@ -58,6 +62,9 @@ async function shootBothThemes(
 // CAPTURE_DOCS=1, so the normal e2e suite never rewrites committed assets.
 test.describe("docs screenshots (mocked surfaces, light + dark)", () => {
   test.skip(!process.env.CAPTURE_DOCS, "set CAPTURE_DOCS=1 to (re)generate doc screenshots");
+  // These are slow generators (many surfaces × 2 themes × reloads), not
+  // regression tests — give them plenty of headroom.
+  test.describe.configure({ timeout: 300_000 });
 
   test("public — login, test flow, academy", async ({ context, page }) => {
     await primeConsent(context, "all");
@@ -142,6 +149,59 @@ test.describe("docs screenshots (mocked surfaces, light + dark)", () => {
     await shootBothThemes(page, "sponsors", async () => {
       await sponsors.indexRoot.waitFor({ state: "visible" });
     });
+
+    // An article (not a lesson) — for the Academy/articles doc.
+    const article = new AcademyEntryPage(page);
+    await page.goto("/academy/phishing-kompletny-sprievodca");
+    await shootBothThemes(page, "article", async () => {
+      await article.root.waitFor({ state: "visible" });
+    });
+
+    const privacy = new PrivacyPage(page);
+    await page.goto("/privacy");
+    await shootBothThemes(
+      page,
+      "privacy",
+      async () => {
+        await privacy.firstSection.waitFor({ state: "visible" });
+      },
+      true,
+    );
+
+    const changelog = new ChangelogPage(page);
+    await page.goto("/changelog");
+    await shootBothThemes(page, "changelog", async () => {
+      await changelog.list.waitFor({ state: "visible" });
+    });
+
+    const testsFaq = new TestsIndexPage(page);
+    await page.goto("/tests");
+    await shootBothThemes(page, "faq", async () => {
+      await testsFaq.faqSection.waitFor({ state: "visible" });
+      await testsFaq.faqSection.scrollIntoViewIfNeeded();
+    });
+  });
+
+  test("public — answer feedback (per-question explanation)", async ({ context, page }) => {
+    // A full play-through to the score screen is timing-fragile against the
+    // randomised live bank; the per-question FEEDBACK (the correct answer +
+    // explanation shown right after you answer) is the part that matters for
+    // the "understanding results" doc and captures reliably with one click.
+    await primeConsent(context, "all");
+    await page.setViewportSize({ width: 1180, height: 900 });
+    const flow = new QuizFlowPage(page);
+    await page.goto("/test"); // establish origin so localStorage is writable
+
+    for (const { theme, suffix } of THEMES) {
+      await page.evaluate((t) => window.localStorage.setItem("subenai-theme", t), theme);
+      await page.goto("/test");
+      await flow.questionCard.waitFor({ state: "visible" });
+      await flow.option("a").click();
+      // The answered state (right/wrong + explanation) persists on screen;
+      // shoot shortly after so we never race the auto-advance.
+      await page.waitForTimeout(700);
+      await page.screenshot({ path: `${OUT}/feedback${suffix}.png`, fullPage: false });
+    }
   });
 
   test("signed-in — account profile, DSR form", async ({ context, page }) => {
@@ -189,6 +249,27 @@ test.describe("docs screenshots (mocked surfaces, light + dark)", () => {
       },
       true,
     );
+  });
+
+  test("public — shared result page (mocked attempt)", async ({ context, page }) => {
+    // The shared-result page (/r/<share_id>) is what a recipient of a shared
+    // link sees. We stub the attempt by share_id (no prod data) — reliable, no
+    // play-through needed.
+    await primeConsent(context, "all");
+    await stubAttemptsByShareId(page, {
+      row: makeAttemptRow({ share_id: "TESTAAAA", final_score: 78, percentile: 82 }),
+    });
+    await page.setViewportSize({ width: 1180, height: 1100 });
+    const sr = new ShareResultPage(page);
+    await page.goto("/r/TESTAAAA"); // establish origin
+
+    for (const { theme, suffix } of THEMES) {
+      await page.evaluate((t) => window.localStorage.setItem("subenai-theme", t), theme);
+      await page.goto("/r/TESTAAAA");
+      await sr.scoreValue.waitFor({ state: "visible" });
+      await page.waitForTimeout(400);
+      await page.screenshot({ path: `${OUT}/shared-result${suffix}.png`, fullPage: true });
+    }
   });
 
   test("verify the erasure doc embeds the themed screenshot", async ({ page }) => {

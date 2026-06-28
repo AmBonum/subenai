@@ -64,8 +64,13 @@ tvojej histórie.`,
     description: "Čo znamená tvoje skóre a ako ho využiť na zlepšenie.",
     order: 3,
     category: "Začíname",
-    body: `Po teste dostaneš **skóre** a rozpis po jednotlivých otázkach. Pri každej
-otázke vidíš svoju odpoveď, správnu odpoveď a vysvetlenie.
+    body: `Po teste dostaneš **skóre** a rozpis po jednotlivých otázkach. Najviac
+sa naučíš z **okamžitej spätnej väzby** hneď po každej odpovedi:
+
+![Otázka po odpovedi: správna možnosť je zvýraznená zelenou s fajkou a pod ňou je vysvetlenie „Správne. Scammer si hľadá ďalšieho." — vidíš, prečo bola odpoveď správna alebo nesprávna.](/img/docs/feedback.png#themed)
+
+Pri každej otázke vidíš **svoju odpoveď, správnu odpoveď a vysvetlenie**, prečo
+to tak je. Na konci dostaneš celkové skóre.
 
 - **Vysoké skóre** — dobrý základ; pozri si otázky, ktoré ti nesadli.
 - **Nižšie skóre** — odporúčame prejsť súvisiace **kurzy**, ktoré ťa
@@ -145,7 +150,12 @@ upravíš zobrazované meno, e-mail a iniciály avatara:
     description: "Najčastejšie otázky o subenai.",
     order: 6,
     category: "Účet",
-    body: `**Je test zadarmo?** Áno. Rýchly test aj kurzy sú dostupné bezplatne a bez
+    body: `Najčastejšie otázky máš pohromade aj priamo pri teste — stačí kliknúť na
+otázku a rozbalí sa odpoveď:
+
+![Sekcia „Časté otázky" s rozbaľovacím zoznamom: Je test zadarmo? (označené ako najčastejšia), Koľko času zaberie?, Pre koho je test vhodný?, Aké údaje zbierate?, Môžem test poslať kolegom?](/img/docs/faq.png#themed)
+
+**Je test zadarmo?** Áno. Rýchly test aj kurzy sú dostupné bezplatne a bez
 registrácie.
 
 **Ukladáte moje odpovede?** Bez prihlásenia ostáva výsledok len u teba
@@ -221,8 +231,11 @@ roly, retencia 12 mesiacov, CSV export). Učiteľ pripraví test pre triedu,
     body: `Akadémia je naša **knižnica článkov** o aktuálnych podvodoch — nové
 techniky, rozbory reálnych prípadov a praktické rady, ako sa brániť.
 
-Články sú zadarmo a bez prihlásenia, pravidelne pribúdajú a dopĺňajú kurzy
-o aktuálne dianie. Nájdeš ich v sekcii **Blog / Akadémia**.`,
+![Článok v Akadémii „phishing — kompletný sprievodca": nadpis, údaj o čase čítania a úvodný text s členením na sekcie (napríklad „čo je phishing v 60 sekúnd").](/img/docs/article.png#themed)
+
+Každý článok má **odhadovaný čas čítania** a prehľadné sekcie. Články sú
+zadarmo a bez prihlásenia, pravidelne pribúdajú a dopĺňajú [kurzy](/docs/kurzy)
+o aktuálne dianie. Nájdeš ich v **[Akadémii](/academy)** pod záložkou *Články*.`,
   },
   {
     slug: "zdielanie-vysledkov",
@@ -231,11 +244,17 @@ o aktuálne dianie. Nájdeš ich v sekcii **Blog / Akadémia**.`,
     order: 11,
     category: "Funkcie",
     body: `Po teste môžeš svoj výsledok **zdieľať** — odkazom alebo obrázkom pre
-sociálne siete (Instagram, TikTok, Facebook).
+sociálne siete.
+
+![Zdieľaný výsledok: skóre „78 / 100", typ osobnosti a rozdelenie podľa kategórií; sekcia „Zdieľaj ďalej" s tlačidlami Facebook, Messenger, WhatsApp, X, LinkedIn, Telegram a samostatná sekcia pre Instagram & TikTok s tlačidlami „Stiahni IG Story (PNG)" a „Skopíruj caption".](/img/docs/shared-result.png#themed)
+
+Takto vyzerá stránka, ktorú uvidí každý, komu odkaz pošleš — **skóre, typ
+osobnosti a rozdelenie** podľa kategórií. V sekcii **„Zdieľaj ďalej"** klikneš
+na sieť (Facebook, Messenger, WhatsApp, X, LinkedIn, Telegram), alebo si pre
+**Instagram a TikTok** stiahneš hotový obrázok (IG Story PNG) aj s popiskom.
 
 Zdieľanie je **dobrovoľné**: bez prihlásenia výsledok nikam neukladáme, kým ho
-ty sám nezdieľaš odkazom. Zdieľaný odkaz ukazuje skóre a krátke zhrnutie —
-ostatní si môžu rovnaký test spraviť tiež.`,
+ty sám nezdieľaš odkazom — a [vieš si ho aj zmazať](/docs/vymazanie-udajov).`,
   },
   {
     slug: "pomocnik",
@@ -284,6 +303,8 @@ spracúvame len to, čo je nevyhnutné na fungovanie služby. Táto stránka
 zhŕňa, čo o tebe vieme, prečo, ako dlho to uchovávame a čo s tým môžeš
 urobiť. Úplné a záväzné znenie nájdeš v [Ochrane súkromia](/privacy);
 nastavenie meraní rieši [Cookies](/cookies).
+
+![Stránka „Ochrana súkromia" s prehľadne číslovanými sekciami o tom, aké údaje spracúvame, na akom právnom základe, ako dlho ich uchovávame a aké máš práva.](/img/docs/privacy.png#themed)
 
 ## Čo spracúvame
 
@@ -415,10 +436,13 @@ požiadaviek**.`,
     order: 17,
     category: "Projekt a súkromie",
     body: `Priebežne pridávame nové testy, kurzy, články a vylepšenia. Prehľad
-zmien a noviniek nájdeš na stránke **Zmeny**.
+zmien a noviniek nájdeš na stránke **[Zmeny](/changelog)**.
 
-Sleduj ju, ak chceš vedieť, čo pribudlo — od nových odvetvových balíkov po
-aktualizácie kurzov.`,
+![Stránka „Zmeny a verzie" so zoznamom vydaní zoradených od najnovšieho — pri každom verzii sú položky Pridané / Zmenené / Opravené.](/img/docs/changelog.png#themed)
+
+Záznamy sú zoradené **od najnovšieho** a delené na **Pridané / Zmenené /
+Opravené**. Sleduj ju, ak chceš vedieť, čo pribudlo — od nových odvetvových
+balíkov po aktualizácie kurzov.`,
   },
 ];
 
