@@ -1,8 +1,15 @@
 # E53 — AI scam-check chat assistant ("Podvodový poradca")
 
-**Status:** 🟡 Plan drafted, awaiting product-owner approval
-**Branch (future):** `feature/E53-scam-chat`
-**Author:** architecture plan, 2026-06-13 (no implementation in this commit)
+**Status:** 🚧 All 9 stories implemented + merged to `main` (commits
+`ddb574c`…`349e9f1`); story-level DoD met (impl + unit tests + docs +
+CR). **Not yet ✅ Done** — Epic DoD §3 live-deploy verification is
+outstanding: owner must create the Vectorize index + Pages bindings and
+run the first `npm run rag:index` against the live Cloudflare API
+(`tasks/E53-runbook.md` §1). Lint 0/0, typecheck clean, 3826 unit tests
+green, build ✓, `rag:index` dry-run produces 1,788 chunks (verified
+2026-06-28). Open product questions Q1–Q7 below still need owner sign-off.
+**Branch:** merged via `feature/E53-scam-chat`
+**Author:** architecture plan, 2026-06-13; implemented 2026-06-13…06-14
 
 ---
 

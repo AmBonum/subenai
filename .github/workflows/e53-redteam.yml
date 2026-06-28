@@ -1,0 +1,38 @@
+name: E53 red-team (live)
+
+# Fires the adversarial probe set at the LIVE scam-chat gateway (canary,
+# scope-lock, admin-blackout invariants). Manual only: the feature is not
+# deployed yet and each run spends real Workers AI neurons against the daily
+# free budget, so it must never run unattended on every PR. Provide the
+# gateway URL as an input or set the E53_GATEWAY_URL repo secret. The script
+# skips cleanly (exit 0) when no URL is available.
+on:
+  workflow_dispatch:
+    inputs:
+      gateway_url:
+        description: "Scam-chat gateway URL (defaults to the E53_GATEWAY_URL secret)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  redteam:
+    name: Adversarial probes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Run red-team eval
+        run: npm run e53:redteam
+        env:
+          E53_GATEWAY_URL: ${{ inputs.gateway_url || secrets.E53_GATEWAY_URL }}
+          E53_CANARY: ${{ secrets.E53_CANARY }}
+          E53_AUTH: ${{ secrets.E53_AUTH }}

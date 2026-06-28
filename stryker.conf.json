@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "_comment": "Mutation testing scoped to the highest-stakes logic — where a test that asserts presence but not correctness lets a silent regression cause a privacy leak or a free-tier cost overrun. Run via `npm run mutation` (slow; CI runs it weekly/on-demand, never as a PR gate). break:null = report-only — surfaces the score without failing the build while the surviving-mutant backlog is worked down.",
+  "packageManager": "npm",
+  "testRunner": "vitest",
+  "reporters": ["html", "clear-text", "progress"],
+  "coverageAnalysis": "perTest",
+  "mutate": [
+    "src/lib/consent.ts",
+    "functions/_lib/scam-chat/budget.ts",
+    "functions/_lib/scam-chat/gates.ts"
+  ],
+  "thresholds": { "high": 80, "low": 60, "break": null },
+  "timeoutMS": 60000,
+  "concurrency": 4
+}

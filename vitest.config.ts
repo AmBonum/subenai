@@ -63,7 +63,19 @@ export default defineConfig(({ mode }) => {
         // Floor adjusted down to 57 to reflect new reality. The fix is
         // adding tests, not bypassing CI — see backlog entry in
         // PLAN-2026-05-19-testing-coverage.md for the lift-back plan.
-        thresholds: { lines: 57, functions: 49 },
+        //
+        // 2026-06-28 RATCHET: the suite has since grown to ~3,826 tests
+        // and measured coverage rose to stmts 60.81 / branch 54.84 /
+        // funcs 55.01 / lines 63.72. Lock that level in — thresholds are
+        // pinned ~1.5–2 pts below the live numbers (headroom for v8's
+        // run-to-run jitter) so any regression fails CI while honest new
+        // code does not have to clear the final 70% bar immediately. We
+        // also add branch + statement gates that were previously
+        // unenforced. Next step toward the 70% exit criterion in
+        // PLAN-2026-05-19-testing-coverage.md: ratchet again after the
+        // next coverage-lift batch — never lower these without a written
+        // reason here.
+        thresholds: { statements: 59, branches: 53, functions: 53, lines: 62 },
       },
     },
   };

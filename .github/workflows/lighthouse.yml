@@ -1,0 +1,35 @@
+name: Lighthouse CI
+
+# Core Web Vitals budgets (LCP / CLS / TBT / TTI) on the key public routes,
+# served by the real Cloudflare worker (wrangler pages dev) rather than a
+# static SPA fallback. Reports upload to LHCI temporary-public-storage (free).
+# Separate from the required CI job so a budget warning never blocks a merge;
+# only a catastrophic perf collapse (<0.5) fails this workflow.
+on:
+  pull_request: {}
+  workflow_dispatch: {}
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    name: Lighthouse budgets
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Run Lighthouse CI
+        run: npx --yes @lhci/cli@0.14.x autorun

@@ -80,3 +80,6 @@ marketing/linkedin/rendered/
 
 # E53 RAG index manifest (operator-local artifact of scripts/build-rag-index.ts)
 .rag-index-manifest.json
+
+# Stryker mutation testing temp dir
+.stryker-tmp/

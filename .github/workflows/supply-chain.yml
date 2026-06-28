@@ -1,0 +1,70 @@
+name: Supply chain (SBOM + Trivy)
+
+# Complements CodeQL (SAST on our source) + npm-audit (advisory DB) with a
+# dependency-vulnerability scan and a CycloneDX SBOM of what actually ships.
+# All tooling is free / OSS; on a public repo SARIF upload to the Security
+# tab is free too.
+on:
+  push:
+    branches: [main]
+  pull_request: {}
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC — catch newly-disclosed CVEs
+  workflow_dispatch: {}
+
+concurrency:
+  group: supply-chain-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write # SARIF upload to the code-scanning tab
+
+jobs:
+  sbom:
+    name: CycloneDX SBOM
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Generate SBOM (CycloneDX)
+        run: npx --yes @cyclonedx/cyclonedx-npm --output-format JSON --output-file sbom.cdx.json
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ github.run_id }}
+          path: sbom.cdx.json
+          retention-days: 90
+
+  trivy:
+    name: Trivy dependency scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      # Report-only for now (exit-code 0): findings surface in the Security
+      # tab without blocking merges. Flip to exit-code 1 + a severity floor
+      # once the backlog is triaged. esbuild is already pinned via overrides
+      # (see package.json) for a known build-tooling CVE.
+      - name: Run Trivy (filesystem)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-results.sarif
+          severity: HIGH,CRITICAL
+          exit-code: "0"
+          ignore-unfixed: true
+      - name: Upload Trivy SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy-fs

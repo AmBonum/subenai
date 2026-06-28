@@ -55,6 +55,12 @@ jobs:
       - name: Bundle guard — no trackers
         run: npm run audit:bundle
 
+      # Perf budget — fail if a gzipped JS chunk (or the total) grows past
+      # its budget in perf-budget.json. Catches accidental bloat that the
+      # >500 kB Rollup warning only whispers about.
+      - name: Bundle guard — size budget
+        run: npm run check:bundle-budget
+
       # E48 incident response — verify RPCs + tables exist in production.
       # Skipped when secrets are absent (fork PRs, local runs without prod creds).
       # To activate: add VITE_SUPABASE_URL + PROD_INVARIANT_CHECK_KEY secrets
