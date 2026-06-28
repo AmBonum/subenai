@@ -183,14 +183,17 @@ doškolenie — na to nadväzujú [kurzy](/docs/kurzy).`,
     description: "Ako si poskladať vlastný test z otázok alebo zo šablóny.",
     order: 8,
     category: "Pre firmy",
-    body: `Prihlásení používatelia (lektori, firmy) si môžu **poskladať vlastný
-test** v editore: vyber otázky, nastav poradie a zdieľaj test s respondentmi.
+    body: `V **[editore testov](/test/builder)** si poskladáš vlastný test: vyber
+otázky z banky, nastav poradie a zdieľaj test s respondentmi.
 
-Nemusíš začínať od nuly — **šablóny** poskytujú hotové sady, ktoré upravíš
-podľa seba. Vytvorený test má vlastný odkaz, ktorý pošleš respondentom; ich
-výsledky vidíš vo svojom účte.
+![Editor „Zostav vlastný test pre tím": výber zo stoviek otázok, predefinované sady podľa odvetvia (školy, AI, sociálne siete, rodičia, zdravotníctvo, heslá a 2FA…) a dole tlačidlá „Spustiť pre seba" a „Zdieľať s tímom".](/img/docs/composer.png#themed)
 
-Na tvorbu vlastných testov je potrebné **prihlásenie**.`,
+Nemusíš začínať od nuly — hore vyberieš **predefinovanú sadu** podľa odvetvia
+alebo otázky pridáš ručne z **banky otázok**. Dole vidíš počet vybraných
+otázok a test buď **spustíš pre seba**, alebo **zdieľaš s tímom** vlastným
+odkazom; výsledky respondentov potom vidíš vo svojom účte.
+
+Na uloženie a zdieľanie vlastných testov je potrebné **prihlásenie**.`,
   },
   {
     slug: "pre-skoly",
@@ -201,9 +204,13 @@ Na tvorbu vlastných testov je potrebné **prihlásenie**.`,
     body: `subenai ponúka **vzdelávacie testy a materiály pre školy** — pomáhajú
 žiakom naučiť sa rozpoznávať podvody bezpečným, interaktívnym spôsobom.
 
-Učitelia môžu využiť testy v rámci hodín a nadviazať na ne kurzmi. Detaily
-a podmienky spracovania údajov (vrátane DPA pre školy) nájdeš v sekcii
-**Školy**.`,
+![Stránka „Pre školy": nadpis „Otestuj triedu na rozpoznávanie scamov — bez registrácií, bez ceny", role riaditeľ/DPO, IT koordinátor, učiteľ/lektor a štatistiky 0 €, 3 min, GDPR, retencia 12 mesiacov.](/img/docs/schools.png#themed)
+
+Edu mód je **zadarmo**, **bez registrácie žiakov** a **GDPR-čistý** (čisté
+roly, retencia 12 mesiacov, CSV export). Učiteľ pripraví test pre triedu,
+žiaci ho urobia a učiteľ hneď vidí, kto na čom zlyhal — a nadviaže
+[kurzmi](/docs/kurzy). Detaily a DPA pre školy nájdeš v sekcii
+**[Školy](/schools)**.`,
   },
   {
     slug: "akademia",
@@ -257,8 +264,13 @@ ti poradca odporučí kontaktovať políciu.`,
     body: `subenai je nezávislý projekt. Ak ti dáva zmysel, môžeš ho **finančne
 podporiť** — pomáha to udržať testy a kurzy zadarmo a pridávať nový obsah.
 
-Možnosti podpory a zoznam podporovateľov nájdeš v sekcii **Podporiť projekt**.
-Podporu vieš kedykoľvek spravovať alebo zrušiť.`,
+Podporovateľov nájdeš na stránke **[Naši sponzori](/sponsors)**:
+
+![Stránka „Naši sponzori" so zoznamom podporovateľov a ich odkazmi, vyhľadávaním a filtrom podľa dátumu; dole poznámka, že zoznam je dobrovoľný a mnohí sponzori sú anonymní.](/img/docs/sponsors.png#themed)
+
+Zápis do zoznamu je **dobrovoľný** — mnohí sponzori sú anonymní a sumy ani
+počty platieb nezverejňujeme. Podporu vieš kedykoľvek **spravovať alebo
+zrušiť**.`,
   },
   {
     slug: "sukromie-a-data",

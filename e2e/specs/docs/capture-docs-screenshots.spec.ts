@@ -14,6 +14,9 @@ import { ScamChatPage } from "../../poms/scam-chat/ScamChat";
 import { HomePage } from "../../poms/quiz/HomePage";
 import { TestsIndexPage } from "../../poms/quiz/TestsDirectoryPage";
 import { KontaktPage } from "../../poms/support/KontaktPage";
+import { ComposerPage } from "../../poms/quiz/ComposerPage";
+import { SchoolsPage } from "../../poms/marketing/SchoolsPage";
+import { SponsorsPage } from "../../poms/marketing/SponsorsPage";
 
 // E57 — generates the documentation screenshots WITHOUT prod writes, a
 // password, or Docker: the existing e2e mock layer (mocked Supabase auth +
@@ -120,6 +123,25 @@ test.describe("docs screenshots (mocked surfaces, light + dark)", () => {
       },
       true,
     );
+
+    const composer = new ComposerPage(page);
+    await page.goto("/test/builder");
+    await shootBothThemes(page, "composer", async () => {
+      await composer.heading.waitFor({ state: "visible" });
+      await composer.questionPickerSection.waitFor({ state: "visible" });
+    });
+
+    const schools = new SchoolsPage(page);
+    await page.goto("/schools");
+    await shootBothThemes(page, "schools", async () => {
+      await schools.heroTitle.waitFor({ state: "visible" });
+    });
+
+    const sponsors = new SponsorsPage(page);
+    await page.goto("/sponsors");
+    await shootBothThemes(page, "sponsors", async () => {
+      await sponsors.indexRoot.waitFor({ state: "visible" });
+    });
   });
 
   test("signed-in — account profile, DSR form", async ({ context, page }) => {
