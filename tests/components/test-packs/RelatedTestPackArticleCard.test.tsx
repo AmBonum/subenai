@@ -64,7 +64,7 @@ describe("RelatedTestPackArticleCard — E25 Phase 3 test-pack → article", () 
     );
   });
 
-  it("CTA links to /blog/$slug with the related article slug", () => {
+  it("CTA links to /academy/$slug with the related article slug", () => {
     useBlogPostByRelatedTest.mockReturnValue({
       data: PILLAR_PHISHING,
       isLoading: false,
@@ -73,7 +73,7 @@ describe("RelatedTestPackArticleCard — E25 Phase 3 test-pack → article", () 
     render(<RelatedTestPackArticleCard packSlug="eshop" />);
     expect(screen.getByTestId("test-pack-related-academy-cta")).toHaveAttribute(
       "data-to",
-      "/blog/$slug",
+      "/academy/$slug",
     );
   });
 

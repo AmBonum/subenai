@@ -15,7 +15,7 @@ export const fakeEshopOverenieCourse: Course = {
     {
       kind: "intro",
       heading: "Falošný e-shop poznáš za 2 minúty — ak vieš, kde pozerať",
-      body: `Falošný e-shop v roku 2026 nevyzerá ako tých 5 chýb pred desiatimi rokmi. Má slušnú grafiku, fotky produktov, reálne názvy značiek a recenzie napísané ChatGPT-om. Často je to klon legitímneho českého alebo poľského obchodu, len s inou IBAN-ou na konci. Slováci ročne stratia milióny eur cez „výhodné" iPhone-y za 299 € z falošných FB reklám alebo z e-shopov, ktoré sa volajú elektromax-sk-vypredaj.com. Dobrá správa: dvojminútová kontrola pred zaplatením ťa zachráni v 95 % prípadov.`,
+      body: `Falošný e-shop v roku 2026 nevyzerá ako tých päť chýb spred desiatich rokov. Má slušnú grafiku, fotky produktov, reálne názvy značiek a recenzie napísané ChatGPT-om. Často je to klon legitímneho českého alebo poľského obchodu, len s iným číslom IBAN na konci. Slováci ročne stratia milióny eur cez „výhodné" iPhony za 299 € z falošných reklám na Facebooku alebo z e-shopov, ktoré sa volajú elektromax-sk-vypredaj.com. Dobrá správa: dvojminútová kontrola pred zaplatením ťa zachráni v 95 % prípadov.`,
     },
     {
       kind: "example",
@@ -25,7 +25,7 @@ export const fakeEshopOverenieCourse: Course = {
         url: "https://apple-vyprodej-sk.shop/iphone-15-pro-299eur",
         secure: true,
       },
-      commentary: `HTTPS visiačik neznamená nič — kúpiš ho za 5 € hocikde. Doména apple-vyprodej-sk.shop nie je Apple. Apple v SR predáva cez apple.com/sk alebo cez autorizovaných predajcov ako iStores či Datart.`,
+      commentary: `Visiačik HTTPS neznamená nič — kúpiš ho hocikde za 5 €. Doména apple-vyprodej-sk.shop nie je Apple. Apple v SR predáva cez apple.com/sk alebo cez autorizovaných predajcov ako iStores či Datart.`,
     },
     {
       kind: "example",
@@ -44,7 +44,7 @@ export const fakeEshopOverenieCourse: Course = {
         label: "Recenzia na podvodnom e-shope",
         body: `Som veľmi spokojná s mojím nákupom! Produkt prišiel rýchlo a kvalita predčila moje očakávania. Určite odporúčam tento obchod každému, kto hľadá kvalitné výrobky za výhodnú cenu. ⭐⭐⭐⭐⭐ — Mária K.`,
       },
-      commentary: `Vágna, bez konkrétneho produktu, bez detailu o doručení, bez fotky. Reálna recenzia spomína model, čas dodania a často aj problém s podporou. AI generované recenzie sú dnes 80 % obsahu na fake e-shopoch.`,
+      commentary: `Vágna, bez konkrétneho produktu, bez detailu o doručení, bez fotky. Reálna recenzia spomína model, čas dodania a často aj problém s podporou. Recenzie generované umelou inteligenciou tvoria dnes 80 % obsahu na falošných e-shopoch.`,
     },
     {
       kind: "example",
@@ -54,7 +54,7 @@ export const fakeEshopOverenieCourse: Course = {
         label: "Pokladňa fake e-shopu",
         body: `Akceptujeme: Bankový prevod na IBAN AT89 3704 4040 0532 0130. Po pripísaní platby tovar odošleme do 2 pracovných dní.`,
       },
-      commentary: `Rakúsky IBAN (AT) pre slovenský e-shop? Žiadna karta, žiadny PayPal, žiadne dobierka? Legitímny obchod má aspoň 2-3 platobné metódy s ochranou kupujúceho. Prevod je nevratný.`,
+      commentary: `Rakúsky IBAN (AT) pre slovenský e-shop? Žiadna karta, žiadny PayPal, žiadna dobierka? Legitímny obchod má aspoň 2 – 3 platobné metódy s ochranou kupujúceho. Prevod je nevratný.`,
     },
     {
       kind: "checklist",
@@ -78,11 +78,11 @@ export const fakeEshopOverenieCourse: Course = {
         },
         {
           good: true,
-          text: "Web ponúka aspoň platbu kartou (Visa/Mastercard) alebo dobierku — máš chargeback ochranu.",
+          text: "Web ponúka aspoň platbu kartou (Visa/Mastercard) alebo dobierku — máš ochranu cez chargeback (spätné vrátenie platby cez banku).",
         },
         {
           good: false,
-          text: `Cena je 50–80 % pod trhom („iPhone 15 Pro za 299 €") — neexistuje, vždy podvod.`,
+          text: `Cena je 50 – 80 % pod trhom („iPhone 15 Pro za 299 €") — neexistuje, vždy ide o podvod.`,
         },
         {
           good: false,
@@ -98,7 +98,7 @@ export const fakeEshopOverenieCourse: Course = {
         `Žiadne IČO, žiadna adresa, žiadny telefón — len kontaktný formulár.`,
         `Recenzie sú len 5-hviezdičkové, vágne, bez konkrétnych mien a produktov.`,
         `Platba výhradne bankovým prevodom alebo cez krypto — žiadna karta.`,
-        `Ceny 50–80 % pod trhom u značkového tovaru (Apple, Samsung, Dyson).`,
+        `Ceny 50 – 80 % pod trhom pri značkovom tovare (Apple, Samsung, Dyson).`,
         `Stránka v slovenčine, ale s pravopisnými chybami („objedávka", „bezplátne", „garácia").`,
       ],
     },
@@ -107,21 +107,21 @@ export const fakeEshopOverenieCourse: Course = {
       heading: "Ako nakupovať online bezpečne",
       do: [
         `Pri novom e-shope kontroluj IČO na finstat.sk — overíš obrat, vek firmy aj exekúcie.`,
-        `Plaťuj kartou alebo cez PayPal — máš 120 dní na chargeback pri nedoručenom tovare.`,
+        `Plať kartou alebo cez PayPal — pri nedoručenom tovare máš 120 dní na chargeback.`,
         `Hľadaj recenzie tvarom „názov-eshopu skusenosti" na Google a Heureka.sk.`,
         `Pri zľavách nad 50 % na značkový tovar predpokladaj podvod, kým sa nepresvedčíš o opaku.`,
       ],
       dont: [
         `Nepoužívaj bankový prevod ako jedinú možnosť — peniaze sú prakticky nevratné.`,
-        `Neklikajú na e-shopy z FB / IG reklám bez kontroly domény mimo platformy.`,
-        `Nedôveruj recenziám len na webe predajcu — sú často generované AI.`,
+        `Neklikaj na e-shopy z reklám na Facebooku či Instagrame bez kontroly domény mimo platformy.`,
+        `Nedôveruj recenziám len na webe predajcu — sú často generované umelou inteligenciou.`,
         `Nedávaj číslo karty na stránku bez HTTPS (visiačik vľavo od URL).`,
       ],
     },
     {
       kind: "scenario",
       heading: "Reálny scenár — Dyson za 189 € z Instagramu",
-      story: `Vidíš sponzorovanú reklamu na Instagrame: Dyson V15 za 189 € (bežne 749 €), oficiálny rebrand 2026, posledných 7 kusov. Klikneš, otvorí sa dyson-vypredaj-sk.shop — moderne vyzerá, fotky sú originálne. V pokladni je IBAN v Maďarsku a kontakt len cez formulár.`,
+      story: `Vidíš sponzorovanú reklamu na Instagrame: Dyson V15 za 189 € (bežne 749 €), oficiálny výpredaj značky 2026, posledných 7 kusov. Klikneš, otvorí sa dyson-vypredaj-sk.shop — vyzerá moderne, fotky sú originálne. V pokladni je IBAN v Maďarsku a kontakt len cez formulár.`,
       right_action: `Zatvoríš stránku. Otvoríš si dyson.sk v novom okne — žiadna takáto akcia neexistuje. Reklamu nahlásiš na Instagrame (3 bodky → Report Ad → Scam or Fraud). Ak ti to nedá pokoj, pozrieš model V15 na alza.sk alebo datart.sk za reálnu cenu. Ušetril si 189 €.`,
     },
   ],

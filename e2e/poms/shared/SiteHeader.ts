@@ -4,8 +4,10 @@ import type { Locator, Page } from "@playwright/test";
  * Mega-menu slugs (Phase 1, D1). Items either render as a flat link
  * (`MegaLinkSlug`) or as a hover trigger that opens a panel (`MegaTriggerSlug`).
  */
-export type MegaLinkSlug = "pre_skoly" | "blog" | "podpora";
-export type MegaTriggerSlug = "testy" | "skolenia";
+// E55 — /courses + /blog merged into one flat "akademia" link; the
+// Školenia panel is gone, leaving "testy" as the only hover-panel item.
+export type MegaLinkSlug = "akademia" | "pre_skoly" | "podpora";
+export type MegaTriggerSlug = "testy";
 export type MegaSlug = MegaLinkSlug | MegaTriggerSlug;
 
 /**

@@ -16,7 +16,7 @@ export const emailPhishingCourse: Course = {
     {
       kind: "intro",
       heading: "Email je stále útok č. 1",
-      body: `Aj keď SMS vedie v rýchlosti, e-mail je stále hlavný kanál pre cielené podvody. Útočník má v ňom miesto na presvedčivý dizajn, falošné logá a kvalitne preložený text. Cieľ je rovnaký: dostať ťa na falošnú stránku, alebo aby si stiahol prílohu.`,
+      body: `Aj keď SMS vedie v rýchlosti, e-mail je stále hlavný kanál pre cielené phishingové (podvodné vylákanie prihlasovacích či platobných údajov) útoky. Útočník má v ňom miesto na presvedčivý dizajn, falošné logá a kvalitne preložený text. Cieľ je rovnaký: dostať ťa na falošnú stránku alebo aby si stiahol prílohu.`,
     },
     {
       kind: "example",
@@ -29,7 +29,7 @@ export const emailPhishingCourse: Course = {
         body: `Vážený klient, na vašom účte boli zaznamenané neobvyklé pohyby. Ak sa do 24 hodín nepriahlasite cez nižšie uvedený odkaz, váš prístup do internet bankingu bude pozastavený.`,
         cta: "Overiť účet",
       },
-      commentary: `From doména slsp-bezpecnost.online — slovenská sporiteľňa píše z @slsp.sk, nie z náhodne registrovanej .online. „Overte sa do 24 hodín" je pavlovov reflex na strach. Žiadna banka takto nekomunikuje.`,
+      commentary: `Doména odosielateľa slsp-bezpecnost.online — Slovenská sporiteľňa píše z @slsp.sk, nie z náhodne registrovanej .online. „Overte sa do 24 hodín" je pavlovovský reflex na strach. Žiadna banka takto nekomunikuje.`,
     },
     {
       kind: "example",
@@ -54,7 +54,7 @@ export const emailPhishingCourse: Course = {
         subject: "Urgentne — potrebujem prevod, som na meeting-u",
         body: `Ahoj, som teraz na zákazníckom meetingu a nemôžem volať. Potrebujem urgentne prevodom poslať 7 800 EUR na účet dodávateľa, číslo IBAN: SK35 ... Pošli mi potvrdenie, ďakujem.`,
       },
-      commentary: `Tzv. Business Email Compromise (BEC). Útočník si spravil doménu firma-sk.co (skutočná je firma.sk). Píše v štýle CEO, vyvíja tlak. Žiadny šéf nepýta urgentnú platbu cez e-mail bez verifikácie. Vždy zavolaj na známy telefónny kontakt.`,
+      commentary: `Tzv. Business Email Compromise (podvod cez kompromitovaný firemný e-mail), skrátene BEC. Útočník si spravil doménu firma-sk.co (skutočná je firma.sk). Píše v štýle CEO, vyvíja tlak. Žiadny šéf nepýta urgentnú platbu cez e-mail bez verifikácie. Vždy zavolaj na známy telefónny kontakt.`,
     },
     {
       kind: "example",
@@ -66,7 +66,7 @@ export const emailPhishingCourse: Course = {
         subject: "Faktúra č. 2024-1187 na úhradu",
         body: `V prílohe nájdete faktúru č. 2024-1187 splatnú do 7 dní. Pri pochybnostiach kontaktujte naše účtovníctvo. Príloha: faktura_1187.zip`,
       },
-      commentary: `Faktúra v .zip alebo .iso prílohe je takmer vždy malware. Skutočné faktúry sú PDF priamo, alebo cez známy systém. Ak si nečakáš faktúru od tejto firmy — neotváraj.`,
+      commentary: `Faktúra v .zip alebo .iso prílohe je takmer vždy malware (škodlivý softvér). Skutočné faktúry sú PDF priamo alebo cez známy systém. Ak nečakáš faktúru od tejto firmy — neotváraj.`,
     },
     {
       kind: "example",
@@ -96,7 +96,7 @@ export const emailPhishingCourse: Course = {
     },
     {
       kind: "redflags",
-      heading: "10 vecí na ktoré sa pozri pred kliknutím",
+      heading: "10 vecí, na ktoré sa pozri pred kliknutím",
       flags: [
         `Doména odosielateľa nepatrí firme — pozri si ju ZA znakom @, nie len zobrazené meno.`,
         `Generické oslovenie („Vážený klient", „Dear Customer") namiesto mena.`,
@@ -104,9 +104,9 @@ export const emailPhishingCourse: Course = {
         `Hroziaca strata (zablokovanie účtu, vymazanie dát, zákonné konanie).`,
         `Príliš dobrá ponuka (výhra, recruiter z Apple, vrátenie peňazí).`,
         `Príloha .zip / .iso / .exe / .scr — nikdy neotvárať.`,
-        `Pravopisné chyby alebo zlý preklad (najmä u „banka SR").`,
-        `Žiadosť o heslo, OTP, PIN cez e-mail.`,
-        `Link, ktorý po hover-e ukazuje inú doménu ako text linku.`,
+        `Pravopisné chyby alebo zlý preklad (najmä pri „banke SR").`,
+        `Žiadosť o heslo, OTP (jednorazový overovací kód) či PIN cez e-mail.`,
+        `Odkaz, ktorý po nabehnutí kurzorom ukazuje inú doménu ako text odkazu.`,
         `Nečakaná faktúra od dodávateľa, s ktorým nemáš zmluvu.`,
       ],
     },
@@ -115,11 +115,11 @@ export const emailPhishingCourse: Course = {
       heading: "Rýchla 30-sekundová kontrola",
       items: [
         { good: false, text: `Doména za @ vyzerá ako „banka-secure.online".` },
-        { good: false, text: "Ja som pozvaný na pohovor, hoci som nikam neposielal CV." },
+        { good: false, text: "Som pozvaný na pohovor, hoci som nikam neposielal CV." },
         { good: false, text: "E-mail mi tlačí čas alebo ma straší." },
         { good: true, text: "Doména súhlasí — slsp.sk, microsoft.com, paypal.com." },
         { good: true, text: "E-mail rieši niečo, čo som naozaj v posledných dňoch robil." },
-        { good: true, text: "Otvorím stránku ručne, nie z linku v e-maile." },
+        { good: true, text: "Otvorím stránku ručne, nie z odkazu v e-maile." },
       ],
     },
     {
@@ -127,22 +127,22 @@ export const emailPhishingCourse: Course = {
       heading: "Pravidlá",
       do: [
         `Pri každom „bankovom" e-maile otvor banku ručne v prehliadači.`,
-        `2FA na e-mail (Gmail, Outlook). Ten je kľúč k všetkému ostatnému.`,
-        `Pri urgentnom príkaze od „šéfa" zavolaj mu — nie odpíš e-mailom.`,
-        `Príloha sa otvára iba vtedy, keď ju očakávaš a poznáš odosielateľa.`,
+        `Zapni 2FA (dvojfaktorové overenie) na e-mail (Gmail, Outlook). Ten je kľúčom k všetkému ostatnému.`,
+        `Pri urgentnom príkaze od „šéfa" mu zavolaj — neodpisuj e-mailom.`,
+        `Prílohu otváraj iba vtedy, keď ju očakávaš a poznáš odosielateľa.`,
       ],
       dont: [
-        `Nedôverovať zobrazenému menu odosielateľa — len doméne za @.`,
-        `Neklikať na „obnoviť heslo" linky z e-mailu — vždy ručne.`,
-        `Nepreposielať podozrivý e-mail kolegom — môžu kliknúť za teba.`,
-        `Nedávať odpoveď „STOP" alebo „odhlásiť" útočníkovi.`,
+        `Nedôveruj zobrazenému menu odosielateľa — len doméne za @.`,
+        `Neklikaj na odkazy „obnoviť heslo" z e-mailu — vždy ručne.`,
+        `Nepreposielaj podozrivý e-mail kolegom — môžu kliknúť za teba.`,
+        `Nedávaj odpoveď „STOP" ani „odhlásiť" útočníkovi.`,
       ],
     },
     {
       kind: "scenario",
       heading: "Reálny scenár — pondelok ráno",
       story: `Otvoríš Outlook. „Microsoft: vaše heslo vyprší dnes o 18:00, kliknite a obnovte." Si v strese, máš online meeting o 5 minút. Klikneš?`,
-      right_action: `Nie. Otvoríš Microsoft account ručne v inom tabe (account.microsoft.com), prihlásiš sa cez známy flow. Tam buď naozaj uvidíš upozornenie, alebo nie. Žiadnu „obnovu" cez e-mail nikdy nerob.`,
+      right_action: `Nie. Otvoríš si konto Microsoft ručne v inej karte (account.microsoft.com) a prihlásiš sa zaužívaným postupom. Tam buď naozaj uvidíš upozornenie, alebo nie. Žiadnu „obnovu" cez e-mail nikdy nerob.`,
     },
   ],
   sources: [

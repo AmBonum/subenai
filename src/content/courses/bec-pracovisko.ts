@@ -4,7 +4,7 @@ export const becWorkplaceCourse: Course = {
   slug: "bec-pracovisko-fake-ceo",
   title: `BEC: keď ti „CEO" napíše súrne preveď 50 000 EUR`,
   tagline:
-    "Business Email Compromise je najdrahšia forma firemného phishingu: 5 typov + 6 procesných obrán pre účtovníkov a HR.",
+    "Business Email Compromise (podvod cez kompromitovaný firemný e-mail) je najdrahšia forma firemného phishingu (podvodné vylákanie prihlasovacích či platobných údajov): 5 typov + 6 procesných obrán pre účtovníkov a HR.",
   category: "obecne",
   difficulty: "pokročilý",
   estimatedMinutes: 13,
@@ -15,7 +15,7 @@ export const becWorkplaceCourse: Course = {
     {
       kind: "intro",
       heading: `BEC = jeden e-mail, 50 000 EUR preč`,
-      body: `Business Email Compromise cieli na účtovníkov, asistentov, finančných manažérov v SK firmách. Útočník 2-4 týždne sleduje firemnú komunikáciu (cez phishnutý jeden účet alebo verejné LinkedIn dáta), naučí sa štýl CEO/CFO, a potom v správnu chvíľu (pred dovolenkou, pri uzávierke) pošle „súrnu" žiadosť o prevod. Priemerná škoda na incident v EÚ podľa Europol-u presahuje 50 000 EUR. Prevencia je 90 % o procese, 10 % o technike.`,
+      body: `Business Email Compromise cieli na účtovníkov, asistentov, finančných manažérov v SK firmách. Útočník 2 – 4 týždne sleduje firemnú komunikáciu (cez jeden phishnutý účet alebo verejné LinkedIn dáta), naučí sa štýl CEO/CFO a potom v správnu chvíľu (pred dovolenkou, pri uzávierke) pošle „súrnu" žiadosť o prevod. Priemerná škoda na incident v EÚ podľa Europolu presahuje 50 000 EUR. Prevencia je 90 % o procese, 10 % o technike.`,
     },
     {
       kind: "example",
@@ -27,7 +27,7 @@ export const becWorkplaceCourse: Course = {
         subject: "Súrne — potrebujem prevod, som na klientskom meetingu",
         body: `Mária, som teraz na zákazníckom meetingu v Mníchove a nemôžem volať. Potrebujem urgentne prevodom poslať 47 800 EUR na účet nového dodávateľa. IBAN: DE89 3704 0044 0532 0130 00. Svif: COBADEFFXXX. Pošli potvrdenie po vykonaní, ďakujem.`,
       },
-      commentary: `Klasický CEO Fraud. Doména 'firma-sk.co' (skutočná je 'firma.sk'). Štýl je natrénovaný — útočník čítal vašu e-mailovú archív týždne. „Som na meetingu, nemôžem volať" je obrana proti out-of-band verifikácii. Tento jeden e-mail je najdrahší v EÚ.`,
+      commentary: `Klasický CEO Fraud. Doména 'firma-sk.co' (skutočná je 'firma.sk'). Štýl je natrénovaný — útočník čítal váš e-mailový archív týždne. „Som na meetingu, nemôžem volať" je obrana proti out-of-band verifikácii. Tento jeden e-mail je najdrahší v EÚ.`,
     },
     {
       kind: "example",
@@ -39,7 +39,7 @@ export const becWorkplaceCourse: Course = {
         subject: "Aktualizácia bankového účtu pre dodávateľa MetalTech",
         body: `Mária, MetalTech mi práve volal — menia bankový účet kvôli akvizícii. Nový IBAN pre faktúry: SK35 1100 0000 0099 8877 6655. Použi ho na faktúru #2024-1187 (12 400 EUR), ktorú máš dnes splatnú. Potvrdím e-mailom keď bude účet aktívny.`,
       },
-      commentary: `Útočník phishol jeden interný účet (CFO), alebo spoofuje doménu. Cieľ: prevod existujúcej legitímnej faktúry na ich účet. Túto schému zachytí len telefonický callback dodávateľovi — žiadny e-mail nestačí, lebo aj „potvrdenie" môže prísť z toho istého kompromitovaného účtu.`,
+      commentary: `Útočník phishol jeden interný účet (CFO) alebo spoofuje (podvrhnutie identity odosielateľa) doménu. Cieľ: prevod existujúcej legitímnej faktúry na ich účet. Túto schému zachytí len telefonický callback dodávateľovi — žiadny e-mail nestačí, lebo aj „potvrdenie" môže prísť z toho istého kompromitovaného účtu.`,
     },
     {
       kind: "example",
@@ -51,11 +51,11 @@ export const becWorkplaceCourse: Course = {
         subject: "Dôverné — akvizícia, prevod escrow",
         body: `Mária, vaša spoločnosť je v procese akvizície, ktorú náš úrad sprostredkováva. Pre právnu istotu potrebujeme escrow prevod 78 000 EUR na náš účet do 17:00 dnes. CEO Peter Novák to odsouhlasil ústne, ale kvôli regulačnému embargu nemôže komunikovať písomne. Poznáte nasledujúcich 48 hodín ako confidentiality period — žiadne otázky kolegom.`,
       },
-      commentary: `Pridáva autoritu („právnik", „M&A") a izoláciu („nehovor s kolegami"). „Embargo" je psychologický trik — útočník vie, že callback by ho odhalil. Žiadny advokát nedonúti účtovníka prevodu bez podpísanej zmluvy a bez možnosti overiť s CEO.`,
+      commentary: `Pridáva autoritu („právnik", „M&A") a izoláciu („nehovor s kolegami"). „Embargo" je psychologický trik — útočník vie, že callback by ho odhalil. Žiadny advokát nedonúti účtovníka k prevodu bez podpísanej zmluvy a bez možnosti overiť ho s CEO.`,
     },
     {
       kind: "example",
-      heading: `Typ #4 — phishing CEO účtu cez Microsoft 365 spoof`,
+      heading: `Typ #4 — phishing (podvodné vylákanie údajov) CEO účtu cez Microsoft 365 spoof`,
       visual: {
         kind: "email",
         from: "Microsoft 365 Security",
@@ -64,7 +64,7 @@ export const becWorkplaceCourse: Course = {
         body: `CEO/admin: vaše heslo k Microsoft 365 účtu vyprší o 24 hodín. Aby ste zachovali prístup k Outlook, OneDrive a Teams, potvrďte súčasné heslo cez nižšie uvedený odkaz.`,
         cta: "Zachovať prístup",
       },
-      commentary: `Toto je vstupný vector pre BEC. Útočník phishne CEO heslo, prihlási sa do Outlook, čítava komunikáciu, naučí sa štýl. Až potom (po týždňoch) pošle z reálneho CEO mailbox-u falošnú žiadosť o prevod. To je ten najnebezpečnejší typ — žiadne spoofing, e-mail je z naozaj firemnej domény.`,
+      commentary: `Toto je vstupný vektor pre BEC. Útočník phishne CEO heslo, prihlási sa do Outlooku, číta komunikáciu, naučí sa štýl. Až potom (po týždňoch) pošle z reálneho CEO mailboxu falošnú žiadosť o prevod. To je ten najnebezpečnejší typ — žiadny spoofing, e-mail je z naozaj firemnej domény.`,
     },
     {
       kind: "example",
@@ -76,7 +76,7 @@ export const becWorkplaceCourse: Course = {
         subject: "Zmena bankového účtu pre výplatu",
         body: `Mária, prosím zmeň môj výplatný účet pre nasledujúcu výplatu. Otvoril som si nový účet v Tatra banke. IBAN: SK11 1100 0000 0066 5544 3322. Ďakujem, Tomáš`,
       },
-      commentary: `Útočník phishne zamestnanca alebo spoofuje doménu, požiada o presmerovanie výplaty. Účtovníctvo to často vykoná bez overenia (zdá sa neškodné). Skutočný zamestnanec zistí až keď výplata nepríde. Ochrana: každú zmenu výplatného účtu overiť osobne alebo telefonicky na predchádzajúce známe číslo.`,
+      commentary: `Útočník phishne zamestnanca alebo spoofuje doménu, požiada o presmerovanie výplaty. Účtovníctvo to často vykoná bez overenia (zdá sa neškodné). Skutočný zamestnanec zistí, až keď výplata nepríde. Ochrana: každú zmenu výplatného účtu overiť osobne alebo telefonicky na predchádzajúce známe číslo.`,
     },
     {
       kind: "redflags",
@@ -100,7 +100,7 @@ export const becWorkplaceCourse: Course = {
         `Out-of-band verifikácia — pri každej žiadosti o prevod zavolaj CEO/CFO na známe číslo (nie z e-mailu).`,
         `Zmena bankového účtu dodávateľa — vždy potvrdiť osobne / telefonicky na pred-existujúce číslo.`,
         `Zmena výplatného účtu zamestnanca — vždy overenie cez HR, ideálne osobne.`,
-        `2FA na všetkých Microsoft 365 / Google Workspace účtoch (najmä management).`,
+        `2FA (dvojfaktorové overenie) na všetkých Microsoft 365 / Google Workspace účtoch (najmä management).`,
         `Pravidelný BEC training pre účtovníctvo — phishing simulácie 2x ročne.`,
       ],
       dont: [
@@ -128,7 +128,7 @@ export const becWorkplaceCourse: Course = {
       kind: "scenario",
       heading: "Reálny scenár — piatok 16:30, pred dovolenkou",
       story: `Si účtovníčka v 30-osobovej firme. CEO Peter Novák ide o hodinu na 2-týždňovú dovolenku. Príde e-mail z 'peter.novak@firma-sk.co': „Mária, súrne preveď 47 800 EUR na nového dodávateľa pred mojím odchodom. IBAN posielam v ďalšej správe. Žiadam ťa, aby si to spravila ešte dnes — ďakujem."`,
-      right_action: `Zavoláš Petrovi na jeho mobilné číslo (z firemného adresára, nie z e-mailu). Ak nedvíha, napíšeš na osobný WhatsApp / Signal. Aj keby to spôsobilo 30-minútový delay — Peter to ocení viac ako stratu 47 800 EUR. Doménu 'firma-sk.co' po druhom pohľade vidíš — vy ste '.sk', nie '.co'. To je ten červený flag.`,
+      right_action: `Zavoláš Petrovi na jeho mobilné číslo (z firemného adresára, nie z e-mailu). Ak nedvíha, napíšeš na osobný WhatsApp / Signal. Aj keby to spôsobilo 30-minútové zdržanie — Peter to ocení viac ako stratu 47 800 EUR. Doménu 'firma-sk.co' po druhom pohľade vidíš — vy ste '.sk', nie '.co'. To je ten varovný signál.`,
     },
   ],
   sources: [

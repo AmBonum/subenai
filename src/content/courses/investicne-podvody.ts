@@ -15,7 +15,7 @@ export const investmentScamsCourse: Course = {
     {
       kind: "intro",
       heading: `Investičný podvod nie je „blbosť pre dôchodcov"`,
-      body: `Krypto a AI-trading scamy sa cielia presne na opačnú demografiu — 25 až 55 rokov, technicky zruční, ale finančne neistí. Ponuka je vždy rovnaká: zaručený výnos, exclusive access, a presvedčivá známa tvár (Elon Musk, Andrej Kiska, Boris Kollár). V skutočnosti ide o profesionálny call-center podvod, ktorý ťa povedie tri týždne za ruku — kým ti účet neobchytí.`,
+      body: `Krypto a AI-trading scamy (podvody) sa cielia na inú demografiu, než by si čakal — 25 až 55 rokov, technicky zruční, ale finančne neistí. Ponuka je vždy rovnaká: zaručený výnos, exkluzívny prístup a presvedčivá známa tvár (Elon Musk, Andrej Kiska, Boris Kollár). V skutočnosti ide o profesionálny podvod riadený z call-centra, ktorý ťa povedie tri týždne za ruku — kým ti účet nevybielia.`,
     },
     {
       kind: "example",
@@ -29,7 +29,7 @@ export const investmentScamsCourse: Course = {
         imageEmoji: "🤖",
         price: "250 €",
       },
-      commentary: `Reklama je deepfake video — Muskov hlas a obraz sú vygenerované AI z verejných videí. Ani Musk, ani žiadna iná známa osobnosť ti nikdy nesľúbi „istý" výnos cez Instagram reklamu. Verifikovaný účet je často kúpený alebo phishnutý.`,
+      commentary: `Reklama je deepfake (umelo vygenerované falošné video či hlas) — Muskov hlas a obraz sú vygenerované AI z verejných videí. Ani Musk, ani žiadna iná známa osobnosť ti nikdy nesľúbi „istý" výnos cez reklamu na Instagrame. Verifikovaný účet je často kúpený alebo získaný phishingom (podvodným vylákaním prihlasovacích či platobných údajov).`,
     },
     {
       kind: "example",
@@ -55,7 +55,7 @@ export const investmentScamsCourse: Course = {
 
 Tvojich 500 EUR sa zmenilo na 30 EUR.`,
       },
-      commentary: `Klasický pump & dump na obskúrnych meme tokenoch. Skupina je real, signály sú real, ale ty si vždy ten posledný. Profesionálni „insideri" zarobia, retail (ty) prerobí. Funguje desaťročia, len páka sa presunula z penny stocks do crypto.`,
+      commentary: `Klasický pump & dump (umelé vyhnanie a následný prepad ceny) na neznámych meme tokenoch. Skupina je skutočná, signály sú skutočné, ale ty si vždy ten posledný. Profesionálni „insideri" zarobia, drobní investori (ty) prerobia. Funguje desaťročia, len sa presunul z lacných akcií do kryptomien.`,
     },
     {
       kind: "example",
@@ -69,7 +69,7 @@ Po 2 dňoch: „Ojoj, trh sa otočil, tvoja pozícia hrozí likvidáciou. Pošli
 
 Po týždni: „Nepodarilo sa zachrániť pozíciu, ale máš nárok na refundáciu — pošli 1 200 EUR daň."`,
       },
-      commentary: `Neexistuje legitímny broker, ktorý ti zavolá cez WhatsApp a tlačí ťa na vyšší vklad. Marek je v call-centre v Albánsku alebo Izraeli, číta skript. „Margin call" a „daň z refundácie" sú farebné variácie na to isté: pošli ešte viac peňazí.`,
+      commentary: `Neexistuje legitímny broker, ktorý ti zavolá cez WhatsApp a tlačí ťa na vyšší vklad. Marek sedí v call-centre v Albánsku alebo Izraeli a číta scenár. „Margin call" (výzva na doplnenie zálohy) a „daň z refundácie" sú len rôzne obmeny toho istého: pošli ešte viac peňazí.`,
     },
     {
       kind: "example",
@@ -90,36 +90,36 @@ Po týždni: „Nepodarilo sa zachrániť pozíciu, ale máš nárok na refundá
         `Osobný account manager ti volá / píše cez WhatsApp / Telegram.`,
         `Tlak zvýšiť vklad, použiť „páku", „nezmeškať okamih".`,
         `Daň / poplatok / refundácia, ktorú musíš zaplatiť skôr ako uvidíš peniaze.`,
-        `Doména .io / .co / .xyz, ktorú nie je v zozname Národnej banky Slovenska.`,
+        `Doména .io / .co / .xyz, ktorá nie je v zozname Národnej banky Slovenska.`,
         `Komunita na Telegrame, kde admin sám nikdy nestratil.`,
         `Dashboard ukazuje úžasné zisky, ale výber sa odkladá.`,
         `Stránka má regulačné čísla, ktoré nesedia s registrom regulátora.`,
-        `Sociálny dôkaz — screenshoty „zákazníkov, ktorí už zarobili 50k EUR".`,
+        `Sociálny dôkaz — snímky obrazovky „zákazníkov, ktorí už zarobili 50-tisíc EUR".`,
       ],
     },
     {
       kind: "do_dont",
-      heading: "Pravidlá, ktoré ťa zachránia pred crypto/AI scamom",
+      heading: "Pravidlá, ktoré ťa zachránia pred krypto/AI podvodom",
       do: [
         `Pred vkladom over brokera v registri NBS (https://www.nbs.sk/sk/dohlad-nad-financnym-trhom/zoznamy).`,
         `Používaj len známe regulované platformy (Interactive Brokers, Trading 212, eToro, XTB).`,
-        `Pri kryptu drž len na známych burzách (Coinbase, Kraken, Binance) a v hardvérovej peňaženke (Ledger, Trezor).`,
+        `Kryptomeny drž len na známych burzách (Coinbase, Kraken, Binance) a v hardvérovej peňaženke (Ledger, Trezor).`,
         `Investuj len sumu, o ktorú si môžeš dovoliť prísť.`,
-        `Ak ťa kontaktuje „osobný broker" — okamžite ukončiť hovor.`,
+        `Ak ťa kontaktuje „osobný broker" — okamžite ukonči hovor.`,
       ],
       dont: [
-        `Neklikať na investičnú reklamu v IG / FB / TikTok feedu.`,
-        `Nezadávať údaje karty na stránku, ktorú odporučil deepfake celebrita.`,
+        `Neklikať na investičnú reklamu v zozname príspevkov na IG / FB / TikTok.`,
+        `Nezadávať údaje karty na stránku, ktorú odporučila deepfake celebrita.`,
         `Neposielať „daň zo zisku" alebo „margin call" vopred.`,
-        `Nedávať vzdialený prístup do PC / banking appky „account managerovi".`,
-        `Nenakupovať shitcoiny na základe Telegram signálov.`,
+        `Nedávať vzdialený prístup do počítača ani do bankovej aplikácie „account managerovi".`,
+        `Nenakupovať bezcenné kryptomeny na základe signálov z Telegramu.`,
       ],
     },
     {
       kind: "scenario",
       heading: "Reálny scenár — utorok večer, scrolluješ Instagram",
       story: `Reklama: krátke video, Boris Kollár hovorí „Pripojil som sa k novej AI-trading platforme, prvý mesiac mi zarobila 18 %. Skúste to aj vy, stačí 250 EUR." Po kliknutí pekná stránka, registrácia, „account manager Tomáš" volá za 30 minút.`,
-      right_action: `Reklamu nahlásiš (Meta umožňuje nahlásiť ako podvod), platformu zatvoríš. Boris Kollár nikdy neodporučí investičnú platformu cez sociálnu sieť — ide o deepfake. Žiadny legitímny broker nezavolá za 30 minút. Vklad nikdy neurobíš.`,
+      right_action: `Reklamu nahlásiš (Meta umožňuje nahlásiť ju ako podvod), platformu zatvoríš. Boris Kollár nikdy neodporučí investičnú platformu cez sociálnu sieť — ide o deepfake. Žiadny legitímny broker nezavolá za 30 minút. Vklad nikdy neurobíš.`,
     },
   ],
   sources: [

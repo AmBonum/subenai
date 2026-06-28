@@ -28,7 +28,7 @@ export function BlogPostCard({ post, variant = "default" }: BlogPostCardProps) {
   const published = formatDateLongSk(post.published_at);
   const card = (
     <Link
-      to="/blog/$slug"
+      to="/academy/$slug"
       params={{ slug: post.slug }}
       className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-foreground/30 hover:shadow-card ${
         pillar ? "ring-1 ring-primary/40" : ""

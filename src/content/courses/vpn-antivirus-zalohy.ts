@@ -14,7 +14,7 @@ export const vpnAntivirusZalohyCourse: Course = {
     {
       kind: "intro",
       heading: "VPN, antivírus a zálohy — fakty namiesto marketingu",
-      body: `VPN, antivírus a zálohy sú tri nástroje, na ktorých marketing minul stovky miliónov eur — a väčšina ľudí napriek tomu nevie, ktorý je kedy užitočný. VPN nie je všeliek („skryje ťa pred hackermi") — primárne mení tvoju geo-polohu a šifruje verejnú wifi. Antivírus v 2026 už nie je Norton 360 z roku 2005 — Windows Defender v základe stačí 80 % užívateľom, platený ESET / Bitdefender pridáva ochranu pred ransomware. Zálohy podľa pravidla 3-2-1 ti zachránia foto archív aj keď ti hardisk umrie, dom vyhorí alebo notebook ukradnú. Tento kurz ti dá jasné odporúčania bez „kúp si všetko" mantry.`,
+      body: `VPN, antivírus a zálohy sú tri nástroje, na ktorých marketing minul stovky miliónov eur — a väčšina ľudí napriek tomu nevie, ktorý je kedy užitočný. VPN nie je všeliek („skryje ťa pred hackermi") — primárne mení tvoju geo-polohu a šifruje verejnú wifi. Antivírus v 2026 už nie je Norton 360 z roku 2005 — Windows Defender v základe stačí 80 % užívateľom, platený ESET / Bitdefender pridáva ochranu pred ransomvérom (vydieračský softvér, ktorý zašifruje súbory). Zálohy podľa pravidla 3-2-1 ti zachránia fotoarchív, aj keď ti pevný disk umrie, dom vyhorí alebo notebook ukradnú. Tento kurz ti dá jasné odporúčania bez mantry „kúp si všetko".`,
     },
     {
       kind: "example",
@@ -44,7 +44,7 @@ export const vpnAntivirusZalohyCourse: Course = {
         label: "Windows Defender vs platený antivírus",
         body: `Windows Defender (zadarmo, v systéme): Zachytí 95 % bežného malware. Pre väčšinu domácich užívateľov stačí.\nESET Smart Security (~40 €/rok): Ransomware protection, banking module, parental controls.\nBitdefender Total Security (~60 €/rok): Pridáva VPN (limit 200 MB/deň), správcu hesiel.\nMac: vstavaný XProtect + Gatekeeper pokryje 99 % prípadov.`,
       },
-      commentary: `Ak máš deti, banking-uješ veľa cez PC, alebo pracuješ s firemnými datami z domu — ESET / Bitdefender stoja za tých 40 € ročne. Inak Windows Defender + zdravý rozum + ad-blocker (uBlock Origin) je vyhovujúci stack.`,
+      commentary: `Ak máš deti, veľa bankuješ cez PC alebo pracuješ s firemnými dátami z domu — ESET / Bitdefender stoja za tých 40 € ročne. Inak Windows Defender + zdravý rozum + ad-blocker (uBlock Origin) je vyhovujúci stack.`,
     },
     {
       kind: "example",
@@ -64,7 +64,7 @@ export const vpnAntivirusZalohyCourse: Course = {
         url: "https://airport-free-wifi.connect/login",
         secure: false,
       },
-      commentary: `Falošná wifi „Airport_Free_Wifi" zriadená útočníkom v letiskovej hale. Prihlasuješ sa cez ich „captive portal" — heslo na e-mail máš ukradnuté. Riešenie: vždy zapni VPN pred pripojením na akúkoľvek nedôverivú wifi. Alebo používaj mobilný hotspot.`,
+      commentary: `Falošná wifi „Airport_Free_Wifi" zriadená útočníkom v letiskovej hale. Prihlasuješ sa cez ich „captive portal" — heslo na e-mail máš ukradnuté. Riešenie: vždy zapni VPN pred pripojením na akúkoľvek nedôveryhodnú wifi. Alebo používaj mobilný hotspot.`,
     },
     {
       kind: "checklist",
@@ -88,7 +88,7 @@ export const vpnAntivirusZalohyCourse: Course = {
         },
         {
           good: true,
-          text: "uBlock Origin v prehliadači — blokuje malvertising a tracking-y, najlepšia bezpečnostná appka zdarma.",
+          text: "uBlock Origin v prehliadači — blokuje malvertising (škodlivá reklama šíriaca malware) a trackery, najlepšia bezpečnostná appka zdarma.",
         },
         {
           good: false,
@@ -104,11 +104,11 @@ export const vpnAntivirusZalohyCourse: Course = {
       kind: "redflags",
       heading: "Marketingové bludy o bezpečnostných produktoch",
       flags: [
-        `„VPN ťa ochráni pred hackermi" — nie, šifruje len sieťovú vrstvu, neochráni pred phishingom ani malware.`,
+        `„VPN ťa ochráni pred hackermi" — nie, šifruje len sieťovú vrstvu, neochráni pred phishingom (podvodné vylákanie prihlasovacích či platobných údajov) ani malvérom (škodlivý softvér).`,
         `„Náš antivírus má 99,9 % detekciu" — všetky komerčné antivírusy majú podobné výsledky (AV-Test).`,
         `„Bezplatný VPN, žiadne logy" — bezplatný VPN predáva tvoje dáta, alebo má závažné limity. Mullvad / Proton sú platené z dôvodu.`,
         `„Náš cloud má AI ochranu pred ransomware" — marketing. Skutočná ochrana je verzionovanie + offline záloha.`,
-        `„Heslo je dnes mŕtve, kúp si naše riešenie" — heslá + 2FA + správca hesiel je stále zlatý štandard.`,
+        `„Heslo je dnes mŕtve, kúp si naše riešenie" — heslá + 2FA (dvojfaktorové overenie) + správca hesiel sú stále zlatý štandard.`,
         `„Bez nášho antivírusu Mac dostane vírus" — Mac dostáva malware, ale väčšinou cez phishing, nie cez tradičný vírus.`,
       ],
     },
@@ -116,7 +116,7 @@ export const vpnAntivirusZalohyCourse: Course = {
       kind: "do_dont",
       heading: "Senior level pravidlá pre 2026",
       do: [
-        `Začni so záloha 3-2-1 — bezpečnostne najdôležitejší krok, lebo chráni pred ransomware aj hardvérovým zlyhaním.`,
+        `Začni so zálohou 3-2-1 — bezpečnostne najdôležitejší krok, lebo chráni pred ransomvérom aj hardvérovým zlyhaním.`,
         `Pre cestovanie / verejnú wifi: ProtonVPN alebo Mullvad, ideálne kill-switch zapnutý.`,
         `Aktualizuj OS aj appky automaticky — staré verzie sú najčastejší vektor útoku.`,
         `Pre banking PC: ESET / Bitdefender + samostatný prehliadač len pre banku (Brave / Firefox bez rozšírení).`,
@@ -132,7 +132,7 @@ export const vpnAntivirusZalohyCourse: Course = {
       kind: "scenario",
       heading: "Reálny scenár — ransomware napadol rodinný počítač",
       story: `Spustíš PC v sobotu ráno. Obrazovka: „Vaše súbory sú zašifrované. Pošlite 0,03 BTC (~1 800 €) na túto adresu do 72 hodín, inak ich navždy stratíte." Všetky fotky z 10 rokov, daňové priznania, dokumenty — všetko nečitateľné. Antivírus zlyhal.`,
-      right_action: `NEPLATÍŠ. Polovica obetí, ktoré zaplatia, dáta späť nedostanú. Odpojíš PC od siete (vytiahneš ethernet, vypneš wifi). Hlásiš na SK-CERT (incident@sk-cert.sk). Z externého disku alebo cloud zálohy obnovíš dáta na nový / preinštalovaný systém. Pre budúcnosť: pravidlo 3-2-1 by ti tento útok stalo 30 minút reinštalu namiesto 1 800 € a možnej straty. Toto je hlavný dôvod, prečo má každý mať zálohu mimo domu.`,
+      right_action: `NEPLATÍŠ. Polovica obetí, ktoré zaplatia, dáta späť nedostanú. Odpojíš PC od siete (vytiahneš ethernet, vypneš wifi). Hlásiš na SK-CERT (incident@sk-cert.sk). Z externého disku alebo cloud zálohy obnovíš dáta na nový / preinštalovaný systém. Pre budúcnosť: s pravidlom 3-2-1 by ťa tento útok stál 30 minút reinštalácie namiesto 1 800 € a možnej straty. Toto je hlavný dôvod, prečo má každý mať zálohu mimo domu.`,
     },
   ],
   sources: [

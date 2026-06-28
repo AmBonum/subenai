@@ -101,7 +101,7 @@ function WeakCategoryRow({ category, score }: { category: QuizCategory; score: n
       <div className="mt-3 grid gap-3 md:grid-cols-2">
         {course && (
           <Link
-            to="/courses/$slug"
+            to="/academy/$slug"
             params={{ slug: course.slug }}
             className="group flex items-start gap-3 rounded-lg border border-success/30 bg-success/5 p-3 transition-colors hover:border-success/60 hover:bg-success/10"
             data-testid={`results-weak-recs-course-${category}`}
@@ -127,7 +127,7 @@ function WeakCategoryRow({ category, score }: { category: QuizCategory; score: n
 
         {pillar && (
           <Link
-            to="/blog/$slug"
+            to="/academy/$slug"
             params={{ slug: pillar.slug }}
             className="group flex items-start gap-3 rounded-lg border border-primary/30 bg-primary/5 p-3 transition-colors hover:border-primary/60 hover:bg-primary/10"
             data-testid={`results-weak-recs-article-${category}`}

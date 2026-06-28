@@ -16,7 +16,7 @@ export const marketplaceCourse: Course = {
     {
       kind: "intro",
       heading: "Bazoš a Facebook Marketplace ako lovisko",
-      body: `Slovenský trh ovládajú dve platformy: Bazoš a FB Marketplace. Obe majú minimálnu moderáciu, takže útočník vytvorí účet za 5 minút a má tisíce potenciálnych obetí. Schémy sú dvojaké — buď ako „predávajúci" (vyláka ti zálohu), alebo ako „kupec" (vyláka ti údaje karty cez fake platobnú stránku).`,
+      body: `Slovenský trh ovládajú dve platformy: Bazoš a FB Marketplace. Obe majú minimálnu moderáciu, takže útočník si vytvorí účet za 5 minút a má tisíce potenciálnych obetí. Schémy sú dvojaké — útočník buď vystupuje ako „predávajúci" (vyláka ti zálohu), alebo ako „kupec" (vyláka ti údaje karty cez falošnú platobnú stránku).`,
     },
     {
       kind: "example",
@@ -30,7 +30,7 @@ export const marketplaceCourse: Course = {
         description: `Súrne predám, sťahujem sa do Nemecka. Auto je v perfektnom stave, prvý majiteľ. Posielam fotky aj papiere na WhatsApp. Záujemca pošle 1 000 € zálohu, dovoz a obhliadka v Bratislave do 3 dní.`,
         imageEmoji: "🚗",
       },
-      commentary: `BMW 2018 s 90 tis. km má reálnu cenu 18-22 tisíc EUR. „Polovica" + „súrne" + „sťahujem sa" je kombinácia, ktorá NIKDY nie je pravda. Po zálohe auto nepríde, telefón prestane fungovať.`,
+      commentary: `BMW z roku 2018 s 90 tis. km má reálnu cenu 18 – 22 tisíc EUR. „Polovica" + „súrne" + „sťahujem sa" je kombinácia, ktorá NIKDY nie je pravdivá. Po zálohe auto nepríde a telefón prestane fungovať.`,
     },
     {
       kind: "example",
@@ -44,7 +44,7 @@ export const marketplaceCourse: Course = {
         description: `Pekný 2-izbový byt v centre. Som teraz v zahraničí, kľúče pošlem kuriérom po prijatí depozitu 500 €. Komunikácia cez WhatsApp / e-mail.`,
         imageEmoji: "🏢",
       },
-      commentary: `Trhová cena 2-izbáku v Starom Meste je 700-1 200 € + energie. „Som v zahraničí, kľúče cez kuriéra po depozite" je nikdy reálne. Vždy si byt obhliadni osobne pred akoukoľvek platbou.`,
+      commentary: `Trhová cena 2-izbového bytu v Starom Meste je 700 – 1 200 € + energie. „Som v zahraničí, kľúče cez kuriéra po depozite" nie je nikdy reálne. Vždy si byt obhliadni osobne pred akoukoľvek platbou.`,
     },
     {
       kind: "example",
@@ -58,7 +58,7 @@ Ty: dostaneš link stripe-payment-iban.com — vyzerá ako Stripe.
 
 Po vyplnení čísla karty + CVV a OTP — kupec zmizne, z karty sa stráca 850 €.`,
       },
-      commentary: `Stripe / PayPal nikdy nedávajú zaplatiť „cez link, kde vyplníš svoje údaje" — naopak, ty ich dostaneš na svoj účet. Útočník ťa cez fake platobnú bránu donúti zadať údaje, ktoré okamžite použije.`,
+      commentary: `Stripe ani PayPal ti nikdy nedajú zaplatiť „cez odkaz, kde vyplníš svoje údaje" — naopak, peniaze dostaneš ty na svoj účet. Útočník ťa cez falošnú platobnú bránu donúti zadať údaje, ktoré okamžite zneužije.`,
     },
     {
       kind: "example",
@@ -71,7 +71,7 @@ Po vyplnení čísla karty + CVV a OTP — kupec zmizne, z karty sa stráca 850 
 3. Hovorí: „Ach, omylom som pridal nulu, pošli mi 1 800 € späť, prosím."
 4. Pošleš mu 1 800 € — z tvojich peňazí. Prevod na 2 000 € nikdy nedorazí.`,
       },
-      commentary: `Klasická schéma „chargeback" alebo „fake transfer". Skutočný príchod sleduj VÝLUČNE v internet bankingu (nie zo screenshotu od kupca). Nikdy nepošli „vrátenie" predtým, než suma reálne dorazí na účet.`,
+      commentary: `Klasická schéma „chargeback" (spätné stiahnutie platby) alebo „falošný prevod". Skutočný príchod peňazí sleduj VÝLUČNE v internetbankingu (nie zo snímky obrazovky od kupca). Nikdy nepošli „vrátenie" peňazí skôr, než suma reálne dorazí na účet.`,
     },
     {
       kind: "redflags",
@@ -81,8 +81,8 @@ Po vyplnení čísla karty + CVV a OTP — kupec zmizne, z karty sa stráca 850 
         `Predávajúci „je v zahraničí, dovoz cez kuriéra po zálohe".`,
         `Komunikácia mimo platformy (WhatsApp, Telegram, Signal).`,
         `Naliehanie na rýchlu platbu („mám iného záujemcu").`,
-        `„Kupec" pošle ti link na zaplatenie (Stripe, PayPal) — opak je norma.`,
-        `Inzerát má fotku z internetu (reverse image search ti to ukáže).`,
+        `„Kupec" ti pošle odkaz na zaplatenie (Stripe, PayPal) — pritom norma je opačná.`,
+        `Inzerát má fotku z internetu (odhalí to spätné vyhľadávanie obrázka).`,
         `Profil predávajúceho je nový, bez histórie a recenzií.`,
         `Žiadosť o zálohu vopred bez možnosti obhliadky.`,
       ],
@@ -92,7 +92,10 @@ Po vyplnení čísla karty + CVV a OTP — kupec zmizne, z karty sa stráca 850 
       heading: "Pravidlá pre kupujúceho",
       items: [
         { good: true, text: `Vec si vždy obhliadni osobne pred akoukoľvek platbou.` },
-        { good: true, text: `Auto pred kúpou skontroluj cez OEAVK / cez servisné číslo.` },
+        {
+          good: true,
+          text: `Auto pred kúpou skontroluj cez kontrolu VIN (číslo karosérie) a servisnú históriu.`,
+        },
         {
           good: true,
           text: `Nájom bytu — fyzická prehliadka, nájomná zmluva pred prevodom depozitu.`,
@@ -113,9 +116,12 @@ Po vyplnení čísla karty + CVV a OTP — kupec zmizne, z karty sa stráca 850 
           good: true,
           text: `Platba pri preberaní (cash) alebo overený prevod priamo na tvoj účet.`,
         },
-        { good: true, text: `Kontrola príchodu sumy v internet bankingu — nie zo screenshotu.` },
+        {
+          good: true,
+          text: `Kontrola príchodu sumy v internetbankingu — nie zo snímky obrazovky.`,
+        },
         { good: true, text: `Pri vyšších sumách — overenie totožnosti kupujúceho cez OP.` },
-        { good: false, text: `„Stripe / PayPal link" od kupca — to nie je tvoj inkasný flow.` },
+        { good: false, text: `„Odkaz na Stripe / PayPal" od kupca — takto inkaso neprebieha.` },
         {
           good: false,
           text: `„Pošli mi naspäť, omylom som dal viac" — pred reálnym príchodom sumy.`,
@@ -127,23 +133,23 @@ Po vyplnení čísla karty + CVV a OTP — kupec zmizne, z karty sa stráca 850 
       kind: "do_dont",
       heading: "Pravidlá pre obe strany",
       do: [
-        `Pri pochybnostiach radšej obchod nezavrieť, než stratiť peniaze.`,
+        `Pri pochybnostiach radšej od obchodu odstúpiť, než stratiť peniaze.`,
         `Verejné miesto na stretnutie (parkovisko OC, polícia ako miesto výmeny).`,
         `Nahlásiť podvodný inzerát platforme (Bazoš → Nahlásiť).`,
-        `Pri investíciách nad 1 000 € — vždy zmluva, kúpno-predajná dohoda.`,
+        `Pri obchodoch nad 1 000 € — vždy zmluva, kúpno-predajná zmluva.`,
       ],
       dont: [
-        `Neposielať zálohu cez kryptomeny (nezvratné).`,
-        `Neposielať údaje karty / OTP / CVV nikomu, ani „kupcovi".`,
-        `Neveriť screenshotom prevodov — len reálnemu príchodu na účet.`,
-        `Nedávať OP / pas v plnom rozlíšení neznámym (kradnú identitu).`,
+        `Neposielať zálohu cez kryptomeny (je to nezvratné).`,
+        `Neposielať údaje karty, OTP (jednorazový overovací kód) ani CVV nikomu, ani „kupcovi".`,
+        `Neveriť snímkam obrazovky o prevodoch — len reálnemu príchodu na účet.`,
+        `Nedávať OP ani pas v plnom rozlíšení neznámym (kradnú identitu).`,
       ],
     },
     {
       kind: "scenario",
       heading: "Reálny scenár — predávaš telefón na FB Marketplace",
       story: `Pýta sa „Maťo z Košíc": „Ahoj, mám záujem, ale neviem prísť. Môžem zaplatiť cez Stripe? Pošlem ti link, kde vyplníš údaje karty a peniaze ti prídu."`,
-      right_action: `Odpovieš: „Stripe takto nefunguje, peniaze ti prídu cez bežný prevod alebo cash pri preberaní. Ak chceš, môžeme stretnúť, alebo posielam tovar po príchode peňazí na účet." Ak protestuje — končíš konverzáciu.`,
+      right_action: `Odpovieš: „Stripe takto nefunguje, peniaze ti prídu cez bežný prevod alebo v hotovosti pri preberaní. Ak chceš, môžeme sa stretnúť, alebo ti tovar pošlem po príchode peňazí na účet." Ak protestuje — ukončíš konverzáciu.`,
     },
   ],
   sources: [

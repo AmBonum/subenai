@@ -12,7 +12,7 @@ function RelatedCourseCta({ category }: { category: Category }) {
   if (!course) return null;
   return (
     <Link
-      to="/courses/$slug"
+      to="/academy/$slug"
       params={{ slug: course.slug }}
       className="mt-4 inline-flex items-center gap-2 rounded-xl border-2 border-border bg-card/50 px-4 py-2 text-sm font-medium text-foreground transition hover:border-primary/60 hover:bg-card"
     >

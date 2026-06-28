@@ -235,8 +235,8 @@ test.describe("/app/insights?tab=recommendations", () => {
     });
   });
 
-  // TC-06: "Pozri kurz" CTA links to /courses/$slug when training has a slug.
-  test("TC-06: 'Pozri kurz' CTA href points to /courses/{slug}", async ({ page }) => {
+  // TC-06: "Pozri kurz" CTA links to /academy/$slug when training has a slug.
+  test("TC-06: 'Pozri kurz' CTA href points to /academy/{slug}", async ({ page }) => {
     const row = makeRecommendationRow();
     await setupEducator(page.context(), page, {
       tables: { course_recommendations: [row] },
@@ -251,7 +251,7 @@ test.describe("/app/insights?tab=recommendations", () => {
     await test.step("Verify the 'Pozri kurz' CTA has the correct href", async () => {
       await expect(insights.recommendationsCardViewCta(row.id as string)).toHaveAttribute(
         "href",
-        "/courses/kriticke-myslenie-zaklady",
+        "/academy/kriticke-myslenie-zaklady",
       );
     });
   });

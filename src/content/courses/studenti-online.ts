@@ -15,7 +15,7 @@ export const studentiOnlineCourse: Course = {
     {
       kind: "intro",
       heading: "Internet safety pre študentov — riziká, ktoré rodičia nevidia",
-      body: `Internet safety pre študentov v 2026 už nie je o „nezverejňuj telefónne číslo". Útočníci sa dnes presunuli tam, kde sú študenti reálne — Discord servery, Steam trade, Telegram skupiny s brigádami, kryptozarábanie cez Pump.fun. Falošná „brigáda za 2 000 € týždenne z domu" v Telegrame je v 90 % prípadov muling — pereš špinavé peniaze cez svoj účet a do roka máš trestné stíhanie. Steam Item scam ti za 5 minút berie 800 € inventár, ktorý si si budoval roky. Tento kurz ti ukáže 5 najčastejších pascí pre študentov a ako ich obísť bez paranoie.`,
+      body: `Internet safety (online bezpečnosť) pre študentov v 2026 už nie je o „nezverejňuj telefónne číslo". Útočníci sa dnes presunuli tam, kde sú študenti reálne — Discord servery, Steam trade, Telegram skupiny s brigádami, kryptozarábanie cez Pump.fun. Falošná „brigáda za 2 000 € týždenne z domu" v Telegrame je v 90 % prípadov muling (pranie cudzích peňazí cez tvoj účet) — pereš špinavé peniaze cez svoj účet a do roka máš trestné stíhanie. Steam item scam (podvod) ti za 5 minút berie 800 € inventár, ktorý si si budoval roky. Tento kurz ti ukáže 5 najčastejších pascí pre študentov a ako ich obísť bez paranoje.`,
     },
     {
       kind: "example",
@@ -25,7 +25,7 @@ export const studentiOnlineCourse: Course = {
         label: "Telegram skupina @brigady_sk_2026",
         body: `🔥 BRIGÁDA Z DOMU 🔥 2 000 € týždenne, 1–2 hodiny denne, len treba slovenský bankový účet. Posielame ti peniaze, ty ich rozdeľuješ klientom podľa inštrukcií, necháš si 5 % províziu. Pre VŠ aj SŠ, hneď začať. Napíš @lukas_hr_manager`,
       },
-      commentary: `Klasický money muling — pereš výnosy z phishingu, romance scamov a krypto podvodov cez svoj účet. Po 6 mesiacoch ti banka zablokuje účet a polícia ti zaklope. Trest za pranie peňazí: 4–10 rokov.`,
+      commentary: `Klasický money muling — pereš výnosy z phishingu (podvodné vylákanie prihlasovacích či platobných údajov), romance scamov (podvod cez predstieraný ľúbostný vzťah) a krypto podvodov cez svoj účet. Po 6 mesiacoch ti banka zablokuje účet a polícia ti zaklope. Trest za pranie peňazí: 4–10 rokov.`,
     },
     {
       kind: "example",
@@ -44,7 +44,7 @@ export const studentiOnlineCourse: Course = {
         label: `Steam chat — „obchodník" s CS:GO knife`,
         body: `Predám AWP Dragon Lore za 280 € (cena na Steam Market 410 €). Použijeme dôveryhodného middlemana — môj kamarát Steam moderátor, jeho profil: steamcommunity.com.trade-secure.net/profile/xyz`,
       },
-      commentary: `Steam neexistujú „middleman moderátori". Doména steamcommunity.com.trade-secure.net je phishing — skutočná je len steamcommunity.com. Cieľ: zobrať ti účet aj s celým inventárom (často hodnota 500–5 000 €).`,
+      commentary: `Na Steame neexistujú „middleman moderátori". Doména steamcommunity.com.trade-secure.net je phishing — skutočná je len steamcommunity.com. Cieľ: zobrať ti účet aj s celým inventárom (často hodnota 500–5 000 €).`,
     },
     {
       kind: "example",
@@ -56,7 +56,7 @@ export const studentiOnlineCourse: Course = {
         body: `Hľadám 3 študentov pre 1:1 mentoring. Naučím ťa zarábať 800–1 200 € týždenne pasívne. Začiatočný vklad len 200 €. Reagujem na DM 🚀`,
         cta: "Poslať správu",
       },
-      commentary: `Pig-butchering pre študentov. „Mentor" 2 týždne učí, ukazuje falošné zisky na svojej platforme, ty doplníš 200 €, vidíš „zisk", pridáš 800 €, doplníš celé úspory — všetko zmizne v deň výberu.`,
+      commentary: `Pig butchering (dlhodobý investičný podvod budovaný cez vzťah) pre študentov. „Mentor" 2 týždne učí, ukazuje falošné zisky na svojej platforme, ty doplníš 200 €, vidíš „zisk", pridáš 800 €, doplníš celé úspory — všetko zmizne v deň výberu.`,
     },
     {
       kind: "checklist",
@@ -64,7 +64,7 @@ export const studentiOnlineCourse: Course = {
       items: [
         {
           good: true,
-          text: "2FA na Discord, Steam, Instagram, school email — všetky cez authenticator (Google / Microsoft Authenticator).",
+          text: "2FA (dvojfaktorové overenie) na Discord, Steam, Instagram, školský e-mail — všetky cez authenticator (Google / Microsoft Authenticator).",
         },
         {
           good: true,
@@ -88,7 +88,7 @@ export const studentiOnlineCourse: Course = {
         },
         {
           good: false,
-          text: `Posielanie kopie OP / pasu na „overenie" niekomu z chat appky, koho nepoznáš osobne.`,
+          text: `Posielanie kópie OP / pasu na „overenie" niekomu z chat appky, koho nepoznáš osobne.`,
         },
       ],
     },
@@ -115,8 +115,8 @@ export const studentiOnlineCourse: Course = {
         `Vždy over linky cez ručné zadanie do prehliadača — discord.com, steamcommunity.com.`,
       ],
       dont: [
-        `Nikdy nepožičiavaj svoj bankový účet kamarátovi / „brigáde" / Telegram skupine. Stávaš sa mula.`,
-        `Nedávaj na verejné fórum (Reddit, Discord) tvoj e-mail z VŠ — útočník si rýchlo nájde meno + heslo z únikov.`,
+        `Nikdy nepožičiavaj svoj bankový účet kamarátovi / „brigáde" / Telegram skupine. Stávaš sa mulou.`,
+        `Nedávaj na verejné fórum (Reddit, Discord) svoj e-mail z VŠ — útočník si rýchlo nájde meno + heslo z únikov.`,
         `Neotváraj prílohy z e-mailov, ktoré sa tvária ako „Vaše skúškové potvrdenie" mimo školského systému.`,
         `Nedôveruj žiadnemu „mentorovi", ktorý sám priznáva, že nemá overiteľnú prácu mimo Instagramu.`,
       ],

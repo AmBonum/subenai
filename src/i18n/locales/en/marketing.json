@@ -40,15 +40,9 @@
         "panel_link_sablony": "Test templates",
         "panel_featured": "New questions this month →"
       },
-      "skolenia": {
-        "label": "Courses",
-        "desc": "Free short courses — phishing, smishing, BEC. Slovak scenarios, no jargon.",
-        "panel_section_kurzy": "Courses",
-        "panel_link_all": "All courses",
-        "panel_link_email_phishing": "Email phishing",
-        "panel_link_sms_smishing": "SMS smishing",
-        "panel_link_vishing": "Vishing",
-        "panel_featured": "For schools & HR"
+      "akademia": {
+        "label": "Academy",
+        "desc": "Interactive courses and articles on scams — learn to spot them on real examples."
       },
       "pre_skoly": {
         "label": "For educators",

@@ -75,7 +75,7 @@ describe("CoursesFaqSection — E26 senior upgrade", () => {
   it("renders rescue footer with /blog + /contact CTAs", () => {
     render(<CoursesFaqSection />);
     expect(screen.getByTestId("courses-faq-footer")).toHaveTextContent(/Nenašiel si odpoveď/);
-    expect(screen.getByTestId("courses-faq-footer-cta-blog")).toHaveAttribute("href", "/blog");
+    expect(screen.getByTestId("courses-faq-footer-cta-blog")).toHaveAttribute("href", "/academy");
     expect(screen.getByTestId("courses-faq-footer-cta-contact")).toHaveAttribute(
       "href",
       "/contact",

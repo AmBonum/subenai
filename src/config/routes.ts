@@ -27,8 +27,15 @@ export const ROUTES = {
   zostavaVysledky: "/test/builder/$id/results",
   sablony: "/sablony",
   skoly: "/schools",
-  skolenia: "/courses",
-  skoleniaSlug: "/courses/$slug",
+  // E55 — /courses + /blog unified into /academy. These keys are kept as
+  // aliases (callsites untouched) and now point at the academy hub. 301
+  // redirects in public/_redirects preserve inbound link equity.
+  academy: "/academy",
+  academySlug: "/academy/$slug",
+  /** @deprecated E55 — courses merged into the academy; use `academy` */
+  skolenia: "/academy",
+  /** @deprecated E55 — course detail is now an academy lesson; use `academySlug` */
+  skoleniaSlug: "/academy/$slug",
   podpora: "/support",
   sponzori: "/sponsors",
   /** @deprecated M3 — /sponsors/all merged into /sponsors; use `sponzori` */
@@ -40,5 +47,6 @@ export const ROUTES = {
   zmeny: "/changelog",
   contact: "/contact",
   contactForm: "/contact-form",
-  blog: "/blog",
+  /** @deprecated E55 — blog merged into the academy; use `academy` */
+  blog: "/academy",
 } as const;

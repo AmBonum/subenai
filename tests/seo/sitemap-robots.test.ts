@@ -54,14 +54,14 @@ describe("AH-9.9 sitemap.xml", () => {
     expect(xml).toContain("https://subenai.sk/about");
   });
 
-  it("includes the blog index", () => {
-    expect(xml).toContain("https://subenai.sk/blog");
+  it("includes the academy index", () => {
+    expect(xml).toContain("https://subenai.sk/academy</loc>");
   });
 
-  it("includes blog category archive pages", () => {
-    expect(xml).toContain("https://subenai.sk/blog/kategoria/phishing-a-emaily");
-    expect(xml).toContain("https://subenai.sk/blog/kategoria/ai-scamy");
-    expect(xml).toContain("https://subenai.sk/blog/kategoria/studenti");
+  it("includes academy category archive pages", () => {
+    expect(xml).toContain("https://subenai.sk/academy/category/phishing-a-emaily");
+    expect(xml).toContain("https://subenai.sk/academy/category/ai-scamy");
+    expect(xml).toContain("https://subenai.sk/academy/category/studenti");
   });
 });
 

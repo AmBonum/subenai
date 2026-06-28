@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>subenai akadémia</title>
+    <link>https://subenai.sk/academy</link>
+    <description>Akadémia o internetových podvodoch — kurzy a články o digitálnej bezpečnosti pre slovenských čitateľov.</description>
+    <language>sk-SK</language>
+    <copyright>© 2026 subenai</copyright>
+    <lastBuildDate>Sun, 28 Jun 2026 13:02:12 GMT</lastBuildDate>
+    <atom:link href="https://subenai.sk/academy/rss.xml" rel="self" type="application/rss+xml" />
+
+  </channel>
+</rss>

@@ -28,10 +28,10 @@ const COLUMN_DEFS: FooterColumnDef[] = [
     links: [
       { to: ROUTES.test, labelKey: "columns.obsah.links.test", slug: "test" },
       { to: ROUTES.testy, labelKey: "columns.obsah.links.testy", slug: "testy" },
-      { to: ROUTES.skolenia, labelKey: "columns.obsah.links.skolenia", slug: "skolenia" },
+      // E55 — /courses + /blog unified into the academy hub (single link).
+      { to: ROUTES.academy, labelKey: "columns.obsah.links.blog", slug: "academy" },
       { to: ROUTES.sablony, labelKey: "columns.obsah.links.sablony", slug: "sablony" },
       { to: ROUTES.skoly, labelKey: "columns.obsah.links.skoly", slug: "skoly" },
-      { to: ROUTES.blog, labelKey: "columns.obsah.links.blog", slug: "blog" },
     ],
   },
   {

@@ -67,7 +67,7 @@ describe("RelatedAcademyArticleCard", () => {
     );
   });
 
-  it("CTA links to /blog/$slug with the related article slug", () => {
+  it("CTA links to /academy/$slug with the related article slug", () => {
     useBlogPostByRelatedCourse.mockReturnValue({
       data: PILLAR_PHISHING,
       isLoading: false,
@@ -76,7 +76,7 @@ describe("RelatedAcademyArticleCard", () => {
     render(<RelatedAcademyArticleCard courseSlug="email-phishing" />);
     expect(screen.getByTestId("course-related-academy-cta")).toHaveAttribute(
       "data-to",
-      "/blog/$slug",
+      "/academy/$slug",
     );
   });
 

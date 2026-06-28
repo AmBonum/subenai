@@ -1,5 +1,15 @@
-/kurzy /courses 301
-/kurzy/* /courses/:splat 301
+# E55 — /courses + /blog unified into /academy. Order matters: the more
+# specific category/author paths MUST precede the bare wildcard so they
+# aren't shadowed. /kurzy + /skolenia (legacy Slovak) chain straight to
+# /academy (no double hop via /courses).
+/blog/kategoria/* /academy/category/:splat 301
+/blog/autor/* /academy/author/:splat 301
+/blog /academy 301
+/blog/* /academy/:splat 301
+/courses /academy 301
+/courses/* /academy/:splat 301
+/kurzy /academy 301
+/kurzy/* /academy/:splat 301
 /test/firma /tests 301
 /test/firma/* /tests/:splat 301
 /testy /tests 301
@@ -15,8 +25,8 @@
 /kontakt/ticket/:id /contact-form/ticket/:id 301
 /skoly /schools 301
 /o-projekte /about 301
-/skolenia /courses 301
-/skolenia/* /courses/:splat 301
+/skolenia /academy 301
+/skolenia/* /academy/:splat 301
 
 # E33 — composer rebrand: /test/zostav → /test/builder (English URL).
 # More-specific results route MUST come BEFORE the wildcard so it

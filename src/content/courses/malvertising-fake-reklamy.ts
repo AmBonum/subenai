@@ -16,7 +16,7 @@ export const malvertisingCourse: Course = {
     {
       kind: "intro",
       heading: "Reklamy na prvom mieste nie sú automaticky dôveryhodné",
-      body: `Kedy naposledy si hľadal prihlásenie do internet bankingu cez Google? Väčšina ľudí to robí bežne. Útočníci to vedia — a platia Google Ads za to, aby ich falošná stránka bola na prvom mieste vo výsledkoch vyhľadávania. Tento útok sa volá malvertising (malicious advertising). Výsledok vyzerá legitímne: správny názov banky, zelené písmo domény... kým sa nepozrieš pozorne. Podľa ENISA a Europolu sa malvertising v rokoch 2024–2025 stal jedným z najrýchlejšie rastúcich vektorov bankového phishingu v EÚ.`,
+      body: `Kedy naposledy si hľadal prihlásenie do internetbankingu cez Google? Väčšina ľudí to robí bežne. Útočníci to vedia — a platia za reklamu v Google Ads, aby ich falošná stránka bola na prvom mieste vo výsledkoch vyhľadávania. Tento útok sa volá malvertising (škodlivá reklama šíriaca malware). Výsledok vyzerá legitímne: správny názov banky, zelené písmo domény... kým sa nepozrieš pozorne. Podľa ENISA a Europolu sa malvertising v rokoch 2024 – 2025 stal jedným z najrýchlejšie rastúcich vektorov bankového phishingu (podvodného vylákania prihlasovacích či platobných údajov) v EÚ.`,
     },
     {
       kind: "example",
@@ -26,7 +26,7 @@ export const malvertisingCourse: Course = {
         url: "https://tatrabanka-prihlasenie.sk/login",
         secure: true,
       },
-      commentary: `Útočník zaplatil za Google reklamu s názvom „Tatra Banka — Internetové bankovníctvo". Doména je tatrabanka-prihlasenie.sk — nie tatrabanka.sk. Pravá Tatra banka je na elektronickebankovnictvo.tatrabanka.sk alebo tb.tatrabanka.sk. Pomlčka v doméne je pri bankách takmer vždy falošná.`,
+      commentary: `Útočník zaplatil za reklamu v Google s názvom „Tatra Banka — Internetové bankovníctvo". Doména je tatrabanka-prihlasenie.sk — nie tatrabanka.sk. Pravá Tatra banka je na adrese elektronickebankovnictvo.tatrabanka.sk alebo tb.tatrabanka.sk. Pomlčka v doméne je pri bankách takmer vždy znakom podvodu.`,
     },
     {
       kind: "example",
@@ -36,7 +36,7 @@ export const malvertisingCourse: Course = {
         url: "https://vub-banking.online/prihlasenie",
         secure: true,
       },
-      commentary: `VÚB má doménu vub.sk — nie vub-banking.online. Táto reklama sa objavila na vrchole Google výsledkov pri hľadaní „vúb internet banking prihlásenie". HTTPS (zelený zámok) neznamená, že stránka je bezpečná — iba že spojenie je šifrované. Certifikát si môže vziať ktokoľvek vrátane podvodníkov.`,
+      commentary: `VÚB má doménu vub.sk — nie vub-banking.online. Táto reklama sa objavila na vrchole výsledkov Google pri hľadaní „vúb internet banking prihlásenie". HTTPS (zelený zámok) neznamená, že stránka je bezpečná — iba že spojenie je šifrované. Certifikát si môže zaobstarať ktokoľvek vrátane podvodníkov.`,
     },
     {
       kind: "example",
@@ -49,7 +49,7 @@ export const malvertisingCourse: Course = {
         cta: "Registrovať sa",
         imageEmoji: "💰",
       },
-      commentary: `SLSP (ani žiadna slovenská banka) neotvorila krypto portál s garantovanými výnosmi — to je zákonom zakázané. Inzerát na Instagrame, neoverený účet, jazykový vzor „exkluzívne + obmedzený počet" = scam. Garantovaný výnos v investíciách neexistuje — za akékoľvek garantovanie sa udeľujú pokuty od NBS.`,
+      commentary: `SLSP (ani žiadna slovenská banka) neotvorila krypto portál s garantovanými výnosmi — to je zákonom zakázané. Inzerát na Instagrame, neoverený účet, jazykový vzorec „exkluzívne + obmedzený počet" = scam (podvod). Garantovaný výnos v investíciách neexistuje — za akékoľvek garantovanie udeľuje NBS pokuty.`,
     },
     {
       kind: "example",
@@ -99,8 +99,8 @@ export const malvertisingCourse: Course = {
         `Doména obsahuje pomlčky, nadbytočné slová (prihlasenie, secure, banking, login) za názvom banky.`,
         `HTTPS zámok je prítomný, ale doména nepatrí inštitúcii — certifikát si môže vziať ktokoľvek.`,
         `Investičná reklama od „banky" na sociálnej sieti sľubuje garantovaný výnos alebo exkluzívnu ponuku.`,
-        `Prihlasovací formulár ťa žiada o celé heslo + OTP naraz (banka ich nikdy nepýta súčasne).`,
-        `Stránka pôsobí identicky s originálom, ale URL nič nesedí (falošné, pixel-perfect kópie sú bežné).`,
+        `Prihlasovací formulár ťa žiada o celé heslo a OTP (jednorazový overovací kód) naraz (banka ich nikdy nepýta súčasne).`,
+        `Stránka pôsobí identicky s originálom, ale URL nesedí (falošné, dokonalé kópie sú bežné).`,
       ],
     },
     {
@@ -124,7 +124,7 @@ export const malvertisingCourse: Course = {
       kind: "scenario",
       heading: "Pondelkové ráno — potrebuješ urgentne zaplatiť faktúru",
       story: `Je 8:15, sedíš v aute a potrebuješ zaplatiť faktúru do 9:00. Otvoríš Chrome, napíšeš „tatra banka prihlasenie" — prvý výsledok hovorí „Tatra Banka — Internetové bankovníctvo" so zelenou doménou. Klikneš, prihlasovací formulár vyzerá identicky ako vždy. Zadáš meno a heslo...`,
-      right_action: `Zastaneš pri URL: tatrabanka-online.sk namiesto tatrabanka.sk. Zavrieš tab. Otvoríš záložku, ktorú máš uloženú ako „Tatra banka". Zaplatíš faktúru. Neskôr nahlásiš podvodnú reklamu Googlu. Útočník mal falošnú stránku nahorenú len 6 hodín, kým ju Google vymazal — no stihol zachytiť stovky prihlásení.`,
+      right_action: `Zastaneš pri URL: tatrabanka-online.sk namiesto tatrabanka.sk. Zatvoríš kartu. Otvoríš záložku, ktorú máš uloženú ako „Tatra banka". Zaplatíš faktúru. Neskôr nahlásiš podvodnú reklamu Googlu. Útočník mal falošnú stránku spustenú len 6 hodín, kým ju Google odstránil — no stihol zachytiť stovky prihlásení.`,
     },
   ],
   sources: [

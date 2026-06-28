@@ -18,7 +18,7 @@ const PUBLIC_ROUTES_REJECT_ALL = [
   "/cookies",
   "/about",
   "/sponsors",
-  "/blog",
+  "/academy",
   "/zmeny",
 ] as const;
 

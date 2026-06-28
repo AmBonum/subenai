@@ -15,7 +15,7 @@ export const rodinaDetiSenioriCourse: Course = {
     {
       kind: "intro",
       heading: "Bezpečnosť rodiny — tri rôzne generácie, tri rôzne riziká",
-      body: `Bezpečnosť rodiny online v 2026 znamená tri úplne odlišné konverzácie. S deťmi (7–14) riešiš rodičovskú kontrolu, kyberšikanu a Discord/TikTok. S tínedžermi (15–18) hovoríš o sextingu, fake profiloch a tom, prečo Snapchat nie je súkromný. So seniormi rodičmi a starými rodičmi nastavuješ ich smartfón tak, aby im romance scammer a falošný „vnuk v núdzi" nezobrali úspory. Tento kurz dáva konkrétne kroky pre každú skupinu — nie strašenie, ale praktické zapnutie 2FA, blokovanie webov a krízová linka 116 111, ktorá pre dieťa zachraňuje životy.`,
+      body: `Bezpečnosť rodiny online v roku 2026 znamená tri úplne odlišné konverzácie. S deťmi (7 – 14) riešiš rodičovskú kontrolu, kyberšikanu a Discord/TikTok. S tínedžermi (15 – 18) hovoríš o sextingu (posielanie intímneho obsahu), falošných profiloch a o tom, prečo Snapchat nie je súkromný. So seniormi — rodičmi a starými rodičmi — nastavuješ ich smartfón tak, aby im romance scammer (podvodník cez predstieraný ľúbostný vzťah) a falošný „vnuk v núdzi" nezobrali úspory. Tento kurz dáva konkrétne kroky pre každú skupinu — nie strašenie, ale praktické zapnutie 2FA (dvojfaktorové overenie), blokovanie webov a krízová linka 116 111, ktorá pre dieťa zachraňuje životy.`,
     },
     {
       kind: "example",
@@ -29,7 +29,7 @@ export const rodinaDetiSenioriCourse: Course = {
     },
     {
       kind: "example",
-      heading: `Tínedžeri — fake profil „od dievčaťa zo školy"`,
+      heading: `Tínedžeri — falošný profil „od dievčaťa zo školy"`,
       visual: {
         kind: "instagram",
         account: "lucia_zo_skoly_2026",
@@ -37,7 +37,7 @@ export const rodinaDetiSenioriCourse: Course = {
         body: `ahoj, vidim ze chodis do nasej skoly, mas pekne oci 😊 napis mi na snap: luciahot.snap`,
         cta: "Sledovať",
       },
-      commentary: `Sextortion v 2026: scammer naviaže kontakt ako „spolužiačka", presunie konverzáciu na Snap, vypýta intímnu fotku, potom vydiera. Pre tínedžera katastrofa — preto musí vedieť, že hovor s rodičom NIE JE trest, je jediné riešenie.`,
+      commentary: `Sextortion (vydieranie intímnym obsahom) v roku 2026: podvodník naviaže kontakt ako „spolužiačka", presunie konverzáciu na Snapchat, vypýta intímnu fotku a potom vydiera. Pre tínedžera katastrofa — preto musí vedieť, že hovor s rodičom NIE JE trest, je jediné riešenie.`,
     },
     {
       kind: "example",
@@ -48,7 +48,7 @@ export const rodinaDetiSenioriCourse: Course = {
         number: "+421 940 555 111",
         hint: "často aj český kód +420 alebo zahraničný — caller ID sa dá sfalšovať",
       },
-      commentary: `„Babka, mal som autonehodu, súrne 3 800 € na advokáta, neviem rozprávať, hlas mám rozbitý." Klasika. V 2026 navyše s AI klonom hlasu reálneho vnuka z TikTok/Instagram videa. Žiadne peniaze sa nikdy neposielajú cez prevodníka alebo „kuriérovi" k bytu.`,
+      commentary: `„Babka, mal som autonehodu, súrne 3 800 € na advokáta, neviem rozprávať, hlas mám rozbitý." Klasika. V roku 2026 navyše s AI klonom hlasu (deepfake — umelo vygenerovaný falošný hlas) reálneho vnuka z videa na TikToku/Instagrame. Žiadne peniaze sa nikdy neposielajú prevodom ani „kuriérovi" k bytu.`,
     },
     {
       kind: "example",
@@ -63,7 +63,7 @@ export const rodinaDetiSenioriCourse: Course = {
     },
     {
       kind: "checklist",
-      heading: "Checklist pre rodičovský smartfón (8–14 rokov)",
+      heading: "Kontrolný zoznam pre rodičovský smartfón (8 – 14 rokov)",
       items: [
         {
           good: true,
@@ -71,11 +71,11 @@ export const rodinaDetiSenioriCourse: Course = {
         },
         {
           good: true,
-          text: "Limit obrazovkového času, blokácia 18+ obsahu, schvaľovanie každej novej appky cez rodičovský telefón.",
+          text: "Limit obrazovkového času, blokovanie obsahu pre dospelých (18+), schvaľovanie každej novej aplikácie cez rodičovský telefón.",
         },
         {
           good: true,
-          text: "Vypnutie in-app nákupov (Apple ID / Google Play → vyžadovať heslo pri každom nákupe).",
+          text: "Vypnutie nákupov v aplikáciách (in-app — Apple ID / Google Play → vyžadovať heslo pri každom nákupe).",
         },
         {
           good: true,
@@ -83,7 +83,7 @@ export const rodinaDetiSenioriCourse: Course = {
         },
         {
           good: false,
-          text: "Stalkerware (mSpy, FlexiSpy) bez vedomia tínedžera — nelegálne, zničí dôveru, nefunguje dlhodobo.",
+          text: "Stalkerware (sledovací softvér — mSpy, FlexiSpy) bez vedomia tínedžera — nelegálne, zničí dôveru, nefunguje dlhodobo.",
         },
         {
           good: false,
@@ -108,23 +108,23 @@ export const rodinaDetiSenioriCourse: Course = {
       kind: "do_dont",
       heading: "Pravidlá pre rodinu",
       do: [
-        `Pre starých rodičov nastav 2FA na ich e-mail a banku (najlepšie cez SMS, autenticator je pre nich ťažký).`,
+        `Pre starých rodičov nastav 2FA na ich e-mail a banku (najlepšie cez SMS, autentifikátor je pre nich ťažký).`,
         `Pre dieťa povedz nahlas: „Ak ti niekto na nete urobí čokoľvek, čo ťa vystraší, povieš mi a NIE som naštvaný. Pomôžem."`,
-        `Spoločne s tínedžerom prejdite nastavenia súkromia na Instagrame / TikToku — kto vidí stories, kto môže komentovať.`,
+        `Spoločne s tínedžerom prejdite nastavenia súkromia na Instagrame / TikToku — kto vidí príbehy (stories), kto môže komentovať.`,
         `Číslo 116 111 (Linka detskej istoty) vytlač a daj na chladničku — anonymne, zdarma, 24/7.`,
       ],
       dont: [
         `Nikdy nedovoľ starým rodičom inštalovať „pomocné" appky (TeamViewer, AnyDesk) z telefonického návodu.`,
-        `Netrestajte dieťa za to, že vám povedalo o sextortioe / podvode — strestáte budúce priznania.`,
+        `Netrestajte dieťa za to, že vám povedalo o sextortion / podvode — potrestáte tým budúce priznania.`,
         `Nečítajte tínedžerovi správy bez jeho vedomia — buď sa s vami baví, alebo s falošnou „Luciou".`,
-        `Nedávajte deťom kartu rodiča s NFC bez limitu — nastavte vreckové na vlastnú detskú kartu (Mintos Kids, Revolut <18).`,
+        `Nedávajte deťom kartu rodiča s NFC (bezkontaktná platba) bez limitu — nastavte vreckové na vlastnú detskú kartu (napríklad Revolut <18).`,
       ],
     },
     {
       kind: "scenario",
       heading: `Reálny scenár — babka a „vnuk Maťo"`,
-      story: `Babke (74) volá človek: „Babka, to som ja, Maťo. Mal som autonehodu na D1, niekoho som zranil. Súrne potrebujem 4 200 € na advokáta, inak idem do väzby. Príde po peniaze môj kolega Pavol, nemôžem ti to povedať podrobnejšie, polícia ma sleduje." Hlas naozaj vyzerá ako Maťov — útočník zostrihal AI klon z jeho Instagram stories.`,
-      right_action: `Babka zavesí. Zavolá Maťovi priamo na jeho známe číslo. Ak je nedostupný, zavolá jeho mame (svojej dcére) na overenie. Polícia v SR nikdy nevyžaduje úhradu „za advokáta v hotovosti k bytu". Toto je vždy podvod — a v 2026 už aj s AI klonom hlasu. Najlepšia prevencia: rodina má vopred dohodnuté „rodinné kontrolné slovo" — slovo, ktoré pozná len rodina a útočník ho nezistí.`,
+      story: `Babke (74) volá človek: „Babka, to som ja, Maťo. Mal som autonehodu na D1, niekoho som zranil. Súrne potrebujem 4 200 € na advokáta, inak idem do väzby. Príde po peniaze môj kolega Pavol, nemôžem ti to povedať podrobnejšie, polícia ma sleduje." Hlas naozaj znie ako Maťov — útočník zostrihal AI klon z jeho instagramových príbehov.`,
+      right_action: `Babka zavesí. Zavolá Maťovi priamo na jeho známe číslo. Ak je nedostupný, zavolá jeho mame (svojej dcére) na overenie. Polícia v SR nikdy nevyžaduje úhradu „za advokáta v hotovosti k bytu". Toto je vždy podvod — a v roku 2026 už aj s AI klonom hlasu. Najlepšia prevencia: rodina má vopred dohodnuté „rodinné kontrolné slovo" — slovo, ktoré pozná len rodina a útočník ho nezistí.`,
     },
   ],
   sources: [

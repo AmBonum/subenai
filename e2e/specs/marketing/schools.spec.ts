@@ -100,7 +100,7 @@ test.describe("/schools — senior marketing landing (E19)", () => {
     await expect(schools.footerCta).toBeVisible();
     await expect(schools.footerCard("composer")).toHaveAttribute("href", "/test/builder");
     await expect(schools.footerCard("test")).toHaveAttribute("href", "/test");
-    await expect(schools.footerCard("blog")).toHaveAttribute("href", "/blog");
+    await expect(schools.footerCard("blog")).toHaveAttribute("href", "/academy");
   });
 
   test("hero CTA navigates to /test/builder (Composer)", async ({ page, schools }) => {

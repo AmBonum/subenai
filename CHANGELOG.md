@@ -9,6 +9,15 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+### Zmenené
+- **Kurzy a blog sme spojili do jednej Akadémie.** Na novej stránke `/academy`
+  nájdete kurzy aj články na jednom mieste, s filtrom a vyhľadávaním. Kurzy sú
+  teraz interaktívne — pri príkladoch si rovno vyskúšate, či podvod spoznáte, s
+  okamžitou spätnou väzbou a vysvetlením. Pôvodné odkazy na `/kurzy` a `/blog`
+  automaticky presmerujeme na novú Akadémiu.
+- **Anglické pojmy majú slovenské vysvetlenie.** Pri prvom použití slov ako
+  phishing, smishing či scam nájdete v zátvorke ich význam po slovensky.
+
 ## [1.15.0] — 2026-06-13
 
 ### Pridané

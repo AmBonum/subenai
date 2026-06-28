@@ -42,15 +42,9 @@
         "panel_link_sablony": "Šablóny testov",
         "panel_featured": "Nové otázky tento mesiac →"
       },
-      "skolenia": {
-        "label": "Školenia",
-        "desc": "Bezplatné krátke kurzy — phishing, smishing, BEC. Slovenské scenáre, žiadny žargón.",
-        "panel_section_kurzy": "Kurzy",
-        "panel_link_all": "Všetky kurzy",
-        "panel_link_email_phishing": "Email phishing",
-        "panel_link_sms_smishing": "SMS smishing",
-        "panel_link_vishing": "Vishing",
-        "panel_featured": "Pre školy a HR"
+      "akademia": {
+        "label": "Akadémia",
+        "desc": "Interaktívne kurzy a články o podvodoch — uč sa rozpoznať ich na reálnych príkladoch."
       },
       "pre_skoly": {
         "label": "Pre školy a lektorov",
@@ -59,10 +53,6 @@
       "podpora": {
         "label": "Podpora projektu",
         "desc": "Hosting, obsah a údržba. Bez reklám, bez paywallu — funguje zo sponzorstva."
-      },
-      "blog": {
-        "label": "Akadémia",
-        "desc": "Sprievodcovia a návody — ako rozpoznať scam skôr, než ťa dostane."
       }
     },
     "cta": {

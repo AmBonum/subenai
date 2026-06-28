@@ -69,7 +69,7 @@ export function BlogHomeSection() {
           </p>
         </div>
         <Link
-          to="/blog"
+          to="/academy"
           className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary/40 bg-primary/5 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:border-primary hover:bg-primary/10"
           data-testid="home-blog-cta-secondary"
         >
@@ -98,7 +98,7 @@ export function BlogHomeSection() {
       {/* Primary CTA below the cards — full-width on mobile for tap-friendliness */}
       <div className="mt-8 flex justify-center md:hidden">
         <Link
-          to="/blog"
+          to="/academy"
           className="inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105"
           data-testid="home-blog-cta-primary"
         >

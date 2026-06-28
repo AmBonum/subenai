@@ -78,11 +78,11 @@ describe("WeakCategoryRecommendations", () => {
     expect(screen.getByTestId("results-weak-recs-score-fake_vs_real")).toHaveTextContent("40 %");
   });
 
-  it("renders the course half (links to /courses/$slug) when a course is registered", () => {
+  it("renders the course half (links to /academy/$slug) when a course is registered", () => {
     noPosts();
     render(<WeakCategoryRecommendations breakdown={mixedBreakdown} />);
     const courseLink = screen.getByTestId("results-weak-recs-course-phishing");
-    expect(courseLink).toHaveAttribute("data-to", "/courses/$slug");
+    expect(courseLink).toHaveAttribute("data-to", "/academy/$slug");
   });
 
   it("renders the article half when the pillar query resolves to a post", () => {
@@ -97,7 +97,7 @@ describe("WeakCategoryRecommendations", () => {
     });
     render(<WeakCategoryRecommendations breakdown={mixedBreakdown} />);
     const articlePhishing = screen.getByTestId("results-weak-recs-article-phishing");
-    expect(articlePhishing).toHaveAttribute("data-to", "/blog/$slug");
+    expect(articlePhishing).toHaveAttribute("data-to", "/academy/$slug");
     expect(articlePhishing).toHaveTextContent(PILLAR_PHISHING.title);
     expect(screen.getByTestId("results-weak-recs-article-fake_vs_real")).toHaveTextContent(
       PILLAR_AI.title,

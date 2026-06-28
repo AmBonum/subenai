@@ -166,7 +166,7 @@ describe("HomeFaqSection — docs link", () => {
     render(<HomeFaqSection sections={SECTIONS} />);
     const hint = screen.getByTestId("home-faq-docs-hint");
     const link = within(hint).getByRole("link");
-    expect(link).toHaveAttribute("data-to", "/blog");
+    expect(link).toHaveAttribute("data-to", "/academy");
     expect(link).toHaveTextContent("Otvor akadémiu");
   });
 });

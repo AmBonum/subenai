@@ -61,7 +61,7 @@ export function RelatedTestPackArticleCard({ packSlug }: RelatedTestPackArticleC
           </p>
         </div>
         <Link
-          to="/blog/$slug"
+          to="/academy/$slug"
           params={{ slug: post.slug }}
           className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-primary/60 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-primary/20"
           data-testid="test-pack-related-academy-cta"

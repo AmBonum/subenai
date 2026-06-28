@@ -3,10 +3,10 @@ import type { Locator, Page } from "@playwright/test";
 export type FooterNavSlug =
   | "test"
   | "testy"
-  | "skolenia"
+  // E55 — /courses + /blog unified; the footer carries one "academy" link.
+  | "academy"
   | "sablony"
   | "skoly"
-  | "blog"
   | "o-projekte"
   | "kontakt"
   | "podpora"

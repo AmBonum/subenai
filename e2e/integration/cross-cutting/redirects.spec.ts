@@ -112,18 +112,19 @@ test.describe("SK→EN URL redirects (public/_redirects)", () => {
     expect(r.headers()["location"]).toBe("/tests");
   });
 
-  // TC-12: /skolenia and /kurzy both redirect to /courses
-  test("TC-12: /skolenia and /kurzy both redirect to /courses", async ({ request }) => {
+  // TC-12: /skolenia and /kurzy both redirect to /academy (E55 — courses
+  // merged into the academy hub; no double hop via /courses).
+  test("TC-12: /skolenia and /kurzy both redirect to /academy", async ({ request }) => {
     const rSkolenia = await request.fetch("/skolenia", { maxRedirects: 0 });
     expect(rSkolenia.status()).toBe(301);
-    expect(rSkolenia.headers()["location"]).toBe("/courses");
+    expect(rSkolenia.headers()["location"]).toBe("/academy");
 
     const rKurzy = await request.fetch("/kurzy", { maxRedirects: 0 });
     expect(rKurzy.status()).toBe(301);
-    expect(rKurzy.headers()["location"]).toBe("/courses");
+    expect(rKurzy.headers()["location"]).toBe("/academy");
   });
 
-  // TC-13: /skolenia/sms-smishing (wildcard) redirects to /courses/sms-smishing
+  // TC-13: /skolenia/sms-smishing (wildcard) redirects to /academy/sms-smishing
   test("TC-13: /skolenia/sms-smishing splat rule preserves the path segment", async ({
     request,
   }) => {
@@ -131,7 +132,25 @@ test.describe("SK→EN URL redirects (public/_redirects)", () => {
       maxRedirects: 0,
     });
     expect(r.status()).toBe(301);
-    expect(r.headers()["location"]).toBe("/courses/sms-smishing");
+    expect(r.headers()["location"]).toBe("/academy/sms-smishing");
+  });
+
+  // TC-13a: E55 academy cutover — /courses and /blog (+ splats, category,
+  // author) 301 to the unified /academy surface, preserving link equity.
+  test("TC-13a: /courses and /blog redirect to /academy", async ({ request }) => {
+    const cases: [string, string][] = [
+      ["/courses", "/academy"],
+      ["/blog", "/academy"],
+      ["/courses/email-phishing", "/academy/email-phishing"],
+      ["/blog/phishing-kompletny-sprievodca", "/academy/phishing-kompletny-sprievodca"],
+      ["/blog/kategoria/ai-scamy", "/academy/category/ai-scamy"],
+      ["/blog/autor/subenai-editorial", "/academy/author/subenai-editorial"],
+    ];
+    for (const [from, to] of cases) {
+      const r = await request.fetch(from, { maxRedirects: 0 });
+      expect(r.status(), `expected 301 for ${from}`).toBe(301);
+      expect(r.headers()["location"], `wrong target for ${from}`).toBe(to);
+    }
   });
 
   // TC-14: /o-projekte permanently redirects to /about

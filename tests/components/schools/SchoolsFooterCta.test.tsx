@@ -35,6 +35,6 @@ describe("SchoolsFooterCta", () => {
 
   it("Blog card points to /blog (joins cross-link triangle)", () => {
     render(<SchoolsFooterCta />);
-    expect(screen.getByTestId("schools-footer-cta-blog")).toHaveAttribute("data-to", "/blog");
+    expect(screen.getByTestId("schools-footer-cta-blog")).toHaveAttribute("data-to", "/academy");
   });
 });

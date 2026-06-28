@@ -50,7 +50,7 @@ export function TestsLearningStrip() {
           </p>
         </div>
         <Link
-          to="/blog"
+          to="/academy"
           data-testid="tests-learning-strip-cta"
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary underline-offset-4 hover:underline"
         >
@@ -62,7 +62,7 @@ export function TestsLearningStrip() {
         {posts.map((post) => (
           <li key={post.slug}>
             <Link
-              to="/blog/$slug"
+              to="/academy/$slug"
               params={{ slug: post.slug }}
               data-testid={`tests-learning-strip-item-${post.slug}`}
               className="group flex items-start gap-3 rounded-xl border border-border/40 bg-background/40 p-3 transition hover:border-primary/40 hover:bg-card/60"

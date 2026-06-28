@@ -26,14 +26,14 @@ describe("NotFoundPage (E22)", () => {
     expect(screen.getByTestId("not-found-home-cta")).toHaveAttribute("data-to", "/");
   });
 
-  it("renders 4 suggestion cards to the right routes", () => {
+  it("renders 3 suggestion cards to the right routes", () => {
     render(<NotFoundPage />);
     expect(screen.getByTestId("not-found-suggestion-test")).toHaveAttribute("data-to", "/test");
-    expect(screen.getByTestId("not-found-suggestion-academy")).toHaveAttribute("data-to", "/blog");
-    expect(screen.getByTestId("not-found-suggestion-courses")).toHaveAttribute(
+    expect(screen.getByTestId("not-found-suggestion-academy")).toHaveAttribute(
       "data-to",
-      "/courses",
+      "/academy",
     );
+    expect(screen.queryByTestId("not-found-suggestion-courses")).toBeNull();
     expect(screen.getByTestId("not-found-suggestion-schools")).toHaveAttribute(
       "data-to",
       "/schools",
@@ -65,7 +65,6 @@ describe("NotFoundPage (E22)", () => {
     expect(screen.getByTestId("not-found-home-cta")).toHaveTextContent("Späť na úvod");
     expect(screen.getByTestId("not-found-suggestion-test")).toHaveTextContent("Spusti rýchly test");
     expect(screen.getByTestId("not-found-suggestion-academy")).toHaveTextContent("Otvor akadémiu");
-    expect(screen.getByTestId("not-found-suggestion-courses")).toHaveTextContent("Pozri školenia");
     expect(screen.getByTestId("not-found-suggestion-schools")).toHaveTextContent(
       "Pre školy a učiteľov",
     );
