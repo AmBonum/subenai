@@ -107,9 +107,15 @@ describe("/docs/app parent — auth gate", () => {
 });
 
 describe("/docs/admin/$slug loader", () => {
-  it("returns the slug when ADMIN_DOCS has an entry", () => {
-    const out = adminSlugLoader({ params: { slug: "dashboard" } });
-    expect(out).toEqual({ slug: "dashboard" });
+  it("returns the slug + manifest entry when ADMIN_DOCS has an entry", () => {
+    // E54.6 — admin loader mirrors the app loader's {slug, entry} contract.
+    const out = adminSlugLoader({ params: { slug: "dashboard" } }) as {
+      slug: string;
+      entry: { kind: string; explainerKey?: string };
+    };
+    expect(out.slug).toBe("dashboard");
+    expect(out.entry.kind).toBe("explainer");
+    expect(out.entry.explainerKey).toBe("dashboard");
   });
 
   it("throws notFound() when slug is unknown", () => {

@@ -109,6 +109,139 @@ odvetvovými sadami otázok — viac v sekcii pre firmy.
 **Ako vás kontaktujem?** Cez kontaktný formulár v pätičke; prihlásení
 používatelia majú podporu priamo v aplikácii.`,
   },
+  {
+    slug: "firemne-testy",
+    title: "Testovanie pre firmy",
+    description: "Odvetvové balíky otázok na otestovanie zamestnancov.",
+    order: 7,
+    category: "Pre firmy",
+    body: `Firmy môžu otestovať zamestnancov **odvetvovými balíkmi** otázok
+zameranými na hrozby ich oboru — napríklad e-shop, gastro, IT, zdravotníctvo
+či financie.
+
+Každý balík obsahuje reálne situácie relevantné pre dané odvetvie. Verejné
+balíky nájdeš v sekcii **Testy**; po výbere balíka dostaneš test rovnako ako
+pri rýchlom teste, len s cielenými otázkami.
+
+**Tip:** výsledky pomáhajú identifikovať, kde tím potrebuje doškolenie — na to
+nadväzujú kurzy.`,
+  },
+  {
+    slug: "vlastne-testy",
+    title: "Vlastné testy a šablóny",
+    description: "Ako si poskladať vlastný test z otázok alebo zo šablóny.",
+    order: 8,
+    category: "Pre firmy",
+    body: `Prihlásení používatelia (lektori, firmy) si môžu **poskladať vlastný
+test** v editore: vyber otázky, nastav poradie a zdieľaj test s respondentmi.
+
+Nemusíš začínať od nuly — **šablóny** poskytujú hotové sady, ktoré upravíš
+podľa seba. Vytvorený test má vlastný odkaz, ktorý pošleš respondentom; ich
+výsledky vidíš vo svojom účte.
+
+Na tvorbu vlastných testov je potrebné **prihlásenie**.`,
+  },
+  {
+    slug: "pre-skoly",
+    title: "Pre školy",
+    description: "Vzdelávacie testy a materiály pre žiakov a učiteľov.",
+    order: 9,
+    category: "Vzdelávanie",
+    body: `subenai ponúka **vzdelávacie testy a materiály pre školy** — pomáhajú
+žiakom naučiť sa rozpoznávať podvody bezpečným, interaktívnym spôsobom.
+
+Učitelia môžu využiť testy v rámci hodín a nadviazať na ne kurzmi. Detaily
+a podmienky spracovania údajov (vrátane DPA pre školy) nájdeš v sekcii
+**Školy**.`,
+  },
+  {
+    slug: "akademia",
+    title: "Akadémia (články)",
+    description: "Vzdelávacie články o aktuálnych podvodoch a obrane.",
+    order: 10,
+    category: "Vzdelávanie",
+    body: `Akadémia je naša **knižnica článkov** o aktuálnych podvodoch — nové
+techniky, rozbory reálnych prípadov a praktické rady, ako sa brániť.
+
+Články sú zadarmo a bez prihlásenia, pravidelne pribúdajú a dopĺňajú kurzy
+o aktuálne dianie. Nájdeš ich v sekcii **Blog / Akadémia**.`,
+  },
+  {
+    slug: "zdielanie-vysledkov",
+    title: "Zdieľanie výsledkov",
+    description: "Ako zdieľať výsledok testu odkazom alebo obrázkom.",
+    order: 11,
+    category: "Funkcie",
+    body: `Po teste môžeš svoj výsledok **zdieľať** — odkazom alebo obrázkom pre
+sociálne siete (Instagram, TikTok, Facebook).
+
+Zdieľanie je **dobrovoľné**: bez prihlásenia výsledok nikam neukladáme, kým ho
+ty sám nezdieľaš odkazom. Zdieľaný odkaz ukazuje skóre a krátke zhrnutie —
+ostatní si môžu rovnaký test spraviť tiež.`,
+  },
+  {
+    slug: "pomocnik",
+    title: "Podvodový poradca (AI)",
+    description: "AI asistent, ktorý poradí pri podozrení na podvod.",
+    order: 12,
+    category: "Funkcie",
+    body: `**Podvodový poradca** je AI asistent zameraný výlučne na podvody. Opíš
+mu situáciu („snaží sa ma niekto podviesť?") a dostaneš zrozumiteľné
+posúdenie rizika a odporúčané ďalšie kroky.
+
+Rozhovor **neukladáme** — zatvorením karty sa zmaže. Nepíš doň rodné číslo ani
+heslá. Pri vyššom riziku ti poradca odporučí kontaktovať políciu. Nájdeš ho
+ako **Pomocník**.`,
+  },
+  {
+    slug: "podpora-projektu",
+    title: "Podpora projektu",
+    description: "Ako môžeš projekt finančne podporiť.",
+    order: 13,
+    category: "Projekt a súkromie",
+    body: `subenai je nezávislý projekt. Ak ti dáva zmysel, môžeš ho **finančne
+podporiť** — pomáha to udržať testy a kurzy zadarmo a pridávať nový obsah.
+
+Možnosti podpory a zoznam podporovateľov nájdeš v sekcii **Podporiť projekt**.
+Podporu vieš kedykoľvek spravovať alebo zrušiť.`,
+  },
+  {
+    slug: "sukromie-a-data",
+    title: "Súkromie a dáta",
+    description: "Aké údaje spracúvame a aké máš práva.",
+    order: 14,
+    category: "Projekt a súkromie",
+    body: `Súkromie berieme vážne. Rýchly test sa dá spraviť **bez registrácie** a
+bez ukladania odpovedí na server. Prihlásením získaš históriu — vtedy sa
+výsledky ukladajú k tvojmu účtu.
+
+Podrobnosti o spracúvaní údajov, cookies a tvojich právach (vrátane žiadostí
+o prístup či výmaz) nájdeš na stránkach **Ochrana súkromia** a **Cookies**.`,
+  },
+  {
+    slug: "kontakt",
+    title: "Kontakt a podpora",
+    description: "Ako nás kontaktovať a získať pomoc.",
+    order: 15,
+    category: "Projekt a súkromie",
+    body: `Ak potrebuješ pomoc alebo máš otázku, napíš nám cez **kontaktný
+formulár** dostupný v pätičke webu. Môžeš priložiť aj snímky obrazovky.
+
+Prihlásení používatelia majú podporu priamo v aplikácii a vidia stav svojich
+požiadaviek.`,
+  },
+  {
+    slug: "zmeny",
+    title: "Novinky a zmeny",
+    description: "Prehľad nového obsahu a vylepšení.",
+    order: 16,
+    category: "Projekt a súkromie",
+    body: `Priebežne pridávame nové testy, kurzy, články a vylepšenia. Prehľad
+zmien a noviniek nájdeš na stránke **Zmeny**.
+
+Sleduj ju, ak chceš vedieť, čo pribudlo — od nových odvetvových balíkov po
+aktualizácie kurzov.`,
+  },
 ];
 
 for (const doc of DOCS) {

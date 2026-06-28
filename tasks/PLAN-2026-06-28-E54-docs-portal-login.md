@@ -1,8 +1,10 @@
 # PLAN — E54: Docs portal + login surfacing
 
-**Status:** 🚧 Phase 1 implemented 2026-06-28 — E54.1–E54.5 done (login nav,
-docs engine, auth-docs rendering, public docs + first batch, e2e). Complete
-public-feature content + admin docs deferred to incremental follow-ups.
+**Status:** ✅ Done 2026-06-28 — E54.1–E54.6. Login surfaced; docs engine;
+auth-docs rendering; **complete public-feature content (16 pages)**; **admin
+docs rendering** (admins-only); e2e + a11y. Nothing deferred — every public
+section and every explainer-backed admin slug renders real content; only
+genuinely content-less sub-slugs keep the stub.
 **Branch:** `feature/E54-docs-portal-login`
 **Brainstorm:** approved by owner 2026-06-28 (this doc is the design spec)
 

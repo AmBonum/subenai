@@ -1,10 +1,12 @@
-import { tFor } from "@/i18n/app-explainers";
+import { tFor as tForApp } from "@/i18n/app-explainers";
+import { tFor as tForAdmin } from "@/i18n/admin";
 
-// E54.3 — renders an authenticated /docs/app/<slug> page from the existing
-// explainer i18n (`explainers.<key>` in app-explainers.json), the same
-// content that powers the inline AppPageExplainer panels. No public-docs
-// sidebar here: this is the gated app reference, reached from in-product
-// explainer "viac" links. Defensive against entries with no `sections`.
+// E54.3 / E54.6 — renders a gated /docs/{app,admin}/<slug> page from the
+// existing explainer i18n (`explainers.<key>`), the same content that powers
+// the inline AppPageExplainer / AdminPageExplainer panels. App and admin
+// explainers share the same shape (both feed the PageExplainer component),
+// so one renderer covers both — only the i18n namespace differs.
+// Defensive against entries without `sections`.
 
 interface ExplainerSection {
   heading: string;
@@ -14,11 +16,14 @@ interface ExplainerSection {
 export interface DocsExplainerPageProps {
   /** Explainer key, e.g. "dashboard" (from the manifest DocEntry). */
   explainerKey: string;
+  /** Which explainer namespace to read. */
+  area?: "app" | "admin";
 }
 
-export function DocsExplainerPage({ explainerKey }: DocsExplainerPageProps) {
-  const t = tFor("explainers");
-  const tObj = tFor.object("explainers");
+export function DocsExplainerPage({ explainerKey, area = "app" }: DocsExplainerPageProps) {
+  const resolver = area === "admin" ? tForAdmin : tForApp;
+  const t = resolver("explainers");
+  const tObj = resolver.object("explainers");
 
   const title = t(`${explainerKey}.title`);
   const lead = t(`${explainerKey}.lead`);
@@ -32,6 +37,7 @@ export function DocsExplainerPage({ explainerKey }: DocsExplainerPageProps) {
     <article
       data-testid="docs-explainer-root"
       data-explainer-key={explainerKey}
+      data-doc-area={area}
       className="mx-auto max-w-3xl space-y-8 px-4 py-10 md:py-14"
     >
       <header className="space-y-3">

@@ -10,6 +10,12 @@ describe("DocsExplainerPage", () => {
     expect(screen.getAllByTestId("docs-explainer-section").length).toBeGreaterThan(0);
   });
 
+  it("renders admin explainer content when area=admin", () => {
+    render(<DocsExplainerPage explainerKey="users" area="admin" />);
+    expect(screen.getByTestId("docs-explainer-root")).toHaveAttribute("data-doc-area", "admin");
+    expect(screen.getByTestId("docs-explainer-title").textContent?.length ?? 0).toBeGreaterThan(0);
+  });
+
   it("does not crash for an entry without sections (defensive)", () => {
     render(<DocsExplainerPage explainerKey="___missing___" />);
     expect(screen.getByTestId("docs-explainer-root")).toBeInTheDocument();
