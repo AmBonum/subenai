@@ -141,6 +141,36 @@ script can also output a `.sql` for the chat, per CLAUDE.md + memory). The
 static `src/content/courses/**` stays as the migration source until cutover,
 then is removed.
 
+## Content quality gate — editorial (owner requirement, blocking)
+
+**Every single course must be read end-to-end and copy-edited by a dedicated
+writing/editing subagent before its content ships as an academy lesson.** This
+is a hard gate on E55.4, not a nice-to-have. Rules the agent enforces per
+course (and per migrated article body it touches):
+
+- **Standard literary Slovak (spisovná slovenčina).** Correct diacritics,
+  grammar, agreement, punctuation, typography (e.g. „slovenské úvodzovky",
+  pomlčka –, non-breaking spaces before units). Zero typos — spelling or
+  content.
+- **No content errors.** Facts, numbers, claims and red-flag logic are
+  internally consistent and correct; nothing misleading.
+- **English terms get a Slovak gloss in parentheses on first use** in each
+  lesson, e.g. *phishing (podvodné vylákanie údajov)*, *scam (podvod)*,
+  *smishing (phishingová SMS)*, *vishing (telefonický podvod)*, *spoofing
+  (podvrhnutie identity)*. Thereafter the term may stand alone. Keep a
+  consistent glossary across all courses (a shared `GLOSSARY` so the same term
+  always gets the same Slovak gloss).
+- **Consistent terminology and tone** with the rest of the site copy.
+
+**Process:** in E55.4, each course is dispatched to a copy-editing subagent
+(prompted with the rules above + the shared glossary). The agent returns the
+corrected content + a list of changes; corrections are applied to the source
+(`src/content/courses/*.ts`) before conversion, so the clean text flows into
+the DB. A final full proofread pass over all migrated lessons closes the gate.
+Reuse `marketing:brand-review` / `elements-of-style:writing-clearly-and-concisely`
+where available; otherwise a `general-purpose` agent with the explicit ruleset.
+The same gate applies to any new Phase-B content.
+
 ## Testing strategy (every type)
 
 - **Unit (Vitest):** shortcode parser (md/quiz/visual split, unknown-id
@@ -183,13 +213,19 @@ owner runs the import SQL.
 - **E55.2** — Shortcode renderer + `AcademyQuiz` (reuse quiz engine) + unit/a11y.
 - **E55.3** — `/academy` routes (index, $slug, category, author) + index filters;
   queries renamed/extended; SEO JSON-LD per `content_type`.
-- **E55.4** — Course→DB migration script + converter (+ golden tests) + SQL out.
+- **E55.4** — **Editorial copy-edit of every course (per § Content quality
+  gate)** by a dedicated subagent + shared Slovak glossary, corrections applied
+  to source; THEN Course→DB migration script + converter (+ golden tests) +
+  SQL out. The migration must not run on un-edited copy.
 - **E55.5** — `_redirects` + delete `/blog`+`/courses` routes/components +
   repoint nav/footer/home/internal links + sitemap + RSS.
 - **E55.6** — Test consolidation: blog+courses → academy (unit + e2e/POM),
   remove obsolete; full green loop.
+- **E55.7** — Final editorial proofread pass over ALL migrated lessons (+ the
+  82 articles' English-term glosses), closing the content quality gate.
 
-Sequencing: E55.1 → E55.2 ∥ E55.3 → E55.4 → E55.5 → E55.6.
+Sequencing: E55.1 → E55.2 ∥ E55.3 → E55.4 (edit → migrate) → E55.5 → E55.6 →
+E55.7.
 
 ## Risks / open
 
