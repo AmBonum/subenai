@@ -2,7 +2,7 @@ import type { Course } from "./_schema";
 
 export const pribehyObetiCourse: Course = {
   slug: "pribehy-skutocnych-obeti",
-  title: "Príbehy slovákov, ktorí prišli o peniaze online",
+  title: "Príbehy Slovákov, ktorí prišli o peniaze online",
   tagline:
     "4 anonymizované prípady z roku 2025–2026: čo sa stalo, koľko stálo, ako sa dalo predísť.",
   category: "obecne",
@@ -15,8 +15,8 @@ export const pribehyObetiCourse: Course = {
   sections: [
     {
       kind: "intro",
-      heading: "Príbehy slovákov, ktorí prišli o peniaze — aby si neopakoval ich chyby",
-      body: `Príbehy obetí podvodov sú najlepšia učebnica, lebo presviedčajú lepšie ako teória. „Mne sa to nestane" je presne to, čo si pred podvodom mysleli aj ľudia v týchto 4 príbehoch — inžinier IT, učiteľka, dôchodca, finančná riaditeľka. Stratili spolu 87 000 €. Ich príbehy sú anonymizované, ale zostavené podľa reálnych prípadov, ktoré v 2025–2026 riešili NCKB, polícia SR a slovenské banky. Každý príbeh končí konkrétnym ponaučením — čo sa malo urobiť inak.`,
+      heading: "Príbehy Slovákov, ktorí prišli o peniaze — aby si neopakoval ich chyby",
+      body: `Príbehy obetí podvodov sú najlepšia učebnica, lebo presviedčajú lepšie ako teória. „Mne sa to nestane" je presne to, čo si pred podvodom mysleli aj ľudia v týchto 4 príbehoch — inžinier IT, učiteľka, dôchodca, finančná riaditeľka. Stratili spolu 87 000 €. Ich príbehy sú anonymizované, ale zostavené podľa reálnych prípadov, ktoré v rokoch 2025 – 2026 riešili NCKB, polícia SR a slovenské banky. Každý príbeh končí konkrétnym ponaučením — čo sa malo urobiť inak.`,
     },
     {
       kind: "example",
@@ -27,7 +27,7 @@ export const pribehyObetiCourse: Course = {
         body: `VUB: Pokus o neopravnenu transakciu 4 800 EUR z Vasho uctu. Pre okamzite zablokovanie zavolajte na +421 2 4863 1111.`,
         time: "piatok 21:12",
       },
-      commentary: `Tatiana zavolala, „bankár" jej cez pol hodinu „presúval peniaze na bezpečný účet" cez jej internet banking — diktoval kroky, ona klikala. Suma 4 800 € išla na účet muly v Bulharsku. Ponaučenie: VÚB nikdy nepýta presun peňazí. Vždy zaves a volaj na číslo z karty.`,
+      commentary: `Tatiana zavolala a „bankár" jej cez pol hodinu „presúval peniaze na bezpečný účet" cez jej internetbanking (internetové bankovníctvo) — diktoval kroky, ona klikala. Suma 4 800 € išla na účet nastrčenej osoby v Bulharsku. Ponaučenie: VÚB nikdy nežiada presun peňazí. Vždy zaves a volaj na číslo z karty.`,
     },
     {
       kind: "example",
@@ -39,7 +39,7 @@ export const pribehyObetiCourse: Course = {
         body: `Hľadám 5 ľudí na 1:1 krypto mentoring. Vlani môjmu klientovi z Brna 24 000 € za 4 mesiace 💎 DM ✉️`,
         cta: "Poslať správu",
       },
-      commentary: `Peter (skúsený IT-čkár, neletel by na obyčajný phishing) sa s „Elenou" rozprával 6 týždňov. Začala s 500 €, „zisk" 12 % za týždeň na falošnej platforme. Doplatil 17 500 €. Pri pokuse o výber: „daňový poplatok 4 000 € dopredu". Vtedy mu zacvaklo. Ponaučenie: pig-butchering. Žiadna reálna investícia nedáva 12 % týždenne. Žiadny „mentor" nehľadá DM klientov.`,
+      commentary: `Peter (skúsený IT-čkár, na obyčajný phishing (podvodné vylákanie prihlasovacích či platobných údajov) by nenaletel) sa s „Elenou" rozprával 6 týždňov. Začala s 500 €, „zisk" 12 % za týždeň na falošnej platforme. Doplatil 17 500 €. Pri pokuse o výber: „daňový poplatok 4 000 € dopredu". Vtedy mu zacvaklo. Ponaučenie: pig butchering (dlhodobý investičný podvod budovaný cez vzťah). Žiadna reálna investícia nedáva 12 % týždenne. Žiadny „mentor" nehľadá klientov cez DM.`,
     },
     {
       kind: "example",
@@ -50,7 +50,7 @@ export const pribehyObetiCourse: Course = {
         number: "+421 940 222 555",
         hint: "AI klon hlasu vnuka — zostrihaný z TikTok stories",
       },
-      commentary: `Volal „vnuk Maroš" — hlas presne ako jeho, plač, autonehoda na D1, 12 200 € pre advokáta, „kuriér Pavol" príde za hodinu k bytu. Pán Jozef vybral z banky úspory, odovzdal cudziemu mužovi obálku. Skutočný Maroš bol na pivo s kamarátmi. Polícia peniaze nenašla. Ponaučenie: rodinné kontrolné slovo (vopred dohodnuté), žiadne hotovosti kuriérovi.`,
+      commentary: `Volal „vnuk Maroš" — hlas presne ako jeho, plač, autonehoda na D1, 12 200 € pre advokáta, „kuriér Pavol" príde za hodinu k bytu. Pán Jozef vybral z banky úspory, odovzdal cudziemu mužovi obálku. Skutočný Maroš bol na pive s kamarátmi. Polícia peniaze nenašla. Ponaučenie: rodinné kontrolné slovo (vopred dohodnuté), žiadne hotovosti kuriérovi.`,
     },
     {
       kind: "example",
@@ -62,7 +62,7 @@ export const pribehyObetiCourse: Course = {
         subject: "URGENT — akvizícia, len medzi nami",
         body: `Mária, riešim akvizíciu v Rakúsku, právnici nestihli pripraviť papiere. Potrebujem rýchly prevod 52 000 € na predbežnú zálohu, zdôvodním na pondelkovom calle. IBAN AT89… Sprav to dnes do 16:00, nik nesmie vedieť kým nepodpíšeme.`,
       },
-      commentary: `Po prevode si Mária na chodbe všimla CEO — opýtala sa na akvizíciu. „Akú akvizíciu?" Doména firma-eu.com vs reálna firma-sk.eu. Útočník mal navyše 8-sekundový hlasový deepfake z LinkedIn videa CEO ako „potvrdenie". 52 000 € išlo do Hong Kongu. Ponaučenie: každý prevod nad limit musí mať druhé schválenie. CEO „súrne a tajne" = vždy phishing.`,
+      commentary: `Po prevode si Mária na chodbe všimla CEO — opýtala sa na akvizíciu. „Akú akvizíciu?" Doména firma-eu.com oproti reálnej firma-sk.eu. Útočník mal navyše 8-sekundový hlasový deepfake (umelo vygenerované falošné video či hlas) z videa CEO na LinkedIne ako „potvrdenie". 52 000 € išlo do Hongkongu. Tomuto typu útoku cez kompromitovaný firemný e-mail sa hovorí BEC (podvod cez kompromitovaný firemný e-mail). Ponaučenie: každý prevod nad limit musí mať druhé schválenie. CEO „súrne a tajne" = vždy podvod.`,
     },
     {
       kind: "redflags",
@@ -89,7 +89,7 @@ export const pribehyObetiCourse: Course = {
       dont: [
         `Nikdy nepresúvajte peniaze pod časovým tlakom — vždy aspoň hodina pauza.`,
         `Nedávajte hotovosť ani kartu cudzincovi pred dverami, ani „kuriérovi banky".`,
-        `Nedôverujte „mentorom z Instagramu" so screenshotmi profitov — fake za 2 minúty v Photoshope.`,
+        `Nedôverujte „mentorom z Instagramu" so snímkami obrazovky ich ziskov — podvrh sa dá vyrobiť za 2 minúty v Photoshope.`,
         `Nehanbite sa hlásiť podvod — polícia to počuje denne, vďaka vašej výpovedi chytia ďalších páchateľov.`,
       ],
     },

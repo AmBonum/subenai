@@ -16,7 +16,7 @@ export const smsSmishingCourse: Course = {
     {
       kind: "intro",
       heading: "Prečo SMS, prečo teraz",
-      body: `Smishing (SMS phishing) je momentálne najčastejší typ podvodu na Slovensku. Útočník ti pošle krátku správu, ktorá vyzerá ako od pošty, banky alebo úradu, a tlačí ťa, aby si urýchlene klikol. Stačia tri sekundy nepozornosti — a si na falošnej stránke, ktorá ti zoberie buď peniaze, alebo prístup do internet bankingu.`,
+      body: `Smishing (phishing cez SMS) je momentálne najčastejší typ podvodu (scam) na Slovensku. Ide o phishing (podvodné vylákanie prihlasovacích či platobných údajov) doručený cez textovú správu: útočník ti pošle krátku správu, ktorá vyzerá ako od pošty, banky alebo úradu, a tlačí ťa, aby si urýchlene klikol. Stačia tri sekundy nepozornosti — a si na falošnej stránke, ktorá ti zoberie buď peniaze, alebo prístup do internet bankingu.`,
     },
     {
       kind: "example",
@@ -60,7 +60,7 @@ export const smsSmishingCourse: Course = {
         body: `Vasa elektronicka identifikacna karta vyprsala. Predizte si ju online: slovensko-id.sk-overenie.com`,
         time: "včera 18:02",
       },
-      commentary: `Štátna stránka slovensko.sk neposiela SMS upozornenia o eID. Predĺženie eID rieši okresné riaditeľstvo PZ osobne. Doména s viacerými pomlčkami a koncovkou .com na štátnu službu je instantný red flag.`,
+      commentary: `Štátna stránka slovensko.sk neposiela SMS upozornenia o eID. Predĺženie eID rieši okresné riaditeľstvo PZ osobne. Doména s viacerými pomlčkami a koncovkou .com pri štátnej službe je okamžitý varovný signál.`,
     },
     {
       kind: "example",
@@ -77,12 +77,12 @@ export const smsSmishingCourse: Course = {
       kind: "redflags",
       heading: "8 indícií, podľa ktorých rozoznáš smishing za 3 sekundy",
       flags: [
-        `Skrátený link (bit.ly, tinyurl, t.co) alebo doména s viacerými pomlčkami.`,
+        `Skrátený odkaz (bit.ly, tinyurl, t.co) alebo doména s viacerými pomlčkami.`,
         `Pravopisné chyby alebo chýbajúca diakritika („Vasa zasielka").`,
-        `Odosielateľ je číslo zo zahraničia (+44, +1, +234) namiesto SK alphanumeric ID.`,
+        `Odosielateľ je číslo zo zahraničia (+44, +1, +234) namiesto slovenského alfanumerického názvu odosielateľa.`,
         `Časový tlak — „do 24 hodín", „posledná šanca", „inak hrozí".`,
-        `Žiadosť o citlivý údaj (heslo, kód z SMS, OTP, PIN) cez správu.`,
-        `Doména v linke nepatrí inštitúcii — csob-secure.online namiesto csob.sk.`,
+        `Žiadosť o citlivý údaj (heslo, kód z SMS, OTP — jednorazový overovací kód, PIN) cez správu.`,
+        `Doména v odkaze nepatrí inštitúcii — csob-secure.online namiesto csob.sk.`,
         `SMS sa tvári ako od štátu, ale štát skoro nikdy SMS na vybavovanie nepoužíva.`,
         `Príliš dobrá ponuka („vrátenie preplatku", „výhra v súťaži, ktorú si nehral").`,
       ],
@@ -92,22 +92,22 @@ export const smsSmishingCourse: Course = {
       heading: "Pravidlá, ktoré ťa zachránia",
       do: [
         `Pri pochybnostiach zavolaj inštitúcii (banka, pošta, polícia) priamo na číslo z ich oficiálneho webu.`,
-        `Otvor stránku ručne vpísaním adresy do prehliadača — nikdy z linku v SMS.`,
+        `Otvor stránku ručne vpísaním adresy do prehliadača — nikdy nie z odkazu v SMS.`,
         `Zapni si dvojfaktorovú autentifikáciu (2FA) všade, kde sa dá. Najmä na e-maile.`,
         `Podozrivú SMS nahlas na 7726 (bezplatná linka pre spam SMS) alebo na NCKB.`,
       ],
       dont: [
-        `Neklikať na link zo SMS, ani „len zo zvedavosti".`,
+        `Neklikať na odkaz zo SMS, ani „len zo zvedavosti".`,
         `Neodpovedať „STOP" — potvrdíš tým, že číslo je aktívne.`,
         `Nediktovať OTP / PIN / heslo nikomu, ani „bankárovi" cez telefón.`,
-        `Neinstalovať appky z linkov mimo App Store / Google Play.`,
+        `Neinštalovať aplikácie z odkazov mimo App Store / Google Play.`,
       ],
     },
     {
       kind: "scenario",
       heading: "Reálny scenár",
-      story: `Príde ti SMS „Vaša zásielka čaká na pošte, doplatte 1,30 € za clo". Vieš, že práve čakáš balík z AliExpressu. Linkajú ti posta-sk.payment-now.com.`,
-      right_action: `Otvoríš Pošta SR appku alebo posta.sk ručne. Tam zistíš stav zásielky a prípadný doplatok. Link zo SMS ignoruješ. Ak balík nikde nie je, SMS ide do koša.`,
+      story: `Príde ti SMS „Vaša zásielka čaká na pošte, doplatte 1,30 € za clo". Vieš, že práve čakáš balík z AliExpressu. Posielajú ti odkaz posta-sk.payment-now.com.`,
+      right_action: `Otvoríš Pošta SR appku alebo posta.sk ručne. Tam zistíš stav zásielky a prípadný doplatok. Odkaz zo SMS ignoruješ. Ak balík nikde nie je, SMS ide do koša.`,
     },
   ],
   sources: [

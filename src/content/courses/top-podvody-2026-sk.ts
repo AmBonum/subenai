@@ -15,7 +15,7 @@ export const topPodvody2026Course: Course = {
     {
       kind: "intro",
       heading: "Top podvody na Slovensku v 2026 — čo sa zmenilo oproti 2025",
-      body: `Top podvody na Slovensku v 2026 majú jeden spoločný menovateľ: AI. Deepfake hlas z 8 sekúnd nahrávky, ChatGPT-generované e-maily bez gramatických chýb, falošné AI investičné platformy s realistickým UI. Zároveň prišli nové vlny — EÚ AI Akt (platný od augusta 2026) spustil vlnu phishingu „povinná registrácia AI nástrojov", rebranding Slovenskej pošty na „Slovak Post" v marci dal útočníkom 6 mesiacov priestoru s „aktualizácia údajov k novému značeniu" e-mailmi. Krypto pump-and-dump na meme coiny zlikvidoval slovenských retail investorov za vyše 12 miliónov €. Tento kurz prejde 5 najaktuálnejších schém v SR a ako každú rozoznáš za pár sekúnd.`,
+      body: `Top podvody na Slovensku v 2026 majú jeden spoločný menovateľ: AI. Deepfake (umelo vygenerované falošné video či hlas) hlas z 8 sekúnd nahrávky, ChatGPT-generované e-maily bez gramatických chýb, falošné AI investičné platformy s realistickým UI. Zároveň prišli nové vlny — EÚ AI Akt (platný od augusta 2026) spustil vlnu phishingu (podvodné vylákanie prihlasovacích či platobných údajov) „povinná registrácia AI nástrojov", rebranding Slovenskej pošty na „Slovak Post" v marci dal útočníkom 6 mesiacov priestoru s „aktualizáciou údajov k novému značeniu" e-mailmi. Krypto pump-and-dump na meme coiny zlikvidoval slovenských retailových investorov za vyše 12 miliónov €. Tento kurz prejde 5 najaktuálnejších schém v SR a ako každú rozoznáš za pár sekúnd.`,
     },
     {
       kind: "example",
@@ -63,7 +63,7 @@ export const topPodvody2026Course: Course = {
         number: "skrýva sa cez WhatsApp call — žiadne caller ID",
         hint: "AI klon hlasu zo 8 sekúnd LinkedIn videa CEO",
       },
-      commentary: `V 2026 BEC podvody postúpili — útočník volá cez WhatsApp s deepfake hlasom CEO, „súrny prevod 80 000 € na rakúsky účet, akvizícia, nikomu o tom nesmieš povedať". Hlas je 95 % autentický. Obrana: vždy druhé schválenie cez nezávislý kanál (osobne, alebo Slack DM s overením kontextu).`,
+      commentary: `V 2026 BEC podvody (podvod cez kompromitovaný firemný e-mail) postúpili — útočník volá cez WhatsApp s deepfake hlasom CEO, „súrny prevod 80 000 € na rakúsky účet, akvizícia, nikomu o tom nesmieš povedať". Hlas je 95 % autentický. Obrana: vždy druhé schválenie cez nezávislý kanál (osobne alebo Slack DM s overením kontextu).`,
     },
     {
       kind: "example",
@@ -73,7 +73,7 @@ export const topPodvody2026Course: Course = {
         url: "https://tradingbot-ai-elon-2026.com/sk/registracia",
         secure: true,
       },
-      commentary: `Reklama: „Elon Musk uvádza novú AI investičnú platformu pre Slovákov. Začnete s 250 €, do mesiaca máte 3 800 €." Deepfake video Elona / Andreja Kisku schvaľujúce platformu. Skutočnosť: pig-butchering platforma, peniaze nikdy nevidíš.`,
+      commentary: `Reklama: „Elon Musk uvádza novú AI investičnú platformu pre Slovákov. Začnete s 250 €, do mesiaca máte 3 800 €." Deepfake video Elona Muska / Andreja Kisku schvaľujúce platformu. Skutočnosť: pig butchering (dlhodobý investičný podvod budovaný cez vzťah) platforma, peniaze nikdy nevidíš.`,
     },
     {
       kind: "redflags",
@@ -108,7 +108,7 @@ export const topPodvody2026Course: Course = {
       kind: "scenario",
       heading: `Reálny scenár — „povinná aktualizácia údajov k Slovak Post"`,
       story: `Príde ti SMS: „Slovak Post: Po rebrandingu je nutné potvrdiť doručovacie údaje, inak hrozí prerušenie služby. Overiť: slovak-post.update-account.sk." Naozaj čakáš balík z Aliexpressu — zdá sa to dôveryhodné.`,
-      right_action: `Otvor si posta.sk / slovakpost.sk priamo v prehliadači (zadáš ručne). Skontroluj stav zásielky cez Pošta SR appku. SMS so „povinnou aktualizáciou" ignoruješ a nahlasiš na 7726 (bezplatná linka pre spam SMS). Žiadna pošta nevyžaduje aktualizáciu cez SMS link — vždy iba cez prihlásenie do oficiálnej appky alebo na webe.`,
+      right_action: `Otvor si posta.sk / slovakpost.sk priamo v prehliadači (zadáš ručne). Skontroluj stav zásielky cez Pošta SR appku. SMS so „povinnou aktualizáciou" ignoruješ a nahlásiš na 7726 (bezplatná linka pre spam SMS). Žiadna pošta nevyžaduje aktualizáciu cez SMS link — vždy iba cez prihlásenie do oficiálnej appky alebo na webe.`,
     },
   ],
   sources: [

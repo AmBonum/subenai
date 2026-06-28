@@ -15,7 +15,7 @@ export const ochranaBlizkychCourse: Course = {
     {
       kind: "intro",
       heading: "Prečo sú seniori v hľadáčiku",
-      body: `Podľa dát Europolu seniori tvoria viac ako 60 % obetí telefonických podvodov. Dôvodov je niekoľko: väčšie úspory na účte, menší technologický prehľad a väčšia ochota dôverovať autoritám (banka, polícia, lekár). Ty — ako ich blízky — si prvá obranná línia. Nie preto, lebo sú neschopní, ale pretože útočníci sú profesionáli, ktorí na tom trávia celú pracovnú dobu. Táto kapitola ti dáva konkrétne nástroje na rozhovor, nastavenie a reakciu po prípadnom útoku.`,
+      body: `Podľa dát Europolu seniori tvoria viac ako 60 % obetí telefonických podvodov. Dôvodov je niekoľko: väčšie úspory na účte, menší technologický prehľad a väčšia ochota dôverovať autoritám (banka, polícia, lekár). Ty — ako ich blízky — si prvá obranná línia. Nie preto, že by boli neschopní, ale preto, že útočníci sú profesionáli, ktorí tým trávia celý pracovný čas. Táto kapitola ti dáva konkrétne nástroje na rozhovor, nastavenia a reakciu po prípadnom útoku.`,
     },
     {
       kind: "example",
@@ -26,7 +26,7 @@ export const ochranaBlizkychCourse: Course = {
         number: "+43 912 345 678",
         hint: `„Babička, to som ja, Peter, mám tu problém, zrážka autom v Rakúsku. Potrebujem zálohu na právnika, 1 200 EUR. Mama nevie, prosím, nepovez jej nič, príde tam niekto prevziať obálku."`,
       },
-      commentary: `Útočníci skenujú sociálne siete, vedia meno vnuka, mesto kde býva babička. Hlas „nakloní" AI alebo jednoducho dúfajú, že babička ho v rozrušení nespozná. Heslo rodiny: zavolaj späť na číslo, ktoré máš uložené v kontaktoch. Vždy.`,
+      commentary: `Útočníci prehľadávajú sociálne siete, vedia meno vnuka aj mesto, kde býva babička. Hlas „naklonuje" umelá inteligencia (deepfake — umelo vygenerované falošné video či hlas) alebo jednoducho dúfajú, že babička ho v rozrušení nespozná. Rodinné pravidlo: zavolaj späť na číslo, ktoré máš uložené v kontaktoch. Vždy.`,
     },
     {
       kind: "example",
@@ -37,7 +37,7 @@ export const ochranaBlizkychCourse: Course = {
         number: "+421 2 xxxx xxxx",
         hint: `„Pán Kováč, zaznamenaná podozrivú transakcia na vašom účte. Aby sme vás ochránili, prosím choďte ihneď k bankomatu a urobte „bezpečnostný prevod" podľa môjho návodu."`,
       },
-      commentary: `Banka nikdy nepýta „bezpečnostný prevod k bankomatu". Akonáhle si pri bankomate s telefónom v ruke podľa cudzieho návodu — peniaze odchádzajú tebe. Správny krok: zavesiť a zavolať banke na číslo zo zadnej strany karty.`,
+      commentary: `Banka nikdy nepýta „bezpečnostný prevod pri bankomate". Len čo stojíš pri bankomate s telefónom v ruke a konáš podľa cudzieho návodu, peniaze odchádzajú z tvojho účtu. Správny krok: zavesiť a zavolať banke na číslo zo zadnej strany karty.`,
     },
     {
       kind: "checklist",
@@ -55,7 +55,10 @@ export const ochranaBlizkychCourse: Course = {
           good: true,
           text: "Nastavte SMS notifikácie pre každú transakciu na účte — každý výber, každý prevod.",
         },
-        { good: true, text: "Zapnite 2FA na ich emailovom účte — stačí SMS, nemusí byť app." },
+        {
+          good: true,
+          text: "Zapnite 2FA (dvojfaktorové overenie) na ich e-mailovom účte — stačí SMS, nemusí to byť aplikácia.",
+        },
         {
           good: true,
           text: "Povedzte im: banka, polícia ani Microsoft nikdy nežiadajú kód z SMS ani heslo.",
@@ -80,21 +83,21 @@ export const ochranaBlizkychCourse: Course = {
       do: [
         `Zavolajte banke okamžite — každá minúta zvyšuje šancu na zastavenie prevodu. Číslo: zadná strana karty.`,
         `Nahláste prípad na políciu (158) — bez nahlásenia nie je možné stíhanie ani štatistiky.`,
-        `Zmeňte heslá na emaile a internet bankingu z bezpečného zariadenia.`,
+        `Zmeňte heslá k e-mailu a internet bankingu z bezpečného zariadenia.`,
         `Informujte ostatných príbuzných — útočníci volajú aj druhýkrát, keď vedia, že obeť „funguje".`,
         `Podporte blízkeho emocionálne — hanba a šok sú normálne reakcie, nie slabosť.`,
       ],
       dont: [
-        `Neposielajte ďalšie peniaze na „späťplatbu" ani „poistenie" — to je ďalší útok.`,
-        `Nekritizujte blízkeho, že dal peniaze — podvod je prepracovaný, victim-blaming nepomáha.`,
-        `Nečakajte, kým sa „samo vyrieši" — operatívna banka intervencia funguje iba prvých 24 hodín.`,
+        `Neposielajte ďalšie peniaze na „vrátenie platby" ani „poistenie" — to je ďalší útok.`,
+        `Nekritizujte blízkeho, že dal peniaze — podvod je prepracovaný a obviňovanie obete nepomáha.`,
+        `Nečakajte, kým sa to „samo vyrieši" — rýchly zásah banky funguje iba prvých 24 hodín.`,
       ],
     },
     {
       kind: "scenario",
       heading: "Mama zavolá v panike",
       story: `Mama ti zavolá: „Volali z banky, že mi zablokujú účet, pomôž mi, prosím si ťa. Povedali, že mám ísť k bankomatu a zadať kód, ktorý mi pošlú." Je rozrušená, verí tomu. Chce ísť hneď.`,
-      right_action: `Vysvetlíš jej pokojne: „Mama, to je podvod. Banka nikdy takto nevolá. Nezavesuj, neber nič." Potom jej zavoláte spolu na číslo z jej bankovej karty — nie to, čo jej nechali. Overia, že žiadna blokácia nie je. Mama je v pohode, peniaze sú v bezpečí.`,
+      right_action: `Vysvetlíš jej pokojne: „Mama, to je podvod. Banka nikdy takto nevolá. Nikam nechoď, nič nerob." Potom spolu zavoláte na číslo z jej bankovej karty — nie na to, ktoré jej nechali. Banka overí, že žiadna blokácia nie je. Mama je v pohode, peniaze sú v bezpečí.`,
     },
   ],
   sources: [

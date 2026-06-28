@@ -4,7 +4,7 @@ export const dataHygieneCourse: Course = {
   slug: "data-hygiene",
   title: `Data hygiene — ako neprísť o digitálnu identitu`,
   tagline:
-    "2FA, správca hesiel a kontrola únikov: 30 minút setup-u, ktorý ti zachráni roky digitálnych problémov.",
+    "2FA (dvojfaktorové overenie), správca hesiel a kontrola únikov: 30 minút nastavovania, ktoré ti ušetria roky digitálnych problémov.",
   category: "data",
   difficulty: "začiatočník",
   estimatedMinutes: 10,
@@ -15,7 +15,7 @@ export const dataHygieneCourse: Course = {
     {
       kind: "intro",
       heading: `Prečo „mňa to nezaujíma" nestačí`,
-      body: `Aj keď nikdy neklikneš na podvodnú SMS, tvoje údaje sa môžu dostať na čierny trh inou cestou — únik z firmy, kde máš účet (LinkedIn, MyHeritage, AdultFriendFinder, Marriott — všetky reálne úniky posledných rokov). Útočník potom skúša tvoje heslo na desiatkach iných služieb. Ak používaš to isté heslo viackrát, máš problém.`,
+      body: `Aj keď nikdy neklikneš na podvodnú SMS, tvoje údaje sa môžu dostať na čierny trh inou cestou — únikom z firmy, kde máš účet (LinkedIn, MyHeritage, AdultFriendFinder, Marriott — všetko reálne úniky údajov posledných rokov). Útočník potom skúša tvoje heslo na desiatkach iných služieb. Ak používaš to isté heslo viackrát, máš problém.`,
     },
     {
       kind: "redflags",
@@ -23,29 +23,29 @@ export const dataHygieneCourse: Course = {
       flags: [
         `Používaš to isté heslo na viacerých službách.`,
         `Heslo je „menoSluzby123" alebo dátum narodenia.`,
-        `Nemáš zapnuté 2FA na e-maile (ten je kľúč ku všetkému).`,
-        `Posledných 12 mesiacov si nezmenil žiadne heslo.`,
+        `Nemáš zapnuté 2FA na e-maile (ten je kľúčom ku všetkému).`,
+        `Za posledných 12 mesiacov si nezmenil žiadne heslo.`,
         `Tvoj e-mail je v haveibeenpwned.com — pravdepodobne uniklo aspoň jedno heslo.`,
-        `Ukladáš si heslá v Notes / Excel / na papier vedľa monitora.`,
-        `Občas posielaš heslo cez SMS / e-mail kolegovi.`,
+        `Ukladáš si heslá v Poznámkach, Exceli alebo na papier vedľa monitora.`,
+        `Občas posielaš heslo kolegovi cez SMS či e-mail.`,
         `Tvoj telefón nemá nastavený PIN ani biometriu.`,
       ],
     },
     {
       kind: "checklist",
-      heading: `7-bodový setup, ktorý ťa vyrieši na roky`,
+      heading: `7-bodové nastavenie, ktoré ťa zabezpečí na roky`,
       items: [
         {
           good: true,
-          text: `Nainštaluj password manager (Bitwarden zadarmo, 1Password platený). Migruj všetky heslá tam.`,
+          text: `Nainštaluj si password manager (správcu hesiel — Bitwarden zadarmo, 1Password platený). Presuň doň všetky heslá.`,
         },
         {
           good: true,
-          text: `Vygeneruj nové unikátne heslá pre top 10 služieb (e-mail, banka, eshop, soc. siete).`,
+          text: `Vygeneruj nové unikátne heslá pre 10 najdôležitejších služieb (e-mail, banka, e-shop, sociálne siete).`,
         },
         {
           good: true,
-          text: `Zapni 2FA cez authenticator app (Google Authenticator, Authy) — NIE cez SMS, ak sa dá.`,
+          text: `Zapni 2FA cez authenticator (overovaciu aplikáciu — Google Authenticator, Authy) — ak sa dá, NIE cez SMS.`,
         },
         {
           good: true,
@@ -53,15 +53,15 @@ export const dataHygieneCourse: Course = {
         },
         {
           good: true,
-          text: `Skontroluj prepojené appky vo svojom Google / Microsoft / Apple účte. Zruš tie, čo nepoužívaš.`,
+          text: `Skontroluj prepojené aplikácie vo svojom Google / Microsoft / Apple účte. Zruš tie, ktoré nepoužívaš.`,
         },
         {
           good: true,
-          text: `Nastav recovery options (záložný e-mail, telefón, recovery codes).`,
+          text: `Nastav možnosti obnovy účtu (záložný e-mail, telefón, záložné kódy).`,
         },
         {
           good: true,
-          text: `Nastav obrazovku zámku na telefóne (PIN aspoň 6-miestny + biometria).`,
+          text: `Nastav si zamykaciu obrazovku na telefóne (PIN aspoň 6-miestny a biometria).`,
         },
       ],
     },
@@ -69,32 +69,32 @@ export const dataHygieneCourse: Course = {
       kind: "do_dont",
       heading: `Heslá — pravidlá`,
       do: [
-        `Generovať náhodné heslá v password manageri (16+ znakov).`,
+        `Generovať náhodné heslá v správcovi hesiel (16 a viac znakov).`,
         `Mať unikátne heslo pre každú službu.`,
-        `Pre veci, ktoré si musíš pamätať (master password), používať passphrase typu „kone-jablko-lampa-2x4".`,
-        `Pravidelne kontrolovať haveibeenpwned.com (alebo nechať notify).`,
+        `Pre heslá, ktoré si musíš pamätať (hlavné heslo, tzv. master password), používať prístupovú frázu typu „kone-jablko-lampa-2x4".`,
+        `Pravidelne kontrolovať haveibeenpwned.com (alebo si nechať posielať upozornenia).`,
       ],
       dont: [
         `Neopakovať heslá medzi službami. NIKDY.`,
-        `Nezdieľať heslo cez e-mail / SMS / Slack v plain texte.`,
-        `Neskladovať heslá v poznámkach v telefóne.`,
-        `Nepoužívať „heslo123", dátum narodenia, meno mačky.`,
+        `Nezdieľať heslo cez e-mail, SMS či Slack v čitateľnej podobe.`,
+        `Neukladať heslá v poznámkach v telefóne.`,
+        `Nepoužívať „heslo123", dátum narodenia ani meno mačky.`,
       ],
     },
     {
       kind: "do_dont",
       heading: `2FA — pravidlá`,
       do: [
-        `Authenticator app (Google Authenticator, Authy, 1Password) — najsilnejšie.`,
+        `Overovacia aplikácia (Google Authenticator, Authy, 1Password) — najsilnejšia ochrana.`,
         `Hardvérový kľúč (YubiKey) pre kritické účty (bankovníctvo, kryptoburzy).`,
-        `Uložiť si recovery codes do password managera + offline.`,
-        `Zapnúť 2FA na e-maile ako prvé. Ten je kľúč k resetu všetkého ostatného.`,
+        `Uložiť si záložné kódy do správcu hesiel aj offline.`,
+        `Zapnúť 2FA na e-maile ako prvé. Ten je kľúčom k obnove všetkého ostatného.`,
       ],
       dont: [
-        `Nezálohovať 2FA seedy do iCloud / Google Drive bez šifrovania.`,
-        `SMS 2FA len keď nie je iná možnosť (SIM swap útok existuje).`,
-        `Nediktovať OTP z 2FA nikomu — ani „bankárovi" cez telefón.`,
-        `Nezatvárať 2FA recovery flow bez toho, aby si si zapísal záložné kódy.`,
+        `Nezálohovať tajné kľúče (seedy) 2FA do iCloudu či Google Drivu bez šifrovania.`,
+        `SMS 2FA používať len vtedy, keď nie je iná možnosť (útok SIM swap, čiže prenos čísla na cudziu SIM, existuje).`,
+        `Nediktovať OTP (jednorazový overovací kód) z 2FA nikomu — ani „bankárovi" cez telefón.`,
+        `Nezatvárať obnovu 2FA bez toho, aby si si zapísal záložné kódy.`,
       ],
     },
     {
@@ -102,17 +102,17 @@ export const dataHygieneCourse: Course = {
       heading: `Vzor — ako vyzerá únik dát`,
       visual: {
         kind: "text",
-        label: `LinkedIn 2021 leak (700 mil. profilov)`,
-        body: `V roku 2021 unikli údaje 700 miliónov LinkedIn profilov: meno, e-mail, telefón, pracovná pozícia, a hashe niektorých hesiel. Ak si v tom čase mal LinkedIn účet, tvoj e-mail sa pravdepodobne objavil v zozname.
+        label: `Únik LinkedIn 2021 (700 mil. profilov)`,
+        body: `V roku 2021 unikli údaje 700 miliónov profilov LinkedIn: meno, e-mail, telefón, pracovná pozícia a hashe niektorých hesiel. Ak si v tom čase mal účet na LinkedIne, tvoj e-mail sa pravdepodobne objavil v zozname.
 
 Útočníci tieto úniky používajú na:
-• Targeted phishing (poznajú tvoju firmu, pozíciu, kolegov).
-• Credential stuffing — skúšajú heslo z LinkedIn-u na Gmail-i, banke.
-• Social engineering — „Volám z LinkedIn HR, váš profil treba overiť."
+• Cielený phishing (podvodné vylákanie údajov) — poznajú tvoju firmu, pozíciu, kolegov.
+• Credential stuffing (hromadné skúšanie uniknutých prihlasovacích údajov) — skúšajú heslo z LinkedInu na Gmaile či v banke.
+• Sociálne inžinierstvo (manipulácia s cieľom získať údaje) — „Volám z personálneho oddelenia LinkedIn, váš profil treba overiť."
 
 Test: zadaj svoj e-mail na haveibeenpwned.com a uvidíš, kde všade si.`,
       },
-      commentary: `Únik nie je tvoja chyba — firma má bezpečnostnú dieru. Tvoja zodpovednosť je len jedna: nepoužívať to isté heslo druhý raz. Password manager + 2FA = problém vyriešený.`,
+      commentary: `Únik nie je tvoja chyba — bezpečnostnú dieru má firma. Tvoja zodpovednosť je len jedna: nepoužívať to isté heslo druhýkrát. Správca hesiel a 2FA = problém vyriešený.`,
     },
     {
       kind: "checklist",
@@ -120,19 +120,19 @@ Test: zadaj svoj e-mail na haveibeenpwned.com a uvidíš, kde všade si.`,
       items: [
         {
           good: true,
-          text: `Skontrolovať e-mail v haveibeenpwned.com (alebo notifikácie z password managera).`,
+          text: `Skontrolovať e-mail na haveibeenpwned.com (alebo notifikácie zo správcu hesiel).`,
         },
         {
           good: true,
-          text: `Skontrolovať aktívne sessions na Gmail / Facebook / Instagram (Settings → Where you're logged in).`,
+          text: `Skontrolovať aktívne prihlásenia na Gmaile / Facebooku / Instagrame (Nastavenia → Kde si prihlásený).`,
         },
         {
           good: true,
-          text: `Skontrolovať autorizované appky a zrušiť tie, čo už nepoužívaš.`,
+          text: `Skontrolovať autorizované aplikácie a zrušiť tie, ktoré už nepoužívaš.`,
         },
         {
           good: true,
-          text: `Pri akomkoľvek upozornení na nový login z neznámeho zariadenia — okamžite zmeniť heslo.`,
+          text: `Pri akomkoľvek upozornení na nové prihlásenie z neznámeho zariadenia — okamžite zmeniť heslo.`,
         },
       ],
     },
@@ -140,7 +140,7 @@ Test: zadaj svoj e-mail na haveibeenpwned.com a uvidíš, kde všade si.`,
       kind: "scenario",
       heading: `Reálny scenár — pondelok ráno, e-mail z neznámeho zariadenia`,
       story: `Príde ti e-mail: „New sign-in to your Google account from Lagos, Nigeria. If this wasn't you, secure your account." Ty si bol celý víkend doma v Žiline.`,
-      right_action: `Otvor Google account ručne (nie z linku v e-maile). Choď do Security → Recent sign-ins. Ak je tam Lagos — okamžite zmeň heslo, odhlás všetky sessions, skontroluj 2FA. Ak nie — pravdepodobne phishing.`,
+      right_action: `Otvor si Google účet ručne (nie z odkazu v e-maile). Choď do Zabezpečenie → Nedávne prihlásenia. Ak je tam Lagos — okamžite zmeň heslo, odhlás všetky relácie a skontroluj 2FA. Ak nie — pravdepodobne ide o phishing (podvodné vylákanie prihlasovacích či platobných údajov).`,
     },
   ],
   sources: [

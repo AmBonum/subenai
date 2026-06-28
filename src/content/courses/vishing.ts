@@ -16,18 +16,18 @@ export const vishingCourse: Course = {
     {
       kind: "intro",
       heading: "Telefón je psychologická bomba",
-      body: `Vishing (voice phishing) zneužíva najsilnejšiu zbraň útočníka — živý hlas. V SMS si môžeš dať pauzu, e-mail si môžeš dvakrát prečítať. Ale keď ti zavolá „bankár" a tlačí ťa, mozog sa zalkne. Práve preto je vishing finančne najškodlivejší typ podvodu — priemerná škoda na obeť je rádovo tisíce eur.`,
+      body: `Vishing (phishing cez telefonát) zneužíva najsilnejšiu zbraň útočníka — živý hlas. Pri SMS si môžeš dať pauzu, e-mail si môžeš dvakrát prečítať. Ale keď ti zavolá „bankár" a tlačí ťa, mozog sa zasekne. Práve preto je vishing finančne najškodlivejší typ podvodu — priemerná škoda na jednu obeť je rádovo tisíce eur.`,
     },
     {
       kind: "example",
-      heading: `Scenár #1 — „bankár" o úteku peňazí`,
+      heading: `Scenár #1 — „bankár" o úniku peňazí`,
       visual: {
         kind: "call",
         caller: "Slovenská sporiteľňa",
         number: "+421 2 5826 1111",
         hint: `„Dobrý deň, volám z bezpečnostného oddelenia. Z vášho účtu sa práve snaží odísť 4 800 EUR do zahraničia. Aby sme to zastavili, potrebujem od vás kód, ktorý vám teraz príde SMSkou."`,
       },
-      commentary: `Skutočný bankár ťa NIKDY nepýta o kód z SMS. Ten kód je práve to, čím útočník schvaľuje prevod (3D Secure / strong customer authentication). Diktovaním kódu mu sám podpíšeš odchod peňazí.`,
+      commentary: `Skutočný bankár od teba NIKDY nepýta kód z SMS. Ten kód je práve to, čím útočník schvaľuje prevod (3D Secure / strong customer authentication). Diktovaním kódu mu sám podpíšeš odchod peňazí.`,
     },
     {
       kind: "example",
@@ -53,7 +53,7 @@ export const vishingCourse: Course = {
     },
     {
       kind: "example",
-      heading: `Scenár #4 — „dcéra v núdzi" (deepfake hlas)`,
+      heading: `Scenár #4 — „dcéra v núdzi" (deepfake hlas — umelo vygenerovaný falošný hlas)`,
       visual: {
         kind: "call",
         caller: "neznáme číslo",
@@ -66,7 +66,7 @@ export const vishingCourse: Course = {
       kind: "redflags",
       heading: "Indície, že hovor je podvod",
       flags: [
-        `Volajúci od „banky" pýta kód z SMS, OTP, PIN, alebo heslo do internet bankingu.`,
+        `Volajúci od „banky" pýta kód z SMS, OTP (jednorazový overovací kód), PIN alebo heslo do internet bankingu.`,
         `„Polícia" / „daňový úrad" / „súd" tlačí na okamžitý prevod alebo platbu.`,
         `„Microsoft", „Google", „Apple support" volá z vlastnej iniciatívy.`,
         `Volajúci požaduje, aby si nezavesil a šiel s telefónom k bankomatu.`,

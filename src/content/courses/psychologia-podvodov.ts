@@ -26,7 +26,7 @@ export const psychologiaPodvodovCourse: Course = {
         body: `Podozriva transakcia 1 248 EUR. Ak nebola Vasa, potvrdte zrusenie do 10 minut: tatra-bezpecnost.sk-overenie.com`,
         time: "dnes 22:48",
       },
-      commentary: `Časový tlak vypína prefrontálny kortex. „Do 10 minút" + neskorá hodina = mozog v paniku a klik. Skutočná Tatra banka ti dá čas, žiadne 10-minútové ultimátum.`,
+      commentary: `Časový tlak vypína prefrontálny kortex. „Do 10 minút" + neskorá hodina = mozog v panike klikne. Skutočná Tatra banka ti dá čas, žiadne 10-minútové ultimátum.`,
     },
     {
       kind: "example",
@@ -37,7 +37,7 @@ export const psychologiaPodvodovCourse: Course = {
         number: "+421 2 4444 1234",
         hint: "číslo sa dá sfalšovať cez VoIP — caller ID nie je dôkaz",
       },
-      commentary: `Titul, hodnosť, oficiálny tón. Mozog je naučený poslúchať autoritu. Skutočný vyšetrovateľ ťa nikdy nepýta o presune peňazí cez telefón — vyšetrovanie ide cez výsluch na stanici.`,
+      commentary: `Titul, hodnosť, oficiálny tón. Mozog je naučený poslúchať autoritu. Skutočný vyšetrovateľ ťa nikdy nežiada o presun peňazí cez telefón — vyšetrovanie ide cez výsluch na stanici.`,
     },
     {
       kind: "example",
@@ -50,7 +50,7 @@ export const psychologiaPodvodovCourse: Course = {
         cta: "Zistiť viac",
         imageEmoji: "💰",
       },
-      commentary: `„Tisíce iných to robia" obíde tvoj kritický filter — keď to funguje masám, asi to nie je podvod, že? Falošné komentáre a fake účty sú jeden z najlacnejších nástrojov scammera.`,
+      commentary: `„Tisíce iných to robia" obíde tvoj kritický filter — keď to funguje masám, asi to nie je podvod, že? Falošné komentáre a falošné účty sú jeden z najlacnejších nástrojov podvodníka.`,
     },
     {
       kind: "example",
@@ -63,7 +63,7 @@ export const psychologiaPodvodovCourse: Course = {
         body: `Detegovali sme neoprávnený pokus o prihlásenie. Pre zachovanie prístupu sa musíte overiť do 24 hodín, inak bude účet zablokovaný a všetky transakcie pozastavené.`,
         cta: "Overiť účet",
       },
-      commentary: `Strata bolí dvakrát viac, než radosť zo zisku (loss aversion, Kahneman). „Stratíš prístup" je silnejšia páka než „získaj bonus". Slovenská sporiteľňa neposiela hrozby cez e-mail.`,
+      commentary: `Strata bolí dvakrát viac než radosť zo zisku (averzia k strate, Kahneman). „Stratíš prístup" je silnejšia páka než „získaj bonus". Slovenská sporiteľňa neposiela hrozby cez e-mail.`,
     },
     {
       kind: "example",
@@ -73,11 +73,11 @@ export const psychologiaPodvodovCourse: Course = {
         label: `Správa od „investičného poradcu" po 3 mesiacoch chatovania`,
         body: `Anna, prosím, len ešte 800 €. Účet je takmer odblokovaný a tých 47 000 € konečne uvidíš. Zachránil som ťa z tej kryptopasce, pamätáš? Ver mi naposledy.`,
       },
-      commentary: `Pig-butchering hrá na pocit dlhu („pomohol mi"). Čím viac si investoval — čas, peniaze, emócie — tým ťažšie odísť. Klasický sunk-cost fallacy.`,
+      commentary: `Pig butchering (dlhodobý investičný podvod budovaný cez vzťah) hrá na pocit dlhu („pomohol mi"). Čím viac si investoval — čas, peniaze, emócie — tým ťažšie sa odchádza. Klasický sunk-cost fallacy (klam utopených nákladov).`,
     },
     {
       kind: "redflags",
-      heading: "7 spúšťačov, ktoré tvoj mozog robia zraniteľný",
+      heading: "7 spúšťačov, ktoré robia tvoj mozog zraniteľným",
       flags: [
         `Naliehavosť — „do 10 minút", „posledná šanca", „inak ti zablokujú účet".`,
         `Autorita — uniforma, titul, hodnosť, „pán doktor", „kapitán polície".`,
@@ -93,22 +93,22 @@ export const psychologiaPodvodovCourse: Course = {
       heading: "Ako si vypnúť automatickú reakciu",
       do: [
         `Pri každej naliehavej správe sa donúť počkať 10 minút pred akýmkoľvek krokom — emócia za ten čas opadne.`,
-        `Pýtaj sa: „Prečo má on/ona naponáhlo, keď ja nemám?" Naliehavosť je červená vlajka.`,
+        `Pýtaj sa: „Prečo sa on/ona ponáhľa, keď ja nemusím?" Naliehavosť je varovný signál.`,
         `Overuj druhým kanálom — banka SMS, telefón na oficiálne číslo z webu, nie z e-mailu.`,
         `Hovor s niekým z rodiny alebo kolegom skôr, než pošleš väčšiu sumu komukoľvek.`,
       ],
       dont: [
         `Nikdy nerob finančné rozhodnutia v strese, panike alebo neskoro v noci.`,
         `Neignoruj pocit, že „niečo je čudné" — intuícia je často rýchlejšia než logika.`,
-        `Nepreceňuj sa — „mne sa to nestane" je presne myslenie, na ktorom scameri stavajú.`,
-        `Nedôveruj caller ID, e-mailovým adresám ani titulom — všetko sa dá sfalšovať.`,
+        `Nepreceňuj sa — „mne sa to nestane" je presne to myslenie, na ktorom podvodníci stavajú.`,
+        `Nedôveruj zobrazenému číslu volajúceho (caller ID), e-mailovým adresám ani titulom — všetko sa dá sfalšovať.`,
       ],
     },
     {
       kind: "scenario",
       heading: `Reálny scenár — falošný „bankár"`,
       story: `Volá ti človek, predstavuje sa ako Peter Hudák zo Slovenskej sporiteľne, bezpečnostné oddelenie. Vie tvoje meno, vie posledné 4 čísla karty (zistené z úniku dát). Hovorí: „Pán Kováč, práve sa vám niekto pokúsil zobrať 2 400 €. Aby sme transakciu zablokovali, presuňte peniaze na bezpečnostný účet, ktorý vám teraz nadiktujem."`,
-      right_action: `Zavesíš. Otvoríš mobilnú appku Slovenskej sporiteľne — tam vidíš všetky transakcie naživo. Ak je niečo podozrivé, voláš na číslo z appky alebo z karty (nie to, ktoré ti práve volal „Peter"). Žiadna banka v SR nikdy nepýta presun peňazí na „bezpečnostný účet". To je vždy podvod.`,
+      right_action: `Zavesíš. Otvoríš mobilnú aplikáciu Slovenskej sporiteľne — tam vidíš všetky transakcie naživo. Ak je niečo podozrivé, voláš na číslo z aplikácie alebo z karty (nie na to, z ktorého ti práve volal „Peter"). Žiadna banka v SR nikdy nežiada presun peňazí na „bezpečnostný účet". To je vždy podvod.`,
     },
   ],
   sources: [

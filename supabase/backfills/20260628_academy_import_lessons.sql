@@ -24,7 +24,7 @@ VALUES (
   $exc$5 typov podvodných SMS, ktoré teraz lietajú na Slovensku — a ako ich rozoznáš za 3 sekundy podľa červených vlajok.$exc$,
   $body$## Prečo SMS, prečo teraz
 
-Smishing (SMS phishing) je momentálne najčastejší typ podvodu na Slovensku. Útočník ti pošle krátku správu, ktorá vyzerá ako od pošty, banky alebo úradu, a tlačí ťa, aby si urýchlene klikol. Stačia tri sekundy nepozornosti — a si na falošnej stránke, ktorá ti zoberie buď peniaze, alebo prístup do internet bankingu.
+Smishing (phishing cez SMS) je momentálne najčastejší typ podvodu (scam) na Slovensku. Ide o phishing (podvodné vylákanie prihlasovacích či platobných údajov) doručený cez textovú správu: útočník ti pošle krátku správu, ktorá vyzerá ako od pošty, banky alebo úradu, a tlačí ťa, aby si urýchlene klikol. Stačia tri sekundy nepozornosti — a si na falošnej stránke, ktorá ti zoberie buď peniaze, alebo prístup do internet bankingu.
 
 ## Vzor #1 — „Slovenská pošta"
 
@@ -48,7 +48,7 @@ Polícia SR pokuty cez SMS neposiela. Doručia ich poštou s číslom konania, a
 
 [[visual:b64:eyJraW5kIjoic21zIiwic2VuZGVyIjoic2xvdmVuc2tvLXNrIiwiYm9keSI6IlZhc2EgZWxla3Ryb25pY2thIGlkZW50aWZpa2FjbmEga2FydGEgdnlwcnNhbGEuIFByZWRpenRlIHNpIGp1IG9ubGluZTogc2xvdmVuc2tvLWlkLnNrLW92ZXJlbmllLmNvbSIsInRpbWUiOiJ2xI1lcmEgMTg6MDIifQ==]]
 
-Štátna stránka slovensko.sk neposiela SMS upozornenia o eID. Predĺženie eID rieši okresné riaditeľstvo PZ osobne. Doména s viacerými pomlčkami a koncovkou .com na štátnu službu je instantný red flag.
+Štátna stránka slovensko.sk neposiela SMS upozornenia o eID. Predĺženie eID rieši okresné riaditeľstvo PZ osobne. Doména s viacerými pomlčkami a koncovkou .com pri štátnej službe je okamžitý varovný signál.
 
 ## Vzor #5 — „Daňový úrad — preplatok"
 
@@ -58,17 +58,17 @@ Polícia SR pokuty cez SMS neposiela. Doručia ich poštou s číslom konania, a
 
 ## 8 indícií, podľa ktorých rozoznáš smishing za 3 sekundy
 
-**Červená vlajka:** Skrátený link (bit.ly, tinyurl, t.co) alebo doména s viacerými pomlčkami.
+**Červená vlajka:** Skrátený odkaz (bit.ly, tinyurl, t.co) alebo doména s viacerými pomlčkami.
 
 **Červená vlajka:** Pravopisné chyby alebo chýbajúca diakritika („Vasa zasielka").
 
-**Červená vlajka:** Odosielateľ je číslo zo zahraničia (+44, +1, +234) namiesto SK alphanumeric ID.
+**Červená vlajka:** Odosielateľ je číslo zo zahraničia (+44, +1, +234) namiesto slovenského alfanumerického názvu odosielateľa.
 
 **Červená vlajka:** Časový tlak — „do 24 hodín", „posledná šanca", „inak hrozí".
 
-**Červená vlajka:** Žiadosť o citlivý údaj (heslo, kód z SMS, OTP, PIN) cez správu.
+**Červená vlajka:** Žiadosť o citlivý údaj (heslo, kód z SMS, OTP — jednorazový overovací kód, PIN) cez správu.
 
-**Červená vlajka:** Doména v linke nepatrí inštitúcii — csob-secure.online namiesto csob.sk.
+**Červená vlajka:** Doména v odkaze nepatrí inštitúcii — csob-secure.online namiesto csob.sk.
 
 **Červená vlajka:** SMS sa tvári ako od štátu, ale štát skoro nikdy SMS na vybavovanie nepoužíva.
 
@@ -79,22 +79,22 @@ Polícia SR pokuty cez SMS neposiela. Doručia ich poštou s číslom konania, a
 ### ✅ Rob
 
 - Pri pochybnostiach zavolaj inštitúcii (banka, pošta, polícia) priamo na číslo z ich oficiálneho webu.
-- Otvor stránku ručne vpísaním adresy do prehliadača — nikdy z linku v SMS.
+- Otvor stránku ručne vpísaním adresy do prehliadača — nikdy nie z odkazu v SMS.
 - Zapni si dvojfaktorovú autentifikáciu (2FA) všade, kde sa dá. Najmä na e-maile.
 - Podozrivú SMS nahlas na 7726 (bezplatná linka pre spam SMS) alebo na NCKB.
 
 ### ❌ Nerob
 
-- Neklikať na link zo SMS, ani „len zo zvedavosti".
+- Neklikať na odkaz zo SMS, ani „len zo zvedavosti".
 - Neodpovedať „STOP" — potvrdíš tým, že číslo je aktívne.
 - Nediktovať OTP / PIN / heslo nikomu, ani „bankárovi" cez telefón.
-- Neinstalovať appky z linkov mimo App Store / Google Play.
+- Neinštalovať aplikácie z odkazov mimo App Store / Google Play.
 
 ## Reálny scenár
 
-Príde ti SMS „Vaša zásielka čaká na pošte, doplatte 1,30 € za clo". Vieš, že práve čakáš balík z AliExpressu. Linkajú ti posta-sk.payment-now.com.
+Príde ti SMS „Vaša zásielka čaká na pošte, doplatte 1,30 € za clo". Vieš, že práve čakáš balík z AliExpressu. Posielajú ti odkaz posta-sk.payment-now.com.
 
-**Zlaté pravidlo:** Otvoríš Pošta SR appku alebo posta.sk ručne. Tam zistíš stav zásielky a prípadný doplatok. Link zo SMS ignoruješ. Ak balík nikde nie je, SMS ide do koša.$body$,
+**Zlaté pravidlo:** Otvoríš Pošta SR appku alebo posta.sk ručne. Tam zistíš stav zásielky a prípadný doplatok. Odkaz zo SMS ignoruješ. Ak balík nikde nie je, SMS ide do koša.$body$,
   'lesson', $diff$beginner$diff$, 8, $emoji$📱$emoji$, 8,
   $src$[{"label":"NBÚ — odporúčania pre občanov","url":"https://www.nbu.gov.sk/"},{"label":"Slovenská pošta — bezpečnostné upozornenia","url":"https://www.posta.sk/"},{"label":"NCKB — najčastejšie typy podvodov","url":"https://www.sk-cert.sk/"}]$src$::jsonb,
   'published', $pub$2026-04-26$pub$
@@ -129,13 +129,13 @@ VALUES (
   $exc$Falošná banka, falošný Microsoft, falošný šéf: 6 typických vzorov a 30-sekundový checklist, ktorým ich odhalíš.$exc$,
   $body$## Email je stále útok č. 1
 
-Aj keď SMS vedie v rýchlosti, e-mail je stále hlavný kanál pre cielené podvody. Útočník má v ňom miesto na presvedčivý dizajn, falošné logá a kvalitne preložený text. Cieľ je rovnaký: dostať ťa na falošnú stránku, alebo aby si stiahol prílohu.
+Aj keď SMS vedie v rýchlosti, e-mail je stále hlavný kanál pre cielené phishingové (podvodné vylákanie prihlasovacích či platobných údajov) útoky. Útočník má v ňom miesto na presvedčivý dizajn, falošné logá a kvalitne preložený text. Cieľ je rovnaký: dostať ťa na falošnú stránku alebo aby si stiahol prílohu.
 
 ## Vzor #1 — „Slovenská sporiteľňa" o blokovaní účtu
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiU2xvdmVuc2vDoSBzcG9yaXRlxL7FiGEiLCJmcm9tRW1haWwiOiJuby1yZXBseUBzbHNwLWJlenBlY25vc3Qub25saW5lIiwic3ViamVjdCI6IkJlenBlxI1ub3N0bsOpIHVwb3pvcm5lbmllIOKAlCBvdmVydGUgc2EgZG8gMjQgaG9kw61uIiwiYm9keSI6IlbDocW+ZW7DvSBrbGllbnQsIG5hIHZhxaFvbSDDusSNdGUgYm9saSB6YXpuYW1lbmFuw6kgbmVvYnZ5a2zDqSBwb2h5YnkuIEFrIHNhIGRvIDI0IGhvZMOtbiBuZXByaWFobGFzaXRlIGNleiBuacW+xaFpZSB1dmVkZW7DvSBvZGtheiwgdsOhxaEgcHLDrXN0dXAgZG8gaW50ZXJuZXQgYmFua2luZ3UgYnVkZSBwb3phc3RhdmVuw70uIiwiY3RhIjoiT3ZlcmnFpSDDusSNZXQifQ==]]
 
-From doména slsp-bezpecnost.online — slovenská sporiteľňa píše z @slsp.sk, nie z náhodne registrovanej .online. „Overte sa do 24 hodín" je pavlovov reflex na strach. Žiadna banka takto nekomunikuje.
+Doména odosielateľa slsp-bezpecnost.online — Slovenská sporiteľňa píše z @slsp.sk, nie z náhodne registrovanej .online. „Overte sa do 24 hodín" je pavlovovský reflex na strach. Žiadna banka takto nekomunikuje.
 
 ## Vzor #2 — „Microsoft 365" o vypršaní hesla
 
@@ -147,13 +147,13 @@ Microsoft komunikuje výhradne z @microsoft.com a @account.microsoft.com. Domén
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiUGV0ZXIgTm92w6FrIChDRU8pIiwiZnJvbUVtYWlsIjoicGV0ZXIubm92YWtAZmlybWEtc2suY28iLCJzdWJqZWN0IjoiVXJnZW50bmUg4oCUIHBvdHJlYnVqZW0gcHJldm9kLCBzb20gbmEgbWVldGluZy11IiwiYm9keSI6IkFob2osIHNvbSB0ZXJheiBuYSB6w6FrYXpuw61ja29tIG1lZXRpbmd1IGEgbmVtw7TFvmVtIHZvbGHFpS4gUG90cmVidWplbSB1cmdlbnRuZSBwcmV2b2RvbSBwb3NsYcWlIDcgODAwIEVVUiBuYSDDusSNZXQgZG9kw6F2YXRlxL5hLCDEjcOtc2xvIElCQU46IFNLMzUgLi4uIFBvxaFsaSBtaSBwb3R2cmRlbmllLCDEj2FrdWplbS4ifQ==]]
 
-Tzv. Business Email Compromise (BEC). Útočník si spravil doménu firma-sk.co (skutočná je firma.sk). Píše v štýle CEO, vyvíja tlak. Žiadny šéf nepýta urgentnú platbu cez e-mail bez verifikácie. Vždy zavolaj na známy telefónny kontakt.
+Tzv. Business Email Compromise (podvod cez kompromitovaný firemný e-mail), skrátene BEC. Útočník si spravil doménu firma-sk.co (skutočná je firma.sk). Píše v štýle CEO, vyvíja tlak. Žiadny šéf nepýta urgentnú platbu cez e-mail bez verifikácie. Vždy zavolaj na známy telefónny kontakt.
 
 ## Vzor #4 — „Faktúra na zaplatenie" s prílohou .zip
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiw5rEjXRvdm7DrWN0dm8iLCJmcm9tRW1haWwiOiJ1Y3Rvdm5pY3R2b0Btb2phZG9kYXZrYS1mYWt0dXJhLmNvbSIsInN1YmplY3QiOiJGYWt0w7pyYSDEjS4gMjAyNC0xMTg3IG5hIMO6aHJhZHUiLCJib2R5IjoiViBwcsOtbG9oZSBuw6FqZGV0ZSBmYWt0w7pydSDEjS4gMjAyNC0xMTg3IHNwbGF0bsO6IGRvIDcgZG7DrS4gUHJpIHBvY2h5Ym5vc3RpYWNoIGtvbnRha3R1anRlIG5hxaFlIMO6xI10b3Zuw61jdHZvLiBQcsOtbG9oYTogZmFrdHVyYV8xMTg3LnppcCJ9]]
 
-Faktúra v .zip alebo .iso prílohe je takmer vždy malware. Skutočné faktúry sú PDF priamo, alebo cez známy systém. Ak si nečakáš faktúru od tejto firmy — neotváraj.
+Faktúra v .zip alebo .iso prílohe je takmer vždy malware (škodlivý softvér). Skutočné faktúry sú PDF priamo alebo cez známy systém. Ak nečakáš faktúru od tejto firmy — neotváraj.
 
 ## Vzor #5 — „LinkedIn" — nová pracovná ponuka
 
@@ -167,7 +167,7 @@ LinkedIn píše z @linkedin.com. Doména linkedin-careers-eu.com nepatrí im. Pr
 
 PayPal píše z @paypal.com. Aj samotná správa môže byť pravdivá pocitovo (mohol by si sa skutočne prihlasovať z iného miesta), ale doména a CTA tlačia na rýchle kliknutie.
 
-## 10 vecí na ktoré sa pozri pred kliknutím
+## 10 vecí, na ktoré sa pozri pred kliknutím
 
 **Červená vlajka:** Doména odosielateľa nepatrí firme — pozri si ju ZA znakom @, nie len zobrazené meno.
 
@@ -181,44 +181,44 @@ PayPal píše z @paypal.com. Aj samotná správa môže byť pravdivá pocitovo 
 
 **Červená vlajka:** Príloha .zip / .iso / .exe / .scr — nikdy neotvárať.
 
-**Červená vlajka:** Pravopisné chyby alebo zlý preklad (najmä u „banka SR").
+**Červená vlajka:** Pravopisné chyby alebo zlý preklad (najmä pri „banke SR").
 
-**Červená vlajka:** Žiadosť o heslo, OTP, PIN cez e-mail.
+**Červená vlajka:** Žiadosť o heslo, OTP (jednorazový overovací kód) či PIN cez e-mail.
 
-**Červená vlajka:** Link, ktorý po hover-e ukazuje inú doménu ako text linku.
+**Červená vlajka:** Odkaz, ktorý po nabehnutí kurzorom ukazuje inú doménu ako text odkazu.
 
 **Červená vlajka:** Nečakaná faktúra od dodávateľa, s ktorým nemáš zmluvu.
 
 ## Rýchla 30-sekundová kontrola
 
 - ❌ Doména za @ vyzerá ako „banka-secure.online".
-- ❌ Ja som pozvaný na pohovor, hoci som nikam neposielal CV.
+- ❌ Som pozvaný na pohovor, hoci som nikam neposielal CV.
 - ❌ E-mail mi tlačí čas alebo ma straší.
 - ✅ Doména súhlasí — slsp.sk, microsoft.com, paypal.com.
 - ✅ E-mail rieši niečo, čo som naozaj v posledných dňoch robil.
-- ✅ Otvorím stránku ručne, nie z linku v e-maile.
+- ✅ Otvorím stránku ručne, nie z odkazu v e-maile.
 
 ## Pravidlá
 
 ### ✅ Rob
 
 - Pri každom „bankovom" e-maile otvor banku ručne v prehliadači.
-- 2FA na e-mail (Gmail, Outlook). Ten je kľúč k všetkému ostatnému.
-- Pri urgentnom príkaze od „šéfa" zavolaj mu — nie odpíš e-mailom.
-- Príloha sa otvára iba vtedy, keď ju očakávaš a poznáš odosielateľa.
+- Zapni 2FA (dvojfaktorové overenie) na e-mail (Gmail, Outlook). Ten je kľúčom k všetkému ostatnému.
+- Pri urgentnom príkaze od „šéfa" mu zavolaj — neodpisuj e-mailom.
+- Prílohu otváraj iba vtedy, keď ju očakávaš a poznáš odosielateľa.
 
 ### ❌ Nerob
 
-- Nedôverovať zobrazenému menu odosielateľa — len doméne za @.
-- Neklikať na „obnoviť heslo" linky z e-mailu — vždy ručne.
-- Nepreposielať podozrivý e-mail kolegom — môžu kliknúť za teba.
-- Nedávať odpoveď „STOP" alebo „odhlásiť" útočníkovi.
+- Nedôveruj zobrazenému menu odosielateľa — len doméne za @.
+- Neklikaj na odkazy „obnoviť heslo" z e-mailu — vždy ručne.
+- Nepreposielaj podozrivý e-mail kolegom — môžu kliknúť za teba.
+- Nedávaj odpoveď „STOP" ani „odhlásiť" útočníkovi.
 
 ## Reálny scenár — pondelok ráno
 
 Otvoríš Outlook. „Microsoft: vaše heslo vyprší dnes o 18:00, kliknite a obnovte." Si v strese, máš online meeting o 5 minút. Klikneš?
 
-**Zlaté pravidlo:** Nie. Otvoríš Microsoft account ručne v inom tabe (account.microsoft.com), prihlásiš sa cez známy flow. Tam buď naozaj uvidíš upozornenie, alebo nie. Žiadnu „obnovu" cez e-mail nikdy nerob.$body$,
+**Zlaté pravidlo:** Nie. Otvoríš si konto Microsoft ručne v inej karte (account.microsoft.com) a prihlásiš sa zaužívaným postupom. Tam buď naozaj uvidíš upozornenie, alebo nie. Žiadnu „obnovu" cez e-mail nikdy nerob.$body$,
   'lesson', $diff$beginner$diff$, 9, $emoji$✉️$emoji$, 9,
   $src$[{"label":"NCKB — phishing detail","url":"https://www.sk-cert.sk/"},{"label":"Microsoft — Identifying phishing","url":"https://support.microsoft.com/"},{"label":"PayPal — bezpečnostné centrum","url":"https://www.paypal.com/sk/security"}]$src$::jsonb,
   'published', $pub$2026-04-26$pub$
@@ -253,13 +253,13 @@ VALUES (
   $exc$„Banka", „polícia" alebo „Microsoft" v telefóne? 4 scenáre + presné vety, ktorými hovor ukončíš za 5 sekúnd.$exc$,
   $body$## Telefón je psychologická bomba
 
-Vishing (voice phishing) zneužíva najsilnejšiu zbraň útočníka — živý hlas. V SMS si môžeš dať pauzu, e-mail si môžeš dvakrát prečítať. Ale keď ti zavolá „bankár" a tlačí ťa, mozog sa zalkne. Práve preto je vishing finančne najškodlivejší typ podvodu — priemerná škoda na obeť je rádovo tisíce eur.
+Vishing (phishing cez telefonát) zneužíva najsilnejšiu zbraň útočníka — živý hlas. Pri SMS si môžeš dať pauzu, e-mail si môžeš dvakrát prečítať. Ale keď ti zavolá „bankár" a tlačí ťa, mozog sa zasekne. Práve preto je vishing finančne najškodlivejší typ podvodu — priemerná škoda na jednu obeť je rádovo tisíce eur.
 
-## Scenár #1 — „bankár" o úteku peňazí
+## Scenár #1 — „bankár" o úniku peňazí
 
 [[visual:b64:eyJraW5kIjoiY2FsbCIsImNhbGxlciI6IlNsb3ZlbnNrw6Egc3Bvcml0ZcS+xYhhIiwibnVtYmVyIjoiKzQyMSAyIDU4MjYgMTExMSIsImhpbnQiOiLigJ5Eb2Jyw70gZGXFiCwgdm9sw6FtIHogYmV6cGXEjW5vc3Ruw6lobyBvZGRlbGVuaWEuIFogdsOhxaFobyDDusSNdHUgc2EgcHLDoXZlIHNuYcW+w60gb2TDrXPFpSA0IDgwMCBFVVIgZG8gemFocmFuacSNaWEuIEFieSBzbWUgdG8gemFzdGF2aWxpLCBwb3RyZWJ1amVtIG9kIHbDoXMga8OzZCwga3RvcsO9IHbDoW0gdGVyYXogcHLDrWRlIFNNU2tvdS5cIiJ9]]
 
-Skutočný bankár ťa NIKDY nepýta o kód z SMS. Ten kód je práve to, čím útočník schvaľuje prevod (3D Secure / strong customer authentication). Diktovaním kódu mu sám podpíšeš odchod peňazí.
+Skutočný bankár od teba NIKDY nepýta kód z SMS. Ten kód je práve to, čím útočník schvaľuje prevod (3D Secure / strong customer authentication). Diktovaním kódu mu sám podpíšeš odchod peňazí.
 
 ## Scenár #2 — „policajt" o vyšetrovaní
 
@@ -273,7 +273,7 @@ Skutočný bankár ťa NIKDY nepýta o kód z SMS. Ten kód je práve to, čím 
 
 Microsoft NIKDY nezavolá. Bodka. Tento typ podvodu cielí najmä na anglicky hovoriacich seniorov, ale prichádza aj na slovenské čísla. „Vzdialený prístup" je vstupenka pre útočníka — vidí ti všetko vrátane bankingu.
 
-## Scenár #4 — „dcéra v núdzi" (deepfake hlas)
+## Scenár #4 — „dcéra v núdzi" (deepfake hlas — umelo vygenerovaný falošný hlas)
 
 [[visual:b64:eyJraW5kIjoiY2FsbCIsImNhbGxlciI6Im5lem7DoW1lIMSNw61zbG8iLCJudW1iZXIiOiIrNDIxIDl4eCB4eHggeHh4IiwiaGludCI6IuKAnk1hbWksIHRvIHNvbSBqYSwgbcOhbSBwcm9ibMOpbSwgdWtyYWRsaSBtaSBwZcWIYcW+ZW5rdSwgbcO0xb5lxaEgbWkgcsO9Y2hsbyBwb3NsYcWlIDgwMCBFVVIgbmEgdGVudG8gw7rEjWV0PyBQcm9zw61tLCBuaWtvbXUgbmVob3ZvciwgdnlzdmV0bMOtbSB0byBwb3RvbS5cIiJ9]]
 
@@ -281,7 +281,7 @@ AI dnes vie naklonovať hlas z 30 sekúnd nahrávky (napr. zo sociálnych sietí
 
 ## Indície, že hovor je podvod
 
-**Červená vlajka:** Volajúci od „banky" pýta kód z SMS, OTP, PIN, alebo heslo do internet bankingu.
+**Červená vlajka:** Volajúci od „banky" pýta kód z SMS, OTP (jednorazový overovací kód), PIN alebo heslo do internet bankingu.
 
 **Červená vlajka:** „Polícia" / „daňový úrad" / „súd" tlačí na okamžitý prevod alebo platbu.
 
@@ -350,31 +350,31 @@ VALUES (
   $exc$Auto za polovicu, byt v centre za 200 € a „kupec" cez WhatsApp: pravidlá pre Bazoš, Vinted aj Marketplace.$exc$,
   $body$## Bazoš a Facebook Marketplace ako lovisko
 
-Slovenský trh ovládajú dve platformy: Bazoš a FB Marketplace. Obe majú minimálnu moderáciu, takže útočník vytvorí účet za 5 minút a má tisíce potenciálnych obetí. Schémy sú dvojaké — buď ako „predávajúci" (vyláka ti zálohu), alebo ako „kupec" (vyláka ti údaje karty cez fake platobnú stránku).
+Slovenský trh ovládajú dve platformy: Bazoš a FB Marketplace. Obe majú minimálnu moderáciu, takže útočník si vytvorí účet za 5 minút a má tisíce potenciálnych obetí. Schémy sú dvojaké — útočník buď vystupuje ako „predávajúci" (vyláka ti zálohu), alebo ako „kupec" (vyláka ti údaje karty cez falošnú platobnú stránku).
 
 ## Vzor #1 — auto za polovicu trhovej ceny
 
 [[visual:b64:eyJraW5kIjoibGlzdGluZyIsInNpdGUiOiJCYXpvxaEiLCJ0aXRsZSI6IkJNVyAzMjBkLCAyMDE4LCA5MCAwMDAga20g4oCUIHPDunJuZSIsInByaWNlIjoiOSA4MDAg4oKsIiwibG9jYXRpb24iOiJCcmF0aXNsYXZhIiwiZGVzY3JpcHRpb24iOiJTw7pybmUgcHJlZMOhbSwgc8WlYWh1amVtIHNhIGRvIE5lbWVja2EuIEF1dG8gamUgdiBwZXJmZWt0bm9tIHN0YXZlLCBwcnbDvSBtYWppdGXEvi4gUG9zaWVsYW0gZm90a3kgYWogcGFwaWVyZSBuYSBXaGF0c0FwcC4gWsOhdWplbWNhIHBvxaFsZSAxIDAwMCDigqwgesOhbG9odSwgZG92b3ogYSBvYmhsaWFka2EgdiBCcmF0aXNsYXZlIGRvIDMgZG7DrS4iLCJpbWFnZUVtb2ppIjoi8J+alyJ9]]
 
-BMW 2018 s 90 tis. km má reálnu cenu 18-22 tisíc EUR. „Polovica" + „súrne" + „sťahujem sa" je kombinácia, ktorá NIKDY nie je pravda. Po zálohe auto nepríde, telefón prestane fungovať.
+BMW z roku 2018 s 90 tis. km má reálnu cenu 18 – 22 tisíc EUR. „Polovica" + „súrne" + „sťahujem sa" je kombinácia, ktorá NIKDY nie je pravdivá. Po zálohe auto nepríde a telefón prestane fungovať.
 
 ## Vzor #2 — byt v centre za 250 €
 
 [[visual:b64:eyJraW5kIjoibGlzdGluZyIsInNpdGUiOiJCYXpvxaEiLCJ0aXRsZSI6IjItaXpib3bDvSBieXQsIFN0YXLDqSBNZXN0bywgQnJhdGlzbGF2YSIsInByaWNlIjoiMjUwIOKCrCAvIG1lc2lhYyIsImxvY2F0aW9uIjoiQnJhdGlzbGF2YSDigJQgU3RhcsOpIE1lc3RvIiwiZGVzY3JpcHRpb24iOiJQZWtuw70gMi1pemJvdsO9IGJ5dCB2IGNlbnRyZS4gU29tIHRlcmF6IHYgemFocmFuacSNw60sIGvEvsO6xI1lIHBvxaFsZW0ga3VyacOpcm9tIHBvIHByaWphdMOtIGRlcG96aXR1IDUwMCDigqwuIEtvbXVuaWvDoWNpYSBjZXogV2hhdHNBcHAgLyBlLW1haWwuIiwiaW1hZ2VFbW9qaSI6IvCfj6IifQ==]]
 
-Trhová cena 2-izbáku v Starom Meste je 700-1 200 € + energie. „Som v zahraničí, kľúče cez kuriéra po depozite" je nikdy reálne. Vždy si byt obhliadni osobne pred akoukoľvek platbou.
+Trhová cena 2-izbového bytu v Starom Meste je 700 – 1 200 € + energie. „Som v zahraničí, kľúče cez kuriéra po depozite" nie je nikdy reálne. Vždy si byt obhliadni osobne pred akoukoľvek platbou.
 
 ## Vzor #3 — „kupec" pošle fake Stripe / PayPal link
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiS29udmVyesOhY2lhIHMg4oCea3VwY29tXCIiLCJib2R5IjoiS3VwZWM6IOKAnkFob2osIG3DoW0gesOhdWplbSBvIHR2b2ogdGVsZWbDs24uIFNvbSB6IFRybmF2eSwgbmV2aWVtIHByw61zxaUgb3NvYm5lLCBtw7TFvmVtIHRpIHphcGxhdGnFpSBjZXogU3RyaXBlLiBQb8WhbGVtIHRpIGxpbmssIHZ5cGxuw63FoSDDumRhamUga2FydHkgYSBwZW5pYXplIHRpIHByw61kdSBuYSDDusSNZXQuXCJcblxuVHk6IGRvc3RhbmXFoSBsaW5rIHN0cmlwZS1wYXltZW50LWliYW4uY29tIOKAlCB2eXplcsOhIGFrbyBTdHJpcGUuXG5cblBvIHZ5cGxuZW7DrSDEjcOtc2xhIGthcnR5ICsgQ1ZWIGEgT1RQIOKAlCBrdXBlYyB6bWl6bmUsIHoga2FydHkgc2Egc3Ryw6FjYSA4NTAg4oKsLiJ9]]
 
-Stripe / PayPal nikdy nedávajú zaplatiť „cez link, kde vyplníš svoje údaje" — naopak, ty ich dostaneš na svoj účet. Útočník ťa cez fake platobnú bránu donúti zadať údaje, ktoré okamžite použije.
+Stripe ani PayPal ti nikdy nedajú zaplatiť „cez odkaz, kde vyplníš svoje údaje" — naopak, peniaze dostaneš ty na svoj účet. Útočník ťa cez falošnú platobnú bránu donúti zadať údaje, ktoré okamžite zneužije.
 
 ## Vzor #4 — „náhodný preklep" v sume prevodu
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiU2Now6ltYSDigJ5vbXlsb20gc29tIHRpIHBvc2xhbCB2aWFjXCIiLCJib2R5IjoiMS4gS3VwZWMgc2kg4oCea8O6cGlcIiB0dm9qIHRvdmFyIHphIDIwMCDigqwuXG4yLiBQb8WhbGUgdGkgc2NyZWVuc2hvdCBwcmV2b2R1IG5hIDIgMDAwIOKCrCAoZmFrZSBzY3JlZW5zaG90LCDFvmlhZG55IHNrdXRvxI1uw70gcHJldm9kIG5lcHJpxaFpZWwpLlxuMy4gSG92b3LDrTog4oCeQWNoLCBvbXlsb20gc29tIHByaWRhbCBudWx1LCBwb8WhbGkgbWkgMSA4MDAg4oKsIHNww6TFpSwgcHJvc8OtbS5cIlxuNC4gUG/FoWxlxaEgbXUgMSA4MDAg4oKsIOKAlCB6IHR2b2ppY2ggcGXFiGF6w60uIFByZXZvZCBuYSAyIDAwMCDigqwgbmlrZHkgbmVkb3JhesOtLiJ9]]
 
-Klasická schéma „chargeback" alebo „fake transfer". Skutočný príchod sleduj VÝLUČNE v internet bankingu (nie zo screenshotu od kupca). Nikdy nepošli „vrátenie" predtým, než suma reálne dorazí na účet.
+Klasická schéma „chargeback" (spätné stiahnutie platby) alebo „falošný prevod". Skutočný príchod peňazí sleduj VÝLUČNE v internetbankingu (nie zo snímky obrazovky od kupca). Nikdy nepošli „vrátenie" peňazí skôr, než suma reálne dorazí na účet.
 
 ## Indície, podľa ktorých rozoznáš podvod
 
@@ -386,9 +386,9 @@ Klasická schéma „chargeback" alebo „fake transfer". Skutočný príchod sl
 
 **Červená vlajka:** Naliehanie na rýchlu platbu („mám iného záujemcu").
 
-**Červená vlajka:** „Kupec" pošle ti link na zaplatenie (Stripe, PayPal) — opak je norma.
+**Červená vlajka:** „Kupec" ti pošle odkaz na zaplatenie (Stripe, PayPal) — pritom norma je opačná.
 
-**Červená vlajka:** Inzerát má fotku z internetu (reverse image search ti to ukáže).
+**Červená vlajka:** Inzerát má fotku z internetu (odhalí to spätné vyhľadávanie obrázka).
 
 **Červená vlajka:** Profil predávajúceho je nový, bez histórie a recenzií.
 
@@ -406,9 +406,9 @@ Klasická schéma „chargeback" alebo „fake transfer". Skutočný príchod sl
 ## Pravidlá pre predávajúceho
 
 - ✅ Platba pri preberaní (cash) alebo overený prevod priamo na tvoj účet.
-- ✅ Kontrola príchodu sumy v internet bankingu — nie zo screenshotu.
+- ✅ Kontrola príchodu sumy v internetbankingu — nie zo snímky obrazovky.
 - ✅ Pri vyšších sumách — overenie totožnosti kupujúceho cez OP.
-- ❌ „Stripe / PayPal link" od kupca — to nie je tvoj inkasný flow.
+- ❌ „Odkaz na Stripe / PayPal" od kupca — takto inkaso neprebieha.
 - ❌ „Pošli mi naspäť, omylom som dal viac" — pred reálnym príchodom sumy.
 - ❌ Posielanie tovaru na adresu, ktorá nezodpovedá platbe.
 
@@ -416,23 +416,23 @@ Klasická schéma „chargeback" alebo „fake transfer". Skutočný príchod sl
 
 ### ✅ Rob
 
-- Pri pochybnostiach radšej obchod nezavrieť, než stratiť peniaze.
+- Pri pochybnostiach radšej od obchodu odstúpiť, než stratiť peniaze.
 - Verejné miesto na stretnutie (parkovisko OC, polícia ako miesto výmeny).
 - Nahlásiť podvodný inzerát platforme (Bazoš → Nahlásiť).
-- Pri investíciách nad 1 000 € — vždy zmluva, kúpno-predajná dohoda.
+- Pri obchodoch nad 1 000 € — vždy zmluva, kúpno-predajná zmluva.
 
 ### ❌ Nerob
 
-- Neposielať zálohu cez kryptomeny (nezvratné).
-- Neposielať údaje karty / OTP / CVV nikomu, ani „kupcovi".
-- Neveriť screenshotom prevodov — len reálnemu príchodu na účet.
-- Nedávať OP / pas v plnom rozlíšení neznámym (kradnú identitu).
+- Neposielať zálohu cez kryptomeny (je to nezvratné).
+- Neposielať údaje karty, OTP (jednorazový overovací kód) ani CVV nikomu, ani „kupcovi".
+- Neveriť snímkam obrazovky o prevodoch — len reálnemu príchodu na účet.
+- Nedávať OP ani pas v plnom rozlíšení neznámym (kradnú identitu).
 
 ## Reálny scenár — predávaš telefón na FB Marketplace
 
 Pýta sa „Maťo z Košíc": „Ahoj, mám záujem, ale neviem prísť. Môžem zaplatiť cez Stripe? Pošlem ti link, kde vyplníš údaje karty a peniaze ti prídu."
 
-**Zlaté pravidlo:** Odpovieš: „Stripe takto nefunguje, peniaze ti prídu cez bežný prevod alebo cash pri preberaní. Ak chceš, môžeme stretnúť, alebo posielam tovar po príchode peňazí na účet." Ak protestuje — končíš konverzáciu.$body$,
+**Zlaté pravidlo:** Odpovieš: „Stripe takto nefunguje, peniaze ti prídu cez bežný prevod alebo v hotovosti pri preberaní. Ak chceš, môžeme sa stretnúť, alebo ti tovar pošlem po príchode peňazí na účet." Ak protestuje — ukončíš konverzáciu.$body$,
   'lesson', $diff$beginner$diff$, 9, $emoji$🛒$emoji$, 9,
   $src$[{"label":"NCKB — podvody na inzertných portáloch","url":"https://www.sk-cert.sk/"},{"label":"PZ SR — varovania pre seniorov","url":"https://www.minv.sk/"},{"label":"Bazoš — pravidlá a bezpečnosť","url":"https://www.bazos.sk/"}]$src$::jsonb,
   'published', $pub$2026-04-26$pub$
@@ -463,11 +463,11 @@ VALUES (
   (SELECT id FROM public.blog_categories WHERE slug = $cat$cyber-hygiena$cat$),
   (SELECT id FROM public.blog_authors WHERE slug = $auth$subenai-editorial$auth$),
   $title$Data hygiene — ako neprísť o digitálnu identitu$title$,
-  $sub$2FA, správca hesiel a kontrola únikov: 30 minút setup-u, ktorý ti zachráni roky digitálnych problémov.$sub$,
-  $exc$2FA, správca hesiel a kontrola únikov: 30 minút setup-u, ktorý ti zachráni roky digitálnych problémov.$exc$,
+  $sub$2FA (dvojfaktorové overenie), správca hesiel a kontrola únikov: 30 minút nastavovania, ktoré ti ušetria roky digitálnych problémov.$sub$,
+  $exc$2FA (dvojfaktorové overenie), správca hesiel a kontrola únikov: 30 minút nastavovania, ktoré ti ušetria roky digitálnych problémov.$exc$,
   $body$## Prečo „mňa to nezaujíma" nestačí
 
-Aj keď nikdy neklikneš na podvodnú SMS, tvoje údaje sa môžu dostať na čierny trh inou cestou — únik z firmy, kde máš účet (LinkedIn, MyHeritage, AdultFriendFinder, Marriott — všetky reálne úniky posledných rokov). Útočník potom skúša tvoje heslo na desiatkach iných služieb. Ak používaš to isté heslo viackrát, máš problém.
+Aj keď nikdy neklikneš na podvodnú SMS, tvoje údaje sa môžu dostať na čierny trh inou cestou — únikom z firmy, kde máš účet (LinkedIn, MyHeritage, AdultFriendFinder, Marriott — všetko reálne úniky údajov posledných rokov). Útočník potom skúša tvoje heslo na desiatkach iných služieb. Ak používaš to isté heslo viackrát, máš problém.
 
 ## Indície, že tvoja identita je v ohrození
 
@@ -475,78 +475,78 @@ Aj keď nikdy neklikneš na podvodnú SMS, tvoje údaje sa môžu dostať na či
 
 **Červená vlajka:** Heslo je „menoSluzby123" alebo dátum narodenia.
 
-**Červená vlajka:** Nemáš zapnuté 2FA na e-maile (ten je kľúč ku všetkému).
+**Červená vlajka:** Nemáš zapnuté 2FA na e-maile (ten je kľúčom ku všetkému).
 
-**Červená vlajka:** Posledných 12 mesiacov si nezmenil žiadne heslo.
+**Červená vlajka:** Za posledných 12 mesiacov si nezmenil žiadne heslo.
 
 **Červená vlajka:** Tvoj e-mail je v haveibeenpwned.com — pravdepodobne uniklo aspoň jedno heslo.
 
-**Červená vlajka:** Ukladáš si heslá v Notes / Excel / na papier vedľa monitora.
+**Červená vlajka:** Ukladáš si heslá v Poznámkach, Exceli alebo na papier vedľa monitora.
 
-**Červená vlajka:** Občas posielaš heslo cez SMS / e-mail kolegovi.
+**Červená vlajka:** Občas posielaš heslo kolegovi cez SMS či e-mail.
 
 **Červená vlajka:** Tvoj telefón nemá nastavený PIN ani biometriu.
 
-## 7-bodový setup, ktorý ťa vyrieši na roky
+## 7-bodové nastavenie, ktoré ťa zabezpečí na roky
 
-- ✅ Nainštaluj password manager (Bitwarden zadarmo, 1Password platený). Migruj všetky heslá tam.
-- ✅ Vygeneruj nové unikátne heslá pre top 10 služieb (e-mail, banka, eshop, soc. siete).
-- ✅ Zapni 2FA cez authenticator app (Google Authenticator, Authy) — NIE cez SMS, ak sa dá.
+- ✅ Nainštaluj si password manager (správcu hesiel — Bitwarden zadarmo, 1Password platený). Presuň doň všetky heslá.
+- ✅ Vygeneruj nové unikátne heslá pre 10 najdôležitejších služieb (e-mail, banka, e-shop, sociálne siete).
+- ✅ Zapni 2FA cez authenticator (overovaciu aplikáciu — Google Authenticator, Authy) — ak sa dá, NIE cez SMS.
 - ✅ Zaregistruj e-mail na haveibeenpwned.com — dostaneš upozornenie pri každom novom úniku.
-- ✅ Skontroluj prepojené appky vo svojom Google / Microsoft / Apple účte. Zruš tie, čo nepoužívaš.
-- ✅ Nastav recovery options (záložný e-mail, telefón, recovery codes).
-- ✅ Nastav obrazovku zámku na telefóne (PIN aspoň 6-miestny + biometria).
+- ✅ Skontroluj prepojené aplikácie vo svojom Google / Microsoft / Apple účte. Zruš tie, ktoré nepoužívaš.
+- ✅ Nastav možnosti obnovy účtu (záložný e-mail, telefón, záložné kódy).
+- ✅ Nastav si zamykaciu obrazovku na telefóne (PIN aspoň 6-miestny a biometria).
 
 ## Heslá — pravidlá
 
 ### ✅ Rob
 
-- Generovať náhodné heslá v password manageri (16+ znakov).
+- Generovať náhodné heslá v správcovi hesiel (16 a viac znakov).
 - Mať unikátne heslo pre každú službu.
-- Pre veci, ktoré si musíš pamätať (master password), používať passphrase typu „kone-jablko-lampa-2x4".
-- Pravidelne kontrolovať haveibeenpwned.com (alebo nechať notify).
+- Pre heslá, ktoré si musíš pamätať (hlavné heslo, tzv. master password), používať prístupovú frázu typu „kone-jablko-lampa-2x4".
+- Pravidelne kontrolovať haveibeenpwned.com (alebo si nechať posielať upozornenia).
 
 ### ❌ Nerob
 
 - Neopakovať heslá medzi službami. NIKDY.
-- Nezdieľať heslo cez e-mail / SMS / Slack v plain texte.
-- Neskladovať heslá v poznámkach v telefóne.
-- Nepoužívať „heslo123", dátum narodenia, meno mačky.
+- Nezdieľať heslo cez e-mail, SMS či Slack v čitateľnej podobe.
+- Neukladať heslá v poznámkach v telefóne.
+- Nepoužívať „heslo123", dátum narodenia ani meno mačky.
 
 ## 2FA — pravidlá
 
 ### ✅ Rob
 
-- Authenticator app (Google Authenticator, Authy, 1Password) — najsilnejšie.
+- Overovacia aplikácia (Google Authenticator, Authy, 1Password) — najsilnejšia ochrana.
 - Hardvérový kľúč (YubiKey) pre kritické účty (bankovníctvo, kryptoburzy).
-- Uložiť si recovery codes do password managera + offline.
-- Zapnúť 2FA na e-maile ako prvé. Ten je kľúč k resetu všetkého ostatného.
+- Uložiť si záložné kódy do správcu hesiel aj offline.
+- Zapnúť 2FA na e-maile ako prvé. Ten je kľúčom k obnove všetkého ostatného.
 
 ### ❌ Nerob
 
-- Nezálohovať 2FA seedy do iCloud / Google Drive bez šifrovania.
-- SMS 2FA len keď nie je iná možnosť (SIM swap útok existuje).
-- Nediktovať OTP z 2FA nikomu — ani „bankárovi" cez telefón.
-- Nezatvárať 2FA recovery flow bez toho, aby si si zapísal záložné kódy.
+- Nezálohovať tajné kľúče (seedy) 2FA do iCloudu či Google Drivu bez šifrovania.
+- SMS 2FA používať len vtedy, keď nie je iná možnosť (útok SIM swap, čiže prenos čísla na cudziu SIM, existuje).
+- Nediktovať OTP (jednorazový overovací kód) z 2FA nikomu — ani „bankárovi" cez telefón.
+- Nezatvárať obnovu 2FA bez toho, aby si si zapísal záložné kódy.
 
 ## Vzor — ako vyzerá únik dát
 
-[[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiTGlua2VkSW4gMjAyMSBsZWFrICg3MDAgbWlsLiBwcm9maWxvdikiLCJib2R5IjoiViByb2t1IDIwMjEgdW5pa2xpIMO6ZGFqZSA3MDAgbWlsacOzbm92IExpbmtlZEluIHByb2ZpbG92OiBtZW5vLCBlLW1haWwsIHRlbGVmw7NuLCBwcmFjb3Zuw6EgcG96w61jaWEsIGEgaGFzaGUgbmlla3RvcsO9Y2ggaGVzaWVsLiBBayBzaSB2IHRvbSDEjWFzZSBtYWwgTGlua2VkSW4gw7rEjWV0LCB0dm9qIGUtbWFpbCBzYSBwcmF2ZGVwb2RvYm5lIG9iamF2aWwgdiB6b3puYW1lLlxuXG7DmnRvxI1uw61jaSB0aWV0byDDum5pa3kgcG91xb7DrXZhasO6IG5hOlxu4oCiIFRhcmdldGVkIHBoaXNoaW5nIChwb3puYWrDuiB0dm9qdSBmaXJtdSwgcG96w61jaXUsIGtvbGVnb3YpLlxu4oCiIENyZWRlbnRpYWwgc3R1ZmZpbmcg4oCUIHNrw7rFoWFqw7ogaGVzbG8geiBMaW5rZWRJbi11IG5hIEdtYWlsLWksIGJhbmtlLlxu4oCiIFNvY2lhbCBlbmdpbmVlcmluZyDigJQg4oCeVm9sw6FtIHogTGlua2VkSW4gSFIsIHbDocWhIHByb2ZpbCB0cmViYSBvdmVyacWlLlwiXG5cblRlc3Q6IHphZGFqIHN2b2ogZS1tYWlsIG5hIGhhdmVpYmVlbnB3bmVkLmNvbSBhIHV2aWTDrcWhLCBrZGUgdsWhYWRlIHNpLiJ9]]
+[[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiw5puaWsgTGlua2VkSW4gMjAyMSAoNzAwIG1pbC4gcHJvZmlsb3YpIiwiYm9keSI6IlYgcm9rdSAyMDIxIHVuaWtsaSDDumRhamUgNzAwIG1pbGnDs25vdiBwcm9maWxvdiBMaW5rZWRJbjogbWVubywgZS1tYWlsLCB0ZWxlZsOzbiwgcHJhY292bsOhIHBvesOtY2lhIGEgaGFzaGUgbmlla3RvcsO9Y2ggaGVzaWVsLiBBayBzaSB2IHRvbSDEjWFzZSBtYWwgw7rEjWV0IG5hIExpbmtlZEluZSwgdHZvaiBlLW1haWwgc2EgcHJhdmRlcG9kb2JuZSBvYmphdmlsIHYgem96bmFtZS5cblxuw5p0b8SNbsOtY2kgdGlldG8gw7puaWt5IHBvdcW+w612YWrDuiBuYTpcbuKAoiBDaWVsZW7DvSBwaGlzaGluZyAocG9kdm9kbsOpIHZ5bMOha2FuaWUgw7pkYWpvdikg4oCUIHBvem5hasO6IHR2b2p1IGZpcm11LCBwb3rDrWNpdSwga29sZWdvdi5cbuKAoiBDcmVkZW50aWFsIHN0dWZmaW5nIChocm9tYWRuw6kgc2vDusWhYW5pZSB1bmlrbnV0w71jaCBwcmlobGFzb3ZhY8OtY2ggw7pkYWpvdikg4oCUIHNrw7rFoWFqw7ogaGVzbG8geiBMaW5rZWRJbnUgbmEgR21haWxlIMSNaSB2IGJhbmtlLlxu4oCiIFNvY2nDoWxuZSBpbsW+aW5pZXJzdHZvIChtYW5pcHVsw6FjaWEgcyBjaWXEvm9tIHrDrXNrYcWlIMO6ZGFqZSkg4oCUIOKAnlZvbMOhbSB6IHBlcnNvbsOhbG5laG8gb2RkZWxlbmlhIExpbmtlZEluLCB2w6HFoSBwcm9maWwgdHJlYmEgb3ZlcmnFpS5cIlxuXG5UZXN0OiB6YWRhaiBzdm9qIGUtbWFpbCBuYSBoYXZlaWJlZW5wd25lZC5jb20gYSB1dmlkw63FoSwga2RlIHbFoWFkZSBzaS4ifQ==]]
 
-Únik nie je tvoja chyba — firma má bezpečnostnú dieru. Tvoja zodpovednosť je len jedna: nepoužívať to isté heslo druhý raz. Password manager + 2FA = problém vyriešený.
+Únik nie je tvoja chyba — bezpečnostnú dieru má firma. Tvoja zodpovednosť je len jedna: nepoužívať to isté heslo druhýkrát. Správca hesiel a 2FA = problém vyriešený.
 
 ## Mesačná údržba (5 minút)
 
-- ✅ Skontrolovať e-mail v haveibeenpwned.com (alebo notifikácie z password managera).
-- ✅ Skontrolovať aktívne sessions na Gmail / Facebook / Instagram (Settings → Where you're logged in).
-- ✅ Skontrolovať autorizované appky a zrušiť tie, čo už nepoužívaš.
-- ✅ Pri akomkoľvek upozornení na nový login z neznámeho zariadenia — okamžite zmeniť heslo.
+- ✅ Skontrolovať e-mail na haveibeenpwned.com (alebo notifikácie zo správcu hesiel).
+- ✅ Skontrolovať aktívne prihlásenia na Gmaile / Facebooku / Instagrame (Nastavenia → Kde si prihlásený).
+- ✅ Skontrolovať autorizované aplikácie a zrušiť tie, ktoré už nepoužívaš.
+- ✅ Pri akomkoľvek upozornení na nové prihlásenie z neznámeho zariadenia — okamžite zmeniť heslo.
 
 ## Reálny scenár — pondelok ráno, e-mail z neznámeho zariadenia
 
 Príde ti e-mail: „New sign-in to your Google account from Lagos, Nigeria. If this wasn't you, secure your account." Ty si bol celý víkend doma v Žiline.
 
-**Zlaté pravidlo:** Otvor Google account ručne (nie z linku v e-maile). Choď do Security → Recent sign-ins. Ak je tam Lagos — okamžite zmeň heslo, odhlás všetky sessions, skontroluj 2FA. Ak nie — pravdepodobne phishing.$body$,
+**Zlaté pravidlo:** Otvor si Google účet ručne (nie z odkazu v e-maile). Choď do Zabezpečenie → Nedávne prihlásenia. Ak je tam Lagos — okamžite zmeň heslo, odhlás všetky relácie a skontroluj 2FA. Ak nie — pravdepodobne ide o phishing (podvodné vylákanie prihlasovacích či platobných údajov).$body$,
   'lesson', $diff$beginner$diff$, 10, $emoji$🛡️$emoji$, 10,
   $src$[{"label":"Have I Been Pwned — únik databázy","url":"https://haveibeenpwned.com/"},{"label":"Bitwarden — bezplatný password manager","url":"https://bitwarden.com/"},{"label":"NCKB — odporúčania pre digitálnu hygienu","url":"https://www.sk-cert.sk/"}]$src$::jsonb,
   'published', $pub$2026-04-26$pub$
@@ -581,13 +581,13 @@ VALUES (
   $exc$Reklamy s deepfake Elonom, pump & dump tokeny a „AI brokeri" — 5 schém, ktorými ťa pripravia o 10 000 € a viac.$exc$,
   $body$## Investičný podvod nie je „blbosť pre dôchodcov"
 
-Krypto a AI-trading scamy sa cielia presne na opačnú demografiu — 25 až 55 rokov, technicky zruční, ale finančne neistí. Ponuka je vždy rovnaká: zaručený výnos, exclusive access, a presvedčivá známa tvár (Elon Musk, Andrej Kiska, Boris Kollár). V skutočnosti ide o profesionálny call-center podvod, ktorý ťa povedie tri týždne za ruku — kým ti účet neobchytí.
+Krypto a AI-trading scamy (podvody) sa cielia presne na opačnú demografiu — 25 až 55 rokov, technicky zruční, ale finančne neistí. Ponuka je vždy rovnaká: zaručený výnos, exkluzívny prístup a presvedčivá známa tvár (Elon Musk, Andrej Kiska, Boris Kollár). V skutočnosti ide o profesionálny podvod riadený z call-centra, ktorý ťa povedie tri týždne za ruku — kým ti účet nevybielia.
 
 ## Schéma #1 — deepfake reklama na Instagrame
 
 [[visual:b64:eyJraW5kIjoiaW5zdGFncmFtIiwiYWNjb3VudCI6ImVsb25fbXVza19pbnZlc3QiLCJ2ZXJpZmllZCI6dHJ1ZSwiYm9keSI6IkVsb24gTXVzazog4oCexI5ha3VqZW0gdsWhZXRrw71tLCBrdG8gc2EgcHJpZGFsIGsgbW9qZWogQUktdHJhZGluZyBwbGF0Zm9ybWUgVGVzbGFRdWFudHVtLiBQcnbDvSBtZXNpYWMgdsOhbSB6YXJvYsOtIDEyICUgaXN0w71tIHpob2Rub3RlbsOtbS4gU3RhxI3DrSAyNTAgRVVSIHZrbGFkLlwiIiwiY3RhIjoiU2vDunMgdG8gcyAyNTAgRVVSIiwiaW1hZ2VFbW9qaSI6IvCfpJYiLCJwcmljZSI6IjI1MCDigqwifQ==]]
 
-Reklama je deepfake video — Muskov hlas a obraz sú vygenerované AI z verejných videí. Ani Musk, ani žiadna iná známa osobnosť ti nikdy nesľúbi „istý" výnos cez Instagram reklamu. Verifikovaný účet je často kúpený alebo phishnutý.
+Reklama je deepfake (umelo vygenerované falošné video či hlas) — Muskov hlas a obraz sú vygenerované AI z verejných videí. Ani Musk, ani žiadna iná známa osobnosť ti nikdy nesľúbi „istý" výnos cez reklamu na Instagrame. Verifikovaný účet je často kúpený alebo získaný phishingom (podvodným vylákaním prihlasovacích či platobných údajov).
 
 ## Schéma #2 — „AI auto-trader bot"
 
@@ -599,13 +599,13 @@ Profesionálny dashboard ti ukazuje, ako tvojich „250 EUR" za týždeň narás
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiVGVsZWdyYW0g4oCeVklQIHNpZ25hbHNcIiIsImJvZHkiOiJBZG1pbjog4oCeRG5lcyBvIDE5OjAwIG5ha3VwdWp0ZSAkTU9PTiB0b2tlbi4gQ2VuYSAwLDAwMyBVU0QsIHRhcmdldCAwLDA1IFVTRCBkbyBkdm9jaCBkbsOtLiBUb3RvIGplIG5hxaFhIDE3LiDDunNwZcWhbsOhIG9wZXLDoWNpYS5cIlxuXG4xOTowMCDigJQgdG9rZW4gc2Egc2t1dG/EjW5lIHBvaG5lIChvcmdhbml6w6F0b3JpIHXFviBuYWvDunBpbGkgdsSNZXJhIHphIDAsMDAxKS5cbjE5OjE1IOKAlCBrb211bml0YSBtYXPDrXZuZSBrdXB1amUsIGNlbmEgdnlsZXTDrSBuYSAwLDAwOC5cbjE5OjMwIOKAlCBvcmdhbml6w6F0b3JpIHByZWTDoXZhasO6IHbFoWV0a28gKERVTVApLCBjZW5hIHBhZMOhIG5hIDAsMDAwNS5cblxuVHZvamljaCA1MDAgRVVSIHNhIHptZW5pbG8gbmEgMzAgRVVSLiJ9]]
 
-Klasický pump & dump na obskúrnych meme tokenoch. Skupina je real, signály sú real, ale ty si vždy ten posledný. Profesionálni „insideri" zarobia, retail (ty) prerobí. Funguje desaťročia, len páka sa presunula z penny stocks do crypto.
+Klasický pump & dump (umelé vyhnanie a následný prepad ceny) na neznámych meme tokenoch. Skupina je skutočná, signály sú skutočné, ale ty si vždy ten posledný. Profesionálni „insideri" zarobia, drobní investori (ty) prerobia. Funguje desaťročia, len sa presunul z lacných akcií do kryptomien.
 
 ## Schéma #4 — „osobný broker" cez WhatsApp
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiS29udmVyesOhY2lhIHMg4oCeTWFyZWtvbVwiIiwiYm9keSI6Ik1hcmVrIHogVFEgQ2FwaXRhbDog4oCeVmlkw61tLCDFvmUgbcOhxaEgw7rEjWV0IG5hIG5hxaFlaiBwbGF0Zm9ybWUuIFNvbSB0dm9qIG9zb2Juw70gYWNjb3VudCBtYW5hZ2VyLiBBYnkgc2kgdXLDvWNobGlsIHpob2Rub3RlbmllLCBuYXZyaHVqZW0genbDvcWhacWlIHZrbGFkIG5hIDUgMDAwIEVVUiBhIHZ5dcW+acWlIGxldmVyYWdlIDE6NTAuXCJcblxuUG8gMiBkxYhvY2g6IOKAnk9qb2osIHRyaCBzYSBvdG/EjWlsLCB0dm9qYSBwb3rDrWNpYSBocm96w60gbGlrdmlkw6FjaW91LiBQb8WhbGkgxI9hbMWhw61jaCAzIDAwMCBFVVIgbWFyZ2luIGNhbGwgZG8gaG9kaW55LlwiXG5cblBvIHTDvcW+ZG5pOiDigJ5OZXBvZGFyaWxvIHNhIHphY2hyw6FuacWlIHBvesOtY2l1LCBhbGUgbcOhxaEgbsOhcm9rIG5hIHJlZnVuZMOhY2l1IOKAlCBwb8WhbGkgMSAyMDAgRVVSIGRhxYguXCIifQ==]]
 
-Neexistuje legitímny broker, ktorý ti zavolá cez WhatsApp a tlačí ťa na vyšší vklad. Marek je v call-centre v Albánsku alebo Izraeli, číta skript. „Margin call" a „daň z refundácie" sú farebné variácie na to isté: pošli ešte viac peňazí.
+Neexistuje legitímny broker, ktorý ti zavolá cez WhatsApp a tlačí ťa na vyšší vklad. Marek sedí v call-centre v Albánsku alebo Izraeli a číta scenár. „Margin call" (výzva na doplnenie zálohy) a „daň z refundácie" sú len rôzne obmeny toho istého: pošli ešte viac peňazí.
 
 ## Schéma #5 — fake broker s licenciou „CySEC"
 
@@ -625,7 +625,7 @@ Stránka prezentuje „regulácia CySEC #248/12, FCA #FRN-887234". Čísla sú v
 
 **Červená vlajka:** Daň / poplatok / refundácia, ktorú musíš zaplatiť skôr ako uvidíš peniaze.
 
-**Červená vlajka:** Doména .io / .co / .xyz, ktorú nie je v zozname Národnej banky Slovenska.
+**Červená vlajka:** Doména .io / .co / .xyz, ktorá nie je v zozname Národnej banky Slovenska.
 
 **Červená vlajka:** Komunita na Telegrame, kde admin sám nikdy nestratil.
 
@@ -633,31 +633,31 @@ Stránka prezentuje „regulácia CySEC #248/12, FCA #FRN-887234". Čísla sú v
 
 **Červená vlajka:** Stránka má regulačné čísla, ktoré nesedia s registrom regulátora.
 
-**Červená vlajka:** Sociálny dôkaz — screenshoty „zákazníkov, ktorí už zarobili 50k EUR".
+**Červená vlajka:** Sociálny dôkaz — snímky obrazovky „zákazníkov, ktorí už zarobili 50-tisíc EUR".
 
-## Pravidlá, ktoré ťa zachránia pred crypto/AI scamom
+## Pravidlá, ktoré ťa zachránia pred krypto/AI podvodom
 
 ### ✅ Rob
 
 - Pred vkladom over brokera v registri NBS (https://www.nbs.sk/sk/dohlad-nad-financnym-trhom/zoznamy).
 - Používaj len známe regulované platformy (Interactive Brokers, Trading 212, eToro, XTB).
-- Pri kryptu drž len na známych burzách (Coinbase, Kraken, Binance) a v hardvérovej peňaženke (Ledger, Trezor).
+- Kryptomeny drž len na známych burzách (Coinbase, Kraken, Binance) a v hardvérovej peňaženke (Ledger, Trezor).
 - Investuj len sumu, o ktorú si môžeš dovoliť prísť.
-- Ak ťa kontaktuje „osobný broker" — okamžite ukončiť hovor.
+- Ak ťa kontaktuje „osobný broker" — okamžite ukonči hovor.
 
 ### ❌ Nerob
 
-- Neklikať na investičnú reklamu v IG / FB / TikTok feedu.
-- Nezadávať údaje karty na stránku, ktorú odporučil deepfake celebrita.
+- Neklikať na investičnú reklamu v zozname príspevkov na IG / FB / TikTok.
+- Nezadávať údaje karty na stránku, ktorú odporučila deepfake celebrita.
 - Neposielať „daň zo zisku" alebo „margin call" vopred.
-- Nedávať vzdialený prístup do PC / banking appky „account managerovi".
-- Nenakupovať shitcoiny na základe Telegram signálov.
+- Nedávať vzdialený prístup do počítača ani do bankovej aplikácie „account managerovi".
+- Nenakupovať bezcenné kryptomeny na základe signálov z Telegramu.
 
 ## Reálny scenár — utorok večer, scrolluješ Instagram
 
 Reklama: krátke video, Boris Kollár hovorí „Pripojil som sa k novej AI-trading platforme, prvý mesiac mi zarobila 18 %. Skúste to aj vy, stačí 250 EUR." Po kliknutí pekná stránka, registrácia, „account manager Tomáš" volá za 30 minút.
 
-**Zlaté pravidlo:** Reklamu nahlásiš (Meta umožňuje nahlásiť ako podvod), platformu zatvoríš. Boris Kollár nikdy neodporučí investičnú platformu cez sociálnu sieť — ide o deepfake. Žiadny legitímny broker nezavolá za 30 minút. Vklad nikdy neurobíš.$body$,
+**Zlaté pravidlo:** Reklamu nahlásiš (Meta umožňuje nahlásiť ju ako podvod), platformu zatvoríš. Boris Kollár nikdy neodporučí investičnú platformu cez sociálnu sieť — ide o deepfake. Žiadny legitímny broker nezavolá za 30 minút. Vklad nikdy neurobíš.$body$,
   'lesson', $diff$advanced$diff$, 12, $emoji$📉$emoji$, 12,
   $src$[{"label":"Národná banka Slovenska — varovania pred neoprávnenými investičnými službami","url":"https://www.nbs.sk/"},{"label":"ESMA — investor warnings","url":"https://www.esma.europa.eu/"},{"label":"NCKB — krypto podvody","url":"https://www.sk-cert.sk/"}]$src$::jsonb,
   'published', $pub$2026-04-26$pub$
@@ -688,47 +688,47 @@ VALUES (
   (SELECT id FROM public.blog_categories WHERE slug = $cat$socialne-siete$cat$),
   (SELECT id FROM public.blog_authors WHERE slug = $auth$subenai-editorial$auth$),
   $title$Online láska, ktorá ťa pripraví o úspory$title$,
-  $sub$Catfishing pattern, „vojakovi v Sýrii treba peniaze" a 4 ďalšie príbehy: ako vyzerá online láska, ktorá ťa pripraví o úspory.$sub$,
-  $exc$Catfishing pattern, „vojakovi v Sýrii treba peniaze" a 4 ďalšie príbehy: ako vyzerá online láska, ktorá ťa pripraví o úspory.$exc$,
+  $sub$Catfishing (falošná online identita), „vojakovi v Sýrii treba peniaze" a 4 ďalšie príbehy: ako vyzerá online láska, ktorá ťa pripraví o úspory.$sub$,
+  $exc$Catfishing (falošná online identita), „vojakovi v Sýrii treba peniaze" a 4 ďalšie príbehy: ako vyzerá online láska, ktorá ťa pripraví o úspory.$exc$,
   $body$## Najškodlivejší typ podvodu — emócie + osamelosť
 
-Romance scam (catfishing) cielí najmä rozvedených, ovdovených a osamelých ľudí 45+. Útočník si buduje vzťah cez Tinder, Facebook, Instagram alebo špecializované zoznamky 6 týždňov až 6 mesiacov. Až keď je obeť emocionálne investovaná, príde žiadosť o peniaze. Priemerná škoda v SR podľa polície je nad 5 000 EUR per obeť, často aj reputačná škoda (intímne fotky).
+Romance scam (podvod cez predstieraný ľúbostný vzťah, známy aj ako catfishing — vytvorenie falošnej online identity) cieli najmä na rozvedených, ovdovených a osamelých ľudí nad 45 rokov. Útočník si buduje vzťah cez Tinder, Facebook, Instagram alebo špecializované zoznamky 6 týždňov až 6 mesiacov. Až keď je obeť emocionálne investovaná, príde žiadosť o peniaze. Priemerná škoda v SR podľa polície je nad 5 000 EUR na jednu obeť, často aj reputačná škoda (intímne fotky).
 
 ## Príbeh #1 — „vojak v Sýrii"
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiS29udmVyesOhY2lhIHogVGluZGVydSAoMTAuIHTDvcW+ZGXFiCkiLCJib2R5IjoiTWFyaywgNDcsIFVTIEFybXkgbWFqb3I6IOKAnkRyYWjDoSwgbcOhbSBwcm9ibMOpbS4gTmHFoWEgamVkbm90a2EgdiBTw71yaWkgbcOhIHByZXN1biwgYWxlIG3DtGogc2F0ZWxpdG7DvSB0ZWxlZsOzbiBqZSBwb2themVuw70gYSB2b2plbnNrw70gc3lzdMOpbSBwcmV2b2RvdiBuZWZ1bmd1amUuIFBvdHJlYnVqZW0gMyAyMDAgVVNEIG5hIG7DoWhyYWRuw6kgdnliYXZlbmllLiBIbmXEjyBha28gc2EgdnLDoXRpbSBkbyBVU0EgbyAyIG1lc2lhY2UsIHZyw6F0aW0gdGkgdG8gYWogcyDDunJva21pLiBWZXLDrW0gdGkuXCIifQ==]]
 
-Klasický Sweetheart Scam pattern. „Vojak v zahraničí" — preto nemôže prísť osobne. „Pokazené vybavenie" — preto pýta peniaze. „Hneď ako sa vrátim" — preto nestihneš overiť. Skutoční vojaci nemajú problém s prevodmi, ich vybavenie zabezpečuje armáda.
+Klasický vzorec (pattern) podvodu typu „Sweetheart Scam" (podvod cez predstieraný ľúbostný vzťah). „Vojak v zahraničí" — preto nemôže prísť osobne. „Pokazené vybavenie" — preto pýta peniaze. „Hneď ako sa vrátim" — preto nestihneš overiť. Skutoční vojaci nemajú problém s prevodmi, ich vybavenie zabezpečuje armáda.
 
 ## Príbeh #2 — „inžinier na ropnej plošine"
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiS29udmVyesOhY2lhIHogRmFjZWJvb2sgTWVzc2VuZ2VyICgxMi4gdMO9xb5kZcWIKSIsImJvZHkiOiJUb23DoXMsIDUyLCByb3Buw6EgcGxvxaFpbmEgcHJpIE7Ds3Jza3U6IOKAnlNrb27EjWlsIHNhIG1pIGtvbnRyYWt0IGEgY2hjZW0gcHLDrXPFpSB6YSB0ZWJvdSBkbyBCcmF0aXNsYXZ5LiBBbGUgZmlybWEgbWkgemFkcsW+YWxhIHbDvXBsYXR1IGvDvW0gbmV1aHJhZMOtbSBjb2xuw6kgcG9wbGF0a3kgMiA4MDAgRVVSIHphIG7DoXN0cm9qZS4gTW9obGEgYnkgc2kgbWkgdG8gcG9tw7RjxaUgdWhyYWRpxaU/IFZyw6F0aW0gdGkgaG5lxI8gYWtvIHByw61kZW0sIHBlbmlhemUgbcOhbSBuYSBuw7Nyc2tvbSDDusSNdGUuXCIifQ==]]
 
-Iný frame, rovnaký scenár. „Ropná plošina" — exotická lokácia, neoveriteľná. „Colné poplatky / nástroje / výplata zadržaná" — konkrétne, ale neoveriteľné. Žiadna firma neoveruje colný dlh cez peňaženku zamestnanca, ani cez peňaženky ich partnerov.
+Iné podanie, rovnaký scenár. „Ropná plošina" — exotická lokácia, neoveriteľná. „Colné poplatky / nástroje / zadržaná výplata" — konkrétne, ale neoveriteľné. Žiadna firma neuhrádza colný dlh cez peňaženku zamestnanca, ani cez peňaženky jeho partnerov.
 
 ## Príbeh #3 — „chirurg, ktorému zomrel pacient"
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiS29udmVyesOhY2lhLCAxOC4gdMO9xb5kZcWIIiwiYm9keSI6IkRhbmllbCwgNDksIGNoaXJ1cmcgdiBOZW1lY2t1OiDigJ5EcmFow6EsIG3DoW0gb2Jyb3Zza8O9IHByb2Jsw6ltLiBNw7RqIHBhY2llbnQgcG/EjWFzIG9wZXLDoWNpZSB6b21yZWwgYSByb2RpbmEgbWEgxb5hbHVqZS4gQWR2b2vDoXQgY2hjZSA4IDUwMCBFVVIgesOhbG9odSwgaW5hayBwcsOtZGVtIG8gbGljZW5jaXUuIE11c8OtxaEgbWkgcG9tw7RjxaUsIHByb3PDrW0g4oCUIGtlxI8gdG8gdnlocsOhbWUsIHZyw6F0aW0gdGkgdG8uXCIifQ==]]
 
-„Profesionálna katastrofa" je psychologická páka — chcel by si pomôcť. Ale advokáti nikdy nepýtajú zálohu cez prevod od cudzieho človeka v zahraničí. Súdne spory v Nemecku riešia poistovne lekárov, nie partnerky obvinených.
+„Profesionálna katastrofa" je psychologická páka — chcel by si pomôcť. Ale advokáti nikdy nepýtajú zálohu cez prevod od cudzieho človeka v zahraničí. Súdne spory v Nemecku riešia poisťovne lekárov, nie partnerky obvinených.
 
 ## Príbeh #4 — „investícia spolu" (kombinácia s E5.8)
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiS29udmVyesOhY2lhLCAxNC4gdMO9xb5kZcWIIiwiYm9keSI6IktyaXN0w61uYSwgMzksIGZpbmFuxI1uw6EgcG9yYWRrecWIYSB6byBTaW5nYXB1cnU6IOKAnk1pbMOhxI1paywgbcOhbSBwcmUgbsOhcyBwbMOhbi4gTcO0aiBicm9rZXIgbcOhIGV4a2x1esOtdm55IHByw61zdHVwIGsgQUktdHJhZGluZyBwbGF0Zm9ybWUsIGt0b3LDoSB6YXJvYsOtIDggJSBtZXNhxI1uZS4gUHJldmVkaWVtZSBzcG9sdSA2IDAwMCBFVVIgYSB6YSByb2sgc2kga8O6cGltZSBieXQuIFBvxaFsZW0gdGkgbGluaywgamEgaWRlbSA2IDAwMCwgdHkgNCAwMDAsIE9LP1wiIn0=]]
 
-Romance scam často prechádza do investment scamu (pozri kurz Investičné podvody). „Spoločná investícia" je príkaz na presun cez zdielanú platformu — ktorá je fake. Útočník nikdy nevkladá svojich 6 000, len ich „ukáže" na falošnom screenshot-e. Reálne pošle iba obeť.
+Romance scam často prechádza do investment scamu (investičný podvod; pozri kurz Investičné podvody). „Spoločná investícia" je pokyn na presun peňazí cez zdieľanú platformu — ktorá je falošná. Útočník nikdy nevkladá svojich 6 000, len ich „ukáže" na falošnej snímke obrazovky. Reálne pošle peniaze iba obeť.
 
 ## Príbeh #5 — sextortion (intímne fotky)
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiRS1tYWlsLCBkZcWIIHBvIHZpZGVvLWhvdm9yZSIsImJvZHkiOiLigJ5Nw6FtIHrDoXpuYW0geiBuw6HFoWhvIHZpZGVvLWhvdm9ydS4gQWsgbmVkb3N0YW5lbSAxIDIwMCBFVVIgdiBCaXRjb2luZSBkbyA0OCBob2TDrW4sIHZpZGVvIHBvxaFsZW0gdsWhZXRrw71tIHR2b2ppbSBGYWNlYm9vayBrb250YWt0b20gYSB0dm9qZWogcm9kaW5lLiBUdSBqZSBCVEMgYWRyZXNhOiBiYzFxeHkuLi5cIiJ9]]
 
-Sextortion často nadväzuje na romance scam alebo „náhodné" video flirt-y. Útočník nahral konverzáciu (alebo ju len tvrdí). Ak zaplatíš, žiada ďalšie. Správny postup: nezaplatiť, nahlásiť polícii (158) a NCKB. Útočník nemá pohodlnú metódu, ako kontakty získať — väčšinou blufuje.
+Sextortion (vydieranie intímnym obsahom) často nadväzuje na romance scam alebo „náhodné" video flirty. Útočník nahral konverzáciu (alebo to len tvrdí). Ak zaplatíš, žiada ďalšie. Správny postup: nezaplatiť, nahlásiť polícii (158) a NCKB. Útočník nemá jednoduchý spôsob, ako kontakty získať — väčšinou blufuje.
 
 ## Indície romance scamu
 
-**Červená vlajka:** Profil príliš dokonalý — model alebo vojak v uniforme, jediná-dve fotky.
+**Červená vlajka:** Profil príliš dokonalý — model alebo vojak v uniforme, jedna-dve fotky.
 
-**Červená vlajka:** Nikdy nemôže video-call bez výhovorky („zlý signál", „pracujem v noci").
+**Červená vlajka:** Nikdy nemôže ísť na videohovor bez výhovorky („zlý signál", „pracujem v noci").
 
 **Červená vlajka:** Žije ďaleko, často „v zahraničí", a stále plánuje prísť.
 
@@ -740,25 +740,25 @@ Sextortion často nadväzuje na romance scam alebo „náhodné" video flirt-y. 
 
 **Červená vlajka:** Píše s gramatickými chybami, ktoré nesedia s deklarovaným pôvodom (americký lekár s česko-slovenskou syntaxou).
 
-**Červená vlajka:** Obrátený search obrázku ti ukáže, že fotka je ukradnutá z iného účtu.
+**Červená vlajka:** Spätné vyhľadávanie obrázka (reverse image search) ti ukáže, že fotka je ukradnutá z iného účtu.
 
-## Rýchly test — je tvoj online vzťah real?
+## Rýchly test — je tvoj online vzťah skutočný?
 
-- ✅ Mali sme video-hovor, kde som videla/videl tvár live (nie nahrávku).
+- ✅ Mali sme videohovor, kde som videla/videl tvár naživo (nie nahrávku).
 - ✅ Stretli sme sa osobne aspoň raz.
 - ✅ Mám viac ako 5 fotiek z rôznych prostredí, ktoré navzájom súhlasia.
 - ❌ Pýtal/a si o peniaze (v akejkoľvek forme — pôžička, investícia, dar).
 - ❌ Vždy je „skoro" osobné stretnutie, ale niečo prekazí.
 - ❌ Posielam mu/jej peniaze cez krypto, Western Union, darčekové karty.
-- ❌ Vyhýba sa video-callu, alebo robí len krátky.
+- ❌ Vyhýba sa videohovoru, alebo robí len krátky.
 
 ## Pravidlá, ktoré ťa zachránia
 
 ### ✅ Rob
 
-- Pred akýmkoľvek prevodom — fyzické stretnutie alebo aspoň dlhý live video-call.
-- Reverse image search profilových fotiek (TinEye, Google Images).
-- Zdieľaj rozhovory s priateľom alebo rodinou — vonkajší pohľad odhalí pattern.
+- Pred akýmkoľvek prevodom — fyzické stretnutie alebo aspoň dlhý videohovor naživo.
+- Spätné vyhľadávanie profilových fotiek (reverse image search — TinEye, Google Images).
+- Zdieľaj rozhovory s priateľom alebo rodinou — vonkajší pohľad odhalí vzorec.
 - Pri sextortion nezaplatiť — nahlásiť polícii (158) a NCKB.
 - Pri podozrení nahlás profil platforme (Tinder, Bumble, FB Dating).
 
@@ -767,14 +767,14 @@ Sextortion často nadväzuje na romance scam alebo „náhodné" video flirt-y. 
 - Neposielať peniaze niekomu, koho si nevidel/a osobne, bez výnimky.
 - Nezdieľať intímne fotky / video — žiadny krásny vzťah ich nevyžaduje na týždeň 6.
 - Nepripájať sa k „spoločnej investičnej platforme", ktorú odporúča online partner.
-- Neuplácať sextortion — vyžiada si ďalšiu sumu, a ďalšiu.
+- Neplatiť pri sextortion — vyžiada si ďalšiu sumu, a ďalšiu.
 - Nezatajiť to rodine zo studu — práve to útočník chce, aby si zostal/a izolovaný/á.
 
 ## Reálny scenár — 4 mesiace komunikácie, prvá žiadosť
 
 Komunikuješ s „Markom", americkým inžinierom v Saudskej Arábii, už 4 mesiace. Krásna konverzácia, hovorí o spoločnej budúcnosti v Bratislave. Dnes prišla správa: „Drahá, môj otec je v nemocnici, urgentná operácia, potrebujem 4 800 USD do 24 hodín. Pošlem ti to späť hneď ako sa vrátim. Verím ti, ty si jediná, na koho sa môžem obrátiť."
 
-**Zlaté pravidlo:** Žiadne peniaze. Reverse image search jeho fotiek (90 % šanca, že sú ukradnuté). Volaj americkú ambasádu — „American citizens services" reálne pomáha občanom v núdzi, vrátane lekárskej krízy. Ak Mark protestuje, alebo zmizne — bol to scam celý čas. Povedz to rodine alebo priateľovi, neoľutuješ.$body$,
+**Zlaté pravidlo:** Žiadne peniaze. Spätné vyhľadávanie jeho fotiek (90 % šanca, že sú ukradnuté). Volaj americkú ambasádu — „American citizens services" reálne pomáha občanom v núdzi, vrátane lekárskej krízy. Ak Mark protestuje, alebo zmizne — bol to scam celý čas. Povedz to rodine alebo priateľovi, neoľutuješ.$body$,
   'lesson', $diff$beginner$diff$, 10, $emoji$💔$emoji$, 10,
   $src$[{"label":"PZ SR — varovania pred romance scam","url":"https://www.minv.sk/"},{"label":"NCKB — sociálne inžinierstvo","url":"https://www.sk-cert.sk/"},{"label":"FTC — Romance Scams (US, ale univerzálny pattern)","url":"https://consumer.ftc.gov/"}]$src$::jsonb,
   'published', $pub$2026-04-26$pub$
@@ -805,41 +805,41 @@ VALUES (
   (SELECT id FROM public.blog_categories WHERE slug = $cat$digitalna-bezpecnost$cat$),
   (SELECT id FROM public.blog_authors WHERE slug = $auth$subenai-editorial$auth$),
   $title$BEC: keď ti „CEO" napíše súrne preveď 50 000 EUR$title$,
-  $sub$Business Email Compromise je najdrahšia forma firemného phishingu: 5 typov + 6 procesných obrán pre účtovníkov a HR.$sub$,
-  $exc$Business Email Compromise je najdrahšia forma firemného phishingu: 5 typov + 6 procesných obrán pre účtovníkov a HR.$exc$,
+  $sub$Business Email Compromise (podvod cez kompromitovaný firemný e-mail) je najdrahšia forma firemného phishingu (podvodné vylákanie prihlasovacích či platobných údajov): 5 typov + 6 procesných obrán pre účtovníkov a HR.$sub$,
+  $exc$Business Email Compromise (podvod cez kompromitovaný firemný e-mail) je najdrahšia forma firemného phishingu (podvodné vylákanie prihlasovacích či platobných údajov): 5 typov + 6 procesných obrán pre účtovníkov a HR.$exc$,
   $body$## BEC = jeden e-mail, 50 000 EUR preč
 
-Business Email Compromise cieli na účtovníkov, asistentov, finančných manažérov v SK firmách. Útočník 2-4 týždne sleduje firemnú komunikáciu (cez phishnutý jeden účet alebo verejné LinkedIn dáta), naučí sa štýl CEO/CFO, a potom v správnu chvíľu (pred dovolenkou, pri uzávierke) pošle „súrnu" žiadosť o prevod. Priemerná škoda na incident v EÚ podľa Europol-u presahuje 50 000 EUR. Prevencia je 90 % o procese, 10 % o technike.
+Business Email Compromise cieli na účtovníkov, asistentov, finančných manažérov v SK firmách. Útočník 2 – 4 týždne sleduje firemnú komunikáciu (cez jeden phishnutý účet alebo verejné LinkedIn dáta), naučí sa štýl CEO/CFO a potom v správnu chvíľu (pred dovolenkou, pri uzávierke) pošle „súrnu" žiadosť o prevod. Priemerná škoda na incident v EÚ podľa Europolu presahuje 50 000 EUR. Prevencia je 90 % o procese, 10 % o technike.
 
 ## Typ #1 — fake CEO ("som na meeting-u, urgentne preveď")
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiUGV0ZXIgTm92w6FrIChDRU8pIiwiZnJvbUVtYWlsIjoicGV0ZXIubm92YWtAZmlybWEtc2suY28iLCJzdWJqZWN0IjoiU8O6cm5lIOKAlCBwb3RyZWJ1amVtIHByZXZvZCwgc29tIG5hIGtsaWVudHNrb20gbWVldGluZ3UiLCJib2R5IjoiTcOhcmlhLCBzb20gdGVyYXogbmEgesOha2F6bsOtY2tvbSBtZWV0aW5ndSB2IE1uw61jaG92ZSBhIG5lbcO0xb5lbSB2b2xhxaUuIFBvdHJlYnVqZW0gdXJnZW50bmUgcHJldm9kb20gcG9zbGHFpSA0NyA4MDAgRVVSIG5hIMO6xI1ldCBub3bDqWhvIGRvZMOhdmF0ZcS+YS4gSUJBTjogREU4OSAzNzA0IDAwNDQgMDUzMiAwMTMwIDAwLiBTdmlmOiBDT0JBREVGRlhYWC4gUG/FoWxpIHBvdHZyZGVuaWUgcG8gdnlrb25hbsOtLCDEj2FrdWplbS4ifQ==]]
 
-Klasický CEO Fraud. Doména 'firma-sk.co' (skutočná je 'firma.sk'). Štýl je natrénovaný — útočník čítal vašu e-mailovú archív týždne. „Som na meetingu, nemôžem volať" je obrana proti out-of-band verifikácii. Tento jeden e-mail je najdrahší v EÚ.
+Klasický CEO Fraud. Doména 'firma-sk.co' (skutočná je 'firma.sk'). Štýl je natrénovaný — útočník čítal váš e-mailový archív týždne. „Som na meetingu, nemôžem volať" je obrana proti out-of-band verifikácii. Tento jeden e-mail je najdrahší v EÚ.
 
 ## Typ #2 — fake CFO mení bankové údaje dodávateľa
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiSmFuYSBIb3J2w6F0aG92w6EgKENGTykiLCJmcm9tRW1haWwiOiJqYW5hLmhvcnZhdGhvdmFAZmlybWEuc2siLCJzdWJqZWN0IjoiQWt0dWFsaXrDoWNpYSBiYW5rb3bDqWhvIMO6xI10dSBwcmUgZG9kw6F2YXRlxL5hIE1ldGFsVGVjaCIsImJvZHkiOiJNw6FyaWEsIE1ldGFsVGVjaCBtaSBwcsOhdmUgdm9sYWwg4oCUIG1lbmlhIGJhbmtvdsO9IMO6xI1ldCBrdsO0bGkgYWt2aXrDrWNpaS4gTm92w70gSUJBTiBwcmUgZmFrdMO6cnk6IFNLMzUgMTEwMCAwMDAwIDAwOTkgODg3NyA2NjU1LiBQb3XFvmkgaG8gbmEgZmFrdMO6cnUgIzIwMjQtMTE4NyAoMTIgNDAwIEVVUiksIGt0b3LDuiBtw6HFoSBkbmVzIHNwbGF0bsO6LiBQb3R2cmTDrW0gZS1tYWlsb20ga2XEjyBidWRlIMO6xI1ldCBha3TDrXZueS4ifQ==]]
 
-Útočník phishol jeden interný účet (CFO), alebo spoofuje doménu. Cieľ: prevod existujúcej legitímnej faktúry na ich účet. Túto schému zachytí len telefonický callback dodávateľovi — žiadny e-mail nestačí, lebo aj „potvrdenie" môže prísť z toho istého kompromitovaného účtu.
+Útočník phishol jeden interný účet (CFO) alebo spoofuje (podvrhnutie identity odosielateľa) doménu. Cieľ: prevod existujúcej legitímnej faktúry na ich účet. Túto schému zachytí len telefonický callback dodávateľovi — žiadny e-mail nestačí, lebo aj „potvrdenie" môže prísť z toho istého kompromitovaného účtu.
 
 ## Typ #3 — fake právnik („dôverné M&A, žiadne otázky")
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiRHIuIE1hcmVrIFBvbMOhaywgUG9sw6FrICYgUGFydG5lcnMiLCJmcm9tRW1haWwiOiJtYXJlay5wb2xha0Bwb2xhay1wYXJ0bmVycy1sZWdhbC5jb20iLCJzdWJqZWN0IjoiRMO0dmVybsOpIOKAlCBha3ZpesOtY2lhLCBwcmV2b2QgZXNjcm93IiwiYm9keSI6Ik3DoXJpYSwgdmHFoWEgc3BvbG/EjW5vc8WlIGplIHYgcHJvY2VzZSBha3ZpesOtY2llLCBrdG9yw7ogbsOhxaEgw7pyYWQgc3Byb3N0cmVka292w6F2YS4gUHJlIHByw6F2bnUgaXN0b3R1IHBvdHJlYnVqZW1lIGVzY3JvdyBwcmV2b2QgNzggMDAwIEVVUiBuYSBuw6HFoSDDusSNZXQgZG8gMTc6MDAgZG5lcy4gQ0VPIFBldGVyIE5vdsOhayB0byBvZHNvdWhsYXNpbCDDunN0bmUsIGFsZSBrdsO0bGkgcmVndWxhxI1uw6ltdSBlbWJhcmd1IG5lbcO0xb5lIGtvbXVuaWtvdmHFpSBww61zb21uZS4gUG96bsOhdGUgbmFzbGVkdWrDumNpY2ggNDggaG9kw61uIGFrbyBjb25maWRlbnRpYWxpdHkgcGVyaW9kIOKAlCDFvmlhZG5lIG90w6F6a3kga29sZWdvbS4ifQ==]]
 
-Pridáva autoritu („právnik", „M&A") a izoláciu („nehovor s kolegami"). „Embargo" je psychologický trik — útočník vie, že callback by ho odhalil. Žiadny advokát nedonúti účtovníka prevodu bez podpísanej zmluvy a bez možnosti overiť s CEO.
+Pridáva autoritu („právnik", „M&A") a izoláciu („nehovor s kolegami"). „Embargo" je psychologický trik — útočník vie, že callback by ho odhalil. Žiadny advokát nedonúti účtovníka k prevodu bez podpísanej zmluvy a bez možnosti overiť ho s CEO.
 
 ## Typ #4 — phishing CEO účtu cez Microsoft 365 spoof
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiTWljcm9zb2Z0IDM2NSBTZWN1cml0eSIsImZyb21FbWFpbCI6Im5vLXJlcGx5QG0zNjUtYWNjb3VudC1zZWN1cml0eS5jb20iLCJzdWJqZWN0IjoiVmHFoWUgaGVzbG8gTWljcm9zb2Z0IDM2NSB2eXByxaHDrSBvIDI0aCDigJQgb2thbcW+aXTDoSBha2NpYSBwb3RyZWJuw6EiLCJib2R5IjoiQ0VPL2FkbWluOiB2YcWhZSBoZXNsbyBrIE1pY3Jvc29mdCAzNjUgw7rEjXR1IHZ5cHLFocOtIG8gMjQgaG9kw61uLiBBYnkgc3RlIHphY2hvdmFsaSBwcsOtc3R1cCBrIE91dGxvb2ssIE9uZURyaXZlIGEgVGVhbXMsIHBvdHZyxI90ZSBzw7rEjWFzbsOpIGhlc2xvIGNleiBuacW+xaFpZSB1dmVkZW7DvSBvZGthei4iLCJjdGEiOiJaYWNob3ZhxaUgcHLDrXN0dXAifQ==]]
 
-Toto je vstupný vector pre BEC. Útočník phishne CEO heslo, prihlási sa do Outlook, čítava komunikáciu, naučí sa štýl. Až potom (po týždňoch) pošle z reálneho CEO mailbox-u falošnú žiadosť o prevod. To je ten najnebezpečnejší typ — žiadne spoofing, e-mail je z naozaj firemnej domény.
+Toto je vstupný vektor pre BEC. Útočník phishne CEO heslo, prihlási sa do Outlooku, číta komunikáciu, naučí sa štýl. Až potom (po týždňoch) pošle z reálneho CEO mailboxu falošnú žiadosť o prevod. To je ten najnebezpečnejší typ — žiadny spoofing, e-mail je z naozaj firemnej domény.
 
 ## Typ #5 — payroll diversion (zamestnanec mení svoj výplatný účet)
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiVG9tw6HFoSBLcmFqxI1pIiwiZnJvbUVtYWlsIjoidG9tYXMua3JhamNpQGZpcm1hLXNrLmNvIiwic3ViamVjdCI6IlptZW5hIGJhbmtvdsOpaG8gw7rEjXR1IHByZSB2w71wbGF0dSIsImJvZHkiOiJNw6FyaWEsIHByb3PDrW0gem1lxYggbcO0aiB2w71wbGF0bsO9IMO6xI1ldCBwcmUgbmFzbGVkdWrDumN1IHbDvXBsYXR1LiBPdHZvcmlsIHNvbSBzaSBub3bDvSDDusSNZXQgdiBUYXRyYSBiYW5rZS4gSUJBTjogU0sxMSAxMTAwIDAwMDAgMDA2NiA1NTQ0IDMzMjIuIMSOYWt1amVtLCBUb23DocWhIn0=]]
 
-Útočník phishne zamestnanca alebo spoofuje doménu, požiada o presmerovanie výplaty. Účtovníctvo to často vykoná bez overenia (zdá sa neškodné). Skutočný zamestnanec zistí až keď výplata nepríde. Ochrana: každú zmenu výplatného účtu overiť osobne alebo telefonicky na predchádzajúce známe číslo.
+Útočník phishne zamestnanca alebo spoofuje doménu, požiada o presmerovanie výplaty. Účtovníctvo to často vykoná bez overenia (zdá sa neškodné). Skutočný zamestnanec zistí, až keď výplata nepríde. Ochrana: každú zmenu výplatného účtu overiť osobne alebo telefonicky na predchádzajúce známe číslo.
 
 ## Indície BEC v príchodzom e-maile
 
@@ -867,7 +867,7 @@ Toto je vstupný vector pre BEC. Útočník phishne CEO heslo, prihlási sa do O
 - Out-of-band verifikácia — pri každej žiadosti o prevod zavolaj CEO/CFO na známe číslo (nie z e-mailu).
 - Zmena bankového účtu dodávateľa — vždy potvrdiť osobne / telefonicky na pred-existujúce číslo.
 - Zmena výplatného účtu zamestnanca — vždy overenie cez HR, ideálne osobne.
-- 2FA na všetkých Microsoft 365 / Google Workspace účtoch (najmä management).
+- 2FA (dvojfaktorové overenie) na všetkých Microsoft 365 / Google Workspace účtoch (najmä management).
 - Pravidelný BEC training pre účtovníctvo — phishing simulácie 2x ročne.
 
 ### ❌ Nerob
@@ -892,7 +892,7 @@ Toto je vstupný vector pre BEC. Útočník phishne CEO heslo, prihlási sa do O
 
 Si účtovníčka v 30-osobovej firme. CEO Peter Novák ide o hodinu na 2-týždňovú dovolenku. Príde e-mail z 'peter.novak@firma-sk.co': „Mária, súrne preveď 47 800 EUR na nového dodávateľa pred mojím odchodom. IBAN posielam v ďalšej správe. Žiadam ťa, aby si to spravila ešte dnes — ďakujem."
 
-**Zlaté pravidlo:** Zavoláš Petrovi na jeho mobilné číslo (z firemného adresára, nie z e-mailu). Ak nedvíha, napíšeš na osobný WhatsApp / Signal. Aj keby to spôsobilo 30-minútový delay — Peter to ocení viac ako stratu 47 800 EUR. Doménu 'firma-sk.co' po druhom pohľade vidíš — vy ste '.sk', nie '.co'. To je ten červený flag.$body$,
+**Zlaté pravidlo:** Zavoláš Petrovi na jeho mobilné číslo (z firemného adresára, nie z e-mailu). Ak nedvíha, napíšeš na osobný WhatsApp / Signal. Aj keby to spôsobilo 30-minútové zdržanie — Peter to ocení viac ako stratu 47 800 EUR. Doménu 'firma-sk.co' po druhom pohľade vidíš — vy ste '.sk', nie '.co'. To je ten varovný signál.$body$,
   'lesson', $diff$advanced$diff$, 13, $emoji$🏢$emoji$, 13,
   $src$[{"label":"Europol — BEC report (EÚ priemerná škoda)","url":"https://www.europol.europa.eu/"},{"label":"NCKB — sociálne inžinierstvo na pracovisku","url":"https://www.sk-cert.sk/"},{"label":"Microsoft — Identifying BEC patterns","url":"https://learn.microsoft.com/"}]$src$::jsonb,
   'published', $pub$2026-04-26$pub$
@@ -927,7 +927,7 @@ VALUES (
   $exc$„Vy ste náš nový sused", „som z plynární", podvrhnutá platobná páska v reštaurácii — 6 podvodov, ktoré sa dejú naživo.$exc$,
   $body$## Pred obrazovkou si ostražitý. Čo pri dverách?
 
-Phishing, smishing, vishing — väčšina ľudí vie, že hrozby číhajú online. Lenže podvody existujú aj v realite, tvárou v tvár. A práve tu zlyhávajú aj tí, ktorí by „na email nenaleteli". Fyzický kontakt buduje dôveru rýchlejšie než akákoľvek správa — útočník vidí tvoju reakciu, prispôsobuje sa v reálnom čase a využíva spoločenský tlak. Výsledok: rozhodneš sa rýchlejšie, menej kriticky. Táto kapitola ti ukáže najčastejšie scenáre a jednoduchú obranu.
+Phishing (podvodné vylákanie prihlasovacích či platobných údajov), smishing (phishing cez SMS), vishing (phishing cez telefonát) — väčšina ľudí vie, že hrozby číhajú online. Lenže podvody existujú aj v realite, tvárou v tvár. A práve tu zlyhávajú aj tí, ktorí by „na e-mail nenaleteli". Fyzický kontakt buduje dôveru rýchlejšie než akákoľvek správa — útočník vidí tvoju reakciu, prispôsobuje sa v reálnom čase a využíva spoločenský tlak. Výsledok: rozhodneš sa rýchlejšie a menej kriticky. Táto kapitola ti ukáže najčastejšie scenáre a jednoduchú obranu.
 
 ## Scenár #1 — „Kontrola plynu"
 
@@ -973,9 +973,9 @@ Všetci „náhodní výhercovia" okolo sú komplicovia. Hra je zmanipulovaná �
 
 ### ✅ Rob
 
-- Pýtajte si preukaz totožnosti a služobný odznak — każdý oprávnený technik/inšpektor ich má.
+- Pýtajte si preukaz totožnosti a služobný odznak — každý oprávnený technik či inšpektor ich má.
 - Overte si číslo zákazníckej linky sami (z webu spoločnosti) a zavolajte cez neho.
-- Nechajte vykonávateľa počkať von a overíte, kým mu otvoríte.
+- Nechajte návštevníka počkať vonku a najprv si ho overte, kým mu otvoríte.
 - Výherné oznámenia porovnajte s oficiálnym webom spoločnosti.
 - Akúkoľvek podozrivú ponuku nahláste na www.minv.sk alebo 158.
 
@@ -986,11 +986,11 @@ Všetci „náhodní výhercovia" okolo sú komplicovia. Hra je zmanipulovaná �
 - Nedávajte peniaze cudzincom v núdzi na ulici — kontaktujte pre nich mestskú políciu.
 - Nezúčastňujte sa hier na ulici — vždy sú nečestné.
 
-## Sobotný predpoludnie — zvonček
+## Sobotné predpoludnie — zvonček
 
-Práve ste doma sami. Zazvonili. Cez kukátko vidíte muža v reflexnej veste s tabletom. „Dobrý deň, SVB technik, kontrola plynovodného potrubia po havárii u susedov. Potrebujem prístup do panelu na chodbe a zobrať vzorku z vášho kohútika."
+Práve ste doma sami. Zazvonili. Cez kukátko vidíte muža v reflexnej veste s tabletom. „Dobrý deň, technik SVB, kontrola plynovodného potrubia po havárii u susedov. Potrebujem prístup do panelu na chodbe a zobrať vzorku z vášho kohútika."
 
-**Zlaté pravidlo:** Povedzte: „Počkajte, zavolám si overiť." Zavreli ste dvere (nezamkli ich, viete ich otvoriť). Cez google nájdete zákaznícku linku svojho plynárenského operátora. Zavoláte — a zistíte, že žiadna havarijná kontrola nebola plánovaná. Muža cez dvere informujete, že nevpustíte nikoho bez potvrdenia od spoločnosti, a zavoláte 158.$body$,
+**Zlaté pravidlo:** Povedzte: „Počkajte, zavolám si to overiť." Zavriete dvere (nezamknete ich, viete ich otvoriť). Cez Google nájdete zákaznícku linku svojho plynárenského operátora. Zavoláte — a zistíte, že žiadna havarijná kontrola nebola plánovaná. Muža cez dvere informujete, že nevpustíte nikoho bez potvrdenia od spoločnosti, a zavoláte 158.$body$,
   'lesson', $diff$beginner$diff$, 8, $emoji$🚪$emoji$, 8,
   $src$[{"label":"PZ SR — podvody a bezpečnosť","url":"https://www.minv.sk/"},{"label":"SK-CERT — podvodné techniky","url":"https://www.sk-cert.sk/"},{"label":"Spotrebiteľský poradca — inšpektori","url":"https://www.soi.sk/"}]$src$::jsonb,
   'published', $pub$2026-04-30$pub$
@@ -1025,26 +1025,26 @@ VALUES (
   $exc$Seniori sú primárny cieľ podvodníkov v SR. Tu je sprievodca, ako pomôcť rodičom a starým rodičom rozpoznať podvod skôr, než zavolajú.$exc$,
   $body$## Prečo sú seniori v hľadáčiku
 
-Podľa dát Europolu seniori tvoria viac ako 60 % obetí telefonických podvodov. Dôvodov je niekoľko: väčšie úspory na účte, menší technologický prehľad a väčšia ochota dôverovať autoritám (banka, polícia, lekár). Ty — ako ich blízky — si prvá obranná línia. Nie preto, lebo sú neschopní, ale pretože útočníci sú profesionáli, ktorí na tom trávia celú pracovnú dobu. Táto kapitola ti dáva konkrétne nástroje na rozhovor, nastavenie a reakciu po prípadnom útoku.
+Podľa dát Europolu seniori tvoria viac ako 60 % obetí telefonických podvodov. Dôvodov je niekoľko: väčšie úspory na účte, menší technologický prehľad a väčšia ochota dôverovať autoritám (banka, polícia, lekár). Ty — ako ich blízky — si prvá obranná línia. Nie preto, že by boli neschopní, ale preto, že útočníci sú profesionáli, ktorí tým trávia celý pracovný čas. Táto kapitola ti dáva konkrétne nástroje na rozhovor, nastavenia a reakciu po prípadnom útoku.
 
 ## Scenár #1 — „Vnuk" volá z cudziny
 
 [[visual:b64:eyJraW5kIjoiY2FsbCIsImNhbGxlciI6Im5lem7DoW1lIMSNw61zbG8gKCs0MyA5eHgpIiwibnVtYmVyIjoiKzQzIDkxMiAzNDUgNjc4IiwiaGludCI6IuKAnkJhYmnEjWthLCB0byBzb20gamEsIFBldGVyLCBtw6FtIHR1IHByb2Jsw6ltLCB6csOhxb5rYSBhdXRvbSB2IFJha8O6c2t1LiBQb3RyZWJ1amVtIHrDoWxvaHUgbmEgcHLDoXZuaWthLCAxIDIwMCBFVVIuIE1hbWEgbmV2aWUsIHByb3PDrW0sIG5lcG92ZXogamVqIG5pxI0sIHByw61kZSB0YW0gbmlla3RvIHByZXZ6aWHFpSBvYsOhbGt1LlwiIn0=]]
 
-Útočníci skenujú sociálne siete, vedia meno vnuka, mesto kde býva babička. Hlas „nakloní" AI alebo jednoducho dúfajú, že babička ho v rozrušení nespozná. Heslo rodiny: zavolaj späť na číslo, ktoré máš uložené v kontaktoch. Vždy.
+Útočníci prehľadávajú sociálne siete, vedia meno vnuka aj mesto, kde býva babička. Hlas „naklonuje" umelá inteligencia (deepfake — umelo vygenerované falošné video či hlas) alebo jednoducho dúfajú, že babička ho v rozrušení nespozná. Rodinné pravidlo: zavolaj späť na číslo, ktoré máš uložené v kontaktoch. Vždy.
 
 ## Scenár #2 — Falošný bankový „poradca"
 
 [[visual:b64:eyJraW5kIjoiY2FsbCIsImNhbGxlciI6IlbDmkIgQmFua2Eg4oCUIGJlenBlxI1ub3PFpSIsIm51bWJlciI6Iis0MjEgMiB4eHh4IHh4eHgiLCJoaW50Ijoi4oCeUMOhbiBLb3bDocSNLCB6YXpuYW1lbmFuw6EgcG9kb3pyaXbDuiB0cmFuc2FrY2lhIG5hIHZhxaFvbSDDusSNdGUuIEFieSBzbWUgdsOhcyBvY2hyw6FuaWxpLCBwcm9zw61tIGNob8SPdGUgaWhuZcSPIGsgYmFua29tYXR1IGEgdXJvYnRlIOKAnmJlenBlxI1ub3N0bsO9IHByZXZvZFwiIHBvZMS+YSBtw7RqaG8gbsOhdm9kdS5cIiJ9]]
 
-Banka nikdy nepýta „bezpečnostný prevod k bankomatu". Akonáhle si pri bankomate s telefónom v ruke podľa cudzieho návodu — peniaze odchádzajú tebe. Správny krok: zavesiť a zavolať banke na číslo zo zadnej strany karty.
+Banka nikdy nepýta „bezpečnostný prevod pri bankomate". Len čo stojíš pri bankomate s telefónom v ruke a konáš podľa cudzieho návodu, peniaze odchádzajú z tvojho účtu. Správny krok: zavesiť a zavolať banke na číslo zo zadnej strany karty.
 
 ## Čo urobiť so svojimi blízkymi ešte dnes
 
 - ✅ Dohodnite si rodinné „bezpečnostné slovo" — ktokoľvek ho nevie, nie je člen rodiny.
 - ✅ Uložte rodičom do telefónu zákaznícku linku ich banky — priamo. Nech číslo nemusia hľadať.
 - ✅ Nastavte SMS notifikácie pre každú transakciu na účte — každý výber, každý prevod.
-- ✅ Zapnite 2FA na ich emailovom účte — stačí SMS, nemusí byť app.
+- ✅ Zapnite 2FA (dvojfaktorové overenie) na ich e-mailovom účte — stačí SMS, nemusí to byť aplikácia.
 - ✅ Povedzte im: banka, polícia ani Microsoft nikdy nežiadajú kód z SMS ani heslo.
 - ✅ Ak máte obavu, nastavte denný limit prevodov — banka to umožní za 5 minút v pobočke.
 - ❌ Nevysmievajte sa im, ak na niečo naleteli — hanba ich odradí od včasného nahlásenia.
@@ -1056,21 +1056,21 @@ Banka nikdy nepýta „bezpečnostný prevod k bankomatu". Akonáhle si pri bank
 
 - Zavolajte banke okamžite — každá minúta zvyšuje šancu na zastavenie prevodu. Číslo: zadná strana karty.
 - Nahláste prípad na políciu (158) — bez nahlásenia nie je možné stíhanie ani štatistiky.
-- Zmeňte heslá na emaile a internet bankingu z bezpečného zariadenia.
+- Zmeňte heslá k e-mailu a internet bankingu z bezpečného zariadenia.
 - Informujte ostatných príbuzných — útočníci volajú aj druhýkrát, keď vedia, že obeť „funguje".
 - Podporte blízkeho emocionálne — hanba a šok sú normálne reakcie, nie slabosť.
 
 ### ❌ Nerob
 
-- Neposielajte ďalšie peniaze na „späťplatbu" ani „poistenie" — to je ďalší útok.
-- Nekritizujte blízkeho, že dal peniaze — podvod je prepracovaný, victim-blaming nepomáha.
-- Nečakajte, kým sa „samo vyrieši" — operatívna banka intervencia funguje iba prvých 24 hodín.
+- Neposielajte ďalšie peniaze na „vrátenie platby" ani „poistenie" — to je ďalší útok.
+- Nekritizujte blízkeho, že dal peniaze — podvod je prepracovaný a obviňovanie obete nepomáha.
+- Nečakajte, kým sa to „samo vyrieši" — rýchly zásah banky funguje iba prvých 24 hodín.
 
 ## Mama zavolá v panike
 
 Mama ti zavolá: „Volali z banky, že mi zablokujú účet, pomôž mi, prosím si ťa. Povedali, že mám ísť k bankomatu a zadať kód, ktorý mi pošlú." Je rozrušená, verí tomu. Chce ísť hneď.
 
-**Zlaté pravidlo:** Vysvetlíš jej pokojne: „Mama, to je podvod. Banka nikdy takto nevolá. Nezavesuj, neber nič." Potom jej zavoláte spolu na číslo z jej bankovej karty — nie to, čo jej nechali. Overia, že žiadna blokácia nie je. Mama je v pohode, peniaze sú v bezpečí.$body$,
+**Zlaté pravidlo:** Vysvetlíš jej pokojne: „Mama, to je podvod. Banka nikdy takto nevolá. Nikam nechoď, nič nerob." Potom spolu zavoláte na číslo z jej bankovej karty — nie na to, ktoré jej nechali. Banka overí, že žiadna blokácia nie je. Mama je v pohode, peniaze sú v bezpečí.$body$,
   'lesson', $diff$beginner$diff$, 8, $emoji$👨‍👩‍👧$emoji$, 8,
   $src$[{"label":"Europol — senior fraud statistics","url":"https://www.europol.europa.eu/"},{"label":"PZ SR — ochrana seniorov","url":"https://www.minv.sk/"},{"label":"Slovak Banking Association — fraud prevention","url":"https://www.sbaonline.sk/"}]$src$::jsonb,
   'published', $pub$2026-04-30$pub$
@@ -1105,7 +1105,7 @@ VALUES (
   $exc$Naskenovať QR kód trvá sekundu. Stratiť prihlasovacie údaje tiež. Ako rozoznáš falošné QR na parkovisku, v reštaurácii a v schránke.$exc$,
   $body$## QR kód — nová cesta k phishingu
 
-QR quishing (QR + phishing) je jednou z najrýchlejšie rastúcich techník od roku 2023. Dôvod je prostý: QR kód je pre ľudský mozog „bezpečný symbol" — bez skenera nevidíš URL, na ktorý ťa posiela. Útočníci tlačia falošné QR stikery a lepia ich cez originál na parkovacích automatoch, v reštauráciách, na balíkových boxoch. Výsledok: naskenuješ zdanlivo legitímny kód a skončíš na podvodnej stránke, ktorá chce tvoje platobné údaje alebo meno + heslo.
+QR quishing (phishing cez QR kód) je jednou z najrýchlejšie rastúcich techník phishingu (podvodné vylákanie prihlasovacích či platobných údajov) od roku 2023. Dôvod je prostý: QR kód je pre ľudský mozog „bezpečný symbol" — bez skenera nevidíš URL, na ktorú ťa posiela. Útočníci tlačia falošné QR nálepky a lepia ich cez originál na parkovacích automatoch, v reštauráciách, na balíkových boxoch. Výsledok: naskenuješ zdanlivo legitímny kód a skončíš na podvodnej stránke, ktorá chce tvoje platobné údaje alebo meno + heslo.
 
 ## Scenár #1 — Parkovací automat
 
@@ -1117,7 +1117,7 @@ QR kód na parkovacom automate ťa posiela na adresu „parkovanie-sk-platba.net
 
 [[visual:b64:eyJraW5kIjoidXJsIiwidXJsIjoiaHR0cHM6Ly9tZW51LXNrLWxvZ2luLnBhZ2Uvd2lmaSIsInNlY3VyZSI6ZmFsc2V9]]
 
-Stolový QR kód pre WiFi alebo menu smeruje na stránku s inštaláciou „menu apky" alebo žiadosťou o prihlásenie Google/Facebook účtom. Reštaurácia nepotrebuje váš Google účet. Prihlasovací formulár na tejto adrese kradne tokeny. Ak reštaurácia chce, aby ste sa prihlásili cez sociálnu sieť pre WiFi — opýtajte sa obsluhy na priame WiFi heslo.
+Stolový QR kód pre wifi alebo menu smeruje na stránku s inštaláciou „menu aplikácie" alebo žiadosťou o prihlásenie cez Google/Facebook účet. Reštaurácia nepotrebuje váš Google účet. Prihlasovací formulár na tejto adrese kradne prihlasovacie tokeny. Ak reštaurácia chce, aby ste sa prihlásili cez sociálnu sieť pre wifi — opýtajte sa obsluhy na priame heslo k wifi.
 
 ## Scenár #3 — Falošný QR v zásielkovom SMS
 
@@ -1133,7 +1133,7 @@ Packeta, DHL, GLS — nikto z nich nepošle SMS so skrytým QR kódom. Ich SMS o
 
 **Červená vlajka:** Stránka po naskenovaní hneď žiada platobné údaje alebo prihlásenie cez Google/Facebook.
 
-**Červená vlajka:** QR zo SMS či emailu od dopravcu — legitimní dopravcovia posielajú len text-link, nie QR.
+**Červená vlajka:** QR zo SMS či e-mailu od dopravcu — legitímni dopravcovia posielajú len textový odkaz, nie QR.
 
 **Červená vlajka:** Adresa doménou nesúvisí s prevádzkovateľom (napr. parkovisko, ale doména nie je mestská).
 
@@ -1144,19 +1144,19 @@ Packeta, DHL, GLS — nikto z nich nepošle SMS so skrytým QR kódom. Ich SMS o
 - Pred otvorením URL si prečítajte adresu v prehliadači — väčšina telefónov ju ukáže pred navigáciou.
 - Na parkoviskách plaťte priamo kartou na automate, bez QR.
 - Dopravcov (Packeta, DHL…) overujte na ich domovskej stránke zadaním čísla zásielky — nie cez QR.
-- Ak na stole v reštaurácii leží voľná nálepka so QR kódom, informujte obsluhu.
+- Ak na stole v reštaurácii leží voľná nálepka s QR kódom, informujte obsluhu.
 
 ### ❌ Nerob
 
 - Nezadávajte platobné údaje na stránke otvorenej cez neoverený QR kód.
 - Neprihlasujte sa cez Google/Facebook na stránkach z QR kódov vo verejnom priestore.
-- Neinštalujte apky navrhnuté QR kódom v reštaurácii alebo na parkovisku.
+- Neinštalujte aplikácie ponúknuté QR kódom v reštaurácii alebo na parkovisku.
 
 ## Centrum mesta, sobota ráno
 
 Na parkovacom automate vedľa nákupného centra skenujete QR kód označený „Rýchla platba". Stránka vyzerá rovnako ako mestský portál. Pýta sa na číslo parkovacieho miesta, EČV a číslo karty vrátane CVV kódu.
 
-**Zlaté pravidlo:** CVV kód parkovacie automaty nikdy nepytajú — to je jednoznačný znak podvodu. Zatvoríte stránku. Zaplatíte priamo kartou na automate, prípadne cez oficiálnu mestskú appku.$body$,
+**Zlaté pravidlo:** CVV kód parkovacie automaty nikdy nepýtajú — to je jednoznačný znak podvodu. Zatvoríte stránku. Zaplatíte priamo kartou na automate, prípadne cez oficiálnu mestskú aplikáciu.$body$,
   'lesson', $diff$beginner$diff$, 6, $emoji$📲$emoji$, 6,
   $src$[{"label":"NCSC UK — QR code scams","url":"https://www.ncsc.gov.uk/"},{"label":"SK-CERT — phishingové trendy","url":"https://www.sk-cert.sk/"},{"label":"FBI — quishing alert 2023","url":"https://www.ic3.gov/"}]$src$::jsonb,
   'published', $pub$2026-04-30$pub$
@@ -1187,23 +1187,23 @@ VALUES (
   (SELECT id FROM public.blog_categories WHERE slug = $cat$sms-a-telefon$cat$),
   (SELECT id FROM public.blog_authors WHERE slug = $auth$subenai-editorial$auth$),
   $title$AI deepfake podvody — falošný hlas, falošná tvár, skutočná škoda$title$,
-  $sub$„Mama, prevedz mi 800 €" hlasom tvojho dieťaťa: ako fungujú voice cloning a deepfake video a ako ich rozoznáš naživo.$sub$,
-  $exc$„Mama, prevedz mi 800 €" hlasom tvojho dieťaťa: ako fungujú voice cloning a deepfake video a ako ich rozoznáš naživo.$exc$,
+  $sub$„Mama, prevedz mi 800 €" hlasom tvojho dieťaťa: ako fungujú klonovanie hlasu a deepfake (umelo vygenerované falošné video či hlas) a ako ich rozoznáš naživo.$sub$,
+  $exc$„Mama, prevedz mi 800 €" hlasom tvojho dieťaťa: ako fungujú klonovanie hlasu a deepfake (umelo vygenerované falošné video či hlas) a ako ich rozoznáš naživo.$exc$,
   $body$## Klonovanie hlasu: od sci-fi po bežný podvod
 
-Ešte v roku 2020 bolo klonovanie hlasu doménou hollywoodskych štúdií. Dnes ho zvládne ktokoľvek s 30-sekundovým klipom z TikToku, YouTube alebo Instagram reels — zadarmo, cez desiatky verejných nástrojov. Výsledok je hlas, ktorý znie identicky ako váš syn, vaša mama, váš CEO. Deepfake video ide ešte ďalej: reálne vyzerajúca videohovory, na ktorých „vidíte" tvár osoby, ktorá skutočne nie je na druhom konci. Tieto technológie nie sú budúcnosť — sú súčasnosť. A útočníciich používajú každý deň.
+Ešte v roku 2020 bolo klonovanie hlasu doménou hollywoodskych štúdií. Dnes ho zvládne ktokoľvek s 30-sekundovým klipom z TikToku, YouTube alebo Instagram reels — zadarmo, cez desiatky verejných nástrojov. Výsledok je hlas, ktorý znie identicky ako váš syn, vaša mama, váš CEO. Deepfake video ide ešte ďalej: reálne vyzerajúce videohovory, na ktorých „vidíte" tvár osoby, ktorá skutočne nie je na druhom konci. Tieto technológie nie sú budúcnosť — sú súčasnosť. A útočníci ich používajú každý deň.
 
 ## Scenár #1 — Klonovaný hlas syna
 
 [[visual:b64:eyJraW5kIjoiY2FsbCIsImNhbGxlciI6Ik1hcnRpbiAoc3luKSIsIm51bWJlciI6Iis0MjEgOXh4IHh4eCB4eHgiLCJoaW50Ijoi4oCeT3RlY2tvLCB0byBzb20gamEuIE1hbCBzb20gbmVob2R1LCBzb20gdiBuZW1vY25pY2kgdiBCcm5lLiBOZW3DoW0gZG9rbGFkeSwgcG90cmVidWplbSAxIDUwMCBFVVIgaG5lxI8uIFByb3PDrW0sIHByZXZlxI8gdG8gbmEgdG90byDEjcOtc2xvIMO6xI10dSBhIG5pa29tdSBuZWhvdm9yLCBrw71tIG5lcHLDrWRlbSBkb21vdi5cIiJ9]]
 
-Útočník stiahol hlasovú nahrávku z verejného videa, naklonil ju za menej ako 2 minúty. Rodičia počujú skutočný hlas syna — mozog to nedokáže odfiltrovať v stresovej situácii. Obrana: doprednú sa dohodnuté „rodinné heslo". Ak ho syn nevie povedať, nie je to syn.
+Útočník stiahol hlasovú nahrávku z verejného videa, naklonil ju za menej ako 2 minúty. Rodičia počujú skutočný hlas syna — mozog to nedokáže odfiltrovať v stresovej situácii. Obrana: dopredu si dohodnite „rodinné heslo". Ak ho syn nevie povedať, nie je to syn.
 
-## Scenár #2 — CEO deepfake videhovor
+## Scenár #2 — CEO deepfake videohovor
 
 [[visual:b64:eyJraW5kIjoiY2FsbCIsImNhbGxlciI6IkNFTyDigJQgSsOhbiBIb3J2w6F0aCAodmlkZWhvdm9yKSIsIm51bWJlciI6Ik1pY3Jvc29mdCBUZWFtcyDigJQgb3ZlcmVuw6Egb3JnYW5pesOhY2lhIiwiaGludCI6IlZpZMOtdGUgdHbDoXIgc3ZvamhvIHJpYWRpdGXEvmEuIEhvdm9yw606IOKAnk3DoW1lIHVyZ2VudG7DvSBha3ZpemnEjW7DvSBkZWFsLiBQcmV2aWVzxaUgODUgMDAwIEVVUiBuYSBlc2Nyb3cgw7rEjWV0IGRuZXMgZG8gMTQ6MDAuIERpc2tyw6l0bm9zxaUgcHJvc8OtbSDigJQgbmVpbmZvcm11anRlIGZpbmFuxI1uw7ouXCIifQ==]]
 
-V roku 2024 spoločnosť vo Hongkongu takto prišla o 25 miliónov USD. Deepfake video na Teams-hovore s falošnou tvárou CEO. Overenie: zvolajte fyzické stretnutie alebo zavolajte CEO na iný kanál (mobil). Finančné prevody nad istú sumu musia mať vždy druhý schvaľovací podpis.
+V roku 2024 spoločnosť v Hongkongu takto prišla o 25 miliónov USD. Deepfake video na Teams-hovore s falošnou tvárou CEO. Overenie: zvolajte fyzické stretnutie alebo zavolajte CEO na iný kanál (mobil). Finančné prevody nad istú sumu musia mať vždy druhý schvaľovací podpis.
 
 ## Scenár #3 — Politický deepfake na sociálnych sieťach
 
@@ -1223,7 +1223,7 @@ Deepfake videá politikov a celebrít sú vytvárané masovo na šírenie paniky
 
 **Červená vlajka:** Video alebo hovor prichádza z neobvyklého kontaktu alebo platformy.
 
-**Červená vlajka:** Scénár, ktorý predtým nikdy nenastal: „syn v zahraničí bez dokladov".
+**Červená vlajka:** Scenár, ktorý predtým nikdy nenastal: „syn v zahraničí bez dokladov".
 
 ## Obrana v ére AI klonov
 
@@ -1238,7 +1238,7 @@ Deepfake videá politikov a celebrít sú vytvárané masovo na šírenie paniky
 ### ❌ Nerob
 
 - Neposielajte peniaze na základe telefonátu od „príbuzného v núdzi" bez overenia.
-- Neverejnite deepfake videá „zo zábavy" — pomáhate šíriť dezinformácie aj keď to viete.
+- Nezverejňujte deepfake videá „zo zábavy" — pomáhate šíriť dezinformácie, aj keď to viete.
 - Nepodliehajte časovému tlaku — urgencia je zámerná zbraň. „Stihnem to aj o hodinu."
 
 ## Nedeľný obed — telefón zavibruje
@@ -1275,46 +1275,46 @@ VALUES (
   $slug$kradez-kont-socialnych-sieti$slug$, 'sk',
   (SELECT id FROM public.blog_categories WHERE slug = $cat$digitalna-bezpecnost$cat$),
   (SELECT id FROM public.blog_authors WHERE slug = $auth$subenai-editorial$auth$),
-  $title$Krádež účtu na sociálnych sieťach — ako ju predísť a čo robiť po nej$title$,
+  $title$Krádež účtu na sociálnych sieťach — ako jej predísť a čo robiť po nej$title$,
   $sub$Napadnutý Instagram za 30 sekúnd, obnova trvá dni. Tu je 5-minútová prevencia a krok-za-krokom postup, keď ti účet ukradnú.$sub$,
   $exc$Napadnutý Instagram za 30 sekúnd, obnova trvá dni. Tu je 5-minútová prevencia a krok-za-krokom postup, keď ti účet ukradnú.$exc$,
-  $body$## Prečo chcú váš Instagram viac ako váš email
+  $body$## Prečo chcú váš Instagram viac ako váš e-mail
 
-Účet na sociálnych sieťach má pre útočníka väčšiu hodnotu, než si myslíte. Prístup k vášmu Instagramu, Facebooku alebo TikToku poskytuje: databázu vašich kontaktov (potenciálne obete), históriu komunikácie (materiál pre vydieranie), dôveryhodný kanál pre ďalšie podvody (scamovanie priateľov z vášho mena), prístup k prepojeným aplikáciám a niekedy aj priame platobné funkcie. Krádež účtu prebehne za menej ako minútu — obrana tiež netrvá dlho.
+Účet na sociálnych sieťach má pre útočníka väčšiu hodnotu, než si myslíte. Prístup k vášmu Instagramu, Facebooku alebo TikToku poskytuje: databázu vašich kontaktov (potenciálne obete), históriu komunikácie (materiál na vydieranie), dôveryhodný kanál na ďalšie podvody (podvádzanie priateľov vo vašom mene), prístup k prepojeným aplikáciám a niekedy aj priame platobné funkcie. Krádež účtu prebehne za menej ako minútu — obrana tiež netrvá dlho.
 
 ## Scenár #1 — Falošná bezpečnostná výzva
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiSW5zdGFncmFtIFNlY3VyaXR5IiwiZnJvbUVtYWlsIjoibm9yZXBseUBpbnN0YWdyYW0tc2VjdXJpdHktYWxlcnQuY29tIiwic3ViamVjdCI6IuKaoO+4jyBVbnVzdWFsIGFjdGl2aXR5IG9uIHlvdXIgYWNjb3VudCDigJQgYWN0aW9uIHJlcXVpcmVkIiwiYm9keSI6IldlIG5vdGljZWQgc3VzcGljaW91cyBsb2dpbiBmcm9tIFJvbWFuaWEuIFRvIHByb3RlY3QgeW91ciBhY2NvdW50LCB2ZXJpZnkgeW91ciBpZGVudGl0eSB3aXRoaW4gMjQgaG91cnMuIENsaWNrIGJlbG93IHRvIGNvbmZpcm0uIiwiY3RhIjoiVmVyaWZ5IG15IGFjY291bnQifQ==]]
 
-Správna doména Instagrama je @mail.instagram.com alebo @facebookmail.com. Akákoľvek variácia — „instagram-security-alert.com", „instagram-verify.net" — je phishing. Nikdy neklikajte na odkaz z emailu. Idete priamo na instagram.com → nastavenia → bezpečnosť.
+Správna doména Instagramu je @mail.instagram.com alebo @facebookmail.com. Akákoľvek obmena — „instagram-security-alert.com", „instagram-verify.net" — je phishing (podvodné vylákanie prihlasovacích či platobných údajov). Nikdy neklikajte na odkaz z e-mailu. Choďte priamo na instagram.com → nastavenia → bezpečnosť.
 
 ## Scenár #2 — Kompromitovaný kamarát posiela link
 
 [[visual:b64:eyJraW5kIjoic21zIiwic2VuZGVyIjoiWnV6a2Eg8J+MuCAoa2Ftb8Wha2EpIiwiYm9keSI6IkhhaGEgdG90byB0byBtdXNpcyB2aWRpZXQsIHNpIHRhbSBhaiB0eSDwn5iCIOKGkiBjdXR0Lmx5L3h5N2syIiwibGluayI6Imh0dHBzOi8vY3V0dC5seS94eTdrMiJ9]]
 
-Kamoška to nenapísala — jej účet je kompromitovaný. Útočník posiela správu všetkým jej kontaktom. Link po naskenovaní buď inštaluje malware alebo vedie na falošnú Instagram login stránku. Pravidlo: ak je link bez kontextu od kohokoľvek — overíte priamym telefonátom/SMS pred kliknutím.
+Kamoška to nenapísala — jej účet je kompromitovaný. Útočník posiela správu všetkým jej kontaktom. Odkaz po kliknutí buď inštaluje malware (škodlivý softvér), alebo vedie na falošnú prihlasovaciu stránku Instagramu. Pravidlo: ak vám ktokoľvek pošle odkaz bez kontextu — pred kliknutím si ho overte priamym telefonátom alebo SMS.
 
 ## Scenár #3 — Výkupné za účet
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiRGlyZWN0IG1lc3NhZ2UgeiB2w6HFoWhvIHZsYXN0bsOpaG8gbG9ja251dMOpaG8gw7rEjXR1IiwiYm9keSI6IuKAnk3DoW1lIHByw61zdHVwIGsgdsOhxaFtdSDDusSNdHUgYSBzw7prcm9tbsO9bSBzcHLDoXZhbS4gWmFwbGHFpXRlIDIwMCBFVVIgdiBCaXRjb2luZSBuYSBhZHJlc3UgW3h4eF0gZG8gNDggaG9kw61uIGFsZWJvIHp2ZXJlam7DrW1lIG9ic2FoLiBBayBrb250YWt0dWpldGUgcG9sw61jaXUsIG9rYW3Fvml0ZSBwdWJsaWt1amVtZS5cIiJ9]]
 
-Toto je sextortion / vydieranie. 90 % týchto správ sú bluf — útočníci posielajú tisíce správ v nádeji, že niekto zaplatí. Neplaťte! Nikdy. Nahláste Instagramu (help.instagram.com), zmeňte heslo, nahláste polícia 158. Dokumentujte screenshotmi.
+Toto je sextortion (vydieranie zverejnením intímneho obsahu). 90 % týchto správ je blaf — útočníci posielajú tisíce správ v nádeji, že niekto zaplatí. Neplaťte! Nikdy. Nahláste to Instagramu (help.instagram.com), zmeňte heslo, nahláste to polícii na čísle 158. Všetko zdokumentujte snímkami obrazovky.
 
-## 5-minútová obrana pre váš každý účet
+## 5-minútová obrana pre každý váš účet
 
-- ✅ Zapnite dvojfaktorovú autentifikáciu (2FA) — najlepšie cez autentifikátorovú app (Google Authenticator, Authy), nie SMS.
+- ✅ Zapnite dvojfaktorové overenie (2FA) — najlepšie cez autentifikačnú aplikáciu (Google Authenticator, Authy), nie cez SMS.
 - ✅ Skontrolujte prepojené aplikácie — Nastavenia → Bezpečnosť → Prepojené aplikácie. Odopnite tie, ktoré nepoužívate.
-- ✅ Pre každú sieť iné heslo — aspoň 12 znakov, ideálne cez password manager (Bitwarden je zadarmo).
+- ✅ Pre každú sieť iné heslo — aspoň 12 znakov, ideálne cez správcu hesiel (Bitwarden je zadarmo).
 - ✅ Skontrolujte zoznam prihlásených zariadení — každé neznáme zariadenie ihneď odpojte.
-- ✅ Nastavte záložný email + telefónne číslo pre obnovu — aktuálne, nie staré.
-- ❌ Neprihlasujte sa cez Facebook/Google do cudzích apiek, ktoré nepotrebujú váš profil — každé prepojenie je ďalší útočný vektor.
+- ✅ Nastavte si záložný e-mail a telefónne číslo na obnovu — aktuálne, nie staré.
+- ❌ Neprihlasujte sa cez Facebook/Google do cudzích aplikácií, ktoré nepotrebujú váš profil — každé prepojenie je ďalší útočný vektor.
 - ❌ Nezdieľajte prihlasovacie údaje ani „zálohy" s nikým — ani s „podporou" siete.
 
 ## Zrána — telefón hlási „neznáme prihlásenie"
 
 Dostanete notifikáciu: „Nové prihlásenie z Charkova, Ukrajina." Päť minút nato váš Instagram zobrazí chybovú hlášku — heslo bolo zmenené. Priatelia vám píšu, že dostali od vás podozrivé správy.
 
-**Zlaté pravidlo:** Okamžite idete na instagram.com/accounts/password/reset zadáte emailovú adresu a obnovíte heslo. Ak útočník zmenil aj email, použijete „Získať pomoc cez prihlásenie" → identifikácia tvárou/číslom. Po obnovení: vypnete všetky cudzie sessions (Nastavenia → Zariadenia), nastavíte nové silné heslo a zapnete 2FA. Upozorníte priateľov, čo dostali správy z vášho účtu.$body$,
+**Zlaté pravidlo:** Okamžite idete na instagram.com/accounts/password/reset, zadáte e-mailovú adresu a obnovíte heslo. Ak útočník zmenil aj e-mail, použijete „Získať pomoc cez prihlásenie" → overenie tvárou alebo telefónnym číslom. Po obnovení odhlásite všetky cudzie relácie (Nastavenia → Zariadenia), nastavíte nové silné heslo a zapnete 2FA. Upozorníte priateľov, ktorí dostali správy z vášho účtu.$body$,
   'lesson', $diff$beginner$diff$, 7, $emoji$🔐$emoji$, 7,
   $src$[{"label":"Instagram — nahlásenie napadnutého účtu","url":"https://help.instagram.com/"},{"label":"NCSC — protecting social media accounts","url":"https://www.ncsc.gov.uk/"},{"label":"SK-CERT — bezpečnosť účtov","url":"https://www.sk-cert.sk/"}]$src$::jsonb,
   'published', $pub$2026-04-30$pub$
@@ -1344,12 +1344,12 @@ VALUES (
   $slug$brigady-a-pracovne-podvody$slug$, 'sk',
   (SELECT id FROM public.blog_categories WHERE slug = $cat$fake-eshopy$cat$),
   (SELECT id FROM public.blog_authors WHERE slug = $auth$subenai-editorial$auth$),
-  $title$Falošné brigády a pracovné ponuky — ako poznáš scam pred prvým dňom$title$,
+  $title$Falošné brigády a pracovné ponuky — ako poznáš scam (podvod) pred prvým dňom$title$,
   $sub$Platia vopred, žiadajú občiansky, sľubujú €500 týždenne za „prácu z domu": ako spoznáš scam pred prvým pracovným dňom.$sub$,
   $exc$Platia vopred, žiadajú občiansky, sľubujú €500 týždenne za „prácu z domu": ako spoznáš scam pred prvým pracovným dňom.$exc$,
   $body$## Prečo pracovné ponuky lákajú podvodníkov
 
-Práca z domu, flexibilné hodiny, výnimočný plat — znaky sú jasné, no emocionálna atraktivita pracovnej ponuky vypína kritické myslenie. Útočníci to vedia. Falošné pracovné ponuky (job scam) cielia predovšetkým na mladých ľudí, študentov a tých, ktorí hľadajú rýchly príjem. Výsledok môže byť strata peňazí (poplatok za školenie/vybavenie), krádež identity (pasová kópia pre „zmluvu") alebo najhoršie — nevedomé zapojenie do prania špinavých peňazí ako „money mule".
+Práca z domu, flexibilné hodiny, výnimočný plat — znaky sú jasné, no emocionálna atraktivita pracovnej ponuky vypína kritické myslenie. Útočníci to vedia. Falošné pracovné ponuky (job scam) cielia predovšetkým na mladých ľudí, študentov a tých, ktorí hľadajú rýchly príjem. Výsledok môže byť strata peňazí (poplatok za školenie či vybavenie), krádež identity (kópia pasu pre „zmluvu") alebo najhoršie — nevedomé zapojenie do prania špinavých peňazí ako „money mule" (nastrčená osoba na pohyb cudzích peňazí).
 
 ## Scenár #1 — „Práca z domu, 500 € týždenne"
 
@@ -1357,17 +1357,17 @@ Práca z domu, flexibilné hodiny, výnimočný plat — znaky sú jasné, no em
 
 Mediánová mzda na Slovensku je ~1 400 €/mesiac (350 €/týždeň). Ponuky nad toto číslo bez požadovaných skúseností a zručností sú alarm. Po nadviazaní kontaktu „zamestnávateľ" požiada o poplatok za „kurz", „certifikát" alebo „vybavenie". Žiadna legitímna práca nevyžaduje platbu pred nástupom.
 
-## Scenár #2 — Falošný EU stáž program
+## Scenár #2 — Falošný program stáže v EÚ
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiRVUgWW91dGggT2ZmaWNlIOKAlCBJbnRlcm5zaGlwIERpdmlzaW9uIiwiZnJvbUVtYWlsIjoiaW50ZXJuc2hpcEBldS15b3V0aC1vcHBvcnR1bml0aWVzLm9yZyIsInN1YmplY3QiOiJDb25ncmF0dWxhdGlvbnMg4oCUIHlvdSBoYXZlIGJlZW4gc2VsZWN0ZWQgZm9yIGFuIEVVLWZ1bmRlZCBpbnRlcm5zaGlwIGluIEJydXNzZWxzIiwiYm9keSI6IkRlYXIgYXBwbGljYW50LCBZb3UgaGF2ZSBiZWVuIHNlbGVjdGVkIGZvciBhIDMtbW9udGggcGFpZCBpbnRlcm5zaGlwIGluIEJydXNzZWxzICjigqwxLDgwMC9tb250aCBzdGlwZW5kKS4gVG8gY29uZmlybSB5b3VyIHBsYWNlbWVudCwgcGxlYXNlIHRyYW5zZmVyIGEg4oKsMTUwIHJlZ2lzdHJhdGlvbiBhbmQgdmlzYSBwcm9jZXNzaW5nIGZlZSB3aXRoaW4gNSBidXNpbmVzcyBkYXlzLiBBdHRhY2ggYSBjb3B5IG9mIHlvdXIgcGFzc3BvcnQgZm9yIGlkZW50aXR5IHZlcmlmaWNhdGlvbi4iLCJjdGEiOiJDb25maXJtIG15IHBsYWNlbWVudCJ9]]
 
-EU stáže nikde neprijímajú cez generické emaily s poplatkami. Oficiálné EU programy (Erasmus+, EPSO, Blue Book) fungujú cez europass.eu a oficálne portály. Žiadať pas a poplatok pred podpisom zmluvy je čistý podvod. Overiť: europass.eu a ec.europa.eu/jobs.
+Stáže v EÚ sa nikdy neponúkajú cez generické e-maily s poplatkami. Oficiálne programy EÚ (Erasmus+, EPSO, Blue Book) fungujú cez europass.eu a oficiálne portály. Žiadať pas a poplatok pred podpisom zmluvy je čistý podvod. Overiť: europass.eu a ec.europa.eu/jobs.
 
 ## Scenár #3 — Preposielanie balíkov (money mule)
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiV2hhdHNBcHAgc3Byw6F2YSBvZCDigJ5tYW5hxb7DqXJhXCIiLCJib2R5Ijoi4oCeQWhvaiwgdHZvamEgcHLDoWNhIGplIGplZG5vZHVjaMOhIOKAlCBwcmlqbWXFoSBiYWzDrWt5IG5hIHN2b2p1IGFkcmVzdSBhIHByZXBvxaFsZcWhIGljaCBuYSBhZHJlc3UsIGt0b3LDuiB0aSBkw6FtZS4gWmFwbGF0w61tZSAyMDDigqwvbWVzaWFjIGNleiBiYW5rb3bDvSBwcmV2b2QuIFphxI3DrW5hbWUgYnVkw7pjaSB0w73FvmRlxYguXCIifQ==]]
 
-Toto je „reshipping scam" — nevedomé preposlanie tovaru zakúpeného podvodnými kartami. Ty si objednávateľ a prepravca ukradnutého tovaru. Právne si spolupáchateľ podvodu, aj keď si nevedel o kriminalite. Výsledok: trestné oznámenie, možný záznam v registri. Akúkoľvek prácu zahŕňajúcu preposielanie balíkov alebo peňazí odmietni.
+Toto je „reshipping scam" (podvod s preposielaním zásielok) — nevedomé preposlanie tovaru zakúpeného podvodnými kartami. Ty si objednávateľ a prepravca ukradnutého tovaru. Právne si spolupáchateľ podvodu, aj keď si nevedel o kriminalite. Výsledok: trestné oznámenie, možný záznam v registri. Akúkoľvek prácu zahŕňajúcu preposielanie balíkov alebo peňazí odmietni.
 
 ## Príznaky falošnej pracovnej ponuky
 
@@ -1379,11 +1379,11 @@ Toto je „reshipping scam" — nevedomé preposlanie tovaru zakúpeného podvod
 
 **Červená vlajka:** Nejasný popis práce: „spracovanie dát", „kontrola balíkov", „pomoc zákazníkom" — bez detailov.
 
-**Červená vlajka:** Kontakt len cez WhatsApp alebo osobné správy, žiadny firemný email ani web.
+**Červená vlajka:** Kontakt len cez WhatsApp alebo osobné správy, žiadny firemný e-mail ani web.
 
 **Červená vlajka:** Práca zahŕňa prijímanie platieb na váš účet a ďalší prevod — toto je klasický money mule.
 
-**Červená vlajka:** Uviedli vás bez prihlasovania — „vy ste boli vybraní" bez žiadosti.
+**Červená vlajka:** Oslovili vás bez toho, aby ste sa hlásili — „boli ste vybraní" bez akejkoľvek žiadosti.
 
 ## Ako bezpečne hľadať prácu online
 
@@ -1393,7 +1393,7 @@ Toto je „reshipping scam" — nevedomé preposlanie tovaru zakúpeného podvod
 - Pohovor cez legitímny videokonferenčný nástroj (Teams, Zoom) s overiteľným ID zamestnávateľa.
 - Podpíšte zmluvu pred začatím práce — a zmluvu si nechajte prečítať.
 - Pracovný inzerát nájdite na overených portáloch: profesia.sk, linkedin.com, kariera.sk.
-- Ak dostanete platbu vopred a majú vás žiadať previesť ďalej — zastavte sa a nahláste polícia.
+- Ak dostanete platbu vopred a žiadajú vás previesť ju ďalej — zastavte sa a nahláste to polícii.
 
 ### ❌ Nerob
 
@@ -1406,7 +1406,7 @@ Toto je „reshipping scam" — nevedomé preposlanie tovaru zakúpeného podvod
 
 Dostanete DM od účtu „eu.staz.official": „Ahoj, náš recruiter videl tvoj profil a myslíme, že si ideálny/a pre náš program v Bruseli. Platba 1 500 €/mesiac, štart o 2 týždne. Stačí uhradiť registračný poplatok 120 € a zaslať scan pasu."
 
-**Zlaté pravidlo:** Nereagujete. Overíte si: EU stáže sa neprijímajú cez Instagram DM, EU nikdy nevyberá registračné poplatky, účet „eu.staz.official" na Instagrame nepatrí žiadnej EU inštitúcii. Nahlásite účet ako podvod priamo na Instagrame a ignorujete správu. Ak ste poplatok nejakým spôsobom zaplatili — kontaktujete banku okamžite a nahlásite políciu.$body$,
+**Zlaté pravidlo:** Nereagujete. Overíte si: stáže v EÚ sa neponúkajú cez Instagram DM, EÚ nikdy nevyberá registračné poplatky a účet „eu.staz.official" na Instagrame nepatrí žiadnej inštitúcii EÚ. Nahlásite účet ako podvod priamo na Instagrame a správu ignorujete. Ak ste poplatok nejakým spôsobom zaplatili — okamžite kontaktujete banku a nahlásite to polícii.$body$,
   'lesson', $diff$beginner$diff$, 7, $emoji$💼$emoji$, 7,
   $src$[{"label":"Profesia.sk — upozornenia na falošné inzeráty","url":"https://www.profesia.sk/"},{"label":"Europol — job scam & money mule awareness","url":"https://www.europol.europa.eu/"},{"label":"PZ SR — trestné oznámenie podvod","url":"https://www.minv.sk/"}]$src$::jsonb,
   'published', $pub$2026-04-30$pub$
@@ -1453,13 +1453,13 @@ Na WhatsApp sa ti ozve správa: „Ahoj Katarína, toto číslo mi dal Tomáš, 
 
 Li Wei ti píše každý deň. Zaujíma sa o teba, pýta sa na prácu, rodinu, záujmy. Posiela fotky z „pracovných ciest" — Dubaj, Singapur, Zürich. Pôsobí sofistikovane, empaticky, vtipne. Po troch týždňoch sa cítiš, akoby si ho dobre poznala. Nikdy sa nespomenulo nič o peniazoch alebo investíciách.
 
-**Zlaté pravidlo:** Búriš sa: ako môže človek, ktorého si nikdy nevidela na videohovore (vždy má technický problém), stať sa intímnym priateľom? Videá, fotky ani profil na LinkedIn nevedia nahradiť overený živý kontakt. Každý, kto po týždňoch intenzívneho písania stále vyhýba sa videochatu, má dôvod to skrývať.
+**Zlaté pravidlo:** Búriš sa: ako sa môže človek, ktorého si nikdy nevidela na videohovore (vždy má technický problém), stať tvojím dôverným priateľom? Videá, fotky ani profil na LinkedIn nedokážu nahradiť overený živý kontakt. Každý, kto sa po týždňoch intenzívneho písania stále vyhýba videochatu, má dôvod niečo skrývať.
 
 ## Fáza 3 — Prvý nástup na investičnú platformu
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiU2NyZWVuc2hvdCBXaGF0c0FwcCBrb252ZXJ6w6FjaWUiLCJib2R5IjoiTGkgV2VpOiDigJ5WaWVtLCDFvmUgc2kgb3BhdHJuw6EsIGFsZSBjaGNlbSBzYSBzIHRlYm91IHBvZGVsacWlIG8gbmllxI1vLCDEjW8gem1lbmlsbyBtw7RqIMW+aXZvdC4gUHJhY3VqZW0gcyByb2Rpbm7DvW0gYnJva2Vyb20sIGt0b3LDvSBtw6EgcHLDrXN0dXAgayBwcml2w6F0bmVqIG9iY2hvZG5laiBwbGF0Zm9ybWUuIFphIHBvc2xlZG7DqSAzIG1lc2lhY2Ugc29tIHpob2Rub3RpbCAyMjAgJS4gSW52ZXN0dWplbSBsZW4gc3VtdSwga3RvcsO6IHNpIG3DtMW+ZW0gZG92b2xpxaUgc3RyYXRpxaUg4oCUIDIgMDAwIOKCrCBzdGHEjcOtIG5hIHphxI1pYXRvay4gTmVtdXPDrcWhIG5pxI0gcm9iacWlLCBqYSB0aSB1a8Ohxb5lbSBrYcW+ZMO9IGtyb2suXCIifQ==]]
 
-„Rodinný broker", „privátna platforma", konkrétne percent zisku a ubezpečenie „stačí málo" — to sú tri signály z učebnice. Žiadna legitímna investičná platforma nie je dostupná iba cez osobný kontakt. Zisky 200 %+ za mesiac sú fyzikálne nemožné bez extrémneho rizika.
+„Rodinný broker", „privátna platforma", konkrétne percentá zisku a ubezpečenie „stačí málo" — to sú tri signály z učebnice. Žiadna legitímna investičná platforma nie je dostupná iba cez osobný kontakt. Zisky nad 200 % za mesiac sú bez extrémneho rizika fyzicky nemožné.
 
 ## Fáza 4 — Falošný zisk a eskalácia
 
@@ -1471,19 +1471,19 @@ Zisky na platforme sú fiktívne — číslice sa menia ako v počítačovej hre
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiRS1tYWlsIOKAnnBsYXRmb3JteVwiIiwiYm9keSI6Ik9kOiBzdXBwb3J0QGludmVzdHNrLWdsb2JhbC10cmFkZS5jb20gfCBQcmVkbWV0OiBWw6HFoSB2w71iZXIgYm9sIHBvemFzdGF2ZW7DvVxuXG5Ww6HFvmVuw6EgcGFuaSwgcHJlZCB1dm/Evm5lbsOtbSB2w71iZXJ1IDE4IDQwMCDigqwgbXVzw610ZSB1aHJhZGnFpSBkYcWIb3bDuiB6w6Fsb2h1IDE1ICUgKDIgNzYwIOKCrCkgcG9kxL5hIG1lZHppbsOhcm9kbsOpaG8gbmFyaWFkZW5pYSBPRUNELiBQbGF0YnUgcmVhbGl6dWp0ZSBkbyA0OCBob2TDrW4ga3J5cHRvbWVub3UgbmEgYWRyZXN1IGJjMXEuLi4ifQ==]]
 
-„Daňová záloha" pred výberom je posledná pasca. Ak zaplatíš, príde ďalší poplatok (AML povinnosť, poistné, atď.). Keď odmietneš, platforma sa „zasekne" a Li Wei prestane odpovedať. Regulovaní brokeri nikdy nevyžadujú daňové zálohy v kryptomenách pred výberom — dane platíš VY svojmu daňovému úradu PO prijatí peňazí.
+„Daňová záloha" pred výberom je posledná pasca. Ak zaplatíš, príde ďalší poplatok — AML povinnosť (opatrenia proti praniu špinavých peňazí), poistné a podobne. Keď odmietneš, platforma sa „zasekne" a Li Wei prestane odpovedať. Regulovaní brokeri nikdy nevyžadujú daňové zálohy v kryptomenách pred výberom — dane platíš VY svojmu daňovému úradu PO prijatí peňazí.
 
 ## 7 signálov pig butchering útoku
 
 **Červená vlajka:** Prvý kontakt je „omylom" — správa adresovaná inému menu alebo číslu.
 
-**Červená vlajka:** Cudzinec s luxusným životným štýlom (fotky z hotelov, luxury cars, exotické krajiny) buduje intenzívny vzťah čisto online.
+**Červená vlajka:** Cudzinec s luxusným životným štýlom (fotky z hotelov, luxusné autá, exotické krajiny) buduje intenzívny vzťah čisto online.
 
-**Červená vlajka:** Videhovor sa nikdy neuskutoční — technický problém, rušná práca, iný dôvod.
+**Červená vlajka:** Videohovor sa nikdy neuskutoční — technický problém, rušná práca, iný dôvod.
 
 **Červená vlajka:** Po týždňoch/mesiacoch osobného chatu nasleduje návrh „súkromnej" investičnej príležitosti so zaručeným ziskom.
 
-**Červená vlajka:** Platforma je prístupná len cez link od kontaktu, nie cez bežné app store alebo regulátor.
+**Červená vlajka:** Platforma je prístupná len cez odkaz od kontaktu, nie cez bežný obchod s aplikáciami či regulátora.
 
 **Červená vlajka:** Podmienka výberu peňazí je vždy nová — minimálna suma, daň, poplatok, „overenie".
 
@@ -1494,7 +1494,7 @@ Zisky na platforme sú fiktívne — číslice sa menia ako v počítačovej hre
 ### ✅ Rob
 
 - Overte každého cudzinca, s ktorým komunikujete online: reverzné vyhľadávanie fotky (Google Obrázky / TinEye), LinkedIn, overenie telefónneho čísla.
-- Trvajte na živom videhovore cez WhatsApp alebo FaceTime pred akýmkoľvek finančným rozhovorom.
+- Trvajte na živom videohovore cez WhatsApp alebo FaceTime pred akýmkoľvek finančným rozhovorom.
 - Skontrolujte investičnú platformu v registri NBS (nbs.sk) alebo ESMA (esma.europa.eu) — ak tam nie je, je nelegálna.
 - Poraďte sa s niekým dôveryhodným (rodina, priateľ) pred akýmkoľvek presunom peňazí.
 - Ak ste sa stali obeťou: kontaktujte políciu SR (158) a NBS, zablokujte prístupy, zdokumentujte všetku komunikáciu.
@@ -1503,8 +1503,8 @@ Zisky na platforme sú fiktívne — číslice sa menia ako v počítačovej hre
 
 - Neposielajte peniaze nikomu, koho poznáte iba z online kontaktu, bez fyzického stretnutia.
 - Neinvestujte cez platformu, ku ktorej vás naviedol romantický záujem alebo „priateľ" z internetu.
-- Neplatte žiadne „dane" ani „poplatky" pred výberom investičného zisku — to je vždy podvod.
-- Nepokúšajte sa o pomstu ani o „získanie peňazí späť" cez iné „recovery" firmy — to je ďalší podvod.$body$,
+- Neplaťte žiadne „dane" ani „poplatky" pred výberom investičného zisku — to je vždy podvod.
+- Nepokúšajte sa o pomstu ani o „získanie peňazí späť" cez iné „recovery" firmy (firmy sľubujúce vrátenie ukradnutých peňazí) — to je ďalší podvod.$body$,
   'lesson', $diff$advanced$diff$, 10, $emoji$🐷$emoji$, 10,
   $src$[{"label":"Europol IOCTA 2025 — Investment fraud trends","url":"https://www.europol.europa.eu/publication-events/main-reports/steal-deal-and-repeat-how-cybercriminals-trade-and-exploit-your-data"},{"label":"Europol IOCTA 2026 — AI a podvody","url":"https://www.europol.europa.eu/publication-events/main-reports/iocta-2026-evolving-threat-landscape"},{"label":"NBS — varovania pred nelegálnymi investičnými platformami","url":"https://www.nbs.sk/sk/spotrebitelia/ochrana-spotrebitela/varovania-pred-podvodmi"}]$src$::jsonb,
   'published', $pub$2026-04-29$pub$
@@ -1539,25 +1539,25 @@ VALUES (
   $exc$Hľadáš „VÚB prihlásenie" a klikneš na prvý Google výsledok. Prvý výsledok nemusí byť VÚB — ako rozoznáš falošnú reklamu od pravého výsledku.$exc$,
   $body$## Reklamy na prvom mieste nie sú automaticky dôveryhodné
 
-Kedy naposledy si hľadal prihlásenie do internet bankingu cez Google? Väčšina ľudí to robí bežne. Útočníci to vedia — a platia Google Ads za to, aby ich falošná stránka bola na prvom mieste vo výsledkoch vyhľadávania. Tento útok sa volá malvertising (malicious advertising). Výsledok vyzerá legitímne: správny názov banky, zelené písmo domény... kým sa nepozrieš pozorne. Podľa ENISA a Europolu sa malvertising v rokoch 2024–2025 stal jedným z najrýchlejšie rastúcich vektorov bankového phishingu v EÚ.
+Kedy naposledy si hľadal prihlásenie do internetbankingu cez Google? Väčšina ľudí to robí bežne. Útočníci to vedia — a platia za reklamu v Google Ads, aby ich falošná stránka bola na prvom mieste vo výsledkoch vyhľadávania. Tento útok sa volá malvertising (škodlivá reklama šíriaca malware). Výsledok vyzerá legitímne: správny názov banky, zelené písmo domény... kým sa nepozrieš pozorne. Podľa ENISA a Europolu sa malvertising v rokoch 2024 – 2025 stal jedným z najrýchlejšie rastúcich vektorov bankového phishingu (podvodného vylákania prihlasovacích či platobných údajov) v EÚ.
 
 ## Vzor #1 — Falošná Tatra banka vo výsledkoch Google
 
 [[visual:b64:eyJraW5kIjoidXJsIiwidXJsIjoiaHR0cHM6Ly90YXRyYWJhbmthLXByaWhsYXNlbmllLnNrL2xvZ2luIiwic2VjdXJlIjp0cnVlfQ==]]
 
-Útočník zaplatil za Google reklamu s názvom „Tatra Banka — Internetové bankovníctvo". Doména je tatrabanka-prihlasenie.sk — nie tatrabanka.sk. Pravá Tatra banka je na elektronickebankovnictvo.tatrabanka.sk alebo tb.tatrabanka.sk. Pomlčka v doméne je pri bankách takmer vždy falošná.
+Útočník zaplatil za reklamu v Google s názvom „Tatra Banka — Internetové bankovníctvo". Doména je tatrabanka-prihlasenie.sk — nie tatrabanka.sk. Pravá Tatra banka je na adrese elektronickebankovnictvo.tatrabanka.sk alebo tb.tatrabanka.sk. Pomlčka v doméne je pri bankách takmer vždy znakom podvodu.
 
 ## Vzor #2 — VÚB sponsored link
 
 [[visual:b64:eyJraW5kIjoidXJsIiwidXJsIjoiaHR0cHM6Ly92dWItYmFua2luZy5vbmxpbmUvcHJpaGxhc2VuaWUiLCJzZWN1cmUiOnRydWV9]]
 
-VÚB má doménu vub.sk — nie vub-banking.online. Táto reklama sa objavila na vrchole Google výsledkov pri hľadaní „vúb internet banking prihlásenie". HTTPS (zelený zámok) neznamená, že stránka je bezpečná — iba že spojenie je šifrované. Certifikát si môže vziať ktokoľvek vrátane podvodníkov.
+VÚB má doménu vub.sk — nie vub-banking.online. Táto reklama sa objavila na vrchole výsledkov Google pri hľadaní „vúb internet banking prihlásenie". HTTPS (zelený zámok) neznamená, že stránka je bezpečná — iba že spojenie je šifrované. Certifikát si môže zaobstarať ktokoľvek vrátane podvodníkov.
 
 ## Vzor #3 — Falošný crypto broker cez Facebook/Instagram reklamu
 
 [[visual:b64:eyJraW5kIjoiaW5zdGFncmFtIiwiYWNjb3VudCI6ImNyeXB0b2ludmVzdC5zayIsInZlcmlmaWVkIjpmYWxzZSwiYm9keSI6IvCflKUgRVhLTFVaw41WTkU6IFNsb3ZlbnNrw6Egc3Bvcml0ZcS+xYhhIG90dm9yaWxhIGtyeXB0byBpbnZlc3RpxI1uw70gcG9ydMOhbCBwcmUga2xpZW50b3YgU1IuIEdhcmFudG92YW7DvSB2w71ub3MgMTIgJSBtZXNhxI1uZS4gUmVnaXN0cnVqdGUgc2EgY2V6IG92ZXJlbsO9IGxpbmsg4oCUIGxlbiA1MDAgbWllc3QhIOKPsCIsImN0YSI6IlJlZ2lzdHJvdmHFpSBzYSIsImltYWdlRW1vamkiOiLwn5KwIn0=]]
 
-SLSP (ani žiadna slovenská banka) neotvorila krypto portál s garantovanými výnosmi — to je zákonom zakázané. Inzerát na Instagrame, neoverený účet, jazykový vzor „exkluzívne + obmedzený počet" = scam. Garantovaný výnos v investíciách neexistuje — za akékoľvek garantovanie sa udeľujú pokuty od NBS.
+SLSP (ani žiadna slovenská banka) neotvorila krypto portál s garantovanými výnosmi — to je zákonom zakázané. Inzerát na Instagrame, neoverený účet, jazykový vzorec „exkluzívne + obmedzený počet" = scam (podvod). Garantovaný výnos v investíciách neexistuje — za akékoľvek garantovanie udeľuje NBS pokuty.
 
 ## Vzor #4 — Falošný Microsoft 365 login cez Bing reklamu
 
@@ -1584,9 +1584,9 @@ Microsoft 365 login je na login.microsoftonline.com alebo login.microsoft.com �
 
 **Červená vlajka:** Investičná reklama od „banky" na sociálnej sieti sľubuje garantovaný výnos alebo exkluzívnu ponuku.
 
-**Červená vlajka:** Prihlasovací formulár ťa žiada o celé heslo + OTP naraz (banka ich nikdy nepýta súčasne).
+**Červená vlajka:** Prihlasovací formulár ťa žiada o celé heslo a OTP (jednorazový overovací kód) naraz (banka ich nikdy nepýta súčasne).
 
-**Červená vlajka:** Stránka pôsobí identicky s originálom, ale URL nič nesedí (falošné, pixel-perfect kópie sú bežné).
+**Červená vlajka:** Stránka pôsobí identicky s originálom, ale URL nesedí (falošné, dokonalé kópie sú bežné).
 
 ## Zlaté pravidlá pre bankové prihlásenie online
 
@@ -1609,7 +1609,7 @@ Microsoft 365 login je na login.microsoftonline.com alebo login.microsoft.com �
 
 Je 8:15, sedíš v aute a potrebuješ zaplatiť faktúru do 9:00. Otvoríš Chrome, napíšeš „tatra banka prihlasenie" — prvý výsledok hovorí „Tatra Banka — Internetové bankovníctvo" so zelenou doménou. Klikneš, prihlasovací formulár vyzerá identicky ako vždy. Zadáš meno a heslo...
 
-**Zlaté pravidlo:** Zastaneš pri URL: tatrabanka-online.sk namiesto tatrabanka.sk. Zavrieš tab. Otvoríš záložku, ktorú máš uloženú ako „Tatra banka". Zaplatíš faktúru. Neskôr nahlásiš podvodnú reklamu Googlu. Útočník mal falošnú stránku nahorenú len 6 hodín, kým ju Google vymazal — no stihol zachytiť stovky prihlásení.$body$,
+**Zlaté pravidlo:** Zastaneš pri URL: tatrabanka-online.sk namiesto tatrabanka.sk. Zatvoríš kartu. Otvoríš záložku, ktorú máš uloženú ako „Tatra banka". Zaplatíš faktúru. Neskôr nahlásiš podvodnú reklamu Googlu. Útočník mal falošnú stránku spustenú len 6 hodín, kým ju Google odstránil — no stihol zachytiť stovky prihlásení.$body$,
   'lesson', $diff$advanced$diff$, 8, $emoji$🎯$emoji$, 8,
   $src$[{"label":"ENISA Threat Landscape 2024 — Phishing a social engineering","url":"https://www.enisa.europa.eu/publications/enisa-threat-landscape-2024"},{"label":"Europol IOCTA 2026 — Online fraud schemes","url":"https://www.europol.europa.eu/publication-events/main-reports/iocta-2026-evolving-threat-landscape"},{"label":"SK-CERT — Malvertising upozornenie","url":"https://www.sk-cert.sk/"}]$src$::jsonb,
   'published', $pub$2026-04-29$pub$
@@ -1682,7 +1682,7 @@ Marta chcela len pomôcť s formulárom — a dala chatbotu všetko naraz: meno,
 
 ### ✅ Rob
 
-- Keď dostaneš email alebo správu s perfektnou slovenčinou bez chýb — daj si pozor. Phishing sa dnes píše AI a neprezradia ho pravopisné chyby.
+- Keď dostaneš email alebo správu s perfektnou slovenčinou bez chýb — daj si pozor. Phishing (podvodné vylákanie prihlasovacích či platobných údajov) sa dnes píše AI a neprezradia ho pravopisné chyby.
 - Chatbot na webe banky alebo e-shopu, ktorý ťa odkazuje na „inú stránku" — vždy skontroluj adresu v prehliadači.
 - AI zákaznícke centrum podvodnej stránky vyzerá rovnako ako pravé — overuj firmu podľa URL, nie podľa vzhľadu chatu.
 - Ak ti chatbot ponúkne „zľavu po zadaní čísla karty" — okamžite zavrieš okno. Legitímny chatbot kartu nikdy nepýta.
@@ -1730,11 +1730,11 @@ VALUES (
   $title$AI asistent — ako z neho dostať presne to, čo chceš$title$,
   $sub$Preklad, recept, list lekárovi alebo úradu — AI to zvládne za 10 sekúnd, keď vieš, ako sa opýtať. 6 šablón promtov pre bežný život.$sub$,
   $exc$Preklad, recept, list lekárovi alebo úradu — AI to zvládne za 10 sekúnd, keď vieš, ako sa opýtať. 6 šablón promtov pre bežný život.$exc$,
-  $body$## AI nie je vševedo — ale veľa vie
+  $body$## AI nie je vševed — ale veľa vie
 
-Predstav si asistenta, ktorý prečítal milióny kníh, článkov a webstránok, hovorí takmer každým jazykom a je dostupný 24 hodín denne zadarmo. To je AI asistent — ChatGPT, Gemini alebo Microsoft Copilot. Vie napísať email, preložiť text, vysvetliť pojmy, navrhnúť recept, pomôcť s úradným listom alebo pripraviť otázky pre lekára. Lenže — nie je vševedo. Niekedy si niečo vymyslí (odborníci tomu hovoria „halucinácie"). Nedokáže zavolať záchranku, neskontroluje tvoje zdravie a nie je zodpovedný za chyby. Táto kapitola ti ukáže kedy sa na AI spoľahnúť a kedy radšej siahnuť po odborníkovi.
+Predstav si asistenta, ktorý prečítal milióny kníh, článkov a webstránok, hovorí takmer každým jazykom a je dostupný 24 hodín denne zadarmo. To je AI asistent — ChatGPT, Gemini alebo Microsoft Copilot. Vie napísať email, preložiť text, vysvetliť pojmy, navrhnúť recept, pomôcť s úradným listom alebo pripraviť otázky pre lekára. Lenže — nie je vševed. Niekedy si niečo vymyslí (odborníci tomu hovoria „halucinácie"). Nedokáže zavolať záchranku, neskontroluje tvoje zdravie a nie je zodpovedný za chyby. Táto kapitola ti ukáže, kedy sa na AI spoľahnúť a kedy radšej siahnuť po odborníkovi.
 
-## 5 konkrétnych situácií kde AI ušetrí čas
+## 5 konkrétnych situácií, kde AI ušetrí čas
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiUHLDrWtsYWR5IG90w6F6b2ssIHMga3RvcsO9bWkgQUkgcG9tw7TFvmUiLCJib2R5IjoiMS4g4oCeUHJlbG/FviB0ZW50byB0ZXh0IHogYW5nbGnEjXRpbnkgZG8gc2xvdmVuxI1pbnk6IFt2bG/FviB0ZXh0XVwiXG4yLiDigJ5OYXZyaG5pIG1pIGplZG5vZHVjaMO9IHJlY2VwdCBuYSB2ZcSNZXJ1IHogYnJva29saWNlLCByecW+ZSBhIGt1cmFjaWVobyBtw6RzYVwiXG4zLiDigJ5Qb23DtMW+IG1pIG5hcMOtc2HFpSBzxaVhxb5ub3N0bsO9IGxpc3QgbmEgc2VydmlzLCBrZGUgbWkgbmVwcmF2ZGl2byBvcMOtc2FsaSBhdXRvXCJcbjQuIOKAnlZ5c3ZldGxpIG1pIMSNbyB6bmFtZW7DoTogaHlwZXJ0ZW56aWEgSUkuIHN0dXDFiGFcIiAocG9qZW0sIG5pZSBtb2phIGRpYWduw7N6YSlcbjUuIOKAnk5hcMOtxaEgNSBvdMOhem9rLCBrdG9yw6kgc2Egb3DDvXRhbSBsZWvDoXJhIHByaSBrb250cm9sZSBwZcSNZW5lXCIifQ==]]
 
@@ -1773,7 +1773,7 @@ Tri zložky dobrej otázky: (1) Kontext — kto si a akú máš situáciu, (2) �
 
 Elena (72) sa naučila používať Gemini na mobile. Najprv sa opýta: „Navrhni mi sladší hrnčekový koláč bez cukru — mám diabetickú diétu." Dostane výborný recept s ovocím a stéviou. Povie si: „Toto je skvelé, opýtam sa aj na lieky." Napíše: „Mám predpísaný Metformin a Amlodipín — môžem ich kombinovať s grapefruitovým džúsom?"
 
-**Zlaté pravidlo:** Recept bez cukru — bezpečný, AI v tom vyniká. Interakcia liekov s jedlom — stop. Grapefruit mení vstrebávanie niektorých liekov (Amlodipínu vrátane) a AI môže dať nepresný alebo zastaraný údaj. Správny postup: Elena túto otázku položí lekárnikovi pri výdaji liekov alebo zavolá na bezplatnú informačnú linku svojej zdravotnej poisťovne.$body$,
+**Zlaté pravidlo:** Recept bez cukru — bezpečný, AI v tom vyniká. Interakcia liekov s jedlom — stop. Grapefruit mení vstrebávanie niektorých liekov (vrátane Amlodipínu) a AI môže dať nepresný alebo zastaraný údaj. Správny postup: Elena túto otázku položí lekárnikovi pri výdaji liekov alebo zavolá na bezplatnú informačnú linku svojej zdravotnej poisťovne.$body$,
   'lesson', $diff$beginner$diff$, 9, $emoji$🤝$emoji$, 9,
   $src$[{"label":"UNESCO — AI gramotnosť a vzdelávanie","url":"https://www.unesco.org/en/artificial-intelligence"},{"label":"EU AI Office — zodpovedné použitie AI","url":"https://digital-strategy.ec.europa.eu/en/policies/ai-office"},{"label":"OpenAI ChatGPT — pomocná stránka","url":"https://help.openai.com/"},{"label":"Google Gemini — aplikácia","url":"https://gemini.google.com/"}]$src$::jsonb,
   'published', $pub$2026-04-30$pub$
@@ -1814,33 +1814,33 @@ Psychológia podvodov nie je o tom, či si „dosť bystrý". Naletia právnici,
 
 [[visual:b64:eyJraW5kIjoic21zIiwic2VuZGVyIjoiVGF0cmFCYW5rYSIsImJvZHkiOiJQb2RvenJpdmEgdHJhbnNha2NpYSAxIDI0OCBFVVIuIEFrIG5lYm9sYSBWYXNhLCBwb3R2cmR0ZSB6cnVzZW5pZSBkbyAxMCBtaW51dDogdGF0cmEtYmV6cGVjbm9zdC5zay1vdmVyZW5pZS5jb20iLCJ0aW1lIjoiZG5lcyAyMjo0OCJ9]]
 
-Časový tlak vypína prefrontálny kortex. „Do 10 minút" + neskorá hodina = mozog v paniku a klik. Skutočná Tatra banka ti dá čas, žiadne 10-minútové ultimátum.
+Časový tlak vypína prefrontálny kortex. „Do 10 minút" + neskorá hodina = mozog v panike klikne. Skutočná Tatra banka ti dá čas, žiadne 10-minútové ultimátum.
 
 ## Pasca #2 — Autorita („volá vám polícia")
 
 [[visual:b64:eyJraW5kIjoiY2FsbCIsImNhbGxlciI6ImtwdC4gTWdyLiBOb3bDoWssIE5BS0EiLCJudW1iZXIiOiIrNDIxIDIgNDQ0NCAxMjM0IiwiaGludCI6IsSNw61zbG8gc2EgZMOhIHNmYWzFoW92YcWlIGNleiBWb0lQIOKAlCBjYWxsZXIgSUQgbmllIGplIGTDtGtheiJ9]]
 
-Titul, hodnosť, oficiálny tón. Mozog je naučený poslúchať autoritu. Skutočný vyšetrovateľ ťa nikdy nepýta o presune peňazí cez telefón — vyšetrovanie ide cez výsluch na stanici.
+Titul, hodnosť, oficiálny tón. Mozog je naučený poslúchať autoritu. Skutočný vyšetrovateľ ťa nikdy nežiada o presun peňazí cez telefón — vyšetrovanie ide cez výsluch na stanici.
 
 ## Pasca #3 — Sociálny dôkaz („všetci to robia")
 
 [[visual:b64:eyJraW5kIjoiaW5zdGFncmFtIiwiYWNjb3VudCI6ImNyeXB0b19zbG92YWtpYV8yMDI2IiwidmVyaWZpZWQiOmZhbHNlLCJib2R5IjoiVcW+IDQgODAwIHNsb3bDoWtvdiB6YXJvYmlsbyBzIG5hxaFvdSBBSSBwbGF0Zm9ybW91IG1pbmltw6FsbmUgMSAyMDAg4oKsIHTDvcW+ZGVubmUuIFByaWRhaiBzYSwga8O9bSBqZSBtaWVzdG8uIiwiY3RhIjoiWmlzdGnFpSB2aWFjIiwiaW1hZ2VFbW9qaSI6IvCfkrAifQ==]]
 
-„Tisíce iných to robia" obíde tvoj kritický filter — keď to funguje masám, asi to nie je podvod, že? Falošné komentáre a fake účty sú jeden z najlacnejších nástrojov scammera.
+„Tisíce iných to robia" obíde tvoj kritický filter — keď to funguje masám, asi to nie je podvod, že? Falošné komentáre a falošné účty sú jeden z najlacnejších nástrojov podvodníka.
 
 ## Pasca #4 — Strach a strata
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiU2xvdmVuc2vDoSBzcG9yaXRlxL7FiGEg4oCUIEJlenBlxI1ub3PFpSIsImZyb21FbWFpbCI6InNlY3VyaXR5QHNsc3Atb3ZlcmVuaWUuZXUiLCJzdWJqZWN0IjoiVVJHRU5UOiBWw6HFoSDDusSNZXQgYnVkZSB6YWJsb2tvdmFuw70gZG8gMjRoIiwiYm9keSI6IkRldGVnb3ZhbGkgc21lIG5lb3Byw6F2bmVuw70gcG9rdXMgbyBwcmlobMOhc2VuaWUuIFByZSB6YWNob3ZhbmllIHByw61zdHVwdSBzYSBtdXPDrXRlIG92ZXJpxaUgZG8gMjQgaG9kw61uLCBpbmFrIGJ1ZGUgw7rEjWV0IHphYmxva292YW7DvSBhIHbFoWV0a3kgdHJhbnNha2NpZSBwb3phc3RhdmVuw6kuIiwiY3RhIjoiT3ZlcmnFpSDDusSNZXQifQ==]]
 
-Strata bolí dvakrát viac, než radosť zo zisku (loss aversion, Kahneman). „Stratíš prístup" je silnejšia páka než „získaj bonus". Slovenská sporiteľňa neposiela hrozby cez e-mail.
+Strata bolí dvakrát viac než radosť zo zisku (averzia k strate, Kahneman). „Stratíš prístup" je silnejšia páka než „získaj bonus". Slovenská sporiteľňa neposiela hrozby cez e-mail.
 
 ## Pasca #5 — Reciprocita („už si toho do nás vložil veľa")
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiU3Byw6F2YSBvZCDigJ5pbnZlc3RpxI1uw6lobyBwb3JhZGN1XCIgcG8gMyBtZXNpYWNvY2ggY2hhdG92YW5pYSIsImJvZHkiOiJBbm5hLCBwcm9zw61tLCBsZW4gZcWhdGUgODAwIOKCrC4gw5rEjWV0IGplIHRha21lciBvZGJsb2tvdmFuw70gYSB0w71jaCA0NyAwMDAg4oKsIGtvbmXEjW5lIHV2aWTDrcWhLiBaYWNocsOhbmlsIHNvbSDFpWEgeiB0ZWoga3J5cHRvcGFzY2UsIHBhbcOkdMOhxaE/IFZlciBtaSBuYXBvc2xlZHkuIn0=]]
 
-Pig-butchering hrá na pocit dlhu („pomohol mi"). Čím viac si investoval — čas, peniaze, emócie — tým ťažšie odísť. Klasický sunk-cost fallacy.
+Pig butchering (dlhodobý investičný podvod budovaný cez vzťah) hrá na pocit dlhu („pomohol mi"). Čím viac si investoval — čas, peniaze, emócie — tým ťažšie sa odchádza. Klasický sunk-cost fallacy (klam utopených nákladov).
 
-## 7 spúšťačov, ktoré tvoj mozog robia zraniteľný
+## 7 spúšťačov, ktoré robia tvoj mozog zraniteľným
 
 **Červená vlajka:** Naliehavosť — „do 10 minút", „posledná šanca", „inak ti zablokujú účet".
 
@@ -1861,7 +1861,7 @@ Pig-butchering hrá na pocit dlhu („pomohol mi"). Čím viac si investoval —
 ### ✅ Rob
 
 - Pri každej naliehavej správe sa donúť počkať 10 minút pred akýmkoľvek krokom — emócia za ten čas opadne.
-- Pýtaj sa: „Prečo má on/ona naponáhlo, keď ja nemám?" Naliehavosť je červená vlajka.
+- Pýtaj sa: „Prečo sa on/ona ponáhľa, keď ja nemusím?" Naliehavosť je varovný signál.
 - Overuj druhým kanálom — banka SMS, telefón na oficiálne číslo z webu, nie z e-mailu.
 - Hovor s niekým z rodiny alebo kolegom skôr, než pošleš väčšiu sumu komukoľvek.
 
@@ -1869,14 +1869,14 @@ Pig-butchering hrá na pocit dlhu („pomohol mi"). Čím viac si investoval —
 
 - Nikdy nerob finančné rozhodnutia v strese, panike alebo neskoro v noci.
 - Neignoruj pocit, že „niečo je čudné" — intuícia je často rýchlejšia než logika.
-- Nepreceňuj sa — „mne sa to nestane" je presne myslenie, na ktorom scameri stavajú.
-- Nedôveruj caller ID, e-mailovým adresám ani titulom — všetko sa dá sfalšovať.
+- Nepreceňuj sa — „mne sa to nestane" je presne to myslenie, na ktorom podvodníci stavajú.
+- Nedôveruj zobrazenému číslu volajúceho (caller ID), e-mailovým adresám ani titulom — všetko sa dá sfalšovať.
 
 ## Reálny scenár — falošný „bankár"
 
 Volá ti človek, predstavuje sa ako Peter Hudák zo Slovenskej sporiteľne, bezpečnostné oddelenie. Vie tvoje meno, vie posledné 4 čísla karty (zistené z úniku dát). Hovorí: „Pán Kováč, práve sa vám niekto pokúsil zobrať 2 400 €. Aby sme transakciu zablokovali, presuňte peniaze na bezpečnostný účet, ktorý vám teraz nadiktujem."
 
-**Zlaté pravidlo:** Zavesíš. Otvoríš mobilnú appku Slovenskej sporiteľne — tam vidíš všetky transakcie naživo. Ak je niečo podozrivé, voláš na číslo z appky alebo z karty (nie to, ktoré ti práve volal „Peter"). Žiadna banka v SR nikdy nepýta presun peňazí na „bezpečnostný účet". To je vždy podvod.$body$,
+**Zlaté pravidlo:** Zavesíš. Otvoríš mobilnú aplikáciu Slovenskej sporiteľne — tam vidíš všetky transakcie naživo. Ak je niečo podozrivé, voláš na číslo z aplikácie alebo z karty (nie na to, z ktorého ti práve volal „Peter"). Žiadna banka v SR nikdy nežiada presun peňazí na „bezpečnostný účet". To je vždy podvod.$body$,
   'lesson', $diff$advanced$diff$, 10, $emoji$🧠$emoji$, 10,
   $src$[{"label":"NBÚ — odporúčania pre občanov","url":"https://www.nbu.gov.sk/"},{"label":"SK-CERT — najčastejšie typy podvodov","url":"https://www.sk-cert.sk/"},{"label":"Polícia SR — kybernetická kriminalita","url":"https://www.minv.sk/"}]$src$::jsonb,
   'published', $pub$2026-05-20$pub$
@@ -1911,13 +1911,13 @@ VALUES (
   $exc$7-bodový checklist, ktorým rozoznáš podvodný e-shop skôr, než zaplatíš.$exc$,
   $body$## Falošný e-shop poznáš za 2 minúty — ak vieš, kde pozerať
 
-Falošný e-shop v roku 2026 nevyzerá ako tých 5 chýb pred desiatimi rokmi. Má slušnú grafiku, fotky produktov, reálne názvy značiek a recenzie napísané ChatGPT-om. Často je to klon legitímneho českého alebo poľského obchodu, len s inou IBAN-ou na konci. Slováci ročne stratia milióny eur cez „výhodné" iPhone-y za 299 € z falošných FB reklám alebo z e-shopov, ktoré sa volajú elektromax-sk-vypredaj.com. Dobrá správa: dvojminútová kontrola pred zaplatením ťa zachráni v 95 % prípadov.
+Falošný e-shop v roku 2026 nevyzerá ako tých päť chýb spred desiatich rokov. Má slušnú grafiku, fotky produktov, reálne názvy značiek a recenzie napísané ChatGPT-om. Často je to klon legitímneho českého alebo poľského obchodu, len s iným číslom IBAN na konci. Slováci ročne stratia milióny eur cez „výhodné" iPhony za 299 € z falošných reklám na Facebooku alebo z e-shopov, ktoré sa volajú elektromax-sk-vypredaj.com. Dobrá správa: dvojminútová kontrola pred zaplatením ťa zachráni v 95 % prípadov.
 
 ## Vzor #1 — FB reklama na iPhone za 299 €
 
 [[visual:b64:eyJraW5kIjoidXJsIiwidXJsIjoiaHR0cHM6Ly9hcHBsZS12eXByb2Rlai1zay5zaG9wL2lwaG9uZS0xNS1wcm8tMjk5ZXVyIiwic2VjdXJlIjp0cnVlfQ==]]
 
-HTTPS visiačik neznamená nič — kúpiš ho za 5 € hocikde. Doména apple-vyprodej-sk.shop nie je Apple. Apple v SR predáva cez apple.com/sk alebo cez autorizovaných predajcov ako iStores či Datart.
+Visiačik HTTPS neznamená nič — kúpiš ho hocikde za 5 €. Doména apple-vyprodej-sk.shop nie je Apple. Apple v SR predáva cez apple.com/sk alebo cez autorizovaných predajcov ako iStores či Datart.
 
 ## Vzor #2 — Klon Alza.sk
 
@@ -1929,13 +1929,13 @@ Skutočná Alza je len na alza.sk. Hocijaká poddoména s pomlčkou alebo TLD .o
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiUmVjZW56aWEgbmEgcG9kdm9kbm9tIGUtc2hvcGUiLCJib2R5IjoiU29tIHZlxL5taSBzcG9rb2puw6EgcyBtb2rDrW0gbsOha3Vwb20hIFByb2R1a3QgcHJpxaFpZWwgcsO9Y2hsbyBhIGt2YWxpdGEgcHJlZMSNaWxhIG1vamUgb8SNYWvDoXZhbmlhLiBVcsSNaXRlIG9kcG9yw7rEjWFtIHRlbnRvIG9iY2hvZCBrYcW+ZMOpbXUsIGt0byBoxL5hZMOhIGt2YWxpdG7DqSB2w71yb2JreSB6YSB2w71ob2Ruw7ogY2VudS4g4q2Q4q2Q4q2Q4q2Q4q2QIOKAlCBNw6FyaWEgSy4ifQ==]]
 
-Vágna, bez konkrétneho produktu, bez detailu o doručení, bez fotky. Reálna recenzia spomína model, čas dodania a často aj problém s podporou. AI generované recenzie sú dnes 80 % obsahu na fake e-shopoch.
+Vágna, bez konkrétneho produktu, bez detailu o doručení, bez fotky. Reálna recenzia spomína model, čas dodania a často aj problém s podporou. Recenzie generované umelou inteligenciou tvoria dnes 80 % obsahu na falošných e-shopoch.
 
 ## Vzor #4 — Platba len prevodom
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiUG9rbGFkxYhhIGZha2UgZS1zaG9wdSIsImJvZHkiOiJBa2NlcHR1amVtZTogQmFua292w70gcHJldm9kIG5hIElCQU4gQVQ4OSAzNzA0IDQwNDAgMDUzMiAwMTMwLiBQbyBwcmlww61zYW7DrSBwbGF0YnkgdG92YXIgb2RvxaFsZW1lIGRvIDIgcHJhY292bsO9Y2ggZG7DrS4ifQ==]]
 
-Rakúsky IBAN (AT) pre slovenský e-shop? Žiadna karta, žiadny PayPal, žiadne dobierka? Legitímny obchod má aspoň 2-3 platobné metódy s ochranou kupujúceho. Prevod je nevratný.
+Rakúsky IBAN (AT) pre slovenský e-shop? Žiadna karta, žiadny PayPal, žiadna dobierka? Legitímny obchod má aspoň 2 – 3 platobné metódy s ochranou kupujúceho. Prevod je nevratný.
 
 ## 7-bodový checklist pred zaplatením
 
@@ -1943,8 +1943,8 @@ Rakúsky IBAN (AT) pre slovenský e-shop? Žiadna karta, žiadny PayPal, žiadne
 - ✅ Kontakt obsahuje slovenskú adresu sídla, IČO a DPH — overiť na finstat.sk alebo orsr.sk.
 - ✅ V pätičke sú VOP, reklamačný poriadok a GDPR (s reálnymi menami, nie „Lorem ipsum").
 - ✅ Recenzie sú na nezávislých portáloch (Heureka.sk, Google Reviews) — nie len na ich vlastnom webe.
-- ✅ Web ponúka aspoň platbu kartou (Visa/Mastercard) alebo dobierku — máš chargeback ochranu.
-- ❌ Cena je 50–80 % pod trhom („iPhone 15 Pro za 299 €") — neexistuje, vždy podvod.
+- ✅ Web ponúka aspoň platbu kartou (Visa/Mastercard) alebo dobierku — máš ochranu cez chargeback (spätné vrátenie platby cez banku).
+- ❌ Cena je 50 – 80 % pod trhom („iPhone 15 Pro za 299 €") — neexistuje, vždy ide o podvod.
 - ❌ Doména je mladá (menej ako 6 mesiacov) — overiť cez whois.sk alebo who.is.
 
 ## 6 znakov, podľa ktorých e-shop pôjde do koša
@@ -1957,7 +1957,7 @@ Rakúsky IBAN (AT) pre slovenský e-shop? Žiadna karta, žiadny PayPal, žiadne
 
 **Červená vlajka:** Platba výhradne bankovým prevodom alebo cez krypto — žiadna karta.
 
-**Červená vlajka:** Ceny 50–80 % pod trhom u značkového tovaru (Apple, Samsung, Dyson).
+**Červená vlajka:** Ceny 50 – 80 % pod trhom pri značkovom tovare (Apple, Samsung, Dyson).
 
 **Červená vlajka:** Stránka v slovenčine, ale s pravopisnými chybami („objedávka", „bezplátne", „garácia").
 
@@ -1966,20 +1966,20 @@ Rakúsky IBAN (AT) pre slovenský e-shop? Žiadna karta, žiadny PayPal, žiadne
 ### ✅ Rob
 
 - Pri novom e-shope kontroluj IČO na finstat.sk — overíš obrat, vek firmy aj exekúcie.
-- Plaťuj kartou alebo cez PayPal — máš 120 dní na chargeback pri nedoručenom tovare.
+- Plať kartou alebo cez PayPal — pri nedoručenom tovare máš 120 dní na chargeback.
 - Hľadaj recenzie tvarom „názov-eshopu skusenosti" na Google a Heureka.sk.
 - Pri zľavách nad 50 % na značkový tovar predpokladaj podvod, kým sa nepresvedčíš o opaku.
 
 ### ❌ Nerob
 
 - Nepoužívaj bankový prevod ako jedinú možnosť — peniaze sú prakticky nevratné.
-- Neklikajú na e-shopy z FB / IG reklám bez kontroly domény mimo platformy.
-- Nedôveruj recenziám len na webe predajcu — sú často generované AI.
+- Neklikaj na e-shopy z reklám na Facebooku či Instagrame bez kontroly domény mimo platformy.
+- Nedôveruj recenziám len na webe predajcu — sú často generované umelou inteligenciou.
 - Nedávaj číslo karty na stránku bez HTTPS (visiačik vľavo od URL).
 
 ## Reálny scenár — Dyson za 189 € z Instagramu
 
-Vidíš sponzorovanú reklamu na Instagrame: Dyson V15 za 189 € (bežne 749 €), oficiálny rebrand 2026, posledných 7 kusov. Klikneš, otvorí sa dyson-vypredaj-sk.shop — moderne vyzerá, fotky sú originálne. V pokladni je IBAN v Maďarsku a kontakt len cez formulár.
+Vidíš sponzorovanú reklamu na Instagrame: Dyson V15 za 189 € (bežne 749 €), oficiálny výpredaj značky 2026, posledných 7 kusov. Klikneš, otvorí sa dyson-vypredaj-sk.shop — vyzerá moderne, fotky sú originálne. V pokladni je IBAN v Maďarsku a kontakt len cez formulár.
 
 **Zlaté pravidlo:** Zatvoríš stránku. Otvoríš si dyson.sk v novom okne — žiadna takáto akcia neexistuje. Reklamu nahlásiš na Instagrame (3 bodky → Report Ad → Scam or Fraud). Ak ti to nedá pokoj, pozrieš model V15 na alza.sk alebo datart.sk za reálnu cenu. Ušetril si 189 €.$body$,
   'lesson', $diff$beginner$diff$, 10, $emoji$🛒$emoji$, 10,
@@ -2016,31 +2016,31 @@ VALUES (
   $exc$3 platobné triky a 1 vec na karte, vďaka ktorým ťa fake e-shop neoberie.$exc$,
   $body$## Bezpečné online nákupy začínajú pri výbere platby
 
-Bezpečné online nákupy nie sú o tom, že prestaneš nakupovať. Sú o tom, že si vyberáš platobnú metódu, ktorá ti dáva páku, keď sa niečo pokazí. Kartová platba má chargeback (vrátenie peňazí cez banku do 120 dní). PayPal má Buyer Protection. Apple Pay a Google Pay maskujú reálne číslo karty. Revolut a Wise ti dovolia urobiť jednorazovú virtuálnu kartu len na ten konkrétny nákup. Bankový prevod nemá nič z toho — keď peniaze odídu, sú preč. Tento kurz ti ukáže, ako tieto nástroje použiť v praxi pri nákupe na Slovensku.
+Bezpečné online nákupy nie sú o tom, že prestaneš nakupovať. Sú o tom, že si vyberáš platobnú metódu, ktorá ti dáva páku, keď sa niečo pokazí. Kartová platba má chargeback (vrátenie peňazí cez banku do 120 dní). PayPal má Buyer Protection (ochranu kupujúceho). Apple Pay a Google Pay maskujú reálne číslo karty. Revolut a Wise ti dovolia vytvoriť jednorazovú virtuálnu kartu len na ten konkrétny nákup. Bankový prevod nemá nič z toho — keď peniaze odídu, sú preč. Tento kurz ti ukáže, ako tieto nástroje použiť v praxi pri nákupe na Slovensku.
 
 ## Vzor #1 — Virtuálna karta z Revolutu
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiUmV2b2x1dCDihpIgS2FydHkg4oaSIFZpcnR1w6FsbmUga2FydHkiLCJib2R5IjoiVnl0dm9yIGplZG5vcmF6b3bDuiB2aXJ0dcOhbG51IGthcnR1LiBQbyBwcnZvbSBwb3XFvml0w60gc2EgYXV0b21hdGlja3kgZGVha3RpdnVqZS4gTGltaXQgbmFzdGF2IHByZXNuZSBuYSBzdW11IG7DoWt1cHUgKyA1ICUgcmV6ZXJ2YSBuYSBEUEgvcG/FoXRvdm7DqS4gxIzDrXNsbyBrYXJ0eSBwbGF0w60gbGVuIDI0IGhvZMOtbi4ifQ==]]
 
-Ideálne pre nedôverivé e-shopy. Aj keď údaje uniknú, karta je mŕtva po jednom použití. Revolut, Wise aj Curve túto funkciu majú v základnej (free) verzii.
+Ideálne pre nedôveryhodné e-shopy. Aj keď údaje uniknú, karta je mŕtva po jednom použití. Revolut, Wise aj Curve túto funkciu majú v základnej (bezplatnej) verzii.
 
 ## Vzor #2 — Reklama „posledná šanca" z Facebooku
 
 [[visual:b64:eyJraW5kIjoidXJsIiwidXJsIjoiaHR0cHM6Ly9sdXh1cy1ob2Rpbmt5LXNrLnNob3Avcm9sZXgtc3VibWFyaW5lci00OTlldXIiLCJzZWN1cmUiOnRydWV9]]
 
-Rolex Submariner stojí 9 000 €+. Pri 95 % zľave to nie je akcia, je to podvod. Aj keby si zaplatil, dostaneš falzifikát z Číny v lepšom prípade, nič v horšom. Karty na takéto stránky nikdy.
+Rolex Submariner stojí 9 000 € a viac. Pri 95 % zľave to nie je akcia, je to podvod. Aj keby si zaplatil, v lepšom prípade dostaneš falzifikát z Číny, v horšom nič. Kartu na takéto stránky nikdy nezadávaj.
 
 ## Vzor #3 — Reklamácia cez chargeback
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoixb1pYWRvc8WlIG8gY2hhcmdlYmFjayAoVsOaQiBpbnRlcm5ldCBiYW5raW5nKSIsImJvZHkiOiJLYXJ0eSDihpIgRGV0YWlsIGthcnR5IOKGkiBSZWtsYW3DoWNpYSB0cmFuc2FrY2llLiBWeWJlciBkw7R2b2Qg4oCeVG92YXIgbmVib2wgZG9ydcSNZW7DvVwiIGFsZWJvIOKAnlRvdmFyIG5lem9kcG92ZWTDoSBwb3Bpc3VcIi4gUHJpbG/FvmnFpSBzY3JlZW5zaG90IG9iamVkbsOhdmt5LCBrb211bmlrw6FjaXUgcyBwcmVkYWpjb20sIGTDtGtheiBuZWRvcnXEjWVuaWEuIEJhbmthIHByZcWhZXRyw60gZG8gMzDigJM0NSBkbsOtLiJ9]]
 
-Chargeback funguje pre Visa aj Mastercard, lehota je 120 dní od transakcie. Funguje aj pri fake e-shopoch, ktoré sa medzitým „rozpustili" — banka peniaze stiahne z acquiring banky obchodníka.
+Chargeback funguje pre Visa aj Mastercard, lehota je 120 dní od transakcie. Funguje aj pri falošných e-shopoch, ktoré sa medzitým „rozplynuli" — banka peniaze stiahne z acquiringovej banky obchodníka (banky, ktorá obchodníkovi spracúva kartové platby).
 
 ## Vzor #4 — Apple Pay namiesto fyzickej karty
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiUG9rbGFkxYhhIGUtc2hvcHUgcyBBcHBsZSBQYXkiLCJib2R5IjoiVnliZXJpZcWhIEFwcGxlIFBheSDihpIgVG91Y2ggSUQgLyBGYWNlIElEIOKGkiBwbGF0YmEgcHJlYmVobmUuIE9iY2hvZG7DrWsgbmlrZHkgbmVkb3N0YW5lIHR2b2plIHNrdXRvxI1uw6kgxI3DrXNsbyBrYXJ0eSwgbGVuIGplZG5vcmF6b3bDvSB0b2tlbi4gUHJpIMO6bmlrdSBkYXRhYsOhenkgb2JjaG9kbsOta2EgdHZvamUgw7pkYWplIG5pa2RlIG5pZSBzw7ouIn0=]]
 
-Apple Pay aj Google Pay používajú tokenizáciu — tvoje číslo karty je nahradené unikátnym tokenom, ktorý je viazaný na tvoje zariadenie. Token bez biometriky nikto nepoužije.
+Apple Pay aj Google Pay používajú tokenizáciu (nahradenie čísla karty náhradným kódom) — tvoje číslo karty je nahradené unikátnym tokenom viazaným na tvoje zariadenie. Token bez biometrie nikto nepoužije.
 
 ## Checklist bezpečnej platby online
 
@@ -2054,39 +2054,39 @@ Apple Pay aj Google Pay používajú tokenizáciu — tvoje číslo karty je nah
 
 ## 6 platobných red flagov v pokladni
 
-**Červená vlajka:** Pokladňa nemá HTTPS (visiačik vľavo od URL) — neplatiť za žiadnych okolností.
+**Červená vlajka:** Pokladnica nemá HTTPS (visiačik vľavo od adresy URL) — neplať za žiadnych okolností.
 
-**Červená vlajka:** Jediná platba je bankový prevod (najmä na zahraničný IBAN AT/HU/RO).
+**Červená vlajka:** Jedinou možnosťou platby je bankový prevod (najmä na zahraničný IBAN AT/HU/RO).
 
-**Červená vlajka:** Pýtajú PIN k karte alebo CVV cez e-mail / chat — žiadny obchodník toto legitímne nepýta.
+**Červená vlajka:** Pýtajú PIN ku karte alebo CVV cez e-mail či chat — žiadny obchodník toto legitímne nepýta.
 
-**Červená vlajka:** Suma sa po kliknutí „zaplatiť" zmení (napr. z € na inú menu) — vždy zruš a začni odznova.
+**Červená vlajka:** Suma sa po kliknutí na „zaplatiť" zmení (napr. z € na inú menu) — vždy zruš a začni odznova.
 
-**Červená vlajka:** Pýtajú „overovací" prevod malej sumy najprv — klasický scam, peniaze sú preč.
+**Červená vlajka:** Najprv pýtajú „overovací" prevod malej sumy — klasický scam (podvod), peniaze sú preč.
 
-**Červená vlajka:** Cena za poštovné je vyššia ako produkt sám — typický fake e-shop na drop-shipping.
+**Červená vlajka:** Cena za poštovné je vyššia ako samotný produkt — typický falošný e-shop na dropshipping (predaj tovaru, ktorý predajca nemá na sklade a posiela ho priamo od dodávateľa).
 
 ## Pravidlá platby v 2026
 
 ### ✅ Rob
 
-- Pre nedôverivé e-shopy vždy virtuálna karta (Revolut, Wise) s limitom presne na sumu.
-- Pri zahraničných nákupoch z USA / Číny preferuj PayPal kvôli Buyer Protection.
-- Aktivuj si SMS / push notifikácie pre každú transakciu — uvidíš podvod do 5 sekúnd.
+- Pre nedôveryhodné e-shopy vždy použi virtuálnu kartu (Revolut, Wise) s limitom presne na sumu.
+- Pri zahraničných nákupoch z USA či Číny preferuj PayPal kvôli Buyer Protection.
+- Aktivuj si SMS alebo push notifikácie pre každú transakciu — podvod uvidíš do 5 sekúnd.
 - Pri reklamácii vždy nechaj papierovú stopu — screenshot objednávky, e-maily, čísla transakcií.
 
 ### ❌ Nerob
 
-- Nepoužívaj kreditnú kartu so zostatkom 5 000 € na hocijakom e-shope — výhradne virtuálka.
-- Nikdy nedávaj CVV cez telefón nikomu, vrátane „bankára".
-- Neukladaj kartu do prehliadača Chrome — keď ti hackne účet, hacker má aj kartu.
-- Nepoužívaj rovnaké heslo na e-shop a banku — výrazne znížiš dopad úniku dát.
+- Nepoužívaj kreditnú kartu so zostatkom 5 000 € na hocijakom e-shope — výhradne virtuálku.
+- Nikdy nikomu nedávaj CVV cez telefón, vrátane „bankára".
+- Neukladaj kartu do prehliadača Chrome — keď ti niekto napadne účet, má aj kartu.
+- Nepoužívaj rovnaké heslo na e-shop a banku — výrazne tak znížiš dosah úniku dát.
 
 ## Reálny scenár — Black Friday cez sponzorovaný príspevok
 
-Vidíš FB reklamu: Sony PS5 za 249 € (bežne 549 €), Black Friday early access. Stránka vyzerá ako Alza, ale doména je alza-blackfriday.com. Si v pokušení — keby to bola pravda, zachránil by si 300 €.
+Vidíš FB reklamu: Sony PS5 za 249 € (bežne 549 €), Black Friday early access (skorý prístup k akcii). Stránka vyzerá ako Alza, ale doména je alza-blackfriday.com. Si v pokušení — keby to bola pravda, ušetril by si 300 €.
 
-**Zlaté pravidlo:** Otvoríš si alza.sk priamo v prehliadači (zadáš ručne). Žiadna takáto akcia tam nie je. Zatvoríš podvodnú stránku. Ak by si bol veľmi zvedavý, vytvoríš vo Revolute jednorazovú virtuálnu kartu na 249 € a zaplatíš ňou — ale 99 % šancou prídeš o tých 249 €, takže lepšie nič. PS5 reálne zľava 30 % je tak 380 €, nie 249 €.$body$,
+**Zlaté pravidlo:** Otvoríš si alza.sk priamo v prehliadači (zadáš ju ručne). Žiadna takáto akcia tam nie je. Zatvoríš podvodnú stránku. Ak by si bol veľmi zvedavý, vytvoríš si v Revolute jednorazovú virtuálnu kartu na 249 € a zaplatíš ňou — no s 99 % pravdepodobnosťou o tých 249 € prídeš, takže radšej nič. Reálna 30 % zľava na PS5 je asi 380 €, nie 249 €.$body$,
   'lesson', $diff$beginner$diff$, 8, $emoji$💳$emoji$, 8,
   $src$[{"label":"SOI — ochrana spotrebiteľa","url":"https://www.soi.sk/"},{"label":"Visa Slovakia — zodpovednosť kupujúceho","url":"https://www.visa.sk/"},{"label":"Európska centrálna banka — práva spotrebiteľov","url":"https://www.ecb.europa.eu/"}]$src$::jsonb,
   'published', $pub$2026-05-20$pub$
@@ -2121,7 +2121,7 @@ VALUES (
   $exc$3 nastavenia pre 3 generácie, ktorými ochrániš rodinu na internete za víkend.$exc$,
   $body$## Bezpečnosť rodiny — tri rôzne generácie, tri rôzne riziká
 
-Bezpečnosť rodiny online v 2026 znamená tri úplne odlišné konverzácie. S deťmi (7–14) riešiš rodičovskú kontrolu, kyberšikanu a Discord/TikTok. S tínedžermi (15–18) hovoríš o sextingu, fake profiloch a tom, prečo Snapchat nie je súkromný. So seniormi rodičmi a starými rodičmi nastavuješ ich smartfón tak, aby im romance scammer a falošný „vnuk v núdzi" nezobrali úspory. Tento kurz dáva konkrétne kroky pre každú skupinu — nie strašenie, ale praktické zapnutie 2FA, blokovanie webov a krízová linka 116 111, ktorá pre dieťa zachraňuje životy.
+Bezpečnosť rodiny online v roku 2026 znamená tri úplne odlišné konverzácie. S deťmi (7 – 14) riešiš rodičovskú kontrolu, kyberšikanu a Discord/TikTok. S tínedžermi (15 – 18) hovoríš o sextingu (posielanie intímneho obsahu), falošných profiloch a o tom, prečo Snapchat nie je súkromný. So seniormi — rodičmi a starými rodičmi — nastavuješ ich smartfón tak, aby im romance scammer (podvodník cez predstieraný ľúbostný vzťah) a falošný „vnuk v núdzi" nezobrali úspory. Tento kurz dáva konkrétne kroky pre každú skupinu — nie strašenie, ale praktické zapnutie 2FA (dvojfaktorové overenie), blokovanie webov a krízová linka 116 111, ktorá pre dieťa zachraňuje životy.
 
 ## Deti — kyberšikana na Discord serveri
 
@@ -2129,17 +2129,17 @@ Bezpečnosť rodiny online v 2026 znamená tri úplne odlišné konverzácie. S 
 
 Kyberšikana sa neskončí o 15:00 ako tá v škole — pokračuje 24/7 na telefóne dieťaťa. Linka detskej istoty 116 111 (zdarma, anonymne, 24/7) je prvý krok. Discord report a screenshot druhý.
 
-## Tínedžeri — fake profil „od dievčaťa zo školy"
+## Tínedžeri — falošný profil „od dievčaťa zo školy"
 
 [[visual:b64:eyJraW5kIjoiaW5zdGFncmFtIiwiYWNjb3VudCI6Imx1Y2lhX3pvX3Nrb2x5XzIwMjYiLCJ2ZXJpZmllZCI6ZmFsc2UsImJvZHkiOiJhaG9qLCB2aWRpbSB6ZSBjaG9kaXMgZG8gbmFzZWogc2tvbHksIG1hcyBwZWtuZSBvY2kg8J+YiiBuYXBpcyBtaSBuYSBzbmFwOiBsdWNpYWhvdC5zbmFwIiwiY3RhIjoiU2xlZG92YcWlIn0=]]
 
-Sextortion v 2026: scammer naviaže kontakt ako „spolužiačka", presunie konverzáciu na Snap, vypýta intímnu fotku, potom vydiera. Pre tínedžera katastrofa — preto musí vedieť, že hovor s rodičom NIE JE trest, je jediné riešenie.
+Sextortion (vydieranie intímnym obsahom) v roku 2026: podvodník naviaže kontakt ako „spolužiačka", presunie konverzáciu na Snapchat, vypýta intímnu fotku a potom vydiera. Pre tínedžera katastrofa — preto musí vedieť, že hovor s rodičom NIE JE trest, je jediné riešenie.
 
 ## Seniori — „vnuk mal nehodu"
 
 [[visual:b64:eyJraW5kIjoiY2FsbCIsImNhbGxlciI6Im5lem7DoW1lIMSNw61zbG8iLCJudW1iZXIiOiIrNDIxIDk0MCA1NTUgMTExIiwiaGludCI6IsSNYXN0byBhaiDEjWVza8O9IGvDs2QgKzQyMCBhbGVibyB6YWhyYW5pxI1uw70g4oCUIGNhbGxlciBJRCBzYSBkw6Egc2ZhbMWhb3ZhxaUifQ==]]
 
-„Babka, mal som autonehodu, súrne 3 800 € na advokáta, neviem rozprávať, hlas mám rozbitý." Klasika. V 2026 navyše s AI klonom hlasu reálneho vnuka z TikTok/Instagram videa. Žiadne peniaze sa nikdy neposielajú cez prevodníka alebo „kuriérovi" k bytu.
+„Babka, mal som autonehodu, súrne 3 800 € na advokáta, neviem rozprávať, hlas mám rozbitý." Klasika. V roku 2026 navyše s AI klonom hlasu (deepfake — umelo vygenerovaný falošný hlas) reálneho vnuka z videa na TikToku/Instagrame. Žiadne peniaze sa nikdy neposielajú prevodom ani „kuriérovi" k bytu.
 
 ## Seniori — falošný „technik z Microsoftu"
 
@@ -2147,13 +2147,13 @@ Sextortion v 2026: scammer naviaže kontakt ako „spolužiačka", presunie konv
 
 Volajúci tvrdí, že počítač babky je „nakazený vírusom", potrebuje inštalovať TeamViewer/AnyDesk na „opravu". Cieľ: prístup do internet bankingu. Žiadna IT firma nikdy nevolá nevyžiadane.
 
-## Checklist pre rodičovský smartfón (8–14 rokov)
+## Kontrolný zoznam pre rodičovský smartfón (8 – 14 rokov)
 
 - ✅ Apple: Screen Time → Content & Privacy Restrictions. Android: Google Family Link — obe zdarma, jeden víkend nastaviť.
-- ✅ Limit obrazovkového času, blokácia 18+ obsahu, schvaľovanie každej novej appky cez rodičovský telefón.
-- ✅ Vypnutie in-app nákupov (Apple ID / Google Play → vyžadovať heslo pri každom nákupe).
+- ✅ Limit obrazovkového času, blokovanie obsahu pre dospelých (18+), schvaľovanie každej novej aplikácie cez rodičovský telefón.
+- ✅ Vypnutie nákupov v aplikáciách (in-app — Apple ID / Google Play → vyžadovať heslo pri každom nákupe).
 - ✅ Dohoda s dieťaťom napísaná: „v izbe telefón nie po 21:00, pri jedle nie, pri úlohách nie".
-- ❌ Stalkerware (mSpy, FlexiSpy) bez vedomia tínedžera — nelegálne, zničí dôveru, nefunguje dlhodobo.
+- ❌ Stalkerware (sledovací softvér — mSpy, FlexiSpy) bez vedomia tínedžera — nelegálne, zničí dôveru, nefunguje dlhodobo.
 - ❌ „Mne neverí, lebo si stiahol Snapchat" — Snapchat nie je zlý, dôležitý je rozhovor, nie zákaz.
 
 ## Varovné signály, že dieťa zažíva problém
@@ -2176,23 +2176,23 @@ Volajúci tvrdí, že počítač babky je „nakazený vírusom", potrebuje inš
 
 ### ✅ Rob
 
-- Pre starých rodičov nastav 2FA na ich e-mail a banku (najlepšie cez SMS, autenticator je pre nich ťažký).
+- Pre starých rodičov nastav 2FA na ich e-mail a banku (najlepšie cez SMS, autentifikátor je pre nich ťažký).
 - Pre dieťa povedz nahlas: „Ak ti niekto na nete urobí čokoľvek, čo ťa vystraší, povieš mi a NIE som naštvaný. Pomôžem."
-- Spoločne s tínedžerom prejdite nastavenia súkromia na Instagrame / TikToku — kto vidí stories, kto môže komentovať.
+- Spoločne s tínedžerom prejdite nastavenia súkromia na Instagrame / TikToku — kto vidí príbehy (stories), kto môže komentovať.
 - Číslo 116 111 (Linka detskej istoty) vytlač a daj na chladničku — anonymne, zdarma, 24/7.
 
 ### ❌ Nerob
 
 - Nikdy nedovoľ starým rodičom inštalovať „pomocné" appky (TeamViewer, AnyDesk) z telefonického návodu.
-- Netrestajte dieťa za to, že vám povedalo o sextortioe / podvode — strestáte budúce priznania.
+- Netrestajte dieťa za to, že vám povedalo o sextortion / podvode — potrestáte tým budúce priznania.
 - Nečítajte tínedžerovi správy bez jeho vedomia — buď sa s vami baví, alebo s falošnou „Luciou".
-- Nedávajte deťom kartu rodiča s NFC bez limitu — nastavte vreckové na vlastnú detskú kartu (Mintos Kids, Revolut <18).
+- Nedávajte deťom kartu rodiča s NFC (bezkontaktná platba) bez limitu — nastavte vreckové na vlastnú detskú kartu (Mintos Kids, Revolut <18).
 
 ## Reálny scenár — babka a „vnuk Maťo"
 
-Babke (74) volá človek: „Babka, to som ja, Maťo. Mal som autonehodu na D1, niekoho som zranil. Súrne potrebujem 4 200 € na advokáta, inak idem do väzby. Príde po peniaze môj kolega Pavol, nemôžem ti to povedať podrobnejšie, polícia ma sleduje." Hlas naozaj vyzerá ako Maťov — útočník zostrihal AI klon z jeho Instagram stories.
+Babke (74) volá človek: „Babka, to som ja, Maťo. Mal som autonehodu na D1, niekoho som zranil. Súrne potrebujem 4 200 € na advokáta, inak idem do väzby. Príde po peniaze môj kolega Pavol, nemôžem ti to povedať podrobnejšie, polícia ma sleduje." Hlas naozaj znie ako Maťov — útočník zostrihal AI klon z jeho instagramových príbehov.
 
-**Zlaté pravidlo:** Babka zavesí. Zavolá Maťovi priamo na jeho známe číslo. Ak je nedostupný, zavolá jeho mame (svojej dcére) na overenie. Polícia v SR nikdy nevyžaduje úhradu „za advokáta v hotovosti k bytu". Toto je vždy podvod — a v 2026 už aj s AI klonom hlasu. Najlepšia prevencia: rodina má vopred dohodnuté „rodinné kontrolné slovo" — slovo, ktoré pozná len rodina a útočník ho nezistí.$body$,
+**Zlaté pravidlo:** Babka zavesí. Zavolá Maťovi priamo na jeho známe číslo. Ak je nedostupný, zavolá jeho mame (svojej dcére) na overenie. Polícia v SR nikdy nevyžaduje úhradu „za advokáta v hotovosti k bytu". Toto je vždy podvod — a v roku 2026 už aj s AI klonom hlasu. Najlepšia prevencia: rodina má vopred dohodnuté „rodinné kontrolné slovo" — slovo, ktoré pozná len rodina a útočník ho nezistí.$body$,
   'lesson', $diff$beginner$diff$, 11, $emoji$👨‍👩‍👧$emoji$, 11,
   $src$[{"label":"Linka detskej istoty 116 111","url":"https://www.ldi.sk/"},{"label":"ipcko.sk — internetová poradňa pre mladých","url":"https://ipcko.sk/"},{"label":"SK-CERT — odporúčania pre rodičov","url":"https://www.sk-cert.sk/"},{"label":"Polícia SR — podvody na senioroch","url":"https://www.minv.sk/"}]$src$::jsonb,
   'published', $pub$2026-05-20$pub$
@@ -2227,13 +2227,13 @@ VALUES (
   $exc$5 podvodov, ktoré cielia stredoškolákov a vysokoškolákov v SR v 2026.$exc$,
   $body$## Internet safety pre študentov — riziká, ktoré rodičia nevidia
 
-Internet safety pre študentov v 2026 už nie je o „nezverejňuj telefónne číslo". Útočníci sa dnes presunuli tam, kde sú študenti reálne — Discord servery, Steam trade, Telegram skupiny s brigádami, kryptozarábanie cez Pump.fun. Falošná „brigáda za 2 000 € týždenne z domu" v Telegrame je v 90 % prípadov muling — pereš špinavé peniaze cez svoj účet a do roka máš trestné stíhanie. Steam Item scam ti za 5 minút berie 800 € inventár, ktorý si si budoval roky. Tento kurz ti ukáže 5 najčastejších pascí pre študentov a ako ich obísť bez paranoie.
+Internet safety (online bezpečnosť) pre študentov v 2026 už nie je o „nezverejňuj telefónne číslo". Útočníci sa dnes presunuli tam, kde sú študenti reálne — Discord servery, Steam trade, Telegram skupiny s brigádami, kryptozarábanie cez Pump.fun. Falošná „brigáda za 2 000 € týždenne z domu" v Telegrame je v 90 % prípadov muling (pranie cudzích peňazí cez tvoj účet) — pereš špinavé peniaze cez svoj účet a do roka máš trestné stíhanie. Steam item scam (podvod) ti za 5 minút berie 800 € inventár, ktorý si si budoval roky. Tento kurz ti ukáže 5 najčastejších pascí pre študentov a ako ich obísť bez paranoje.
 
 ## Vzor #1 — Telegram „brigáda 2 000 € týždenne"
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiVGVsZWdyYW0gc2t1cGluYSBAYnJpZ2FkeV9za18yMDI2IiwiYm9keSI6IvCflKUgQlJJR8OBREEgWiBET01VIPCflKUgMiAwMDAg4oKsIHTDvcW+ZGVubmUsIDHigJMyIGhvZGlueSBkZW5uZSwgbGVuIHRyZWJhIHNsb3ZlbnNrw70gYmFua292w70gw7rEjWV0LiBQb3NpZWxhbWUgdGkgcGVuaWF6ZSwgdHkgaWNoIHJvemRlxL51amXFoSBrbGllbnRvbSBwb2TEvmEgaW7FoXRydWtjacOtLCBuZWNow6HFoSBzaSA1ICUgcHJvdsOteml1LiBQcmUgVsWgIGFqIFPFoCwgaG5lxI8gemHEjWHFpS4gTmFww63FoSBAbHVrYXNfaHJfbWFuYWdlciJ9]]
 
-Klasický money muling — pereš výnosy z phishingu, romance scamov a krypto podvodov cez svoj účet. Po 6 mesiacoch ti banka zablokuje účet a polícia ti zaklope. Trest za pranie peňazí: 4–10 rokov.
+Klasický money muling — pereš výnosy z phishingu (podvodné vylákanie prihlasovacích či platobných údajov), romance scamov (podvod cez predstieraný ľúbostný vzťah) a krypto podvodov cez svoj účet. Po 6 mesiacoch ti banka zablokuje účet a polícia ti zaklope. Trest za pranie peňazí: 4–10 rokov.
 
 ## Vzor #2 — Discord „free Nitro" phishing
 
@@ -2251,17 +2251,17 @@ Steam neexistujú „middleman moderátori". Doména steamcommunity.com.trade-se
 
 [[visual:b64:eyJraW5kIjoiaW5zdGFncmFtIiwiYWNjb3VudCI6ImNyeXB0b19tZW50b3Jfc2siLCJ2ZXJpZmllZCI6ZmFsc2UsImJvZHkiOiJIxL5hZMOhbSAzIMWhdHVkZW50b3YgcHJlIDE6MSBtZW50b3JpbmcuIE5hdcSNw61tIMWlYSB6YXLDoWJhxaUgODAw4oCTMSAyMDAg4oKsIHTDvcW+ZGVubmUgcGFzw612bmUuIFphxI1pYXRvxI1uw70gdmtsYWQgbGVuIDIwMCDigqwuIFJlYWd1amVtIG5hIERNIPCfmoAiLCJjdGEiOiJQb3NsYcWlIHNwcsOhdnUifQ==]]
 
-Pig-butchering pre študentov. „Mentor" 2 týždne učí, ukazuje falošné zisky na svojej platforme, ty doplníš 200 €, vidíš „zisk", pridáš 800 €, doplníš celé úspory — všetko zmizne v deň výberu.
+Pig butchering (dlhodobý investičný podvod budovaný cez vzťah) pre študentov. „Mentor" 2 týždne učí, ukazuje falošné zisky na svojej platforme, ty doplníš 200 €, vidíš „zisk", pridáš 800 €, doplníš celé úspory — všetko zmizne v deň výberu.
 
 ## Checklist študentskej bezpečnosti online
 
-- ✅ 2FA na Discord, Steam, Instagram, school email — všetky cez authenticator (Google / Microsoft Authenticator).
+- ✅ 2FA (dvojfaktorové overenie) na Discord, Steam, Instagram, školský e-mail — všetky cez authenticator (Google / Microsoft Authenticator).
 - ✅ Heslá v správcovi (Bitwarden zdarma, Proton Pass) — žiadne „heslo123" alebo dátum narodenia.
 - ✅ Steam Mobile Authenticator + Trade Confirmations — chráni inventár pri ukradnutí účtu.
 - ✅ Pre školský e-mail nikdy nepoužívať rovnaké heslo ako pre osobné konta.
 - ❌ Brigády cez Telegram / Signal kanály s „pošli IBAN a začni hneď" — vždy muling alebo scam.
 - ❌ Klikanie na „free Nitro / free V-Bucks / free Steam keys" linky z Discordu.
-- ❌ Posielanie kopie OP / pasu na „overenie" niekomu z chat appky, koho nepoznáš osobne.
+- ❌ Posielanie kópie OP / pasu na „overenie" niekomu z chat appky, koho nepoznáš osobne.
 
 ## 7 znakov, že ti niekto na Discord / Telegrame chystá podvod
 
@@ -2290,8 +2290,8 @@ Pig-butchering pre študentov. „Mentor" 2 týždne učí, ukazuje falošné zi
 
 ### ❌ Nerob
 
-- Nikdy nepožičiavaj svoj bankový účet kamarátovi / „brigáde" / Telegram skupine. Stávaš sa mula.
-- Nedávaj na verejné fórum (Reddit, Discord) tvoj e-mail z VŠ — útočník si rýchlo nájde meno + heslo z únikov.
+- Nikdy nepožičiavaj svoj bankový účet kamarátovi / „brigáde" / Telegram skupine. Stávaš sa mulou.
+- Nedávaj na verejné fórum (Reddit, Discord) svoj e-mail z VŠ — útočník si rýchlo nájde meno + heslo z únikov.
 - Neotváraj prílohy z e-mailov, ktoré sa tvária ako „Vaše skúškové potvrdenie" mimo školského systému.
 - Nedôveruj žiadnemu „mentorovi", ktorý sám priznáva, že nemá overiteľnú prácu mimo Instagramu.
 
@@ -2329,36 +2329,36 @@ VALUES (
   $slug$pribehy-skutocnych-obeti$slug$, 'sk',
   (SELECT id FROM public.blog_categories WHERE slug = $cat$digitalna-bezpecnost$cat$),
   (SELECT id FROM public.blog_authors WHERE slug = $auth$subenai-editorial$auth$),
-  $title$Príbehy slovákov, ktorí prišli o peniaze online$title$,
+  $title$Príbehy Slovákov, ktorí prišli o peniaze online$title$,
   $sub$4 anonymizované prípady z roku 2025–2026: čo sa stalo, koľko stálo, ako sa dalo predísť.$sub$,
   $exc$4 anonymizované prípady z roku 2025–2026: čo sa stalo, koľko stálo, ako sa dalo predísť.$exc$,
-  $body$## Príbehy slovákov, ktorí prišli o peniaze — aby si neopakoval ich chyby
+  $body$## Príbehy Slovákov, ktorí prišli o peniaze — aby si neopakoval ich chyby
 
-Príbehy obetí podvodov sú najlepšia učebnica, lebo presviedčajú lepšie ako teória. „Mne sa to nestane" je presne to, čo si pred podvodom mysleli aj ľudia v týchto 4 príbehoch — inžinier IT, učiteľka, dôchodca, finančná riaditeľka. Stratili spolu 87 000 €. Ich príbehy sú anonymizované, ale zostavené podľa reálnych prípadov, ktoré v 2025–2026 riešili NCKB, polícia SR a slovenské banky. Každý príbeh končí konkrétnym ponaučením — čo sa malo urobiť inak.
+Príbehy obetí podvodov sú najlepšia učebnica, lebo presviedčajú lepšie ako teória. „Mne sa to nestane" je presne to, čo si pred podvodom mysleli aj ľudia v týchto 4 príbehoch — inžinier IT, učiteľka, dôchodca, finančná riaditeľka. Stratili spolu 87 000 €. Ich príbehy sú anonymizované, ale zostavené podľa reálnych prípadov, ktoré v rokoch 2025 – 2026 riešili NCKB, polícia SR a slovenské banky. Každý príbeh končí konkrétnym ponaučením — čo sa malo urobiť inak.
 
 ## Príbeh #1 — Tatiana (34, finančná manažérka): 4 800 € z banky cez „bezpečnostnú výzvu"
 
 [[visual:b64:eyJraW5kIjoic21zIiwic2VuZGVyIjoiVlVCIiwiYm9keSI6IlZVQjogUG9rdXMgbyBuZW9wcmF2bmVudSB0cmFuc2FrY2l1IDQgODAwIEVVUiB6IFZhc2hvIHVjdHUuIFByZSBva2Fteml0ZSB6YWJsb2tvdmFuaWUgemF2b2xhanRlIG5hICs0MjEgMiA0ODYzIDExMTEuIiwidGltZSI6InBpYXRvayAyMToxMiJ9]]
 
-Tatiana zavolala, „bankár" jej cez pol hodinu „presúval peniaze na bezpečný účet" cez jej internet banking — diktoval kroky, ona klikala. Suma 4 800 € išla na účet muly v Bulharsku. Ponaučenie: VÚB nikdy nepýta presun peňazí. Vždy zaves a volaj na číslo z karty.
+Tatiana zavolala a „bankár" jej cez pol hodinu „presúval peniaze na bezpečný účet" cez jej internetbanking (internetové bankovníctvo) — diktoval kroky, ona klikala. Suma 4 800 € išla na účet nastrčenej osoby v Bulharsku. Ponaučenie: VÚB nikdy nežiada presun peňazí. Vždy zaves a volaj na číslo z karty.
 
 ## Príbeh #2 — Peter (52, IT inžinier): 18 000 € z krypto „investície"
 
 [[visual:b64:eyJraW5kIjoiaW5zdGFncmFtIiwiYWNjb3VudCI6ImVsZW5hX3RyYWRlcl9ldSIsInZlcmlmaWVkIjpmYWxzZSwiYm9keSI6IkjEvmFkw6FtIDUgxL51ZMOtIG5hIDE6MSBrcnlwdG8gbWVudG9yaW5nLiBWbGFuaSBtw7RqbXUga2xpZW50b3ZpIHogQnJuYSAyNCAwMDAg4oKsIHphIDQgbWVzaWFjZSDwn5KOIERNIOKcie+4jyIsImN0YSI6IlBvc2xhxaUgc3Byw6F2dSJ9]]
 
-Peter (skúsený IT-čkár, neletel by na obyčajný phishing) sa s „Elenou" rozprával 6 týždňov. Začala s 500 €, „zisk" 12 % za týždeň na falošnej platforme. Doplatil 17 500 €. Pri pokuse o výber: „daňový poplatok 4 000 € dopredu". Vtedy mu zacvaklo. Ponaučenie: pig-butchering. Žiadna reálna investícia nedáva 12 % týždenne. Žiadny „mentor" nehľadá DM klientov.
+Peter (skúsený IT-čkár, na obyčajný phishing (podvodné vylákanie prihlasovacích či platobných údajov) by nenaletel) sa s „Elenou" rozprával 6 týždňov. Začala s 500 €, „zisk" 12 % za týždeň na falošnej platforme. Doplatil 17 500 €. Pri pokuse o výber: „daňový poplatok 4 000 € dopredu". Vtedy mu zacvaklo. Ponaučenie: pig butchering (dlhodobý investičný podvod budovaný cez vzťah). Žiadna reálna investícia nedáva 12 % týždenne. Žiadny „mentor" nehľadá klientov cez DM.
 
 ## Príbeh #3 — pán Jozef (76, dôchodca): 12 200 € pre „vnuka v nemocnici"
 
 [[visual:b64:eyJraW5kIjoiY2FsbCIsImNhbGxlciI6Im5lem7DoW1lIMSNw61zbG8iLCJudW1iZXIiOiIrNDIxIDk0MCAyMjIgNTU1IiwiaGludCI6IkFJIGtsb24gaGxhc3Ugdm51a2Eg4oCUIHpvc3RyaWhhbsO9IHogVGlrVG9rIHN0b3JpZXMifQ==]]
 
-Volal „vnuk Maroš" — hlas presne ako jeho, plač, autonehoda na D1, 12 200 € pre advokáta, „kuriér Pavol" príde za hodinu k bytu. Pán Jozef vybral z banky úspory, odovzdal cudziemu mužovi obálku. Skutočný Maroš bol na pivo s kamarátmi. Polícia peniaze nenašla. Ponaučenie: rodinné kontrolné slovo (vopred dohodnuté), žiadne hotovosti kuriérovi.
+Volal „vnuk Maroš" — hlas presne ako jeho, plač, autonehoda na D1, 12 200 € pre advokáta, „kuriér Pavol" príde za hodinu k bytu. Pán Jozef vybral z banky úspory, odovzdal cudziemu mužovi obálku. Skutočný Maroš bol na pive s kamarátmi. Polícia peniaze nenašla. Ponaučenie: rodinné kontrolné slovo (vopred dohodnuté), žiadne hotovosti kuriérovi.
 
 ## Príbeh #4 — Mária (41, marketingová riaditeľka): 52 000 € cez BEC / deepfake CEO
 
 [[visual:b64:eyJraW5kIjoiZW1haWwiLCJmcm9tIjoiVG9tw6HFoSBIb2xlYyDigJQgQ0VPIiwiZnJvbUVtYWlsIjoidG9tYXMuaG9sZWNAZmlybWEtZXUuY29tIiwic3ViamVjdCI6IlVSR0VOVCDigJQgYWt2aXrDrWNpYSwgbGVuIG1lZHppIG5hbWkiLCJib2R5IjoiTcOhcmlhLCByaWXFoWltIGFrdml6w61jaXUgdiBSYWvDunNrdSwgcHLDoXZuaWNpIG5lc3RpaGxpIHByaXByYXZpxaUgcGFwaWVyZS4gUG90cmVidWplbSByw71jaGx5IHByZXZvZCA1MiAwMDAg4oKsIG5hIHByZWRiZcW+bsO6IHrDoWxvaHUsIHpkw7R2b2Ruw61tIG5hIHBvbmRlbGtvdm9tIGNhbGxlLiBJQkFOIEFUODnigKYgU3ByYXYgdG8gZG5lcyBkbyAxNjowMCwgbmlrIG5lc21pZSB2ZWRpZcWlIGvDvW0gbmVwb2Rww63FoWVtZS4ifQ==]]
 
-Po prevode si Mária na chodbe všimla CEO — opýtala sa na akvizíciu. „Akú akvizíciu?" Doména firma-eu.com vs reálna firma-sk.eu. Útočník mal navyše 8-sekundový hlasový deepfake z LinkedIn videa CEO ako „potvrdenie". 52 000 € išlo do Hong Kongu. Ponaučenie: každý prevod nad limit musí mať druhé schválenie. CEO „súrne a tajne" = vždy phishing.
+Po prevode si Mária na chodbe všimla CEO — opýtala sa na akvizíciu. „Akú akvizíciu?" Doména firma-eu.com oproti reálnej firma-sk.eu. Útočník mal navyše 8-sekundový hlasový deepfake (umelo vygenerované falošné video či hlas) z videa CEO na LinkedIne ako „potvrdenie". 52 000 € išlo do Hongkongu. Tomuto typu útoku cez kompromitovaný firemný e-mail sa hovorí BEC (podvod cez kompromitovaný firemný e-mail). Ponaučenie: každý prevod nad limit musí mať druhé schválenie. CEO „súrne a tajne" = vždy podvod.
 
 ## Spoločné menovatele všetkých 4 príbehov
 
@@ -2389,7 +2389,7 @@ Po prevode si Mária na chodbe všimla CEO — opýtala sa na akvizíciu. „Ak�
 
 - Nikdy nepresúvajte peniaze pod časovým tlakom — vždy aspoň hodina pauza.
 - Nedávajte hotovosť ani kartu cudzincovi pred dverami, ani „kuriérovi banky".
-- Nedôverujte „mentorom z Instagramu" so screenshotmi profitov — fake za 2 minúty v Photoshope.
+- Nedôverujte „mentorom z Instagramu" so snímkami obrazovky ich ziskov — podvrh sa dá vyrobiť za 2 minúty v Photoshope.
 - Nehanbite sa hlásiť podvod — polícia to počuje denne, vďaka vašej výpovedi chytia ďalších páchateľov.
 
 ## Reálny scenár — buď siedmym, čo nenaletel
@@ -2431,81 +2431,81 @@ VALUES (
   $exc$3 nástroje za 30 minút, vďaka ktorým ti nikto neukradne účet ani po úniku hesla.$exc$,
   $body$## Heslá v 2026 nestačia — toto je dnešný minimálny štandard
 
-Heslá samotné v 2026 účet neochránia. V databázach unikli miliardy kombinácií e-mail + heslo (overiť si môžeš svoju adresu na haveibeenpwned.com — 99 % šanca, že tam si). Riešenie je trojvrstvové: po prvé správca hesiel (Bitwarden, 1Password, Proton Pass) — generuje unikátne 20-znakové heslá pre každý web. Po druhé dvojfaktorová autentifikácia (2FA) cez authenticator appku alebo hardvérový kľúč YubiKey. Po tretie passkeys — náhrada hesla biometriou + dôveryhodným zariadením, ktoré sa nedajú phishing-ovať. Tento kurz ti ukáže, ako tieto tri vrstvy nasadíš za víkend.
+Heslá samotné v roku 2026 účet neochránia. V databázach unikli miliardy kombinácií e-mail + heslo (svoju adresu si môžeš overiť na haveibeenpwned.com — 99 % šanca, že tam si). Riešenie je trojvrstvové: po prvé správca hesiel (Bitwarden, 1Password, Proton Pass) — generuje unikátne 20-znakové heslá pre každý web. Po druhé dvojfaktorová autentifikácia (2FA, dvojfaktorové overenie) cez overovaciu aplikáciu (authenticator) alebo hardvérový kľúč YubiKey. Po tretie passkeys (bezheslové prihlásenie viazané na zariadenie) — náhrada hesla biometriou a dôveryhodným zariadením, ktoré sa nedajú zneužiť phishingom (podvodným vylákaním prihlasovacích či platobných údajov). Tento kurz ti ukáže, ako tieto tri vrstvy nasadíš za víkend.
 
 ## Bitwarden — správca hesiel zdarma
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiQml0d2FyZGVuIHNldHVwIHphIDEwIG1pbsO6dCIsImJvZHkiOiIxLiBiaXR3YXJkZW4uY29tIOKGkiB2eXR2b3Igw7rEjWV0IHMgdmXEvm1pIHNpbG7DvW0gbWFzdGVyIGhlc2xvbSAoMTIrIHNsb3Ygdm8gdmV0ZSwga3RvcsO6IHNpIHBhbcOkdMOhxaEpLlxuMi4gSW7FoXRhbHVqIHJvesWhw61yZW5pZSBkbyBwcmVobGlhZGHEjWEgKyBhcHBrdSBuYSB0ZWxlZsOzbi5cbjMuIFByaSBrYcW+ZG9tIHdlYmUgbmVjaGFqIEJpdHdhcmRlbiB2eWdlbmVyb3ZhxaUgMjAtem5ha292w6kgaGVzbG8g4oCUIG5pa2R5IHNpIGhvIG5lemFwYW3DpHTDocWhLCBhbmkgbmVtdXPDrcWhLlxuNC4gSW1wb3J0dWogaGVzbMOhIHogQ2hyb21lIC8gU2FmYXJpIChvYm9qZSBtYWrDuiBleHBvcnQpLiBQbyBpbXBvcnRlIGljaCB6IHByZWhsaWFkYcSNYSB2eW1hxb4uIn0=]]
 
-Bitwarden je open-source, audit-ovaný, zdarma na všetky zariadenia. Platená verzia (10 $/rok) pridáva integrované 2FA. Alternatívy: 1Password (39 $/rok, krajšie UI), Proton Pass (od Proton Mailu, súčasť Proton Unlimited).
+Bitwarden je open-source, auditovaný a zdarma na všetkých zariadeniach. Platená verzia (10 $/rok) pridáva integrované 2FA. Alternatívy: 1Password (39 $/rok, krajšie používateľské rozhranie), Proton Pass (od Proton Mailu, súčasť Proton Unlimited).
 
 ## 2FA — Google Authenticator, Microsoft Authenticator, Authy
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiQWt0aXbDoWNpYSAyRkEgbmEgZS1tYWlsZSAoR21haWwpIiwiYm9keSI6Ikdvb2dsZSDDusSNZXQg4oaSIEJlenBlxI1ub3PFpSDihpIgRHZvanN0dXDFiG92w6kgb3ZlcmVuaWUg4oaSIEFwbGlrw6FjaWEgQXV0aGVudGljYXRvci4gTmFza2VudWplxaEgUVIga8OzZCBjZXogYXV0aGVudGljYXRvciBhcHBrdS4gUHJpIMSPYWzFoW9tIHByaWhsw6FzZW7DrSBHb29nbGUgdnnFvmlhZGEgNi1taWVzdG55IGvDs2QgeiBhcHBreSAobWVuw60gc2Ega2HFvmTDvWNoIDMwIHNla8O6bmQpLiJ9]]
 
-2FA cez appku je oveľa bezpečnejšie ako 2FA cez SMS — SIM swap útok ti SMS ukradne, authenticator appku nie. Pre kritické účty (Gmail, banka, Bitwarden master) zapni 2FA vždy.
+2FA cez aplikáciu je oveľa bezpečnejšie ako 2FA cez SMS — útok SIM swap (prepísanie tvojho čísla na cudziu SIM kartu) ti SMS ukradne, overovaciu aplikáciu nie. Pre kritické účty (Gmail, banka, hlavné heslo Bitwardenu) zapni 2FA vždy.
 
 ## YubiKey — fyzický kľúč pre maximálnu ochranu
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiWXViaUtleSA1QyBORkMgKH43MCDigqwpIiwiYm9keSI6IkhhcmR2w6lyb3bDvSBrxL7DusSNIHYgdHZhcmUgVVNCLUMuIFByaSBwcmlobMOhc2Vuw60gaG8gdnN1bmXFoSBkbyB0ZWxlZsOzbnUgLyBub3RlYm9va3UgYSBzdGxhxI3DrcWhIHRsYcSNaWRsby4gUGhpc2hpbmcgc2l0ZSBobyBuZXZpZSBwb3XFvmnFpSAoa8S+w7rEjSBvdmVydWplIGRvbcOpbnUpLiBJZGXDoWxuZSAyIGt1c3kg4oCUIGplZGVuIHYgcGXFiGHFvmVua2UsIGRydWjDvSBkb21hIHYgxaF1ZmzDrWt1IGFrbyB6w6Fsb2hhLiJ9]]
 
-YubiKey je zlatý štandard pre 2FA — odolný proti phishingu, ktorý 6-miestne kódy nie sú. Podporuje ho Gmail, Microsoft, GitHub, Facebook, AWS, Bitwarden. Pre bežného užívateľa luxus, pre IT alebo finančníka nutnosť.
+YubiKey je zlatý štandard pre 2FA — odolný proti phishingu, na rozdiel od 6-miestnych kódov. Podporuje ho Gmail, Microsoft, GitHub, Facebook, AWS aj Bitwarden. Pre bežného používateľa luxus, pre IT odborníka alebo finančníka nutnosť.
 
 ## Passkey — náhrada hesla biometriou
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiVnl0dm9yZW5pZSBwYXNza2V5IG5hIEdvb2dsZSDDusSNdGUgKDIwMjYpIiwiYm9keSI6Ikdvb2dsZSDihpIgQmV6cGXEjW5vc8WlIOKGkiBQYXNza2V5cyDihpIgVnl0dm9yacWlIHBhc3NrZXkuIFRlbGVmw7NuIHBvxb5pYWRhIG8gVG91Y2ggSUQgLyBGYWNlIElELiBIb3Rvdm8uIFByaSDEj2FsxaFvbSBwcmlobMOhc2Vuw60gdcW+IG5lZXhpc3R1amUgaGVzbG8g4oCUIGxlbiBiaW9tZXRyaWthIG5hIHR2b2pvbSB6YXJpYWRlbsOtLiJ9]]
 
-Passkey je v podstate kryptografický kľúč viazaný na tvoje zariadenie + biometriu. Nedá sa phishingovať, nedá sa ukradnúť z databázy (ani neexistuje na serveri v plnej podobe). V 2026 podporuje Google, Apple, Microsoft, Amazon, GitHub, eBay.
+Passkey je v podstate kryptografický kľúč viazaný na tvoje zariadenie a biometriu. Nedá sa zneužiť phishingom, nedá sa ukradnúť z databázy (ani neexistuje na serveri v plnej podobe). V roku 2026 ho podporuje Google, Apple, Microsoft, Amazon, GitHub aj eBay.
 
 ## Checklist nasadenia za víkend
 
-- ✅ Master heslo do správcu hesiel: 4–6 náhodných slov + číslo + symbol („KrabicaVlakÚvodom42!"). Zapíš na papier, daj do trezora.
+- ✅ Hlavné heslo do správcu hesiel: 4 – 6 náhodných slov + číslo + symbol („KrabicaVlakÚvodom42!"). Zapíš na papier, daj do trezora.
 - ✅ Bitwarden / 1Password / Proton Pass nainštalovaný na všetkých zariadeniach + prehliadačoch.
-- ✅ 2FA zapnuté cez authenticator appku na: Gmail, banka, Facebook, Instagram, GitHub, Bitwarden, Discord.
+- ✅ 2FA zapnuté cez overovaciu aplikáciu na: Gmail, banka, Facebook, Instagram, GitHub, Bitwarden, Discord.
 - ✅ haveibeenpwned.com — over všetky svoje e-maily. Pri pozitíve zmeň heslá tých účtov ako prvé.
 - ✅ Passkey nasaď na Google a Apple — kde podporujú, tam to je najmenej námahy a najviac bezpečnosti.
 - ❌ Heslá v Excel súbore / poznámkach v telefóne / Notes na Macu — žiadna ochrana, prvý phishing ich má.
 - ❌ Rovnaké heslo na 5 weboch — pri úniku jedného si zranený na všetkých piatich.
 
-## 8 znakov, že tvoja hesielná hygiena je v roku 2015
+## 8 znakov, že tvoja hygiena hesiel je v roku 2015
 
 **Červená vlajka:** Rovnaké heslo používaš na viacero účtov (banka, e-mail, e-shop).
 
-**Červená vlajka:** Heslo obsahuje meno, dátum narodenia, mená detí / domáceho miláčika.
+**Červená vlajka:** Heslo obsahuje meno, dátum narodenia, mená detí či domáceho miláčika.
 
-**Červená vlajka:** 2FA máš len cez SMS, nie cez authenticator appku.
+**Červená vlajka:** 2FA máš len cez SMS, nie cez overovaciu aplikáciu.
 
 **Červená vlajka:** Heslá si pamätáš v hlave — to znamená, že sú slabé alebo opakované.
 
-**Červená vlajka:** Heslá máš v Chrome / Safari bez master hesla zariadenia.
+**Červená vlajka:** Heslá máš v Chrome či Safari bez hlavného hesla zariadenia.
 
 **Červená vlajka:** Nikdy si neoveril, či tvoje e-maily nie sú v úniku (haveibeenpwned.com).
 
 **Červená vlajka:** Pri otázke „aké máš heslo na Gmail" vieš odpovedať bez správcu — heslo je slabé.
 
-**Červená vlajka:** Tvoja recovery e-mailová adresa je rovnaká ako primárna — pri kompromitácii hlavnej, prídeš o všetko.
+**Červená vlajka:** Tvoja záložná (recovery) e-mailová adresa je rovnaká ako primárna — pri kompromitácii hlavnej prídeš o všetko.
 
-## Pravidlá hesielnej hygieny 2026
+## Pravidlá hygieny hesiel 2026
 
 ### ✅ Rob
 
 - Začni s jedným správcom hesiel a postupne pridávaj weby — netreba urobiť všetko za deň.
 - Pre kritické účty (banka, e-mail, správca hesiel) zapni hardvérový kľúč YubiKey alebo passkey.
 - Raz za 3 mesiace skontroluj svoje e-maily na haveibeenpwned.com a zmeň heslá v kompromitovaných službách.
-- Recovery e-mail nech je iná adresa než primárna, ideálne s vlastným silným heslom + 2FA.
+- Záložný (recovery) e-mail nech je iná adresa než primárna, ideálne s vlastným silným heslom a 2FA.
 
 ### ❌ Nerob
 
 - Nikdy nepoužívaj rovnaké heslo na dve služby — toto je jediné pravidlo, ktoré naozaj zmení tvoju bezpečnosť.
-- Nedávaj 2FA kódy nikomu po telefóne, ani „bankárovi", ani „technikovi". 6-miestny kód = tvoj účet.
-- Neukladaj master heslo do správcu hesiel v inom správcovi — kruh, ktorý nemá zmysel.
-- Nepoužívaj „prihlásiť cez Facebook" / „prihlásiť cez Google" na kritické služby — pri strate jedného účtu strácaš všetky pripojené.
+- Nedávaj 2FA kódy nikomu po telefóne — ani „bankárovi", ani „technikovi". 6-miestny kód = tvoj účet.
+- Neukladaj hlavné heslo správcu hesiel do iného správcu — kruh, ktorý nemá zmysel.
+- Nepoužívaj „prihlásiť cez Facebook" či „prihlásiť cez Google" na kritické služby — pri strate jedného účtu strácaš všetky pripojené.
 
 ## Reálny scenár — únik dát z e-shopu
 
-Pošta-SK e-mailom oznámi, že tvoj obľúbený e-shop unikol databázou. Tvoj e-mail + heslo sú teraz v dark webe. Heslo používaš aj na Gmail a Bitwarden.
+Pošta-SK e-mailom oznámi, že tvojmu obľúbenému e-shopu unikla databáza. Tvoj e-mail + heslo sú teraz na dark webe (skrytá časť internetu, kde sa obchoduje s ukradnutými údajmi). Heslo používaš aj na Gmail a Bitwarden.
 
-**Zlaté pravidlo:** Najprv zmeň heslo na Gmail (najkritickejšie — cez Gmail sa resetuje všetko ostatné). Potom master heslo Bitwardenu. Potom pomocou Bitwardenu prejdi 10 najdôležitejších účtov (banka, Facebook, Instagram, Apple, Microsoft) a každému daj nové 20-znakové heslo. Zapni 2FA všade, kde ešte nie je. Skontroluj haveibeenpwned.com — uvidíš, ktoré ďalšie úniky ťa zasahujú. Celkový čas: 1 hodina, výsledok: do týždňa máš lepšiu hesielnú hygienu ako 95 % populácie.$body$,
+**Zlaté pravidlo:** Najprv zmeň heslo na Gmail (najkritickejšie — cez Gmail sa resetuje všetko ostatné). Potom hlavné heslo Bitwardenu. Potom pomocou Bitwardenu prejdi 10 najdôležitejších účtov (banka, Facebook, Instagram, Apple, Microsoft) a každému daj nové 20-znakové heslo. Zapni 2FA všade, kde ešte nie je. Skontroluj haveibeenpwned.com — uvidíš, ktoré ďalšie úniky sa ťa týkajú. Celkový čas: 1 hodina, výsledok: do týždňa máš lepšiu hygienu hesiel ako 95 % populácie.$body$,
   'lesson', $diff$beginner$diff$, 10, $emoji$🔐$emoji$, 10,
   $src$[{"label":"Have I Been Pwned — over úniky","url":"https://haveibeenpwned.com/"},{"label":"Bitwarden — open-source správca hesiel","url":"https://bitwarden.com/"},{"label":"SK-CERT — odporúčania pre heslá","url":"https://www.sk-cert.sk/"},{"label":"Yubico — hardvérové kľúče","url":"https://www.yubico.com/"}]$src$::jsonb,
   'published', $pub$2026-05-20$pub$
@@ -2540,7 +2540,7 @@ VALUES (
   $exc$3 nástroje, 1 pravidlo (3-2-1) a kedy VPN reálne pomáha — bez marketingových bludov.$exc$,
   $body$## VPN, antivírus a zálohy — fakty namiesto marketingu
 
-VPN, antivírus a zálohy sú tri nástroje, na ktorých marketing minul stovky miliónov eur — a väčšina ľudí napriek tomu nevie, ktorý je kedy užitočný. VPN nie je všeliek („skryje ťa pred hackermi") — primárne mení tvoju geo-polohu a šifruje verejnú wifi. Antivírus v 2026 už nie je Norton 360 z roku 2005 — Windows Defender v základe stačí 80 % užívateľom, platený ESET / Bitdefender pridáva ochranu pred ransomware. Zálohy podľa pravidla 3-2-1 ti zachránia foto archív aj keď ti hardisk umrie, dom vyhorí alebo notebook ukradnú. Tento kurz ti dá jasné odporúčania bez „kúp si všetko" mantry.
+VPN, antivírus a zálohy sú tri nástroje, na ktorých marketing minul stovky miliónov eur — a väčšina ľudí napriek tomu nevie, ktorý je kedy užitočný. VPN nie je všeliek („skryje ťa pred hackermi") — primárne mení tvoju geo-polohu a šifruje verejnú wifi. Antivírus v 2026 už nie je Norton 360 z roku 2005 — Windows Defender v základe stačí 80 % užívateľom, platený ESET / Bitdefender pridáva ochranu pred ransomvérom (vydieračský softvér, ktorý zašifruje súbory). Zálohy podľa pravidla 3-2-1 ti zachránia fotoarchív, aj keď ti pevný disk umrie, dom vyhorí alebo notebook ukradnú. Tento kurz ti dá jasné odporúčania bez mantry „kúp si všetko".
 
 ## VPN — kedy má zmysel
 
@@ -2558,7 +2558,7 @@ NordVPN, ExpressVPN, Surfshark sú slušné služby, ale ich marketing tvrdí ve
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiV2luZG93cyBEZWZlbmRlciB2cyBwbGF0ZW7DvSBhbnRpdsOtcnVzIiwiYm9keSI6IldpbmRvd3MgRGVmZW5kZXIgKHphZGFybW8sIHYgc3lzdMOpbWUpOiBaYWNoeXTDrSA5NSAlIGJlxb5uw6lobyBtYWx3YXJlLiBQcmUgdsOkxI3FoWludSBkb23DoWNpY2ggdcW+w612YXRlxL5vdiBzdGHEjcOtLlxuRVNFVCBTbWFydCBTZWN1cml0eSAofjQwIOKCrC9yb2spOiBSYW5zb213YXJlIHByb3RlY3Rpb24sIGJhbmtpbmcgbW9kdWxlLCBwYXJlbnRhbCBjb250cm9scy5cbkJpdGRlZmVuZGVyIFRvdGFsIFNlY3VyaXR5ICh+NjAg4oKsL3Jvayk6IFByaWTDoXZhIFZQTiAobGltaXQgMjAwIE1CL2RlxYgpLCBzcHLDoXZjdSBoZXNpZWwuXG5NYWM6IHZzdGF2YW7DvSBYUHJvdGVjdCArIEdhdGVrZWVwZXIgcG9rcnlqZSA5OSAlIHByw61wYWRvdi4ifQ==]]
 
-Ak máš deti, banking-uješ veľa cez PC, alebo pracuješ s firemnými datami z domu — ESET / Bitdefender stoja za tých 40 € ročne. Inak Windows Defender + zdravý rozum + ad-blocker (uBlock Origin) je vyhovujúci stack.
+Ak máš deti, veľa bankuješ cez PC alebo pracuješ s firemnými dátami z domu — ESET / Bitdefender stoja za tých 40 € ročne. Inak Windows Defender + zdravý rozum + ad-blocker (uBlock Origin) je vyhovujúci stack.
 
 ## Pravidlo 3-2-1 pre zálohy
 
@@ -2570,7 +2570,7 @@ Backblaze (7 $/mesiac) je nepárny tým, že má unlimited backup celého počí
 
 [[visual:b64:eyJraW5kIjoidXJsIiwidXJsIjoiaHR0cHM6Ly9haXJwb3J0LWZyZWUtd2lmaS5jb25uZWN0L2xvZ2luIiwic2VjdXJlIjpmYWxzZX0=]]
 
-Falošná wifi „Airport_Free_Wifi" zriadená útočníkom v letiskovej hale. Prihlasuješ sa cez ich „captive portal" — heslo na e-mail máš ukradnuté. Riešenie: vždy zapni VPN pred pripojením na akúkoľvek nedôverivú wifi. Alebo používaj mobilný hotspot.
+Falošná wifi „Airport_Free_Wifi" zriadená útočníkom v letiskovej hale. Prihlasuješ sa cez ich „captive portal" — heslo na e-mail máš ukradnuté. Riešenie: vždy zapni VPN pred pripojením na akúkoľvek nedôveryhodnú wifi. Alebo používaj mobilný hotspot.
 
 ## Checklist digitálnej bezpečnosti — víkendový setup
 
@@ -2578,13 +2578,13 @@ Falošná wifi „Airport_Free_Wifi" zriadená útočníkom v letiskovej hale. P
 - ✅ Automatické aktualizácie OS, prehliadača a appiek zapnuté — 90 % útokov ide cez staré verzie.
 - ✅ Externý disk + cloud podľa 3-2-1 pravidla, automaticky každý týždeň.
 - ✅ VPN (Mullvad / ProtonVPN) na verejnej wifi a pri cestách do zahraničia.
-- ✅ uBlock Origin v prehliadači — blokuje malvertising a tracking-y, najlepšia bezpečnostná appka zdarma.
+- ✅ uBlock Origin v prehliadači — blokuje malvertising (škodlivá reklama šíriaca malware) a trackery, najlepšia bezpečnostná appka zdarma.
 - ❌ Antivírus s 5 nepoužívanými „bezpečnostnými balíkmi" (Norton 360, McAfee Total Protection) — zaťažuje systém, neprináša hodnotu.
 - ❌ VPN „pre anonymitu" pri normálnom surfovaní — neanonymizuje ťa, len mení IP.
 
 ## Marketingové bludy o bezpečnostných produktoch
 
-**Červená vlajka:** „VPN ťa ochráni pred hackermi" — nie, šifruje len sieťovú vrstvu, neochráni pred phishingom ani malware.
+**Červená vlajka:** „VPN ťa ochráni pred hackermi" — nie, šifruje len sieťovú vrstvu, neochráni pred phishingom (podvodné vylákanie prihlasovacích či platobných údajov) ani malvérom (škodlivý softvér).
 
 **Červená vlajka:** „Náš antivírus má 99,9 % detekciu" — všetky komerčné antivírusy majú podobné výsledky (AV-Test).
 
@@ -2592,7 +2592,7 @@ Falošná wifi „Airport_Free_Wifi" zriadená útočníkom v letiskovej hale. P
 
 **Červená vlajka:** „Náš cloud má AI ochranu pred ransomware" — marketing. Skutočná ochrana je verzionovanie + offline záloha.
 
-**Červená vlajka:** „Heslo je dnes mŕtve, kúp si naše riešenie" — heslá + 2FA + správca hesiel je stále zlatý štandard.
+**Červená vlajka:** „Heslo je dnes mŕtve, kúp si naše riešenie" — heslá + 2FA (dvojfaktorové overenie) + správca hesiel sú stále zlatý štandard.
 
 **Červená vlajka:** „Bez nášho antivírusu Mac dostane vírus" — Mac dostáva malware, ale väčšinou cez phishing, nie cez tradičný vírus.
 
@@ -2600,7 +2600,7 @@ Falošná wifi „Airport_Free_Wifi" zriadená útočníkom v letiskovej hale. P
 
 ### ✅ Rob
 
-- Začni so záloha 3-2-1 — bezpečnostne najdôležitejší krok, lebo chráni pred ransomware aj hardvérovým zlyhaním.
+- Začni so zálohou 3-2-1 — bezpečnostne najdôležitejší krok, lebo chráni pred ransomvérom aj hardvérovým zlyhaním.
 - Pre cestovanie / verejnú wifi: ProtonVPN alebo Mullvad, ideálne kill-switch zapnutý.
 - Aktualizuj OS aj appky automaticky — staré verzie sú najčastejší vektor útoku.
 - Pre banking PC: ESET / Bitdefender + samostatný prehliadač len pre banku (Brave / Firefox bez rozšírení).
@@ -2616,7 +2616,7 @@ Falošná wifi „Airport_Free_Wifi" zriadená útočníkom v letiskovej hale. P
 
 Spustíš PC v sobotu ráno. Obrazovka: „Vaše súbory sú zašifrované. Pošlite 0,03 BTC (~1 800 €) na túto adresu do 72 hodín, inak ich navždy stratíte." Všetky fotky z 10 rokov, daňové priznania, dokumenty — všetko nečitateľné. Antivírus zlyhal.
 
-**Zlaté pravidlo:** NEPLATÍŠ. Polovica obetí, ktoré zaplatia, dáta späť nedostanú. Odpojíš PC od siete (vytiahneš ethernet, vypneš wifi). Hlásiš na SK-CERT (incident@sk-cert.sk). Z externého disku alebo cloud zálohy obnovíš dáta na nový / preinštalovaný systém. Pre budúcnosť: pravidlo 3-2-1 by ti tento útok stalo 30 minút reinštalu namiesto 1 800 € a možnej straty. Toto je hlavný dôvod, prečo má každý mať zálohu mimo domu.$body$,
+**Zlaté pravidlo:** NEPLATÍŠ. Polovica obetí, ktoré zaplatia, dáta späť nedostanú. Odpojíš PC od siete (vytiahneš ethernet, vypneš wifi). Hlásiš na SK-CERT (incident@sk-cert.sk). Z externého disku alebo cloud zálohy obnovíš dáta na nový / preinštalovaný systém. Pre budúcnosť: s pravidlom 3-2-1 by ťa tento útok stál 30 minút reinštalácie namiesto 1 800 € a možnej straty. Toto je hlavný dôvod, prečo má každý mať zálohu mimo domu.$body$,
   'lesson', $diff$advanced$diff$, 12, $emoji$🛡️$emoji$, 12,
   $src$[{"label":"SK-CERT — odporúčania pre koncových používateľov","url":"https://www.sk-cert.sk/"},{"label":"AV-Test — nezávislé testy antivírusov","url":"https://www.av-test.org/"},{"label":"Mullvad VPN — politika súkromia","url":"https://mullvad.net/"},{"label":"Backblaze — cloudové zálohy","url":"https://www.backblaze.com/"}]$src$::jsonb,
   'published', $pub$2026-05-20$pub$
@@ -2651,79 +2651,79 @@ VALUES (
   $exc$60 minút na zachránenie peňazí a reputácie. Krok po kroku, bez paniky.$exc$,
   $body$## Čo robiť po podvode — prvých 60 minút rozhoduje
 
-Čo robiť po podvode — toto je otázka, ktorú si googliš v panike, keď si práve klikol na zlý link alebo zistil, že ti zmizla suma z účtu. Prvých 60 minút rozhoduje, či peniaze zachrániš alebo nie. Banky majú právomoc stiahnuť transakciu v reálnom čase, kým ide cez SEPA — neskôr to už nie je možné. Hacknutý Facebook treba nahlásiť do hodín, kým útočník nezistí tvojich kontaktov a nezačne ich oklamávať. Tento kurz je presný runbook pre 4 najčastejšie situácie: napadnutá karta, hacknutý e-mail / FB, fake e-shop ti nedoručil tovar, romance / pig-butchering kde si poslal peniaze. Žiadne dlhé teoretizovanie — kroky, čísla, formuláre.
+Čo robiť po podvode — toto je otázka, ktorú si googliš v panike, keď si práve klikol na zlý odkaz alebo zistil, že ti z účtu zmizla suma. Prvých 60 minút rozhoduje, či peniaze zachrániš, alebo nie. Banky majú právomoc stiahnuť transakciu v reálnom čase, kým ide cez SEPA (jednotnú európsku platobnú schému) — neskôr to už nie je možné. Napadnutý Facebook treba nahlásiť do niekoľkých hodín, kým útočník nezistí tvoje kontakty a nezačne ich oklamávať. Tento kurz je presný návod (runbook) pre 4 najčastejšie situácie: napadnutá karta, napadnutý e-mail či Facebook, falošný e-shop ti nedoručil tovar, alebo si poslal peniaze pri romance scame (podvod cez predstieraný ľúbostný vzťah) či pig butcheringu (dlhodobý investičný podvod budovaný cez vzťah). Žiadne dlhé teoretizovanie — kroky, čísla, formuláre.
 
 ## Situácia #1 — Cudzia transakcia na karte
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiTm90aWZpa8OhY2lhIHogVsOaQiBiYW5reSIsImJvZHkiOiJUcmFuc2FrY2lhOiA0ODksMDAgRVVSXG5PYmNob2Ruw61rOiBFTEVDLVNUT1JFLUNOXG5Ew6F0dW06IDIwMjYtMDUtMjAgMDM6NDdcbkxva8OhY2lhOiDFoGFuZ2hhaiwgxIzDrW5hIn0=]]
 
-Prvé tri minúty: blokácia karty cez appku banky (Mobile Banking → karta → zablokovať). Druhé tri minúty: zavolanie banky (číslo na zadnej strane karty) a žiadosť o storno transakcie + chargeback. Tretie tri minúty: nová karta + zmena hesiel všade, kde si používal číslo karty.
+Prvé tri minúty: zablokuj kartu cez aplikáciu banky (Mobile Banking → karta → zablokovať). Ďalšie tri minúty: zavolaj banke (číslo na zadnej strane karty) a požiadaj o storno transakcie a chargeback (vrátenie peňazí cez banku). Posledné tri minúty: nová karta a zmena hesiel všade, kde si používal číslo karty.
 
 ## Situácia #2 — Hacknutý Facebook / Instagram
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiRS1tYWlsIG9kIEZhY2Vib29rdSBvIG5vdm9tIHByaWhsw6FzZW7DrSIsImJvZHkiOiJOb3bDqSBwcmlobMOhc2VuaWUgbmEgdsOhxaEgw7rEjWV0OlxuWmFyaWFkZW5pZTogU2Ftc3VuZyBHYWxheHkgUzI0XG5Mb2vDoWNpYTogTGFnb3MsIE5pZ8OpcmlhXG5JUDogMTk3LjIxMC54LnhcbsSOYWt1amVtZSwgxb5lIG7DoXMgY2hyw6FuaXRlLiBBayB0byBuZWJvbGEgdmHFoWEgYWt0aXZpdGEsIHBvc3R1cHVqdGUgcG9kxL5hIGtyb2tvdi4uLiJ9]]
 
-Skús sa hneď prihlásiť. Ak vieš, zmeň heslo + odhlás všetky zariadenia (Nastavenia → Bezpečnosť → Aktívne relácie → Odhlásiť všade) + zapni 2FA. Ak nevieš sa prihlásiť: facebook.com/hacked / instagram.com/hacked — oba majú formálny proces obnovy.
+Skús sa hneď prihlásiť. Ak sa ti to podarí, zmeň heslo, odhlás všetky zariadenia (Nastavenia → Bezpečnosť → Aktívne relácie → Odhlásiť všade) a zapni 2FA (dvojfaktorové overenie). Ak sa prihlásiť nevieš: facebook.com/hacked alebo instagram.com/hacked — oba majú formálny proces obnovy.
 
 ## Situácia #3 — Fake e-shop ti nedoručil tovar
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiRW1haWwgb2Qg4oCeZWxla3Ryb25pa2EtdnlwcmVkYWouc2tcIiAxNCBkbsOtIHBvIHBsYXRiZSIsImJvZHkiOiJWYcWhYSBvYmplZG7DoXZrYSBqZSBtb21lbnTDoWxuZSB2IHN0YXZlIOKAnnNwcmFjb3bDoXZhIHNhXCIuIFogZMO0dm9kdSB2eXNva8OpaG8gZG9weXR1IHNhIGRvcnXEjWVuaWUgbcO0xb5lIHpkcsW+YcWlIG8gxI9hbMWhw61jaCAzMCBkbsOtLiDEjmFrdWplbWUgemEgdHJwZXpsaXZvc8WlLiJ9]]
 
-Klasická taktika fake e-shopu — naťahovanie do uplynutia 30-dňovej chargeback lehoty (skutočná je 120 dní pri Visa/Mastercard). Reklamáciu cez banku podaj IHNEĎ — netreba čakať. Doklady: e-mail objednávky, platobný výpis, komunikácia s predajcom.
+Klasická taktika falošného e-shopu — naťahovanie času do uplynutia 30-dňovej chargeback lehoty (skutočná je 120 dní pri Visa/Mastercard). Reklamáciu cez banku podaj IHNEĎ — netreba čakať. Doklady: e-mail s objednávkou, platobný výpis, komunikácia s predajcom.
 
 ## Situácia #4 — Poslal si peniaze romance / pig-butchering
 
 [[visual:b64:eyJraW5kIjoidGV4dCIsImxhYmVsIjoiVHZvaiBwb3NsZWRuw70gcHJldm9kIOKAnkVsZW55XCIg4oCUIGtyeXB0byBidXJ6YSBCaW5hbmNlIiwiYm9keSI6Ik9kb3NsYW7DqTogOCA0MDAgRVVSXG5OYTogQlRDIHBlxYhhxb5lbmthIGJjMXF4eTIuLi5rZ2R5Z2pyc3F0enEybjB5cmYyNDkzcDgza2tmamh4MHdsaFxuRMOhdHVtOiAyMDI2LTA1LTE5IDIyOjE0XG7DmsSNZWw6IOKAnkludmVzdMOtY2lhIGRvIGFrY2nDrSBUZXNsYSBjZXogVHJhZGluZ0JvdCBQcm9cIiJ9]]
 
-Šanca na vrátenie je nízka, ale nie nulová. Polícii nahlás hneď (najlepšie s printscreenmi celej konverzácie). Burzy ako Binance majú compliance tím — ak útočník použil zákaznícku peňaženku, dá sa zmraziť. Nečakaj na „posledný pokus o výber" — odhal podvod doma a polícii teraz.
+Šanca na vrátenie je nízka, ale nie nulová. Polícii to nahlás hneď (najlepšie so snímkami obrazovky celej konverzácie). Burzy ako Binance majú compliance tím (oddelenie na dodržiavanie predpisov) — ak útočník použil zákaznícku peňaženku, dá sa zmraziť. Nečakaj na „posledný pokus o výber" — odhaľ podvod doma a na polícii hneď teraz.
 
 ## Runbook prvých 60 minút
 
-- ✅ Krok 1 (do 5 minút): Zablokuj kartu cez mobile banking — nečakaj na call centrum.
-- ✅ Krok 2 (do 15 minút): Zavolaj banku na číslo z karty, požiadaj o storno + chargeback. Zaznamenaj číslo tiketu.
-- ✅ Krok 3 (do 30 minút): Zmeň heslá — primárne na: e-mail, banka, Facebook, Apple ID / Google. Zapni 2FA všade, kde nie je.
+- ✅ Krok 1 (do 5 minút): Zablokuj kartu cez mobile banking — nečakaj na telefonické centrum (call centrum).
+- ✅ Krok 2 (do 15 minút): Zavolaj banke na číslo z karty, požiadaj o storno a chargeback. Zaznamenaj si číslo tiketu.
+- ✅ Krok 3 (do 30 minút): Zmeň heslá — v prvom rade k e-mailu, banke, Facebooku a Apple ID / Google. Zapni 2FA všade, kde nie je.
 - ✅ Krok 4 (do 60 minút): Screenshot všetkého — komunikácia, transakcie, doklady. Polícia ich bude vyžadovať.
-- ✅ Krok 5 (do 24 hodín): Hláška na SK-CERT (incident@sk-cert.sk) + lokálna polícia (osobne alebo online cez minv.sk).
+- ✅ Krok 5 (do 24 hodín): Nahlásenie na SK-CERT (incident@sk-cert.sk) a miestnej polícii (osobne alebo online cez minv.sk).
 - ❌ Čakanie „možno sa to vyrieši samo" — každá hodina znižuje šancu na vrátenie peňazí.
-- ❌ Hanbenie sa pred rodinou — buď otvorený, často potrebuješ druhú hlavu na rýchle rozhodnutia.
+- ❌ Hanbiť sa pred rodinou — buď otvorený, často potrebuješ druhú hlavu na rýchle rozhodnutia.
 
 ## Časté chyby obetí po podvode
 
 **Červená vlajka:** Nahlasujú podvod „až keď budú mať čas" — kritická lehota na chargeback je 120 dní, na storno SEPA platby HODINY.
 
-**Červená vlajka:** Nezachovajú dôkazy — vymažú správy, zatvoria účet, čo komplikuje vyšetrovanie.
+**Červená vlajka:** Nezachovajú dôkazy — vymažú správy a zatvoria účet, čo komplikuje vyšetrovanie.
 
-**Červená vlajka:** Platia „posledný poplatok" za vyslobodenie zvyšných peňazí — nikdy neexistuje, vždy ďalší krok scamu.
+**Červená vlajka:** Platia „posledný poplatok" za uvoľnenie zvyšných peňazí — žiadny taký neexistuje, vždy je to ďalší krok scamu (podvodu).
 
-**Červená vlajka:** Veria „advokátovi", ktorý ich kontaktuje s ponukou vrátiť stratené peniaze — sekundárny scam.
+**Červená vlajka:** Veria „advokátovi", ktorý ich kontaktuje s ponukou vrátiť stratené peniaze — sekundárny podvod.
 
-**Červená vlajka:** Nezmenia heslá k iným službám, kde používali rovnaké údaje — útočník postupne ide cez všetky.
+**Červená vlajka:** Nezmenia heslá k iným službám, kde používali rovnaké údaje — útočník postupne prejde všetky.
 
-**Červená vlajka:** Predpokladajú, že polícia podvod „nerieši" — riešia ho aktívne, ich štatistiky chcú vašu výpoveď.
+**Červená vlajka:** Predpokladajú, že polícia podvod „nerieši" — rieši ho aktívne a pre štatistiky potrebuje vašu výpoveď.
 
-**Červená vlajka:** Hanbia sa pred rodinou a riešia to sami — väčšina obetí potrebuje druhú perspektívu na ďalšie rozhodnutia.
+**Červená vlajka:** Hanbia sa pred rodinou a riešia to sami — väčšina obetí potrebuje druhý pohľad na ďalšie rozhodnutia.
 
 ## Pravidlá pre prvé hodiny po podvode
 
 ### ✅ Rob
 
-- Konaj okamžite — peniaze sa zmrazia, kým ešte sú na SEPA mediu, nie po prevode do dark pool burzy.
-- Zachovaj všetky dôkazy: screenshoty, e-maily, čísla transakcií, prihlasovacie aktivity.
-- Nahláš podvod aj keď nevieš, či pomôže — štatistika polície + SK-CERT z toho dokáže chytiť ďalšieho páchateľa.
-- Povedz to rodine / partnerovi — druhá hlava ti pomôže nerobiť ďalšie chyby v panike.
+- Konaj okamžite — peniaze sa dajú zmraziť, kým sú ešte v systéme SEPA, nie po prevode na krypto burzu.
+- Zachovaj všetky dôkazy: snímky obrazovky, e-maily, čísla transakcií, záznamy o prihláseniach.
+- Nahlás podvod, aj keď nevieš, či to pomôže — vďaka štatistikám polície a SK-CERT sa dá chytiť ďalší páchateľ.
+- Povedz to rodine alebo partnerovi — druhá hlava ti pomôže nerobiť ďalšie chyby v panike.
 
 ### ❌ Nerob
 
-- Nikdy nezaplatí „advokátovi" / „policajtovi" / „recovery firme", ktorá ti volá nevyžiadane s ponukou vrátiť peniaze.
-- Nemaž dôkazy ani v hneve — sú jediný spôsob, ako sa polícii podarí útočníka identifikovať.
-- Nehovor o podvode na Facebooku verejne — útočník ťa zacieli druhým útokom z falošného „pomôžem ti" profilu.
-- Neignoruj zmenu hesiel — ak útočník dostal jeden účet, skúsi ten istý mail+heslo na 50 ďalších.
+- Nikdy nezaplať „advokátovi", „policajtovi" či „recovery firme" (firme sľubujúcej vrátenie peňazí), ktorá ti volá nevyžiadane s ponukou vrátiť peniaze.
+- Nemaž dôkazy ani v hneve — sú jediným spôsobom, ako polícia útočníka identifikuje.
+- Nehovor o podvode na Facebooku verejne — útočník ťa zacieli druhým útokom z falošného profilu typu „pomôžem ti".
+- Nepodceň zmenu hesiel — ak útočník získal jeden účet, skúsi ten istý e-mail a heslo na 50 ďalších.
 
 ## Reálny scenár — 23:48, vidíš transakciu 1 200 € z karty v Číne
 
 Sedíš pred TV, prichádza ti push notifikácia z banky: „Transakcia 1 234 €, JD-PAYMENT-CN, lokácia Peking." Karta je v tvojej peňaženke. Banky majú call centrum už zatvorené.
 
-**Zlaté pravidlo:** Otvor appku banky → karta → zablokovať okamžite (max 30 sekúnd). Otvor chat support v appke (väčšina SK bánk má 24/7 chat) — popíš transakciu, požiadaj o storno. Ak chat nemá, použi tlačidlo „nahlásiť podvodnú transakciu" priamo v appke. Skríne všetko. Zajtra hneď ráno (8:00) zavolaj banku na číslo z karty — overíš stav reklamácie + požiadaš o vystavenie novej karty. Zmena hesla pri každom obchodníkovi, ktorý mal číslo karty. Pri rýchlej akcii (do 60 minút) je šanca na vrátenie peňazí 70–90 %.$body$,
+**Zlaté pravidlo:** Otvor aplikáciu banky → karta → zablokovať okamžite (max. 30 sekúnd). Otvor chatovú podporu v aplikácii (väčšina slovenských bánk má nepretržitý chat) — popíš transakciu a požiadaj o storno. Ak chat nie je k dispozícii, použi tlačidlo „nahlásiť podvodnú transakciu" priamo v aplikácii. Odfoť si obrazovku všetkého. Zajtra hneď ráno (o 8:00) zavolaj banke na číslo z karty — overíš stav reklamácie a požiadaš o vystavenie novej karty. Zmeň heslo u každého obchodníka, ktorý mal číslo karty. Pri rýchlej reakcii (do 60 minút) je šanca na vrátenie peňazí 70–90 %.$body$,
   'lesson', $diff$beginner$diff$, 10, $emoji$🚑$emoji$, 10,
   $src$[{"label":"SK-CERT — nahlásenie incidentu","url":"https://www.sk-cert.sk/"},{"label":"Polícia SR — nahlásiť kybernetický útok","url":"https://www.minv.sk/"},{"label":"Národná banka Slovenska — reklamácie","url":"https://www.nbs.sk/"},{"label":"SOI — ochrana spotrebiteľa","url":"https://www.soi.sk/"}]$src$::jsonb,
   'published', $pub$2026-05-20$pub$
@@ -2758,7 +2758,7 @@ VALUES (
   $exc$5 nových schém, ktoré v 2026 zarobili útočníkom najviac — a ako ich rozoznáš.$exc$,
   $body$## Top podvody na Slovensku v 2026 — čo sa zmenilo oproti 2025
 
-Top podvody na Slovensku v 2026 majú jeden spoločný menovateľ: AI. Deepfake hlas z 8 sekúnd nahrávky, ChatGPT-generované e-maily bez gramatických chýb, falošné AI investičné platformy s realistickým UI. Zároveň prišli nové vlny — EÚ AI Akt (platný od augusta 2026) spustil vlnu phishingu „povinná registrácia AI nástrojov", rebranding Slovenskej pošty na „Slovak Post" v marci dal útočníkom 6 mesiacov priestoru s „aktualizácia údajov k novému značeniu" e-mailmi. Krypto pump-and-dump na meme coiny zlikvidoval slovenských retail investorov za vyše 12 miliónov €. Tento kurz prejde 5 najaktuálnejších schém v SR a ako každú rozoznáš za pár sekúnd.
+Top podvody na Slovensku v 2026 majú jeden spoločný menovateľ: AI. Deepfake (umelo vygenerované falošné video či hlas) hlas z 8 sekúnd nahrávky, ChatGPT-generované e-maily bez gramatických chýb, falošné AI investičné platformy s realistickým UI. Zároveň prišli nové vlny — EÚ AI Akt (platný od augusta 2026) spustil vlnu phishingu (podvodné vylákanie prihlasovacích či platobných údajov) „povinná registrácia AI nástrojov", rebranding Slovenskej pošty na „Slovak Post" v marci dal útočníkom 6 mesiacov priestoru s „aktualizáciou údajov k novému značeniu" e-mailmi. Krypto pump-and-dump na meme coiny zlikvidoval slovenských retailových investorov za vyše 12 miliónov €. Tento kurz prejde 5 najaktuálnejších schém v SR a ako každú rozoznáš za pár sekúnd.
 
 ## Schéma #1 — „Povinná registrácia AI nástrojov podľa EÚ AI Aktu"
 
@@ -2782,13 +2782,13 @@ Klasický pump-and-dump. Influencer cez Telegram skupinu organizuje „pump" —
 
 [[visual:b64:eyJraW5kIjoiY2FsbCIsImNhbGxlciI6IkNFTyBmaXJteSAoZGVlcGZha2UgaGxhc3UpIiwibnVtYmVyIjoic2tyw712YSBzYSBjZXogV2hhdHNBcHAgY2FsbCDigJQgxb5pYWRuZSBjYWxsZXIgSUQiLCJoaW50IjoiQUkga2xvbiBobGFzdSB6byA4IHNla8O6bmQgTGlua2VkSW4gdmlkZWEgQ0VPIn0=]]
 
-V 2026 BEC podvody postúpili — útočník volá cez WhatsApp s deepfake hlasom CEO, „súrny prevod 80 000 € na rakúsky účet, akvizícia, nikomu o tom nesmieš povedať". Hlas je 95 % autentický. Obrana: vždy druhé schválenie cez nezávislý kanál (osobne, alebo Slack DM s overením kontextu).
+V 2026 BEC podvody (podvod cez kompromitovaný firemný e-mail) postúpili — útočník volá cez WhatsApp s deepfake hlasom CEO, „súrny prevod 80 000 € na rakúsky účet, akvizícia, nikomu o tom nesmieš povedať". Hlas je 95 % autentický. Obrana: vždy druhé schválenie cez nezávislý kanál (osobne alebo Slack DM s overením kontextu).
 
 ## Schéma #5 — Falošné AI investičné platformy s celebritami
 
 [[visual:b64:eyJraW5kIjoidXJsIiwidXJsIjoiaHR0cHM6Ly90cmFkaW5nYm90LWFpLWVsb24tMjAyNi5jb20vc2svcmVnaXN0cmFjaWEiLCJzZWN1cmUiOnRydWV9]]
 
-Reklama: „Elon Musk uvádza novú AI investičnú platformu pre Slovákov. Začnete s 250 €, do mesiaca máte 3 800 €." Deepfake video Elona / Andreja Kisku schvaľujúce platformu. Skutočnosť: pig-butchering platforma, peniaze nikdy nevidíš.
+Reklama: „Elon Musk uvádza novú AI investičnú platformu pre Slovákov. Začnete s 250 €, do mesiaca máte 3 800 €." Deepfake video Elona Muska / Andreja Kisku schvaľujúce platformu. Skutočnosť: pig butchering (dlhodobý investičný podvod budovaný cez vzťah) platforma, peniaze nikdy nevidíš.
 
 ## Spoločné znaky podvodov v 2026
 
@@ -2826,7 +2826,7 @@ Reklama: „Elon Musk uvádza novú AI investičnú platformu pre Slovákov. Za�
 
 Príde ti SMS: „Slovak Post: Po rebrandingu je nutné potvrdiť doručovacie údaje, inak hrozí prerušenie služby. Overiť: slovak-post.update-account.sk." Naozaj čakáš balík z Aliexpressu — zdá sa to dôveryhodné.
 
-**Zlaté pravidlo:** Otvor si posta.sk / slovakpost.sk priamo v prehliadači (zadáš ručne). Skontroluj stav zásielky cez Pošta SR appku. SMS so „povinnou aktualizáciou" ignoruješ a nahlasiš na 7726 (bezplatná linka pre spam SMS). Žiadna pošta nevyžaduje aktualizáciu cez SMS link — vždy iba cez prihlásenie do oficiálnej appky alebo na webe.$body$,
+**Zlaté pravidlo:** Otvor si posta.sk / slovakpost.sk priamo v prehliadači (zadáš ručne). Skontroluj stav zásielky cez Pošta SR appku. SMS so „povinnou aktualizáciou" ignoruješ a nahlásiš na 7726 (bezplatná linka pre spam SMS). Žiadna pošta nevyžaduje aktualizáciu cez SMS link — vždy iba cez prihlásenie do oficiálnej appky alebo na webe.$body$,
   'lesson', $diff$beginner$diff$, 8, $emoji$🇸🇰$emoji$, 8,
   $src$[{"label":"SK-CERT — aktuálne hrozby","url":"https://www.sk-cert.sk/"},{"label":"NBÚ — bezpečnostné odporúčania","url":"https://www.nbu.gov.sk/"},{"label":"Slovenská pošta — bezpečnostné upozornenia","url":"https://www.posta.sk/"},{"label":"Európska komisia — AI Act","url":"https://digital-strategy.ec.europa.eu/"}]$src$::jsonb,
   'published', $pub$2026-05-20$pub$

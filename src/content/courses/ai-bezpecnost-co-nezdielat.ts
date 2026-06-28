@@ -78,7 +78,7 @@ export const aiBezpecnostCourse: Course = {
       kind: "do_dont",
       heading: "Ako podvodníci zneužívajú AI",
       do: [
-        `Keď dostaneš email alebo správu s perfektnou slovenčinou bez chýb — daj si pozor. Phishing sa dnes píše AI a neprezradia ho pravopisné chyby.`,
+        `Keď dostaneš email alebo správu s perfektnou slovenčinou bez chýb — daj si pozor. Phishing (podvodné vylákanie prihlasovacích či platobných údajov) sa dnes píše AI a neprezradia ho pravopisné chyby.`,
         `Chatbot na webe banky alebo e-shopu, ktorý ťa odkazuje na „inú stránku" — vždy skontroluj adresu v prehliadači.`,
         `AI zákaznícke centrum podvodnej stránky vyzerá rovnako ako pravé — overuj firmu podľa URL, nie podľa vzhľadu chatu.`,
         `Ak ti chatbot ponúkne „zľavu po zadaní čísla karty" — okamžite zavrieš okno. Legitímny chatbot kartu nikdy nepýta.`,

@@ -14,12 +14,12 @@ export const aiPomocnikCourse: Course = {
   sections: [
     {
       kind: "intro",
-      heading: "AI nie je vševedo — ale veľa vie",
-      body: `Predstav si asistenta, ktorý prečítal milióny kníh, článkov a webstránok, hovorí takmer každým jazykom a je dostupný 24 hodín denne zadarmo. To je AI asistent — ChatGPT, Gemini alebo Microsoft Copilot. Vie napísať email, preložiť text, vysvetliť pojmy, navrhnúť recept, pomôcť s úradným listom alebo pripraviť otázky pre lekára. Lenže — nie je vševedo. Niekedy si niečo vymyslí (odborníci tomu hovoria „halucinácie"). Nedokáže zavolať záchranku, neskontroluje tvoje zdravie a nie je zodpovedný za chyby. Táto kapitola ti ukáže kedy sa na AI spoľahnúť a kedy radšej siahnuť po odborníkovi.`,
+      heading: "AI nie je vševed — ale veľa vie",
+      body: `Predstav si asistenta, ktorý prečítal milióny kníh, článkov a webstránok, hovorí takmer každým jazykom a je dostupný 24 hodín denne zadarmo. To je AI asistent — ChatGPT, Gemini alebo Microsoft Copilot. Vie napísať email, preložiť text, vysvetliť pojmy, navrhnúť recept, pomôcť s úradným listom alebo pripraviť otázky pre lekára. Lenže — nie je vševed. Niekedy si niečo vymyslí (odborníci tomu hovoria „halucinácie"). Nedokáže zavolať záchranku, neskontroluje tvoje zdravie a nie je zodpovedný za chyby. Táto kapitola ti ukáže, kedy sa na AI spoľahnúť a kedy radšej siahnuť po odborníkovi.`,
     },
     {
       kind: "example",
-      heading: "5 konkrétnych situácií kde AI ušetrí čas",
+      heading: "5 konkrétnych situácií, kde AI ušetrí čas",
       visual: {
         kind: "text",
         label: "Príklady otázok, s ktorými AI pomôže",
@@ -101,7 +101,7 @@ Skvelá otázka:
       kind: "scenario",
       heading: "Elena — recept vs. lieky",
       story: `Elena (72) sa naučila používať Gemini na mobile. Najprv sa opýta: „Navrhni mi sladší hrnčekový koláč bez cukru — mám diabetickú diétu." Dostane výborný recept s ovocím a stéviou. Povie si: „Toto je skvelé, opýtam sa aj na lieky." Napíše: „Mám predpísaný Metformin a Amlodipín — môžem ich kombinovať s grapefruitovým džúsom?"`,
-      right_action: `Recept bez cukru — bezpečný, AI v tom vyniká. Interakcia liekov s jedlom — stop. Grapefruit mení vstrebávanie niektorých liekov (Amlodipínu vrátane) a AI môže dať nepresný alebo zastaraný údaj. Správny postup: Elena túto otázku položí lekárnikovi pri výdaji liekov alebo zavolá na bezplatnú informačnú linku svojej zdravotnej poisťovne.`,
+      right_action: `Recept bez cukru — bezpečný, AI v tom vyniká. Interakcia liekov s jedlom — stop. Grapefruit mení vstrebávanie niektorých liekov (vrátane Amlodipínu) a AI môže dať nepresný alebo zastaraný údaj. Správny postup: Elena túto otázku položí lekárnikovi pri výdaji liekov alebo zavolá na bezplatnú informačnú linku svojej zdravotnej poisťovne.`,
     },
   ],
   sources: [

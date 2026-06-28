@@ -15,7 +15,7 @@ export const qrQuishingCourse: Course = {
     {
       kind: "intro",
       heading: "QR kód — nová cesta k phishingu",
-      body: `QR quishing (QR + phishing) je jednou z najrýchlejšie rastúcich techník od roku 2023. Dôvod je prostý: QR kód je pre ľudský mozog „bezpečný symbol" — bez skenera nevidíš URL, na ktorý ťa posiela. Útočníci tlačia falošné QR stikery a lepia ich cez originál na parkovacích automatoch, v reštauráciách, na balíkových boxoch. Výsledok: naskenuješ zdanlivo legitímny kód a skončíš na podvodnej stránke, ktorá chce tvoje platobné údaje alebo meno + heslo.`,
+      body: `QR quishing (phishing cez QR kód) je jednou z najrýchlejšie rastúcich techník phishingu (podvodné vylákanie prihlasovacích či platobných údajov) od roku 2023. Dôvod je prostý: QR kód je pre ľudský mozog „bezpečný symbol" — bez skenera nevidíš URL, na ktorú ťa posiela. Útočníci tlačia falošné QR nálepky a lepia ich cez originál na parkovacích automatoch, v reštauráciách, na balíkových boxoch. Výsledok: naskenuješ zdanlivo legitímny kód a skončíš na podvodnej stránke, ktorá chce tvoje platobné údaje alebo meno + heslo.`,
     },
     {
       kind: "example",
@@ -35,7 +35,7 @@ export const qrQuishingCourse: Course = {
         url: "https://menu-sk-login.page/wifi",
         secure: false,
       },
-      commentary: `Stolový QR kód pre WiFi alebo menu smeruje na stránku s inštaláciou „menu apky" alebo žiadosťou o prihlásenie Google/Facebook účtom. Reštaurácia nepotrebuje váš Google účet. Prihlasovací formulár na tejto adrese kradne tokeny. Ak reštaurácia chce, aby ste sa prihlásili cez sociálnu sieť pre WiFi — opýtajte sa obsluhy na priame WiFi heslo.`,
+      commentary: `Stolový QR kód pre wifi alebo menu smeruje na stránku s inštaláciou „menu aplikácie" alebo žiadosťou o prihlásenie cez Google/Facebook účet. Reštaurácia nepotrebuje váš Google účet. Prihlasovací formulár na tejto adrese kradne prihlasovacie tokeny. Ak reštaurácia chce, aby ste sa prihlásili cez sociálnu sieť pre wifi — opýtajte sa obsluhy na priame heslo k wifi.`,
     },
     {
       kind: "example",
@@ -55,7 +55,7 @@ export const qrQuishingCourse: Course = {
         `Pod QR kódom je viditeľný okraj nálepky — originál sa líši farbou papiera.`,
         `URL po naskenovaní obsahuje podozrivé slová: „-sk-", „-platba-", „-verify-", „-login-".`,
         `Stránka po naskenovaní hneď žiada platobné údaje alebo prihlásenie cez Google/Facebook.`,
-        `QR zo SMS či emailu od dopravcu — legitimní dopravcovia posielajú len text-link, nie QR.`,
+        `QR zo SMS či e-mailu od dopravcu — legitímni dopravcovia posielajú len textový odkaz, nie QR.`,
         `Adresa doménou nesúvisí s prevádzkovateľom (napr. parkovisko, ale doména nie je mestská).`,
       ],
     },
@@ -66,19 +66,19 @@ export const qrQuishingCourse: Course = {
         `Pred otvorením URL si prečítajte adresu v prehliadači — väčšina telefónov ju ukáže pred navigáciou.`,
         `Na parkoviskách plaťte priamo kartou na automate, bez QR.`,
         `Dopravcov (Packeta, DHL…) overujte na ich domovskej stránke zadaním čísla zásielky — nie cez QR.`,
-        `Ak na stole v reštaurácii leží voľná nálepka so QR kódom, informujte obsluhu.`,
+        `Ak na stole v reštaurácii leží voľná nálepka s QR kódom, informujte obsluhu.`,
       ],
       dont: [
         `Nezadávajte platobné údaje na stránke otvorenej cez neoverený QR kód.`,
         `Neprihlasujte sa cez Google/Facebook na stránkach z QR kódov vo verejnom priestore.`,
-        `Neinštalujte apky navrhnuté QR kódom v reštaurácii alebo na parkovisku.`,
+        `Neinštalujte aplikácie ponúknuté QR kódom v reštaurácii alebo na parkovisku.`,
       ],
     },
     {
       kind: "scenario",
       heading: "Centrum mesta, sobota ráno",
       story: `Na parkovacom automate vedľa nákupného centra skenujete QR kód označený „Rýchla platba". Stránka vyzerá rovnako ako mestský portál. Pýta sa na číslo parkovacieho miesta, EČV a číslo karty vrátane CVV kódu.`,
-      right_action: `CVV kód parkovacie automaty nikdy nepytajú — to je jednoznačný znak podvodu. Zatvoríte stránku. Zaplatíte priamo kartou na automate, prípadne cez oficiálnu mestskú appku.`,
+      right_action: `CVV kód parkovacie automaty nikdy nepýtajú — to je jednoznačný znak podvodu. Zatvoríte stránku. Zaplatíte priamo kartou na automate, prípadne cez oficiálnu mestskú aplikáciu.`,
     },
   ],
   sources: [

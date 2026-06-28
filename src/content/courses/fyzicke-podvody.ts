@@ -15,7 +15,7 @@ export const fyzickePodvodyCourse: Course = {
     {
       kind: "intro",
       heading: "Pred obrazovkou si ostražitý. Čo pri dverách?",
-      body: `Phishing, smishing, vishing — väčšina ľudí vie, že hrozby číhajú online. Lenže podvody existujú aj v realite, tvárou v tvár. A práve tu zlyhávajú aj tí, ktorí by „na email nenaleteli". Fyzický kontakt buduje dôveru rýchlejšie než akákoľvek správa — útočník vidí tvoju reakciu, prispôsobuje sa v reálnom čase a využíva spoločenský tlak. Výsledok: rozhodneš sa rýchlejšie, menej kriticky. Táto kapitola ti ukáže najčastejšie scenáre a jednoduchú obranu.`,
+      body: `Phishing (podvodné vylákanie prihlasovacích či platobných údajov), smishing (phishing cez SMS), vishing (phishing cez telefonát) — väčšina ľudí vie, že hrozby číhajú online. Lenže podvody existujú aj v realite, tvárou v tvár. A práve tu zlyhávajú aj tí, ktorí by „na e-mail nenaleteli". Fyzický kontakt buduje dôveru rýchlejšie než akákoľvek správa — útočník vidí tvoju reakciu, prispôsobuje sa v reálnom čase a využíva spoločenský tlak. Výsledok: rozhodneš sa rýchlejšie a menej kriticky. Táto kapitola ti ukáže najčastejšie scenáre a jednoduchú obranu.`,
     },
     {
       kind: "example",
@@ -74,9 +74,9 @@ export const fyzickePodvodyCourse: Course = {
       kind: "do_dont",
       heading: "Ako sa brániť v reálnom živote",
       do: [
-        `Pýtajte si preukaz totožnosti a služobný odznak — każdý oprávnený technik/inšpektor ich má.`,
+        `Pýtajte si preukaz totožnosti a služobný odznak — každý oprávnený technik či inšpektor ich má.`,
         `Overte si číslo zákazníckej linky sami (z webu spoločnosti) a zavolajte cez neho.`,
-        `Nechajte vykonávateľa počkať von a overíte, kým mu otvoríte.`,
+        `Nechajte návštevníka počkať vonku a najprv si ho overte, kým mu otvoríte.`,
         `Výherné oznámenia porovnajte s oficiálnym webom spoločnosti.`,
         `Akúkoľvek podozrivú ponuku nahláste na www.minv.sk alebo 158.`,
       ],
@@ -89,9 +89,9 @@ export const fyzickePodvodyCourse: Course = {
     },
     {
       kind: "scenario",
-      heading: "Sobotný predpoludnie — zvonček",
-      story: `Práve ste doma sami. Zazvonili. Cez kukátko vidíte muža v reflexnej veste s tabletom. „Dobrý deň, SVB technik, kontrola plynovodného potrubia po havárii u susedov. Potrebujem prístup do panelu na chodbe a zobrať vzorku z vášho kohútika."`,
-      right_action: `Povedzte: „Počkajte, zavolám si overiť." Zavreli ste dvere (nezamkli ich, viete ich otvoriť). Cez google nájdete zákaznícku linku svojho plynárenského operátora. Zavoláte — a zistíte, že žiadna havarijná kontrola nebola plánovaná. Muža cez dvere informujete, že nevpustíte nikoho bez potvrdenia od spoločnosti, a zavoláte 158.`,
+      heading: "Sobotné predpoludnie — zvonček",
+      story: `Práve ste doma sami. Zazvonili. Cez kukátko vidíte muža v reflexnej veste s tabletom. „Dobrý deň, technik SVB, kontrola plynovodného potrubia po havárii u susedov. Potrebujem prístup do panelu na chodbe a zobrať vzorku z vášho kohútika."`,
+      right_action: `Povedzte: „Počkajte, zavolám si to overiť." Zavriete dvere (nezamknete ich, viete ich otvoriť). Cez Google nájdete zákaznícku linku svojho plynárenského operátora. Zavoláte — a zistíte, že žiadna havarijná kontrola nebola plánovaná. Muža cez dvere informujete, že nevpustíte nikoho bez potvrdenia od spoločnosti, a zavoláte 158.`,
     },
   ],
   sources: [
