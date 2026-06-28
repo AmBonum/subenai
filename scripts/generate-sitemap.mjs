@@ -33,6 +33,15 @@ const STATIC_ROUTES = [
   { loc: "/schools", priority: "0.7", changefreq: "monthly" },
   { loc: "/blog", priority: "0.8", changefreq: "daily" },
   { loc: "/sablony", priority: "0.8", changefreq: "weekly" },
+  // E54 — public docs portal. Keep these slugs in sync with the registry in
+  // src/content/docs/index.ts (asserted by tests/seo/docs-sitemap.test.ts).
+  { loc: "/docs", priority: "0.6", changefreq: "monthly" },
+  { loc: "/docs/co-je-subenai", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/ako-spravit-test", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/vysledky", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/kurzy", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/ucet", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/faq", priority: "0.5", changefreq: "monthly" },
 ];
 
 // E16.3 — blog category archive pages. The 15 categories are seeded in

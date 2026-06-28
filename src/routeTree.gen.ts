@@ -28,6 +28,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TestsIndexRouteImport } from './routes/tests.index'
 import { Route as TestIndexRouteImport } from './routes/test.index'
 import { Route as SablonyIndexRouteImport } from './routes/sablony.index'
+import { Route as DocsIndexRouteImport } from './routes/docs.index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as ContactFormIndexRouteImport } from './routes/contact-form.index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
@@ -46,6 +47,7 @@ import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
 import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
 import { Route as DocsAppRouteImport } from './routes/docs.app'
 import { Route as DocsAdminRouteImport } from './routes/docs.admin'
+import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
 import { Route as CoursesSlugRouteImport } from './routes/courses.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
@@ -214,6 +216,11 @@ const SablonyIndexRoute = SablonyIndexRouteImport.update({
   path: '/sablony/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/sablony.index.lazy').then((d) => d.Route))
+const DocsIndexRoute = DocsIndexRouteImport.update({
+  id: '/docs/',
+  path: '/docs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
@@ -304,6 +311,11 @@ const DocsAppRoute = DocsAppRouteImport.update({
 const DocsAdminRoute = DocsAdminRouteImport.update({
   id: '/docs/admin',
   path: '/docs/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsSlugRoute = DocsSlugRouteImport.update({
+  id: '/docs/$slug',
+  path: '/docs/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesSlugRoute = CoursesSlugRouteImport.update({
@@ -784,6 +796,7 @@ export interface FileRoutesByFullPath {
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/courses/$slug': typeof CoursesSlugRoute
+  '/docs/$slug': typeof DocsSlugRoute
   '/docs/admin': typeof DocsAdminRouteWithChildren
   '/docs/app': typeof DocsAppRouteWithChildren
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
@@ -802,6 +815,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/contact-form/': typeof ContactFormIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/docs/': typeof DocsIndexRoute
   '/sablony/': typeof SablonyIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
@@ -888,6 +902,7 @@ export interface FileRoutesByTo {
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/courses/$slug': typeof CoursesSlugRoute
+  '/docs/$slug': typeof DocsSlugRoute
   '/docs/admin': typeof DocsAdminRouteWithChildren
   '/docs/app': typeof DocsAppRouteWithChildren
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
@@ -905,6 +920,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/contact-form': typeof ContactFormIndexRoute
   '/courses': typeof CoursesIndexRoute
+  '/docs': typeof DocsIndexRoute
   '/sablony': typeof SablonyIndexRoute
   '/test': typeof TestIndexRoute
   '/tests': typeof TestsIndexRoute
@@ -996,6 +1012,7 @@ export interface FileRoutesById {
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/courses/$slug': typeof CoursesSlugRoute
+  '/docs/$slug': typeof DocsSlugRoute
   '/docs/admin': typeof DocsAdminRouteWithChildren
   '/docs/app': typeof DocsAppRouteWithChildren
   '/login_/enroll-2fa': typeof LoginEnroll2faRoute
@@ -1014,6 +1031,7 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/contact-form/': typeof ContactFormIndexRoute
   '/courses/': typeof CoursesIndexRoute
+  '/docs/': typeof DocsIndexRoute
   '/sablony/': typeof SablonyIndexRoute
   '/test/': typeof TestIndexRoute
   '/tests/': typeof TestsIndexRoute
@@ -1107,6 +1125,7 @@ export interface FileRouteTypes {
     | '/auth/reset-password'
     | '/blog/$slug'
     | '/courses/$slug'
+    | '/docs/$slug'
     | '/docs/admin'
     | '/docs/app'
     | '/login/enroll-2fa'
@@ -1125,6 +1144,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/contact-form/'
     | '/courses/'
+    | '/docs/'
     | '/sablony/'
     | '/test/'
     | '/tests/'
@@ -1211,6 +1231,7 @@ export interface FileRouteTypes {
     | '/auth/reset-password'
     | '/blog/$slug'
     | '/courses/$slug'
+    | '/docs/$slug'
     | '/docs/admin'
     | '/docs/app'
     | '/login/enroll-2fa'
@@ -1228,6 +1249,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/contact-form'
     | '/courses'
+    | '/docs'
     | '/sablony'
     | '/test'
     | '/tests'
@@ -1318,6 +1340,7 @@ export interface FileRouteTypes {
     | '/auth/reset-password'
     | '/blog/$slug'
     | '/courses/$slug'
+    | '/docs/$slug'
     | '/docs/admin'
     | '/docs/app'
     | '/login_/enroll-2fa'
@@ -1336,6 +1359,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/contact-form/'
     | '/courses/'
+    | '/docs/'
     | '/sablony/'
     | '/test/'
     | '/tests/'
@@ -1393,6 +1417,7 @@ export interface RootRouteChildren {
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CoursesSlugRoute: typeof CoursesSlugRoute
+  DocsSlugRoute: typeof DocsSlugRoute
   DocsAdminRoute: typeof DocsAdminRouteWithChildren
   DocsAppRoute: typeof DocsAppRouteWithChildren
   LoginEnroll2faRoute: typeof LoginEnroll2faRoute
@@ -1409,6 +1434,7 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   ContactFormIndexRoute: typeof ContactFormIndexRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  DocsIndexRoute: typeof DocsIndexRoute
   SablonyIndexRoute: typeof SablonyIndexRoute
   TestIndexRoute: typeof TestIndexRoute
   TestsIndexRoute: typeof TestsIndexRoute
@@ -1552,6 +1578,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SablonyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/docs/': {
+      id: '/docs/'
+      path: '/docs'
+      fullPath: '/docs/'
+      preLoaderRoute: typeof DocsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/courses/': {
       id: '/courses/'
       path: '/courses'
@@ -1676,6 +1709,13 @@ declare module '@tanstack/react-router' {
       path: '/docs/admin'
       fullPath: '/docs/admin'
       preLoaderRoute: typeof DocsAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/$slug': {
+      id: '/docs/$slug'
+      path: '/docs/$slug'
+      fullPath: '/docs/$slug'
+      preLoaderRoute: typeof DocsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/$slug': {
@@ -2465,6 +2505,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   BlogSlugRoute: BlogSlugRoute,
   CoursesSlugRoute: CoursesSlugRoute,
+  DocsSlugRoute: DocsSlugRoute,
   DocsAdminRoute: DocsAdminRouteWithChildren,
   DocsAppRoute: DocsAppRouteWithChildren,
   LoginEnroll2faRoute: LoginEnroll2faRoute,
@@ -2481,6 +2522,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   ContactFormIndexRoute: ContactFormIndexRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  DocsIndexRoute: DocsIndexRoute,
   SablonyIndexRoute: SablonyIndexRoute,
   TestIndexRoute: TestIndexRoute,
   TestsIndexRoute: TestsIndexRoute,
