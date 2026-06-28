@@ -220,7 +220,7 @@ const DocsIndexRoute = DocsIndexRouteImport.update({
   id: '/docs/',
   path: '/docs/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/docs.index.lazy').then((d) => d.Route))
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
@@ -317,7 +317,7 @@ const DocsSlugRoute = DocsSlugRouteImport.update({
   id: '/docs/$slug',
   path: '/docs/$slug',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/docs.$slug.lazy').then((d) => d.Route))
 const CoursesSlugRoute = CoursesSlugRouteImport.update({
   id: '/courses/$slug',
   path: '/courses/$slug',

@@ -5,6 +5,7 @@
   "chunks": {
     "react-pdf.browser": 520,
     "index": 270,
+    "BlogPostBody": 60,
     "vendor-charts": 120,
     "vendor-react": 90,
     "courses-content": 75,

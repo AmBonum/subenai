@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { SITE_ORIGIN } from "@/config/site";
-import { DocsIndex } from "@/components/docs/DocsIndex";
 
 // E54.4 — public documentation hub. Indexable (unlike /docs/app and
-// /docs/admin, which stay noindex).
+// /docs/admin, which stay noindex). Component lives in docs.index.lazy.tsx.
 const DOCS_URL = `${SITE_ORIGIN}/docs`;
 const TITLE = "Dokumentácia · subenai";
 const DESC = "Kde čo nájdeš a ako subenai funguje — testy, kurzy, účet a ďalšie.";
@@ -23,5 +22,4 @@ export const Route = createFileRoute("/docs/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: DocsIndex,
 });
