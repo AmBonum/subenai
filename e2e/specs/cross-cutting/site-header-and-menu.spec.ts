@@ -6,8 +6,18 @@
 // "Pre školy a lektorov" → /schools, "Podpora projektu" → /support). The
 // "Školenia" panel is gone (/courses + /blog merged into the single flat
 // "akademia" link → /academy). The mobile sheet renders the panel item as an
-// accordion and flat items as links. The desktop/mobile breakpoint is 820 px
-// (tablet-overflow fix, 2026-05-19).
+// accordion and flat items as links.
+//
+// E56 (mobile-nav redesign): on mobile the primary nav is a fixed bottom tab
+// bar (`mobile-bottomnav-root`, hidden from `lg` up) with five items —
+// home / tests / quicktest (raised centre CTA → /test) / academy / menu. The
+// mobile top header is now just the logo (the old centre CTA
+// `header-cta-mobile-bar` is removed). The hamburger (`header-mobile-trigger`)
+// is DESKTOP-ONLY now: hidden below 1024 px, visible at ≥ 1024 (Tailwind
+// `lg`). The sheet is opened on mobile from the bottom-nav Menu button and on
+// desktop from the hamburger — the open state is shared, the content
+// identical. The desktop/mobile breakpoint is now 1024 px (the `lg`
+// breakpoint), not 820.
 
 import { test, expect } from "../../fixtures/base";
 import { primeConsent } from "../../fixtures/consent";
@@ -105,21 +115,23 @@ test.describe("Site header and responsive navigation menu", () => {
       });
     });
 
-    test("TC-04: The mobile hamburger opens a Sheet containing every nav item plus the CTA", async ({
+    test("TC-04: The bottom-nav Menu button opens a Sheet containing every nav item plus the CTA", async ({
       page,
       header,
+      bottomNav,
     }) => {
       await test.step("Set mobile viewport (375×667) and open the home page", async () => {
         await page.setViewportSize({ width: 375, height: 667 });
         await page.goto("/");
       });
 
-      await test.step("Verify the desktop nav is hidden and the hamburger is visible", async () => {
+      await test.step("Verify the desktop nav + hamburger are hidden and the bottom nav is visible", async () => {
         await expect(header.desktopNav).toBeHidden();
-        await expect(header.hamburgerTrigger).toBeVisible();
+        await expect(header.hamburgerTrigger).toBeHidden();
+        await expect(bottomNav.root).toBeVisible();
       });
 
-      await test.step("Open the mobile sheet", async () => {
+      await test.step("Open the mobile sheet via the bottom-nav Menu button", async () => {
         await header.openMobileMenu();
       });
 
@@ -134,15 +146,16 @@ test.describe("Site header and responsive navigation menu", () => {
         await expect(header.sheetCtaLink).toHaveText(/Spustiť test/);
       });
 
-      await test.step("Close the sheet and verify the hamburger is visible again", async () => {
+      await test.step("Close the sheet and verify the bottom nav is still visible", async () => {
         await header.closeMobileMenu();
-        await expect(header.hamburgerTrigger).toBeVisible();
+        await expect(bottomNav.root).toBeVisible();
       });
     });
 
     test("TC-05: Clicking a nav link inside the Sheet navigates and auto-closes the menu", async ({
       page,
       header,
+      bottomNav,
     }) => {
       await test.step("Set mobile viewport, open the home page and open the sheet", async () => {
         await page.setViewportSize({ width: 375, height: 667 });
@@ -158,7 +171,7 @@ test.describe("Site header and responsive navigation menu", () => {
       await test.step("Verify navigation to /tests and that the sheet auto-closed", async () => {
         await expect(page).toHaveURL(/\/tests$/);
         await expect(header.sheet).toBeHidden();
-        await expect(header.hamburgerTrigger).toBeVisible();
+        await expect(bottomNav.root).toBeVisible();
       });
     });
 
@@ -213,6 +226,44 @@ test.describe("Site header and responsive navigation menu", () => {
         await expect(header.sheetNavLink("podpora")).not.toHaveClass(/bg-primary\/10/);
       });
     });
+
+    test("TC-08b: The mobile bottom nav shows all five items with correct hrefs and marks the active tab", async ({
+      page,
+      header,
+      bottomNav,
+    }) => {
+      await test.step("Set mobile viewport (375×667) and open /academy", async () => {
+        await page.setViewportSize({ width: 375, height: 667 });
+        await page.goto("/academy");
+      });
+
+      await test.step("Verify the bottom nav is visible and the desktop nav + hamburger are hidden", async () => {
+        await expect(bottomNav.root).toBeVisible();
+        await expect(header.desktopNav).toBeHidden();
+        await expect(header.hamburgerTrigger).toBeHidden();
+      });
+
+      await test.step("Verify the four link items carry their correct hrefs", async () => {
+        await expect(bottomNav.home).toHaveAttribute("href", "/");
+        await expect(bottomNav.tests).toHaveAttribute("href", "/tests");
+        await expect(bottomNav.quicktest).toHaveAttribute("href", "/test");
+        await expect(bottomNav.academy).toHaveAttribute("href", "/academy");
+        await expect(bottomNav.menu).toBeVisible();
+      });
+
+      await test.step("Verify only the Akadémia tab claims aria-current=page on /academy", async () => {
+        await expect(bottomNav.academy).toHaveAttribute("aria-current", "page");
+        await expect(bottomNav.home).not.toHaveAttribute("aria-current", "page");
+        await expect(bottomNav.tests).not.toHaveAttribute("aria-current", "page");
+        await expect(bottomNav.quicktest).not.toHaveAttribute("aria-current", "page");
+      });
+
+      await test.step("Verify /test activates the quicktest tab but NOT the tests tab", async () => {
+        await page.goto("/test");
+        await expect(bottomNav.quicktest).toHaveAttribute("aria-current", "page");
+        await expect(bottomNav.tests).not.toHaveAttribute("aria-current", "page");
+      });
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -235,15 +286,20 @@ test.describe("Site header and responsive navigation menu", () => {
       });
     });
 
-    test("TC-10: The desktop nav is not visible on a mobile viewport", async ({ page, header }) => {
+    test("TC-10: The desktop nav is not visible on a mobile viewport", async ({
+      page,
+      header,
+      bottomNav,
+    }) => {
       await test.step("Set mobile viewport and open the home page", async () => {
         await page.setViewportSize({ width: 375, height: 667 });
         await page.goto("/");
       });
 
-      await test.step("Verify the desktop nav is hidden and the hamburger is visible", async () => {
+      await test.step("Verify the desktop nav + hamburger are hidden and the bottom nav is visible", async () => {
         await expect(header.desktopNav).toBeHidden();
-        await expect(header.hamburgerTrigger).toBeVisible();
+        await expect(header.hamburgerTrigger).toBeHidden();
+        await expect(bottomNav.root).toBeVisible();
       });
     });
 
@@ -273,6 +329,7 @@ test.describe("Site header and responsive navigation menu", () => {
     test("TC-12: Repeatedly opening and closing the mobile Sheet does not leak state", async ({
       page,
       header,
+      bottomNav,
     }) => {
       const errors: string[] = [];
 
@@ -291,9 +348,9 @@ test.describe("Site header and responsive navigation menu", () => {
         }
       });
 
-      await test.step("Verify no console errors fired and the hamburger is still usable", async () => {
+      await test.step("Verify no console errors fired and the bottom-nav Menu button is still usable", async () => {
         expect(errors).toHaveLength(0);
-        await expect(header.hamburgerTrigger).toBeVisible();
+        await expect(bottomNav.menu).toBeVisible();
       });
     });
 
@@ -321,28 +378,31 @@ test.describe("Site header and responsive navigation menu", () => {
   // ---------------------------------------------------------------------------
 
   test.describe("Edge cases", () => {
-    test("TC-14: Breakpoint at exactly 820 px swaps desktop nav and hamburger", async ({
+    test("TC-14: Breakpoint at exactly 1024 px (lg) swaps the bottom nav/hamburger and desktop nav", async ({
       page,
       header,
+      bottomNav,
     }) => {
       await test.step("Open the home page", async () => {
         await page.goto("/");
       });
 
-      await test.step("At 819 px verify the hamburger is visible and the desktop nav is hidden", async () => {
-        await page.setViewportSize({ width: 819, height: 800 });
-        await expect(header.hamburgerTrigger).toBeVisible();
+      await test.step("At 1023 px verify the hamburger is hidden, the bottom nav is visible and the desktop nav is hidden", async () => {
+        await page.setViewportSize({ width: 1023, height: 800 });
+        await expect(header.hamburgerTrigger).toBeHidden();
+        await expect(bottomNav.root).toBeVisible();
         await expect(header.desktopNav).toBeHidden();
       });
 
-      const logoBeforeResize = await test.step("Capture the logo position at 819 px", async () => {
+      const logoBeforeResize = await test.step("Capture the logo position at 1023 px", async () => {
         return header.logoLink.boundingBox();
       });
 
-      await test.step("Resize to 820 px and verify the desktop nav appears while the hamburger hides", async () => {
-        await page.setViewportSize({ width: 820, height: 800 });
+      await test.step("Resize to 1024 px and verify the desktop nav + hamburger appear while the bottom nav hides", async () => {
+        await page.setViewportSize({ width: 1024, height: 800 });
         await expect(header.desktopNav).toBeVisible();
-        await expect(header.hamburgerTrigger).toBeHidden();
+        await expect(header.hamburgerTrigger).toBeVisible();
+        await expect(bottomNav.root).toBeHidden();
       });
 
       await test.step("Verify the logo's x-position barely shifts across the breakpoint", async () => {
@@ -408,6 +468,7 @@ test.describe("Site header and responsive navigation menu", () => {
     test("TC-17: Focus trap inside the mobile Sheet and Escape closes it", async ({
       page,
       header,
+      bottomNav,
     }) => {
       await test.step("Set mobile viewport, open the home page and open the sheet", async () => {
         await page.setViewportSize({ width: 375, height: 667 });
@@ -419,39 +480,41 @@ test.describe("Site header and responsive navigation menu", () => {
         await expect(header.sheetCloseButton).toBeFocused();
       });
 
-      await test.step("Press Escape and verify the sheet closes and focus returns to the hamburger", async () => {
+      await test.step("Press Escape and verify the sheet closes and focus returns to the bottom-nav Menu button", async () => {
         await page.keyboard.press("Escape");
         await expect(header.sheet).toBeHidden();
-        await expect(header.hamburgerTrigger).toBeFocused();
+        await expect(bottomNav.menu).toBeFocused();
       });
     });
 
-    test("TC-18: Required ARIA attributes are present and correct", async ({ page, header }) => {
+    test("TC-18: Required ARIA attributes are present and correct", async ({
+      page,
+      header,
+      bottomNav,
+    }) => {
       await test.step("Set mobile viewport and open the home page", async () => {
         await page.setViewportSize({ width: 375, height: 667 });
         await page.goto("/");
       });
 
-      await test.step("Verify the navigation landmark and the trigger button have correct accessible names", async () => {
+      await test.step("Verify the navigation landmark, logo and the bottom-nav Menu button have correct accessible names + aria-haspopup", async () => {
         await expect(header.navByRole).toHaveAccessibleName(/Hlavná navigácia/i);
         await expect(header.logoLink).toHaveAccessibleName(/subenai — domov/i);
-        await expect(header.hamburgerTrigger).toHaveAccessibleName(/Otvoriť menu/i);
+        await expect(bottomNav.menu).toHaveAttribute("aria-haspopup", "dialog");
       });
 
-      await test.step("Open the sheet and verify the close button + CTA accessible names", async () => {
+      await test.step("Open the sheet and verify the bottom-nav Menu button is expanded + close button and CTA accessible names", async () => {
         await header.openMobileMenu();
+        await expect(bottomNav.menu).toHaveAttribute("aria-expanded", "true");
         await expect(header.sheetCloseButton).toHaveAccessibleName(/Zavrieť menu/i);
         await expect(header.sheetCtaLink).toHaveAccessibleName(/Spustiť rýchly test/i);
-      });
-
-      await test.step("Verify the decorative hamburger icon is hidden from assistive tech", async () => {
-        await expect(header.hamburgerIcon).toHaveAttribute("aria-hidden", "true");
       });
     });
 
     test("TC-19: Browser back button after the Sheet auto-closed on navigation", async ({
       page,
       header,
+      bottomNav,
     }) => {
       await test.step("Set mobile viewport, open the home page and open the sheet", async () => {
         await page.setViewportSize({ width: 375, height: 667 });
@@ -469,7 +532,7 @@ test.describe("Site header and responsive navigation menu", () => {
         await page.goBack();
         await expect(page).toHaveURL(/\/$/);
         await expect(header.sheet).toBeHidden();
-        await expect(header.hamburgerTrigger).toBeVisible();
+        await expect(bottomNav.root).toBeVisible();
       });
     });
 

@@ -115,8 +115,23 @@ export class SiteHeader {
   // Mobile sheet
   // ---------------------------------------------------------------------------
 
+  /**
+   * E56 — the hamburger is now DESKTOP-ONLY (`hidden … lg:inline-flex`):
+   * visible at width ≥ 1024 (Tailwind `lg`), hidden below. On mobile the
+   * sheet is opened from the bottom-nav Menu button instead (the open state
+   * is shared between both entry points).
+   */
   get hamburgerTrigger(): Locator {
     return this.page.getByTestId("header-mobile-trigger");
+  }
+
+  /**
+   * E56 — the bottom-nav Menu button (the mobile entry point into the shared
+   * sheet). Lives in `MobileBottomNav` too; exposed here so `openMobileMenu`
+   * can open the sheet the mobile way without the spec wiring a second POM.
+   */
+  get bottomNavMenuButton(): Locator {
+    return this.page.getByTestId("mobile-bottomnav-item-menu");
   }
 
   /** Decorative hamburger icon inside the trigger button. */
@@ -173,8 +188,15 @@ export class SiteHeader {
   // Actions
   // ---------------------------------------------------------------------------
 
+  /**
+   * E56 — opens the sheet the MOBILE way: clicks the bottom-nav Menu button
+   * (the hamburger is desktop-only now). The sheet content is identical
+   * regardless of which entry point opened it. Specs that drive the sheet at
+   * a mobile viewport call this; desktop specs click `hamburgerTrigger`
+   * directly.
+   */
   async openMobileMenu(): Promise<void> {
-    await this.hamburgerTrigger.click();
+    await this.bottomNavMenuButton.click();
     await this.sheet.waitFor({ state: "visible" });
     // Wait out the slide-in animation — interacting (click / Escape) while
     // the sheet still animates races Radix focus management and Playwright's
