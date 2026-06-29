@@ -26,6 +26,10 @@ export class DsrFormPage extends BasePage {
     return this.page.getByTestId("dsr-form-submit-button");
   }
 
+  get historyCard(): Locator {
+    return this.page.getByTestId("app-legal-dsr-history-card");
+  }
+
   get successBanner(): Locator {
     return this.page.getByTestId("dsr-form-success-banner");
   }

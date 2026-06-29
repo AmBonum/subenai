@@ -16,6 +16,11 @@ export class TestsIndexPage extends BasePage {
     return this.page.getByTestId("tests-catalog-grid");
   }
 
+  /** The FAQ accordion below the catalog. */
+  get faqSection(): Locator {
+    return this.page.getByTestId("tests-faq-section");
+  }
+
   packCards(): Locator {
     // The grid is a semantic <ul role="list"> (E37 Phase I); each card
     // root is the direct child of its <li> wrapper. The child combinator
