@@ -839,14 +839,16 @@ export const QUESTIONS: Question[] = [
   {
     id: "h-prince-1",
     category: "honeypot",
-    difficulty: "easy",
-    prompt: "Email od nigerijského princa, ktorý ti pošle 10 mil. USD za poplatok 200€. Akcia?",
+    difficulty: "medium",
+    prompt:
+      "Email z „Fondu na ochranu obetí podvodov“: evidujú ti odškodné 9 400 €, stačí uhradiť „uvoľňovací poplatok“ 180 €. Akcia?",
     options: [
-      bad("a", "Pošlem 200€", "critical"),
-      bad("b", "Odpíšem — môže byť legit", "medium"),
-      ok("c", "Zmažem — 419 scam"),
+      bad("a", "Uhradím 180 € — chcem odškodné", "critical"),
+      bad("b", "Pošlem im OP a číslo účtu na overenie", "critical"),
+      ok("c", "Zmažem — recovery scam, žiadny fond nepýta poplatok vopred"),
     ],
-    explanation: "419 scam (princ z Nigérie) je učebnicový podvod. Nigéria neexportuje princov.",
+    explanation:
+      "Recovery/advance-fee scam (nástupca „nigerijského princa“) cieli najmä na ľudí, ktorí už raz naleteli. Žiadny seriózny fond ani úrad nepýta poplatok vopred za vyplatenie peňazí.",
   },
   {
     id: "h-vyhra-1",
@@ -1161,15 +1163,15 @@ export const QUESTIONS: Question[] = [
   {
     id: "h-poslednavola-1",
     category: "honeypot",
-    difficulty: "easy",
+    difficulty: "medium",
     prompt:
-      'Email: „Vaše dedičstvo 1,2 mil. EUR po anglickom tete čaká. Pošlite OP a 350€ na notárske poplatky."',
+      "Email od „advokátskej kancelárie“: po nebohom klientovi s rovnakým priezviskom ako ty ostalo 1,2 mil. €. Stačí podpísať a poslať OP + 350 € na poplatky. Akcia?",
     options: [
-      bad("a", "Pošlem — nevedel som o tete", "critical"),
-      ok("b", "Zmažem — inheritance scam"),
+      bad("a", "Pošlem OP a 350 € — možno sme príbuzní", "critical"),
+      ok("b", "Zmažem — inheritance scam, cudzí advokát ťa sám nekontaktuje kvôli dedičstvu"),
     ],
     explanation:
-      "Inheritance scam — variant nigerijského princa. Ak nemáš anglickú tetu, nemáš ani dedičstvo.",
+      "Inheritance scam: hrá na priezvisko a chamtivosť. Skutočné dedičské konanie vedie notár cez súd, nie neznámy „advokát“ z e-mailu žiadajúci poplatok a kópiu dokladu vopred.",
   },
   {
     id: "p-email-banka-2fa-1",
@@ -1248,14 +1250,15 @@ export const QUESTIONS: Question[] = [
   {
     id: "f-mr-beast-1",
     category: "fake_vs_real",
-    difficulty: "easy",
-    prompt: 'Insta reklama: „MrBeast rozdáva 1000$ prvým 100 ľudom! Stačí kliknúť."',
+    difficulty: "medium",
+    prompt:
+      "YouTube „live“: účet vyzerá ako Elon Musk, v popise „Pošli 0,1 ETH a vrátime ti 0,2 ETH“. Reaguješ?",
     options: [
-      bad("a", "Kliknem — som rýchly", "critical"),
-      ok("b", "Ignorujem — celebrity giveaway scam"),
+      bad("a", "Pošlem 0,1 ETH — znie to ako rýchly zárobok", "critical"),
+      ok("b", "Ignorujem — crypto-doubling giveaway je vždy podvod"),
     ],
     explanation:
-      "Celebrity giveaway scam (MrBeast, Musk, Bezos…) je všade. Žiadny prevod ti nepríde.",
+      "Falošné „giveaway“ livestreamy (Musk, Tesla, brandy) bežia v slučke z ukradnutých účtov. Nikto ti nepošle dvojnásobok — kryptoprevod je nezvratný a peniaze sú nenávratne preč.",
   },
   {
     id: "h-extortion-1",
@@ -1328,7 +1331,7 @@ export const QUESTIONS: Question[] = [
     prompt: "Si na tejto adrese po kliku v emaile.",
     visual: { kind: "url", url: "https://login.tatrabanka.sk.user-portal.io" },
     options: [
-      bad("a", "Pravý SLSP — vidím tatrabanka.sk", "critical"),
+      bad("a", "Pravá Tatra banka — vidím tatrabanka.sk", "critical"),
       ok("b", "Phishing — pravá doména je `user-portal.io`"),
     ],
     explanation:
@@ -1369,7 +1372,7 @@ export const QUESTIONS: Question[] = [
       'Predávaš laptop za 500€. Kupec pošle 700€ a žiada vrátiť 200€ späť, lebo „omylom". Vrátiš?',
     options: [
       bad("a", "Vrátim — slušné", "critical"),
-      ok("b", "Počkám 2 týždne, či sa pôvodný prevod nestorno­vať"),
+      ok("b", "Nevrátim — počkám, či sa pôvodný prevod nestornuje (kradnutá karta)"),
     ],
     explanation:
       "Overpayment scam: pôvodný prevod sa stornuje (kradnutá karta), ty vrátiš reálne peniaze a stratíš laptop.",
@@ -1395,15 +1398,15 @@ export const QUESTIONS: Question[] = [
     id: "u-suffix-tld-1",
     category: "url",
     difficulty: "medium",
-    prompt: "Doména s ktorou TLD je najbezpečnejšia?",
+    prompt: "Ktoré tvrdenie o koncovke domény (TLD) je pravdivé?",
     options: [
-      bad("a", ".click", "medium"),
-      bad("b", ".zip", "medium"),
-      ok("c", ".sk od overenej značky"),
-      bad("d", ".online", "medium"),
+      bad("a", "`.sk` zaručuje, že stránka je dôveryhodná slovenská firma", "medium"),
+      bad("b", "`https://` v adrese znamená, že stránka nie je podvod", "medium"),
+      ok("c", "Žiadna TLD nezaručuje bezpečnosť — rozhoduje overená doména"),
+      bad("d", "`.com` je vždy bezpečnejšia ako `.click` či `.zip`", "minor"),
     ],
     explanation:
-      'Žiadna TLD nie je „bezpečná" sama o sebe, ale `.click`, `.zip`, `.online`, `.app` sú lacné a často zneužívané scammermi.',
+      "Aj phisheri si kúpia `.sk` doménu a HTTPS certifikát (zdarma). TLD ani zámok v adrese nič nezaručujú — over si presnú doménu vľavo od prvého `/`.",
   },
   {
     id: "f-investment-2",
@@ -1647,7 +1650,10 @@ export const QUESTIONS: Question[] = [
     difficulty: "hard",
     prompt: "Adresa v prehliadači:",
     visual: { kind: "url", url: "https://www.tatrabaπka.sk/auth" },
-    options: [bad("a", "Pravý SLSP", "critical"), ok("b", "Phishing — `π` (pi) namiesto `n`")],
+    options: [
+      bad("a", "Pravá Tatra banka", "critical"),
+      ok("b", "Phishing — `π` (pi) namiesto `n`"),
+    ],
     explanation:
       "Unicode triky: matematické či grécke písmená, ktoré vyzerajú podobne ako latinské. Browser ti ich len zriedka označí.",
   },
@@ -4530,6 +4536,226 @@ export const QUESTIONS: Question[] = [
     ],
     explanation:
       "Presmerovanie na `slovensko.sk` je legitímne — je to oficiálne štátne SSO, cez ktoré sa prihlasuje aj eZdravie. Dôležitá je presná doména a HTTPS, nie reflexívne odmietnutie.",
+  },
+
+  // ── E60 — current Slovak scams (2024–2025): harder, hyper-real ───────────────
+  {
+    id: "e60-slsp-sms-call-combo-1",
+    category: "phishing",
+    difficulty: "hard",
+    prompt:
+      "Príde SMS od „SLSP“. O minútu volá „pracovník oddelenia podvodov“ z čísla, ktoré sa zhoduje s číslom banky, a žiada previesť peniaze na „bezpečný účet“. Čo spravíš?",
+    visual: {
+      kind: "sms",
+      sender: "SLSP",
+      body: "Zaznamenali sme podozrivú platbu 412 € v Holandsku. Ak ste to neboli vy, overte:",
+      link: "https://slsp-overenie.sk/blok",
+    },
+    options: [
+      bad("a", "Prevediem — chcem zachrániť úspory", "critical"),
+      bad("b", "Nadiktujem kód z SMS, nech platbu zruší", "critical"),
+      ok("c", "Zložím a zavolám banke na číslo zo zadnej strany karty"),
+    ],
+    explanation:
+      "Najčastejší slovenský scam 2024–25: SMS + nadväzný hovor zo „spoofnutého“ čísla banky. Banka NIKDY nepýta kódy ani prevod na „bezpečný účet“ — taký účet neexistuje. Číslo na displeji sa dá sfalšovať.",
+  },
+  {
+    id: "e60-365bank-vishing-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "Volá „bezpečnostné oddelenie 365.bank“. Číslo na displeji sedí s oficiálnym. Žiada, aby si v appke potvrdil „ochrannú“ notifikáciu. Akcia?",
+    visual: {
+      kind: "call",
+      caller: "365.bank",
+      number: "+421 2 5965 8331",
+      hint: "číslo sa zhoduje s oficiálnym — ale dá sa sfalšovať (spoofing)",
+    },
+    options: [
+      bad("a", "Potvrdím — veď volá banka z pravého čísla", "critical"),
+      ok("b", "Zložím a sám zavolám banke cez číslo z appky/karty"),
+      bad("c", "Prečítam mu kód z notifikácie, nech to vyrieši", "critical"),
+    ],
+    explanation:
+      "Caller ID sa dá sfalšovať — zhodné číslo nič nedokazuje. Potvrdenie notifikácie = schválenie útočníkovho prihlásenia alebo platby. Banka ti nikdy nezavolá, aby si „potvrdil ochranu“.",
+  },
+  {
+    id: "e60-gls-redelivery-1",
+    category: "phishing",
+    difficulty: "medium",
+    prompt: "SMS o opätovnom doručení balíka GLS s drobným poplatkom. Klikneš?",
+    visual: {
+      kind: "sms",
+      sender: "GLS",
+      body: "Vaša zásielka sa nepodarila doručiť. Doplaťte 1,45 € za nové doručenie:",
+      link: "https://gls-redelivery.com/sk",
+    },
+    options: [
+      bad("a", "Zaplatím — je to len pár centov", "critical"),
+      ok("b", "Overím balík cez oficiálnu GLS appku/web podľa tracking čísla"),
+    ],
+    explanation:
+      "GLS doména je `gls-group.com` / `gls-slovakia.sk`. Kuriéri nepýtajú doplatky cez odkaz v SMS. `gls-redelivery.com` je phishing — karta ide priamo scammerovi.",
+  },
+  {
+    id: "e60-sps-incomplete-address-1",
+    category: "phishing",
+    difficulty: "medium",
+    prompt: "SMS od „SPS“: adresa vraj nie je úplná, treba ju doplniť cez odkaz. Spravíš to?",
+    visual: {
+      kind: "sms",
+      sender: "SPS",
+      body: "Vaša adresa je neúplná, zásielku nevieme doručiť. Doplňte údaje:",
+      link: "https://sps-update.info/adresa",
+    },
+    options: [
+      bad("a", "Doplním adresu aj kartu pre „overenie“", "critical"),
+      ok("b", "Ignorujem — kuriér si adresu overí telefonicky, nie cez link"),
+    ],
+    explanation:
+      "Klasický trik „neúplná adresa“. Stránka pýta adresu a potom kartu na „groš“ overovaciu platbu. Reálny kuriér rieši adresu cez svoj oficiálny portál alebo telefonát, nie cez `.info` doménu.",
+  },
+  {
+    id: "e60-whatsapp-dcera-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "WhatsApp z neznámeho čísla: „Mami, rozbil sa mi telefón, toto je moje nové číslo. Súrne potrebujem 480 € na nový, pošli na tento účet, vrátim ti.“ Akcia?",
+    visual: {
+      kind: "text",
+      label: "WhatsApp · neznáme číslo +421 949 ***",
+      body: "Mami, rozbil sa mi telefón, toto je nové číslo 🙏 Súrne potrebujem 480 € na nový, pošli prosím na IBAN, vrátim ti hneď.",
+    },
+    options: [
+      bad("a", "Pošlem hneď — veď je to dieťa v núdzi", "critical"),
+      bad("b", "Najprv napíšem na to nové číslo, či je to naozaj ona", "medium"),
+      ok("c", "Zavolám na jej staré, známe číslo a overím to"),
+    ],
+    explanation:
+      "Scam „dcéra/syn v núdzi“ (hi-mum). Útočník píše z cudzieho čísla — overovať naň nemá zmysel, odpovie ti scammer. Vždy zavolaj na pôvodné známe číslo alebo over otázkou, ktorú vie len ona.",
+  },
+  {
+    id: "e60-booking-inapp-pay-1",
+    category: "fake_vs_real",
+    difficulty: "hard",
+    prompt:
+      "V appke Booking.com ti hotel pošle správu: kvôli „overeniu rezervácie“ zadaj kartu cez priložený odkaz, inak rezerváciu zrušia. Spravíš to?",
+    visual: {
+      kind: "text",
+      label: "Booking.com · správa od ubytovania",
+      body: "Pre potvrdenie rezervácie prosím overte platobnú kartu do 12 h cez tento odkaz, inak bude rezervácia zrušená: secure-booking-verify.com/r/8821",
+    },
+    options: [
+      bad("a", "Zadám kartu — nechcem prísť o rezerváciu", "critical"),
+      ok("b", "Neklikám — platby riešim len cez oficiálne Booking, kontaktujem podporu"),
+    ],
+    explanation:
+      "Útočníci kompromitujú hotelové konto a píšu cez pravú appku. Booking ani hotel nepýtajú kartu cez externý odkaz v chate. `secure-booking-verify.com` nie je Booking.com.",
+  },
+  {
+    id: "e60-qr-efaktura-1",
+    category: "scenario",
+    difficulty: "medium",
+    prompt:
+      "V schránke máš list „e-faktúra za energie“: preplatok ti vraj vrátia, stačí naskenovať QR a zadať údaje karty. Spravíš to?",
+    visual: {
+      kind: "text",
+      label: "List v schránke · „ZSE — vyúčtovanie“",
+      body: "Vznikol vám preplatok 38,20 €. Pre vrátenie naskenujte QR kód a zadajte číslo karty a CVV.",
+    },
+    options: [
+      bad("a", "Naskenujem QR a zadám kartu — chcem preplatok", "critical"),
+      ok("b", "Preplatok mi prídu sami na účet; QR ignorujem a overím v mojom účte ZSE"),
+    ],
+    explanation:
+      "Quishing (QR phishing). Na vrátenie preplatku nikdy netreba CVV — to slúži len na platby OD teba. Dodávateľ pošle preplatok na účet zo zmluvy. Over si to v oficiálnom zákazníckom portáli.",
+  },
+  {
+    id: "e60-celebrity-crypto-1",
+    category: "fake_vs_real",
+    difficulty: "hard",
+    prompt:
+      "Na Facebooku vidíš video, kde známa slovenská tvár (a logo NBS) odporúča „AI obchodnú platformu“ so zaručeným ziskom. Stačí vraj vložiť 250 €. Reaguješ?",
+    visual: {
+      kind: "text",
+      label: "FB reklama · video s tvárou celebrity + logo NBS",
+      body: "„Zarobil som 12 400 € za mesiac s touto AI platformou. Stačí vložiť 250 € a registrovať sa dnes.“ (deepfake hlas + logo NBS)",
+    },
+    options: [
+      bad("a", "Zaregistrujem sa a vložím 250 €", "critical"),
+      bad("b", "Nechám tam aspoň telefón, nech mi zavolajú s detailmi", "critical"),
+      ok("c", "Je to deepfake reklama — nereagujem a nahlásim ju"),
+    ],
+    explanation:
+      "Celebrity a NBS takéto platformy NEodporúčajú — ide o deepfake. Po registrácii ti „poradca“ volá týždne a tlačí na ďalšie vklady (pig butchering). Vložené peniaze nikdy neuvidíš.",
+  },
+  {
+    id: "e60-buyer-refund-card-1",
+    category: "scenario",
+    difficulty: "medium",
+    prompt:
+      "Eshop ti napíše, že tvoja objednávka zlyhala a peniaze ti „vrátia“ — stačí zadať číslo karty a kód, aby ti refund prišiel. Spravíš to?",
+    options: [
+      bad("a", "Zadám kartu a kód, nech mi vrátia peniaze", "critical"),
+      ok("b", "Refund chodí späť automaticky na pôvodnú kartu — žiadne údaje netreba"),
+    ],
+    explanation:
+      "Vrátenie peňazí ide vždy späť na kartu, ktorou si platil — predajca nepotrebuje tvoje číslo karty ani kód. Pýtanie údajov „kvôli refundu“ je vždy podvod na vyprázdnenie účtu.",
+  },
+  {
+    id: "e60-sim-portout-1",
+    category: "scenario",
+    difficulty: "hard",
+    prompt:
+      "Príde SMS: „Vaše číslo bolo požiadané o prenos k inému operátorovi, dokončenie o 2 h.“ Ty si o nič nežiadal. Akcia?",
+    visual: {
+      kind: "sms",
+      sender: "Operátor",
+      body: "Žiadosť o prenos vášho čísla k inému operátorovi bola prijatá. Prenos dokončíme o 2 hodiny.",
+    },
+    options: [
+      bad("a", "Nič — je to asi omyl, vyrieši sa samo", "critical"),
+      ok("b", "Okamžite volám operátorovi a blokujem prenos; je to pokus o SIM swap"),
+    ],
+    explanation:
+      "Prenos čísla (SIM swap) útočníkovi presmeruje tvoje SMS — vrátane 2FA kódov z banky. Ak si o prenos nežiadal, ihneď ho cez operátora zablokuj a skontroluj prístupy do banky.",
+  },
+  {
+    id: "e60-europol-robocall-1",
+    category: "scenario",
+    difficulty: "medium",
+    prompt:
+      "Dvíhaš hovor — automatický anglický hlas: „This is Europol. Your identity is linked to a crime. Press 1 to speak to an officer.“ Akcia?",
+    visual: {
+      kind: "call",
+      caller: "Europol (?)",
+      number: "+44 20 3318 ****",
+      hint: "automatický anglický hlas, žiada stlačiť 1",
+    },
+    options: [
+      bad("a", "Stlačím 1 a vypočujem si, o čo ide", "medium"),
+      ok("b", "Zložím — polícia ani Europol takto nevolajú robotickým hovorom"),
+    ],
+    explanation:
+      "Europol/polícia nikdy nevolajú automatickým robohlasom ani nepýtajú stláčať tlačidlá. Stlačenie 1 ťa spojí s podvodníkom, ktorý ťa zastrašuje a vymáha peniaze či údaje.",
+  },
+  {
+    id: "e60-financnasprava-exekucia-1",
+    category: "phishing",
+    difficulty: "medium",
+    prompt: "SMS o nedoplatku Finančnej správe a hrozbe exekúcie s odkazom na úhradu. Zaplatíš?",
+    visual: {
+      kind: "sms",
+      sender: "FinancnaSprava",
+      body: "Evidujeme nedoplatok 247 €. Pri neuhradení do 24 h hrozí exekúcia. Uhraďte:",
+      link: "https://financnasprava-uhrada.sk/platba",
+    },
+    options: [
+      bad("a", "Zaplatím hneď, nechcem exekúciu", "critical"),
+      ok("b", "Overím si to v osobnej zóne na `financnasprava.sk`, SMS ignorujem"),
+    ],
+    explanation:
+      "Finančná správa komunikuje cez osobnú internetovú zónu a poštu, nie cez SMS s platobným odkazom. Tlak časom („do 24 h hrozí exekúcia“) je znak podvodu.",
   },
 ];
 
