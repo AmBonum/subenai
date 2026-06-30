@@ -92,7 +92,15 @@
     "step_label_prefix_1": "1.",
     "step_label_prefix_2": "2.",
     "step_label_prefix_3": "3.",
-    "loading_packs": "Načítám šablony…"
+    "loading_packs": "Načítám šablony…",
+    "share_dialog": {
+      "title": "Test je připraven ke sdílení",
+      "description": "Pošli tento odkaz svému týmu — každý si test otevře a vyplní sám. Výsledky vidí každý jen své.",
+      "link_label": "Odkaz na test",
+      "copy_aria": "Zkopírovat odkaz na test",
+      "open": "Otevřít test",
+      "close": "Hotovo"
+    }
   },
   "composer_settings": {
     "threshold_label": "Práh úspěšnosti",

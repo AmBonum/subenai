@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
-import { createLazyFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { createLazyFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { PackPreloadChips } from "@/components/composer/build/PackPreloadChips";
 import { ComposerStep2Picker } from "@/components/composer/build/ComposerStep2Picker";
 import { ComposerExplainer } from "@/components/composer/build/ComposerExplainer";
 import { ComposerSettings } from "@/components/composer/build/ComposerSettings";
 import { EduSettings, EDU_PASSWORD_MIN_LEN } from "@/components/composer/edu/intake/EduSettings";
 import { EduSuccessDialog } from "@/components/composer/edu/intake/EduSuccessDialog";
+import { ShareSetDialog } from "@/components/composer/ShareSetDialog";
 import { TestFlow } from "@/components/quiz/flow/TestFlow";
 import { usePlatformPacks, usePlatformPackQuestionIds } from "@/lib/platform/pack-queries";
 import { QUESTIONS, getQuestionById } from "@/lib/quiz/bank/questions";
@@ -63,7 +64,6 @@ export const Route = createLazyFileRoute("/test/builder/")({
 export function ComposerPage() {
   const t = useMemo(() => tFor("composer"), []);
   const search = useSearch({ from: "/test/builder/" });
-  const navigate = useNavigate();
 
   const initial = useMemo(() => loadInitialFromConfig(search.config), [search.config]);
 
@@ -87,6 +87,7 @@ export function ComposerPage() {
   const [staleNotice, setStaleNotice] = useState<string | null>(null);
   const [selfRunning, setSelfRunning] = useState(false);
   const [shareToast, setShareToast] = useState<string | null>(null);
+  const [shareSuccess, setShareSuccess] = useState<string | null>(null);
   const [eduSuccess, setEduSuccess] = useState<{
     publicUrl: string;
     resultsUrl: string;
@@ -318,7 +319,12 @@ export function ComposerPage() {
         setSubmitting(false);
         return;
       }
-      navigate({ to: ROUTES.builderSet, params: { id: payload.id } });
+      // E58 — non-edu team share: surface the shareable link in a dialog (with
+      // copy) instead of silently navigating to the set's test page, which
+      // left the author with no way to get the link to distribute.
+      const origin = typeof window !== "undefined" ? window.location.origin : "";
+      setShareSuccess(`${origin}${payload.url ?? `/test/builder/${payload.id}`}`);
+      setSubmitting(false);
     } catch {
       setError("network_error");
       setSubmitting(false);
@@ -361,7 +367,7 @@ export function ComposerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-40">
+    <div className="min-h-screen bg-background pb-[calc(14rem+env(safe-area-inset-bottom))] lg:pb-40">
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
         <header className="mb-8 text-center md:text-left">
           <Link to={ROUTES.home} className="text-sm text-muted-foreground hover:text-foreground">
@@ -507,7 +513,10 @@ export function ComposerPage() {
         role="region"
         aria-label={t("actions_region_aria")}
         data-testid="composer-actions-region"
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-background/95 px-4 py-3 backdrop-blur sm:px-6"
+        // E58 — sits above the mobile bottom-nav (offset by its height on
+        // small screens so the action buttons are never covered); flush to the
+        // viewport bottom from lg, where the bottom-nav is hidden.
+        className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-30 border-t border-border/60 bg-background/95 px-4 py-3 backdrop-blur sm:px-6 lg:bottom-0"
       >
         <div className="mx-auto flex max-w-3xl flex-col gap-2">
           <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -595,6 +604,10 @@ export function ComposerPage() {
             setAuthorPassword("");
           }}
         />
+      ) : null}
+
+      {shareSuccess ? (
+        <ShareSetDialog publicUrl={shareSuccess} onClose={() => setShareSuccess(null)} />
       ) : null}
 
       <ConfirmDialog
