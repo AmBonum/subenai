@@ -284,7 +284,7 @@ describe("ComposerPage — URL share-out (AC-12)", () => {
 });
 
 describe("ComposerPage — DB share submit", () => {
-  it("POSTs to /api/test-sets and navigates to /test/builder/{id} on success", async () => {
+  it("POSTs to /api/test-sets and shows the share dialog with the link (E58)", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ id: "set_xyz" }), {
         status: 200,
@@ -315,12 +315,12 @@ describe("ComposerPage — DB share submit", () => {
         expect.objectContaining({ method: "POST" }),
       );
     });
-    await waitFor(() => {
-      expect(mocks.navigate).toHaveBeenCalledWith({
-        to: "/test/builder/$id",
-        params: { id: "set_xyz" },
-      });
-    });
+    // E58 — surfaces the shareable link in a dialog (with copy) instead of
+    // silently navigating to the set page.
+    const dialog = await screen.findByTestId("composer-share-success-dialog");
+    expect(dialog).toBeInTheDocument();
+    expect(screen.getByTestId("composer-share-link")).toHaveTextContent("/test/builder/set_xyz");
+    expect(mocks.navigate).not.toHaveBeenCalled();
     fetchSpy.mockRestore();
   });
 

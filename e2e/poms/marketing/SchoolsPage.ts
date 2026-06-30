@@ -100,6 +100,11 @@ export class SchoolsPage extends BasePage {
     return this.page.getByTestId("schools-sticky-cta");
   }
 
+  /** The sticky CTA's bar wrapper (used to assert it clears the bottom-nav). */
+  get stickyCtaBar() {
+    return this.page.getByTestId("schools-sticky-cta-bar");
+  }
+
   // SEO JSON-LD blocks — checked indirectly by counting <script
   // type="application/ld+json"> nodes the route emits. The route emits
   // three: EducationalOrganization + HowTo + FAQPage. SchoolsBreadcrumb

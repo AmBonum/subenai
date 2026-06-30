@@ -92,7 +92,15 @@
     "step_label_prefix_1": "1.",
     "step_label_prefix_2": "2.",
     "step_label_prefix_3": "3.",
-    "loading_packs": "Loading templates…"
+    "loading_packs": "Loading templates…",
+    "share_dialog": {
+      "title": "Your test is ready to share",
+      "description": "Send this link to your team — everyone opens and takes the test themselves. Each person sees only their own result.",
+      "link_label": "Test link",
+      "copy_aria": "Copy the test link",
+      "open": "Open the test",
+      "close": "Done"
+    }
   },
   "composer_settings": {
     "threshold_label": "Passing threshold",

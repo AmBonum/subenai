@@ -15,7 +15,9 @@ export function SchoolsStickyCta() {
   const t = tFor("marketing");
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-sm md:hidden"
+      // E58 — this mobile-only CTA sits above the mobile bottom-nav (both are
+      // shown below md) so the two bars never overlap.
+      className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-40 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-sm md:hidden"
       data-testid="schools-sticky-cta-bar"
       role="region"
       aria-label={t("skoly.sticky_cta")}
