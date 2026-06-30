@@ -510,6 +510,30 @@
       "fake_vs_real": "Fake vs. real",
       "scenario": "Scenario",
       "honeypot": "Looks suspicious but OK"
+    },
+    "analytics": {
+      "title": "Your test stats",
+      "subtitle": "How you moved through the test — time, pace and accuracy.",
+      "total_time": "Total time",
+      "median_time": "Median / question",
+      "fastest": "Fastest",
+      "slowest": "Slowest",
+      "rush_rate": "Rushed answers",
+      "rush_hint": "Share of answers under {threshold}s — rushing is where most mistakes happen.",
+      "streak": "Correct streak",
+      "streak_suffix": "× in a row",
+      "answered": "Answered",
+      "timed_out": "Timed out",
+      "by_difficulty_title": "By difficulty",
+      "by_category_title": "By category",
+      "col_accuracy": "Accuracy",
+      "col_avg_time": "Avg. time",
+      "seconds_suffix": "s",
+      "difficulty": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+      }
     }
   },
   "review": {

@@ -514,6 +514,30 @@
       "fake_vs_real": "Falošné vs. skutočné",
       "scenario": "Scenár",
       "honeypot": "Vyzerá podozrivo, ale OK"
+    },
+    "analytics": {
+      "title": "Štatistiky tvojho testu",
+      "subtitle": "Ako si prešiel testom — čas, tempo a presnosť.",
+      "total_time": "Celkový čas",
+      "median_time": "Medián / otázka",
+      "fastest": "Najrýchlejšia",
+      "slowest": "Najpomalšia",
+      "rush_rate": "Unáhlené odpovede",
+      "rush_hint": "Podiel odpovedí pod {threshold} s — pri unáhlení robíš najviac chýb.",
+      "streak": "Séria správnych",
+      "streak_suffix": "× po sebe",
+      "answered": "Zodpovedané",
+      "timed_out": "Vypršal čas",
+      "by_difficulty_title": "Podľa náročnosti",
+      "by_category_title": "Podľa kategórie",
+      "col_accuracy": "Úspešnosť",
+      "col_avg_time": "Priem. čas",
+      "seconds_suffix": "s",
+      "difficulty": {
+        "easy": "Ľahké",
+        "medium": "Stredné",
+        "hard": "Ťažké"
+      }
     }
   },
   "review": {

@@ -510,6 +510,30 @@
       "fake_vs_real": "Falešné vs. skutečné",
       "scenario": "Scénář",
       "honeypot": "Vypadá podezřele, ale OK"
+    },
+    "analytics": {
+      "title": "Statistiky tvého testu",
+      "subtitle": "Jak jsi prošel testem — čas, tempo a přesnost.",
+      "total_time": "Celkový čas",
+      "median_time": "Medián / otázka",
+      "fastest": "Nejrychlejší",
+      "slowest": "Nejpomalejší",
+      "rush_rate": "Unáhlené odpovědi",
+      "rush_hint": "Podíl odpovědí pod {threshold} s — při spěchu děláš nejvíc chyb.",
+      "streak": "Série správných",
+      "streak_suffix": "× po sobě",
+      "answered": "Zodpovězeno",
+      "timed_out": "Vypršel čas",
+      "by_difficulty_title": "Podle obtížnosti",
+      "by_category_title": "Podle kategorie",
+      "col_accuracy": "Úspěšnost",
+      "col_avg_time": "Prům. čas",
+      "seconds_suffix": "s",
+      "difficulty": {
+        "easy": "Lehké",
+        "medium": "Střední",
+        "hard": "Těžké"
+      }
     }
   },
   "review": {

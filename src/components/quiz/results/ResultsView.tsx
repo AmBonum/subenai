@@ -17,6 +17,7 @@ import { SurveyCard } from "@/components/quiz/survey/SurveyCard";
 import { SocialShareGrid } from "@/components/quiz/share/SocialShareGrid";
 import { ManualShareCard } from "@/components/quiz/share/ManualShareCard";
 import { TrapDialog } from "@/components/quiz/results/TrapDialog";
+import { TestAnalyticsPanel } from "@/components/quiz/results/TestAnalyticsPanel";
 import { WeakCategoryRecommendations } from "@/components/quiz/results/WeakCategoryRecommendations";
 import { tFor } from "@/i18n/quiz";
 
@@ -503,6 +504,10 @@ export function ResultsView({
               </div>
             </div>
           )}
+
+          {/* E59 — per-question timing + accuracy analytics derived from the
+              captured answer records. */}
+          <TestAnalyticsPanel answers={answers} />
 
           {/* Optional survey */}
           {shareId && <SurveyCard shareId={shareId} />}
