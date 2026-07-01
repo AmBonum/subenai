@@ -2,6 +2,8 @@
 // Visual context is described as a structured `visual` prop and rendered
 // by QuestionCard via screenshot components (SMS, Email, URL, IG, listing, call).
 
+import type { AudioEmbed } from "@/lib/academy/audio-shortcode";
+
 export type Category = "phishing" | "url" | "fake_vs_real" | "scenario" | "honeypot";
 export type Difficulty = "easy" | "medium" | "hard";
 export type Severity = "critical" | "medium" | "minor" | null;
@@ -53,6 +55,10 @@ export interface Question {
   visual?: Visual;
   options: Option[];
   explanation: string;
+  /** Optional external scam-call recording, played in-test only when the
+   *  reader has sounds enabled (E62). Reaches static-bank flows
+   *  (pack/composer); the DB-backed quick test does not carry it yet. */
+  audio?: AudioEmbed;
 }
 
 // Helpers for option construction
@@ -4578,6 +4584,15 @@ export const QUESTIONS: Question[] = [
     ],
     explanation:
       "Caller ID sa dá sfalšovať — zhodné číslo nič nedokazuje. Potvrdenie notifikácie = schválenie útočníkovho prihlásenia alebo platby. Banka ti nikdy nezavolá, aby si „potvrdil ochranu“.",
+    audio: {
+      provider: "youtube",
+      url: "https://www.youtube.com/watch?v=SbZz2Q2t-aU",
+      title: "Podvod na telefóne (vishing)",
+      sourceName: "Tatra banka #predigitalnubezpecnost",
+      sourceUrl: "https://www.youtube.com/watch?v=SbZz2Q2t-aU",
+      description:
+        "Oficiálne osvetové video Tatra banky — názorná (hraná) ukážka, nie autentická nahrávka.",
+    },
   },
   {
     id: "e60-gls-redelivery-1",
@@ -4828,7 +4843,12 @@ export function getQuestionTimeLimit(q: Question): number {
 
   // Clamp 8 .. 30 seconds (round to whole seconds, +20% safety margin)
   const withMargin = raw * 1.2;
-  return Math.max(8, Math.min(30, Math.round(withMargin)));
+  const base = Math.max(8, Math.min(30, Math.round(withMargin)));
+
+  // Questions carrying a scam-call recording need room to actually listen
+  // before deciding (E62) — widen the window generously.
+  if (q.audio) return Math.max(60, base + 40);
+  return base;
 }
 
 function visualToText(v?: Visual): string {

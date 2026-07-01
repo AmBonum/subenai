@@ -466,7 +466,8 @@
     "load_error_title": "Couldn't load the test",
     "load_error_body": "Try refreshing the page in a moment.",
     "question_progress": "Question {n} / {total}",
-    "timer_aria": "{seconds} seconds left"
+    "timer_aria": "{seconds} seconds left",
+    "audio_enable": "Turn on sound and listen to the call recording"
   },
   "results": {
     "score_label": "Your score",

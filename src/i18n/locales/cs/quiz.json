@@ -466,7 +466,8 @@
     "load_error_title": "Test se nepodařilo načíst",
     "load_error_body": "Zkus stránku obnovit za chvíli.",
     "question_progress": "Otázka {n} / {total}",
-    "timer_aria": "{seconds} sekund zbývá"
+    "timer_aria": "{seconds} sekund zbývá",
+    "audio_enable": "Zapni zvuk a poslechni si nahrávku hovoru"
   },
   "results": {
     "score_label": "Tvé skóre",
