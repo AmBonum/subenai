@@ -1,5 +1,6 @@
 import type { CourseSection } from "@/content/courses";
 import { VisualBlock } from "@/components/quiz/flow/VisualBlock";
+import { ScamAudioEmbed } from "@/components/academy/ScamAudioEmbed";
 import { Check, X, AlertTriangle } from "lucide-react";
 import { tFor } from "@/i18n/quiz";
 
@@ -147,6 +148,12 @@ export function CourseSectionView({ section, idx }: { section: CourseSection; id
               <p className="text-sm text-foreground/90 sm:text-base">{section.right_action}</p>
             </div>
           </div>
+        </SectionFrame>
+      );
+    case "embed":
+      return (
+        <SectionFrame id={id} heading={section.heading}>
+          <ScamAudioEmbed embed={section.audio} />
         </SectionFrame>
       );
   }

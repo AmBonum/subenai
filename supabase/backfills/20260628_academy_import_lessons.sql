@@ -279,6 +279,10 @@ Microsoft NIKDY nezavolá. Bodka. Tento typ podvodu cielí najmä na anglicky ho
 
 AI dnes vie naklonovať hlas z 30 sekúnd nahrávky (napr. zo sociálnych sietí). „Niekomu nehovor" je psychologický prevod — útočník izoluje obeť od overenia. Vždy zavolaj späť na známe číslo, ktoré máš v kontaktoch.
 
+## Ako vyzerá vishing — edukatívne video
+
+[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVNiWnoyUTJ0LWFVIiwidGl0bGUiOiJQb2R2b2QgbmEgdGVsZWbDs25lICh2aXNoaW5nKSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9U2JaejJRMnQtYVUiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgKGhyYW7DoSkgdWvDocW+a2EgcHJpZWJlaHUgcG9kdm9kbsOpaG8gaG92b3J1LCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiBWxaHDrW1haiBzaSB0w7NuLCBuYWxpZWhhdm9zxaUgYSBww710YW5pZSBrw7NkdS4ifQ==]]
+
 ## Indície, že hovor je podvod
 
 **Červená vlajka:** Volajúci od „banky" pýta kód z SMS, OTP (jednorazový overovací kód), PIN alebo heslo do internet bankingu.
