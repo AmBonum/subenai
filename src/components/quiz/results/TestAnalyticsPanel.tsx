@@ -178,11 +178,11 @@ function BucketTable({
   if (rows.length === 0) return null;
   return (
     <div className="mt-5 border-t border-border/60 pt-4">
-      <div className="mb-2 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        <span>{title}</span>
-        <span className="flex gap-4">
-          <span className="w-12 text-right">{colAccuracy}</span>
-          <span className="w-12 text-right">{colTime}</span>
+      <div className="mb-2 flex items-center justify-between text-muted-foreground">
+        <span className="text-xs font-semibold uppercase tracking-wider">{title}</span>
+        <span className="flex gap-3 text-[10px] font-semibold uppercase">
+          <span className="w-16 whitespace-nowrap text-right">{colAccuracy}</span>
+          <span className="w-16 whitespace-nowrap text-right">{colTime}</span>
         </span>
       </div>
       <ul className="space-y-2">
@@ -193,9 +193,9 @@ function BucketTable({
             className="flex items-center justify-between text-sm"
           >
             <span className="text-foreground/85">{r.label}</span>
-            <span className="flex gap-4 font-mono tabular-nums">
+            <span className="flex gap-3 font-mono tabular-nums">
               <span
-                className={`w-12 text-right font-semibold ${
+                className={`w-16 text-right font-semibold ${
                   r.stat.accuracy >= 70
                     ? "text-success"
                     : r.stat.accuracy >= 40
@@ -205,7 +205,7 @@ function BucketTable({
               >
                 {r.stat.accuracy}%
               </span>
-              <span className="w-12 text-right text-muted-foreground">
+              <span className="w-16 text-right text-muted-foreground">
                 {secs(r.stat.avgResponseMs)}
                 {secSuffix}
               </span>
