@@ -22,7 +22,11 @@ VALUES (
   $title$Ako nedať sa nachytať na podvodné SMS$title$,
   $sub$5 typov podvodných SMS, ktoré teraz lietajú na Slovensku — a ako ich rozoznáš za 3 sekundy podľa červených vlajok.$sub$,
   $exc$5 typov podvodných SMS, ktoré teraz lietajú na Slovensku — a ako ich rozoznáš za 3 sekundy podľa červených vlajok.$exc$,
-  $body$## Prečo SMS, prečo teraz
+  $body$## Pozri si na úvod: ako funguje smishing
+
+[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU5TZXk0NmJkRVlnIiwidGl0bGUiOiJTbWlzaGluZyDigJQgcG9kdm9kbsOpIFNNUyIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9TlNleTQ2YmRFWWciLCJkZXNjcmlwdGlvbiI6Iktyw6F0a2Ugb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IG8gcG9kdm9kbsO9Y2ggU01TLiBOw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]
+
+## Prečo SMS, prečo teraz
 
 Smishing (phishing cez SMS) je momentálne najčastejší typ podvodu (scam) na Slovensku. Ide o phishing (podvodné vylákanie prihlasovacích či platobných údajov) doručený cez textovú správu: útočník ti pošle krátku správu, ktorá vyzerá ako od pošty, banky alebo úradu, a tlačí ťa, aby si urýchlene klikol. Stačia tri sekundy nepozornosti — a si na falošnej stránke, ktorá ti zoberie buď peniaze, alebo prístup do internet bankingu.
 
@@ -127,7 +131,11 @@ VALUES (
   $title$Email phishing — ako rozoznať podvodný e-mail$title$,
   $sub$Falošná banka, falošný Microsoft, falošný šéf: 6 typických vzorov a 30-sekundový checklist, ktorým ich odhalíš.$sub$,
   $exc$Falošná banka, falošný Microsoft, falošný šéf: 6 typických vzorov a 30-sekundový checklist, ktorým ich odhalíš.$exc$,
-  $body$## Email je stále útok č. 1
+  $body$## Pozri si na úvod: čo je phishing (1 min)
+
+[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Iktyw6F0a2Ugb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIGFrbyBwaGlzaGluZyBmdW5ndWplLiBOaWUgamUgdG8gYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]
+
+## Email je stále útok č. 1
 
 Aj keď SMS vedie v rýchlosti, e-mail je stále hlavný kanál pre cielené phishingové (podvodné vylákanie prihlasovacích či platobných údajov) útoky. Útočník má v ňom miesto na presvedčivý dizajn, falošné logá a kvalitne preložený text. Cieľ je rovnaký: dostať ťa na falošnú stránku alebo aby si stiahol prílohu.
 
@@ -352,7 +360,11 @@ VALUES (
   $title$Bazoš a Marketplace — ako rozoznať podvodný inzerát$title$,
   $sub$Auto za polovicu, byt v centre za 200 € a „kupec" cez WhatsApp: pravidlá pre Bazoš, Vinted aj Marketplace.$sub$,
   $exc$Auto za polovicu, byt v centre za 200 € a „kupec" cez WhatsApp: pravidlá pre Bazoš, Vinted aj Marketplace.$exc$,
-  $body$## Bazoš a Facebook Marketplace ako lovisko
+  $body$## Pozri si na úvod: podvodník v online bazári
+
+[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PWpTeWJ0bjVvMWFVIiwidGl0bGUiOiJBa28gb2RoYWxpxaUgcG9kdm9kbsOta2EgdiBvbmxpbmUgYmF6w6FyaSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9alN5YnRuNW8xYVUiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIHBvZHZvZG9jaCB2IGJhesOhcm9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]
+
+## Bazoš a Facebook Marketplace ako lovisko
 
 Slovenský trh ovládajú dve platformy: Bazoš a FB Marketplace. Obe majú minimálnu moderáciu, takže útočník si vytvorí účet za 5 minút a má tisíce potenciálnych obetí. Schémy sú dvojaké — útočník buď vystupuje ako „predávajúci" (vyláka ti zálohu), alebo ako „kupec" (vyláka ti údaje karty cez falošnú platobnú stránku).
 
@@ -583,7 +595,11 @@ VALUES (
   $title$Krypto a „AI brokeri": prečo Elon Musk nezarába na Instagrame$title$,
   $sub$Reklamy s deepfake Elonom, pump & dump tokeny a „AI brokeri" — 5 schém, ktorými ťa pripravia o 10 000 € a viac.$sub$,
   $exc$Reklamy s deepfake Elonom, pump & dump tokeny a „AI brokeri" — 5 schém, ktorými ťa pripravia o 10 000 € a viac.$exc$,
-  $body$## Investičný podvod nie je „blbosť pre dôchodcov"
+  $body$## Pozri si na úvod: príliš lákavé výnosy
+
+[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PTJpM3ZtTlg2clRJIiwidGl0bGUiOiJCdcSPdGUgb3BhdHJuw60gcHJpIGludmVzdGnEjW7DvWNoIHBvbnVrw6FjaCBzIHByw61sacWhIGzDoWthdsO9bSB2w71ub3NvbSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Mmkzdm1OWDZyVEkiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGludmVzdGnEjW7DvWNoIHBvZHZvZG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]
+
+## Investičný podvod nie je „blbosť pre dôchodcov"
 
 Krypto a AI-trading scamy (podvody) sa cielia na inú demografiu, než by si čakal — 25 až 55 rokov, technicky zruční, ale finančne neistí. Ponuka je vždy rovnaká: zaručený výnos, exkluzívny prístup a presvedčivá známa tvár (Elon Musk, Andrej Kiska, Boris Kollár). V skutočnosti ide o profesionálny podvod riadený z call-centra, ktorý ťa povedie tri týždne za ruku — kým ti účet nevybielia.
 
@@ -811,7 +827,11 @@ VALUES (
   $title$BEC: keď ti „CEO" napíše súrne preveď 50 000 EUR$title$,
   $sub$Business Email Compromise (podvod cez kompromitovaný firemný e-mail) je najdrahšia forma firemného phishingu (podvodné vylákanie prihlasovacích či platobných údajov): 5 typov + 6 procesných obrán pre účtovníkov a HR.$sub$,
   $exc$Business Email Compromise (podvod cez kompromitovaný firemný e-mail) je najdrahšia forma firemného phishingu (podvodné vylákanie prihlasovacích či platobných údajov): 5 typov + 6 procesných obrán pre účtovníkov a HR.$exc$,
-  $body$## BEC = jeden e-mail, 50 000 EUR preč
+  $body$## Pozri si na úvod: falošní dodávatelia a riaditelia
+
+[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXgxSXZDSVdjcHJrIiwidGl0bGUiOiJQb3pvciBuYSBmYWxvxaFuw71jaCBkb2TDoXZhdGXEvm92IMSNaSByaWFkaXRlxL5vdiBmaXJpZW0iLCJzb3VyY2VOYW1lIjoiVGF0cmEgYmFua2EiLCJzb3VyY2VVcmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXgxSXZDSVdjcHJrIiwiZGVzY3JpcHRpb24iOiJPc3ZldG92w6kgdmlkZW8gVGF0cmEgYmFua3kgbyBwb2R2b2RvY2ggdHlwdSBCRUMgKGZhbG/FoW7DvSByaWFkaXRlxL4vZG9kw6F2YXRlxL4pLiBOw6F6b3Juw6EgdWvDocW+a2EuIn0=]]
+
+## BEC = jeden e-mail, 50 000 EUR preč
 
 Business Email Compromise cieli na účtovníkov, asistentov, finančných manažérov v SK firmách. Útočník 2 – 4 týždne sleduje firemnú komunikáciu (cez jeden phishnutý účet alebo verejné LinkedIn dáta), naučí sa štýl CEO/CFO a potom v správnu chvíľu (pred dovolenkou, pri uzávierke) pošle „súrnu" žiadosť o prevod. Priemerná škoda na incident v EÚ podľa Europolu presahuje 50 000 EUR. Prevencia je 90 % o procese, 10 % o technike.
 
@@ -1193,7 +1213,11 @@ VALUES (
   $title$AI deepfake podvody — falošný hlas, falošná tvár, skutočná škoda$title$,
   $sub$„Mama, prevedz mi 800 €" hlasom tvojho dieťaťa: ako fungujú klonovanie hlasu a deepfake (umelo vygenerované falošné video či hlas) a ako ich rozoznáš naživo.$sub$,
   $exc$„Mama, prevedz mi 800 €" hlasom tvojho dieťaťa: ako fungujú klonovanie hlasu a deepfake (umelo vygenerované falošné video či hlas) a ako ich rozoznáš naživo.$exc$,
-  $body$## Klonovanie hlasu: od sci-fi po bežný podvod
+  $body$## Pozri si na úvod: ako rozoznať deepfake
+
+[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXExY25yWk85NVRFIiwidGl0bGUiOiJBa28gcm96b3puYcWlIGRlZXBmYWtlIHZpZGXDoT8hIiwic291cmNlTmFtZSI6IlptdWRyaSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9cTFjbnJaTzk1VEUiLCJkZXNjcmlwdGlvbiI6IkVkdWthxI1uw6kgdmlkZW8gc2xvdmVuc2tlaiB2emRlbMOhdmFjZWogcGxhdGZvcm15IFptdWRyaSDigJQgYWtvIHJvem96bmHFpSBkZWVwZmFrZS4ifQ==]]
+
+## Klonovanie hlasu: od sci-fi po bežný podvod
 
 Ešte v roku 2020 bolo klonovanie hlasu doménou hollywoodskych štúdií. Dnes ho zvládne ktokoľvek s 30-sekundovým klipom z TikToku, YouTube alebo Instagram reels — zadarmo, cez desiatky verejných nástrojov. Výsledok je hlas, ktorý znie identicky ako váš syn, vaša mama, váš CEO. Deepfake video ide ešte ďalej: reálne vyzerajúce videohovory, na ktorých „vidíte" tvár osoby, ktorá skutočne nie je na druhom konci. Tieto technológie nie sú budúcnosť — sú súčasnosť. A útočníci ich používajú každý deň.
 
@@ -1913,7 +1937,11 @@ VALUES (
   $title$Falošný e-shop — overenie za 2 minúty$title$,
   $sub$7-bodový checklist, ktorým rozoznáš podvodný e-shop skôr, než zaplatíš.$sub$,
   $exc$7-bodový checklist, ktorým rozoznáš podvodný e-shop skôr, než zaplatíš.$exc$,
-  $body$## Falošný e-shop poznáš za 2 minúty — ak vieš, kde pozerať
+  $body$## Pozri si na úvod: nebezpečne nízke ceny e-shopov
+
+[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU9QVVo1Z2gzLXZRIiwidGl0bGUiOiJOZWJlenBlxI1uZSBuw616a2UgY2VueSBlLXNob3BvdiIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9T1BVWjVnaDMtdlEiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGZhbG/FoW7DvWNoIGUtc2hvcG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]
+
+## Falošný e-shop poznáš za 2 minúty — ak vieš, kde pozerať
 
 Falošný e-shop v roku 2026 nevyzerá ako tých päť chýb spred desiatich rokov. Má slušnú grafiku, fotky produktov, reálne názvy značiek a recenzie napísané ChatGPT-om. Často je to klon legitímneho českého alebo poľského obchodu, len s iným číslom IBAN na konci. Slováci ročne stratia milióny eur cez „výhodné" iPhony za 299 € z falošných reklám na Facebooku alebo z e-shopov, ktoré sa volajú elektromax-sk-vypredaj.com. Dobrá správa: dvojminútová kontrola pred zaplatením ťa zachráni v 95 % prípadov.
 

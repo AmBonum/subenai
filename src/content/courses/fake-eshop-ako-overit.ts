@@ -13,6 +13,19 @@ export const fakeEshopOverenieCourse: Course = {
   updatedAt: "2026-05-20",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: nebezpečne nízke ceny e-shopov",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=OPUZ5gh3-vQ",
+        title: "Nebezpečne nízke ceny e-shopov",
+        sourceName: "Tatra banka #predigitalnubezpecnost",
+        sourceUrl: "https://www.youtube.com/watch?v=OPUZ5gh3-vQ",
+        description:
+          "Osvetové video Tatra banky o falošných e-shopoch. Názorná ukážka, nie autentická nahrávka.",
+      },
+    },
+    {
       kind: "intro",
       heading: "Falošný e-shop poznáš za 2 minúty — ak vieš, kde pozerať",
       body: `Falošný e-shop v roku 2026 nevyzerá ako tých päť chýb spred desiatich rokov. Má slušnú grafiku, fotky produktov, reálne názvy značiek a recenzie napísané ChatGPT-om. Často je to klon legitímneho českého alebo poľského obchodu, len s iným číslom IBAN na konci. Slováci ročne stratia milióny eur cez „výhodné" iPhony za 299 € z falošných reklám na Facebooku alebo z e-shopov, ktoré sa volajú elektromax-sk-vypredaj.com. Dobrá správa: dvojminútová kontrola pred zaplatením ťa zachráni v 95 % prípadov.`,

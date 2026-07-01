@@ -13,6 +13,19 @@ export const becWorkplaceCourse: Course = {
   updatedAt: "2026-04-26",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: falošní dodávatelia a riaditelia",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=x1IvCIWcprk",
+        title: "Pozor na falošných dodávateľov či riaditeľov firiem",
+        sourceName: "Tatra banka",
+        sourceUrl: "https://www.youtube.com/watch?v=x1IvCIWcprk",
+        description:
+          "Osvetové video Tatra banky o podvodoch typu BEC (falošný riaditeľ/dodávateľ). Názorná ukážka.",
+      },
+    },
+    {
       kind: "intro",
       heading: `BEC = jeden e-mail, 50 000 EUR preč`,
       body: `Business Email Compromise cieli na účtovníkov, asistentov, finančných manažérov v SK firmách. Útočník 2 – 4 týždne sleduje firemnú komunikáciu (cez jeden phishnutý účet alebo verejné LinkedIn dáta), naučí sa štýl CEO/CFO a potom v správnu chvíľu (pred dovolenkou, pri uzávierke) pošle „súrnu" žiadosť o prevod. Priemerná škoda na incident v EÚ podľa Europolu presahuje 50 000 EUR. Prevencia je 90 % o procese, 10 % o technike.`,

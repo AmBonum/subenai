@@ -14,6 +14,19 @@ export const smsSmishingCourse: Course = {
   updatedAt: "2026-04-26",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: ako funguje smishing",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=NSey46bdEYg",
+        title: "Smishing — podvodné SMS",
+        sourceName: "Tatra banka",
+        sourceUrl: "https://www.youtube.com/watch?v=NSey46bdEYg",
+        description:
+          "Krátke osvetové video Tatra banky o podvodných SMS. Názorná ukážka, nie autentická nahrávka.",
+      },
+    },
+    {
       kind: "intro",
       heading: "Prečo SMS, prečo teraz",
       body: `Smishing (phishing cez SMS) je momentálne najčastejší typ podvodu (scam) na Slovensku. Ide o phishing (podvodné vylákanie prihlasovacích či platobných údajov) doručený cez textovú správu: útočník ti pošle krátku správu, ktorá vyzerá ako od pošty, banky alebo úradu, a tlačí ťa, aby si urýchlene klikol. Stačia tri sekundy nepozornosti — a si na falošnej stránke, ktorá ti zoberie buď peniaze, alebo prístup do internet bankingu.`,

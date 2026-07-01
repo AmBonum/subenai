@@ -13,6 +13,19 @@ export const aiDeepfakeCourse: Course = {
   updatedAt: "2026-04-30",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: ako rozoznať deepfake",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=q1cnrZO95TE",
+        title: "Ako rozoznať deepfake videá?!",
+        sourceName: "Zmudri",
+        sourceUrl: "https://www.youtube.com/watch?v=q1cnrZO95TE",
+        description:
+          "Edukačné video slovenskej vzdelávacej platformy Zmudri — ako rozoznať deepfake.",
+      },
+    },
+    {
       kind: "intro",
       heading: "Klonovanie hlasu: od sci-fi po bežný podvod",
       body: `Ešte v roku 2020 bolo klonovanie hlasu doménou hollywoodskych štúdií. Dnes ho zvládne ktokoľvek s 30-sekundovým klipom z TikToku, YouTube alebo Instagram reels — zadarmo, cez desiatky verejných nástrojov. Výsledok je hlas, ktorý znie identicky ako váš syn, vaša mama, váš CEO. Deepfake video ide ešte ďalej: reálne vyzerajúce videohovory, na ktorých „vidíte" tvár osoby, ktorá skutočne nie je na druhom konci. Tieto technológie nie sú budúcnosť — sú súčasnosť. A útočníci ich používajú každý deň.`,

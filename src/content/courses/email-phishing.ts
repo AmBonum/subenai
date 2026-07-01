@@ -14,6 +14,19 @@ export const emailPhishingCourse: Course = {
   updatedAt: "2026-04-26",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: čo je phishing (1 min)",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=B_naKIa88zc",
+        title: "Čo je phishing a ako chrániť svoje údaje",
+        sourceName: "Tatra banka #predigitalnubezpecnost",
+        sourceUrl: "https://www.youtube.com/watch?v=B_naKIa88zc",
+        description:
+          "Krátke osvetové video Tatra banky — názorná ukážka, ako phishing funguje. Nie je to autentická nahrávka.",
+      },
+    },
+    {
       kind: "intro",
       heading: "Email je stále útok č. 1",
       body: `Aj keď SMS vedie v rýchlosti, e-mail je stále hlavný kanál pre cielené phishingové (podvodné vylákanie prihlasovacích či platobných údajov) útoky. Útočník má v ňom miesto na presvedčivý dizajn, falošné logá a kvalitne preložený text. Cieľ je rovnaký: dostať ťa na falošnú stránku alebo aby si stiahol prílohu.`,

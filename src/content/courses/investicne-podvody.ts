@@ -13,6 +13,19 @@ export const investmentScamsCourse: Course = {
   updatedAt: "2026-04-26",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: príliš lákavé výnosy",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=2i3vmNX6rTI",
+        title: "Buďte opatrní pri investičných ponukách s príliš lákavým výnosom",
+        sourceName: "Tatra banka",
+        sourceUrl: "https://www.youtube.com/watch?v=2i3vmNX6rTI",
+        description:
+          "Osvetové video Tatra banky o investičných podvodoch. Názorná ukážka, nie autentická nahrávka.",
+      },
+    },
+    {
       kind: "intro",
       heading: `Investičný podvod nie je „blbosť pre dôchodcov"`,
       body: `Krypto a AI-trading scamy (podvody) sa cielia na inú demografiu, než by si čakal — 25 až 55 rokov, technicky zruční, ale finančne neistí. Ponuka je vždy rovnaká: zaručený výnos, exkluzívny prístup a presvedčivá známa tvár (Elon Musk, Andrej Kiska, Boris Kollár). V skutočnosti ide o profesionálny podvod riadený z call-centra, ktorý ťa povedie tri týždne za ruku — kým ti účet nevybielia.`,
