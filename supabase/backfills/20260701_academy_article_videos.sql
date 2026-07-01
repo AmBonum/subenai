@@ -1,0 +1,169 @@
+-- E63.1 — append a verified, honestly-labelled scam-awareness video to
+-- topically-matching academy ARTICLES. Idempotent: the guard skips any row
+-- that already carries an [[audio:…]] embed, so re-running is safe.
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'phishing-kompletny-sprievodca' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'ako-rozpoznat-phishingovy-email-za-10-sekund' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'nove-techniky-phishingu-2026' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'ochrana-pred-phishingom-2fa-passkey' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'phishing-cez-google-formulare' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'podvodne-emaily-z-banky-ako-spoznat' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'spear-phishing-vs-bezny-phishing' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'co-robit-ked-som-klikol-na-phishing' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'ai-phishing-personalizovany-podvod' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PUJfbmFLSWE4OHpjIiwidGl0bGUiOiLEjG8gamUgcGhpc2hpbmcgYSBha28gY2hyw6FuacWlIHN2b2plIMO6ZGFqZSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Ql9uYUtJYTg4emMiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'kviz-rozpoznas-phishingovy-email' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU5TZXk0NmJkRVlnIiwidGl0bGUiOiJTbWlzaGluZyDigJQgcG9kdm9kbsOpIFNNUyIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9TlNleTQ2YmRFWWciLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIHBvZHZvZG7DvWNoIFNNUy4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = '12-najcastejsich-podvodnych-sms-2026' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU5TZXk0NmJkRVlnIiwidGl0bGUiOiJTbWlzaGluZyDigJQgcG9kdm9kbsOpIFNNUyIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9TlNleTQ2YmRFWWciLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIHBvZHZvZG7DvWNoIFNNUy4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'scam-sms-a-podvodne-hovory' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU5TZXk0NmJkRVlnIiwidGl0bGUiOiJTbWlzaGluZyDigJQgcG9kdm9kbsOpIFNNUyIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9TlNleTQ2YmRFWWciLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIHBvZHZvZG7DvWNoIFNNUy4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'sms-z-banky-overit-ci-je-pravda' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU5TZXk0NmJkRVlnIiwidGl0bGUiOiJTbWlzaGluZyDigJQgcG9kdm9kbsOpIFNNUyIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9TlNleTQ2YmRFWWciLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIHBvZHZvZG7DvWNoIFNNUy4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'kviz-scam-sms-rozpozna' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU5TZXk0NmJkRVlnIiwidGl0bGUiOiJTbWlzaGluZyDigJQgcG9kdm9kbsOpIFNNUyIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9TlNleTQ2YmRFWWciLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIHBvZHZvZG7DvWNoIFNNUy4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'phishing-na-balikovu-zasielku' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU5TZXk0NmJkRVlnIiwidGl0bGUiOiJTbWlzaGluZyDigJQgcG9kdm9kbsOpIFNNUyIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9TlNleTQ2YmRFWWciLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIHBvZHZvZG7DvWNoIFNNUy4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'rebrand-slovenska-posta-slovak-post-podvody' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU9QVVo1Z2gzLXZRIiwidGl0bGUiOiJOZWJlenBlxI1uZSBuw616a2UgY2VueSBlLXNob3BvdiIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9T1BVWjVnaDMtdlEiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGZhbG/FoW7DvWNoIGUtc2hvcG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'ako-overit-eshop-pred-nakupom-7-krokov' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU9QVVo1Z2gzLXZRIiwidGl0bGUiOiJOZWJlenBlxI1uZSBuw616a2UgY2VueSBlLXNob3BvdiIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9T1BVWjVnaDMtdlEiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGZhbG/FoW7DvWNoIGUtc2hvcG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'fake-eshopy-ako-odhalit' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU9QVVo1Z2gzLXZRIiwidGl0bGUiOiJOZWJlenBlxI1uZSBuw616a2UgY2VueSBlLXNob3BvdiIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9T1BVWjVnaDMtdlEiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGZhbG/FoW7DvWNoIGUtc2hvcG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'bezpecne-nakupovanie-online-slovensko' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU9QVVo1Z2gzLXZRIiwidGl0bGUiOiJOZWJlenBlxI1uZSBuw616a2UgY2VueSBlLXNob3BvdiIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9T1BVWjVnaDMtdlEiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGZhbG/FoW7DvWNoIGUtc2hvcG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'dropshipping-vs-podvodny-eshop' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU9QVVo1Z2gzLXZRIiwidGl0bGUiOiJOZWJlenBlxI1uZSBuw616a2UgY2VueSBlLXNob3BvdiIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9T1BVWjVnaDMtdlEiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGZhbG/FoW7DvWNoIGUtc2hvcG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'recenzie-na-eshope-falosne-rozpoznat' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU9QVVo1Z2gzLXZRIiwidGl0bGUiOiJOZWJlenBlxI1uZSBuw616a2UgY2VueSBlLXNob3BvdiIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9T1BVWjVnaDMtdlEiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGZhbG/FoW7DvWNoIGUtc2hvcG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'reklamacia-z-podvodneho-eshopu' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU9QVVo1Z2gzLXZRIiwidGl0bGUiOiJOZWJlenBlxI1uZSBuw616a2UgY2VueSBlLXNob3BvdiIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9T1BVWjVnaDMtdlEiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGZhbG/FoW7DvWNoIGUtc2hvcG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'kviz-falosny-eshop-alebo-pravy' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PU9QVVo1Z2gzLXZRIiwidGl0bGUiOiJOZWJlenBlxI1uZSBuw616a2UgY2VueSBlLXNob3BvdiIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9T1BVWjVnaDMtdlEiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGZhbG/FoW7DvWNoIGUtc2hvcG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'podvodne-reklamy-facebook-instagram-eshop' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PWpTeWJ0bjVvMWFVIiwidGl0bGUiOiJBa28gb2RoYWxpxaUgcG9kdm9kbsOta2EgdiBvbmxpbmUgYmF6w6FyaSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9alN5YnRuNW8xYVUiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIHBvZHZvZG9jaCB2IGJhesOhcm9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'bazos-vinted-marketplace-podvody' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PTJpM3ZtTlg2clRJIiwidGl0bGUiOiJCdcSPdGUgb3BhdHJuw60gcHJpIGludmVzdGnEjW7DvWNoIHBvbnVrw6FjaCBzIHByw61sacWhIGzDoWthdsO9bSB2w71ub3NvbSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Mmkzdm1OWDZyVEkiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGludmVzdGnEjW7DvWNoIHBvZHZvZG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'krypto-podvody-2026-pump-and-dump' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PTJpM3ZtTlg2clRJIiwidGl0bGUiOiJCdcSPdGUgb3BhdHJuw60gcHJpIGludmVzdGnEjW7DvWNoIHBvbnVrw6FjaCBzIHByw61sacWhIGzDoWthdsO9bSB2w71ub3NvbSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9Mmkzdm1OWDZyVEkiLCJkZXNjcmlwdGlvbiI6Ik9zdmV0b3bDqSB2aWRlbyBUYXRyYSBiYW5reSBvIGludmVzdGnEjW7DvWNoIHBvZHZvZG9jaC4gTsOhem9ybsOhIHVrw6HFvmthLCBuaWUgYXV0ZW50aWNrw6EgbmFocsOhdmthLiJ9]]'
+WHERE slug = 'chatgpt-podvody-falosne-investicie' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXExY25yWk85NVRFIiwidGl0bGUiOiJBa28gcm96b3puYcWlIGRlZXBmYWtlIHZpZGXDoT8hIiwic291cmNlTmFtZSI6IlptdWRyaSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9cTFjbnJaTzk1VEUiLCJkZXNjcmlwdGlvbiI6IkVkdWthxI1uw6kgdmlkZW8gc2xvdmVuc2tlaiB2emRlbMOhdmFjZWogcGxhdGZvcm15IFptdWRyaSDigJQgYWtvIHJvem96bmHFpSBkZWVwZmFrZS4ifQ==]]'
+WHERE slug = 'ai-a-moderne-podvody-deepfake-voice-cloning' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXExY25yWk85NVRFIiwidGl0bGUiOiJBa28gcm96b3puYcWlIGRlZXBmYWtlIHZpZGXDoT8hIiwic291cmNlTmFtZSI6IlptdWRyaSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9cTFjbnJaTzk1VEUiLCJkZXNjcmlwdGlvbiI6IkVkdWthxI1uw6kgdmlkZW8gc2xvdmVuc2tlaiB2emRlbMOhdmFjZWogcGxhdGZvcm15IFptdWRyaSDigJQgYWtvIHJvem96bmHFpSBkZWVwZmFrZS4ifQ==]]'
+WHERE slug = 'deepfake-video-ako-spoznat' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXExY25yWk85NVRFIiwidGl0bGUiOiJBa28gcm96b3puYcWlIGRlZXBmYWtlIHZpZGXDoT8hIiwic291cmNlTmFtZSI6IlptdWRyaSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9cTFjbnJaTzk1VEUiLCJkZXNjcmlwdGlvbiI6IkVkdWthxI1uw6kgdmlkZW8gc2xvdmVuc2tlaiB2emRlbMOhdmFjZWogcGxhdGZvcm15IFptdWRyaSDigJQgYWtvIHJvem96bmHFpSBkZWVwZmFrZS4ifQ==]]'
+WHERE slug = 'klonovanie-hlasu-podvod-volanie-rodina' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXExY25yWk85NVRFIiwidGl0bGUiOiJBa28gcm96b3puYcWlIGRlZXBmYWtlIHZpZGXDoT8hIiwic291cmNlTmFtZSI6IlptdWRyaSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9cTFjbnJaTzk1VEUiLCJkZXNjcmlwdGlvbiI6IkVkdWthxI1uw6kgdmlkZW8gc2xvdmVuc2tlaiB2emRlbMOhdmFjZWogcGxhdGZvcm15IFptdWRyaSDigJQgYWtvIHJvem96bmHFpSBkZWVwZmFrZS4ifQ==]]'
+WHERE slug = 'pribeh-deepfake-ceo-firma' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXExY25yWk85NVRFIiwidGl0bGUiOiJBa28gcm96b3puYcWlIGRlZXBmYWtlIHZpZGXDoT8hIiwic291cmNlTmFtZSI6IlptdWRyaSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9cTFjbnJaTzk1VEUiLCJkZXNjcmlwdGlvbiI6IkVkdWthxI1uw6kgdmlkZW8gc2xvdmVuc2tlaiB2emRlbMOhdmFjZWogcGxhdGZvcm15IFptdWRyaSDigJQgYWtvIHJvem96bmHFpSBkZWVwZmFrZS4ifQ==]]'
+WHERE slug = 'ai-generovane-fotky-fake-profily' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXExY25yWk85NVRFIiwidGl0bGUiOiJBa28gcm96b3puYcWlIGRlZXBmYWtlIHZpZGXDoT8hIiwic291cmNlTmFtZSI6IlptdWRyaSIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9cTFjbnJaTzk1VEUiLCJkZXNjcmlwdGlvbiI6IkVkdWthxI1uw6kgdmlkZW8gc2xvdmVuc2tlaiB2emRlbMOhdmFjZWogcGxhdGZvcm15IFptdWRyaSDigJQgYWtvIHJvem96bmHFpSBkZWVwZmFrZS4ifQ==]]'
+WHERE slug = 'fake-profily-instagram-tiktok' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVNiWnoyUTJ0LWFVIiwidGl0bGUiOiJQb2R2b2QgbmEgdGVsZWbDs25lICh2aXNoaW5nKSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9U2JaejJRMnQtYVUiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgKGhyYW7DoSkgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'hovor-od-falosneho-policajta-co-robit' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVNiWnoyUTJ0LWFVIiwidGl0bGUiOiJQb2R2b2QgbmEgdGVsZWbDs25lICh2aXNoaW5nKSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9U2JaejJRMnQtYVUiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgKGhyYW7DoSkgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'autorita-policia-banka-manipulacia' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVNiWnoyUTJ0LWFVIiwidGl0bGUiOiJQb2R2b2QgbmEgdGVsZWbDs25lICh2aXNoaW5nKSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9U2JaejJRMnQtYVUiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgKGhyYW7DoSkgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'pribeh-senior-falosny-policajt' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVNiWnoyUTJ0LWFVIiwidGl0bGUiOiJQb2R2b2QgbmEgdGVsZWbDs25lICh2aXNoaW5nKSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9U2JaejJRMnQtYVUiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgKGhyYW7DoSkgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'one-ring-scam-zmeskany-hovor-zo-zahranicia' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVNiWnoyUTJ0LWFVIiwidGl0bGUiOiJQb2R2b2QgbmEgdGVsZWbDs25lICh2aXNoaW5nKSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9U2JaejJRMnQtYVUiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgKGhyYW7DoSkgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'ako-blokovat-spam-volania-android-iphone' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PVNiWnoyUTJ0LWFVIiwidGl0bGUiOiJQb2R2b2QgbmEgdGVsZWbDs25lICh2aXNoaW5nKSIsInNvdXJjZU5hbWUiOiJUYXRyYSBiYW5rYSAjcHJlZGlnaXRhbG51YmV6cGVjbm9zdCIsInNvdXJjZVVybCI6Imh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3dhdGNoP3Y9U2JaejJRMnQtYVUiLCJkZXNjcmlwdGlvbiI6Ik9maWNpw6FsbmUgb3N2ZXRvdsOpIHZpZGVvIFRhdHJhIGJhbmt5IOKAlCBuw6F6b3Juw6EgKGhyYW7DoSkgdWvDocW+a2EsIG5pZSBhdXRlbnRpY2vDoSBuYWhyw6F2a2EuIn0=]]'
+WHERE slug = 'overit-telefonne-cislo-kto-mi-vola' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXgxSXZDSVdjcHJrIiwidGl0bGUiOiJQb3pvciBuYSBmYWxvxaFuw71jaCBkb2TDoXZhdGXEvm92IMSNaSByaWFkaXRlxL5vdiBmaXJpZW0iLCJzb3VyY2VOYW1lIjoiVGF0cmEgYmFua2EiLCJzb3VyY2VVcmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXgxSXZDSVdjcHJrIiwiZGVzY3JpcHRpb24iOiJPc3ZldG92w6kgdmlkZW8gVGF0cmEgYmFua3kgbyBwb2R2b2RvY2ggdHlwdSBCRUMuIE7DoXpvcm7DoSB1a8Ohxb5rYS4ifQ==]]'
+WHERE slug = 'falosna-faktura-email-co-robit' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+UPDATE public.blog_posts
+SET body_mdx = body_mdx || E'\n\n## Pozri si osvetové video\n\n[[audio:b64:eyJwcm92aWRlciI6InlvdXR1YmUiLCJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXgxSXZDSVdjcHJrIiwidGl0bGUiOiJQb3pvciBuYSBmYWxvxaFuw71jaCBkb2TDoXZhdGXEvm92IMSNaSByaWFkaXRlxL5vdiBmaXJpZW0iLCJzb3VyY2VOYW1lIjoiVGF0cmEgYmFua2EiLCJzb3VyY2VVcmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXgxSXZDSVdjcHJrIiwiZGVzY3JpcHRpb24iOiJPc3ZldG92w6kgdmlkZW8gVGF0cmEgYmFua3kgbyBwb2R2b2RvY2ggdHlwdSBCRUMuIE7DoXpvcm7DoSB1a8Ohxb5rYS4ifQ==]]'
+WHERE slug = 'nechcene-platby-z-uctu-co-robit' AND content_type = 'article' AND body_mdx NOT LIKE '%[[audio:b64:%';
+
+-- 41 article UPDATEs
