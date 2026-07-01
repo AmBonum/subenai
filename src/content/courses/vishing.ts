@@ -63,6 +63,19 @@ export const vishingCourse: Course = {
       commentary: `AI dnes vie naklonovať hlas z 30 sekúnd nahrávky (napr. zo sociálnych sietí). „Niekomu nehovor" je psychologický prevod — útočník izoluje obeť od overenia. Vždy zavolaj späť na známe číslo, ktoré máš v kontaktoch.`,
     },
     {
+      kind: "embed",
+      heading: "Ako vyzerá vishing — edukatívne video",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=SbZz2Q2t-aU",
+        title: "Podvod na telefóne (vishing)",
+        sourceName: "Tatra banka #predigitalnubezpecnost",
+        sourceUrl: "https://www.youtube.com/watch?v=SbZz2Q2t-aU",
+        description:
+          "Oficiálne osvetové video Tatra banky — názorná (hraná) ukážka priebehu podvodného hovoru, nie autentická nahrávka. Všímaj si tón, naliehavosť a pýtanie kódu.",
+      },
+    },
+    {
       kind: "redflags",
       heading: "Indície, že hovor je podvod",
       flags: [

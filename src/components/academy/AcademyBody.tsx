@@ -1,6 +1,7 @@
 import { BlogPostBody } from "@/components/blog/BlogPostBody";
 import { AcademyQuiz } from "@/components/academy/AcademyQuiz";
 import { VisualBlock } from "@/components/quiz/flow/VisualBlock";
+import { ScamAudioEmbed } from "@/components/academy/ScamAudioEmbed";
 import { parseAcademyBody } from "@/lib/academy/shortcodes";
 
 // E55.2 / E55.4 — renders an academy entry body: runs of Markdown via the
@@ -22,6 +23,12 @@ export function AcademyBody({ body }: AcademyBodyProps) {
           return (
             <div key={i} data-testid="academy-visual" className="mt-6">
               <VisualBlock visual={block.visual} />
+            </div>
+          );
+        if (block.kind === "audio")
+          return (
+            <div key={i} data-testid="academy-audio">
+              <ScamAudioEmbed embed={block.audio} />
             </div>
           );
         return <BlogPostBody key={i} mdx={block.text} />;

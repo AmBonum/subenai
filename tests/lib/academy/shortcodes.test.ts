@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { parseAcademyBody } from "@/lib/academy/shortcodes";
 import { encodeVisual } from "@/lib/academy/visual-shortcode";
+import { encodeAudio, type AudioEmbed } from "@/lib/academy/audio-shortcode";
 import type { Visual } from "@/lib/quiz/bank/questions";
 
 describe("parseAcademyBody", () => {
@@ -44,5 +45,25 @@ describe("parseAcademyBody", () => {
   it("leaves a corrupt visual payload as Markdown text (no crash)", () => {
     const blocks = parseAcademyBody("[[visual:b64:!!!notbase64!!!]]");
     expect(blocks).toEqual([{ kind: "md", text: "[[visual:b64:!!!notbase64!!!]]" }]);
+  });
+
+  it("decodes an [[audio:…]] shortcode into an audio block between prose", () => {
+    const audio: AudioEmbed = {
+      provider: "youtube",
+      url: "https://www.youtube.com/watch?v=SbZz2Q2t-aU",
+      title: "Podvod na telefóne",
+      sourceName: "Tatra banka",
+    };
+    const blocks = parseAcademyBody(`Pred.\n\n${encodeAudio(audio)}\n\nPo.`);
+    expect(blocks).toEqual([
+      { kind: "md", text: "Pred." },
+      { kind: "audio", audio },
+      { kind: "md", text: "Po." },
+    ]);
+  });
+
+  it("leaves a corrupt audio payload as Markdown text (no crash)", () => {
+    const blocks = parseAcademyBody("[[audio:b64:!!!notbase64!!!]]");
+    expect(blocks).toEqual([{ kind: "md", text: "[[audio:b64:!!!notbase64!!!]]" }]);
   });
 });

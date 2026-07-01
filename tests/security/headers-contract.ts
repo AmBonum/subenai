@@ -90,6 +90,8 @@ export const CSP_ALLOWLIST: Record<string, readonly string[]> = {
     "https://challenges.cloudflare.com",
     // E48-v3 — admin PDF iframe embed (signed Storage URL)
     "https://lwxichbuvcakscntjkzs.supabase.co",
+    // E61 — academy scam-call recordings (privacy click-to-load YouTube player)
+    "https://www.youtube-nocookie.com",
   ],
   "form-action": ["'self'", "https://checkout.stripe.com"],
 };

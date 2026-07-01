@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Visual } from "@/lib/quiz/bank/questions";
+import type { AudioEmbed } from "@/lib/academy/audio-shortcode";
 
 export type CourseCategory =
   | "sms"
@@ -19,7 +20,8 @@ export type CourseSection =
   | { kind: "checklist"; heading: string; items: { good: boolean; text: string }[] }
   | { kind: "redflags"; heading: string; flags: string[] }
   | { kind: "do_dont"; heading: string; do: string[]; dont: string[] }
-  | { kind: "scenario"; heading: string; story: string; right_action: string };
+  | { kind: "scenario"; heading: string; story: string; right_action: string }
+  | { kind: "embed"; heading: string; audio: AudioEmbed };
 
 /**
  * A single free course shown under /kurzy. Add new courses by creating
@@ -86,6 +88,18 @@ const sectionSchema: z.ZodType<CourseSection> = z.discriminatedUnion("kind", [
     heading: z.string().min(1),
     story: z.string().min(1),
     right_action: z.string().min(1),
+  }),
+  z.object({
+    kind: z.literal("embed"),
+    heading: z.string().min(1),
+    audio: z.object({
+      provider: z.enum(["youtube", "external"]),
+      url: z.string().min(1),
+      title: z.string().min(1),
+      sourceName: z.string().min(1),
+      sourceUrl: z.string().url().optional(),
+      description: z.string().optional(),
+    }),
   }),
 ]);
 

@@ -608,6 +608,13 @@
     "url_tab": "Přihlášení",
     "call_incoming": "Příchozí hovor"
   },
+  "academy_audio": {
+    "label": "Ukázka podvodného hovoru",
+    "play": "Přehrát nahrávku",
+    "play_aria": "Přehrát nahrávku: {title}",
+    "open": "Otevřít zdroj",
+    "source": "Zdroj"
+  },
   "courses_misc": {
     "category_label": {
       "sms": "SMS",

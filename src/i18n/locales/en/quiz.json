@@ -608,6 +608,13 @@
     "url_tab": "Sign in",
     "call_incoming": "Incoming call"
   },
+  "academy_audio": {
+    "label": "Scam-call clip",
+    "play": "Play recording",
+    "play_aria": "Play recording: {title}",
+    "open": "Open source",
+    "source": "Source"
+  },
   "courses_misc": {
     "category_label": {
       "sms": "SMS",

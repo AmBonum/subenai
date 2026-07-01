@@ -1,5 +1,6 @@
 import type { Course, CourseSection } from "@/content/courses";
 import { encodeVisual } from "@/lib/academy/visual-shortcode";
+import { encodeAudio } from "@/lib/academy/audio-shortcode";
 
 // E55.4 — deterministic converter: a structured course (intro / example /
 // checklist / redflags / do_dont / scenario sections) → the Markdown +
@@ -13,6 +14,7 @@ import { encodeVisual } from "@/lib/academy/visual-shortcode";
 //   redflags   → ## heading + "**Červená vlajka:** …" paragraphs → 🚩 callouts
 //   do_dont    → ## heading + "### ✅ Rob" / "### ❌ Nerob" bullet lists
 //   scenario   → ## heading + story + "**Zlaté pravidlo:** …" ⭐ callout
+//   embed      → ## heading + [[audio:…]] external recording reference (E61)
 //
 // Pure and side-effect free so it can be golden-tested and run from the
 // SQL generator.
@@ -42,6 +44,8 @@ function sectionToMarkdown(section: CourseSection): string {
       ].join("\n\n");
     case "scenario":
       return `${h}\n\n${section.story.trim()}\n\n**Zlaté pravidlo:** ${section.right_action.trim()}`;
+    case "embed":
+      return `${h}\n\n${encodeAudio(section.audio)}`;
   }
 }
 
