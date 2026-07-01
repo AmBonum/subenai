@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Volume2 } from "lucide-react";
 import { getQuestionTimeLimit, type Question } from "@/lib/quiz/bank/questions";
 import { VisualBlock } from "@/components/quiz/flow/VisualBlock";
+import { ScamAudioEmbed } from "@/components/academy/ScamAudioEmbed";
 import { AnswerFeedback } from "@/components/quiz/review/AnswerFeedback";
+import { useSoundPreference } from "@/hooks/useSoundPreference";
 import { tFor } from "@/i18n/quiz";
 
 interface Props {
@@ -13,6 +16,7 @@ interface Props {
 
 export function QuestionCard({ question, index, total, onAnswer }: Props) {
   const t = tFor("take");
+  const { soundsEnabled, setSoundsEnabled } = useSoundPreference();
   const timeLimit = useMemo(() => getQuestionTimeLimit(question), [question]);
   const [secondsLeft, setSecondsLeft] = useState(timeLimit);
   const [selected, setSelected] = useState<string | null>(null);
@@ -111,6 +115,26 @@ export function QuestionCard({ question, index, total, onAnswer }: Props) {
       {question.visual && (
         <div className="mt-5">
           <VisualBlock visual={question.visual} />
+        </div>
+      )}
+
+      {/* Scam-call recording — only when the reader has opted into sounds
+          (E62). Off by default; audio never surprise-plays. */}
+      {question.audio && (
+        <div className="mt-4" data-testid="quiz-flow-audio">
+          {soundsEnabled ? (
+            <ScamAudioEmbed embed={question.audio} compact />
+          ) : (
+            <button
+              type="button"
+              data-testid="quiz-flow-audio-enable"
+              onClick={() => setSoundsEnabled(true)}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-card/60 px-4 py-3 text-sm font-semibold text-muted-foreground transition-colors hover:border-primary/60 hover:text-foreground"
+            >
+              <Volume2 aria-hidden="true" className="h-4 w-4" />
+              {t("audio_enable")}
+            </button>
+          )}
         </div>
       )}
 
