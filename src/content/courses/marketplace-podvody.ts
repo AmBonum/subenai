@@ -14,6 +14,19 @@ export const marketplaceCourse: Course = {
   updatedAt: "2026-04-26",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: podvodník v online bazári",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=jSybtn5o1aU",
+        title: "Ako odhaliť podvodníka v online bazári",
+        sourceName: "Tatra banka #predigitalnubezpecnost",
+        sourceUrl: "https://www.youtube.com/watch?v=jSybtn5o1aU",
+        description:
+          "Osvetové video Tatra banky o podvodoch v bazároch. Názorná ukážka, nie autentická nahrávka.",
+      },
+    },
+    {
       kind: "intro",
       heading: "Bazoš a Facebook Marketplace ako lovisko",
       body: `Slovenský trh ovládajú dve platformy: Bazoš a FB Marketplace. Obe majú minimálnu moderáciu, takže útočník si vytvorí účet za 5 minút a má tisíce potenciálnych obetí. Schémy sú dvojaké — útočník buď vystupuje ako „predávajúci" (vyláka ti zálohu), alebo ako „kupec" (vyláka ti údaje karty cez falošnú platobnú stránku).`,
