@@ -14,6 +14,19 @@ export const pigButcheringCourse: Course = {
   updatedAt: "2026-04-29",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: príliš lákavé investičné ponuky",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=2i3vmNX6rTI",
+        title: "Buďte opatrní pri investičných ponukách s príliš lákavým výnosom",
+        sourceName: "Tatra banka",
+        sourceUrl: "https://www.youtube.com/watch?v=2i3vmNX6rTI",
+        description:
+          "Oficiálne osvetové video Tatra banky — názorná (hraná) ukážka, nie autentická nahrávka.",
+      },
+    },
+    {
       kind: "intro",
       heading: 'Čo je „pig butchering"?',
       body: `Pig butchering (doslova „vykŕmiť a zabiť") je kombinovaný podvod, pri ktorom útočník najprv buduje vzťah s obeťou — romantický alebo priateľský — a potom ju lákavými investičnými „príležitosťami" pozvoľna oberá o celé úspory. Nie je to rýchly útok: trvá týždne až mesiace. Podľa Europolu je dnes táto schéma zodpovedná za väčšinu z miliárd eur ročne strácaných na investičných podvodoch v EÚ. Cieľ: ľudia v každom veku — od vysokoškolských študentov po dôchodcov.`,

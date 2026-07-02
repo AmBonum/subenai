@@ -13,6 +13,19 @@ export const bezpecneOnlineNakupyCourse: Course = {
   updatedAt: "2026-05-20",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: nebezpečne nízke ceny e-shopov",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=OPUZ5gh3-vQ",
+        title: "Nebezpečne nízke ceny e-shopov",
+        sourceName: "Tatra banka #predigitalnubezpecnost",
+        sourceUrl: "https://www.youtube.com/watch?v=OPUZ5gh3-vQ",
+        description:
+          "Oficiálne osvetové video Tatra banky — názorná (hraná) ukážka, nie autentická nahrávka.",
+      },
+    },
+    {
       kind: "intro",
       heading: "Bezpečné online nákupy začínajú pri výbere platby",
       body: `Bezpečné online nákupy nie sú o tom, že prestaneš nakupovať. Sú o tom, že si vyberáš platobnú metódu, ktorá ti dáva páku, keď sa niečo pokazí. Kartová platba má chargeback (vrátenie peňazí cez banku do 120 dní). PayPal má Buyer Protection (ochranu kupujúceho). Apple Pay a Google Pay maskujú reálne číslo karty. Revolut a Wise ti dovolia vytvoriť jednorazovú virtuálnu kartu len na ten konkrétny nákup. Bankový prevod nemá nič z toho — keď peniaze odídu, sú preč. Tento kurz ti ukáže, ako tieto nástroje použiť v praxi pri nákupe na Slovensku.`,
