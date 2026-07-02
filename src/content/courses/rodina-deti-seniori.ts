@@ -13,6 +13,19 @@ export const rodinaDetiSenioriCourse: Course = {
   updatedAt: "2026-05-20",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: podvody na seniorov (video)",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=wFeXpo_AvtQ",
+        title: "Inteligentný senior — podvody na internete a cez telefón",
+        sourceName: "5peňazí",
+        sourceUrl: "https://www.youtube.com/watch?v=wFeXpo_AvtQ",
+        description:
+          "Edukačné video série „Inteligentný senior“ (5peňazí) o phishingu a vishingu — ideálne pustiť aj rodičom a starým rodičom.",
+      },
+    },
+    {
       kind: "intro",
       heading: "Bezpečnosť rodiny — tri rôzne generácie, tri rôzne riziká",
       body: `Bezpečnosť rodiny online v roku 2026 znamená tri úplne odlišné konverzácie. S deťmi (7 – 14) riešiš rodičovskú kontrolu, kyberšikanu a Discord/TikTok. S tínedžermi (15 – 18) hovoríš o sextingu (posielanie intímneho obsahu), falošných profiloch a o tom, prečo Snapchat nie je súkromný. So seniormi — rodičmi a starými rodičmi — nastavuješ ich smartfón tak, aby im romance scammer (podvodník cez predstieraný ľúbostný vzťah) a falošný „vnuk v núdzi" nezobrali úspory. Tento kurz dáva konkrétne kroky pre každú skupinu — nie strašenie, ale praktické zapnutie 2FA (dvojfaktorové overenie), blokovanie webov a krízová linka 116 111, ktorá pre dieťa zachraňuje životy.`,

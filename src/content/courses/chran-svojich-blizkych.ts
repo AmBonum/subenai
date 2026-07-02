@@ -13,6 +13,19 @@ export const ochranaBlizkychCourse: Course = {
   updatedAt: "2026-04-30",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si (a pusti rodičom): podvody na seniorov",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=wFeXpo_AvtQ",
+        title: "Inteligentný senior — podvody na internete a cez telefón",
+        sourceName: "5peňazí",
+        sourceUrl: "https://www.youtube.com/watch?v=wFeXpo_AvtQ",
+        description:
+          "Edukačné video série „Inteligentný senior“ (5peňazí) o phishingu a vishingu — presne to, čo môžeš pustiť rodičom a starým rodičom.",
+      },
+    },
+    {
       kind: "intro",
       heading: "Prečo sú seniori v hľadáčiku",
       body: `Podľa dát Europolu seniori tvoria viac ako 60 % obetí telefonických podvodov. Dôvodov je niekoľko: väčšie úspory na účte, menší technologický prehľad a väčšia ochota dôverovať autoritám (banka, polícia, lekár). Ty — ako ich blízky — si prvá obranná línia. Nie preto, že by boli neschopní, ale preto, že útočníci sú profesionáli, ktorí tým trávia celý pracovný čas. Táto kapitola ti dáva konkrétne nástroje na rozhovor, nastavenia a reakciu po prípadnom útoku.`,

@@ -13,6 +13,19 @@ export const topPodvody2026Course: Course = {
   updatedAt: "2026-05-20",
   sections: [
     {
+      kind: "embed",
+      heading: "Pozri si na úvod: ako vyzerá typický scam",
+      audio: {
+        provider: "youtube",
+        url: "https://www.youtube.com/watch?v=B1bM5aa4OqI",
+        title: "Scam s PPPítrom",
+        sourceName: "Tatra banka #predigitalnubezpecnost",
+        sourceUrl: "https://www.youtube.com/watch?v=B1bM5aa4OqI",
+        description:
+          "Oficiálne osvetové video Tatra banky — názorná (hraná) ukážka, nie autentická nahrávka.",
+      },
+    },
+    {
       kind: "intro",
       heading: "Top podvody na Slovensku v 2026 — čo sa zmenilo oproti 2025",
       body: `Top podvody na Slovensku v 2026 majú jeden spoločný menovateľ: AI. Deepfake (umelo vygenerované falošné video či hlas) hlas z 8 sekúnd nahrávky, ChatGPT-generované e-maily bez gramatických chýb, falošné AI investičné platformy s realistickým UI. Zároveň prišli nové vlny — EÚ AI Akt (platný od augusta 2026) spustil vlnu phishingu (podvodné vylákanie prihlasovacích či platobných údajov) „povinná registrácia AI nástrojov", rebranding Slovenskej pošty na „Slovak Post" v marci dal útočníkom 6 mesiacov priestoru s „aktualizáciou údajov k novému značeniu" e-mailmi. Krypto pump-and-dump na meme coiny zlikvidoval slovenských retailových investorov za vyše 12 miliónov €. Tento kurz prejde 5 najaktuálnejších schém v SR a ako každú rozoznáš za pár sekúnd.`,
