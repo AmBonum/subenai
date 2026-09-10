@@ -5,7 +5,7 @@ export const aiPomocnikCourse: Course = {
   title: `AI asistent — ako z neho dostať presne to, čo chceš`,
   tagline:
     "Preklad, recept, list lekárovi alebo úradu — AI to zvládne za 10 sekúnd, keď vieš, ako sa opýtať. 6 šablón promtov pre bežný život.",
-  category: "obecne",
+  category: "ai",
   difficulty: "začiatočník",
   estimatedMinutes: 9,
   heroEmoji: "🤝",

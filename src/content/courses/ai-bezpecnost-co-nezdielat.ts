@@ -5,7 +5,7 @@ export const aiBezpecnostCourse: Course = {
   title: `AI a bezpečnosť — čo chatbotu písať a čo nie`,
   tagline:
     "ChatGPT, Gemini a Copilot sú šikovné nástroje. Aké údaje im NIKDY nedávať a ako bezpečne písať promty bez úniku citlivých dát.",
-  category: "obecne",
+  category: "ai",
   difficulty: "začiatočník",
   estimatedMinutes: 8,
   heroEmoji: "🛡️",

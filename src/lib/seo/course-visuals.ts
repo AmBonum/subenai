@@ -34,6 +34,8 @@ export const COURSE_VISUALS: Record<CourseCategory, CourseVisual> = {
   data: { gradientFrom: "from-emerald-500/40", gradientTo: "to-teal-900/40" },
   // Generic / cross-topic — brand palette
   obecne: { gradientFrom: "from-primary/40", gradientTo: "to-accent/40" },
+  // Safe AI work — indigo/violet (matches blog "bezpecna-praca-s-ai")
+  ai: { gradientFrom: "from-indigo-500/40", gradientTo: "to-violet-900/40" },
 };
 
 export function visualForCourseCategory(category: CourseCategory): CourseVisual {

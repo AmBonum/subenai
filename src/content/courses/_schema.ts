@@ -10,7 +10,8 @@ export type CourseCategory =
   | "investicie"
   | "vztahy"
   | "data"
-  | "obecne";
+  | "obecne"
+  | "ai";
 
 export type CourseDifficulty = "začiatočník" | "pokročilý";
 
@@ -57,6 +58,7 @@ const courseCategorySchema = z.enum([
   "vztahy",
   "data",
   "obecne",
+  "ai",
 ]);
 
 const sectionSchema: z.ZodType<CourseSection> = z.discriminatedUnion("kind", [
