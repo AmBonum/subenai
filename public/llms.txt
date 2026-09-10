@@ -1,27 +1,31 @@
 # subenai
 
-> 90-sekundový test slovenskej digitálnej obozretnosti. Reálne scam SMS, emaily, fake e-shopy a telefonické podvody. Ukáže ti, ktoré z nich by ťa dostali — a ako sa proti nim brániť.
+> 90-sekundový test slovenskej digitálnej obozretnosti. Reálne scam SMS, e-maily, falošné e-shopy a telefonické podvody. Ukáže ti, ktoré z nich by ťa dostali — a ako sa proti nim brániť.
 
-subenai je bezplatný edukačný nástroj postavený ako rýchly kvíz: 15 otázok, 90 sekúnd, žiadna registrácia. Cieľ je dať návštevníkovi okamžitú spätnú väzbu o jeho schopnosti rozpoznať podvody, ktoré reálne kolujú na Slovensku — a nasmerovať ho ku konkrétnym návykom (2FA, password manager, overovanie URL).
+subenai je bezplatný edukačný nástroj: 10 otázok, 90 sekúnd, bez registrácie. Cieľ je dať návštevníkovi okamžitú spätnú väzbu o schopnosti rozpoznať podvody, ktoré reálne kolujú na Slovensku — a nasmerovať ho ku konkrétnym návykom (2FA, správca hesiel, overovanie URL, bezpečná práca s AI nástrojmi).
 
-Stránka je v slovenčine a cieli na slovenských používateľov internetu od 14 do 80+ rokov. Obsah pripravujeme z verejných zdrojov NBÚ, NCKB a polícia.sk.
+Stránka je v slovenčine a cieli na slovenských používateľov internetu od 14 do 80+ rokov. Obsah pripravujeme z verejných zdrojov NBÚ, SK-CERT, NBS, polícia.sk a z primárnych zdrojov výrobcov AI nástrojov.
 
 ## Hlavné stránky
 
-- [Domov a kvíz](https://subenai.sk/): Spustenie testu, krátky popis a "Časté otázky".
-- [Test](https://subenai.sk/test): Samotný 15-otázkový kvíz s časomierou a okamžitou recenziou.
-- [Školenia](https://subenai.sk/courses): Krátke bezplatné školenia podľa kategórie podvodu (smishing, phishing, vishing, marketplace, investičné, romance, BEC, data hygiene a ďalšie).
-- [Cookies](https://subenai.sk/cookies): Detailné zásady cookies (GDPR + ePrivacy + zákon č. 452/2021 Z. z.).
-- [Súkromie](https://subenai.sk/privacy): Privacy policy, dátové toky, retention.
+- [Domov a test](https://subenai.sk/): Spustenie testu, popis a časté otázky.
+- [Rýchly test](https://subenai.sk/test): 10 otázok s časomierou a okamžitým vysvetlením.
+- [Testy podľa odvetví](https://subenai.sk/tests): Pripravené testy pre firmy, školy a tímy.
+- [Akadémia](https://subenai.sk/academy): Interaktívne kurzy a články o podvodoch — phishing, smishing, vishing, marketplace, investičné a romance scamy, BEC, hygiena údajov.
+- [Bezpečná práca s AI](https://subenai.sk/academy/category/bezpecna-praca-s-ai): Sekcia pre bežných používateľov (čo nepísať do chatbota, halucinácie, nastavenia súkromia, falošné AI appky, deti a chatboti) aj pre odborníkov (prompt injection, shadow AI, AI agenti a MCP, OWASP Top 10 pre LLM, AI generovaný kód).
+- [Šablóny testov](https://subenai.sk/sablony): Hotové sady otázok na okamžité použitie.
+- [Dokumentácia](https://subenai.sk/docs): Ako appka funguje, účet, súkromie, školy, firmy.
+- [Cookies](https://subenai.sk/cookies): Zásady cookies (GDPR + ePrivacy + zákon č. 452/2021 Z. z.).
+- [Súkromie](https://subenai.sk/privacy): Ochrana osobných údajov, dátové toky, uchovávanie.
 
 ## Princípy a obmedzenia
 
-- **Žiadna registrácia, žiadne osobné údaje**: Test je 100 % anonymný. Identifikátor pokusu (`share_id`) je len náhodné UUID pre zdieľanie výsledku.
-- **Privacy-first**: Sledovanie iba s explicitným consentom (granularne: nevyhnutné / predvoľby / analytika / marketing). Žiadne tretie strany pre marketing.
-- **Otvorený scoring**: Pravidlá výpočtu skóre sú v `src/lib/quiz/scoring.ts`. Kritické chyby (klik na phishing, zdieľanie kódu z SMS) majú vyššiu váhu než vizuálne podobné domény.
-- **Edukatívny dôraz**: Po každej otázke vidieť vysvetlenie aj odkaz na relevantný kurz.
+- **Test bez registrácie, bez osobných údajov**: identifikátor pokusu je náhodné UUID pre zdieľanie výsledku.
+- **Privacy-first**: sledovanie iba s explicitným súhlasom (nevyhnutné / predvoľby / analytika / marketing). Žiadne tretie strany pre marketing.
+- **Otvorený scoring**: pravidlá výpočtu skóre sú v `src/lib/quiz/score/scoring.ts`. Kritické chyby (klik na phishing, prezradenie kódu z SMS) majú vyššiu váhu než vizuálne podobné domény.
+- **Edukatívny dôraz**: po každej otázke vidíš vysvetlenie a odkaz na relevantný kurz alebo článok.
 
 ## Neoficiálne / nezverejnené
 
-- Nie sme bankou, ŠÚ SR ani štátnou agentúrou. Test má edukačný charakter, nie právne odporúčanie.
-- Žiadne reklamy, žiadny model platenej verzie. Hosting je free-tier (Cloudflare Pages).
+- Nie sme banka, štátna agentúra ani právna poradňa. Obsah má edukačný charakter.
+- Žiadne reklamy, žiadna platená verzia. Hosting je free-tier (Cloudflare Pages).

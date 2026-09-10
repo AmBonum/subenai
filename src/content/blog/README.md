@@ -51,6 +51,11 @@ Required keys: `slug`, `title`, `excerpt`, `category_slug`, `author_slug`,
 `primary_keyword`, `search_intent`, `seo_title`, `seo_description`,
 `sources` (≥4 for pillars, ≥3 for clusters per voice-guide §12).
 
+Optional (E65): `difficulty` (`beginner` | `advanced`) — the audience lane
+used by the safe-AI section (`bezpecna-praca-s-ai`); omit it for a pillar
+that serves both audiences. `related_course_slug` — the lesson the
+`ContinueWithCourseCard` points at.
+
 Optional: `subtitle`, `reading_minutes`, `hero_image_url`, `og_image_url`,
 `canonical_url`, `pillar` (boolean — `true` for one of the 10 pillar
 articles, `false` or omitted for cluster articles).
@@ -76,3 +81,22 @@ articles, `false` or omitted for cluster articles).
    `draft` row in Supabase.
 4. The author publishes from `/admin/blog/$id` (toggles status to
    `published`, sets `published_at`).
+
+## Publishing via SQL backfill (E65+)
+
+For a curated batch that ships as `published` rows (the E55 lesson-import
+pattern), generate an idempotent SQL file instead of running the seed
+script against prod:
+
+```bash
+npm run blog:backfill
+```
+
+`scripts/generate-blog-backfill.ts` reads the slugs listed in the section
+manifest (`src/content/academy/ai-safety-section.ts`), validates each
+file's frontmatter, stamps deterministic staggered `published_at` values
+(07:00 Europe/Bratislava + 75 min per slot) and writes
+`supabase/backfills/20260910_ai_safety_articles.sql` (`INSERT … ON CONFLICT
+(slug) DO UPDATE`). The owner runs that file in the prod SQL editor after
+the PR merges; re-running it is safe. `tests/content/ai-safety-section.test.ts`
+asserts the committed SQL is byte-identical to a fresh generation.
