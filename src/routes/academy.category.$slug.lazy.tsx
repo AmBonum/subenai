@@ -14,6 +14,7 @@ function AcademyCategoryRoute() {
   const items = (list.data ?? []).filter((i) => i.category.slug === slug);
   return (
     <AcademyArchive
+      key={slug}
       heading={category.data?.name ?? "Kategória"}
       description={category.data?.description}
       items={items}

@@ -32,32 +32,51 @@ const items: AcademyListItem[] = [
     content_type: "article",
     difficulty: "advanced",
   },
+  {
+    ...base,
+    id: "4",
+    slug: "d",
+    title: "AI pre odborníkov",
+    excerpt: "...",
+    content_type: "lesson",
+    difficulty: "advanced",
+  },
 ];
 
 describe("filterAcademy", () => {
   it("filters by type", () => {
-    expect(filterAcademy(items, { type: "lesson", query: "" }).map((i) => i.id)).toEqual(["2"]);
+    expect(filterAcademy(items, { type: "lesson", query: "" }).map((i) => i.id)).toEqual([
+      "2",
+      "4",
+    ]);
     expect(filterAcademy(items, { type: "article", query: "" }).map((i) => i.id)).toEqual([
       "1",
       "3",
     ]);
-    expect(filterAcademy(items, { type: "all", query: "" })).toHaveLength(3);
+    expect(filterAcademy(items, { type: "all", query: "" })).toHaveLength(4);
   });
 
   it("matches the query against title/excerpt/category", () => {
     expect(filterAcademy(items, { type: "all", query: "sms" }).map((i) => i.id)).toEqual(["2"]);
     expect(filterAcademy(items, { type: "all", query: "základy" }).map((i) => i.id)).toEqual(["1"]);
     // category name match (all share "Phishing") returns everything
-    expect(filterAcademy(items, { type: "all", query: "phishing" })).toHaveLength(3);
+    expect(filterAcademy(items, { type: "all", query: "phishing" })).toHaveLength(4);
   });
 
   it("lane filter keeps the matching lane plus lane-less items", () => {
     expect(
       filterAcademy(items, { type: "all", query: "", lane: "advanced" }).map((i) => i.id),
-    ).toEqual(["1", "2", "3"]);
+    ).toEqual(["1", "2", "3", "4"]);
     expect(
       filterAcademy(items, { type: "all", query: "", lane: "beginner" }).map((i) => i.id),
     ).toEqual(["1", "2"]);
-    expect(filterAcademy(items, { type: "all", query: "", lane: "all" })).toHaveLength(3);
+    expect(filterAcademy(items, { type: "all", query: "", lane: "all" })).toHaveLength(4);
+  });
+
+  it("applies the lane to lessons by their difficulty as well", () => {
+    const advancedLesson = filterAcademy(items, { type: "lesson", query: "", lane: "advanced" });
+    expect(advancedLesson.map((i) => i.id)).toEqual(["2", "4"]);
+    const beginnerLesson = filterAcademy(items, { type: "lesson", query: "", lane: "beginner" });
+    expect(beginnerLesson.map((i) => i.id)).toEqual(["2"]);
   });
 });

@@ -10,8 +10,10 @@ import { cn } from "@/lib/utils";
 // /academy/author/$slug: a heading + a grid of entry cards.
 // E65 — when an article carries a difficulty (the safe-AI section's audience
 // lanes), an "audience" toggle narrows the grid; lane-less entries stay
-// visible in every lane. Lessons alone don't trigger it — their difficulty
-// is a skill level, not an audience.
+// visible in every lane. Lessons alone don't open the toggle (their
+// difficulty is a skill level), but once an article does, lessons follow the
+// same filter: beginner lessons sit with "pre každého", advanced ones with
+// "pre odborníkov".
 
 export interface AcademyArchiveProps {
   heading: string;

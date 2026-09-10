@@ -1,8 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { execFileSync } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import matter from "gray-matter";
+
+import { AI_SAFETY_BACKFILL_PATH, buildAiSafetyBackfillSql } from "@/lib/blog/ai-safety-backfill";
 
 import {
   AI_SAFETY_ARTICLES,
@@ -182,7 +183,7 @@ describe("E65 article integrity", () => {
 });
 
 describe("E65 backfill SQL", () => {
-  const SQL_PATH = "supabase/backfills/20260910_ai_safety_articles.sql";
+  const SQL_PATH = AI_SAFETY_BACKFILL_PATH;
 
   it("carries every manifest article, pillar first", () => {
     const sql = read(SQL_PATH);
@@ -193,12 +194,7 @@ describe("E65 backfill SQL", () => {
     expect(positions[0]).toBeLessThan(Math.min(...positions.slice(1)));
   });
 
-  it("is byte-identical to a fresh generation", () => {
-    const committed = read(SQL_PATH);
-    execFileSync("npx", ["tsx", "scripts/generate-blog-backfill.ts"], {
-      cwd: ROOT,
-      stdio: "ignore",
-    });
-    expect(read(SQL_PATH)).toBe(committed);
+  it("is byte-identical to a fresh in-memory generation", () => {
+    expect(buildAiSafetyBackfillSql(ROOT)).toBe(read(SQL_PATH));
   });
 });

@@ -74,8 +74,9 @@ describe("AcademyArchive lane toggle", () => {
 
   it("shows the lane badge on cards", () => {
     render(<AcademyArchive heading="Kat" items={items} isLoading={false} />);
-    expect(screen.getByText("pre odborníkov")).toBeInTheDocument();
-    expect(screen.getByText("pre každého")).toBeInTheDocument();
+    const lanes = screen.getAllByTestId("academy-archive-card-lane").map((el) => el.textContent);
+    expect(lanes).toEqual(expect.arrayContaining(["pre každého", "pre odborníkov"]));
+    expect(lanes).toHaveLength(2);
   });
 
   it("has no a11y violations", async () => {

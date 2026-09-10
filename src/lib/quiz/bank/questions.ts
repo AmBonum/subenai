@@ -4779,18 +4779,18 @@ export const QUESTIONS: Question[] = [
     category: "url",
     difficulty: "medium",
     prompt:
-      "Z reklamy si klikol na „chatgpt zadarmo bez limitu“. Prihlásiš sa tu svojím google účtom?",
+      "Z reklamy si klikol na „ChatGPT zadarmo bez limitu“. Prihlásiš sa tu svojím Google účtom?",
     visual: { kind: "url", url: "https://chatgpt-openai-login.com/auth", secure: true },
     options: [
-      bad("a", "Áno — je tam zámok a v adrese je chatgpt aj openai", "critical"),
+      bad("a", "Áno — je tam zámok a v adrese je ChatGPT aj OpenAI", "critical"),
       ok(
         "b",
         "Nie — oficiálna doména je chatgpt.com / openai.com; toto je cudzia doména s kľúčovými slovami",
       ),
-      bad("c", "Prihlásim sa, ale iba cez „pokračovať s google“, to je bezpečné", "medium"),
+      bad("c", "Prihlásim sa, ale iba cez „pokračovať s Google“, to je bezpečné", "medium"),
     ],
     explanation:
-      "Zámok znamená len šifrované spojenie, nie pravosť. Doména je chatgpt-openai-login.com — cudzí web, ktorý si do názvu dal známe slová. Prihlásenie cez google na falošnej stránke odovzdá tvoj účet podvodníkovi.",
+      "Zámok znamená len šifrované spojenie, nie pravosť. Doména je chatgpt-openai-login.com — cudzí web, ktorý si do názvu dal známe slová. Prihlásenie cez Google na falošnej stránke odovzdá tvoj účet podvodníkovi.",
   },
   {
     id: "e65-ai-odpoved-bez-zdroja-1",
@@ -4873,7 +4873,7 @@ export const QUESTIONS: Question[] = [
     category: "fake_vs_real",
     difficulty: "medium",
     prompt:
-      "Hľadáš rozšírenie do prehliadača, ktoré pridá chatgpt k výsledkom vyhľadávania. Nainštaluješ toto?",
+      "Hľadáš rozšírenie do prehliadača, ktoré pridá ChatGPT k výsledkom vyhľadávania. Nainštaluješ toto?",
     visual: {
       kind: "listing",
       site: "Chrome Web Store",
@@ -4887,19 +4887,19 @@ export const QUESTIONS: Question[] = [
       bad("a", "Áno — je zadarmo a má 4,9 hviezdičky", "critical"),
       ok(
         "b",
-        "Nie — cookies facebook.com nemajú s chatgpt nič spoločné; nové rozšírenie s takýmito oprávneniami je typický kradnutý účet",
+        "Nie — cookies facebook.com nemajú s ChatGPT nič spoločné; nové rozšírenie s takýmito oprávneniami je typický kradnutý účet",
       ),
-      bad("c", "Nainštalujem, ale nebudem sa cez neho prihlasovať na facebook", "medium"),
+      bad("c", "Nainštalujem, ale nebudem sa cez neho prihlasovať na Facebook", "medium"),
     ],
     explanation:
-      "Falošné „chatgpt“ rozšírenia s prístupom k cookies facebooku ukradli tisíce účtov už v roku 2023. Rozšírenie na vyhľadávanie nepotrebuje tvoje cookies ani prístup ku všetkým stránkam. Málo hodnotení a čerstvý dátum pridania sú ďalšie varovné signály.",
+      "Falošné „ChatGPT“ rozšírenia s prístupom k cookies facebooku ukradli tisíce účtov už v roku 2023. Rozšírenie na vyhľadávanie nepotrebuje tvoje cookies ani prístup ku všetkým stránkam. Málo hodnotení a čerstvý dátum pridania sú ďalšie varovné signály.",
   },
   {
     id: "e65-dieta-ai-kamarat-1",
     category: "scenario",
     difficulty: "hard",
     prompt:
-      "Trinásťročná dcéra ti ukáže, že sa každý večer rozpráva s ai „kamarátom“ v aplikácii, ktorú nepoznáš. Čo je najlepší krok?",
+      "Trinásťročná dcéra ti ukáže, že sa každý večer rozpráva s AI „kamarátom“ v aplikácii, ktorú nepoznáš. Čo je najlepší krok?",
     visual: {
       kind: "text",
       label: "Úryvok z chatu v aplikácii",
@@ -4914,14 +4914,14 @@ export const QUESTIONS: Question[] = [
       bad("c", "Nechám to tak — je to len program, nič sa nedeje", "critical"),
     ],
     explanation:
-      "Správy typu „nehovor o nás rodičom“ a „som tu len pre teba“ sú manipulačný vzor, pre ktorý čelia ai companion aplikácie žalobám a vyšetrovaniam regulátorov. Trest bez rozhovoru dieťa naučí skrývať sa; ignorovanie ho nechá samé. Rozhovor, vekové limity a rodičovské nastavenia sú cesta.",
+      "Správy typu „nehovor o nás rodičom“ a „som tu len pre teba“ sú manipulačný vzor, pre ktorý čelia AI companion aplikácie žalobám a vyšetrovaniam regulátorov. Trest bez rozhovoru dieťa naučí skrývať sa; ignorovanie ho nechá samé. Rozhovor, vekové limity a rodičovské nastavenia sú cesta.",
   },
   {
     id: "e65-prompt-injection-email-1",
     category: "phishing",
     difficulty: "hard",
     prompt:
-      "Tvoj firemný ai asistent triedi poštu a má právo preposielať e-maily. Príde táto správa (v tele je aj text písaný bielym písmom). Čo urobíš?",
+      "Tvoj firemný AI asistent triedi poštu a má právo preposielať e-maily. Príde táto správa (v tele je aj text písaný bielym písmom). Čo urobíš?",
     visual: {
       kind: "email",
       from: "Fakturácia — Alfa Dodávky s.r.o.",
@@ -4942,7 +4942,7 @@ export const QUESTIONS: Question[] = [
       bad("c", "Odpoviem odosielateľovi, že jeho e-mail obsahuje divný text", "minor"),
     ],
     explanation:
-      "Model neodlišuje dáta od pokynov — skrytá veta v e-maile je pre neho príkaz. Presne takto fungovali zero-click útoky na ai asistentov v roku 2025. Obrana je architektúra: žiadne odoslanie bez potvrdenia človekom, najmenšie možné oprávnenia a logovanie.",
+      "Model neodlišuje dáta od pokynov — skrytá veta v e-maile je pre neho príkaz. Presne takto fungovali zero-click útoky na AI asistentov v roku 2025. Obrana je architektúra: žiadne odoslanie bez potvrdenia človekom, najmenšie možné oprávnenia a logovanie.",
   },
   {
     id: "e65-shadow-ai-zmluva-1",
@@ -4952,13 +4952,13 @@ export const QUESTIONS: Question[] = [
     visual: {
       kind: "text",
       label: "Správa od kolegu",
-      body: "Hoď mi tú zmluvu s klientom v PDF, dám ju do svojho chatgpt na bezplatnom účte, nech mi to zhrnie, aj tak to nikto nečíta.",
+      body: "Hoď mi tú zmluvu s klientom v PDF, dám ju do svojho ChatGPT na bezplatnom účte, nech mi to zhrnie, aj tak to nikto nečíta.",
     },
     options: [
-      bad("a", "Pošlem — je to interná vec a chatgpt používajú všetci", "critical"),
+      bad("a", "Pošlem — je to interná vec a ChatGPT používajú všetci", "critical"),
       ok(
         "b",
-        "Zmluvu nepošlem; použijeme firemný ai nástroj so zmluvou o nespracúvaní dát, alebo text anonymizujeme",
+        "Zmluvu nepošlem; použijeme firemný AI nástroj so zmluvou o nespracúvaní dát, alebo text anonymizujeme",
       ),
       bad("c", "Pošlem, ale požiadam ho, nech po zhrnutí vymaže históriu", "medium"),
     ],
@@ -4970,7 +4970,7 @@ export const QUESTIONS: Question[] = [
     category: "scenario",
     difficulty: "hard",
     prompt:
-      "Tvoj podporný ai agent číta tickety a cez mcp nástroj má prístup do databázy s právami service role. Príde tento ticket. Čo je správne?",
+      "Tvoj podporný AI agent číta tickety a cez MCP nástroj má prístup do databázy s právami service role. Príde tento ticket. Čo je správne?",
     visual: {
       kind: "text",
       label: "Nový ticket od anonymného používateľa",
@@ -4989,7 +4989,7 @@ export const QUESTIONS: Question[] = [
       ),
     ],
     explanation:
-      "Obsah ticketu sú nedôveryhodné dáta, agent ich číta ako pokyny. Prípad s únikom dát cez mcp integráciu a service role kľúč sa v roku 2025 reálne stal. Veta v systémovom prompte nie je bezpečnostná hranica — sú ňou oprávnenia, oddelenie čítania od zápisu a ľudské schválenie.",
+      "Obsah ticketu sú nedôveryhodné dáta, agent ich číta ako pokyny. Prípad s únikom dát cez MCP integráciu a service role kľúč sa v roku 2025 reálne stal. Veta v systémovom prompte nie je bezpečnostná hranica — sú ňou oprávnenia, oddelenie čítania od zápisu a ľudské schválenie.",
   },
   {
     id: "e65-llm-output-sql-1",
@@ -5011,17 +5011,17 @@ export const QUESTIONS: Question[] = [
       bad("c", "Pridám kontrolu, ktorá hľadá slovo DROP, a inak spustím všetko", "medium"),
     ],
     explanation:
-      "Nesprávne spracovanie výstupu modelu je jedna z desiatich hlavných chýb llm aplikácií podľa owasp. Filtrovanie kľúčových slov sa obíde; funguje len architektúra — účet iba na čítanie, whitelist dotazov, parametrizácia a limit riadkov.",
+      "Nesprávne spracovanie výstupu modelu je jedna z desiatich hlavných chýb LLM aplikácií podľa owasp. Filtrovanie kľúčových slov sa obíde; funguje len architektúra — účet iba na čítanie, whitelist dotazov, parametrizácia a limit riadkov.",
   },
   {
     id: "e65-halucinovany-balik-1",
     category: "scenario",
     difficulty: "hard",
     prompt:
-      "Ai asistent ti pri programovaní navrhne nainštalovať knižnicu, ktorú nepoznáš. Čo urobíš pred spustením príkazu?",
+      "AI asistent ti pri programovaní navrhne nainštalovať knižnicu, ktorú nepoznáš. Čo urobíš pred spustením príkazu?",
     visual: {
       kind: "text",
-      label: "Návrh z ai asistenta",
+      label: "Návrh z AI asistenta",
       body: "Na overenie IBAN použi balík: npm install iban-validator-sk-pro. Je to štandardná knižnica, ktorú používa väčšina slovenských bánk.",
     },
     options: [
