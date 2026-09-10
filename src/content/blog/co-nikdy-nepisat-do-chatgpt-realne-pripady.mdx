@@ -1,0 +1,165 @@
+---
+slug: co-nikdy-nepisat-do-chatgpt-realne-pripady
+title: "čo nikdy nepísať do chatgpt — 7 reálnych prípadov úniku dát"
+subtitle: "samsung, openai, deepseek, meta a dva úrady — a čo z toho vyplýva pre tvoje rodné číslo"
+excerpt: "chatbot nie je zápisník — je to služba na cudzom serveri. sedem prípadov, ktoré sa naozaj stali: samsung a uniknutý kód, chyba v chatgpt, ktorá ukázala cudzie platobné údaje, pokuta 15 miliónov eur, otvorená databáza deepseek, konverzácie v googli a verejný feed meta ai. plus zoznam vecí, ktoré do chatbota nikdy nepíš, a spôsob, ako sa pýtať bezpečne."
+category_slug: bezpecna-praca-s-ai
+difficulty: beginner
+related_course_slug: ai-bezpecnost-co-nezdielat
+author_slug: subenai-editorial
+primary_keyword: "čo nepísať do chatgpt"
+search_intent: informational
+reading_minutes: 7
+hero_image_url: null
+og_image_url: null
+seo_title: "čo nikdy nepísať do chatgpt — 7 únikov dát | subenai"
+seo_description: "sedem reálnych únikov dát cez ai chatboty — samsung, openai, deepseek, meta — a jasný zoznam, čo do chatgpt nikdy nepísať: rodné číslo, doklady, heslá, IBAN."
+canonical_url: null
+pillar: false
+sources:
+  - label: "techcrunch: samsung po úniku interných dát cez chatgpt zakázal zamestnancom generatívnu ai (máj 2023)"
+    url: "https://techcrunch.com/2023/05/02/samsung-bans-use-of-generative-ai-tools-like-chatgpt-after-april-internal-data-leak/"
+    publisher: "techcrunch"
+    accessed_at: "2026-09-10"
+  - label: "openai: chyba v knižnici redis-py 20. marca 2023 ukázala cudzie názvy konverzácií a časť platobných údajov 1,2 % predplatiteľov chatgpt plus"
+    url: "https://openai.com/index/march-20-chatgpt-outage/"
+    publisher: "openai"
+    accessed_at: "2026-09-10"
+  - label: "garante: taliansky úrad 31. marca 2023 dočasne obmedzil spracúvanie údajov talianskych používateľov chatgpt"
+    url: "https://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/9870847"
+    publisher: "garante per la protezione dei dati personali"
+    accessed_at: "2026-09-10"
+  - label: "garante: v decembri 2024 uložil openai pokutu 15 miliónov eur za porušenie GDPR pri chatgpt; súd v ríme v marci 2026 vyhovel odvolaniu openai a úrad rozhodnutie dočasne stiahol"
+    url: "https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/10085432"
+    publisher: "garante per la protezione dei dati personali"
+    accessed_at: "2026-09-10"
+  - label: "wiz research: v januári 2025 našiel verejne prístupnú databázu deepseek s históriou chatov a API kľúčmi"
+    url: "https://www.wiz.io/blog/wiz-research-uncovers-exposed-deepseek-database-leak"
+    publisher: "wiz research"
+    accessed_at: "2026-09-10"
+  - label: "nukib: v júli 2025 vydal varovanie pred produktmi spoločnosti deepseek"
+    url: "https://nukib.gov.cz/cs/infoservis/aktuality/2279-nukib-vydal-varovani-pred-nekterymi-produkty-spolecnosti-deepseek/"
+    publisher: "nukib"
+    accessed_at: "2026-09-10"
+  - label: "techcrunch: zdieľané chatgpt konverzácie sa v júli 2025 objavili vo výsledkoch google, openai experiment ukončila"
+    url: "https://techcrunch.com/2025/07/31/your-public-chatgpt-queries-are-getting-indexed-by-google-and-other-search-engines/"
+    publisher: "techcrunch"
+    accessed_at: "2026-09-10"
+  - label: "techcrunch: aplikácia meta ai v júni 2025 zverejňovala rozhovory používateľov vo verejnom feede discover"
+    url: "https://techcrunch.com/2025/06/12/the-meta-ai-app-is-a-privacy-disaster/"
+    publisher: "techcrunch"
+    accessed_at: "2026-09-10"
+  - label: "sk-cert: odporúča nezadávať do online ai služieb osobné, zdravotné, finančné ani firemné údaje (september 2023)"
+    url: "https://www.sk-cert.sk/sk/hrozby-spojene-s-technologiami-umelej-inteligencie/index.html"
+    publisher: "sk-cert"
+    accessed_at: "2026-09-10"
+  - label: "openai: voľba „improve the model for everyone“ a dočasné chaty v nastaveniach data controls"
+    url: "https://help.openai.com/en/articles/7730893-data-controls-faq"
+    publisher: "openai"
+    accessed_at: "2026-09-10"
+  - label: "google: časť konverzácií s gemini kontrolujú ľudskí hodnotitelia a po vymazaní histórie sa nemažú"
+    url: "https://support.google.com/gemini/answer/13594961"
+    publisher: "google"
+    accessed_at: "2026-09-10"
+---
+
+„veď je to len chatbot.“ presne s touto vetou vložili zamestnanci samsungu do chatgpt interný zdrojový kód a o pár týždňov mala celá firma generatívnu ai zakázanú. chatbot nie je zápisník. je to služba na cudzom serveri, ktorá si tvoj text môže odložiť, ukázať ho cudziemu človeku alebo ho nechať vytiecť cez chybu v kóde. tu máš sedem prípadov, ktoré sa naozaj stali, zoznam vecí, ktoré do chatbota nepatria, a návod, ako sa pýtať tak, aby si dostal dobrú odpoveď a neprezradil nič. širší obraz bezpečnej práce s ai nájdeš v sprievodcovi [bezpečná práca s ai — kompletný sprievodca](/academy/bezpecna-praca-s-ai-kompletny-sprievodca).
+
+## kam tvoj text ide, keď stlačíš enter
+
+llm (large language model — model typu chatgpt) nebeží u teba v telefóne. každý prompt (zadanie pre ai) letí na server prevádzkovateľa, tam sa spracuje a uloží do histórie. čo sa s ním deje ďalej, určujú podmienky služby, nie tvoj pocit súkromia.
+
+tri veci, ktoré platia pri väčšine bezplatných chatbotov:
+
+- **trénovanie.** chatgpt má voľbu „improve the model for everyone“ v predvolenom stave zapnutú — [podľa oficiálnej nápovedy openai ju vypneš v nastaveniach v sekcii data controls](https://help.openai.com/en/articles/7730893-data-controls-faq). kým to neurobíš, tvoje konverzácie môžu slúžiť na tréning ďalších modelov.
+- **ľudská kontrola.** google [v dokumentácii ku gemini priamo píše, že časť konverzácií číta vyškolený človek](https://support.google.com/gemini/answer/13594961) a takto skontrolované rozhovory sa nezmažú ani po vymazaní histórie.
+- **história a zdieľanie.** čo si napísal, ostáva v účte, kým to nezmažeš. a odkaz na zdieľaný rozhovor je verejná webová stránka.
+
+**zlaté pravidlo:** do chatbota píš len to, čo by si bez problémov napísal na papier a nechal ležať na stole v kaviarni.
+
+## 7 prípadov, ktoré sa naozaj stali
+
+### 1. samsung — zamestnanci vložili zdrojový kód (máj 2023)
+
+zamestnanci polovodičovej divízie samsungu si chceli uľahčiť prácu a vložili do chatgpt interný zdrojový kód a ďalšie citlivé dáta. [podľa techcrunchu z mája 2023 firma reagovala zákazom chatgpt, bingu aj bardu na firemných zariadeniach](https://techcrunch.com/2023/05/02/samsung-bans-use-of-generative-ai-tools-like-chatgpt-after-april-internal-data-leak/) — s odôvodnením, že dáta na externých serveroch sa nedajú stiahnuť späť ani vymazať. kód, ktorý raz odišiel, už nikto nevráti.
+
+### 2. openai — cudzie konverzácie a platobné údaje (marec 2023)
+
+20. marca 2023 videli niektorí používatelia chatgpt v bočnom paneli názvy cudzích konverzácií. [openai v správe z 24. marca 2023 priznala, že príčinou bola chyba v open-source knižnici redis-py](https://openai.com/index/march-20-chatgpt-outage/) a u približne 1,2 % predplatiteľov chatgpt plus aktívnych v deväťhodinovom okne sa cudzím ľuďom mohlo zobraziť meno, e-mail, fakturačná adresa, typ karty, jej posledné štyri číslice a platnosť. nikto nič nehackol. stačila jedna chyba v kóde tretej strany.
+
+### 3. taliansky úrad — zákaz a pokuta 15 miliónov eur (2023–2026)
+
+[taliansky úrad na ochranu osobných údajov garante 31. marca 2023 dočasne zakázal openai spracúvať údaje talianskych používateľov](https://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/9870847). dôvody: žiadny právny základ na trénovanie na osobných údajoch, chýbajúce informovanie používateľov a žiadne overenie veku. [v decembri 2024 ten istý úrad uložil openai pokutu 15 miliónov eur](https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/10085432), okrem iného aj za to, že marcový únik dát úradu vôbec neoznámila. openai sa odvolala a súd v ríme jej v marci 2026 dal za pravdu — úrad rozhodnutie zo svojho webu dočasne stiahol. pokuta teda zatiaľ neplatí, dozor nad chatbotmi však áno: GDPR pre ne platí a úrady to vedia.
+
+### 4. deepseek — otvorená databáza s históriou chatov (január 2025)
+
+[wiz research v januári 2025 našiel verejne prístupnú databázu clickhouse čínskeho chatbota deepseek](https://www.wiz.io/blog/wiz-research-uncovers-exposed-deepseek-database-leak) — bez hesla, s viac než miliónom riadkov logov vrátane histórie chatov, API kľúčov a interných detailov. ktokoľvek s prehliadačom mohol nad databázou spúšťať SQL dotazy. deepseek dieru po nahlásení zavrel, ale nikto nevie, kto sa tam pozrel skôr.
+
+### 5. zdieľané chatgpt konverzácie v googli (júl 2025)
+
+pri zdieľaní rozhovoru mal chatgpt zaškrtávacie políčko, ktoré urobilo odkaz „discoverable“ — viditeľný pre vyhľadávače. [techcrunch 31. júla 2025 ukázal, že stačilo do googlu zadať site:chatgpt.com/share](https://techcrunch.com/2025/07/31/your-public-chatgpt-queries-are-getting-indexed-by-google-and-other-search-engines/) a vypadli cudzie rozhovory — s menami, životopismi aj zdravotnými problémami. openai funkciu v ten istý deň vypla a nazvala ju „krátkym experimentom“. odkaz na zdieľaný rozhovor je ale stále verejná stránka, kým ho sám nezmažeš — a kópiu, ktorú si niekto medzitým uložil, už nestiahneš. presný postup máš v [nastaveniach súkromia krok za krokom](/academy/nastavenia-sukromia-chatgpt-gemini-copilot-claude).
+
+### 6. meta ai a verejný „discover“ feed (jún 2025)
+
+aplikácia meta ai dostala záložku discover, kde vidíš rozhovory iných ľudí. [podľa techcrunchu z júna 2025 tam ľudia nevedomky zverejňovali otázky o daňových problémoch, chorobách a súdnych sporoch, niektorí aj s adresou bydliska](https://techcrunch.com/2025/06/12/the-meta-ai-app-is-a-privacy-disaster/) — aplikácia pri zdieľaní neukázala, kam rozhovor ide ani kto ho uvidí. tlačidlo „zdieľať“ v chatbote nie je odoslanie kamarátovi. je to zverejnenie.
+
+### 7. slovensko a česko — čo hovoria úrady
+
+[sk-cert už v septembri 2023 v prehľade hrozieb spojených s ai napísal jasne: do online služieb so strojovým učením nezadávaj žiadne osobné, zdravotné, finančné, firemné ani iné citlivé údaje](https://www.sk-cert.sk/sk/hrozby-spojene-s-technologiami-umelej-inteligencie/index.html), lebo dáta od používateľov sa môžu použiť na ďalšie trénovanie modelu. [český nukib v júli 2025 vydal oficiálne varovanie pred produktmi deepseek pre prevádzkovateľov kritickej infraštruktúry](https://nukib.gov.cz/cs/infoservis/aktuality/2279-nukib-vydal-varovani-pred-nekterymi-produkty-spolecnosti-deepseek/) a širokej verejnosti odporučil ich používanie dobre zvážiť — dôvodom je nakladanie s dátami a čínske zákony, ktoré k nim štátu dávajú prístup. ani jeden úrad nehovorí „nepoužívaj ai“. hovoria „nepíš tam, čo nechceš stratiť“.
+
+**fakt:** ani jeden z týchto siedmich prípadov nezačal útokom hackera na teba. začal tým, že niekto vložil citlivé dáta na miesto, ktoré nekontroluje.
+
+## toto do chatbota nikdy
+
+zoznam si ulož. keď váhaš, odpoveď je „nie“.
+
+| čo | prečo |
+|---|---|
+| rodné číslo | jediný identifikátor, ktorý ti nikto nevymení. podvodník s ním otvára pôžičky a mení zmluvy |
+| číslo občianskeho, pasu, vodičáku | doklad + meno = základ krádeže identity |
+| heslá, kódy z SMS, obnovovacie kódy | chatbot ich nepotrebuje na nič. nikdy |
+| IBAN, číslo karty, CVV, platnosť | pozri prípad openai: platobné údaje unikli bez hackera |
+| zdravotné údaje spolu s menom | diagnóza + meno = dáta, ktoré GDPR chráni najprísnejšie |
+| firemné dokumenty, zmluvy, zdrojový kód | pozri samsung. a tvoja pracovná zmluva to zrejme zakazuje |
+| fotky dokladov, kariet, zmlúv | fotka je to isté ako text, len sa horšie maže |
+| údaje o iných ľuďoch | kolega, klient, dieťa — o ich súkromí nerozhoduješ ty |
+
+**pozor:** „anonymný“ chatbot bez prihlásenia nie je anonymný. adresa zariadenia, typ prehliadača a čas ostávajú v logoch. prípad deepseek ukázal, ako taký log vyzerá zvnútra.
+
+## ako sa pýtať bezpečne
+
+chatbot ti pomôže aj bez tvojich údajov. trik je v tom, čo z otázky vynecháš.
+
+- **anonymizuj.** namiesto „ján novák, rodné číslo 850101/1234, dlhuje banke 4 200 eur“ napíš „klient dlhuje banke približne 4 000 eur“. odpoveď bude rovnako dobrá.
+- **pýtaj sa na postup, nie na vyplnenie.** „ako sa píše odvolanie proti rozhodnutiu sociálnej poisťovne?“ je bezpečné. „napíš mi odvolanie, tu je moje rozhodnutie“ s nahranou fotkou je únik.
+- **vymysli náhradné mená.** firma = „acme“, kolega = „peter“, produkt = „widget“. model kontext pochopí.
+- **zmaž konkrétne čísla.** IBAN, číslo zmluvy, číslo faktúry — nahraď ich „xxx“. ak ich model potrebuje na výpočet, zaokrúhli.
+- **zapni dočasný chat.** [podľa openai sa dočasné chaty nepoužívajú na tréning, neukladajú sa do histórie a po 30 dňoch sa mažú](https://help.openai.com/en/articles/7730893-data-controls-faq). nie je to neviditeľnosť, ale menšia stopa.
+- **vypni trénovanie.** presný postup pre chatgpt, gemini, copilot a claude máš v článku [nastavenia súkromia krok za krokom](/academy/nastavenia-sukromia-chatgpt-gemini-copilot-claude).
+
+**príklad:** účtovníčka potrebuje skontrolovať výpočet dovolenky. namiesto exportu z mzdového systému napíše: „zamestnanec nastúpil 15. marca, má nárok na 25 dní ročne, koľko dní mu patrí za tento rok?“ žiadne meno, žiadna firma, správna odpoveď.
+
+**tip:** ak už si niečo citlivé vložil, zmaž konverzáciu, zmaž zdieľané odkazy a vypni pamäť. čo sa použilo na tréning, sa už nevráti — ale ďalšie úniky cez históriu alebo zdieľanie zastavíš.
+
+[[quiz:e65-chatgpt-rodne-cislo-1]]
+
+## čo si z toho odnies
+
+- chatbot je služba na cudzom serveri. text tam ostáva, môže ísť na tréning a môže ho čítať človek.
+- samsung, openai, deepseek aj meta ukázali, že únik nepotrebuje hackera. stačí chyba, zaškrtávacie políčko alebo nepozorný zamestnanec.
+- rodné číslo, doklady, heslá, IBAN, karta, zdravotné údaje s menom, firemné dokumenty a fotky dokladov — do chatbota nikdy.
+- anonymizuj a pýtaj sa na postup. odpoveď bude rovnako dobrá, riziko nulové.
+- zdieľaný odkaz je verejná stránka. zmaž ho hneď, ako ho nepotrebuješ — kópie, ktoré si iní uložili, už nezmažeš.
+- sk-cert aj nukib hovoria to isté: ai používaj, citlivé údaje tam nedávaj.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [bezpečná práca s ai — kompletný sprievodca](/academy/bezpecna-praca-s-ai-kompletny-sprievodca)
+- [ai halucinácie — ako overiť, či ti chatbot nevymýšľa](/academy/ai-halucinacie-ako-overit-odpoved)
+- [nastavenia súkromia v chatgpt, gemini, copilot a claude](/academy/nastavenia-sukromia-chatgpt-gemini-copilot-claude)
+- [ai bezpečnosť — čo nezdieľať](/academy/ai-bezpecnost-co-nezdielat)
+- [falošné ai aplikácie a rozšírenia](/academy/falosne-ai-aplikacie-a-rozsirenia)
+
+vieš, čo do chatbota nepatrí. teraz over, či spoznáš aj podvod, ktorý ti ho ponúkne.
+
+**otestuj sa za 90 sekúnd →** `/test`

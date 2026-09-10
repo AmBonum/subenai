@@ -1,0 +1,155 @@
+---
+slug: ai-halucinacie-ako-overit-odpoved
+title: "ai halucinácie — ako overiť, či ti chatbot nevymýšľa"
+subtitle: "prečo model radšej háda, než povie „neviem“, štyri prípady, keď to bolelo, a päť krokov na overenie"
+excerpt: "chatbot odpovedá s istotou profesora aj vtedy, keď háda. halucinácia je vlastnosť modelu, nie občasná chyba. pozri, prečo vzniká, ako stála advokátov pokutu, aerolinku súdny spor a deloitte časť odmeny, a nauč sa päťkrokový postup, ktorým odpoveď overíš za pár minút — skôr, než na ňu vsadíš peniaze alebo zdravie."
+category_slug: bezpecna-praca-s-ai
+difficulty: beginner
+related_course_slug: ai-bezpecnost-co-nezdielat
+author_slug: subenai-editorial
+primary_keyword: "ai halucinácie"
+search_intent: informational
+reading_minutes: 7
+hero_image_url: null
+og_image_url: null
+seo_title: "ai halucinácie — ako overiť odpoveď chatbota | subenai"
+seo_description: "prečo chatgpt a spol. vymýšľajú fakty, štyri reálne prípady (avianca, air canada, google, deloitte) a päť krokov, ako odpoveď ai overiť skôr, než jej uveríš."
+canonical_url: null
+pillar: false
+sources:
+  - label: "sk-cert: výstup jazykového modelu je výpočet pravdepodobnosti a môže byť pravda aj halucinácia, výsledky over nezávisle (september 2023)"
+    url: "https://www.sk-cert.sk/sk/hrozby-spojene-s-technologiami-umelej-inteligencie/index.html"
+    publisher: "sk-cert"
+    accessed_at: "2026-09-10"
+  - label: "openai: jazykové modely halucinujú, lebo tréning a hodnotenie odmeňujú hádanie namiesto priznanej neistoty (september 2025)"
+    url: "https://openai.com/index/why-language-models-hallucinate/"
+    publisher: "openai"
+    accessed_at: "2026-09-10"
+  - label: "arxiv: štúdia why language models hallucinate (kalai, nachum, vempala, zhang, september 2025)"
+    url: "https://arxiv.org/abs/2509.04664"
+    publisher: "arxiv"
+    accessed_at: "2026-09-10"
+  - label: "courtlistener: rozhodnutie súdu v prípade mata v. avianca z 22. júna 2023 — pokuta 5 000 dolárov za vymyslené rozsudky z chatgpt"
+    url: "https://storage.courtlistener.com/recap/gov.uscourts.nysd.575368/gov.uscourts.nysd.575368.54.0.pdf"
+    publisher: "courtlistener"
+    accessed_at: "2026-09-10"
+  - label: "fortune: advokáti dostali pokutu 5 000 dolárov za podanie s halucinovanými citáciami z chatgpt (jún 2023)"
+    url: "https://fortune.com/2023/06/23/lawyers-fined-filing-chatgpt-hallucinations-in-court/"
+    publisher: "fortune"
+    accessed_at: "2026-09-10"
+  - label: "mccarthy tétrault: tribunál vo februári 2024 uznal air canada zodpovednú za nepravdivú radu chatbota a priznal 812,02 dolára"
+    url: "https://www.mccarthy.ca/en/insights/blogs/techlex/moffatt-v-air-canada-misrepresentation-ai-chatbot"
+    publisher: "mccarthy tétrault"
+    accessed_at: "2026-09-10"
+  - label: "ai incident database: záznam o chatbote air canada a nesprávnej informácii o zľave pri úmrtí"
+    url: "https://incidentdatabase.ai/cite/639/"
+    publisher: "ai incident database"
+    accessed_at: "2026-09-10"
+  - label: "google: v máji 2024 priznal chybné ai prehľady (lepidlo na pizzu, jedenie kameňov) a oznámil úpravy systému"
+    url: "https://blog.google/products/search/ai-overviews-update-may-2024/"
+    publisher: "google"
+    accessed_at: "2026-09-10"
+  - label: "fortune: deloitte v októbri 2025 vrátila austrálskej vláde časť odmeny za správu s vymyslenými citáciami z gpt-4o"
+    url: "https://fortune.com/2025/10/07/deloitte-ai-australia-government-report-hallucinations-technology-290000-refund"
+    publisher: "fortune"
+    accessed_at: "2026-09-10"
+  - label: "oecd.ai: záznam incidentu — deloitte vrátila časť z 440 000 austrálskych dolárov za správu s halucinovanými odkazmi"
+    url: "https://oecd.ai/en/incidents/2025-10-05-be45"
+    publisher: "oecd.ai"
+    accessed_at: "2026-09-10"
+  - label: "chip.cz: nukib v januári 2025 varoval, že ai chatboty môžu vygenerovať vymyslené informácie, ktoré pôsobia dôveryhodne"
+    url: "https://www.chip.cz/nukib-varuje-ai-chatovaci-aplikace-vas-mohou-smirovat"
+    publisher: "chip.cz"
+    accessed_at: "2026-09-10"
+---
+
+spýtaš sa chatbota na dátum, zákon alebo liek a dostaneš odpoveď napísanú s istotou profesora. problém je, že tá istota nič neznamená. halucinácia (vymyslená, sebavedomo podaná nepravda) je zabudovaná vlastnosť každého llm (large language model — model typu chatgpt), nie občasná chyba. tento článok ti vysvetlí, prečo model vymýšľa, ukáže štyri prípady, keď to niekoho stálo peniaze alebo povesť, a dá ti päťkrokový postup, ako odpoveď overiť skôr, než na ňu vsadíš. celý kontext bezpečnej práce s ai máš v sprievodcovi [bezpečná práca s ai — kompletný sprievodca](/academy/bezpecna-praca-s-ai-kompletny-sprievodca).
+
+## čo je halucinácia a prečo vzniká
+
+llm nevie fakty. vie, ktoré slovo s najväčšou pravdepodobnosťou nasleduje po predchádzajúcich. [sk-cert to v prehľade hrozieb z roku 2023 opisuje presne: výstup modelu je výpočet pravdepodobnosti, nie uvažovanie, a akýkoľvek výstup môže byť pravda aj halucinácia](https://www.sk-cert.sk/sk/hrozby-spojene-s-technologiami-umelej-inteligencie/index.html). ak sa pýtaš na niečo, čo model v tréningových dátach videl tisíckrát, pravdepodobné slová sedia s realitou. ak sa pýtaš na niečo zriedkavé — slovenský rozsudok, cenu konkrétneho lieku, dátum v malej obci — model tvorí text, ktorý *vyzerá* ako odpoveď.
+
+prečo radšej vymýšľa, než by povedal „neviem“? [openai v septembri 2025 zverejnila výskum, podľa ktorého modely halucinujú, lebo štandardný tréning a testovanie odmeňujú hádanie](https://openai.com/index/why-language-models-hallucinate/). predstav si test s výberom z možností: tip má šancu na bod, prázdna odpoveď má istú nulu. [autori štúdie kalai, nachum, vempala a zhang to zhrnuli tak, že modely sú optimalizované ako študenti pred skúškou](https://arxiv.org/abs/2509.04664) — sebavedomá odpoveď skóruje lepšie než priznaná neistota. výsledok: model hovorí sebavedome aj vtedy, keď háda.
+
+**fakt:** halucinácia nemá varovný signál. vymyslený rozsudok má rovnaký tón, formát aj gramatiku ako skutočný. jediná obrana je overenie mimo chatbota.
+
+## 4 prípady, keď to bolelo
+
+### mata v. avianca — vymyslené rozsudky pred súdom (jún 2023)
+
+newyorskí advokáti podali v spore s leteckou spoločnosťou avianca podanie, ktoré citovalo šesť rozsudkov. ani jeden neexistoval. všetky vygeneroval chatgpt, aj s citátmi a číslami spisov. [sudca castel v rozhodnutí z 22. júna 2023 uložil advokátom a ich kancelárii pokutu 5 000 dolárov](https://storage.courtlistener.com/recap/gov.uscourts.nysd.575368/gov.uscourts.nysd.575368.54.0.pdf) — nie za použitie ai, ale za to, že za vymyslenými rozsudkami stáli aj potom, čo ich existenciu spochybnila protistrana aj súd. [advokát podľa fortune vypovedal, že chatgpt považoval za „akýsi super vyhľadávač“](https://fortune.com/2023/06/23/lawyers-fined-filing-chatgpt-hallucinations-in-court/). nie je. je to generátor textu.
+
+### air canada — chatbot sľúbil zľavu, ktorá neexistovala (február 2024)
+
+cestujúci sa v novembri 2022 pýtal chatbota air canada na zľavu pri úmrtí v rodine. chatbot odpovedal, že o ňu môže požiadať spätne do 90 dní od kúpy letenky. skutočné pravidlá aerolinky spätnú zľavu vylučovali. [tribunál v britskej kolumbii vo februári 2024 rozhodol, že ide o nedbanlivé uvedenie do omylu, a aerolinke nariadil zaplatiť 812,02 kanadského dolára](https://www.mccarthy.ca/en/insights/blogs/techlex/moffatt-v-air-canada-misrepresentation-ai-chatbot). air canada argumentovala, že chatbot je „samostatný právny subjekt“ zodpovedný za vlastné slová. tribunál to odmietol: chatbot je súčasť webu a firma ručí za všetko, čo na ňom stojí. [prípad je zapísaný aj v medzinárodnej databáze ai incidentov](https://incidentdatabase.ai/cite/639/). suma malá, precedens veľký.
+
+### google ai overviews — lepidlo na pizzu (máj 2024)
+
+po spustení ai prehľadov vo vyhľadávaní google v máji 2024 obehli internet snímky, kde ai odporúčala pridať do pizze lepidlo, aby syr držal, a jesť denne aspoň jeden kameň. zdrojom bol starý vtip z reddit-u a satirický článok, ktoré model spracoval ako fakt. [google v oficiálnom blogu z 30. mája 2024 priznal, že systém zle rozoznával nezmyselné otázky a satiru, a oznámil vyše tucta úprav](https://blog.google/products/search/ai-overviews-update-may-2024/) — vrátane obmedzenia obsahu od používateľov pri zdravotných témach. poučenie: ai nerozozná vtip od návodu. ty áno.
+
+### deloitte austrália — správa s vymyslenými citáciami (október 2025)
+
+poradenská firma deloitte odovzdala austrálskej vláde správu o systéme kontroly sociálnych dávok. výskumník chris rudge zo sydneyskej univerzity v nej našiel odkazy na neexistujúce akademické práce, vymyslené citáty zo súdneho rozsudku aj knihu pripísanú profesorovi, ktorý ju nikdy nenapísal. [podľa fortune z októbra 2025 opravená verzia správy priznala použitie modelu gpt-4o cez azure openai](https://fortune.com/2025/10/07/deloitte-ai-australia-government-report-hallucinations-technology-290000-refund) a [deloitte vláde vrátila poslednú splátku z odmeny 440 000 austrálskych dolárov](https://oecd.ai/en/incidents/2025-10-05-be45). ak halucinácia prejde cez kontrolu jednej z najväčších poradenských firiem sveta, prejde aj cez tvoju.
+
+**pozor:** vo všetkých štyroch prípadoch zlyhal ten istý krok — nikto neotvoril zdroj. citácia vyzerala dobre, tak ju nechali tak.
+
+## kde je halucinácia najnebezpečnejšia
+
+nie každá chyba stojí rovnako. pri týchto témach ber odpoveď chatbota ako hypotézu, nikdy ako fakt:
+
+- **zdravie a lieky.** dávkovanie, interakcie, „je to bezpečné v tehotenstve“. model nemá tvoju zdravotnú kartu ani zoznam kontraindikácií. pýtaj sa lekárnika, nie llm.
+- **peniaze.** úroky, poplatky, daňové lehoty, výška dávok. čísla model odhaduje z tréningu, ktorý môže byť roky starý.
+- **právo.** paragrafy, lehoty na odvolanie, „mám nárok na…“. slovenské zákony sú v tréningových dátach zriedkavé — presne tam model vymýšľa najviac. pozri prípad avianca.
+- **ceny a dostupnosť.** model nevidí aktuálny e-shop ani cenník.
+- **dátumy, mená, čísla.** [openai v spomínanom článku uvádza príklad: na otázku o dátume narodenia jedného z autorov dal chatbot tri rôzne odpovede a ani jedna nesedela](https://openai.com/index/why-language-models-hallucinate/).
+- **citácie a zdroje.** vymyslený odkaz je najčastejšia halucinácia. vždy ho otvor.
+
+[český nukib v januári 2025 varoval presne pred tým: ai môže vygenerovať úplne vymyslené informácie, ktoré pôsobia dôveryhodne a sú presvedčivo napísané](https://www.chip.cz/nukib-varuje-ai-chatovaci-aplikace-vas-mohou-smirovat). znie to ako fakt. neznamená to, že to fakt je.
+
+## overovací postup v 5 krokoch
+
+toto ti zaberie dve až päť minút. advokátom z prípadu avianca by to ušetrilo pokutu aj hanbu.
+
+1. **pýtaj si zdroj.** napíš: „uveď konkrétny zdroj s odkazom“. ak model odpovie „podľa všeobecne dostupných informácií“, nemá nič.
+2. **otvor ho.** klikni na odkaz. neexistujúca stránka, iný názov článku alebo text, ktorý tvrdenie neobsahuje — to všetko znamená halucináciu. [advokáti z prípadu avianca tento krok preskočili a súd im vyčítal, že rozsudky neoverili ani po výzve](https://storage.courtlistener.com/recap/gov.uscourts.nysd.575368/gov.uscourts.nysd.575368.54.0.pdf).
+3. **hľadaj primárny zdroj.** zákon na slov-lex, rozsudok na stránke súdu, príbalový leták na stránke štátneho ústavu pre kontrolu liečiv, cenu na oficiálnom e-shope. článok o zákone nie je zákon.
+4. **porovnaj s druhým modelom.** polož tú istú otázku v gemini, copilote alebo claude. ak sa odpovede líšia, aspoň jedna vymýšľa. ak sa zhodujú, stále to nie je dôkaz — oba sa mohli učiť z rovnakého omylu.
+5. **človek s odbornosťou.** pri zdraví, peniazoch a práve je posledný krok vždy lekár, účtovník alebo právnik. chatbot ti pomôže pripraviť otázky. odpoveď nech dá človek, ktorý za ňu ručí.
+
+**zlaté pravidlo:** ak nevieš odpoveď overiť sám, nepoužívaj ju. rozhodnutie o liekoch, peniazoch alebo súde nikdy nestoj na texte, ktorý vygeneroval stroj.
+
+**príklad:** chatbot ti napíše, že na odvolanie proti rozhodnutiu máš 30 dní, a uvedie paragraf. otvoríš slov-lex, nájdeš paragraf — hovorí o 15 dňoch. za tri minúty práce si si ušetril zmeškanú lehotu.
+
+[[quiz:e65-ai-citacia-sud-1]]
+
+## v čom je ai naopak dobrá
+
+halucinácia je problém tam, kde potrebuješ presný fakt. tam, kde potrebuješ text, štruktúru alebo nápad, ai funguje skvele a riziko je malé:
+
+- **preklad a štylistika.** e-mail do zahraničia, formálnejší tón sťažnosti, skrátenie odseku. výsledok vidíš a vieš ho posúdiť sám.
+- **štruktúra.** „urob mi osnovu prezentácie o…“, „rozdeľ tento text do bodov“. žiadny fakt sa nevymýšľa, len sa usporadúva to tvoje.
+- **brainstorming.** dvadsať nápadov na názov projektu, otázky na pohovor, darčeky. zlý nápad ťa nič nestojí.
+- **vysvetlenie pojmov.** „vysvetli mi, čo je IBAN, ako desaťročnému“. základné pojmy má model v dátach tisíckrát — presne tam halucinuje najmenej.
+- **príprava otázok pre odborníka.** „na čo sa mám opýtať právnika pri kúpe bytu?“ dobrý zoznam, a ručí zaň stále právnik.
+
+**tip:** rozdeľ si prácu na dve kôpky: „tu potrebujem fakt“ a „tu potrebujem text“. v prvej kôpke overuj každé číslo. v druhej pusti ai z reťaze.
+
+## čo si z toho odnies
+
+- llm predpovedá pravdepodobné slová, nie fakty. sebavedomý tón nič nedokazuje.
+- modely vymýšľajú, lebo tréning odmeňuje hádanie — potvrdil to výskum openai zo septembra 2025.
+- avianca, air canada, google aj deloitte zlyhali na jednom kroku: nikto neotvoril zdroj.
+- zdravie, lieky, peniaze, právo, ceny a dátumy — tam ber odpoveď ako hypotézu.
+- päť krokov: pýtaj si zdroj → otvor ho → nájdi primárny → porovnaj s druhým modelom → spýtaj sa človeka.
+- ai je výborná na preklad, štruktúru, nápady a vysvetlenie pojmov. tam ju používaj bez obáv.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [bezpečná práca s ai — kompletný sprievodca](/academy/bezpecna-praca-s-ai-kompletny-sprievodca)
+- [čo nikdy nepísať do chatgpt — 7 reálnych prípadov úniku dát](/academy/co-nikdy-nepisat-do-chatgpt-realne-pripady)
+- [ai pomocník na každý deň](/academy/ai-pomocnik-kazdy-den)
+- [chatgpt podvody a falošné investície](/academy/chatgpt-podvody-falosne-investicie)
+
+chatbot vymýšľa s istotou. podvodník tiež. over si, či rozoznáš oboch.
+
+**otestuj sa za 90 sekúnd →** `/test`

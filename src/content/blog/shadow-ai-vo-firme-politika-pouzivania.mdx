@@ -1,0 +1,169 @@
+---
+slug: shadow-ai-vo-firme-politika-pouzivania
+title: "shadow ai vo firme — politika používania ai nástrojov, ktorá naozaj funguje"
+subtitle: "prečo zákaz nefunguje, čo už vyžaduje GDPR a ai akt, a desať pravidiel, ktoré sa dajú dodržiavať"
+excerpt: "shadow ai vzniká, keď sú verejné ai nástroje lepšie než firemné a nikto nepovedal nie. samsung zakázal generatívnu ai po úniku zdrojového kódu, štáty zakázali deepseek, cyberhaven nameral tretinu citlivých dát v promptoch. tu je právny rámec (GDPR, ai akt), politika v desiatich pravidlách, rozdiel medzi spotrebiteľským a podnikovým účtom a rámce iso/iec 42001 a nist, o ktoré sa oprieš."
+category_slug: bezpecna-praca-s-ai
+difficulty: advanced
+related_course_slug: ai-bezpecnost-pre-odbornikov
+author_slug: subenai-editorial
+primary_keyword: "shadow ai politika"
+search_intent: informational
+reading_minutes: 8
+hero_image_url: null
+og_image_url: null
+seo_title: "shadow ai vo firme — politika, ktorá funguje | subenai"
+seo_description: "shadow ai vo firme: prípady samsung a deepseek, čo vyžaduje GDPR a ai akt, politika v 10 pravidlách, spotrebiteľský vs. podnikový účet, iso 42001 a nist ai rmf."
+canonical_url: null
+pillar: false
+sources:
+  - label: "samsung od 1. mája 2023 zakázal generatívnu ai po tom, čo zamestnanci vložili interné dáta do chatgpt"
+    url: "https://techcrunch.com/2023/05/02/samsung-bans-use-of-generative-ai-tools-like-chatgpt-after-april-internal-data-leak/"
+    publisher: "techcrunch"
+    accessed_at: "2026-09-10"
+  - label: "cyberhaven (apríl 2025): 34,8 % dát vkladaných do ai nástrojov je citlivých, 71,7 % nástrojov je vysoko alebo kriticky rizikových"
+    url: "https://www.cyberhaven.com/press-releases/cyberhaven-report-majority-of-corporate-ai-tools-present-critical-data-security-risks"
+    publisher: "cyberhaven"
+    accessed_at: "2026-09-10"
+  - label: "taliansky garante 30. januára 2025 nariadil obmedzenie spracúvania dát talianskych používateľov službou deepseek"
+    url: "https://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/10097450"
+    publisher: "garante per la protezione dei dati personali"
+    accessed_at: "2026-09-10"
+  - label: "austrálske ministerstvo home affairs 4. februára 2025 nariadilo odstrániť deepseek z vládnych zariadení"
+    url: "https://www.theregister.com/2025/02/05/australia_deepseek_ban/"
+    publisher: "the register"
+    accessed_at: "2026-09-10"
+  - label: "nukib 10. júla 2025 vydal varovanie pred produktmi deepseek s hodnotením hrozby vysoká"
+    url: "https://nukib.gov.cz/cs/infoservis/aktuality/2279-nukib-vydal-varovani-pred-nekterymi-produkty-spolecnosti-deepseek/"
+    publisher: "nukib"
+    accessed_at: "2026-09-10"
+  - label: "GDPR článok 28: spracúvanie sprostredkovateľom musí upravovať zmluva"
+    url: "https://gdpr-info.eu/art-28-gdpr/"
+    publisher: "gdpr-info.eu"
+    accessed_at: "2026-09-10"
+  - label: "GDPR článok 5: zásada minimalizácie údajov"
+    url: "https://gdpr-info.eu/art-5-gdpr/"
+    publisher: "gdpr-info.eu"
+    accessed_at: "2026-09-10"
+  - label: "ai akt článok 4: povinnosť ai gramotnosti zamestnancov platí od 2. februára 2025"
+    url: "https://artificialintelligenceact.eu/article/4/"
+    publisher: "eu ai act explorer"
+    accessed_at: "2026-09-10"
+  - label: "úoou sr zverejnil stanovisko edpb 28/2024 k modelom umelej inteligencie (december 2024)"
+    url: "https://dataprotection.gov.sk/sk/aktuality/stanovisko-edpb-k-modelom-umelej-inteligencie-zasady-vseobecneho-nariadenia-ochrane-udajov-podporuju-zodpovednu-umelu-inteli.html"
+    publisher: "úrad na ochranu osobných údajov sr"
+    accessed_at: "2026-09-10"
+  - label: "openai: dáta poslané cez API sa od marca 2023 nepoužívajú na trénovanie, retencia 30 dní, možnosť nulovej retencie"
+    url: "https://developers.openai.com/api/docs/guides/your-data"
+    publisher: "openai"
+    accessed_at: "2026-09-10"
+  - label: "microsoft: prompty a odpovede copilotu vo firemných plánoch spadajú pod dpa a netrénujú základné modely"
+    url: "https://learn.microsoft.com/en-us/copilot/microsoft-365/enterprise-data-protection"
+    publisher: "microsoft learn"
+    accessed_at: "2026-09-10"
+  - label: "google: obsah v gemini pre workspace nekontrolujú ľudia ani sa nepoužíva na trénovanie mimo domény bez povolenia"
+    url: "https://workspace.google.com/security/ai-privacy"
+    publisher: "google workspace"
+    accessed_at: "2026-09-10"
+  - label: "iso/iec 42001:2023 — požiadavky na systém riadenia umelej inteligencie"
+    url: "https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-42001"
+    publisher: "microsoft learn"
+    accessed_at: "2026-09-10"
+  - label: "nist ai rmf 1.0 (január 2023) a profil pre generatívnu ai nist ai 600-1 (júl 2024)"
+    url: "https://www.nist.gov/itl/ai-risk-management-framework"
+    publisher: "nist"
+    accessed_at: "2026-09-10"
+---
+
+firemné IT nepovolilo chatgpt, tak ho ľudia používajú na mobile. marketing má gemini na súkromnom google účte, účtovníčka vkladá faktúry do claude, vývojár posiela celé moduly do copilotu. nikto z nich nie je zlý. všetci robia svoju prácu rýchlejšie a firma o tom nevie. to je shadow ai (neschválené používanie ai nástrojov zamestnancami) a v tomto článku dostaneš incidenty, ktoré ukázali cenu mlčania, právny rámec, ktorý už platí, a politiku v desiatich pravidlách, ktorá sa dá reálne dodržiavať. základy bezpečnej práce s ai máš v [kompletnom sprievodcovi](/academy/bezpecna-praca-s-ai-kompletny-sprievodca), tu ideme na úroveň firmy.
+
+## čo je shadow ai a prečo vzniká
+
+shadow ai vzniká z dvoch príčin a ani jedna nie je zlomyseľnosť. prvá: verejné nástroje sú lepšie než tie firemné. chatgpt, claude a gemini dostávajú každý mesiac nové modely, interný chatbot z roku 2024 nedostal od nasadenia nič. druhá: nikto nepovedal nie. keď politika neexistuje, zamestnanec si ju vyloží sám — a vyloží si ju tak, aby mal prácu hotovú do obeda.
+
+výsledok: dáta tečú do nástrojov, ktoré firma nevybrala, cez účty, ktoré nespravuje, za podmienok, ktoré nikto nečítal. spotrebiteľský účet typicky povoľuje trénovanie na tvojich konverzáciách, kým to sám nevypneš. firemné dáta v tréningovej sade cudzieho modelu nedostaneš späť. zákaz to nerieši. zákaz to len schová.
+
+**fakt:** cyberhaven v [správe z apríla 2025](https://www.cyberhaven.com/press-releases/cyberhaven-report-majority-of-corporate-ai-tools-present-critical-data-security-risks) nameral na vzorke 7 miliónov zamestnancov, že 34,8 % dát vkladaných do ai nástrojov je citlivých (rok predtým 27,4 %), 71,7 % ai nástrojov na pracoviskách hodnotí ako vysoko alebo kriticky rizikové a 83,8 % firemných dát ide práve do nich. najčastejší citlivý obsah: zdrojový kód.
+
+ako zistíš, koľko shadow ai máš ty? tri lacné merania. dns a proxy logy ti povedia, na ktoré ai domény firma chodí a z koľkých zariadení. inventár rozšírení v prehliadačoch odhalí ai doplnky, ktoré nikto neschválil. a anonymný dotazník s otázkou „ktoré ai nástroje používaš a na čo“ dá reálne čísla len vtedy, keď za odpoveď nehrozí postih. bez merania píšeš politiku naslepo.
+
+## čo sa stalo, keď politika chýbala
+
+**samsung, máj 2023.** zamestnanci vložili do chatgpt interné dáta vrátane zdrojového kódu, aby si ich nechali opraviť a zhrnúť. [techcrunch v máji 2023 opísal](https://techcrunch.com/2023/05/02/samsung-bans-use-of-generative-ai-tools-like-chatgpt-after-april-internal-data-leak/) následok: firma od 1. mája 2023 zakázala generatívnu ai na firemných zariadeniach a interných sieťach a začala si stavať vlastné nástroje. samsung výslovne uviedol, že dáta odoslané externej službe sa ťažko získavajú späť a mažú. drahá lekcia za pár promptov.
+
+**deepseek, 2025.** keď sa v januári 2025 rozšíril čínsky model deepseek, štáty reagovali rýchlejšie než väčšina firiem. taliansky úrad garante [30. januára 2025 nariadil obmedzenie spracúvania dát talianskych používateľov](https://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/10097450), lebo prevádzkovateľ tvrdil, že sa naňho európske pravidlá nevzťahujú. austrálske ministerstvo home affairs [4. februára 2025 nariadilo](https://www.theregister.com/2025/02/05/australia_deepseek_ban/) odstrániť deepseek zo všetkých vládnych zariadení. český nukib [10. júla 2025 vydal varovanie](https://nukib.gov.cz/cs/infoservis/aktuality/2279-nukib-vydal-varovani-pred-nekterymi-produkty-spolecnosti-deepseek/) s hodnotením hrozby „vysoká“: nedostatočné zabezpečenie prenosu, zber dát umožňujúci deanonymizáciu a úplná podriadenosť čínskemu právu. ministerstvá museli produkt prestať používať do 9. augusta 2025. verejnosti nukib odporúča zvážiť, čo do nástroja vkladá.
+
+**príklad:** tvoj obchodník si nainštaloval deepseek, lebo „je zadarmo a rýchly“, a vložil doň cenník pre tender. štát by mu za to odpojil zariadenie zo siete. tvoja firma o tom ani nevie.
+
+## čo hovorí právo
+
+politika nie je len hygiena. opiera sa o povinnosti, ktoré už máš.
+
+**GDPR, článok 28.** ak ai nástroj spracúva osobné údaje tvojich zákazníkov alebo zamestnancov, poskytovateľ je sprostredkovateľ a [spracúvanie musí upravovať zmluva](https://gdpr-info.eu/art-28-gdpr/) — predmet, trvanie, povaha, účel, typ údajov, povinnosti. spotrebiteľský účet takú zmluvu nemá. **článok 5** pridáva [minimalizáciu](https://gdpr-info.eu/art-5-gdpr/): údaje „primerané, relevantné a obmedzené na nevyhnutný rozsah“. celá databáza klientov v prompte tento test neprejde.
+
+**ai akt, článok 4.** od 2. februára 2025 musia poskytovatelia aj nasadzovatelia ai systémov [zabezpečiť dostatočnú ai gramotnosť](https://artificialintelligenceact.eu/article/4/) zamestnancov, ktorí s ai pracujú — primeranú ich znalostiam a kontextu použitia. školenie už nie je bonus. je to povinnosť.
+
+**obchodné tajomstvo a mlčanlivosť.** zdrojový kód, cenníky, zmluvy a zápisnice sú obchodné tajomstvo len dovtedy, kým ich chrániš. keď ich zamestnanec vloží do služby, ktorej podmienky povoľujú trénovanie, ochrana sa oslabí. podobne nda s klientom: mlčanlivosť neporušíš len rozhovorom v kaviarni, ale aj promptom. a keď sa spor dostane pred súd, budeš dokazovať, že si tajomstvo primerane chránil — politika a školenie sú prvý dôkaz, ktorý si protistrana vypýta.
+
+**úrady.** slovenský úrad na ochranu osobných údajov [zverejnil stanovisko edpb 28/2024 zo 17. decembra 2024](https://dataprotection.gov.sk/sk/aktuality/stanovisko-edpb-k-modelom-umelej-inteligencie-zasady-vseobecneho-nariadenia-ochrane-udajov-podporuju-zodpovednu-umelu-inteli.html): ak bol model vyvinutý na nezákonne spracúvaných údajoch, ovplyvňuje to zákonnosť jeho nasadenia, a oprávnený záujem prechádza trojkrokovým testom. český nukib ide ďalej a pri konkrétnych produktoch varuje priamo.
+
+## politika v 10 pravidlách
+
+1. **schválené nástroje.** zoznam s názvom, typom účtu a účelom. čo nie je v zozname, nie je povolené — a zoznam sa dá rozšíriť za týždeň, nie za rok.
+2. **klasifikácia dát.** verejné, interné, dôverné, tajné. každá úroveň má povolené nástroje a povolený typ účtu.
+3. **čo nikdy.** osobné údaje klientov, zdravotné údaje, prihlasovacie údaje, kľúče k API, zdrojový kód produkčných systémov, neoznámené finančné výsledky, dáta pod nda.
+4. **anonymizácia.** pred vložením nahraď mená, čísla zmlúv a IBAN zástupnými symbolmi. postup napíš, nielen odporuč.
+5. **podnikové účty bez trénovania.** spotrebiteľský účet na firemné dáta neexistuje. bodka.
+6. **DLP a logovanie.** technická kontrola, ktorá vkladanie citlivých dát zachytí skôr než ľudia. politika bez telemetrie je želanie.
+7. **školenie.** povinné, krátke, s reálnymi príkladmi z vlastnej firmy. splníš ním článok 4 ai aktu a ľudia zároveň pochopia prečo.
+8. **incident postup.** kto, komu, dokedy. „vložil som do chatgpt zmluvu“ musí byť hlásenie bez trestu, inak sa nedozvieš nič.
+9. **kontrola dodávateľov.** každý nový ai nástroj prejde rovnakým procesom ako nový cloud: zmluva, dpa, retencia, lokalita dát.
+10. **revízia raz za štvrťrok.** modely, ceny aj podmienky sa menia každý mesiac. politika z januára je v júli zastaraná.
+
+**zlaté pravidlo:** politika, ktorú zamestnanci dodržiavajú, je lepšia než dokonalá politika, ktorú obchádzajú. povoľ dobré nástroje rýchlo, aby si mohol tie zlé zakázať dôveryhodne.
+
+## spotrebiteľský vs. podnikový účet
+
+rozdiel nie je v modeli. je v zmluve.
+
+| kritérium | spotrebiteľský účet | podnikový účet |
+|---|---|---|
+| trénovanie na tvojich dátach | často zapnuté, kým nevypneš | vypnuté zmluvne |
+| spracúvateľská zmluva (dpa) | žiadna | áno, podľa článku 28 GDPR |
+| retencia | podľa podmienok služby | nastaviteľná, možnosť nulovej retencie |
+| admin kontrola | nulová | SSO, správa používateľov, audit log |
+| kto je zodpovedný | zamestnanec | firma, s dokladom |
+
+openai vo svojej [dokumentácii k API](https://developers.openai.com/api/docs/guides/your-data) uvádza, že dáta poslané cez API sa od marca 2023 nepoužívajú na trénovanie modelov, pokiaľ sa výslovne neprihlásiš, štandardná retencia je 30 dní na účely kontroly zneužitia a schválení zákazníci môžu mať nulovú retenciu. microsoft pre [copilot vo firemných plánoch](https://learn.microsoft.com/en-us/copilot/microsoft-365/enterprise-data-protection) garantuje, že prompty, odpovede a dáta z microsoft graph netrénujú základné modely, spadajú pod dpa a rešpektujú tvoje oprávnenia, citlivostné štítky a retenčné politiky. google pre [gemini vo workspace](https://workspace.google.com/security/ai-privacy) sľubuje, že obsah nekontrolujú ľudia ani sa nepoužíva na trénovanie mimo tvojej domény bez povolenia, a pridáva DLP kontroly a obranu proti nepriamej injekcii promptov. pri každom z nich si over aj retenciu nahratých súborov a to, či sa dá vypnúť história konverzácií pre celú organizáciu — sú to dve diery, na ktoré sa audítor pýta ako prvé.
+
+**pozor:** „podnikový účet“ v marketingu a „podnikový účet“ v zmluve nie sú to isté. čítaj dpa, nie landing page. a over, či sa sľub vzťahuje aj na zásuvné moduly a agentov — microsoft ti pri agentoch od tretích strán výslovne odporúča skontrolovať ich vlastné podmienky.
+
+## rámce, o ktoré sa oprieš
+
+nemusíš vymýšľať vlastnú metodiku.
+
+**iso/iec 42001:2023** je [medzinárodná norma pre systém riadenia ai](https://learn.microsoft.com/en-us/compliance/regulatory/offering-iso-42001): požiadavky na zavedenie, prevádzku a zlepšovanie riadenia ai v organizácii, pre tých, čo ai vyvíjajú, aj pre tých, čo ju len používajú. ak už máš iso 27001, štruktúru poznáš.
+
+**nist ai rmf 1.0** vyšiel [26. januára 2023](https://www.nist.gov/itl/ai-risk-management-framework) a v júli 2024 k nemu nist pridal profil pre generatívnu ai (nist ai 600-1), ktorý menuje konkrétne riziká generatívnych modelov a navrhuje opatrenia. zadarmo, v angličtine, použiteľný ako kostra tvojej politiky.
+
+**tip:** vezmi desať pravidiel vyššie, namapuj ich na kontroly z iso/iec 42001 a na funkcie govern, map, measure, manage z nist. audítorovi ukážeš mapu, zamestnancom jednu stranu.
+
+[[quiz:e65-shadow-ai-zmluva-1]]
+
+## čo si z toho odnies
+
+- shadow ai vzniká, keď sú verejné nástroje lepšie než firemné a nikto nepovedal nie. zákaz to nerieši, iba schová.
+- samsung v máji 2023 zakázal generatívnu ai po tom, čo zamestnanci vložili do chatgpt zdrojový kód. štáty v roku 2025 zakázali deepseek na úradných zariadeniach.
+- GDPR článok 28 vyžaduje zmluvu so sprostredkovateľom, článok 5 minimalizáciu. ai akt článok 4 od februára 2025 vyžaduje ai gramotnosť zamestnancov.
+- podnikový účet sa líši zmluvou, nie modelom: žiadne trénovanie, dpa, retencia, admin kontrola.
+- desať pravidiel: schválené nástroje, klasifikácia, čo nikdy, anonymizácia, podnikové účty, DLP, školenie, incident postup, dodávatelia, štvrťročná revízia.
+- oprieš sa o iso/iec 42001 a nist ai rmf. nemusíš vymýšľať metodiku, stačí ju namapovať.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [bezpečná práca s ai — kompletný sprievodca](/academy/bezpecna-praca-s-ai-kompletny-sprievodca)
+- [čo nikdy nepísať do chatgpt — reálne prípady](/academy/co-nikdy-nepisat-do-chatgpt-realne-pripady)
+- [eu ai akt — čo znamená pre bežného človeka](/academy/ai-akt-eu-co-znamena-pre-bezneho-cloveka)
+- [internet iq test pre firmy a zamestnancov](/academy/internet-iq-test-pre-firmy-zamestnancov)
+
+**otestuj sa za 90 sekúnd →** `/test`
