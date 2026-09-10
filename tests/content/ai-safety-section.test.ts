@@ -13,6 +13,7 @@ import { COURSES } from "@/content/courses";
 import { courseToAcademyRow } from "@/lib/academy/course-to-row";
 import { CATEGORY_VISUALS } from "@/lib/blog/category-visuals";
 import { PILLAR_SLUGS } from "@/lib/blog/pillar-slugs";
+import { getQuestionById } from "@/lib/quiz/bank/questions";
 
 // E65 — the safe-AI section is wired across content, DB seed, SEO and UI
 // layers. This suite is the single tripwire that all of them agree.
@@ -31,6 +32,10 @@ describe("E65 ai-safety section manifest", () => {
   it("quiz ids are unique and e65-prefixed", () => {
     expect(new Set(AI_SAFETY_QUIZ_IDS).size).toBe(AI_SAFETY_QUIZ_IDS.length);
     for (const id of AI_SAFETY_QUIZ_IDS) expect(id).toMatch(/^e65-[a-z0-9-]+-\d+$/);
+  });
+
+  it("every manifest quiz id resolves in the question bank", () => {
+    for (const id of AI_SAFETY_QUIZ_IDS) expect(getQuestionById(id), id).not.toBeNull();
   });
 
   it("every section lesson is a registered course mapped into the section category", () => {
