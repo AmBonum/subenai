@@ -212,6 +212,8 @@ function renderCourseSection(section: CourseSection): string {
         .join("\n")}\n\nNerob:\n${section.dont.map((d) => `- ${d}`).join("\n")}`;
     case "scenario":
       return `## ${section.heading}\n\n${section.story}\n\nSprávny postup: ${section.right_action}`;
+    case "embed":
+      return `## ${section.heading}\n\n${section.audio.title} (${section.audio.sourceName})`;
   }
 }
 
