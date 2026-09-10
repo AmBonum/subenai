@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import matter from "gray-matter";
 
 import {
   AI_SAFETY_ARTICLES,
@@ -66,5 +68,137 @@ describe("E65 category wiring", () => {
   it("pillar is registered in both PILLAR_SLUGS lists", () => {
     expect(PILLAR_SLUGS.has(AI_SAFETY_PILLAR_SLUG)).toBe(true);
     expect(read("scripts/generate-sitemap.mjs")).toContain(`"${AI_SAFETY_PILLAR_SLUG}"`);
+  });
+});
+
+// Voice-guide §5 banned phrases + the locked product/brand terms. "revolučn"
+// is a stem so both "revolučný" and "revolucionizovať" declensions match.
+const BANNED = [
+  "v dnešnej dobe",
+  "v digitálnom svete",
+  "v ére internetu",
+  "moderný človek",
+  "v 21. storočí",
+  "v dnešnom uponáhľanom svete",
+  "netreba zdôrazňovať",
+  "každý z nás vie",
+  "v neposlednom rade",
+  "prelomová technológia",
+  "revolučn",
+  "vykrojené na mieru",
+  "v rámci možností",
+  "je nutné podotknúť",
+  "je dôležité si uvedomiť",
+  "je viac než zrejmé",
+  "kvíz",
+  "SubenAI",
+  "Subenai",
+];
+
+const BLOG_DIR = resolve(ROOT, "src/content/blog");
+const KNOWN_SLUGS = new Set([
+  ...readdirSync(BLOG_DIR)
+    .filter((f) => f.endsWith(".mdx"))
+    .map((f) => f.replace(/\.mdx$/, "")),
+  ...COURSES.map((c) => c.slug),
+]);
+
+function loadArticle(slug: string) {
+  const { data, content } = matter(read(`src/content/blog/${slug}.mdx`));
+  const body = content.trim();
+  return { data: data as Record<string, unknown>, body, words: body.split(/\s+/).length };
+}
+
+describe("E65 article integrity", () => {
+  const articles = AI_SAFETY_ARTICLES.map((a) => ({ ...a, ...loadArticle(a.slug) }));
+
+  it("frontmatter matches the manifest (category, lane, pillar flag, course)", () => {
+    for (const a of articles) {
+      expect(a.data.category_slug, a.slug).toBe(AI_SAFETY_CATEGORY_SLUG);
+      expect(a.data.difficulty ?? null, a.slug).toBe(a.lane);
+      expect(a.data.pillar === true, a.slug).toBe(a.slug === AI_SAFETY_PILLAR_SLUG);
+      expect(AI_SAFETY_LESSON_SLUGS as readonly string[], a.slug).toContain(
+        a.data.related_course_slug,
+      );
+    }
+  });
+
+  it("word bands and source minimums", () => {
+    for (const a of articles) {
+      const [min, max, srcMin] = a.lane === null ? [2200, 3000, 6] : [1100, 1800, 4];
+      expect(a.words, `${a.slug}: ${a.words} words`).toBeGreaterThanOrEqual(min);
+      expect(a.words, `${a.slug}: ${a.words} words`).toBeLessThanOrEqual(max);
+      expect((a.data.sources as unknown[]).length, a.slug).toBeGreaterThanOrEqual(srcMin);
+    }
+  });
+
+  it("house style: no banned phrases, no legacy /blog or /courses links", () => {
+    for (const a of articles) {
+      const text = `${a.data.title} ${a.data.excerpt} ${a.body}`;
+      for (const phrase of BANNED) {
+        expect(text.includes(phrase), `${a.slug}: "${phrase}"`).toBe(false);
+      }
+      expect(a.body.includes("](/blog/"), a.slug).toBe(false);
+      expect(a.body.includes("](/courses/"), a.slug).toBe(false);
+    }
+  });
+
+  it("beginner lane never says útočník", () => {
+    for (const a of articles.filter((x) => x.lane === "beginner")) {
+      expect(/útočník/i.test(a.body), a.slug).toBe(false);
+    }
+  });
+
+  it("every internal /academy link resolves to an existing article or lesson", () => {
+    for (const a of articles) {
+      for (const m of a.body.matchAll(/\]\(\/academy\/([a-z0-9-]+)\)/g)) {
+        expect(KNOWN_SLUGS.has(m[1]), `${a.slug} → ${m[1]}`).toBe(true);
+      }
+    }
+  });
+
+  it("clusters link to the pillar and the pillar links to every cluster + lesson", () => {
+    const pillar = articles.find((a) => a.slug === AI_SAFETY_PILLAR_SLUG)!;
+    for (const a of articles.filter((x) => x.lane !== null)) {
+      expect(a.body.includes(`](/academy/${AI_SAFETY_PILLAR_SLUG})`), a.slug).toBe(true);
+      expect(pillar.body.includes(`](/academy/${a.slug})`), `pillar → ${a.slug}`).toBe(true);
+    }
+    for (const slug of AI_SAFETY_LESSON_SLUGS) {
+      expect(pillar.body.includes(`](/academy/${slug})`), `pillar → ${slug}`).toBe(true);
+    }
+  });
+
+  it("each manifest quiz id is embedded exactly once and every embedded id resolves", () => {
+    for (const a of articles) {
+      const embedded = [...a.body.matchAll(/^\[\[quiz:([a-z0-9_-]+)\]\]\s*$/gim)].map((m) => m[1]);
+      expect([...embedded].sort(), a.slug).toEqual([...a.quizIds].sort());
+      for (const id of embedded) expect(getQuestionById(id), `${a.slug}: ${id}`).not.toBeNull();
+    }
+  });
+
+  it("ends with the test CTA", () => {
+    for (const a of articles) expect(a.body.trimEnd().endsWith("`/test`"), a.slug).toBe(true);
+  });
+});
+
+describe("E65 backfill SQL", () => {
+  const SQL_PATH = "supabase/backfills/20260910_ai_safety_articles.sql";
+
+  it("carries every manifest article, pillar first", () => {
+    const sql = read(SQL_PATH);
+    const positions = AI_SAFETY_ARTICLES.map((a) => sql.indexOf(`$slug$${a.slug}$slug$`));
+    for (const [i, pos] of positions.entries()) {
+      expect(pos, AI_SAFETY_ARTICLES[i].slug).toBeGreaterThan(-1);
+    }
+    expect(positions[0]).toBeLessThan(Math.min(...positions.slice(1)));
+  });
+
+  it("is byte-identical to a fresh generation", () => {
+    const committed = read(SQL_PATH);
+    execFileSync("npx", ["tsx", "scripts/generate-blog-backfill.ts"], {
+      cwd: ROOT,
+      stdio: "ignore",
+    });
+    expect(read(SQL_PATH)).toBe(committed);
   });
 });
