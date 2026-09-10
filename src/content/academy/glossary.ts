@@ -27,6 +27,16 @@ export const GLOSSARY: Record<string, string> = {
   otp: "jednorazový overovací kód",
   "data breach": "únik údajov",
   cta: "výzva na akciu (tlačidlo či odkaz)",
+  // E65 — safe-AI section
+  "prompt injection": "podstrčenie pokynov do AI cez dáta, ktoré spracúva",
+  llm: "large language model — jazykový model typu ChatGPT či Claude",
+  halucinácia: "vymyslená, sebavedomo podaná nepravda z jazykového modelu",
+  "shadow ai": "neschválené používanie AI nástrojov zamestnancami",
+  mcp: "Model Context Protocol — štandard, cez ktorý AI volá nástroje",
+  jailbreak: "obídenie bezpečnostných obmedzení modelu cez prompt",
+  slopsquatting:
+    "registrácia balíka s názvom, ktorý si AI vymyslela, aby ho vývojári nainštalovali",
+  sandbox: "oddelené prostredie bez prístupu k produkčným dátam",
 };
 
 // Format a term with its canonical gloss: "phishing (podvodné vylákanie …)".

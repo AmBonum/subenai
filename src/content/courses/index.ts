@@ -30,6 +30,7 @@ import { hesla2faPasskeysCourse } from "./hesla-2fa-passkeys";
 import { vpnAntivirusZalohyCourse } from "./vpn-antivirus-zalohy";
 import { coRobitPoPodvodeCourse } from "./co-robit-po-podvode";
 import { topPodvody2026Course } from "./top-podvody-2026-sk";
+import { aiBezpecnostPreOdbornikovCourse } from "./ai-bezpecnost-pre-odbornikov";
 
 export type { Course, CourseCategory, CourseSection, CourseDifficulty } from "./_schema";
 export { courseSchema } from "./_schema";
@@ -63,6 +64,7 @@ export const COURSES: Course[] = [
   vpnAntivirusZalohyCourse,
   coRobitPoPodvodeCourse,
   topPodvody2026Course,
+  aiBezpecnostPreOdbornikovCourse,
 ];
 
 const slugs = new Set<string>();

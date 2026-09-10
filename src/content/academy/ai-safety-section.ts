@@ -28,7 +28,11 @@ export const AI_SAFETY_ARTICLES: ReadonlyArray<AiSafetyArticle> = [
     lane: "beginner",
     quizIds: ["e65-chatgpt-rodne-cislo-1"],
   },
-  { slug: "ai-halucinacie-ako-overit-odpoved", lane: "beginner", quizIds: ["e65-ai-citacia-sud-1"] },
+  {
+    slug: "ai-halucinacie-ako-overit-odpoved",
+    lane: "beginner",
+    quizIds: ["e65-ai-citacia-sud-1"],
+  },
   {
     slug: "nastavenia-sukromia-chatgpt-gemini-copilot-claude",
     lane: "beginner",
