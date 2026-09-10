@@ -74,6 +74,13 @@ describe("AcademyIndex", () => {
     expect(cards[0]).toHaveAttribute("data-content-type", "lesson");
   });
 
+  it("renders Slovak difficulty labels, never the raw DB value", () => {
+    mockUseAcademyList.mockReturnValue({ data: items, isLoading: false, isError: false });
+    render(<AcademyIndex />);
+    expect(screen.getByTestId("academy-index-card-difficulty")).toHaveTextContent("začiatočník");
+    expect(screen.queryByText(/beginner/)).not.toBeInTheDocument();
+  });
+
   it("shows the empty state when nothing matches the query", () => {
     mockUseAcademyList.mockReturnValue({ data: items, isLoading: false, isError: false });
     render(<AcademyIndex />);
