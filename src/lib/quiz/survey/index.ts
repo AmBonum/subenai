@@ -87,6 +87,7 @@ export const INTEREST_VALUES = [
   "vztahy",
   "data",
   "obecne",
+  "ai",
 ] as const;
 
 export type Interest = (typeof INTEREST_VALUES)[number];
@@ -100,4 +101,5 @@ export const INTEREST_LABELS: Record<Interest, string> = {
   vztahy: "Romance scams / vzťahy",
   data: "Bezpečnosť osobných údajov",
   obecne: "Všeobecná digitálna hygiena",
+  ai: "AI nástroje a chatboty",
 };

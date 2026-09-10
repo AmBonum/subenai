@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 
 import { useAcademyList, type AcademyListItem } from "@/lib/academy/queries";
+import { difficultyLabel } from "@/lib/academy/difficulty";
 import { filterAcademy, type AcademyTypeFilter } from "@/lib/academy/filter";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +17,7 @@ const TYPE_TABS: { value: AcademyTypeFilter; label: string }[] = [
 
 function EntryCard({ item }: { item: AcademyListItem }) {
   const isLesson = item.content_type === "lesson";
+  const label = difficultyLabel(item.content_type, item.difficulty);
   return (
     <li>
       <Link
@@ -28,7 +30,7 @@ function EntryCard({ item }: { item: AcademyListItem }) {
         <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {isLesson ? <span aria-hidden="true">{item.hero_emoji ?? "🎓"}</span> : null}
           <span>{isLesson ? "Kurz" : item.category.name}</span>
-          {isLesson && item.difficulty ? <span>· {item.difficulty}</span> : null}
+          {label ? <span data-testid="academy-index-card-difficulty">· {label}</span> : null}
           {isLesson && item.estimated_minutes ? (
             <span>· {item.estimated_minutes} min</span>
           ) : !isLesson && item.reading_minutes ? (

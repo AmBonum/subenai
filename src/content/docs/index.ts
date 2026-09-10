@@ -107,7 +107,8 @@ zátvorke. Všetky kurzy aj články nájdeš na jednom mieste v
 Hore prepneš medzi **Všetko / Kurzy / Články** alebo **vyhľadáš** tému; každá
 karta ukazuje **typ** (Kurz alebo Článok), **obtiažnosť** (začiatočník /
 pokročilý) a **odhadovaný čas**. Kliknutím otvoríš celý kurz aj s
-interaktívnymi príkladmi.`,
+interaktívnymi príkladmi. Pri článkoch zo sekcie *Bezpečná práca s AI* je
+namiesto obtiažnosti uvedené publikum (*pre každého* / *pre odborníkov*).`,
   },
   {
     slug: "ucet",
@@ -235,7 +236,14 @@ techniky, rozbory reálnych prípadov a praktické rady, ako sa brániť.
 
 Každý článok má **odhadovaný čas čítania** a prehľadné sekcie. Články sú
 zadarmo a bez prihlásenia, pravidelne pribúdajú a dopĺňajú [kurzy](/docs/kurzy)
-o aktuálne dianie. Nájdeš ich v **[Akadémii](/academy)** pod záložkou *Články*.`,
+o aktuálne dianie. Nájdeš ich v **[Akadémii](/academy)** pod záložkou *Články*.
+
+Články sú zoradené do kategórií. Sekcia **[Bezpečná práca s AI](/academy/category/bezpecna-praca-s-ai)**
+má dve úrovne — *pre každého* (čo nepísať do chatbota, ako overiť odpoveď,
+nastavenia súkromia, falošné AI appky, deti a chatboti) a *pre odborníkov*
+(prompt injection, shadow AI, AI agenti a MCP, OWASP Top 10 pre LLM, AI
+generovaný kód). Na stránke kategórie prepneš úroveň prepínačom
+**Všetko / Pre každého / Pre odborníkov**.`,
   },
   {
     slug: "zdielanie-vysledkov",

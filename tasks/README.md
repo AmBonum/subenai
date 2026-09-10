@@ -69,6 +69,7 @@ tasks/
 |---|---|---|
 | [PLAN-2026-04-25-rast-a-vzdelavanie.md](./PLAN-2026-04-25-rast-a-vzdelavanie.md) | 5 epics, 23 stories: consent bug, growth survey, answer review, data-trap edu popup, courses section | 🟡 Plan approved, awaiting kickoff |
 | [stories/E53-scam-chat-agent.md](./stories/E53-scam-chat-agent.md) | E53, 9 stories: AI scam-check chat assistant — Workers AI free tier, RAG over site content, triage + police-report PDF, photo evidence with 30-min TTL, role-aware disclosure | 🚧 All 9 stories merged to `main`; pending live prod-ops (Vectorize index + bindings + first `rag:index`) — see [E53-runbook.md](./E53-runbook.md) §1 |
+| [stories/E65-ai-safety-content.md](./stories/E65-ai-safety-content.md) | E65, 9 stories: academy section "Bezpečná práca s AI" — 11 sourced articles in two audience lanes, expert lesson, 12 inline quiz items, lane toggle, SEO/docs | 🚧 E65.1–E65.8 ✅ on the branch/PR; E65.9 pending the owner's prod SQL (category migration + 2 backfills) and live verification |
 
 ## Planning process
 

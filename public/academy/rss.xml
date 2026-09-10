@@ -6,8 +6,457 @@
     <description>Akadémia o internetových podvodoch — kurzy a články o digitálnej bezpečnosti pre slovenských čitateľov.</description>
     <language>sk-SK</language>
     <copyright>© 2026 subenai</copyright>
-    <lastBuildDate>Sun, 28 Jun 2026 13:02:12 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 10 Sep 2026 11:01:22 GMT</lastBuildDate>
     <atom:link href="https://subenai.sk/academy/rss.xml" rel="self" type="application/rss+xml" />
-
+    <item>
+      <title>kybernetika vo výučbe — ako za 45 minút otestovať triedu na rozpoznávanie podvodov</title>
+      <link>https://subenai.sk/academy/kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov</guid>
+      <description>máš v rozvrhu jednu hodinu a chceš, aby žiaci vyšli z triedy s reálne lepším rozpoznávaním online podvodov. tu je hotový 45-minútový plán, vrátane toho, ako pripraviť test, ako čítať výsledky bez zahanbovania a ako pokračovať budúci mesiac.</description>
+      <pubDate>Wed, 20 May 2026 15:43:51 GMT</pubDate>
+      <category>Bezpečnosť pre rodičov a seniorov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>Psychológia podvodov — prečo naletíš, aj keď nie si hlúpy</title>
+      <link>https://subenai.sk/academy/psychologia-podvodov</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/psychologia-podvodov</guid>
+      <description>6 kognitívnych pascí, na ktoré stavajú podvodníci v SR — a ako ich vypnúť.</description>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>Falošný e-shop — overenie za 2 minúty</title>
+      <link>https://subenai.sk/academy/fake-eshop-ako-overit</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/fake-eshop-ako-overit</guid>
+      <description>7-bodový checklist, ktorým rozoznáš podvodný e-shop skôr, než zaplatíš.</description>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>Fake e-shopy a marketplace podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>Bezpečné online nákupy — karta, PayPal a chargeback</title>
+      <link>https://subenai.sk/academy/bezpecne-online-nakupy</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/bezpecne-online-nakupy</guid>
+      <description>3 platobné triky a 1 vec na karte, vďaka ktorým ťa fake e-shop neoberie.</description>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>Fake e-shopy a marketplace podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>Bezpečnosť rodiny — deti, rodičia, starí rodičia</title>
+      <link>https://subenai.sk/academy/rodina-deti-seniori</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/rodina-deti-seniori</guid>
+      <description>3 nastavenia pre 3 generácie, ktorými ochrániš rodinu na internete za víkend.</description>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>Sociálne siete a manipulácia</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>Internet safety pre študentov — Discord, Steam, brigády</title>
+      <link>https://subenai.sk/academy/studenti-online</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/studenti-online</guid>
+      <description>5 podvodov, ktoré cielia stredoškolákov a vysokoškolákov v SR v 2026.</description>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>Príbehy Slovákov, ktorí prišli o peniaze online</title>
+      <link>https://subenai.sk/academy/pribehy-skutocnych-obeti</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/pribehy-skutocnych-obeti</guid>
+      <description>4 anonymizované prípady z roku 2025–2026: čo sa stalo, koľko stálo, ako sa dalo predísť.</description>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>Heslá, 2FA a passkeys — praktický sprievodca 2026</title>
+      <link>https://subenai.sk/academy/hesla-2fa-passkeys</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/hesla-2fa-passkeys</guid>
+      <description>3 nástroje za 30 minút, vďaka ktorým ti nikto neukradne účet ani po úniku hesla.</description>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>Cyber hygiene a návyky</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>VPN, antivírus a zálohy — čo dnes naozaj treba</title>
+      <link>https://subenai.sk/academy/vpn-antivirus-zalohy</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/vpn-antivirus-zalohy</guid>
+      <description>3 nástroje, 1 pravidlo (3-2-1) a kedy VPN reálne pomáha — bez marketingových bludov.</description>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>Cyber hygiene a návyky</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>Prvá pomoc — čo robiť, keď ti niekto napadol účet alebo kartu</title>
+      <link>https://subenai.sk/academy/co-robit-po-podvode</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/co-robit-po-podvode</guid>
+      <description>60 minút na zachránenie peňazí a reputácie. Krok po kroku, bez paniky.</description>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>Top podvody na Slovensku v roku 2026</title>
+      <link>https://subenai.sk/academy/top-podvody-2026-sk</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/top-podvody-2026-sk</guid>
+      <description>5 nových schém, ktoré v 2026 zarobili útočníkom najviac — a ako ich rozoznáš.</description>
+      <pubDate>Wed, 20 May 2026 00:00:00 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>yubikey vs. google titan vs. softvérový passkey — ktorý kľúč si kúpiť</title>
+      <link>https://subenai.sk/academy/yubikey-vs-google-titan-vs-passkey</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/yubikey-vs-google-titan-vs-passkey</guid>
+      <description>softvérový passkey je zadarmo a stačí 95 % ľudí. yubikey 5c nfc stojí ~60 € a chráni účet aj keby ti niekto kompromitoval celý telefón. google titan je lacnejšia alternatíva. tento článok rozhodne za teba, ktorý si kúpiť — alebo či vôbec.</description>
+      <pubDate>Tue, 19 May 2026 12:04:44 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>eu ai akt 2026 — čo znamená pre bežného slováka pri ochrane pred ai podvodmi</title>
+      <link>https://subenai.sk/academy/ai-akt-eu-co-znamena-pre-bezneho-cloveka</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/ai-akt-eu-co-znamena-pre-bezneho-cloveka</guid>
+      <description>od 2. augusta 2026 musia veľké ai modely označovať syntetický obsah a deployeri deepfakov ich musia priznať. tu je preklad eu regulácie do slovenského života — čo ti reálne pomôže pri scame, čo nepomôže, a kam to nahlásiš.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>News &amp; aktuálne scam trendy</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>internet iq test pre firmy — vyškoľ zamestnancov za 15 minút</title>
+      <link>https://subenai.sk/academy/internet-iq-test-pre-firmy-zamestnancov</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/internet-iq-test-pre-firmy-zamestnancov</guid>
+      <description>BEC, deepfake CEO hovory, falošné faktúry. najdrahšie incidenty v slovenských firmách začínajú jedným klikom jedného zamestnanca. tu je ako za 15 minút na osobu zistíš, kto v tíme by klikol — a čo s tým urobíš ďalej.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>senior dostal prvý smartfón — bezpečnostné minimum pre rodinu</title>
+      <link>https://subenai.sk/academy/senior-prvy-smartfon-bezpecnost</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/senior-prvy-smartfon-bezpecnost</guid>
+      <description>mama alebo ocko prešli zo „starého“ telefónu na smartfón. nastavenia z krabice ich nechránia pred ničím, čo dnes bežne behá na slovákoch 60+. tu je presný setup, ktorý si sadneš a urobíš za 90 minút — krok za krokom, vrátane rozhovoru, ktorý je dôležitejší než akékoľvek nastavenie.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Bezpečnosť pre rodičov a seniorov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>poistenie proti kybernetickým podvodom — má zmysel pre bežnú rodinu?</title>
+      <link>https://subenai.sk/academy/poistenie-proti-kybernetickym-podvodom</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/poistenie-proti-kybernetickym-podvodom</guid>
+      <description>kybernetické poistenie je nová kategória na slovenskom trhu. allianz, kooperativa, uniqa aj generali to ponúkajú ako pripoistenie k domácnosti za 30–100 € ročne. tu je čestný rozbor — kto to potrebuje, koho oklame malé písmo, a kedy je YubiKey lepší než poistka.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>hacknutý facebook účet — krok za krokom k obnove</title>
+      <link>https://subenai.sk/academy/hacknuty-facebook-ucet-co-robit</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/hacknuty-facebook-ucet-co-robit</guid>
+      <description>niekto ti prevzal facebook, zmenil heslo a možno aj email. tento návod ti dá presný postup obnovy v poradí, ktoré naozaj funguje — bez behania v kruhu a bez aplikácií tretích strán, ktoré ťa len ďalej okradnú.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Sociálne siete a manipulácia</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>prečo sú aktualizácie systému dôležitejšie, než si myslíš</title>
+      <link>https://subenai.sk/academy/aktualizacie-systemu-preco-su-dolezite</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/aktualizacie-systemu-preco-su-dolezite</guid>
+      <description>väčšina hacknutých počítačov v 2026 nepadne na nový sofistikovaný útok. padne na chybu, ktorá bola opravená pred mesiacmi. tento návod ti ukáže, ako vyzerá životný cyklus zraniteľnosti od dňa nula po masové skenovanie a prečo „aktualizujem cez víkend“ je často neskoro.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>internet iq test — aký je tvoj skutočný digitálny rozum?</title>
+      <link>https://subenai.sk/academy/kviz-iq-internet-bezpecnost</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/kviz-iq-internet-bezpecnost</guid>
+      <description>väčšina slovákov si myslí, že na podvod nenaletí. čísla hovoria niečo iné. tu je ochutnávka — sedem scenárov, osem stupňov digitálneho rozumu a presný odkaz na 90-sekundový test, ktorý povie, kde stojíš ty.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Kvízy a interaktívne články</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>najlepší správca hesiel 2026 — 1password, bitwarden, proton pass a ďalší</title>
+      <link>https://subenai.sk/academy/najlepsi-spravca-hesiel-porovnanie-2026</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/najlepsi-spravca-hesiel-porovnanie-2026</guid>
+      <description>ak si rozhodnutý, že potrebuješ správca hesiel, ale váhaš medzi 1password, bitwardenom, proton pass, dashlane a nordpass — tu je päť-stranové porovnanie s konkrétnym odporúčaním pre štyri typické situácie slovenského používateľa v roku 2026.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>služby monitoringu úniku dát — porovnanie pre slovenského používateľa (2026)</title>
+      <link>https://subenai.sk/academy/sluzby-monitoring-uniku-dat</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/sluzby-monitoring-uniku-dat</guid>
+      <description>monitoring únikov osobných údajov je dnes prakticky povinnosť — otázka je, či za to treba platiť. v tomto porovnaní si prejdeme bezplatné možnosti (hibp, mozilla monitor, password manager checkup) aj platené služby (1password watchtower, bitdefender, mozilla monitor plus) a povieme si, kedy 95 % hodnoty dostaneš zadarmo a kedy má platený plán pre teba reálny zmysel.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>správca hesiel — porovnanie 4 možností pre rok 2026</title>
+      <link>https://subenai.sk/academy/spravca-hesiel-porovnanie</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/spravca-hesiel-porovnanie</guid>
+      <description>vlastné heslo pre každú zo 150 služieb si nezapamätáš. preto existuje správca hesiel. v tomto porovnaní si pozrieme 4 najreálnejšie možnosti pre slováka v roku 2026 — koľko stoja, čo vedia, kde sa rozbijú a ktorá z nich je pre teba najlepšia.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>telegram a whatsapp scam skupiny — investičné, krypto, „práca z domu“</title>
+      <link>https://subenai.sk/academy/telegram-whatsapp-scam-skupiny</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/telegram-whatsapp-scam-skupiny</guid>
+      <description>telegram a whatsapp sú v roku 2026 hlavná dielňa slovenských investičných a kryptopodvodov. tu je rozbor troch typov scam skupín, vzory ako rastú, presné znaky podľa ktorých ich spoznáš a prečo „práca z domu za 500 € týždenne“ znamená trestný čin, aj keď peniaze v skutočnosti netvoja.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Sociálne siete a manipulácia</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>podvodné súťaže a giveawayy na sociálnych sieťach — ako rozpoznať fake výhru</title>
+      <link>https://subenai.sk/academy/podvodne-sutaze-a-giveawayy</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/podvodne-sutaze-a-giveawayy</guid>
+      <description>fake giveaway je dnes najlacnejší spôsob, ako ti podvodník dostane kartu alebo heslo. tento sprievodca ti ukáže štyri najčastejšie vzory podvodných súťaží na facebooku, instagrame a tiktoku — a jednoduchý 30-sekundový test, ktorý odhalí 9 z 10 fake výhier ešte pred kliknutím.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Sociálne siete a manipulácia</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>„naletela som na bankový podvod“ — príbeh slovenky, ktorá prišla o 4 800 €</title>
+      <link>https://subenai.sk/academy/pribeh-naletela-som-na-podvod-banka</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/pribeh-naletela-som-na-podvod-banka</guid>
+      <description>andrea, 38 rokov, profesionálka. vo štvrtok večer jej príde sms od „banky“ o podozrivej transakcii. za 12 minút má účet prázdny — 4 800 € preč. tu je presný priebeh, čo by jej zachránilo peniaze a čo robiť, ak sa to stalo aj tebe.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Príbehy reálnych podvodov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>rok lásky, ktorá neexistovala — príbeh romance scamu zo slovenska</title>
+      <link>https://subenai.sk/academy/pribeh-romance-scam-rok-laska</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/pribeh-romance-scam-rok-laska</guid>
+      <description>evine 12 mesiacov v romance scame — od prvej milej správy v januári po telefonát s dcérou v decembri. čo presne sa dialo, kedy mala šancu vystúpiť a prečo nevystúpila ani jeden múdry človek by nevystúpil. žiadne moralizovanie, žiadna vina.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Príbehy reálnych podvodov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>naliehavosť ako zbraň — prečo „okamžite konajte“ funguje</title>
+      <link>https://subenai.sk/academy/naliehavost-ako-zbran-podvodnika</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/naliehavost-ako-zbran-podvodnika</guid>
+      <description>podvodník nepotrebuje, aby si bol hlúpy. potrebuje, aby si konal rýchlo. tento článok rozoberá, prečo tlak na čas vypína tvoju opatrnosť, ktoré scenáre to využívajú najtvrdšie, a jedno pravidlo, ktorým si tento útok takmer celý zneškodníš.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Psychológia podvodov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>prečo aj inteligentní ľudia naletia na podvody — 5 kognitívnych pascí</title>
+      <link>https://subenai.sk/academy/preco-aj-inteligentni-ludia-naletia</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/preco-aj-inteligentni-ludia-naletia</guid>
+      <description>vysokoškoláci, lekári, IT inžinieri, právnici — všetci posielajú podvodníkom peniaze rovnako často ako ostatní. nie kvôli inteligencii, ale kvôli piatim pasciam, ktoré má v hlave každý z nás. tento text si pošli rodičovi, ktorý sa hanbí priznať, že naletel.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Psychológia podvodov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>strach ako spúšťač — ako podvodníci využívajú paniku</title>
+      <link>https://subenai.sk/academy/strach-vs-hramotnost-strachu</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/strach-vs-hramotnost-strachu</guid>
+      <description>strach je najsilnejšia páka, ktorou ťa podvodník otočí za 10 sekúnd. tento explainer ti ukáže, čo robí amygdala pri panike, prečo legitímna inštitúcia nikdy nepýta okamžitú akciu, a ako rozoznať informovaný strach od zbrane v rukách scammera.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Psychológia podvodov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>ako hovoriť s deťmi o podvodoch online — podľa veku</title>
+      <link>https://subenai.sk/academy/ako-hovorit-s-detmi-o-podvodoch</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/ako-hovorit-s-detmi-o-podvodoch</guid>
+      <description>šesťročnému nevysvetlíš sextortion. sedemnásťročnému neporadíš s frázou „nehovor s cudzími“. tento sprievodca dáva tri samostatné rozhovory s konkrétnymi vetami pre tri vekové pásma — plus jedno pravidlo, ktoré platí pre všetkých.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Bezpečnosť pre rodičov a seniorov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>otestuj sa pre rodičov — ako dobre poznáš digitálny svet svojich detí?</title>
+      <link>https://subenai.sk/academy/kviz-internetova-bezpecnost-pre-rodicov</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/kviz-internetova-bezpecnost-pre-rodicov</guid>
+      <description>sedem situácií, ktoré sa tento rok dejú slovenským deťom a tínedžerom. pri každej si vyber jednu z troch možností — potom odhalíme, ktorá je správna a prečo. na konci zistíš, kde máš medzeru a čo s tým.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Kvízy a interaktívne články</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>kyberšikana — ako ju spoznať, čo robiť a kam volať (linka 116 111, ipčko)</title>
+      <link>https://subenai.sk/academy/kybersikana-co-robit</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/kybersikana-co-robit</guid>
+      <description>kyberšikana sa nezačína bitkou na chodbe — začína sa screenshotom, ktorý kolovaním v skupinovom chate vyrastie. tu je presný postup, čo robiť, keď to zachytíš u svojho dieťaťa: varovné znaky, prvých 24 hodín, kedy volať 116 111 a kedy políciu.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Bezpečnosť pre rodičov a seniorov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>silné heslo v roku 2026 — alebo prečo už dávno máme passkeys</title>
+      <link>https://subenai.sk/academy/silne-heslo-2026-vs-passkey</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/silne-heslo-2026-vs-passkey</guid>
+      <description>klasická rada „dvanásť znakov, veľké, malé, číslo, špeciálny znak“ je z roku 2003 a útočníkom dnes nerobí ani malú vrásku. v tomto texte ti ukážem, prečo, čo ju nahrádza, a kde v 2026 vieš heslo úplne vymeniť za passkey.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>rodičovská kontrola — porovnanie 5 aplikácií pre rok 2026</title>
+      <link>https://subenai.sk/academy/rodicovska-kontrola-aplikacie-porovnanie</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/rodicovska-kontrola-aplikacie-porovnanie</guid>
+      <description>porovnanie piatich rodičovských aplikácií pre slovenské rodiny v roku 2026. ceny, funkcie, slabé miesta. kedy stačí natívne riešenie a kedy má platený nástroj zmysel — a prečo žiadna aplikácia nenahradí rozhovor.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Bezpečnosť pre rodičov a seniorov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>rodičovská kontrola na iphone a androide — praktický návod (2026)</title>
+      <link>https://subenai.sk/academy/rodicovska-kontrola-iphone-android</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/rodicovska-kontrola-iphone-android</guid>
+      <description>screen time na iphone, family link na androide, schvaľovanie nákupov, content filter, bezpečnosť správ. presné kroky cez nastavenia z roku 2026 — a ako sa o tom s dieťaťom rozprávať, aby to nebolo o kontrole, ale o dohode.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Bezpečnosť pre rodičov a seniorov</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>romance scam — keď „láska z internetu“ pýta peniaze</title>
+      <link>https://subenai.sk/academy/romance-scam-laska-cez-internet</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/romance-scam-laska-cez-internet</guid>
+      <description>romance scam je profesionálna manipulácia, ktorá trvá týždne až mesiace. tento sprievodca ti ukáže, ako vzor funguje krok po kroku, prečo by naletel takmer každý a aké konkrétne kroky urobiť, keď si v tom uviazol/-a — bez výčitiek, bez moralizovania.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Sociálne siete a manipulácia</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>uniklo mi heslo? ako to overiť na haveibeenpwned za 30 sekúnd</title>
+      <link>https://subenai.sk/academy/uniknute-heslo-overit-haveibeenpwned</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/uniknute-heslo-overit-haveibeenpwned</guid>
+      <description>haveibeenpwned je celosvetový štandard na kontrolu, či ti heslo alebo e-mail uniklo do verejnej databázy. tu je presný návod — čo zadať, ako interpretovať výsledok, čo zmeniť ako prvé a ako si nastaviť automatický monitoring na budúce úniky.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Digitálna bezpečnosť pre bežných ľudí</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>ako rozpoznať phishingový email za 10 sekúnd — checklist, ktorý ti zachráni účet</title>
+      <link>https://subenai.sk/academy/ako-rozpoznat-phishingovy-email-za-10-sekund</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/ako-rozpoznat-phishingovy-email-za-10-sekund</guid>
+      <description>phishingový email vyzerá dnes lepšie než tvoja faktúra od dodávateľa. táto 10-sekundová kontrola ti dá jasné áno/nie skôr, než stihneš dočítať predmet — bez technického žargónu a s konkrétnymi slovenskými príkladmi.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Phishing a emailové podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>nové techniky phishingu, ktoré sa objavili v roku 2026</title>
+      <link>https://subenai.sk/academy/nove-techniky-phishingu-2026</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/nove-techniky-phishingu-2026</guid>
+      <description>rok 2026 priniesol osem nových phishingových techník, ktoré obchádzajú spam filtre, SMS dvojfaktorovku aj zdravý rozum. tu je krátky rozbor každej z nich a konkrétny detekčný znak, podľa ktorého ich rozpoznáš.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>News &amp; aktuálne scam trendy</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>ochrana pred phishingom — 2fa, passkeys a hardvérové kľúče vysvetlené</title>
+      <link>https://subenai.sk/academy/ochrana-pred-phishingom-2fa-passkey</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/ochrana-pred-phishingom-2fa-passkey</guid>
+      <description>phishing porazíš vrstvami, nie opatrnosťou. tento sprievodca ti ukáže rebrík obrany od sms kódov po hardvérové kľúče, prečo passkey útok zastaví a kam presne nasadiť ktorý faktor.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Phishing a emailové podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>phishing cez google formuláre — nová vlna 2026</title>
+      <link>https://subenai.sk/academy/phishing-cez-google-formulare</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/phishing-cez-google-formulare</guid>
+      <description>útočníci v roku 2026 hostujú phishingové formuláre priamo na docs.google.com. URL vyzerá legitímne, antivírus nereaguje, password manager vyplní heslo. tu je presný mechanizmus a čo robiť, ak si už údaje odoslal.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Phishing a emailové podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>podvodné emaily z banky — ako rýchlo spoznať falošnú správu</title>
+      <link>https://subenai.sk/academy/podvodne-emaily-z-banky-ako-spoznat</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/podvodne-emaily-z-banky-ako-spoznat</guid>
+      <description>falošný email z tvojej banky vyzerá ako pravý, dokým mu nepozrieš na adresu odosielateľa a na doménu odkazu. tento návod ti dáva odtlačok siedmich slovenských bánk — vúb, slsp, tatra banka, čsob, mbank, unicredit, poštová — a postup na 20 sekúnd overenia.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Phishing a emailové podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>spear phishing vs. bežný phishing — rozdiel, ktorý ťa môže stáť všetko</title>
+      <link>https://subenai.sk/academy/spear-phishing-vs-bezny-phishing</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/spear-phishing-vs-bezny-phishing</guid>
+      <description>bežný phishing posiela milión rovnakých e-mailov. spear phishing pozná tvoje meno, tvojho šéfa a tvoj posledný projekt. tu je rozdiel, prečo na to nalietajú aj profesionáli a ako sa brániť vrstvami, nie opatrnosťou.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Phishing a emailové podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>čo robiť, keď som klikol na phishingový odkaz — prvá pomoc krok za krokom</title>
+      <link>https://subenai.sk/academy/co-robit-ked-som-klikol-na-phishing</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/co-robit-ked-som-klikol-na-phishing</guid>
+      <description>klikol si na phishing a teraz panikáriš. nie si idiot, naletel by každý unavený človek. tu je sedem krokov v poradí, ktoré ti vrátia kontrolu nad zariadením a účtami — od odpojenia siete cez zmenu hesiel až po monitoring výpisov.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Phishing a emailové podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>ai phishing — keď ai píše podvody na mieru tebe</title>
+      <link>https://subenai.sk/academy/ai-phishing-personalizovany-podvod</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/ai-phishing-personalizovany-podvod</guid>
+      <description>do roku 2023 si phishing rozpoznal podľa preklepov a divnej slovenčiny. dnes ti gpt napíše perfektný e-mail s tvojím menom, titulom a posledným projektom z linkedinu. tu je ako sa zmenil phishing, čo z pôvodných signálov ešte platí a aké tri vrstvy obrany ti dnes zachránia účet.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>AI a moderné online podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>otestuj sa — rozpoznáš phishingový email?</title>
+      <link>https://subenai.sk/academy/kviz-rozpoznas-phishingovy-email</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/kviz-rozpoznas-phishingovy-email</guid>
+      <description>šesť reálnych slovenských emailov a SMS-iek z roku 2026. pri každom rozhodneš: klikneš, alebo zatvoríš tab? po každej úlohe odhalíme červené vlajky a vysvetlíme, prečo je to podvod alebo legit.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Kvízy a interaktívne články</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>12 najčastejších podvodných SMS na Slovensku v roku 2026</title>
+      <link>https://subenai.sk/academy/12-najcastejsich-podvodnych-sms-2026</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/12-najcastejsich-podvodnych-sms-2026</guid>
+      <description>podvodné sms slovensko nezačali balíkom z covidu — dnes ich chodí 12 variantov, ktoré sa otáčajú podľa sezóny. tu je 12 aktuálnych vzorov z 2026: presný text, prečo ti to mozog kúpi a čo robiť.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Scam SMS a telefonické podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>sms z banky — ako za 20 sekúnd overiť, či je pravá</title>
+      <link>https://subenai.sk/academy/sms-z-banky-overit-ci-je-pravda</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/sms-z-banky-overit-ci-je-pravda</guid>
+      <description>falošná sms z banky ti dnes príde tak často, že už nezačíname otázkou ‚či je to podvod&apos;, ale ‚ako rýchlo to viem overiť&apos;. tu je 20-sekundový postup pre tatra banku, slsp a vúb, plus jedno pravidlo, ktoré ti zachráni účet.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Scam SMS a telefonické podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>otestuj sa — rozpoznáš scam sms od pravej?</title>
+      <link>https://subenai.sk/academy/kviz-scam-sms-rozpozna</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/kviz-scam-sms-rozpozna</guid>
+      <description>šesť sms-iek, ktoré tento rok obiehajú slovenské mobily — od slovak post cez tatra banku až po finančnú správu. pri každej sa zastav, rozhodni, a potom rozoberieme červené vlajky.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Kvízy a interaktívne články</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
+    <item>
+      <title>phishing cez balíkové zásielky — packeta, slovak post, gls a ako ich rozoznať</title>
+      <link>https://subenai.sk/academy/phishing-na-balikovu-zasielku</link>
+      <guid isPermaLink="true">https://subenai.sk/academy/phishing-na-balikovu-zasielku</guid>
+      <description>Balíkový phishing je v 2026 najúspešnejší slovenský scam. Pošta a kuriéri ti naozaj posielajú SMS — podvodník to vie a stavia na tom. Tu sú konkrétne vzory pre Slovak Post, Packetu, GLS, DPD a DHL a presný checklist, ako ich za 15 sekúnd odhaliť.</description>
+      <pubDate>Tue, 19 May 2026 10:48:20 GMT</pubDate>
+      <category>Phishing a emailové podvody</category>
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">subenai editorial</dc:creator>
+    </item>
   </channel>
 </rss>

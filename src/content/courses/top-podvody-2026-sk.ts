@@ -14,7 +14,7 @@ export const topPodvody2026Course: Course = {
   sections: [
     {
       kind: "embed",
-      heading: "Pozri si na úvod: ako vyzerá typický scam",
+      heading: "Pozri si na úvod: ako vyzerá typický scam (podvod)",
       audio: {
         provider: "youtube",
         url: "https://www.youtube.com/watch?v=B1bM5aa4OqI",

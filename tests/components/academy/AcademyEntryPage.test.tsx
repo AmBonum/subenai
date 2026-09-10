@@ -41,7 +41,31 @@ const lesson: AcademyEntryDetail = {
   sources: [],
 };
 
+const article: AcademyEntryDetail = {
+  ...lesson,
+  id: "2",
+  slug: "prompt-injection",
+  title: "prompt injection",
+  content_type: "article",
+  difficulty: "advanced",
+  estimated_minutes: null,
+  hero_emoji: null,
+  reading_minutes: 8,
+  body_mdx: "text",
+};
+
 describe("AcademyEntryPage", () => {
+  it("shows the Slovak difficulty for a lesson, not the raw DB value", () => {
+    render(<AcademyEntryPage entry={lesson} />);
+    expect(screen.getByTestId("academy-entry-lane")).toHaveTextContent("začiatočník");
+    expect(screen.queryByText(/beginner/)).not.toBeInTheDocument();
+  });
+
+  it("shows the audience lane for an article with difficulty", () => {
+    render(<AcademyEntryPage entry={article} />);
+    expect(screen.getByTestId("academy-entry-lane")).toHaveTextContent("pre odborníkov");
+  });
+
   it("renders a lesson with its body and inline interactive quiz", () => {
     render(<AcademyEntryPage entry={lesson} />);
     expect(screen.getByTestId("academy-entry-title")).toHaveTextContent("Email phishing");

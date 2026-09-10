@@ -31,6 +31,7 @@ Short, practical lessons with real-world examples:
 - scam messages
 - fake websites
 - manipulation techniques
+- safe use of AI tools (ChatGPT, agents) — one track for everyday users, one for professionals
 
 ---
 

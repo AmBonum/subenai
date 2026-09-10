@@ -17,6 +17,7 @@ const CATEGORY_SLUG: Record<CourseCategory, string> = {
   vztahy: "socialne-siete",
   data: "cyber-hygiena",
   obecne: "digitalna-bezpecnost",
+  ai: "bezpecna-praca-s-ai",
 };
 
 const DIFFICULTY: Record<CourseDifficulty, "beginner" | "advanced"> = {

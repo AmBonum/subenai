@@ -1,10 +1,12 @@
 # Topic content map — pillars × courses × clusters
 
 > **Status**: living document, owned by editorial. Last refresh
-> 2026-05-19 — added teacher-targeted pillar
-> `kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov` as part of
-> E19. Bump the timestamp when you edit and re-confirm the
-> cross-link wiring matches the table below.
+> 2026-09-10 — added the safe-AI pillar
+> `bezpecna-praca-s-ai-kompletny-sprievodca` (E65) with two audience
+> lanes and the expert lesson `ai-bezpecnost-pre-odbornikov`. Previous
+> refresh 2026-05-19 added the teacher pillar (E19). Bump the timestamp
+> when you edit and re-confirm the cross-link wiring matches the table
+> below.
 
 ## Purpose
 
@@ -41,6 +43,7 @@ E17.1–E17.4:
 | Bezpečné nakupovanie online (SK) | `bezpecne-nakupovanie-online-slovensko` | `marketplace-bazos-podvody` | scenario | Marketplace dominates "I'm buying X, is this legit?" intent. |
 | Internet safety pre študentov | `internet-safety-pre-studentov` | `kradez-kont-socialnych-sieti` | — | Account-takeover is the most common student threat vector. |
 | Kybernetika vo výučbe — pre učiteľov | `kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov` | `chran-svojich-blizkych` | — | E19-era pillar for the teacher persona that the /schools page targets. Provides the 45-min lesson plan + GDPR-in-brief that previously had no public surface. Course pairing is "chráň svojich blízkych" because teacher protective-adult work overlaps with parent/grandparent topics. |
+| Bezpečná práca s AI — kompletný sprievodca | `bezpecna-praca-s-ai-kompletny-sprievodca` | `ai-bezpecnost-co-nezdielat` | scenario (12 `e65-*` items embedded inline) | E65 pillar for two audiences. Its 10 clusters carry `difficulty` = `beginner` (5, course `ai-bezpecnost-co-nezdielat`) or `advanced` (5, course `ai-bezpecnost-pre-odbornikov`); the category page `/academy/category/bezpecna-praca-s-ai` offers a lane toggle. Manifest: `src/content/academy/ai-safety-section.ts`. |
 
 ## Courses that have no pillar yet (orphans, in priority order)
 
@@ -54,8 +57,9 @@ E17.1–E17.4:
 | Brigády a pracovné podvody | `brigady-a-pracovne-podvody` | maybe | Could pair with a "jobs scam" pillar — quarterly review. |
 | Pig butchering | `pig-butchering-podvod` | no | Best as cluster under investičné pillar once that exists. |
 | Romance scams — catfishing | `romance-scams-catfishing` | maybe | Single-tactic, well-defined; pillar would have legs (multiple SK-specific real cases in the news). |
-| AI — čo nezdielať | `ai-bezpecnost-co-nezdielat` | no | Cluster under `digitalna-bezpecnost-kompletny-navod`. |
-| AI pomocník každý deň | `ai-pomocnik-kazdy-den` | no | Tutorial-style; cluster article direction. |
+| AI — čo nezdielať | `ai-bezpecnost-co-nezdielat` | paired (E65) | Now the beginner-lane course of the safe-AI pillar; re-homed to course category `ai` → `bezpecna-praca-s-ai`. |
+| AI pomocník každý deň | `ai-pomocnik-kazdy-den` | paired (E65) | Re-homed to `ai` → `bezpecna-praca-s-ai`; linked from the safe-AI pillar's "čítaj ďalej". |
+| AI bezpečnosť pre odborníkov | `ai-bezpecnost-pre-odbornikov` | paired (E65) | Expert lesson (prompt injection, agents/MCP, firemné dáta); `related_course_slug` of the five advanced-lane clusters. |
 | Malvertising — fake reklamy | `malvertising-fake-reklamy` | no | Already used as the "url" quiz recommendation; pillar would be redundant. |
 | Chráň svojich blízkych | `chran-svojich-blizkych` | no | Already paired with two pillars (psychology + parents). |
 

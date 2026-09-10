@@ -1,0 +1,285 @@
+---
+slug: bezpecna-praca-s-ai-kompletny-sprievodca
+title: "bezpečná práca s ai — kompletný sprievodca pre bežných používateľov aj odborníkov"
+subtitle: "jeden sprievodca pre dvoch čitateľov: čo nepísať do chatbota, ako overiť odpoveď a ako nepustiť ai agenta k dátam, ktoré nemá vidieť"
+excerpt: "chatgpt, gemini, copilot aj claude sú skvelí pomocníci — až do chvíle, keď im pošleš rodné číslo, uveríš vymyslenej citácii alebo nainštaluješ falošné rozšírenie. tento sprievodca má dve časti: prvú pre každého, kto ai používa doma alebo v práci, druhú pre ľudí, ktorí ai stavajú do firemných systémov. reálne prípady, jedno pravidlo na tému, žiadny strach."
+category_slug: bezpecna-praca-s-ai
+related_course_slug: ai-bezpecnost-co-nezdielat
+author_slug: subenai-editorial
+primary_keyword: "bezpečná práca s ai"
+search_intent: informational
+reading_minutes: 15
+hero_image_url: null
+og_image_url: null
+seo_title: "bezpečná práca s ai — kompletný sprievodca | subenai"
+seo_description: "čo nikdy nepísať do chatgpt, ako overiť odpoveď ai, nastavenia súkromia, falošné ai appky, deti a chatboti — plus prompt injection, mcp a owasp pre odborníkov."
+canonical_url: null
+pillar: true
+sources:
+  - label: "núkib odporúča nevkladať do ai chatbotov citlivé informácie, brať ich odpovede s rezervou a sťahovať appky len z oficiálnych obchodov (január 2025)"
+    url: "https://nukib.gov.cz/cs/infoservis/doporuceni/2214-nukib-doporucuje-obezretnost-v-pouzivani-nahle-popularnich-aplikaci/"
+    publisher: "núkib"
+    accessed_at: "2026-09-10"
+  - label: "wiz research našiel v januári 2025 otvorenú databázu deepseeku s vyše miliónom riadkov logov vrátane histórie chatov a tajných kľúčov"
+    url: "https://www.wiz.io/blog/wiz-research-uncovers-exposed-deepseek-database-leak"
+    publisher: "wiz research"
+    accessed_at: "2026-09-10"
+  - label: "rozhodnutie súdu v spore mata v. avianca z 22. júna 2023 — pokuta 5 000 dolárov za rozsudky, ktoré si vymyslel chatgpt"
+    url: "https://storage.courtlistener.com/recap/gov.uscourts.nysd.575368/gov.uscourts.nysd.575368.54.0.pdf"
+    publisher: "courtlistener"
+    accessed_at: "2026-09-10"
+  - label: "openai v auguste 2025 stiahlo funkciu, cez ktorú sa zdieľané chatgpt konverzácie dostali do výsledkov google"
+    url: "https://www.malwarebytes.com/blog/news/2025/08/openai-kills-short-lived-experiment-where-chatgpt-chats-could-be-found-on-google"
+    publisher: "malwarebytes"
+    accessed_at: "2026-09-10"
+  - label: "guardio labs odhalil v marci 2023 falošné chatgpt rozšírenie pre chrome, ktoré kradlo facebook účty a inštalovalo sa 2 000-krát denne"
+    url: "https://guard.io/labs/fakegpt-new-variant-of-fake-chatgpt-chrome-extension-stealing-facebook-ad-accounts-with"
+    publisher: "guardio labs"
+    accessed_at: "2026-09-10"
+  - label: "character.ai oznámilo v októbri 2025 koniec voľného chatovania pre používateľov do 18 rokov od 25. novembra 2025"
+    url: "https://blog.character.ai/u18-chat-announcement/"
+    publisher: "character.ai"
+    accessed_at: "2026-09-10"
+  - label: "openai spustilo v septembri 2025 rodičovské nastavenia pre chatgpt vrátane tichých hodín a upozornení pri známkach sebapoškodzovania"
+    url: "https://techcrunch.com/2025/09/29/openai-rolls-out-safety-routing-system-parental-controls-on-chatgpt/"
+    publisher: "techcrunch"
+    accessed_at: "2026-09-10"
+  - label: "echoleak (cve-2025-32711): zero-click prompt injection v microsoft 365 copilot, ktorú našli aim labs v januári 2025 a microsoft opravil v máji 2025"
+    url: "https://www.bleepingcomputer.com/news/security/zero-click-ai-data-leak-flaw-uncovered-in-microsoft-365-copilot/"
+    publisher: "bleepingcomputer"
+    accessed_at: "2026-09-10"
+  - label: "samsung zakázal od mája 2023 generatívne ai nástroje po tom, čo zamestnanci vložili do chatgpt citlivé interné dáta"
+    url: "https://techcrunch.com/2023/05/02/samsung-bans-use-of-generative-ai-tools-like-chatgpt-after-april-internal-data-leak/"
+    publisher: "techcrunch"
+    accessed_at: "2026-09-10"
+  - label: "invariant labs ukázali v máji 2025, ako jedno issue vo verejnom repozitári prinúti agenta cez github mcp vyniesť dáta zo súkromných repozitárov"
+    url: "https://invariantlabs.ai/blog/mcp-github-vulnerability"
+    publisher: "invariant labs"
+    accessed_at: "2026-09-10"
+  - label: "owasp top 10 pre llm aplikácie 2025 — desať kategórií rizík od prompt injection po neobmedzenú spotrebu"
+    url: "https://genai.owasp.org/llm-top-10/"
+    publisher: "owasp"
+    accessed_at: "2026-09-10"
+  - label: "tribunál v britskej kolumbii rozhodol vo februári 2024, že air canada zodpovedá za nepravdivý sľub svojho chatbota"
+    url: "https://www.mccarthy.ca/en/insights/blogs/techlex/moffatt-v-air-canada-misrepresentation-ai-chatbot"
+    publisher: "mccarthy tétrault"
+    accessed_at: "2026-09-10"
+  - label: "štúdia pre usenix security 2025: komerčné modely odporúčajú neexistujúce balíky v aspoň 5,2 % prípadov, open-source modely v 21,7 %"
+    url: "https://arxiv.org/abs/2406.10279"
+    publisher: "arxiv"
+    accessed_at: "2026-09-10"
+  - label: "eu ai akt, článok 4: povinnosť ai gramotnosti pre firmy, ktoré ai nasadzujú, platí od 2. februára 2025"
+    url: "https://artificialintelligenceact.eu/article/4/"
+    publisher: "eu ai act explorer"
+    accessed_at: "2026-09-10"
+  - label: "eu ai akt, článok 50: transparentnosť a označovanie syntetického obsahu platí od 2. augusta 2026"
+    url: "https://artificialintelligenceact.eu/article/50/"
+    publisher: "eu ai act explorer"
+    accessed_at: "2026-09-10"
+---
+
+chatgpt ti napíše e-mail, gemini zhrnie zmluvu, copilot dopíše kód. ten istý nástroj ti však vie vyniesť firemné tajomstvo, vymyslieť súdny rozsudok alebo cez jeden dobre napísaný e-mail poslať tvoje dáta cudziemu. bez jediného kliknutia. tento sprievodca je pre dvoch čitateľov naraz. ak ai používaš ako pomocníka, čítaj časť 1: pre každého. ak ai stavaš do systémov, píšeš s ňou kód alebo jej dávaš nástroje, skroluj rovno na nadpis „časť 2: pre odborníkov“. obe majú rovnaký tvar: päť tém, ku každej pravidlo, prípad a odkaz ďalej.
+
+## čo ai nástroj naozaj robí s tvojím textom
+
+llm (large language model — model typu chatgpt) je štatistický model, ktorý predpovedá ďalšie slovo. tri dôsledky, ktoré ti výrobca nepovie.
+
+po prvé: čokoľvek napíšeš, opustí tvoje zariadenie — na cudzí server, do histórie a pri predvolených nastaveniach aj do tréningu modelu. po druhé: model nevie, čo je pravda. vie, čo znie pravdepodobne, a keď mu chýbajú dáta, doplní ich bez varovania. po tretie: model neodlišuje tvoje pokyny od textu, ktorý spracúva. e-mail, PDF alebo webstránka sú preň rovnaký vstup ako tvoja otázka.
+
+český úrad núkib to v januári 2025 zhrnul do [troch viet: do chatbotov nevkladaj citlivé informácie, ich odpovede ber s rezervou a appky sťahuj len z oficiálnych obchodov](https://nukib.gov.cz/cs/infoservis/doporuceni/2214-nukib-doporucuje-obezretnost-v-pouzivani-nahle-popularnich-aplikaci/). zvyšok sprievodcu sú len dôsledky.
+
+## časť 1: pre každého
+
+päť tém, päť pravidiel, päť prípadov, ktoré sa naozaj stali.
+
+### 1. čo nikdy nepísať do chatbota
+
+pravidlo: do chatbota píš len to, čo by si bez problémov napísal na pohľadnicu. rodné číslo, číslo karty, heslá, zdravotné diagnózy, zmluvy s menami klientov a interný kód tam nepatria. nie preto, že by ich model „ukradol“, ale preto, že po odoslaní ich už nemáš pod kontrolou. sú na cudzom serveri, v cudzej histórii, v cudzej zálohe. a od tej chvíle o nich rozhoduje cudzia firma a cudzia chyba.
+
+príklad: v januári 2025 [našiel tím wiz research databázu čínskeho chatbota deepseek otvorenú do internetu — bez hesla, s vyše miliónom riadkov logov vrátane histórie chatov a tajných kľúčov](https://www.wiz.io/blog/wiz-research-uncovers-exposed-deepseek-database-leak). kto vedel, kam sa pozrieť, si mohol prečítať, čo ľudia deepseeku písali. firma dieru po upozornení rýchlo zavrela. správy používateľov však medzitým ležali na verejnom mieste.
+
+podvodník nepotrebuje hacknúť tvoj počítač, keď mu stačí počkať na cudziu chybu v konfigurácii.
+
+**zlaté pravidlo:** ak by ti bolo nepríjemné, keby ten prompt čítal kolega z vedľajšej kancelárie, nepatrí do chatbota. anonymizuj — meno nahraď za „klient a“, čísla za „xxx“ — a potom sa pýtaj.
+
+celý zoznam a ďalšie prípady máš v [čo nikdy nepísať do chatgpt — reálne prípady](/academy/co-nikdy-nepisat-do-chatgpt-realne-pripady).
+
+### 2. ai si vymýšľa — over odpoveď
+
+pravidlo: každý fakt, ktorý od ai dostaneš a chceš použiť, si over v nezávislom zdroji. halucinácia (vymyslená, sebavedomo podaná nepravda) nie je chyba, ktorú výrobca čoskoro opraví. je to vlastnosť modelu, ktorý predpovedá text, nie fakty. najnebezpečnejšie sú citácie, čísla, paragrafy zákonov a mená — presne tie veci, ktoré znejú najodbornejšie a ktoré sa nikomu nechce overovať.
+
+príklad: v júni 2023 [súd v new yorku v spore mata v. avianca potrestal právnikov pokutou 5 000 dolárov, lebo do podania vložili rozsudky, ktoré si chatgpt vymyslel](https://storage.courtlistener.com/recap/gov.uscourts.nysd.575368/gov.uscourts.nysd.575368.54.0.pdf). rozsudky mali čísla spisov, mená sudcov aj citované pasáže. jediný problém: neexistovali v žiadnej databáze rozsudkov. stačilo ich tam vyhľadať. nikto to neurobil. pokuta bola malá. hanba v médiách nie.
+
+toto je kľúčová lekcia: ai nevie overiť samu seba. otázka „si si istý?“ nie je overenie. overenie je otvoriť pôvodný zdroj a nájsť tam tú vetu.
+
+**tip:** pýtaj si od ai odkaz na zdroj a potom naň klikni. ak odkaz nefunguje alebo stránka hovorí niečo iné, celú odpoveď zahoď. jedna vymyslená citácia znamená, že model si vymýšľal aj inde.
+
+praktický postup na overenie v troch krokoch nájdeš v [ai halucinácie — ako overiť odpoveď](/academy/ai-halucinacie-ako-overit-odpoved).
+
+[[quiz:e65-ai-odpoved-bez-zdroja-1]]
+
+### 3. nastavenia súkromia
+
+pravidlo: v každom ai nástroji si hneď po prvom prihlásení vypni tréning na tvojich dátach a zisti, čo presne robí tlačidlo „zdieľať“. chatgpt, gemini, copilot aj claude majú prepínač, ktorým prevádzkovateľovi zakážeš použiť tvoje konverzácie na učenie modelu. predvolene býva nastavený v prospech výrobcu, nie v tvoj. nájdeš ho v nastaveniach pod súkromím alebo správou dát — dve minúty hľadania, ktoré sa oplatia.
+
+príklad: v lete 2025 si ľudia zdieľali chatgpt konverzácie cez odkaz a zaškrtli políčko, ktoré chat urobilo vyhľadateľným. výsledok: [koncom júla 2025 sa tieto chaty objavili vo výsledkoch google — vrátane súkromných rozhovorov, ktoré ich autori nikdy nechceli mať verejné — a openai funkciu stiahlo s tým, že vytvorila priveľa príležitostí omylom zdieľať veci, ktoré ľudia zdieľať nechceli](https://www.malwarebytes.com/blog/news/2025/08/openai-kills-short-lived-experiment-where-chatgpt-chats-could-be-found-on-google). nikto nič nehackol. ľudia len klikli na políčko, ktoré nečítali.
+
+**pozor:** „zdieľať odkaz“ v ai nástroji znamená verejný odkaz. kto ho má, ten chat číta. a čo je raz v cache vyhľadávača, sa maže pomaly.
+
+preto nastav tri veci: vypni tréning na tvojich dátach, na citlivé otázky používaj dočasný chat a históriu pravidelne maž. klikací návod pre všetky štyri nástroje, vrátane toho, kde je dočasný chat schovaný, máš v [nastavenia súkromia — chatgpt, gemini, copilot, claude](/academy/nastavenia-sukromia-chatgpt-gemini-copilot-claude).
+
+### 4. falošné ai appky a stránky
+
+pravidlo: ai nástroj inštaluj len z oficiálnej domény alebo oficiálneho obchodu a nikdy cez reklamu na sociálnej sieti. popularita chatgpt je pre podvodníka hotová marketingová kampaň zadarmo — stačí skopírovať názov a pridať slovo „free“ alebo „quick“.
+
+príklad: v marci 2023 [odhalil guardio labs rozšírenie pre chrome „quick access to chat gpt“, ktoré si denne inštalovalo vyše 2 000 ľudí. rozšírenie naozaj odpovedalo cez oficiálne chatgpt API — a popri tom kradlo cookies prihlásených facebook účtov, preberalo firemné reklamné účty a z nich platilo ďalšie reklamy na seba](https://guard.io/labs/fakegpt-new-variant-of-fake-chatgpt-chrome-extension-stealing-facebook-ad-accounts-with). google ho z obchodu stiahol 9. marca 2023. dovtedy sa šírilo samo, z peňazí obetí. obete nemuseli nič zadávať. stačilo, že boli prihlásené.
+
+phishing (podvodné vylákanie údajov) tu nebeží cez falošnú banku, ale cez falošného pomocníka. scam (podvod) vyzerá ako produktivita.
+
+**príklad:** reklama „chatgpt zadarmo bez limitu“, doména typu chatgpt-free-app, po kliknutí prihlásenie cez facebook. skutočný chatgpt beží na chatgpt.com. všetko ostatné je obal, ktorý ti v lepšom prípade účtuje cudzie API a v horšom kradne účet.
+
+ako rozpoznať pravú doménu, čo skontrolovať pri rozšírení a ktoré appky sú len obal okolo cudzieho API, máš v [falošné ai aplikácie a rozšírenia](/academy/falosne-ai-aplikacie-a-rozsirenia).
+
+[[quiz:e65-chatgpt-domena-url-1]]
+
+### 5. deti a ai chatboti
+
+pravidlo: dieťa nemá mať ai chatbota bez nastavených limitov a bez toho, aby si vedel, s ktorým sa rozpráva. chatbot je trpezlivý, vždy dostupný a hovorí presne to, čo chce dieťa počuť. pre dvanásťročného je to ideálny kamarát. a to je práve problém. kamarát, ktorý nikdy neodporuje, však dieťa nič nenaučí o skutočných vzťahoch.
+
+príklad: [character.ai v októbri 2025 oznámilo, že do 25. novembra 2025 úplne vypne voľné chatovanie pre používateľov mladších ako 18 rokov, dovtedy im obmedzí čas na dve hodiny denne a nasadí overovanie veku](https://blog.character.ai/u18-chat-announcement/). firma to urobila po tlaku regulátorov, odborníkov aj rodičov. keď samotný prevádzkovateľ uzná, že jeho produkt nie je pre tínedžerov, ber to vážne. nie je to panika. je to priznanie výrobcu. [openai medzitým v septembri 2025 spustilo rodičovské nastavenia pre chatgpt: tiché hodiny, vypnutie hlasu, pamäte a generovania obrázkov a upozornenie rodičovi pri známkach sebapoškodzovania](https://techcrunch.com/2025/09/29/openai-rolls-out-safety-routing-system-parental-controls-on-chatgpt/).
+
+**tip:** nerieš to zákazom, ale prepojením. prepoj svoj účet s účtom dieťaťa, nastav hodiny, kedy chatbot mlčí, a raz za čas sa opýtaj, na čo ho používa. veta „ukáž mi, čo si sa ho dnes pýtal“ funguje lepšie než kontrola histórie potajomky.
+
+ktoré nastavenia zapnúť a ako sa s dieťaťom o ai rozprávať, máš v [ai chatboti a deti — čo nastaviť](/academy/ai-chatboti-a-deti-co-nastavit).
+
+## časť 2: pre odborníkov
+
+tu prepíname register: útočník nie je podvodník s appkou, ale niekto, kto rozumie, ako model číta vstup.
+
+### 1. prompt injection
+
+pravidlo: každý text, ktorý model číta, ber ako potenciálny pokyn od útočníka. prompt injection (podstrčenie pokynov do ai cez dáta, ktoré spracúva) funguje, lebo llm nemá oddelený kanál pre inštrukcie a dáta. pokyn schovaný v e-maile, v komentári na webe alebo v PDF je pre model rovnako záväzný ako tvoj systémový prompt. niekedy záväznejší, lebo prišiel neskôr.
+
+príklad: [aim labs našli v januári 2025 v microsoft 365 copilot zraniteľnosť echoleak (cve-2025-32711, zverejnená v júni 2025): útočník poslal obeti e-mail so skrytými pokynmi, copilot si ho pri odpovedaní na bežnú pracovnú otázku sám natiahol do kontextu a citlivé dáta z účtu odoslal von cez pripravený odkaz alebo obrázok. obeť nemusela nič otvoriť ani na nič kliknúť. microsoft chybu opravil na serveri v máji 2025](https://www.bleepingcomputer.com/news/security/zero-click-ai-data-leak-flaw-uncovered-in-microsoft-365-copilot/). zneužitie v praxi sa zatiaľ nepotvrdilo. koncept však áno: zero-click únik dát cez asistenta, ktorý má prístup k tvojej schránke.
+
+**pozor:** filtrovanie „zlých slov“ v prompte proti tomuto nepomáha. útočník pokyn preformuluje, preloží, zakóduje alebo schová do bieleho textu. obrana je architektúra: model, ktorý číta nedôveryhodný vstup, nemá mať zároveň právo posielať dáta von. zvyšok útočníka len spomalí.
+
+vzory útokov, testovacie payloady a vrstvy obrany rozoberáme v [prompt injection — reálne prípady a obrana](/academy/prompt-injection-realne-pripady-a-obrana).
+
+### 2. shadow ai a firemná politika
+
+pravidlo: keď firma nedá ľuďom schválený ai nástroj, použijú neschválený. shadow ai (neschválené používanie ai nástrojov zamestnancami) nie je problém disciplíny, ale ponuky: ak schválený nástroj chýba alebo je horší, prehrá. zákaz bez alternatívy len presunie tie isté prompty z firemného účtu na súkromný telefón, kde ich nikto nevidí. a nikto ich ani nezastaví.
+
+príklad: v apríli 2023 [zamestnanci samsungu vložili do chatgpt citlivé interné dáta. samsung od 1. mája 2023 zakázal generatívne ai nástroje na firemných zariadeniach aj na súkromných zariadeniach v internej sieti a začal stavať vlastné nástroje. v internom prieskume označilo ai nástroje za bezpečnostné riziko 65 % zamestnancov](https://techcrunch.com/2023/05/02/samsung-bans-use-of-generative-ai-tools-like-chatgpt-after-april-internal-data-leak/). čítaj to celé: firma najprv zakázala, potom postavila náhradu. bez druhého kroku by zákaz nevydržal ani kvartál.
+
+**zhrnutie:** dobrá ai politika má tri vety, nie tridsať strán: ktoré nástroje sú schválené (na firemnom účte s vypnutým tréningom), ktoré dáta do nich nikdy nejdú (osobné údaje klientov, zdrojový kód, zmluvy, čokoľvek pod dohodou o mlčanlivosti) a koho sa spýtať, keď si nie si istý. všetko ostatné je príloha.
+
+šablónu politiky, checklist pre HR a IT, spôsob, ako shadow ai merať namiesto hádania, a argumenty pre vedenie máš v [shadow ai vo firme — politika používania](/academy/shadow-ai-vo-firme-politika-pouzivania).
+
+### 3. ai agenti a mcp
+
+pravidlo: agent má mať presne toľko práv, koľko potrebuje na jednu úlohu, a nikdy nemá naraz čítať nedôveryhodný vstup a mať prístup k súkromným dátam. mcp (model context protocol — štandard, cez ktorý ai volá nástroje) dal agentom ruky. a ruky bez obmedzení sú presne to, čo útočník hľadá. nemusí obísť tvoj firewall. stačí mu presvedčiť agenta.
+
+príklad: [invariant labs v máji 2025 ukázali, ako sa cez github mcp server dá agent uniesť jedným issue vo verejnom repozitári. používateľ požiadal agenta, aby prešiel otvorené issues; v jednom bolo skryté zadanie; agent — claude 4 opus — otvoril súkromné repozitáre používateľa a ich obsah zverejnil v pull requeste do verejného repozitára](https://invariantlabs.ai/blog/mcp-github-vulnerability). invariant zdôraznil, že chyba nie je v kóde mcp servera. je to architektúra: nedôveryhodný vstup plus privilegovaný prístup plus autonómia.
+
+tri ingrediencie, jeden únik. odstráň ktorúkoľvek a útok nefunguje. najlacnejšie sa odstraňuje autonómia: človek klikne „schváliť“ pred každým zápisom.
+
+**tip:** pre každého agenta si napíš jednu vetu: „číta x, môže robiť y, výsledok ide do z“. ak x obsahuje čokoľvek z internetu a y obsahuje zápis alebo odosielanie, máš problém, ktorý rieši schvaľovanie človekom, nie lepší prompt.
+
+čítanie oprávnení mcp serverov, otrávené popisy nástrojov a checklist pred nasadením agenta máš v [ai agenti a mcp — bezpečnostný checklist](/academy/ai-agenti-mcp-bezpecnostny-checklist).
+
+### 4. owasp top 10 pre llm
+
+pravidlo: než nasadíš llm do produktu, prejdi si desať kategórií rizík, ktoré [owasp zhrnul v zozname top 10 pre llm aplikácie 2025](https://genai.owasp.org/llm-top-10/): prompt injection, únik citlivých informácií, dodávateľský reťazec, otrávenie dát a modelu, nesprávne spracovanie výstupu, nadmerná autonómia, únik systémového promptu, slabiny vektorov a embeddingov, dezinformácie a neobmedzená spotreba. nie je to akademický zoznam. každá položka má za sebou incident. a väčšina sa dá otestovať za popoludnie.
+
+príklad na kategóriu „dezinformácie“: [chatbot air canada sľúbil cestujúcemu, že si zľavu za úmrtie v rodine môže uplatniť spätne. nebola to pravda. pred tribunálom v britskej kolumbii vo februári 2024 air canada tvrdila, že chatbot je samostatný právny subjekt zodpovedný za vlastné konanie. tribunál to odmietol — firma zodpovedá za všetky informácie na svojom webe, či ich píše človek alebo model — a prikázal zaplatiť rozdiel v cene](https://www.mccarthy.ca/en/insights/blogs/techlex/moffatt-v-air-canada-misrepresentation-ai-chatbot). halucinácia chatbota sa stala právne záväzným sľubom. obrana „to povedal model, nie my“ neobstála.
+
+ešte jedna podceňovaná položka: výstup modelu, ktorý ide priamo do SQL dotazu, do shellu alebo do html bez ošetrenia, je klasická injection s novým názvom. „nesprávne spracovanie výstupu“ je stará škola v novom kabáte. rieši sa rovnako: validácia, escapovanie, parametrizované dotazy.
+
+ku každej kategórii máme príklad, test a obranu v [owasp top 10 pre llm aplikácie](/academy/owasp-top-10-pre-llm-aplikacie).
+
+### 5. ai generovaný kód
+
+pravidlo: každý balík, ktorý ti ai navrhne nainštalovať, si over v registri skôr, než napíšeš install. modely si vymýšľajú nielen citácie, ale aj názvy knižníc — a útočník si ich vie vygenerovať rovnako ľahko ako ty.
+
+príklad: [štúdia prijatá na usenix security 2025 vygenerovala 576 000 vzoriek kódu a zistila, že komerčné modely odporučili neexistujúci balík v aspoň 5,2 % prípadov, open-source modely v 21,7 %. dokopy 205 474 unikátnych vymyslených názvov](https://arxiv.org/abs/2406.10279). to je pointa slopsquattingu (registrácia balíka s názvom, ktorý si ai vymyslela): útočník zaregistruje vymyslený názov v npm alebo pypi, naplní ho škodlivým kódom a čaká, kým ho ďalší vývojár skopíruje z odpovede asistenta.
+
+nič nehackuje. len počká, kým si mu obeť balík nainštaluje sama. s právami vývojára, na stroji s prístupom do produkcie.
+
+**zlaté pravidlo:** ai návrh kódu je návrh od cudzieho juniora, ktorý nikdy neuvidí následky. review robíš ty. balíky overuješ ty. tajomstvá v kóde hľadáš ty. a lockfile s overenými verziami commituješ ty.
+
+k tomu pridaj kontrolu súborov s pravidlami pre asistenta v repozitári — sú to inštrukcie pre model a review prechádzajú zriedka. skrytý znak v takom súbore je pokyn, ktorý nikto nevidí, ale model poslúchne. celý postup, od lockfile po skryté znaky, máš v [ai generovaný kód, halucinované balíčky a slopsquatting](/academy/ai-generovany-kod-halucinovane-balicky-slopsquatting).
+
+## čo ti dáva eu ai akt
+
+[článok 4 platí od 2. februára 2025 a ukladá firmám, ktoré ai nasadzujú, zabezpečiť ai gramotnosť svojich ľudí primeranú ich úlohe](https://artificialintelligenceact.eu/article/4/). firma, ktorá dá ľuďom copilot bez školenia, už dnes neplní povinnosť z nariadenia. a školenie „nepíš tam heslá, overuj odpovede“ je presne toto.
+
+[článok 50 platí od 2. augusta 2026: musíš vedieť, že sa rozprávaš s ai, syntetický obsah má byť strojovo označený a deepfake priznaný](https://artificialintelligenceact.eu/article/50/). pomôže proti náhodným zámenám, nie proti podvodníkovi, ktorý označovanie ignoruje. čo nariadenie mení v praxi, máš v [ai akt eu — čo znamená pre bežného človeka](/academy/ai-akt-eu-co-znamena-pre-bezneho-cloveka).
+
+## jedna strana pravidiel pre každého
+
+- do chatbota len to, čo by si napísal na pohľadnicu. mená, čísla a heslá anonymizuj.
+- každý fakt, číslo a citáciu over v pôvodnom zdroji. „si si istý?“ nie je overenie.
+- vypni tréning na tvojich dátach. vo všetkých nástrojoch.
+- na citlivé otázky používaj dočasný chat. históriu maž.
+- „zdieľať odkaz“ znamená verejný odkaz. bodka.
+- ai nástroje len z oficiálnej domény alebo obchodu. nikdy cez reklamu.
+- rozšíreniu prehliadača, ktoré pýta prístup ku všetkým stránkam, never.
+- dieťaťu prepoj účet so svojím, nastav tiché hodiny, pýtaj sa, na čo chatbota používa.
+- ai radí v peniazoch, zdraví alebo práve? prvý názor, nie posledný.
+- keď si nie si istý, spýtaj sa človeka. chatbot ti dá za pravdu vždy.
+
+## jedna strana pravidiel pre odborníkov
+
+- každý vstup, ktorý model číta, je nedôveryhodný. e-mail, tiket, issue, PDF, webstránka.
+- kto číta nedôveryhodný vstup, neposiela dáta von. jedno alebo druhé.
+- agent dostane najmenšie oprávnenia na jednu úlohu. zápis a odosielanie schvaľuje človek.
+- výstup modelu ošetruj ako vstup od používateľa. do SQL, shellu a html až po validácii.
+- systémový prompt nie je tajomstvo. kľúče a heslá doň nepatria.
+- schválené ai nástroje na firemnom účte s vypnutým tréningom. zákaz bez alternatívy vyrába shadow ai.
+- ai politika má tri vety: čo je povolené, čo tam nejde, koho sa spýtať.
+- každý balík od ai over v registri. lockfile do repozitára. ai kód cez review.
+- súbory s pravidlami pre asistenta patria do review. skryté znaky hľadaj automaticky.
+- pred nasadením prejdi owasp top 10 pre llm. jedna veta na položku.
+
+## čo si z toho odnies
+
+- llm predpovedá text, neoveruje pravdu. znie rovnako isto, keď má pravdu, aj keď si vymýšľa.
+- čo pošleš do chatbota, opúšťa tvoje zariadenie. deepseek, google a samsung: tri cesty jedného úniku.
+- halucinácia stojí peniaze: 5 000 dolárov pre právnikov v spore avianca, právne záväzný sľub pre air canada.
+- falošné ai appky sú dnešný phishing. oficiálna doména, oficiálny obchod, žiadna reklama.
+- nedôveryhodný vstup plus privilegovaný prístup plus autonómia rovná sa únik. odstráň jednu.
+- vymyslené balíky sú reálny útočný vektor. over pred inštaláciou.
+- eu ai akt od februára 2025 žiada od firiem ai gramotnosť. začni týmto textom.
+
+## čítaj ďalej v tomto tematickom celku
+
+pre každého:
+
+- [čo nikdy nepísať do chatgpt — reálne prípady](/academy/co-nikdy-nepisat-do-chatgpt-realne-pripady)
+- [ai halucinácie — ako overiť odpoveď](/academy/ai-halucinacie-ako-overit-odpoved)
+- [nastavenia súkromia — chatgpt, gemini, copilot, claude](/academy/nastavenia-sukromia-chatgpt-gemini-copilot-claude)
+- [falošné ai aplikácie a rozšírenia](/academy/falosne-ai-aplikacie-a-rozsirenia)
+- [ai chatboti a deti — čo nastaviť](/academy/ai-chatboti-a-deti-co-nastavit)
+
+pre odborníkov:
+
+- [prompt injection — reálne prípady a obrana](/academy/prompt-injection-realne-pripady-a-obrana)
+- [shadow ai vo firme — politika používania](/academy/shadow-ai-vo-firme-politika-pouzivania)
+- [ai agenti a mcp — bezpečnostný checklist](/academy/ai-agenti-mcp-bezpecnostny-checklist)
+- [owasp top 10 pre llm aplikácie](/academy/owasp-top-10-pre-llm-aplikacie)
+- [ai generovaný kód, halucinované balíčky a slopsquatting](/academy/ai-generovany-kod-halucinovane-balicky-slopsquatting)
+
+lekcie:
+
+- [ai bezpečnosť — čo nezdieľať](/academy/ai-bezpecnost-co-nezdielat)
+- [ai pomocník na každý deň](/academy/ai-pomocnik-kazdy-den)
+- [ai bezpečnosť pre odborníkov](/academy/ai-bezpecnost-pre-odbornikov)
+
+súvisiaci celok:
+
+- [ai a moderné podvody — deepfake, voice cloning a ai phishing](/academy/ai-a-moderne-podvody-deepfake-voice-cloning)
+
+a teraz si over, či rozoznáš skutočný scam.
+
+**otestuj sa za 90 sekúnd →** `/test`

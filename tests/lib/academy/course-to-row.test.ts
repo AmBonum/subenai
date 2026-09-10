@@ -39,6 +39,11 @@ describe("courseToAcademyRow", () => {
     expect(row.sources).toEqual([{ label: "Zdroj", url: "https://example.org" }]);
   });
 
+  it("maps the ai course category to the safe-AI academy category", () => {
+    const row = courseToAcademyRow({ ...sample, category: "ai" });
+    expect(row.category_slug).toBe("bezpecna-praca-s-ai");
+  });
+
   it("maps every registered course to a known category + difficulty", () => {
     const categories = new Set([
       "sms-a-telefon",
@@ -47,6 +52,7 @@ describe("courseToAcademyRow", () => {
       "socialne-siete",
       "digitalna-bezpecnost",
       "cyber-hygiena",
+      "bezpecna-praca-s-ai",
     ]);
     for (const course of COURSES) {
       const row = courseToAcademyRow(course);

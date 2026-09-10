@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import { AcademyBody } from "@/components/academy/AcademyBody";
+import { difficultyLabel } from "@/lib/academy/difficulty";
 import type { AcademyEntryDetail } from "@/lib/academy/queries";
 
 // E55.3 — renders one academy entry (article or interactive lesson). The body
@@ -12,6 +13,7 @@ export interface AcademyEntryPageProps {
 
 export function AcademyEntryPage({ entry }: AcademyEntryPageProps) {
   const isLesson = entry.content_type === "lesson";
+  const label = difficultyLabel(entry.content_type, entry.difficulty);
   return (
     <article
       data-testid="academy-entry-root"
@@ -30,7 +32,7 @@ export function AcademyEntryPage({ entry }: AcademyEntryPageProps) {
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {isLesson ? <span aria-hidden="true">{entry.hero_emoji ?? "🎓"}</span> : null}
           <span>{isLesson ? "Kurz" : "Článok"}</span>
-          {isLesson && entry.difficulty ? <span>· {entry.difficulty}</span> : null}
+          {label ? <span data-testid="academy-entry-lane">· {label}</span> : null}
           {isLesson && entry.estimated_minutes ? (
             <span>· {entry.estimated_minutes} min</span>
           ) : null}

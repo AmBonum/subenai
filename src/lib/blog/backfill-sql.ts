@@ -1,0 +1,144 @@
+// E65 — pure MDX-row → SQL builder for idempotent blog_posts backfills.
+// Mirrors scripts/generate-academy-import.ts (lessons). Kept side-effect
+// free so the SQL shape is unit-tested; scripts/generate-blog-backfill.ts
+// wires the file system.
+
+export interface BlogBackfillSource {
+  label: string;
+  url: string;
+  publisher?: string;
+  accessed_at?: string;
+}
+
+export interface BlogBackfillPost {
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  excerpt: string;
+  body_mdx: string;
+  category_slug: string;
+  author_slug: string;
+  pillar_slug: string | null;
+  difficulty: "beginner" | "advanced" | null;
+  related_course_slug: string | null;
+  primary_keyword: string;
+  search_intent: string;
+  reading_minutes: number | null;
+  seo_title: string;
+  seo_description: string;
+  canonical_url: string | null;
+  hero_image_url: string | null;
+  og_image_url: string | null;
+  sources: BlogBackfillSource[];
+  published_at: string;
+}
+
+// 2026-09-10 07:00 Europe/Bratislava (CEST, UTC+2).
+const BASE_PUBLISHED_AT = Date.UTC(2026, 8, 10, 5, 0, 0);
+const STAGGER_MS = 75 * 60 * 1000;
+const BRATISLAVA_OFFSET_MS = 2 * 60 * 60 * 1000;
+
+// Editorial-calendar stagger policy (tasks/blog/editorial-calendar.md §2):
+// first publish 07:00 local, ~75 min apart. Rendered with the fixed +02:00
+// offset so the file is byte-stable regardless of the generating machine.
+export function staggeredPublishedAt(index: number): string {
+  const utc = BASE_PUBLISHED_AT + index * STAGGER_MS;
+  const local = new Date(utc + BRATISLAVA_OFFSET_MS);
+  return `${local.toISOString().slice(0, 19)}+02:00`;
+}
+
+function dollar(value: string, tag: string): string {
+  let t = tag;
+  while (value.includes(`$${t}$`)) t += "_";
+  return `$${t}$${value}$${t}$`;
+}
+
+function nullable(value: string | null, tag: string, column: string): string {
+  return value === null ? `NULL, -- ${column}` : `${dollar(value, tag)}, -- ${column}`;
+}
+
+function pillarRef(slug: string | null): string {
+  if (slug === null) return "NULL, -- pillar_post_id";
+  return `(SELECT id FROM public.blog_posts WHERE slug = ${dollar(slug, "pillar")}), -- pillar_post_id`;
+}
+
+function insert(post: BlogBackfillPost): string {
+  return `INSERT INTO public.blog_posts
+  (slug, language, category_id, author_id, pillar_post_id,
+   title, subtitle, excerpt, body_mdx,
+   hero_image_url, og_image_url, seo_title, seo_description, canonical_url,
+   primary_keyword, search_intent, reading_minutes, sources_jsonb,
+   related_course_slug, content_type, difficulty, status, published_at)
+VALUES (
+  ${dollar(post.slug, "slug")}, 'sk',
+  (SELECT id FROM public.blog_categories WHERE slug = ${dollar(post.category_slug, "cat")}),
+  (SELECT id FROM public.blog_authors WHERE slug = ${dollar(post.author_slug, "auth")}),
+  ${pillarRef(post.pillar_slug)}
+  ${dollar(post.title, "title")},
+  ${nullable(post.subtitle, "sub", "subtitle")}
+  ${dollar(post.excerpt, "exc")},
+  ${dollar(post.body_mdx, "body")},
+  ${nullable(post.hero_image_url, "hero", "hero_image_url")}
+  ${nullable(post.og_image_url, "og", "og_image_url")}
+  ${dollar(post.seo_title, "seot")},
+  ${dollar(post.seo_description, "seod")},
+  ${nullable(post.canonical_url, "canon", "canonical_url")}
+  ${dollar(post.primary_keyword, "kw")},
+  ${dollar(post.search_intent, "intent")},
+  ${post.reading_minutes === null ? "NULL" : String(post.reading_minutes)},
+  ${dollar(JSON.stringify(post.sources), "src")}::jsonb,
+  ${nullable(post.related_course_slug, "course", "related_course_slug")}
+  'article',
+  ${nullable(post.difficulty, "diff", "difficulty")}
+  'published',
+  ${dollar(post.published_at, "pub")}
+)
+ON CONFLICT (slug) DO UPDATE SET
+  category_id = EXCLUDED.category_id,
+  author_id = EXCLUDED.author_id,
+  pillar_post_id = EXCLUDED.pillar_post_id,
+  title = EXCLUDED.title,
+  subtitle = EXCLUDED.subtitle,
+  excerpt = EXCLUDED.excerpt,
+  body_mdx = EXCLUDED.body_mdx,
+  hero_image_url = EXCLUDED.hero_image_url,
+  og_image_url = EXCLUDED.og_image_url,
+  seo_title = EXCLUDED.seo_title,
+  seo_description = EXCLUDED.seo_description,
+  canonical_url = EXCLUDED.canonical_url,
+  primary_keyword = EXCLUDED.primary_keyword,
+  search_intent = EXCLUDED.search_intent,
+  reading_minutes = EXCLUDED.reading_minutes,
+  sources_jsonb = EXCLUDED.sources_jsonb,
+  related_course_slug = EXCLUDED.related_course_slug,
+  content_type = EXCLUDED.content_type,
+  difficulty = EXCLUDED.difficulty,
+  status = EXCLUDED.status,
+  published_at = EXCLUDED.published_at,
+  updated_at = now();`;
+}
+
+export interface BlogBackfillOptions {
+  title: string;
+  sourceNote: string;
+}
+
+export function buildBlogBackfillSql(
+  posts: BlogBackfillPost[],
+  { title, sourceNote }: BlogBackfillOptions,
+): string {
+  const header = `-- ============================================================================
+-- ${title} (${posts.length} articles → blog_posts)
+-- GENERATED by scripts/generate-blog-backfill.ts — do not edit by hand.
+-- Source: ${sourceNote}
+-- ============================================================================
+-- Idempotent: ON CONFLICT (slug) DO UPDATE. Safe to re-run. Requires the
+-- category row (see the migration named in the source note) and the
+-- 'subenai-editorial' author. Pillar rows precede their clusters so the
+-- pillar_post_id subselect resolves inside the same transaction.
+-- ============================================================================
+
+BEGIN;
+`;
+  return `${header}\n${posts.map(insert).join("\n\n")}\n\nCOMMIT;\n`;
+}

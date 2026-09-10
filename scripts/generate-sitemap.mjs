@@ -76,6 +76,7 @@ const PILLAR_SLUGS = new Set([
   "bezpecne-nakupovanie-online-slovensko",
   "internet-safety-pre-studentov",
   "kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov",
+  "bezpecna-praca-s-ai-kompletny-sprievodca",
 ]);
 
 const BLOG_CATEGORY_SLUGS = [
@@ -84,6 +85,7 @@ const BLOG_CATEGORY_SLUGS = [
   "fake-eshopy",
   "socialne-siete",
   "ai-scamy",
+  "bezpecna-praca-s-ai",
   "digitalna-bezpecnost",
   "kvizy",
   "pribehy",

@@ -19,6 +19,7 @@ export const PILLAR_SLUGS: ReadonlySet<string> = new Set([
   "bezpecne-nakupovanie-online-slovensko",
   "internet-safety-pre-studentov",
   "kybernetika-vo-vyucbe-prakticky-navod-pre-ucitelov",
+  "bezpecna-praca-s-ai-kompletny-sprievodca",
 ]);
 
 export function isPillarSlug(slug: string): boolean {

@@ -625,7 +625,8 @@
       "investicie": "Investice",
       "vztahy": "Vztahy",
       "data": "Data hygiene",
-      "obecne": "Obecné"
+      "obecne": "Obecné",
+      "ai": "AI"
     },
     "reading_aria": "Doba čtení",
     "related_title": "Pokračuj dalším kurzem",
@@ -699,7 +700,7 @@
     "meta_description": "Bezplatné kurzy kybernetické bezpečnosti: phishing, vishing, smishing, online podvody, ochrana údajů. Reálné příklady ze slovenského prostředí.",
     "og_description": "Bezplatné kurzy kybernetické bezpečnosti: phishing, vishing, smishing, online podvody. Reálné příklady ze slovenského prostředí.",
     "list_name": "Bezplatné kurzy o digitální obezřetnosti",
-    "page_heading": "28 bezplatných kurzů — phishing, vishing, smishing, falešné e-shopy, investiční podvody a další.",
+    "page_heading": "29 bezplatných kurzů — phishing, vishing, smishing, falešné e-shopy, investiční podvody a další.",
     "page_intro": "Každý kurz je 10-minutová stránka s reálnými příklady ze slovenského internetu — žádné PDF na 60 stran. Pro sebe, pro kolegy, pro rodiče. Po každém tématu ti doporučíme i článek z blogu, pokud chceš jít hlouběji.",
     "value_short": "10 minut",
     "value_short_desc": "Krátká stránka, ne 60-stranové PDF",

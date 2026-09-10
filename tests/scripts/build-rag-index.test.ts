@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import { readdirSync } from "node:fs";
 
 import {
   chunkMarkdown,
@@ -116,10 +117,12 @@ describe("chunkMarkdown", () => {
 });
 
 describe("corpus extraction (real content, no network)", () => {
-  it("covers all 81 blog articles with public audience", async () => {
+  it("covers every blog article with public audience", async () => {
+    const mdxCount = readdirSync(BLOG_DIR).filter((f) => f.endsWith(".mdx")).length;
     const chunks = await buildBlogChunks(BLOG_DIR);
     const slugs = new Set(chunks.map((c) => c.metadata.slug));
-    expect(slugs.size).toBe(81);
+    expect(mdxCount).toBeGreaterThanOrEqual(81);
+    expect(slugs.size).toBe(mdxCount);
     for (const chunk of chunks) {
       expect(chunk.metadata.audience).toBe("public");
       expect(chunk.metadata.url).toBe(`/blog/${chunk.metadata.slug}`);

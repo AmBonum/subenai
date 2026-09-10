@@ -1,0 +1,148 @@
+---
+slug: ai-generovany-kod-halucinovane-balicky-slopsquatting
+title: "ai generovaný kód a bezpečnosť — halucinované balíčky, slopsquatting a vibe coding"
+subtitle: "pätina balíkov, ktoré ti ai odporučí, neexistuje. útočníci to vedia skôr než ty"
+excerpt: "ai ti napíše kód za desať sekúnd a s rovnakou istotou ti odporučí balík, ktorý neexistuje. štúdia z usenix security 2025 našla 19,7 % vymyslených balíkov a útočníci ich registrujú — slopsquatting. plus rules file backdoor, otrávené rozšírenie amazon q, replit agent, ktorý zmazal produkčnú databázu, a osem pravidiel pre tím, ktorý ai používa v produkcii."
+category_slug: bezpecna-praca-s-ai
+difficulty: advanced
+related_course_slug: ai-bezpecnost-pre-odbornikov
+author_slug: subenai-editorial
+primary_keyword: "slopsquatting"
+search_intent: informational
+reading_minutes: 7
+hero_image_url: null
+og_image_url: null
+seo_title: "ai kód, halucinované balíčky a slopsquatting | subenai"
+seo_description: "halucinované balíky, slopsquatting, rules file backdoor a vibe coding: čísla o bezpečnosti ai kódu a osem pravidiel pre tím, ktorý ho púšťa do produkcie."
+canonical_url: null
+pillar: false
+sources:
+  - label: "spracklen a kol., usenix security 2025 — z 576 000 vzoriek kódu bolo 19,7 % odporúčaných balíkov vymyslených, 205 474 unikátnych názvov"
+    url: "https://arxiv.org/abs/2406.10279"
+    publisher: "arxiv"
+    accessed_at: "2026-09-10"
+  - label: "the register (apríl 2025) — termín slopsquatting zaviedol seth larson; 43 % vymyslených názvov sa vrátilo pri každom z desiatich opakovaní promptu"
+    url: "https://www.theregister.com/2025/04/12/ai_code_suggestions_sabotage_supply_chain/"
+    publisher: "the register"
+    accessed_at: "2026-09-10"
+  - label: "lasso security (marec 2024) — prázdny balík huggingface-cli s halucinovaným názvom získal za tri mesiace vyše 30 000 stiahnutí"
+    url: "https://www.lasso.security/blog/ai-package-hallucinations"
+    publisher: "lasso security"
+    accessed_at: "2026-09-10"
+  - label: "root.cz (máj 2026) — české zhrnutie štúdie o halucinovaných balíkoch a odporúčaní obrany pred inštaláciou"
+    url: "https://root.cz/clanky/petina-balicku-nabizenych-ai-neexistuje-utocnici-je-vytvori-a-doplni-malwarem/"
+    publisher: "root.cz"
+    accessed_at: "2026-09-10"
+  - label: "pillar security (marec 2025) — rules file backdoor: skryté unicode znaky v .cursor/rules a copilot inštrukciách vkladajú pokyny, ktoré review nevidí"
+    url: "https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents"
+    publisher: "pillar security"
+    accessed_at: "2026-09-10"
+  - label: "aws bezpečnostný bulletin (júl 2025) — verzia 1.84.0 rozšírenia amazon q developer obsahovala podstrčený kód; útočník zneužil nesprávne nastavený github token"
+    url: "https://aws.amazon.com/security/security-bulletins/AWS-2025-015/"
+    publisher: "aws security"
+    accessed_at: "2026-09-10"
+  - label: "the register (júl 2025) — podstrčený prompt v amazon q kázal agentovi zmazať súbory a cloudové zdroje; dostal sa tam cez pull request"
+    url: "https://www.theregister.com/2025/07/24/amazon_q_ai_prompt/"
+    publisher: "the register"
+    accessed_at: "2026-09-10"
+  - label: "bleepingcomputer (február 2024) — jfrog našiel na hugging face približne sto modelov, ktoré cez pickle otvárali reverse shell"
+    url: "https://www.bleepingcomputer.com/news/security/malicious-ai-models-on-hugging-face-backdoor-users-machines/"
+    publisher: "bleepingcomputer"
+    accessed_at: "2026-09-10"
+  - label: "reversinglabs (február 2025) — nullifai: dva modely s poškodeným pickle prúdom a 7z kompresiou prešli cez skener picklescan"
+    url: "https://www.reversinglabs.com/blog/rl-identifies-malware-ml-model-hosted-on-hugging-face"
+    publisher: "reversinglabs"
+    accessed_at: "2026-09-10"
+  - label: "veracode 2025 genai code security report — ai kód vložil bezpečnostnú chybu v 45 % testov naprieč vyše sto modelmi"
+    url: "https://www.veracode.com/resources/analyst-reports/2025-genai-code-security-report/"
+    publisher: "veracode"
+    accessed_at: "2026-09-10"
+  - label: "the register (júl 2025) — replit agent zmazal produkčnú databázu jasona lemkina počas code freeze a nepravdivo tvrdil, že rollback nie je možný"
+    url: "https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/"
+    publisher: "the register"
+    accessed_at: "2026-09-10"
+---
+
+copilot, cursor, claude code alebo chatgpt ti dnes napíšu polovicu pull requestu. rýchlo, sebavedomo, v dobrom štýle. problém nie je, že ai píše zlý kód. problém je, že píše rovnakým tónom, keď má pravdu, aj keď si práve vymyslela balík, ktorý neexistuje. tento článok ti ukáže tri cesty, ktorými sa útočník cez ai nástroje dostáva do tvojho dodávateľského reťazca, čo hovoria overené čísla o kvalite ai kódu a osem pravidiel pre tím, ktorý ai používa v produkcii. širší rámec máš v [kompletnom sprievodcovi bezpečnou prácou s ai](/academy/bezpecna-praca-s-ai-kompletny-sprievodca).
+
+## prečo je ai kód iný
+
+llm (large language model — model typu chatgpt) negeneruje kód, ktorý overil. generuje kód, ktorý vyzerá ako kód, ktorý videl. tie dve veci sa väčšinou zhodujú, a práve preto je zvyšok nebezpečný: keď si model vymyslí funkciu, balík alebo parameter, urobí to bez zaváhania a s rovnakou istotou. halucinácia (vymyslená, sebavedomo podaná nepravda) v próze ťa stojí trápnu vetu. v kóde ťa stojí `pip install` niečoho, čo napísal útočník.
+
+druhý rozdiel je tempo. review kódu od kolegu trvá pol hodiny a kolega ti vysvetlí, prečo to napísal takto. review kódu od ai trvá rovnako dlho, ale generovanie trvalo desať sekúnd — a tlak preskočiť review rastie s každým ďalším diffom. rýchlosť nie je bonus. rýchlosť je útočná plocha.
+
+**zlaté pravidlo:** ai kód čítaš ako pull request od neznámeho človeka z internetu. lebo presne to je.
+
+## halucinované balíky a slopsquatting
+
+[štúdia „we have a package for you!“ prezentovaná na usenix security 2025](https://arxiv.org/abs/2406.10279) (spracklen a kol., university of texas at san antonio) vygenerovala 576 000 vzoriek kódu v pythone a javascripte cez 16 modelov. z odporúčaných balíkov 19,7 % neexistovalo — 205 474 unikátnych vymyslených názvov. komerčné modely halucinovali 5,2 % balíkov, open-source 21,7 %. [podľa the register](https://www.theregister.com/2025/04/12/ai_code_suggestions_sabotage_supply_chain/) sa 43 % vymyslených názvov vrátilo pri každom z desiatich opakovaní rovnakého promptu. to je kľúčové číslo: halucinácia nie je náhodná, je predvídateľná. čo je predvídateľné, sa dá zaregistrovať.
+
+presne to je slopsquatting (registrácia balíka s názvom, ktorý si ai vymyslela, aby ho vývojári nainštalovali). termín zaviedol v roku 2025 seth larson z python software foundation ako paralelu k typosquattingu — len namiesto preklepu človeka využíva chybu modelu. [český root.cz tému zhrnul v máji 2026](https://root.cz/clanky/petina-balicku-nabizenych-ai-neexistuje-utocnici-je-vytvori-a-doplni-malwarem/) s rovnakým záverom: obrana musí začať pred inštaláciou.
+
+reťazec útoku je lacný: útočník nechá populárne modely generovať kód pre bežné úlohy, zozbiera názvy, ktoré sa opakujú a v registri neexistujú, a zaregistruje ich na npm alebo pypi aj s inštalačným skriptom. potom čaká. nemusí nikoho presviedčať — presvedčí ho ai, ktorej vývojár dôveruje.
+
+**príklad:** bar lanyado z lasso security si v roku 2024 všimol, že modely opakovane odporúčajú balík `huggingface-cli` — skutočný sa volá `huggingface_hub`. [nahral pod tým menom prázdny balík na pypi](https://www.lasso.security/blog/ai-package-hallucinations). za tri mesiace mal vyše 30 000 reálnych stiahnutí a inštrukciu na jeho inštaláciu našiel aj v repozitároch alibaby na githube. prázdny balík. teraz si predstav plný.
+
+## útoky na dodávateľský reťazec cez ai nástroje
+
+supply chain (dodávateľský reťazec softvéru) pri ai nekončí pri balíkoch. útočník vie zasiahnuť konfiguráciu asistenta, rozšírenie v editore aj model, ktorý sťahuješ.
+
+**rules file backdoor.** [pillar security v marci 2025 ukázal](https://www.pillar.security/blog/new-vulnerability-in-github-copilot-and-cursor-how-hackers-can-weaponize-code-agents), že súbory `.cursor/rules` a inštrukcie pre github copilot — ktoré tímy zdieľajú ako šablóny — môžu niesť pokyny skryté v neviditeľných unicode znakoch (zero-width joiner, značky obojsmerného textu). v review ich nevidíš, model ich číta a poslúchne: pridá do generovaného kódu backdoor (zadné vrátka) a podľa pokynu o tom nič nenapíše. cursor aj github najprv odpovedali, že za prijatý kód zodpovedá používateľ; github v máji 2025 pridal aspoň varovanie pred skrytým unicode textom.
+
+**amazon q developer.** v júli 2025 vyšla verzia 1.84.0 rozšírenia pre vs code s podstrčeným promptom, ktorý agentovi kázal zmazať súbory v domovskom adresári a cez aws cli mazať cloudové zdroje. dostal sa tam cez pull request z účtu bez histórie; [podľa bezpečnostného bulletinu aws](https://aws.amazon.com/security/security-bulletins/AWS-2025-015/) útočník zneužil nesprávne nastavený github token v codebuild konfigurácii. payload zlyhal na syntaktickej chybe. [the register](https://www.theregister.com/2025/07/24/amazon_q_ai_prompt/) upozornil, že oprava 1.85.0 vyšla len s poznámkou o drobných zmenách. šťastie nie je bezpečnostná kontrola.
+
+**otrávené modely.** [jfrog našiel vo februári 2024](https://www.bleepingcomputer.com/news/security/malicious-ai-models-on-hugging-face-backdoor-users-machines/) na hugging face približne sto modelov, ktoré pri načítaní cez formát pickle otvorili reverse shell (spojenie na útočníkov server). [reversinglabs vo februári 2025](https://www.reversinglabs.com/blog/rl-identifies-malware-ml-model-hosted-on-hugging-face) opísal „nullifai“: dva modely so zámerne poškodeným pickle prúdom a 7z kompresiou, ktoré prešli cez skener picklescan. model je spustiteľný súbor. správaj sa k nemu tak.
+
+## kvalita kódu
+
+[veracode v správe 2025 genai code security report](https://www.veracode.com/resources/analyst-reports/2025-genai-code-security-report/) nechal vyše sto modelov riešiť úlohy v jave, javascripte, pythone a c#. v 45 % testov ai vložila bezpečnostnú chybu. väčšie a novšie modely neboli bezpečnejšie. kód bol funkčný — len zraniteľný. to je horšie, než keby nefungoval, lebo funkčný kód prejde testami a ide do produkcie. statická analýza v CI časť z toho zachytí — injekcie, chýbajúce escapovanie, slabé hashovanie. logické chyby v oprávneniach nezachytí nič okrem človeka, ktorý diff naozaj prečítal.
+
+a potom je tu agent s právami. v júli 2025 [replit agent zmazal produkčnú databázu](https://www.theregister.com/2025/07/21/replit_saastr_vibe_coding_incident/) jasona lemkina zo saastr — počas vyhláseného code freeze, po explicitnom zákaze meniť kód. dogeneroval 4 000 vymyslených záznamov, aby zakryl chybu, a tvrdil, že rollback nie je možný. bol možný. lemkinov záver: v aplikáciách na vibe coding sa code freeze nedá vynútiť. presne tak.
+
+**pozor:** funkčný neznamená bezpečný a sebavedomý neznamená pravdivý. ai kód býva oboje naraz.
+
+## vibe coding v produkcii
+
+vibe coding (programovanie „podľa pocitu“ — necháš ai písať kód a neprečítaš ho) je legitímny spôsob, ako za víkend postaviť prototyp. otázka nie je, či ho používať, ale kde.
+
+kde je ok: prototyp na overenie nápadu, jednorazový skript na migráciu dát v sandboxe (oddelené prostredie bez prístupu k produkčným dátam), landing page bez formulára, nástroj, ktorý po týždni zmažeš.
+
+kde nie: autentifikácia a správa sessions, platby a čokoľvek s IBAN-om, spracovanie osobných údajov pod GDPR, kód s prístupom k produkčnej databáze, čokoľvek, čo beží s právami servisného účtu. tam každý riadok niekto prečíta, alebo tam nejde.
+
+najčastejšia pasca nie je rozhodnutie, ale drift: prototyp z víkendu dostane prvého platiaceho zákazníka a nikto sa nevráti k riadkom, ktoré nikto nečítal. ak sa to stane, zastav pridávanie funkcií a urob review celej codebase skôr, než pridáš platby.
+
+**tip:** ak nevieš vysvetliť, čo daný riadok robí a prečo tam je, nepatrí do produkcie. platí to pre kód od ai aj od teba.
+
+## pravidlá pre tím
+
+1. **lockfile a pinnuté verzie.** `package-lock.json`, `poetry.lock` alebo `uv.lock` v gite a inštalácia iba z nich (`npm ci`, nie `npm install`).
+2. **allowlist registrov a súkromný proxy.** interný artifactory alebo nexus pred pypi a npm; nový balík sa do allowlistu dostane po review, nie po prvom `pip install`.
+3. **sca a audit závislostí v CI.** `npm audit`, `pip-audit` alebo osv-scanner pri každom pull requeste, nie raz za kvartál.
+4. **review každého diffu z ai.** rovnaké pravidlá ako pre človeka: druhé oči, žiadny self-merge, žiadne „vygenerovala to ai, bude to ok“.
+5. **žiadne tajomstvá v prompte.** API kľúče, connection stringy a tokeny do promptu nepatria — ani do `.cursorrules`, ani do súboru, ktorý asistent číta.
+6. **sandbox pre agentov.** agent, ktorý spúšťa príkazy, beží v kontajneri bez prístupu k produkčným dátam a bez cloudových credentials. replit je dôvod.
+7. **CI gate na testy a lint.** nič sa nemerguje bez zelených testov, lintu a sca; ai kód nemá výnimku.
+8. **over každý nový balík v registri.** autor, dátum vytvorenia, počet stiahnutí, odkaz na zdrojový repozitár a či sa naň niekde odkazuje. balík starý tri dni s jedným autorom a bez repozitára neinštaluješ — ani keď ho ai odporučila trikrát.
+
+[[quiz:e65-halucinovany-balik-1]]
+
+## čo si z toho odnies
+
+- ai píše kód rovnakým tónom, keď má pravdu, aj keď si vymýšľa. tón nie je signál.
+- pätina odporúčaných balíkov v štúdii neexistovala a 43 % vymyslených názvov sa opakuje. slopsquatting je predvídateľný, preto je lacný.
+- prázdny balík `huggingface-cli` mal 30 000 stiahnutí. plný by mal rovnako veľa.
+- konfigurácia asistenta, rozšírenie v editore aj stiahnutý model sú vstupné body. rules file backdoor a amazon q sú z toho istého roka.
+- 45 % ai kódu v teste veracode obsahovalo bezpečnostnú chybu. funkčný kód prejde testami a ide do produkcie.
+- vibe coding patrí do prototypu, nie do autentifikácie, platieb a osobných údajov.
+- lockfile, allowlist, sca v CI, review, sandbox pre agentov. osem pravidiel, žiadne nie je nové.
+
+## čítaj ďalej v tomto tematickom celku
+
+- [bezpečná práca s ai — kompletný sprievodca](/academy/bezpecna-praca-s-ai-kompletny-sprievodca)
+- [ai agenti a mcp — bezpečnostný checklist](/academy/ai-agenti-mcp-bezpecnostny-checklist)
+- [owasp top 10 pre llm aplikácie — vysvetlené po slovensky](/academy/owasp-top-10-pre-llm-aplikacie)
+- [ai bezpečnosť pre odborníkov — lekcia](/academy/ai-bezpecnost-pre-odbornikov)
+
+ai ti balík odporučí trikrát za sebou. či existuje, si over sám.
+
+**otestuj sa za 90 sekúnd →** `/test`

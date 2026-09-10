@@ -9,6 +9,16 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 
 ## [Unreleased]
 
+### Pridané
+- **Nová sekcia Akadémie „Bezpečná práca s AI".** Jedenásť článkov a nový kurz o tom,
+  ako používať ChatGPT, Gemini, Copilot či AI agentov bez úniku dát — v dvoch úrovniach:
+  *pre každého* (čo nikdy nepísať do chatbota, ako overiť odpoveď, nastavenia súkromia,
+  falošné AI appky, deti a chatboti) a *pre odborníkov* (prompt injection, shadow AI,
+  AI agenti a MCP, OWASP Top 10 pre LLM aplikácie, AI generovaný kód). Každý článok
+  má reálne prípady so zdrojmi a interaktívnu otázku „vyskúšaj si to".
+- **Prepínač publika na stránke kategórie** (Všetko / Pre každého / Pre odborníkov) a
+  slovenské označenie úrovne na kartách kurzov namiesto anglického „beginner / advanced".
+
 ### Zmenené
 - **Kurzy a blog sme spojili do jednej Akadémie.** Na novej stránke `/academy`
   nájdete kurzy aj články na jednom mieste, s filtrom a vyhľadávaním. Kurzy sú

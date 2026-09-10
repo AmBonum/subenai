@@ -488,3 +488,21 @@ agent's responsibility — typical patterns:
   generating an article flagged `[underlinked]`, it should propose
   the suggested fix edges to the editorial owner in the PR description
   but not insert un-listed links unilaterally.
+
+## 6. E65 addendum — P12 "Bezpečná práca s AI" (added 2026-09-10)
+
+Same three rules as §1. Edges are asserted mechanically by
+`tests/content/ai-safety-section.test.ts` (every cluster → pillar, pillar
+→ every cluster + the three lessons, every `/academy/<slug>` link resolves).
+Links use the `/academy/<slug>` path (the `/blog/` prefix is legacy and
+301s).
+
+| edge_type | from | to | notes |
+|---|---|---|---|
+| pillar→cluster | P12 | C81 … C90 | rendered in the pillar's lane subsections and again in "čítaj ďalej" |
+| pillar→lesson | P12 | `ai-bezpecnost-co-nezdielat`, `ai-pomocnik-kazdy-den`, `ai-bezpecnost-pre-odbornikov` | interactive follow-ups per lane |
+| cluster→pillar | C81 … C90 | P12 | inline in the body + "čítaj ďalej" |
+| sibling (beginner) | C81↔C83, C81↔C82, C84↔C83, C85↔C84 | — | privacy ↔ leaks ↔ hallucination ↔ fake apps ↔ children |
+| sibling (advanced) | C86↔C88, C87↔C86, C88↔C90, C89↔C86, C90↔C89 | — | injection ↔ agents ↔ policy ↔ owasp ↔ generated code |
+| cross-pillar | P12 ↔ P5 (`ai-a-moderne-podvody-deepfake-voice-cloning`) | — | AI as a tool used against you vs. AI as a tool you use |
+| cross-cluster | C87 → `ai-akt-eu-co-znamena-pre-bezneho-cloveka`; C85 → `rodicovska-kontrola-iphone-android`, `kybersikana-co-robit`; C84 → `chatgpt-podvody-falosne-investicie`, `co-robit-ked-som-klikol-na-phishing`; C83 → `ochrana-pred-phishingom-2fa-passkey` | — | strongest topical hops into the existing corpus |

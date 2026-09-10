@@ -223,3 +223,23 @@ The catalogue was scanned for near-duplicate primary keywords. Resolutions below
     - **C56** → `podvody slovensko 2026` (year-tagged news roundup, refreshed quarterly).
 
 No remaining duplicate primaries detected. Secondary keyword overlap is intentional and supports the pillar-and-cluster topical-authority model.
+
+---
+
+## 16. Bezpečná práca s AI (P12 + C81–C90) — added 2026-09-10 (E65)
+
+Two audience lanes inside one category (`bezpecna-praca-s-ai`). Lane is the `difficulty` frontmatter key (`beginner` / `advanced`); the pillar carries none. All rows are informational intent; volume estimates are directional (`~`), as in §1–§15.
+
+| id | wave | slug | working_title | primary_keyword | secondary_keywords | search_intent | est_volume_sk | est_difficulty | pillar_link | notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| P12 | E65 | bezpecna-praca-s-ai-kompletny-sprievodca | bezpečná práca s ai — kompletný sprievodca pre bežných používateľov aj odborníkov | bezpecna praca s ai | ai bezpecnost, chatgpt bezpecnost, ako bezpecne pouzivat ai, ai riziká | informational | ~medium | ~40 | — | Pillar, both lanes. 2 inline quizzes. Links all 10 clusters + 3 lessons. |
+| C81 | E65 | co-nikdy-nepisat-do-chatgpt-realne-pripady | čo nikdy nepísať do chatgpt — 7 reálnych prípadov úniku dát | co nepisat do chatgpt | chatgpt sukromie, chatgpt unik dat, samsung chatgpt, chatgpt osobne udaje | informational | ~medium | ~30 | P12 | beginner lane |
+| C82 | E65 | ai-halucinacie-ako-overit-odpoved | ai halucinácie — ako overiť, či ti chatbot nevymýšľa | ai halucinacie | chatgpt vymysla, ako overit ai odpoved, ai chyby, ai fakty | informational | ~medium | ~28 | P12 | beginner lane |
+| C83 | E65 | nastavenia-sukromia-chatgpt-gemini-copilot-claude | nastavenia súkromia v chatgpt, gemini, copilot a claude — krok za krokom | chatgpt nastavenia sukromia | gemini sukromie, copilot sukromie, claude trenovanie dat, vypnut trenovanie chatgpt | informational | ~low–medium | ~25 | P12 | beginner lane; official help pages as sources |
+| C84 | E65 | falosne-ai-aplikacie-a-rozsirenia | falošné ai aplikácie a rozšírenia — ako spoznať fake chatgpt | falosny chatgpt | fake chatgpt aplikacia, chatgpt rozsirenie podvod, deepseek malware, ai appka podvod | informational | ~low–medium | ~27 | P12 | beginner lane |
+| C85 | E65 | ai-chatboti-a-deti-co-nastavit | ai chatboti a deti — čo nastaviť a o čom sa rozprávať | ai chatbot deti | character ai deti, chatgpt rodicovska kontrola, ai kamarat dieta, deti a umela inteligencia | informational | ~low–medium | ~30 | P12 | beginner lane; parents persona |
+| C86 | E65 | prompt-injection-realne-pripady-a-obrana | prompt injection — ako útočník ovládne tvojho ai asistenta (reálne prípady) | prompt injection | nepriama prompt injection, echoleak, ai asistent utok, llm bezpecnost | informational | ~low | ~35 | P12 | advanced lane |
+| C87 | E65 | shadow-ai-vo-firme-politika-pouzivania | shadow ai vo firme — politika používania ai nástrojov, ktorá naozaj funguje | shadow ai | politika pouzivania ai vo firme, ai act gramotnost, chatgpt vo firme gdpr, ai smernica firma | informational | ~low | ~32 | P12 | advanced lane; HR/IT persona |
+| C88 | E65 | ai-agenti-mcp-bezpecnostny-checklist | ai agenti a mcp — bezpečnostný checklist pre vývojárov | mcp bezpecnost | ai agent bezpecnost, mcp server riziko, tool poisoning, ai agent opravnenia | informational | ~low | ~38 | P12 | advanced lane; developer persona |
+| C89 | E65 | owasp-top-10-pre-llm-aplikacie | owasp top 10 pre llm aplikácie — vysvetlené po slovensky s príkladmi | owasp top 10 llm | llm zranitelnosti, bezpecnost llm aplikacii, owasp llm 2025, ai aplikacia bezpecnost | informational | ~low | ~40 | P12 | advanced lane |
+| C90 | E65 | ai-generovany-kod-halucinovane-balicky-slopsquatting | ai generovaný kód a bezpečnosť — halucinované balíčky, slopsquatting a vibe coding | slopsquatting | ai generovany kod bezpecnost, halucinovane balicky, vibe coding riziko, copilot bezpecnost kodu | informational | ~low | ~35 | P12 | advanced lane; developer persona |

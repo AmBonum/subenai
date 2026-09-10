@@ -328,3 +328,23 @@ A draft that fails any quality gate flips back to `drafting`, the failing gate's
 ## 6. Carryover policy
 
 If a wave slips — e.g., D4 publishes only 4 of 5 pillars because one fails the SEO audit gate mid-day — the unsent article carries to the **next day's leading slot**, displacing nothing else. The slipped article inherits the next day's earliest stagger time (07:00 on pillar days, 07:00 on cluster days) and the originally scheduled D+1 articles shift one slot later in the cadence. If D+1 was already at capacity (9-article day), the last D+1 article carries to D+2 instead, propagating forward. D14 is the catch-up day: anything still unpublished by end-of-D13 ships on D14 alongside distribution work, with stagger times allocated starting 07:00 and spaced ≥45 minutes apart. No article is dropped from the corpus; the contract is that all 80 articles (10 pillars + 70 clusters) ship by end-of-D14.
+
+## 7. E65 — 2026-09-10 (Thursday) — Bezpečná práca s AI (P12 + C81–C90)
+
+Status: `ready_to_publish` on merge; `published` once the owner runs `supabase/backfills/20260910_ai_safety_articles.sql` in prod. Stagger per §2 (07:00 local, 75-minute steps); the timestamps are baked into the generated SQL by `npm run blog:backfill` (deterministic).
+
+| slot | published_at (Europe/Bratislava) | slug | lane |
+|---|---|---|---|
+| 1 | 07:00 | bezpecna-praca-s-ai-kompletny-sprievodca | pillar |
+| 2 | 08:15 | co-nikdy-nepisat-do-chatgpt-realne-pripady | beginner |
+| 3 | 09:30 | ai-halucinacie-ako-overit-odpoved | beginner |
+| 4 | 10:45 | nastavenia-sukromia-chatgpt-gemini-copilot-claude | beginner |
+| 5 | 12:00 | falosne-ai-aplikacie-a-rozsirenia | beginner |
+| 6 | 13:15 | ai-chatboti-a-deti-co-nastavit | beginner |
+| 7 | 14:30 | prompt-injection-realne-pripady-a-obrana | advanced |
+| 8 | 15:45 | shadow-ai-vo-firme-politika-pouzivania | advanced |
+| 9 | 17:00 | ai-agenti-mcp-bezpecnostny-checklist | advanced |
+| 10 | 18:15 | owasp-top-10-pre-llm-aplikacie | advanced |
+| 11 | 19:30 | ai-generovany-kod-halucinovane-balicky-slopsquatting | advanced |
+
+Post-publish ops: `npm run rag:index` (scam-chat corpus picks up the 11 MDX files) and a redeploy so the build-time sitemap + RSS list the article URLs.
