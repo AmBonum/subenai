@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils";
 
 // E55.3 — shared archive layout for /academy/category/$slug and
 // /academy/author/$slug: a heading + a grid of entry cards.
-// E65 — when any entry carries a difficulty (the safe-AI section's audience
+// E65 — when an article carries a difficulty (the safe-AI section's audience
 // lanes), an "audience" toggle narrows the grid; lane-less entries stay
-// visible in every lane.
+// visible in every lane. Lessons alone don't trigger it — their difficulty
+// is a skill level, not an audience.
 
 export interface AcademyArchiveProps {
   heading: string;
@@ -27,7 +28,9 @@ const LANE_TABS: { value: AcademyLaneFilter; label: string }[] = [
 
 export function AcademyArchive({ heading, description, items, isLoading }: AcademyArchiveProps) {
   const [lane, setLane] = useState<AcademyLaneFilter>("all");
-  const hasLanes = items.some((item) => item.difficulty !== null);
+  const hasLanes = items.some(
+    (item) => item.content_type === "article" && item.difficulty !== null,
+  );
   const visible = useMemo(
     () => (hasLanes ? filterAcademy(items, { type: "all", query: "", lane }) : items),
     [items, hasLanes, lane],

@@ -53,6 +53,16 @@ describe("AcademyArchive lane toggle", () => {
     expect(screen.queryByTestId("academy-archive-lane-all")).not.toBeInTheDocument();
   });
 
+  it("hides the toggle when only lessons carry a difficulty (lanes are an article concept)", () => {
+    const lessonOnly: AcademyListItem[] = [
+      items[0],
+      { ...items[1], id: "l", slug: "lesson", content_type: "lesson", hero_emoji: "📧" },
+    ];
+    render(<AcademyArchive heading="Kat" items={lessonOnly} isLoading={false} />);
+    expect(screen.queryByTestId("academy-archive-lane-all")).not.toBeInTheDocument();
+    expect(screen.getAllByTestId("academy-archive-card")).toHaveLength(2);
+  });
+
   it("filters cards by lane and keeps lane-less items", () => {
     render(<AcademyArchive heading="Kat" items={items} isLoading={false} />);
     expect(screen.getAllByTestId("academy-archive-card")).toHaveLength(3);

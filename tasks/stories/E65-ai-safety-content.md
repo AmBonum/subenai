@@ -38,6 +38,7 @@ Every article carries verified real incidents with sources and one inline
 ## Stories
 
 ### ~~E65.1 Section manifest + `ai` course category~~ ✅
+
 - Implementation: `src/content/academy/ai-safety-section.ts`; `"ai"` in
   `CourseCategory` (schema, course-to-row, course-visuals, survey
   interests, i18n labels); two lessons re-categorised.
@@ -47,15 +48,17 @@ Every article carries verified real incidents with sources and one inline
 - Code review: fresh-context review before PR.
 
 ### ~~E65.2 Category row, visuals, sitemap, pillar list~~ ✅
+
 - Implementation: migration `20260910100000_blog_category_ai_safety.sql`
-  + `DEPLOY_SETUP.sql` mirror; `CATEGORY_VISUALS`, `CategoryIllustration`;
-  `scripts/generate-sitemap.mjs` + `src/lib/blog/pillar-slugs.ts`;
-  scam-chat route-catalog description.
+  and its `DEPLOY_SETUP.sql` mirror; `CATEGORY_VISUALS`,
+  `CategoryIllustration`; `scripts/generate-sitemap.mjs` +
+  `src/lib/blog/pillar-slugs.ts`; scam-chat route-catalog description.
 - Tests: section wiring block in `tests/content/ai-safety-section.test.ts`,
   `tests/seo/sitemap-robots.test.ts`.
 - Documentation: `CHANGELOG.md`.
 
 ### ~~E65.3 Audience lanes in the UI~~ ✅
+
 - Implementation: `src/lib/academy/difficulty.ts` (Slovak labels — also
   fixes the raw `beginner`/`advanced` leak on lesson cards), lane filter
   in `src/lib/academy/filter.ts`, toggle in `AcademyArchive`, badges in
@@ -65,12 +68,14 @@ Every article carries verified real incidents with sources and one inline
 - Documentation: docs portal (`akademia`, `kurzy`).
 
 ### ~~E65.4 Twelve `e65-*` question-bank items~~ ✅
+
 - Implementation: `src/lib/quiz/bank/questions.ts` (url, scenario,
   fake_vs_real, phishing; medium/hard only).
 - Tests: `tests/lib/quiz/bank-invariants.test.ts` (existing), quiz-id
   resolution in the section test.
 
 ### ~~E65.5 Expert lesson `ai-bezpecnost-pre-odbornikov`~~ ✅
+
 - Implementation: `src/content/courses/ai-bezpecnost-pre-odbornikov.ts`,
   registry, glossary terms, course-count copy 28 → 29 (sk/en/cs),
   regenerated `supabase/backfills/20260628_academy_import_lessons.sql`.
@@ -79,6 +84,7 @@ Every article carries verified real incidents with sources and one inline
   embed heading of `top-podvody-2026-sk`), `claims`, `academy-glossary`.
 
 ### ~~E65.6 Backfill generator + frontmatter gate~~ ✅
+
 - Implementation: `src/lib/blog/backfill-sql.ts` (pure builder),
   `scripts/generate-blog-backfill.ts`, `npm run blog:backfill`.
 - Tests: `tests/lib/blog/backfill-sql.test.ts`,
@@ -86,6 +92,7 @@ Every article carries verified real incidents with sources and one inline
 - Documentation: `src/content/blog/README.md`.
 
 ### ~~E65.7 Eleven articles~~ ✅
+
 - Implementation: `src/content/blog/{pillar + 10 clusters}.mdx`, drafted
   by parallel agents under the brief in the plan, reviewed in full.
 - Tests: article integrity block in `tests/content/ai-safety-section.test.ts`
@@ -94,11 +101,13 @@ Every article carries verified real incidents with sources and one inline
 - Documentation: `tasks/blog/{keyword-map,link-graph,editorial-calendar}.md`.
 
 ### ~~E65.8 Discovery surfaces + docs~~ ✅
+
 - Implementation: `public/llms.txt` rewrite, docs portal copy,
   `CHANGELOG.md`, `README.md`, `tasks/README.md`.
 - Tests: `tests/seo` suite.
 
 ### E65.9 Deploy + prod SQL + live verification 🚧
+
 - Implementation: PR → GHAS check → auto-merge → CF Pages deploy.
 - Owner ops (prod SQL editor, in order):
   1. `supabase/migrations/20260910100000_blog_category_ai_safety.sql`
