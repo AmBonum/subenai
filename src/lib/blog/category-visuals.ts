@@ -74,6 +74,13 @@ export const CATEGORY_VISUALS: Record<string, CategoryVisual> = {
     glyph: "🤖",
     shortLabel: "ai scamy",
   },
+  "bezpecna-praca-s-ai": {
+    gradientFrom: "from-indigo-500",
+    gradientTo: "to-violet-900",
+    accentHex: "#6366f1",
+    glyph: "🧭",
+    shortLabel: "ai bezpečnosť",
+  },
   "digitalna-bezpecnost": {
     gradientFrom: "from-emerald-500",
     gradientTo: "to-teal-900",

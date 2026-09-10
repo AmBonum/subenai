@@ -3730,6 +3730,14 @@ INSERT INTO public.blog_categories (slug, name, sort_order, description) VALUES
   ('studenti',             'Internet safety pre študentov',       150, 'Bezpečnosť na internete pre žiakov a študentov.')
 ON CONFLICT (slug) DO NOTHING;
 
+-- E65 — mirror of supabase/migrations/20260910100000_blog_category_ai_safety.sql
+INSERT INTO public.blog_categories (slug, name, sort_order, description, seo_title, seo_description) VALUES
+  ('bezpecna-praca-s-ai', 'Bezpečná práca s AI', 55,
+   'Ako používať ChatGPT, Gemini, Copilot či AI agentov bez úniku dát a bez naletenia — pre bežných používateľov aj odborníkov.',
+   'bezpečná práca s ai — návody pre bežných používateľov aj odborníkov | subenai',
+   'Čo nikdy nepísať do chatbota, ako overiť AI odpoveď, nastavenia súkromia, prompt injection, shadow AI a bezpečnosť AI agentov — s reálnymi prípadmi.')
+ON CONFLICT (slug) DO NOTHING;
+
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('blog-images', 'blog-images', true)
 ON CONFLICT (id) DO NOTHING;

@@ -61,6 +61,7 @@ describe("AH-9.9 sitemap.xml", () => {
   it("includes academy category archive pages", () => {
     expect(xml).toContain("https://subenai.sk/academy/category/phishing-a-emaily");
     expect(xml).toContain("https://subenai.sk/academy/category/ai-scamy");
+    expect(xml).toContain("https://subenai.sk/academy/category/bezpecna-praca-s-ai");
     expect(xml).toContain("https://subenai.sk/academy/category/studenti");
   });
 });

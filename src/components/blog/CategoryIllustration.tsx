@@ -335,12 +335,33 @@ function StudentIllustration() {
   );
 }
 
+// 16. Safe AI work — shield with a chat bubble and a check mark inside.
+function AiSafetyIllustration() {
+  return (
+    <svg {...COMMON_PROPS}>
+      <path
+        d="M100 26 L152 46 V96 C152 130 130 156 100 172 C70 156 48 130 48 96 V46 Z"
+        fill="currentColor"
+        fillOpacity={0.12}
+      />
+      <path d="M100 26 L152 46 V96 C152 130 130 156 100 172 C70 156 48 130 48 96 V46 Z" />
+      <rect x="70" y="70" width="60" height="40" rx="10" fill="currentColor" fillOpacity={0.16} />
+      <rect x="70" y="70" width="60" height="40" rx="10" />
+      <path d="M84 110 L80 122 L94 110" />
+      <path d="M86 90 L96 100 L114 82" strokeWidth={3} />
+      <circle cx="140" cy="60" r="4" fill="currentColor" />
+      <path d="M140 48 V54 M140 66 V72 M128 60 H134 M146 60 H152" />
+    </svg>
+  );
+}
+
 const REGISTRY: Record<string, () => ReactElement> = {
   "phishing-a-emaily": PhishingIllustration,
   "sms-a-telefon": SmsIllustration,
   "fake-eshopy": EshopIllustration,
   "socialne-siete": SocialIllustration,
   "ai-scamy": AiIllustration,
+  "bezpecna-praca-s-ai": AiSafetyIllustration,
   "digitalna-bezpecnost": SecurityIllustration,
   kvizy: QuizIllustration,
   pribehy: StoryIllustration,

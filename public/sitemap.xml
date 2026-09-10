@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
+  <url>
     <loc>https://subenai.sk/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -12,7 +12,7 @@
   </url>
   <url>
     <loc>https://subenai.sk/academy</loc>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
@@ -74,6 +74,96 @@
     <loc>https://subenai.sk/sablony</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/co-je-subenai</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/ako-spravit-test</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/vysledky</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/kurzy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/ucet</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/faq</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/firemne-testy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/vlastne-testy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/pre-skoly</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/akademia</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/vymazanie-udajov</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/zdielanie-vysledkov</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/pomocnik</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/podpora-projektu</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/sukromie-a-data</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/kontakt</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/docs/zmeny</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://subenai.sk/academy/ai-bezpecnost-co-nezdielat</loc>
@@ -244,13 +334,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/tests/rodicia</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/tests/socialne-siete</loc>
+    <loc>https://subenai.sk/tests/skoly</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
@@ -262,7 +346,13 @@
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/tests/heslo-2fa</loc>
+    <loc>https://subenai.sk/tests/socialne-siete</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/tests/rodicia</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
@@ -274,14 +364,8 @@
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/tests/skoly</loc>
+    <loc>https://subenai.sk/tests/heslo-2fa</loc>
     <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/tests/vseobecny</loc>
-    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
@@ -304,19 +388,19 @@
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/tests/verejne-sluzby</loc>
-    <lastmod>2026-04-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/tests/it-vyvoj</loc>
-    <lastmod>2026-04-27</lastmod>
+    <loc>https://subenai.sk/tests/vseobecny</loc>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://subenai.sk/tests/autoservis</loc>
+    <lastmod>2026-04-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/tests/eshop</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
@@ -328,7 +412,13 @@
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/tests/eshop</loc>
+    <loc>https://subenai.sk/tests/verejne-sluzby</loc>
+    <lastmod>2026-04-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/tests/it-vyvoj</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
@@ -355,6 +445,11 @@
   </url>
   <url>
     <loc>https://subenai.sk/academy/category/ai-scamy</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/category/bezpecna-praca-s-ai</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -421,8 +516,8 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/sms-z-banky-overit-ci-je-pravda</loc>
-    <lastmod>2026-05-20</lastmod>
+    <loc>https://subenai.sk/academy/nechcene-platby-z-uctu-co-robit</loc>
+    <lastmod>2026-07-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -433,44 +528,134 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/nove-techniky-phishingu-2026</loc>
+    <loc>https://subenai.sk/academy/internet-iq-test-pre-firmy-zamestnancov</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/ai-phishing-personalizovany-podvod</loc>
+    <loc>https://subenai.sk/academy/senior-prvy-smartfon-bezpecnost</loc>
     <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/hacknuty-facebook-ucet-co-robit</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/poistenie-proti-kybernetickym-podvodom</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/ako-overit-eshop-pred-nakupom-7-krokov</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/dropshipping-vs-podvodny-eshop</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/recenzie-na-eshope-falosne-rozpoznat</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/reklamacia-z-podvodneho-eshopu</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/kviz-falosny-eshop-alebo-pravy</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/podvodne-reklamy-facebook-instagram-eshop</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/bazos-vinted-marketplace-podvody</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/krypto-podvody-2026-pump-and-dump</loc>
+    <lastmod>2026-07-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://subenai.sk/academy/chatgpt-podvody-falosne-investicie</loc>
-    <lastmod>2026-05-20</lastmod>
+    <lastmod>2026-07-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/kybersikana-co-robit</loc>
-    <lastmod>2026-05-20</lastmod>
+    <loc>https://subenai.sk/academy/deepfake-video-ako-spoznat</loc>
+    <lastmod>2026-07-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/phishing-na-balikovu-zasielku</loc>
-    <lastmod>2026-05-20</lastmod>
+    <loc>https://subenai.sk/academy/klonovanie-hlasu-podvod-volanie-rodina</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/pribeh-deepfake-ceo-firma</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/ai-generovane-fotky-fake-profily</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/fake-profily-instagram-tiktok</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/hovor-od-falosneho-policajta-co-robit</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/autorita-policia-banka-manipulacia</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/pribeh-senior-falosny-policajt</loc>
+    <lastmod>2026-07-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://subenai.sk/academy/one-ring-scam-zmeskany-hovor-zo-zahranicia</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/platobne-karty-virtualne-revolut-wise</loc>
-    <lastmod>2026-05-20</lastmod>
+    <lastmod>2026-07-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -481,14 +666,26 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://subenai.sk/academy/ako-blokovat-spam-volania-android-iphone</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/overit-telefonne-cislo-kto-mi-vola</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://subenai.sk/academy/vpn-ci-naozaj-potrebujem</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/overit-telefonne-cislo-kto-mi-vola</loc>
-    <lastmod>2026-05-20</lastmod>
+    <loc>https://subenai.sk/academy/falosna-faktura-email-co-robit</loc>
+    <lastmod>2026-07-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -523,66 +720,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/ai-generovane-fotky-fake-profily</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/deepfake-video-ako-spoznat</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/klonovanie-hlasu-podvod-volanie-rodina</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/internet-iq-test-pre-firmy-zamestnancov</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/senior-prvy-smartfon-bezpecnost</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/co-robit-ked-som-klikol-na-phishing</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/nechcene-platby-z-uctu-co-robit</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/hacknuty-facebook-ucet-co-robit</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/poistenie-proti-kybernetickym-podvodom</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/reklamacia-z-podvodneho-eshopu</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://subenai.sk/academy/aktualizacie-systemu-preco-su-dolezite</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
@@ -595,79 +732,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/rebrand-slovenska-posta-slovak-post-podvody</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/ako-rozpoznat-phishingovy-email-za-10-sekund</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/falosna-faktura-email-co-robit</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/kviz-rozpoznas-phishingovy-email</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/phishing-cez-google-formulare</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/podvodne-emaily-z-banky-ako-spoznat</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/spear-phishing-vs-bezny-phishing</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/ako-overit-eshop-pred-nakupom-7-krokov</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/ako-blokovat-spam-volania-android-iphone</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/dropshipping-vs-podvodny-eshop</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/recenzie-na-eshope-falosne-rozpoznat</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://subenai.sk/academy/najlepsi-spravca-hesiel-porovnanie-2026</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/ochrana-pred-phishingom-2fa-passkey</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -685,43 +750,13 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/krypto-podvody-2026-pump-and-dump</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://subenai.sk/academy/telegram-whatsapp-scam-skupiny</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/fake-profily-instagram-tiktok</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://subenai.sk/academy/podvodne-sutaze-a-giveawayy</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/podvodne-reklamy-facebook-instagram-eshop</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/bazos-vinted-marketplace-podvody</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/pribeh-deepfake-ceo-firma</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -734,18 +769,6 @@
   </url>
   <url>
     <loc>https://subenai.sk/academy/pribeh-romance-scam-rok-laska</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/pribeh-senior-falosny-policajt</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/autorita-policia-banka-manipulacia</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -775,12 +798,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/hovor-od-falosneho-policajta-co-robit</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://subenai.sk/academy/silne-heslo-2026-vs-passkey</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
@@ -793,13 +810,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/kviz-scam-sms-rozpozna</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/kviz-falosny-eshop-alebo-pravy</loc>
+    <loc>https://subenai.sk/academy/kybersikana-co-robit</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -829,49 +840,97 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://subenai.sk/academy/ako-rozpoznat-phishingovy-email-za-10-sekund</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/nove-techniky-phishingu-2026</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/ochrana-pred-phishingom-2fa-passkey</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/phishing-cez-google-formulare</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/podvodne-emaily-z-banky-ako-spoznat</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/spear-phishing-vs-bezny-phishing</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/co-robit-ked-som-klikol-na-phishing</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/ai-phishing-personalizovany-podvod</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/kviz-rozpoznas-phishingovy-email</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://subenai.sk/academy/12-najcastejsich-podvodnych-sms-2026</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/sms-z-banky-overit-ci-je-pravda</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/kviz-scam-sms-rozpozna</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/phishing-na-balikovu-zasielku</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/platobne-karty-virtualne-revolut-wise</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://subenai.sk/academy/internet-safety-pre-studentov</loc>
-    <lastmod>2026-05-20</lastmod>
+    <loc>https://subenai.sk/academy/rebrand-slovenska-posta-slovak-post-podvody</loc>
+    <lastmod>2026-07-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/phishing-kompletny-sprievodca</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/ai-a-moderne-podvody-deepfake-voice-cloning</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/digitalna-bezpecnost-kompletny-navod</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/bezpecne-nakupovanie-online-slovensko</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://subenai.sk/academy/bezpecnost-pre-rodicov-deti-seniorov</loc>
-    <lastmod>2026-05-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://subenai.sk/academy/scam-sms-a-podvodne-hovory</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -883,7 +942,37 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://subenai.sk/academy/phishing-kompletny-sprievodca</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/scam-sms-a-podvodne-hovory</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://subenai.sk/academy/fake-eshopy-ako-odhalit</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/bezpecne-nakupovanie-online-slovensko</loc>
+    <lastmod>2026-07-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/digitalna-bezpecnost-kompletny-navod</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/internet-safety-pre-studentov</loc>
     <lastmod>2026-05-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -891,6 +980,12 @@
   <url>
     <loc>https://subenai.sk/academy/psychologia-internetovych-podvodov</loc>
     <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://subenai.sk/academy/ai-a-moderne-podvody-deepfake-voice-cloning</loc>
+    <lastmod>2026-07-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

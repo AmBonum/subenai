@@ -56,7 +56,7 @@ export const ROUTE_CATALOG: RouteCatalogEntry[] = [
     path: "/academy",
     title: "Akadémia",
     description:
-      "Bezplatné interaktívne kurzy a články o podvodoch — phishing, podvodné SMS a telefonáty, falošné e-shopy, investičné podvody a praktické návody, ako sa chrániť.",
+      "Bezplatné interaktívne kurzy a články o podvodoch — phishing, podvodné SMS a telefonáty, falošné e-shopy, investičné podvody, bezpečná práca s AI nástrojmi (pre bežných používateľov aj odborníkov) a praktické návody, ako sa chrániť.",
     audience: "public",
   },
   {
