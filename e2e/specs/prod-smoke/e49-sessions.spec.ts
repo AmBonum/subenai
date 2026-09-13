@@ -155,7 +155,7 @@ test.describe("E49 prod-smoke — /app/tests respondent drill-down", () => {
     await pom.signInAsOwner();
     await expect(pom.shellRoot).toBeVisible({ timeout: 20_000 });
 
-    await pom.headerLogout.click();
+    await pom.signOutViaHeader();
 
     // After sign-out the user is redirected to /login. We assert on the
     // login form mount rather than the URL alone — a stale shell DOM with
