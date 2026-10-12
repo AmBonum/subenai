@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 
 import { MAX_AML_AMOUNT_EUR, STRIPE_API_VERSION } from "./stripe-webhook";
+import { ipRateLimit, rateLimitedResponse, readClientIp } from "../_lib/security";
 
 interface Env {
   STRIPE_SECRET_KEY: string;
@@ -16,6 +17,8 @@ const FOOTER_TIER_ONEOFF_EUR = 50;
 const FOOTER_TIER_MONTHLY_EUR = 25;
 const MIN_ONEOFF_EUR = 5;
 const DISPLAY_MESSAGE_MAX = 80;
+export const CHECKOUT_PER_IP_PER_HOUR = 10;
+const RATE_WINDOW_S = 60 * 60;
 
 export interface CheckoutCreateInput {
   mode: "oneoff" | "monthly";
@@ -233,6 +236,11 @@ function jsonResponse(status: number, body: Record<string, unknown>): Response {
 
 export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   const { request, env } = ctx;
+
+  const ip = readClientIp(request);
+  if (!ipRateLimit.consume(`checkout:ip:${ip}`, CHECKOUT_PER_IP_PER_HOUR, RATE_WINDOW_S)) {
+    return rateLimitedResponse(RATE_WINDOW_S);
+  }
 
   let raw: unknown;
   try {
