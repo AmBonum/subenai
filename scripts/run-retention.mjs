@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// E38.3 — daily retention runner.
+// E38.3 — retention runner.
 //
-// Invoked by `.github/workflows/retention-cron.yml` at 03:00 UTC daily.
-// Calls the three retention RPCs against production Supabase and logs
-// the row counts. Returns non-zero on any RPC error so the workflow
+// The RPCs are scheduled daily in pg_cron (20261012100000_retention_pg_cron.sql);
+// this script is the manual run / backfill. Calls the retention RPCs against
+// production Supabase and logs the row counts. Returns non-zero on any RPC error so the workflow
 // run fails visibly (and the operator gets a GitHub notification).
 //
 // Honours `/privacy` retention claims:
@@ -27,7 +27,7 @@
 import { fileURLToPath } from "node:url";
 import { createClient } from "@supabase/supabase-js";
 
-const RPCS = [
+export const RPCS = [
   { name: "purge_expired_attempts", description: "Delete attempts older than 36 months" },
   { name: "anonymize_expired_anticheat", description: "NULL anti-cheat data older than 12 months" },
   {

@@ -2,5 +2,6 @@
 // tests/scripts/run-retention.test.ts type-checks under the main
 // tsconfig (scripts/** is not part of the TS project).
 declare module "*/run-retention.mjs" {
+  export const RPCS: ReadonlyArray<{ name: string; description: string }>;
   export function main(deps?: { createClient: unknown }): Promise<number>;
 }
