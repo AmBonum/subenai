@@ -17,12 +17,7 @@ import { useTransitionTicketStatus } from "@/lib/admin/queries-tickets";
 // queue without a beat of intention.
 
 export type SupportTicketStatus =
-  | "new"
-  | "in_progress"
-  | "waiting_user"
-  | "resolved"
-  | "reopened"
-  | "archived";
+  "new" | "in_progress" | "waiting_user" | "resolved" | "reopened" | "archived";
 
 interface TransitionOption {
   to: SupportTicketStatus;

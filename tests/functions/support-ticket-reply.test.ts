@@ -491,8 +491,7 @@ describe("POST /api/support-ticket-reply — E48-v4 internal notes", () => {
 
     // INSERT row carries is_internal: true
     const insertPayload = JSON.parse(state.lastInsertBody!.value) as
-      | Array<Record<string, unknown>>
-      | Record<string, unknown>;
+      Array<Record<string, unknown>> | Record<string, unknown>;
     const row = Array.isArray(insertPayload) ? insertPayload[0] : insertPayload;
     expect(row.is_internal).toBe(true);
     expect(row.author_kind).toBe("admin");
@@ -522,8 +521,7 @@ describe("POST /api/support-ticket-reply — E48-v4 internal notes", () => {
 
     // INSERT carries is_internal: false explicitly.
     const insertPayload = JSON.parse(state.lastInsertBody!.value) as
-      | Array<Record<string, unknown>>
-      | Record<string, unknown>;
+      Array<Record<string, unknown>> | Record<string, unknown>;
     const row = Array.isArray(insertPayload) ? insertPayload[0] : insertPayload;
     expect(row.is_internal).toBe(false);
 
