@@ -1,7 +1,7 @@
 // Domain-specific GA4 events for the /blog feature surface.
 //
 // Naming convention: `blog_<noun>_<verb>` — e.g. `blog_post_view`,
-// `blog_share_click`. Reserved GA4 names (page_view, search, etc) are
+// `blog_cta_click`. Reserved GA4 names (page_view, search, etc) are
 // avoided to keep custom events isolated in GA4 Explorer reports.
 //
 // Every event MUST have the four classifier params if applicable so
@@ -17,7 +17,6 @@
 //   • routes/blog/$slug.lazy.tsx           → blog_post_view, blog_related_click
 //   • routes/blog/kategoria/$slug.lazy.tsx → blog_category_view
 //   • routes/blog/autor/$slug.lazy.tsx     → blog_author_view
-//   • components/blog/BlogShareRow.tsx     → blog_share_click, blog_link_copy
 //   • components/blog/ArticleCTABanner.tsx → blog_cta_click
 //   • components/blog/BlogScenarioCard.tsx → blog_scenario_answer
 //   • components/blog/BlogTableOfContents  → blog_toc_click
@@ -81,17 +80,6 @@ export function trackBlogSearch(input: { query: string; result_count: number }):
   trackEvent("blog_search", {
     search_term: input.query,
     result_count: input.result_count,
-    language: LANG,
-  });
-}
-
-export function trackBlogShareClick(input: {
-  post_slug: string;
-  platform: "twitter" | "facebook" | "linkedin" | "copy_link";
-}): void {
-  trackEvent("blog_share_click", {
-    post_slug: input.post_slug,
-    platform: input.platform,
     language: LANG,
   });
 }
