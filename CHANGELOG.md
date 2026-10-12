@@ -28,6 +28,10 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 - **Anglické pojmy majú slovenské vysvetlenie.** Pri prvom použití slov ako
   phishing, smishing či scam nájdete v zátvorke ich význam po slovensky.
 
+### Opravené
+- **PDF export výsledkov edu testu zobrazuje slovenské znaky správne.** Mená ako
+  „Ľubomír“ či „Čačková“ sa v PDF už nerozpadajú na nečitateľné znaky.
+
 ## [1.15.0] — 2026-06-13
 
 ### Pridané
