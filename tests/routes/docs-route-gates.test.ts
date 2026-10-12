@@ -136,6 +136,13 @@ describe("/docs/app/$slug loader", () => {
     expect(out.entry.explainerKey).toBe("dashboard");
   });
 
+  it("returns a guide entry for slugs backed by a public guide (E66.5)", () => {
+    const out = appSlugLoader({ params: { slug: "tests-sharing" } }) as unknown as {
+      entry: { kind: string; docSlug?: string };
+    };
+    expect(out.entry).toEqual({ kind: "guide", docSlug: "zdielanie-testu" });
+  });
+
   it("throws notFound() when slug is unknown", () => {
     expect(() => appSlugLoader({ params: { slug: "not-a-real-slug" } })).toThrow();
   });
