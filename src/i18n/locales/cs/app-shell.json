@@ -48,6 +48,10 @@
         "label": "Notifikace",
         "tip": "Nová sezení, dokončení, připomenutí přetestů."
       },
+      "billing": {
+        "label": "Předplatné",
+        "tip": "Plán, doklady o proškolení a faktury."
+      },
       "teams": {
         "label": "Tým a role",
         "tip": "Pozvěte kolegy jako Editor nebo Viewer."

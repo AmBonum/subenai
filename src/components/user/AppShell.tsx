@@ -16,6 +16,7 @@ import {
   GraduationCap,
   UsersRound,
   UserCog,
+  CreditCard,
   Menu,
   X,
 } from "lucide-react";
@@ -39,6 +40,7 @@ const TESTID_PREFIX: Record<NavMode, string> = {
 
 type NavKey =
   | "dashboard"
+  | "billing"
   | "tests"
   | "edu_tests"
   | "templates"
@@ -109,6 +111,12 @@ const VYSLEDKY: NavItem[] = [
 
 const FOOTER: NavItem[] = [
   { key: "teams", to: "/app/teams", testid: "app-shell-sidebar-link-teams", icon: Users },
+  {
+    key: "billing",
+    to: "/app/billing",
+    testid: "app-shell-sidebar-link-billing",
+    icon: CreditCard,
+  },
   {
     key: "profile",
     to: "/app/account/profile",

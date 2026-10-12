@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
+import { processOrgPlanEvent } from "../_lib/billing";
 import { sendEmail } from "../_lib/email";
 import { refundAlertEmail } from "../_lib/email-templates";
 import { PROD_SUPABASE_URL } from "../_lib/supabase-url";
@@ -95,6 +96,9 @@ export async function processEvent(
   supabase: SupabaseClient,
   env?: Env,
 ): Promise<ProcessResult> {
+  const orgPlan = await processOrgPlanEvent(event, supabase);
+  if (orgPlan) return orgPlan;
+
   switch (event.type) {
     case "checkout.session.completed":
       return handleCheckoutCompleted(supabase, event.data.object as Stripe.Checkout.Session);

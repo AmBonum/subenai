@@ -1968,6 +1968,93 @@ export type Database = {
         };
         Relationships: [];
       };
+      org_subscriptions: {
+        Row: {
+          id: string;
+          user_id: string;
+          plan: string;
+          status: string;
+          respondent_cap: number;
+          stripe_customer_id: string;
+          stripe_subscription_id: string;
+          current_period_start: string;
+          current_period_end: string;
+          cancel_at_period_end: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          plan: string;
+          status: string;
+          respondent_cap: number;
+          stripe_customer_id: string;
+          stripe_subscription_id: string;
+          current_period_start: string;
+          current_period_end: string;
+          cancel_at_period_end?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          plan?: string;
+          status?: string;
+          respondent_cap?: number;
+          stripe_customer_id?: string;
+          stripe_subscription_id?: string;
+          current_period_start?: string;
+          current_period_end?: string;
+          cancel_at_period_end?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      evidence_reports: {
+        Row: {
+          id: string;
+          owner_id: string;
+          test_id: string | null;
+          test_title: string;
+          test_version: number;
+          org_name: string;
+          session_ids: string[];
+          respondent_count: number;
+          passed_count: number;
+          content_sha256: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          owner_id: string;
+          test_id?: string | null;
+          test_title: string;
+          test_version: number;
+          org_name: string;
+          session_ids: string[];
+          respondent_count: number;
+          passed_count: number;
+          content_sha256: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          owner_id?: string;
+          test_id?: string | null;
+          test_title?: string;
+          test_version?: number;
+          org_name?: string;
+          session_ids?: string[];
+          respondent_count?: number;
+          passed_count?: number;
+          content_sha256?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       public_sponsors: {
@@ -2195,6 +2282,18 @@ export type Database = {
       generate_weekly_digests: {
         Args: Record<string, never>;
         Returns: number;
+      };
+      verify_evidence_report: {
+        Args: { p_id: string };
+        Returns: {
+          org_name: string;
+          test_title: string;
+          test_version: number;
+          respondent_count: number;
+          passed_count: number;
+          content_sha256: string;
+          created_at: string;
+        }[];
       };
       get_peer_card: {
         Args: { p_user_id?: string | null };

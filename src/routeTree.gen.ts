@@ -21,6 +21,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ChangelogRouteImport } from './routes/changelog'
+import { Route as CennikRouteImport } from './routes/cennik'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
@@ -42,6 +43,7 @@ import { Route as SchoolsDpaRouteImport } from './routes/schools_.dpa'
 import { Route as SablonySlugRouteImport } from './routes/sablony.$slug'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as RShareIdRouteImport } from './routes/r.$shareId'
+import { Route as OverenieReportIdRouteImport } from './routes/overenie.$reportId'
 import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
 import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
 import { Route as DocsAppRouteImport } from './routes/docs.app'
@@ -61,6 +63,7 @@ import { Route as AppInsightsRouteImport } from './routes/app.insights'
 import { Route as AppHistoryRouteImport } from './routes/app.history'
 import { Route as AppHelpRouteImport } from './routes/app.help'
 import { Route as AppDigestRouteImport } from './routes/app.digest'
+import { Route as AppBillingRouteImport } from './routes/app.billing'
 import { Route as AppAudiencesRouteImport } from './routes/app.audiences'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminTrainingsRouteImport } from './routes/admin/trainings'
@@ -114,6 +117,7 @@ import { Route as AcademyCategorySlugRouteImport } from './routes/academy.catego
 import { Route as AcademyAuthorSlugRouteImport } from './routes/academy.author.$slug'
 import { Route as TestBuilderIdIndexRouteImport } from './routes/test.builder.$id.index'
 import { Route as TestBuilderIdResultsRouteImport } from './routes/test.builder.$id.results'
+import { Route as AppTestsTestIdDokladRouteImport } from './routes/app.tests.$testId_.doklad'
 import { Route as TestBuilderIdResultsAttemptIdRouteImport } from './routes/test.builder.$id.results.$attemptId'
 import { Route as AppTestsTestIdSessionsSessionIdRouteImport } from './routes/app.tests.$testId.sessions.$sessionId'
 
@@ -179,6 +183,11 @@ const ChangelogRoute = ChangelogRouteImport.update({
   path: '/changelog',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/changelog.lazy').then((d) => d.Route))
+const CennikRoute = CennikRouteImport.update({
+  id: '/cennik',
+  path: '/cennik',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -286,6 +295,11 @@ const RShareIdRoute = RShareIdRouteImport.update({
   path: '/r/$shareId',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/r.$shareId.lazy').then((d) => d.Route))
+const OverenieReportIdRoute = OverenieReportIdRouteImport.update({
+  id: '/overenie/$reportId',
+  path: '/overenie/$reportId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginVerify2faRoute = LoginVerify2faRouteImport.update({
   id: '/login_/verify-2fa',
   path: '/login/verify-2fa',
@@ -381,6 +395,11 @@ const AppHelpRoute = AppHelpRouteImport.update({
 const AppDigestRoute = AppDigestRouteImport.update({
   id: '/digest',
   path: '/digest',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBillingRoute = AppBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAudiencesRoute = AppAudiencesRouteImport.update({
@@ -711,6 +730,11 @@ const TestBuilderIdResultsRoute = TestBuilderIdResultsRouteImport.update({
 } as any).lazy(() =>
   import('./routes/test.builder.$id.results.lazy').then((d) => d.Route),
 )
+const AppTestsTestIdDokladRoute = AppTestsTestIdDokladRouteImport.update({
+  id: '/tests/$testId_/doklad',
+  path: '/tests/$testId/doklad',
+  getParentRoute: () => AppRoute,
+} as any)
 const TestBuilderIdResultsAttemptIdRoute =
   TestBuilderIdResultsAttemptIdRouteImport.update({
     id: '/$attemptId',
@@ -733,6 +757,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/cennik': typeof CennikRoute
   '/changelog': typeof ChangelogRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
@@ -769,6 +794,7 @@ export interface FileRoutesByFullPath {
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
+  '/app/billing': typeof AppBillingRoute
   '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
@@ -788,6 +814,7 @@ export interface FileRoutesByFullPath {
   '/docs/app': typeof DocsAppRouteWithChildren
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
+  '/overenie/$reportId': typeof OverenieReportIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
   '/sablony/$slug': typeof SablonySlugRoute
@@ -832,6 +859,7 @@ export interface FileRoutesByFullPath {
   '/app/edu-tests/': typeof AppEduTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/builder/': typeof TestBuilderIndexRoute
+  '/app/tests/$testId/doklad': typeof AppTestsTestIdDokladRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
   '/test/builder/$id/': typeof TestBuilderIdIndexRoute
   '/app/tests/$testId/sessions/$sessionId': typeof AppTestsTestIdSessionsSessionIdRoute
@@ -840,6 +868,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/cennik': typeof CennikRoute
   '/changelog': typeof ChangelogRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
@@ -873,6 +902,7 @@ export interface FileRoutesByTo {
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
+  '/app/billing': typeof AppBillingRoute
   '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
@@ -892,6 +922,7 @@ export interface FileRoutesByTo {
   '/docs/app': typeof DocsAppRouteWithChildren
   '/login/enroll-2fa': typeof LoginEnroll2faRoute
   '/login/verify-2fa': typeof LoginVerify2faRoute
+  '/overenie/$reportId': typeof OverenieReportIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
   '/sablony/$slug': typeof SablonySlugRoute
@@ -934,6 +965,7 @@ export interface FileRoutesByTo {
   '/app/edu-tests': typeof AppEduTestsIndexRoute
   '/app/tests': typeof AppTestsIndexRoute
   '/test/builder': typeof TestBuilderIndexRoute
+  '/app/tests/$testId/doklad': typeof AppTestsTestIdDokladRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
   '/test/builder/$id': typeof TestBuilderIdIndexRoute
   '/app/tests/$testId/sessions/$sessionId': typeof AppTestsTestIdSessionsSessionIdRoute
@@ -945,6 +977,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
+  '/cennik': typeof CennikRoute
   '/changelog': typeof ChangelogRoute
   '/contact': typeof ContactRoute
   '/cookies': typeof CookiesRoute
@@ -981,6 +1014,7 @@ export interface FileRoutesById {
   '/admin/trainings': typeof AdminTrainingsRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/app/audiences': typeof AppAudiencesRoute
+  '/app/billing': typeof AppBillingRoute
   '/app/digest': typeof AppDigestRoute
   '/app/help': typeof AppHelpRouteWithChildren
   '/app/history': typeof AppHistoryRoute
@@ -1000,6 +1034,7 @@ export interface FileRoutesById {
   '/docs/app': typeof DocsAppRouteWithChildren
   '/login_/enroll-2fa': typeof LoginEnroll2faRoute
   '/login_/verify-2fa': typeof LoginVerify2faRoute
+  '/overenie/$reportId': typeof OverenieReportIdRoute
   '/r/$shareId': typeof RShareIdRoute
   '/s/$slug': typeof SSlugRoute
   '/sablony/$slug': typeof SablonySlugRoute
@@ -1044,6 +1079,7 @@ export interface FileRoutesById {
   '/app/edu-tests/': typeof AppEduTestsIndexRoute
   '/app/tests/': typeof AppTestsIndexRoute
   '/test/builder/': typeof TestBuilderIndexRoute
+  '/app/tests/$testId_/doklad': typeof AppTestsTestIdDokladRoute
   '/test/builder/$id/results': typeof TestBuilderIdResultsRouteWithChildren
   '/test/builder/$id/': typeof TestBuilderIdIndexRoute
   '/app/tests/$testId/sessions/$sessionId': typeof AppTestsTestIdSessionsSessionIdRoute
@@ -1056,6 +1092,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/app'
+    | '/cennik'
     | '/changelog'
     | '/contact'
     | '/cookies'
@@ -1092,6 +1129,7 @@ export interface FileRouteTypes {
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
+    | '/app/billing'
     | '/app/digest'
     | '/app/help'
     | '/app/history'
@@ -1111,6 +1149,7 @@ export interface FileRouteTypes {
     | '/docs/app'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
+    | '/overenie/$reportId'
     | '/r/$shareId'
     | '/s/$slug'
     | '/sablony/$slug'
@@ -1155,6 +1194,7 @@ export interface FileRouteTypes {
     | '/app/edu-tests/'
     | '/app/tests/'
     | '/test/builder/'
+    | '/app/tests/$testId/doklad'
     | '/test/builder/$id/results'
     | '/test/builder/$id/'
     | '/app/tests/$testId/sessions/$sessionId'
@@ -1163,6 +1203,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/cennik'
     | '/changelog'
     | '/contact'
     | '/cookies'
@@ -1196,6 +1237,7 @@ export interface FileRouteTypes {
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
+    | '/app/billing'
     | '/app/digest'
     | '/app/help'
     | '/app/history'
@@ -1215,6 +1257,7 @@ export interface FileRouteTypes {
     | '/docs/app'
     | '/login/enroll-2fa'
     | '/login/verify-2fa'
+    | '/overenie/$reportId'
     | '/r/$shareId'
     | '/s/$slug'
     | '/sablony/$slug'
@@ -1257,6 +1300,7 @@ export interface FileRouteTypes {
     | '/app/edu-tests'
     | '/app/tests'
     | '/test/builder'
+    | '/app/tests/$testId/doklad'
     | '/test/builder/$id/results'
     | '/test/builder/$id'
     | '/app/tests/$testId/sessions/$sessionId'
@@ -1267,6 +1311,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/app'
+    | '/cennik'
     | '/changelog'
     | '/contact'
     | '/cookies'
@@ -1303,6 +1348,7 @@ export interface FileRouteTypes {
     | '/admin/trainings'
     | '/admin/users'
     | '/app/audiences'
+    | '/app/billing'
     | '/app/digest'
     | '/app/help'
     | '/app/history'
@@ -1322,6 +1368,7 @@ export interface FileRouteTypes {
     | '/docs/app'
     | '/login_/enroll-2fa'
     | '/login_/verify-2fa'
+    | '/overenie/$reportId'
     | '/r/$shareId'
     | '/s/$slug'
     | '/sablony/$slug'
@@ -1366,6 +1413,7 @@ export interface FileRouteTypes {
     | '/app/edu-tests/'
     | '/app/tests/'
     | '/test/builder/'
+    | '/app/tests/$testId_/doklad'
     | '/test/builder/$id/results'
     | '/test/builder/$id/'
     | '/app/tests/$testId/sessions/$sessionId'
@@ -1377,6 +1425,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
+  CennikRoute: typeof CennikRoute
   ChangelogRoute: typeof ChangelogRoute
   ContactRoute: typeof ContactRoute
   CookiesRoute: typeof CookiesRoute
@@ -1397,6 +1446,7 @@ export interface RootRouteChildren {
   DocsAppRoute: typeof DocsAppRouteWithChildren
   LoginEnroll2faRoute: typeof LoginEnroll2faRoute
   LoginVerify2faRoute: typeof LoginVerify2faRoute
+  OverenieReportIdRoute: typeof OverenieReportIdRoute
   RShareIdRoute: typeof RShareIdRoute
   SSlugRoute: typeof SSlugRoute
   SablonySlugRoute: typeof SablonySlugRoute
@@ -1501,6 +1551,13 @@ declare module '@tanstack/react-router' {
       path: '/changelog'
       fullPath: '/changelog'
       preLoaderRoute: typeof ChangelogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cennik': {
+      id: '/cennik'
+      path: '/cennik'
+      fullPath: '/cennik'
+      preLoaderRoute: typeof CennikRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app': {
@@ -1650,6 +1707,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RShareIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/overenie/$reportId': {
+      id: '/overenie/$reportId'
+      path: '/overenie/$reportId'
+      fullPath: '/overenie/$reportId'
+      preLoaderRoute: typeof OverenieReportIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login_/verify-2fa': {
       id: '/login_/verify-2fa'
       path: '/login/verify-2fa'
@@ -1781,6 +1845,13 @@ declare module '@tanstack/react-router' {
       path: '/digest'
       fullPath: '/app/digest'
       preLoaderRoute: typeof AppDigestRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/billing': {
+      id: '/app/billing'
+      path: '/billing'
+      fullPath: '/app/billing'
+      preLoaderRoute: typeof AppBillingRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/audiences': {
@@ -2154,6 +2225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestBuilderIdResultsRouteImport
       parentRoute: typeof TestBuilderIdRoute
     }
+    '/app/tests/$testId_/doklad': {
+      id: '/app/tests/$testId_/doklad'
+      path: '/tests/$testId/doklad'
+      fullPath: '/app/tests/$testId/doklad'
+      preLoaderRoute: typeof AppTestsTestIdDokladRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/test/builder/$id/results/$attemptId': {
       id: '/test/builder/$id/results/$attemptId'
       path: '/$attemptId'
@@ -2334,6 +2412,7 @@ const AppTestsTestIdRouteWithChildren = AppTestsTestIdRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppAudiencesRoute: typeof AppAudiencesRoute
+  AppBillingRoute: typeof AppBillingRoute
   AppDigestRoute: typeof AppDigestRoute
   AppHelpRoute: typeof AppHelpRouteWithChildren
   AppHistoryRoute: typeof AppHistoryRoute
@@ -2354,10 +2433,12 @@ interface AppRouteChildren {
   AppTestsNewRoute: typeof AppTestsNewRoute
   AppEduTestsIndexRoute: typeof AppEduTestsIndexRoute
   AppTestsIndexRoute: typeof AppTestsIndexRoute
+  AppTestsTestIdDokladRoute: typeof AppTestsTestIdDokladRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAudiencesRoute: AppAudiencesRoute,
+  AppBillingRoute: AppBillingRoute,
   AppDigestRoute: AppDigestRoute,
   AppHelpRoute: AppHelpRouteWithChildren,
   AppHistoryRoute: AppHistoryRoute,
@@ -2378,6 +2459,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppTestsNewRoute: AppTestsNewRoute,
   AppEduTestsIndexRoute: AppEduTestsIndexRoute,
   AppTestsIndexRoute: AppTestsIndexRoute,
+  AppTestsTestIdDokladRoute: AppTestsTestIdDokladRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -2449,6 +2531,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
+  CennikRoute: CennikRoute,
   ChangelogRoute: ChangelogRoute,
   ContactRoute: ContactRoute,
   CookiesRoute: CookiesRoute,
@@ -2469,6 +2552,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocsAppRoute: DocsAppRouteWithChildren,
   LoginEnroll2faRoute: LoginEnroll2faRoute,
   LoginVerify2faRoute: LoginVerify2faRoute,
+  OverenieReportIdRoute: OverenieReportIdRoute,
   RShareIdRoute: RShareIdRoute,
   SSlugRoute: SSlugRoute,
   SablonySlugRoute: SablonySlugRoute,
