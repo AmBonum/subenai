@@ -211,7 +211,11 @@
       "public_middle": " (default is off). Granular — name, optional link, optional message up to 80 characters. You can withdraw consent at any time by email at ",
       "public_suffix": ".",
       "limit_label": "Maximum one-off amount 500 €",
-      "limit_text": " — we keep the limit below the KYC threshold per § 10 zákona č. 297/2008 Z. z. on protection against legalisation of proceeds from criminal activity. Above this amount we only accept support via bank transfer outside Stripe."
+      "limit_text": " — we keep the limit below the KYC threshold per § 10 zákona č. 297/2008 Z. z. on protection against legalisation of proceeds from criminal activity. Above this amount we only accept support via bank transfer outside Stripe.",
+      "org_plans_label": "Organisation plans (/cennik):",
+      "org_plans_text": " when you buy the Štart, Firma or Firma+ plan we process the account e-mail, company name, billing address and optionally the company and VAT IDs entered in Stripe Checkout, plus the plan, status and period of the subscription. Legal basis: Art. 6(1)(b) and (c) GDPR. Accounting records are kept for 10 years under Act No. 431/2002; the subscription record is deleted with the account. You can cancel at any time in subscription management; the plan stays active until the end of the paid period.",
+      "evidence_label": "Training-evidence report:",
+      "evidence_text": " when a report is issued we process the names, e-mails, completion dates and scores of the test's respondents as the test author's processor (Art. 28 GDPR) — the PDF is generated in the author's browser and is not stored. The database keeps only a summary (organisation, test title and version, counts, SHA-256 fingerprint and the ids of completed sessions used to compute the plan allowance). Public verification at /overenie shows only that summary, without personal data. The record is deleted together with the author's account."
     },
     "s8": {
       "heading": "8. Education mode (collecting edu responses)",
@@ -324,8 +328,8 @@
         },
         "prefs": {
           "category": "Preferences",
-          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, subenai-theme, subenai-a11y-font, subenai-a11y-motion, iiq_edu_intake:* (sessionStorage)",
-          "purpose": "Remembering UI preferences and in-progress forms between visits: sidebar open/closed state, whether you've seen the dashboard intro banner, whether you've dismissed the profile-completion nudge, whether you have the /blog pillar lists expanded, the chosen appearance (light/dark/system, `subenai-theme`), accessibility settings — font size (`subenai-a11y-font`) and reduced animations (`subenai-a11y-motion`), and the name/email you started typing into a shared-test intake form (`iiq_edu_intake:*` — sessionStorage only, wiped after submit). Without these cookies / localStorage / sessionStorage entries every button still works — you just have to re-select on next visit. Language (`subenai.locale`) is always stored as strictly necessary so the page renders in the correct language.",
+          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, subenai-theme, subenai-a11y-font, subenai-a11y-motion, subenai.evidence.orgName, iiq_edu_intake:* (sessionStorage)",
+          "purpose": "Remembering UI preferences and in-progress forms between visits: sidebar open/closed state, whether you've seen the dashboard intro banner, whether you've dismissed the profile-completion nudge, whether you have the /blog pillar lists expanded, the chosen appearance (light/dark/system, `subenai-theme`), accessibility settings — font size (`subenai-a11y-font`) and reduced animations (`subenai-a11y-motion`), the organisation name last entered on a training-evidence report (`subenai.evidence.orgName`), and the name/email you started typing into a shared-test intake form (`iiq_edu_intake:*` — sessionStorage only, wiped after submit). Without these cookies / localStorage / sessionStorage entries every button still works — you just have to re-select on next visit. Language (`subenai.locale`) is always stored as strictly necessary so the page renders in the correct language.",
           "duration": "tab session (intake form), 1 week (sidebar), up to 12 months (others) / until cleared"
         },
         "analytics": {

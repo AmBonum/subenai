@@ -1,19 +1,21 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
 import { SITE_ORIGIN } from "@/config/site";
-import { getPublicDoc } from "@/content/docs";
 
 // E54.4 — public /docs/<slug>. Static segments /docs/app and /docs/admin
 // win over this dynamic route, so it only ever serves public slugs.
 // Indexable; unknown slug → notFound(). The component (which pulls in the
 // react-markdown renderer) lives in docs.$slug.lazy.tsx so it stays out of
-// the main bundle (perf-budget).
+// the main bundle (perf-budget). The loader imports the doc content
+// dynamically for the same reason: a static import here would put every
+// doc body into the main chunk.
 
 export const Route = createFileRoute("/docs/$slug")({
-  loader: ({ params }) => {
+  loader: async ({ params }) => {
+    const { getPublicDoc } = await import("@/content/docs");
     const doc = getPublicDoc(params.slug);
     if (!doc) throw notFound();
-    return doc;
+    return { slug: doc.slug, title: doc.title, description: doc.description };
   },
   head: ({ loaderData }) => {
     const url = loaderData ? `${SITE_ORIGIN}/docs/${loaderData.slug}` : `${SITE_ORIGIN}/docs`;

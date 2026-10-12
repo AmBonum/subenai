@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useId, useState } from "react";
 
 import { Input } from "@/components/ui/input";
+import { hasConsent, loadConsent } from "@/lib/consent";
 import { CONTACT_EMAIL, SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/billing";
 import { callBillingApi, orgBillingQueryKey } from "@/lib/billing/client";
@@ -36,6 +37,7 @@ function readStoredOrgName(): string {
 }
 
 function storeOrgName(value: string) {
+  if (!hasConsent(loadConsent(), "preferences")) return;
   try {
     localStorage.setItem(ORG_NAME_STORAGE_KEY, value);
   } catch {

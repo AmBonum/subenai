@@ -211,7 +211,11 @@
       "public_middle": " (výchozí je vypnuto). Granulárně — jméno, volitelný odkaz, volitelná zpráva do 80 znaků. Souhlas můžete kdykoli odvolat e-mailem na ",
       "public_suffix": ".",
       "limit_label": "Maximální jednorázová částka 500 €",
-      "limit_text": " — držíme limit pod hranicí KYC povinnosti per § 10 zákona č. 297/2008 Z. z. o ochraně před legalizací příjmů z trestné činnosti. Nad tuto částku přijímáme podporu pouze bankovním převodem mimo Stripe."
+      "limit_text": " — držíme limit pod hranicí KYC povinnosti per § 10 zákona č. 297/2008 Z. z. o ochraně před legalizací příjmů z trestné činnosti. Nad tuto částku přijímáme podporu pouze bankovním převodem mimo Stripe.",
+      "org_plans_label": "Firemní předplatné (/cennik):",
+      "org_plans_text": " při koupi plánu Štart, Firma nebo Firma+ zpracováváme e-mail účtu, název firmy, fakturační adresu a volitelně IČO/DIČ zadané ve Stripe Checkout, plán, stav a období předplatného. Právní základ: čl. 6 odst. 1 písm. b a c GDPR. Účetní záznamy uchováváme 10 let podle zákona č. 431/2002 Z. z., záznam o předplatném smažeme spolu s účtem. Předplatné zrušíte kdykoli ve správě předplatného; platí do konce zaplaceného období.",
+      "evidence_label": "Doklad o proškolení:",
+      "evidence_text": " při vystavení dokladu zpracováváme jména, e-maily, data dokončení a skóre respondentů testu jako zpracovatel autora testu (čl. 28 GDPR) — PDF vzniká v prohlížeči autora a neukládáme ho. V databázi zůstane jen souhrn (organizace, název a verze testu, počty, kontrolní otisk SHA-256 a identifikátory dokončených relací pro výpočet limitu plánu). Veřejné ověření na /overenie zobrazuje pouze tento souhrn bez osobních údajů. Záznam smažeme spolu s účtem autora."
     },
     "s8": {
       "heading": "8. Education mode (sběr edu odpovědí)",
@@ -324,8 +328,8 @@
         },
         "prefs": {
           "category": "Předvolby",
-          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, subenai-theme, subenai-a11y-font, subenai-a11y-motion, iiq_edu_intake:* (sessionStorage)",
-          "purpose": "Zapamatování UI předvoleb a rozpracovaných formulářů mezi návštěvami: stav postranního panelu (otevřeno/zavřeno), zda jste viděli uvítací banner na dashboardu, zda jste zavřeli nudge na doplnění profilu, zda máte v /blog otevřené seznamy pilířů, zvolený vzhled (světlý/tmavý/systémový, `subenai-theme`), nastavení přístupnosti — velikost písma (`subenai-a11y-font`) a omezení animací (`subenai-a11y-motion`), a jméno/e-mail rozepsané v intake formuláři sdíleného testu (`iiq_edu_intake:*` — pouze v sessionStorage, mažeme po odeslání). Bez těchto cookies / localStorage / sessionStorage záznamů vám fungují všechna tlačítka, jen si při příští návštěvě musíte znovu vybrat. Jazyk (`subenai.locale`) se ukládá vždy jako nezbytný pro vykreslení stránky ve správném jazyce.",
+          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, subenai-theme, subenai-a11y-font, subenai-a11y-motion, subenai.evidence.orgName, iiq_edu_intake:* (sessionStorage)",
+          "purpose": "Zapamatování UI předvoleb a rozpracovaných formulářů mezi návštěvami: stav postranního panelu (otevřeno/zavřeno), zda jste viděli uvítací banner na dashboardu, zda jste zavřeli nudge na doplnění profilu, zda máte v /blog otevřené seznamy pilířů, zvolený vzhled (světlý/tmavý/systémový, `subenai-theme`), nastavení přístupnosti — velikost písma (`subenai-a11y-font`) a omezení animací (`subenai-a11y-motion`), název organizace naposledy zadaný na dokladu o proškolení (`subenai.evidence.orgName`), a jméno/e-mail rozepsané v intake formuláři sdíleného testu (`iiq_edu_intake:*` — pouze v sessionStorage, mažeme po odeslání). Bez těchto cookies / localStorage / sessionStorage záznamů vám fungují všechna tlačítka, jen si při příští návštěvě musíte znovu vybrat. Jazyk (`subenai.locale`) se ukládá vždy jako nezbytný pro vykreslení stránky ve správném jazyce.",
           "duration": "relace karty (intake formulář), 1 týden (sidebar), až 12 měsíců (ostatní) / do smazání"
         },
         "analytics": {

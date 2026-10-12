@@ -223,7 +223,11 @@
       "public_middle": " (default je vypnuté). Granularne — meno, voliteľný odkaz, voliteľná správa do 80 znakov. Súhlas môžeš kedykoľvek odvolať e-mailom na ",
       "public_suffix": ".",
       "limit_label": "Maximálna jednorazová suma 500 €",
-      "limit_text": " — držíme limit pod hranicou KYC povinnosti per § 10 zákona č. 297/2008 Z. z. o ochrane pred legalizáciou príjmov z trestnej činnosti. Nad túto sumu prijímame podporu len bankovým prevodom mimo Stripe."
+      "limit_text": " — držíme limit pod hranicou KYC povinnosti per § 10 zákona č. 297/2008 Z. z. o ochrane pred legalizáciou príjmov z trestnej činnosti. Nad túto sumu prijímame podporu len bankovým prevodom mimo Stripe.",
+      "org_plans_label": "Firemné predplatné (/cennik):",
+      "org_plans_text": " pri kúpe plánu Štart, Firma alebo Firma+ spracúvame e-mail účtu, názov firmy, fakturačnú adresu a voliteľne IČO/DIČ zadané v Stripe Checkout, plán, stav a obdobie predplatného. Právny základ: čl. 6 ods. 1 písm. b a c GDPR. Účtovné záznamy uchovávame 10 rokov per zákon č. 431/2002 Z. z., záznam o predplatnom zmažeme spolu s účtom. Predplatné zrušíš kedykoľvek v správe predplatného; platí do konca zaplateného obdobia.",
+      "evidence_label": "Doklad o preškolení:",
+      "evidence_text": " pri vystavení dokladu spracúvame mená, e-maily, dátumy dokončenia a skóre respondentov testu ako sprostredkovateľ autora testu (čl. 28 GDPR) — PDF vzniká v prehliadači autora a neukladáme ho. V databáze ostane len súhrn (organizácia, názov a verzia testu, počty, kontrolný odtlačok SHA-256 a identifikátory dokončených relácií pre výpočet limitu plánu). Verejné overenie na /overenie zobrazuje iba tento súhrn bez osobných údajov. Záznam zmažeme spolu s účtom autora."
     },
     "s8": {
       "heading": "8. Education mode (zber edu odpovedí)",
@@ -341,8 +345,8 @@
         },
         "prefs": {
           "category": "Predvoľby",
-          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, subenai-theme, subenai-a11y-font, subenai-a11y-motion, iiq_edu_intake:* (sessionStorage)",
-          "purpose": "Zapamätanie UI predvolieb a rozpracovaných formulárov medzi návštevami: stav postranného panelu (otvorené/zatvorené), či si videl/a uvítací banner na dashboarde, či si zavrel/a nudge na doplnenie profilu, či máš v /blog otvorené zoznamy pilierov, zvolený vzhľad (svetlý/tmavý/systémový, `subenai-theme`), nastavenia prístupnosti — veľkosť písma (`subenai-a11y-font`) a obmedzenie animácií (`subenai-a11y-motion`), a meno/e-mail rozpísané v intake formulári zdieľaného testu (`iiq_edu_intake:*` — len v sessionStorage, mažeme po odoslaní). Bez týchto cookies / localStorage / sessionStorage záznamov ti fungujú všetky tlačidlá, len si pri ďalšej návšteve treba znova vybrať. Jazyk (`subenai.locale`) sa ukladá vždy ako nevyhnutný pre vykreslenie stránky v správnom jazyku.",
+          "key": "sidebar_state, subenai.dashboard_intro_seen, subenai.profile-banner.dismissed.*, blog:pillars-open, subenai-theme, subenai-a11y-font, subenai-a11y-motion, subenai.evidence.orgName, iiq_edu_intake:* (sessionStorage)",
+          "purpose": "Zapamätanie UI predvolieb a rozpracovaných formulárov medzi návštevami: stav postranného panelu (otvorené/zatvorené), či si videl/a uvítací banner na dashboarde, či si zavrel/a nudge na doplnenie profilu, či máš v /blog otvorené zoznamy pilierov, zvolený vzhľad (svetlý/tmavý/systémový, `subenai-theme`), nastavenia prístupnosti — veľkosť písma (`subenai-a11y-font`) a obmedzenie animácií (`subenai-a11y-motion`), názov organizácie naposledy zadaný na doklade o preškolení (`subenai.evidence.orgName`), a meno/e-mail rozpísané v intake formulári zdieľaného testu (`iiq_edu_intake:*` — len v sessionStorage, mažeme po odoslaní). Bez týchto cookies / localStorage / sessionStorage záznamov ti fungujú všetky tlačidlá, len si pri ďalšej návšteve treba znova vybrať. Jazyk (`subenai.locale`) sa ukladá vždy ako nevyhnutný pre vykreslenie stránky v správnom jazyku.",
           "duration": "relácia karty (intake formulár), 1 týždeň (sidebar), až 12 mesiacov (ostatné) / do zmazania"
         },
         "analytics": {

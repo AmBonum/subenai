@@ -473,6 +473,20 @@ function PrivacyPage() {
                 <strong>{t("s7.limit_label")}</strong>
                 {t("s7.limit_text")}
               </p>
+              <p
+                className="pt-2 text-sm leading-relaxed text-muted-foreground"
+                data-testid="privacy-s7-org-plans"
+              >
+                <strong>{t("s7.org_plans_label")}</strong>
+                {t("s7.org_plans_text")}
+              </p>
+              <p
+                className="pt-2 text-sm leading-relaxed text-muted-foreground"
+                data-testid="privacy-s7-evidence"
+              >
+                <strong>{t("s7.evidence_label")}</strong>
+                {t("s7.evidence_text")}
+              </p>
             </section>
 
             <section
