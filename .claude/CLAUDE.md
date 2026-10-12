@@ -216,6 +216,34 @@ on `/login` will then show a one-click sign-in button.
   must return zero matches. If you find an existing offender while
   doing other work, fix it in the same PR — don't leave it for "later".
 
+## Rules shared with the owner's other projects (nfko, Monitor zo slovenčiny)
+Adopted 2026-10-12 so they don't have to be rebuilt per repo.
+- **Reply to the owner in Slovak**; everything on GitHub stays English (see Style).
+- **Decide like a senior, record it.** Product, pricing, UX and legal-approach
+  decisions are made, not asked — each one gets a one-line reason in
+  `tasks/DECISIONS.md`. Brand changes (logo, colours, name) still need explicit
+  approval with a before/after.
+- **Owner-only actions become todos, not questions**: paying, signing,
+  creating accounts, setting secrets, running prod SQL, contacting anyone.
+  Never send e-mails/messages on the owner's behalf — draft them.
+  Missing company/seller details are written as "doplniť" and listed as pending.
+- **No image generation** (Higgsfield or similar) — real photos or vectors.
+- **Working files outside `/tmp`** — commit them or keep them under the repo's
+  gitignored `reports/`; a scratchpad wipe once nearly lost days of work.
+- **Fix tests before the run, not from its failures.** Before changing a value,
+  copy or field name, `grep -rn` every occurrence across `src/ tests/ e2e/
+  specs/` and update the affected tests first; the run confirms, it doesn't
+  discover. (TDD's intentional red is the exception.)
+- **Screens state everything**: errors are red (a WCAG AA token, not the
+  nearest shade), success says *what* changed, a message says what to do next,
+  loading / empty / failed states each have their own view, results are
+  announced via `aria-live`. Check: finish the screen keyboard-only.
+- **Visual baselines go stale silently** inside the diff tolerance. When a look
+  changes on purpose, regenerate only the affected snapshots by name and
+  explain every changed region before committing.
+- **Measure before tuning parallelism** (workers, concurrency); record the
+  numbers next to the setting.
+
 ## Non-negotiables
 - Never `git push` without an explicit ask in the current turn.
 - **Always `git fetch origin <branch>` before pushing** and compare
