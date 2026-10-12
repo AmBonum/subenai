@@ -16,9 +16,15 @@
  *   6. Respondent table — header + filtered rows
  *   7. Page footer with page number + privacy reminder
  */
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Document, Font, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 
 import type { PdfData } from "./pdf-data";
+
+// Respondent names and test titles are Slovak; the built-in PDF fonts are
+// Latin-1 only and turn č ľ ť ň into garbage. No italic Noto ships, so the
+// former oblique lines rely on the muted colour alone.
+Font.register({ family: "NotoSans", src: "/fonts/NotoSans-Regular.ttf" });
+Font.register({ family: "NotoSansBold", src: "/fonts/NotoSans-Bold.ttf" });
 
 interface Props {
   data: PdfData;
@@ -40,12 +46,12 @@ const styles = StyleSheet.create({
     padding: 36,
     fontSize: 10,
     color: PALETTE.fg,
-    fontFamily: "Helvetica",
+    fontFamily: "NotoSans",
   },
   title: {
     fontSize: 18,
     marginBottom: 4,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
   },
   subtitle: {
     fontSize: 9,
@@ -62,7 +68,7 @@ const styles = StyleSheet.create({
   },
   sectionHeading: {
     fontSize: 9,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
     color: PALETTE.muted,
     textTransform: "uppercase",
     letterSpacing: 0.6,
@@ -87,7 +93,7 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 14,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
     marginTop: 2,
   },
   histogramRow: {
@@ -121,7 +127,6 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: PALETTE.muted,
     marginBottom: 12,
-    fontFamily: "Helvetica-Oblique",
   },
   tableHeader: {
     flexDirection: "row",
@@ -136,7 +141,7 @@ const styles = StyleSheet.create({
   },
   th: {
     fontSize: 8,
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "NotoSansBold",
     color: PALETTE.muted,
     textTransform: "uppercase",
     letterSpacing: 0.6,
@@ -151,7 +156,6 @@ const styles = StyleSheet.create({
   emptyRow: {
     fontSize: 9,
     color: PALETTE.muted,
-    fontFamily: "Helvetica-Oblique",
     paddingVertical: 12,
     textAlign: "center",
   },
@@ -193,7 +197,7 @@ export function ResultsPdf({ data }: Props) {
           <StatCell label="Medián" value={data.aggregate.median} />
           <StatCell label="Min / Max" value={data.aggregate.minMax} />
           <StatCell
-            label={`Vyhovelo (≥ ${data.aggregate.threshold} %)`}
+            label={`Vyhovelo (od ${data.aggregate.threshold} %)`}
             value={data.aggregate.passed}
           />
         </View>
