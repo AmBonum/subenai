@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AUDIENCE_LABEL, REAL_CASE_TEMPLATE_BY_SLUG } from "@/content/templates/real-cases";
 import { usePublicTemplates } from "@/lib/platform/queries";
 import { buildSablonyCollectionAndListJsonLd } from "@/lib/seo/templates-jsonld";
 import { jsonLdString } from "@/lib/seo/json-ld";
@@ -116,10 +117,18 @@ function SablonyIndexPage() {
 
 function SablonyCard({ template }: { template: Template }) {
   const href = template.slug ? `/sablony/${template.slug}` : null;
+  const audience = template.slug
+    ? REAL_CASE_TEMPLATE_BY_SLUG.get(template.slug)?.audience
+    : undefined;
   return (
     <Card data-testid={`sablony-card-${template.id}`} className="flex h-full flex-col">
       <CardHeader>
-        <div className="mb-2 flex items-center gap-2">
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          {audience && audience !== "verejnost" ? (
+            <Badge data-testid={`sablony-card-${template.id}-audience`}>
+              {AUDIENCE_LABEL[audience]}
+            </Badge>
+          ) : null}
           <Badge variant="outline" data-testid={`sablony-card-${template.id}-age`}>
             {AGE_RATING_BADGE[template.age_rating]}
           </Badge>
@@ -155,7 +164,7 @@ function SablonyCard({ template }: { template: Template }) {
             </Button>
           ) : (
             <Button asChild variant="ghost" size="sm">
-              <a href={`/test/builder?templateId=${template.id}`}>
+              <a href={`/app/tests/new?step=1&templateId=${template.id}`}>
                 Použiť <ExternalLink className="ml-1 h-3 w-3" />
               </a>
             </Button>

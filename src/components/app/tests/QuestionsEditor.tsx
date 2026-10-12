@@ -19,6 +19,7 @@ import { QuestionPickerDialog } from "@/components/app/tests/QuestionPickerDialo
 import {
   useAddQuestionsToTest,
   useLibraryQuestions,
+  usePlatformQuestionMeta,
   useRemoveQuestionFromTest,
   useUpdateTestQuestionOrder,
 } from "@/lib/platform/queries";
@@ -47,6 +48,7 @@ export function QuestionsEditor({ testId, questionIds, maxQuestions = 100 }: Pro
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const libraryQ = useLibraryQuestions();
+  const platformMetaQ = usePlatformQuestionMeta(localOrder);
   const addMut = useAddQuestionsToTest(testId);
   const removeMut = useRemoveQuestionFromTest(testId);
   const reorderMut = useUpdateTestQuestionOrder(testId);
@@ -151,7 +153,7 @@ export function QuestionsEditor({ testId, questionIds, maxQuestions = 100 }: Pro
       ) : (
         <ul className="space-y-1.5" data-testid="test-editor-questions-list">
           {localOrder.map((qid, idx) => {
-            const meta = libraryById.get(qid);
+            const meta = libraryById.get(qid) ?? platformMetaQ.data?.get(qid);
             const isFirst = idx === 0;
             const isLast = idx === localOrder.length - 1;
             return (
