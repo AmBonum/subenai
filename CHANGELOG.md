@@ -16,7 +16,8 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   vzdelávaniu zamestnancov v kybernetickej bezpečnosti.
 - **Cenník a predplatné.** Testy, výsledky aj CSV export ostávajú zadarmo; plány Štart,
   Firma a Firma+ (od 149 € ročne) pridávajú doklady s certifikátmi a faktúru s IČO a DIČ.
-  Predplatné spravujete a rušíte v sekcii *Predplatné*.
+  Predplatné spravujete a rušíte v sekcii *Predplatné*. Podmienky nájdete na stránke
+  [Obchodné podmienky](/obchodne-podmienky).
 - **Hotové šablóny podľa skutočných podvodov.** Všetky šablóny v `/sablony` majú teraz
   otázky a pribudlo 17 nových — pre firmy (falošná faktúra a zmena IBAN, Microsoft 365
   phishing, falošný IT support, deepfake hlas šéfa, QR kódy, ročné preškolenie…) aj pre

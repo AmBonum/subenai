@@ -50,6 +50,7 @@ import { Route as PricingRoute } from "@/routes/cennik";
 import { Route as BillingRoute } from "@/routes/app.billing";
 import { Route as EvidenceRoute } from "@/routes/app.tests.$testId_.doklad";
 import { Route as VerifyRoute } from "@/routes/overenie.$reportId";
+import { Route as TermsRoute } from "@/routes/obchodne-podmienky";
 
 // createFileRoute is mocked to return its options, so the route *is* { component }.
 function componentOf(route: object): ComponentType {
@@ -134,9 +135,15 @@ describe("/app/billing", () => {
     expect(screen.getByTestId("billing-checkout-error")).toHaveTextContent("súhlas");
     expect(billing.callBillingApi).not.toHaveBeenCalled();
 
+    expect(screen.getByTestId("billing-consent-terms-link")).toHaveAttribute(
+      "href",
+      "/obchodne-podmienky",
+    );
+    expect(screen.getByTestId("billing-consent-privacy-link")).toHaveAttribute("href", "/privacy");
+
     await user.click(screen.getByTestId("billing-consent-terms"));
     await user.click(screen.getByTestId("billing-pay-button"));
-    expect(screen.getByTestId("billing-checkout-error")).toHaveTextContent("okamžité");
+    expect(screen.getByTestId("billing-checkout-error")).toHaveTextContent("začatie poskytovania");
     expect(billing.callBillingApi).not.toHaveBeenCalled();
 
     await user.click(screen.getByTestId("billing-consent-immediate"));
@@ -358,5 +365,23 @@ describe("/overenie/$reportId", () => {
     rpc.mockResolvedValue({ data: [], error: null });
     renderRoute(VerifyRoute);
     expect(await screen.findByTestId("verify-invalid")).toBeInTheDocument();
+  });
+});
+
+describe("/obchodne-podmienky", () => {
+  it("names the seller, covers renewal, withdrawal and complaints, and fills the contact", () => {
+    renderRoute(TermsRoute);
+    expect(screen.getByTestId("terms-heading")).toHaveTextContent(
+      "Obchodné podmienky platených plánov",
+    );
+    expect(screen.getByTestId("terms-section-uvod")).toHaveTextContent("IČO: 55 055 290");
+    expect(screen.getByTestId("terms-section-trvanie")).toHaveTextContent(
+      "automaticky sa obnovuje",
+    );
+    expect(screen.getByTestId("terms-section-odstupenie")).toHaveTextContent(
+      "uhradí pomernú časť ceny",
+    );
+    expect(screen.getByTestId("terms-section-reklamacie")).toHaveTextContent("do 30 dní");
+    expect(screen.getByTestId("terms-main")).not.toHaveTextContent("{email}");
   });
 });

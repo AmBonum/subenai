@@ -3,3 +3,11 @@
 - 2026-10-12 — Yearly billing only — matches the annual re-training cycle buyers budget for and keeps Stripe fees under 1 %.
 - 2026-10-12 — Never block a respondent mid-campaign over a cap; the cap gates evidence generation only — an employee must never see a paywall.
 - 2026-10-12 — 3D visuals are CSS 3D (no WebGL dependency) — zero bundle cost, works on low-end phones, respects reduced motion.
+
+## 2026-10-12 — Terms of sale for paid plans (E66)
+- `/obchodne-podmienky` added before launch; checkout consent now links to it instead of `/privacy`.
+- Withdrawal: B2B buyers have none; consumers keep the 14-day right and pay the
+  pro-rata part (the service runs for a year, so "loss of right on start" would not hold).
+- Seller identity is taken from the privacy policy (am.bonum s. r. o., non-VAT payer).
+- **Owner todo:** have the text reviewed by a lawyer before significant sales volume.
+

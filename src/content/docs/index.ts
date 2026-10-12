@@ -434,9 +434,10 @@ zahrnieš.
 
 1. Otvor stránku **[Cenník](/cennik)** a vyber plán.
 2. Prihlás sa (alebo si vytvor účet).
-3. Pred platbou potvrdíš dva samostatné súhlasy: **obchodné podmienky** a
-   **výslovnú žiadosť o okamžité začatie poskytovania služby**, pri ktorej
-   berieš na vedomie stratu práva na odstúpenie od zmluvy.
+3. Pred platbou potvrdíš dva samostatné súhlasy:
+   **[obchodné podmienky](/obchodne-podmienky)** a **žiadosť o začatie
+   poskytovania služby hneď po zaplatení**. Ak kupuješ ako spotrebiteľ a do
+   14 dní odstúpiš, uhradíš len pomernú časť ceny.
 4. Zaplatíš cez platobnú bránu **Stripe**. Po úspešnej platbe sa plán
    aktivuje automaticky.
 

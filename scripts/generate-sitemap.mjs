@@ -32,6 +32,7 @@ const STATIC_ROUTES = [
   { loc: "/test/builder", priority: "0.7", changefreq: "monthly" },
   { loc: "/schools", priority: "0.7", changefreq: "monthly" },
   { loc: "/cennik", priority: "0.8", changefreq: "monthly" },
+  { loc: "/obchodne-podmienky", priority: "0.3", changefreq: "yearly" },
   { loc: "/sablony", priority: "0.8", changefreq: "weekly" },
   // E54 — public docs portal. Keep these slugs in sync with the registry in
   // src/content/docs/index.ts (asserted by tests/seo/docs-sitemap.test.ts).

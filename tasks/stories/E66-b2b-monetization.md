@@ -90,3 +90,6 @@ prod SQL handed to the owner, live verification after merge.
   users (`safeAppRedirect`).
 - Public doc bodies were statically imported by a non-lazy route and sat in
   the main chunk → dynamic import (index 271 kB → 258 kB).
+- Checkout consent linked to `/privacy` and no terms of sale existed → `/obchodne-podmienky`
+  (seller, subject, price, yearly renewal, cancellation, consumer withdrawal with pro-rata
+  payment, complaints, SOI); consents and Stripe submit text now match it.

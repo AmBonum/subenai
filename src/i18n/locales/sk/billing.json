@@ -84,23 +84,25 @@
     "none_title": "Zatiaľ nemáte plán",
     "none_text": "Testy a výsledky máte zadarmo. Plán potrebujete len na vystavenie dokladu o preškolení s certifikátmi.",
     "choose": "Vyberte plán",
-    "consent_terms": "Súhlasím so spracovaním údajov na účely predplatného podľa zásad ochrany osobných údajov.",
-    "consent_immediate": "Žiadam o okamžité sprístupnenie služby a beriem na vedomie, že tým strácam právo odstúpiť od zmluvy (zákon č. 108/2024 Z. z.).",
+    "consent_terms": "Súhlasím s obchodnými podmienkami a beriem na vedomie zásady ochrany osobných údajov.",
+    "consent_immediate": "Žiadam o začatie poskytovania služby hneď po zaplatení, pred uplynutím 14-dňovej lehoty na odstúpenie. Ak kupujem ako spotrebiteľ a odstúpim, uhradím pomernú časť ceny.",
     "pay": "Zaplatiť {price} € a aktivovať",
     "paying": "Presmerúvam na platobnú bránu…",
     "success_pending": "Platba prijatá. Aktivujem predplatné — zvyčajne to trvá pár sekúnd.",
     "success_done": "Predplatné {plan} je aktívne. Doklad vystavíte v detaile ľubovoľného testu.",
     "load_error": "Stav predplatného sa nepodarilo načítať. Obnovte stránku; ak problém pretrvá, napíšte nám na {email}.",
     "errors": {
-      "missing_consent_terms": "Na pokračovanie potvrďte súhlas so spracovaním údajov.",
-      "missing_consent_immediate": "Na pokračovanie potvrďte žiadosť o okamžité sprístupnenie.",
+      "missing_consent_terms": "Na pokračovanie potvrďte súhlas s obchodnými podmienkami.",
+      "missing_consent_immediate": "Na pokračovanie potvrďte žiadosť o začatie poskytovania služby.",
       "already_subscribed": "Už máte aktívne predplatné. Zmenu plánu vyriešime cez {email}.",
       "rate_limited": "Príliš veľa pokusov. Skúste to znova o hodinu.",
       "not_signed_in": "Platnosť prihlásenia vypršala. Prihláste sa znova a pokračujte.",
       "unauthorized": "Platnosť prihlásenia vypršala. Prihláste sa znova a pokračujte.",
       "no_subscription": "K účtu zatiaľ nie je priradené žiadne predplatné.",
       "default": "Platbu sa nepodarilo spustiť. Skúste to znova; ak problém pretrvá, napíšte nám na {email}."
-    }
+    },
+    "consent_terms_link": "Obchodné podmienky",
+    "consent_privacy_link": "Ochrana osobných údajov"
   },
   "evidence": {
     "title": "Doklad o preškolení",
@@ -162,5 +164,92 @@
     "invalid_text": "Takýto doklad sme nevystavili alebo bol zmazaný spolu s účtom organizácie. Skontrolujte, či ste odkaz prepísali presne.",
     "error_text": "Overenie sa teraz nepodarilo. Skúste to o chvíľu znova.",
     "privacy_note": "Overenie zobrazuje len súhrn — mená absolventov ani ich výsledky nezverejňujeme."
+  },
+  "terms": {
+    "meta_title": "Obchodné podmienky platených plánov | subenai",
+    "meta_description": "Obchodné podmienky plánov Štart, Firma a Firma+ na subenai.sk: predmet, cena, ročné predplatné, zrušenie, odstúpenie a reklamácie.",
+    "title": "Obchodné podmienky platených plánov",
+    "effective": "Účinné od 12. 10. 2026",
+    "back": "Späť na cenník",
+    "sections": [
+      {
+        "id": "uvod",
+        "heading": "1. Úvodné ustanovenia",
+        "paragraphs": [
+          "Tieto obchodné podmienky upravujú predaj platených plánov Štart, Firma a Firma+ služby subenai.sk medzi poskytovateľom a objednávateľom.",
+          "Poskytovateľ: am.bonum s. r. o., Škultétyho 1560/3, 052 01 Spišská Nová Ves, IČO: 55 055 290, DIČ: 2121850005, zapísaná v Obchodnom registri Mestského súdu Košice, oddiel Sro, vložka č. 55453/V. Kontakt: {email}.",
+          "Bezplatné funkcie (testy, kampane, výsledky, export CSV, kurzy a Akadémia) sú dostupné bez platby a predmetom týchto podmienok nie sú."
+        ]
+      },
+      {
+        "id": "predmet",
+        "heading": "2. Predmet zmluvy",
+        "paragraphs": [
+          "Plán oprávňuje objednávateľa počas zaplateného ročného obdobia vystavovať doklady o preškolení: súhrnný PDF doklad, certifikát pre každého respondenta, ktorý test absolvoval, a verejné overenie pravosti dokladu na adrese /overenie.",
+          "Limit plánu je počet rôznych respondentov zahrnutých v dokladoch v jednom období (Štart 25, Firma 100, Firma+ 250). Opätovné vystavenie dokladu pre už započítaných respondentov limit nečerpá. Nevyčerpaný limit sa do ďalšieho obdobia neprenáša.",
+          "Po vyčerpaní limitu testy a výsledky fungujú ďalej a respondentov nikdy neblokujeme. Doklad nad limit vystavíte po prechode na vyšší plán.",
+          "Doklad je podklad k preukázaniu vzdelávania zamestnancov, napríklad podľa vyhlášky NBÚ č. 227/2025 Z. z. Nie je certifikáciou systému riadenia informačnej bezpečnosti a sám osebe nezaručuje súlad s právnymi predpismi."
+        ]
+      },
+      {
+        "id": "objednavka",
+        "heading": "3. Objednávka a uzavretie zmluvy",
+        "paragraphs": [
+          "Plán objednáte po prihlásení v sekcii Predplatné (/app/billing): vyberiete plán, potvrdíte súhlasy a zaplatíte cez platobnú bránu Stripe. Zmluva vzniká úspešným zaplatením; potvrdenie a faktúru dostanete e-mailom.",
+          "Za správnosť fakturačných údajov (názov, adresa, IČO, DIČ) zodpovedá objednávateľ."
+        ]
+      },
+      {
+        "id": "cena",
+        "heading": "4. Cena a platobné podmienky",
+        "paragraphs": [
+          "Ceny sú uvedené na stránke /cennik v eurách za 12 mesiacov. Poskytovateľ nie je platiteľom DPH, uvedené ceny sú konečné.",
+          "Platí sa vopred platobnou kartou alebo iným spôsobom, ktorý ponúkne Stripe Checkout. Platby spracúva Stripe; údaje o karte poskytovateľ nevidí ani neukladá.",
+          "Faktúry vystavujeme elektronicky a sú dostupné aj v správe predplatného."
+        ]
+      },
+      {
+        "id": "trvanie",
+        "heading": "5. Trvanie, obnovenie a zrušenie",
+        "paragraphs": [
+          "Predplatné trvá 12 mesiacov od zaplatenia a automaticky sa obnovuje na ďalších 12 mesiacov za rovnakú cenu. Zmenu ceny pre ďalšie obdobie oznámime e-mailom najmenej 30 dní vopred.",
+          "Predplatné zrušíte kedykoľvek v sekcii Predplatné cez „Faktúry a správa predplatného“. Platí potom do konca zaplateného obdobia a ďalej sa neobnoví. Za nevyčerpanú časť obdobia cenu nevraciame, ak tieto podmienky alebo zákon neustanovujú inak.",
+          "Prechod na vyšší plán vybavíme na {email} bez straty zaplateného obdobia.",
+          "Ak sa obnovovacia platba nepodarí ani po opakovaných pokusoch, predplatné skončí. Už vystavené doklady a ich verejné overenie zostávajú platné, kým objednávateľ nezruší svoj účet."
+        ]
+      },
+      {
+        "id": "odstupenie",
+        "heading": "6. Odstúpenie od zmluvy",
+        "paragraphs": [
+          "Objednávateľ, ktorý plán kupuje v rámci svojej podnikateľskej alebo inej profesijnej činnosti (napríklad firma, škola či iná organizácia), nie je spotrebiteľom a právo na odstúpenie podľa zákona č. 108/2024 Z. z. nemá.",
+          "Spotrebiteľ môže od zmluvy odstúpiť bez udania dôvodu do 14 dní od jej uzavretia, a to e-mailom na {email}. Keďže pri objednávke výslovne žiada o začatie poskytovania služby pred uplynutím tejto lehoty, uhradí pomernú časť ceny za obdobie do odstúpenia. Zvyšok ceny vrátime do 14 dní rovnakým platobným prostriedkom, akým bola platba uhradená."
+        ]
+      },
+      {
+        "id": "reklamacie",
+        "heading": "7. Reklamácie a riešenie sporov",
+        "paragraphs": [
+          "Vady služby (napríklad doklad sa nedá vystaviť alebo obsahuje nesprávne údaje) reklamujte na {email}. Reklamáciu vybavíme bez zbytočného odkladu, najneskôr do 30 dní. Pri oprávnenej reklamácii vadu odstránime, a ak to nie je možné, primerane predĺžime obdobie alebo vrátime pomernú časť ceny.",
+          "Dozor nad dodržiavaním predpisov na ochranu spotrebiteľa vykonáva Slovenská obchodná inšpekcia (www.soi.sk). Spotrebiteľ má právo na alternatívne riešenie sporu podľa zákona č. 391/2015 Z. z., najmä prostredníctvom Slovenskej obchodnej inšpekcie."
+        ]
+      },
+      {
+        "id": "zodpovednost",
+        "heading": "8. Zodpovednosť a osobné údaje",
+        "paragraphs": [
+          "Za obsah testov, výber respondentov a použitie dokladu zodpovedá objednávateľ. Službu poskytujeme s odbornou starostlivosťou; nepretržitú dostupnosť však zaručiť nevieme.",
+          "Pri vystavení dokladu spracúvame osobné údaje respondentov ako sprostredkovateľ objednávateľa. Podrobnosti sú v zásadách ochrany osobných údajov (/privacy)."
+        ]
+      },
+      {
+        "id": "zaver",
+        "heading": "9. Záverečné ustanovenia",
+        "paragraphs": [
+          "Právne vzťahy sa riadia právom Slovenskej republiky: medzi podnikateľmi Obchodným zákonníkom, so spotrebiteľmi Občianskym zákonníkom a zákonom č. 108/2024 Z. z.",
+          "Zmenu týchto podmienok oznámime e-mailom najmenej 30 dní pred jej účinnosťou. Ak so zmenou nesúhlasíte, môžete predplatné zrušiť; počas už zaplateného obdobia sa zmena v neprospech objednávateľa neuplatní."
+        ]
+      }
+    ]
   }
 }

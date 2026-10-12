@@ -101,7 +101,7 @@ export function buildOrgCheckoutParams(input: {
     custom_text: {
       submit: {
         message:
-          "Žiadate o okamžité sprístupnenie služby a beriete na vedomie, že tým strácate právo odstúpiť od zmluvy (zákon č. 108/2024 Z. z.). Predplatné môžete kedykoľvek zrušiť ku koncu obdobia.",
+          "Platbou súhlasíte s obchodnými podmienkami (subenai.sk/obchodne-podmienky). Služba začne hneď po zaplatení; spotrebiteľ môže do 14 dní odstúpiť a uhradí pomernú časť ceny. Predplatné sa obnovuje ročne a zrušíte ho kedykoľvek ku koncu obdobia.",
       },
     },
   };

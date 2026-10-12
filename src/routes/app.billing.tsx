@@ -231,8 +231,24 @@ function ChoosePlan({
             />
             <label htmlFor={termsId} className="text-sm leading-snug">
               {t("consent_terms")}{" "}
-              <a href="/privacy" className="underline" target="_blank" rel="noreferrer">
-                /privacy
+              <a
+                href="/obchodne-podmienky"
+                className="underline"
+                target="_blank"
+                rel="noreferrer"
+                data-testid="billing-consent-terms-link"
+              >
+                {t("consent_terms_link")}
+              </a>
+              {" · "}
+              <a
+                href="/privacy"
+                className="underline"
+                target="_blank"
+                rel="noreferrer"
+                data-testid="billing-consent-privacy-link"
+              >
+                {t("consent_privacy_link")}
               </a>
             </label>
           </div>

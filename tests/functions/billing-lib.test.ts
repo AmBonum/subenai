@@ -105,7 +105,8 @@ describe("buildOrgCheckoutParams", () => {
     });
     expect(p.customer_email).toBe("it@firma.sk");
     expect(p.tax_id_collection).toEqual({ enabled: true });
-    expect(JSON.stringify(p.custom_text)).toContain("108/2024");
+    expect(JSON.stringify(p.custom_text)).toContain("subenai.sk/obchodne-podmienky");
+    expect(JSON.stringify(p.custom_text)).toContain("pomernú časť ceny");
   });
 
   it("reuses an existing Stripe customer instead of creating a duplicate", () => {
