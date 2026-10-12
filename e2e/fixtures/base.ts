@@ -26,6 +26,9 @@ import { PodporaPage } from "../poms/sponsorship/PodporaPage";
 import { PodakovaniePage } from "../poms/sponsorship/PodakovaniePage";
 import { StripeCheckoutPage } from "../poms/external/StripeCheckoutPage";
 import { PrivacyPage, CookiesPage, ChangelogPage } from "../poms/marketing/LegalPages";
+import { PricingPage } from "../poms/billing/PricingPage";
+import { TermsPage } from "../poms/billing/TermsPage";
+import { EvidenceVerifyPage } from "../poms/billing/EvidenceVerifyPage";
 import { KontaktPage } from "../poms/support/KontaktPage";
 import { KontaktTicketViewPage } from "../poms/support/KontaktTicketViewPage";
 import { AdminTicketsQueuePage } from "../poms/admin/AdminTicketsQueuePage";
@@ -111,6 +114,9 @@ type Fixtures = {
   privacy: PrivacyPage;
   cookies: CookiesPage;
   changelog: ChangelogPage;
+  pricing: PricingPage;
+  terms: TermsPage;
+  evidenceVerify: EvidenceVerifyPage;
   kontakt: KontaktPage;
   kontaktTicketView: KontaktTicketViewPage;
   adminTicketsQueue: AdminTicketsQueuePage;
@@ -205,6 +211,15 @@ export const test = base.extend<Fixtures>({
   },
   changelog: async ({ page }, use) => {
     await use(new ChangelogPage(page));
+  },
+  pricing: async ({ page }, use) => {
+    await use(new PricingPage(page));
+  },
+  terms: async ({ page }, use) => {
+    await use(new TermsPage(page));
+  },
+  evidenceVerify: async ({ page }, use) => {
+    await use(new EvidenceVerifyPage(page));
   },
   kontakt: async ({ page }, use) => {
     await use(new KontaktPage(page));
