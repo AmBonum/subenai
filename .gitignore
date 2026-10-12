@@ -83,3 +83,7 @@ marketing/linkedin/rendered/
 
 # Stryker mutation testing temp dir
 .stryker-tmp/
+
+# Stray Playwright output dirs from parallel local runs + local CI logs
+test-results*/
+.ci-local-*.log
