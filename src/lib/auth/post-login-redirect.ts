@@ -14,13 +14,19 @@
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { getAALStatus, listFactors } from "@/lib/auth/mfa";
+import { safeAppRedirect } from "@/lib/auth/safe-redirect";
 
 export interface PostLoginTarget {
   to: "/app" | "/admin" | "/login/enroll-2fa" | "/login/verify-2fa";
   search?: { redirect: string };
+  /** Validated in-app deep link for regular users (see safeAppRedirect). */
+  href?: string;
 }
 
-export async function decidePostLoginTarget(session: Session): Promise<PostLoginTarget> {
+export async function decidePostLoginTarget(
+  session: Session,
+  requestedRedirect?: unknown,
+): Promise<PostLoginTarget> {
   const { data: roleOk } = await supabase.rpc("has_role", {
     _user_id: session.user.id,
     _role: "admin",
@@ -28,7 +34,8 @@ export async function decidePostLoginTarget(session: Session): Promise<PostLogin
   const isAdmin = roleOk === true;
 
   if (!isAdmin) {
-    return { to: "/app" };
+    const href = safeAppRedirect(requestedRedirect);
+    return href ? { to: "/app", href } : { to: "/app" };
   }
 
   const factors = await listFactors();

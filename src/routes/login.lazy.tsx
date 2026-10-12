@@ -1,11 +1,11 @@
-import { createLazyFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate, useSearch, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { decidePostLoginTarget } from "@/lib/auth/post-login-redirect";
+import { decidePostLoginTarget, type PostLoginTarget } from "@/lib/auth/post-login-redirect";
 import { tFor } from "@/i18n/app-shell";
 import { tFor as tAuth } from "@/i18n/auth";
 
@@ -19,6 +19,11 @@ function LoginPage() {
   const tx = tAuth("login_extras");
   const tColl = tAuth("oauth_only_collision");
   const navigate = useNavigate();
+  const requestedRedirect = (useSearch({ strict: false }) as { redirect?: unknown }).redirect;
+  const navigateToTarget = (target: PostLoginTarget) =>
+    target.href
+      ? navigate({ href: target.href })
+      : navigate(target.search ? { to: target.to, search: target.search } : { to: target.to });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -56,8 +61,7 @@ function LoginPage() {
         setError(authError?.message ?? t("error_generic"));
         return;
       }
-      const target = await decidePostLoginTarget(data.session);
-      navigate(target.search ? { to: target.to, search: target.search } : { to: target.to });
+      navigateToTarget(await decidePostLoginTarget(data.session, requestedRedirect));
     } catch (e) {
       setError((e as Error)?.message ?? t("error_generic"));
     } finally {
@@ -111,8 +115,7 @@ function LoginPage() {
         return;
       }
 
-      const target = await decidePostLoginTarget(data.session);
-      navigate(target.search ? { to: target.to, search: target.search } : { to: target.to });
+      navigateToTarget(await decidePostLoginTarget(data.session, requestedRedirect));
     } catch {
       setError(t("error_generic"));
     } finally {

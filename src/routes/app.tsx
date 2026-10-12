@@ -16,7 +16,7 @@ export const Route = createFileRoute("/app")({
   // intact.
   beforeLoad: async ({ location }) => {
     const skipOnboardedGate = location.pathname === "/app/onboarding";
-    return requireSupabaseAuth(location.pathname, {
+    return requireSupabaseAuth(location.href, {
       requireOnboarded: !skipOnboardedGate,
     });
   },

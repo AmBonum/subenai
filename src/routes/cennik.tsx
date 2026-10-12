@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check } from "lucide-react";
 
 import { PlanCards } from "@/components/billing/PlanCards";
+import { EvidenceReport3D } from "@/components/three-d/EvidenceReport3D";
 import { SITE_ORIGIN } from "@/config/site";
 import { tFor } from "@/i18n/billing";
 import { PLANS } from "@/lib/billing/plans";
@@ -121,7 +122,9 @@ function PricingPage() {
             </Link>
           </div>
         </div>
-        <div data-testid="pricing-hero-visual" aria-hidden />
+        <div data-testid="pricing-hero-visual">
+          <EvidenceReport3D className="mx-auto" caption={t("hero_visual_caption")} />
+        </div>
       </section>
 
       <section id="plany" className="mt-16 scroll-mt-24" data-testid="pricing-plans">

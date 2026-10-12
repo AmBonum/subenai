@@ -51,8 +51,13 @@ import { Route as BillingRoute } from "@/routes/app.billing";
 import { Route as EvidenceRoute } from "@/routes/app.tests.$testId_.doklad";
 import { Route as VerifyRoute } from "@/routes/overenie.$reportId";
 
-function renderRoute(route: { component?: unknown }) {
-  const Component = route.component as ComponentType;
+// createFileRoute is mocked to return its options, so the route *is* { component }.
+function componentOf(route: object): ComponentType {
+  return (route as { component: ComponentType }).component;
+}
+
+function renderRoute(route: object) {
+  const Component = componentOf(route);
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>
@@ -199,7 +204,7 @@ describe("/app/billing", () => {
       isError: false,
       data: { subscription: ACTIVE, usedInPeriod: 0 },
     });
-    const Component = BillingRoute.component as ComponentType;
+    const Component = componentOf(BillingRoute);
     rerender(<Component />);
     expect(screen.getByTestId("billing-success-done")).toHaveTextContent("Firma");
   });

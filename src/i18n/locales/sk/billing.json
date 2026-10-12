@@ -68,7 +68,8 @@
         "a": "Nie. Školy používajú testy, triedy a výsledky zadarmo. Doklad s certifikátmi je určený organizáciám, ktoré ho potrebujú pri audite."
       }
     ],
-    "checkout_cancelled": "Platba bola zrušená. Plán si môžete vybrať kedykoľvek znova."
+    "checkout_cancelled": "Platba bola zrušená. Plán si môžete vybrať kedykoľvek znova.",
+    "hero_visual_caption": "Ukážka dokladu o preškolení s certifikátom a pečaťou overenia."
   },
   "billing": {
     "title": "Predplatné a doklady",
