@@ -192,7 +192,7 @@ export async function buildCheckoutSession(
     custom_text: {
       submit: {
         message:
-          "Stlačením potvrdzujete súhlas so začatím poskytovania okamžite a stratu práva na odstúpenie (§ 7 ods. 6 zákona č. 102/2014 Z. z.).",
+          "Stlačením potvrdzujete súhlas so začatím poskytovania okamžite a stratu práva na odstúpenie (zákon č. 108/2024 Z. z. o ochrane spotrebiteľa).",
       },
     },
   };

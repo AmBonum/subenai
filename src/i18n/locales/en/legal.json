@@ -200,7 +200,7 @@
       "refund_label": "Refund and subscription cancellation:",
       "refund_prefix": " a voluntary contribution is ",
       "refund_emph1": "non-refundable",
-      "refund_middle": " (digital service provided immediately, the right of withdrawal lapses under § 7 ods. 6 zákona č. 102/2014 Z. z. — you explicitly tick a consent before payment). You can ",
+      "refund_middle": " (digital service provided immediately, the right of withdrawal lapses under Slovak Act No. 108/2024 Coll. on consumer protection — you explicitly tick a consent before payment). You can ",
       "refund_emph2": "cancel a monthly subscription at any time with a single click",
       "refund_middle2": " via the Stripe Customer Portal, the link to which we will send you after you enter your email at ",
       "refund_link": "/manage-support",

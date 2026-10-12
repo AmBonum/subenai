@@ -200,7 +200,7 @@
       "refund_label": "Refundace a zrušení odběru:",
       "refund_prefix": " dobrovolný příspěvek je ",
       "refund_emph1": "nevratný",
-      "refund_middle": " (digitální služba poskytnutá okamžitě, právo na odstoupení zaniká podle § 7 ods. 6 zákona č. 102/2014 Z. z. — před platbou výslovně zaškrtnete souhlas). Měsíční odběr můžete ",
+      "refund_middle": " (digitální služba poskytnutá okamžitě, právo na odstoupení zaniká podle zákona č. 108/2024 Z. z. o ochraně spotřebitele — před platbou výslovně zaškrtnete souhlas). Měsíční odběr můžete ",
       "refund_emph2": "kdykoli zrušit jediným kliknutím",
       "refund_middle2": " přes Stripe Customer Portal, jehož odkaz vám pošleme po zadání e-mailu na adrese ",
       "refund_link": "/manage-support",
