@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, GraduationCap, ShieldCheck, Users } from "lucide-react";
 
+import { ScamPhone3D } from "@/components/three-d/ScamPhone3D";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
 
@@ -42,65 +43,70 @@ export function SchoolsHero() {
       aria-labelledby="schools-hero-heading"
       data-testid="schools-hero"
     >
-      <p
-        className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-success"
-        data-testid="schools-hero-kicker"
-      >
-        <GraduationCap className="size-3.5" aria-hidden="true" />
-        {t("skoly.hero_kicker")}
-      </p>
+      <div className="lg:grid lg:grid-cols-[1fr_15rem] lg:items-center lg:gap-8">
+        <div className="min-w-0">
+          <p
+            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-success"
+            data-testid="schools-hero-kicker"
+          >
+            <GraduationCap className="size-3.5" aria-hidden="true" />
+            {t("skoly.hero_kicker")}
+          </p>
 
-      <h1
-        id="schools-hero-heading"
-        className="mt-3 text-3xl font-black leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl"
-        data-testid="schools-hero-title"
-      >
-        {t("skoly.hero_title")}
-      </h1>
+          <h1
+            id="schools-hero-heading"
+            className="mt-3 text-3xl font-black leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl"
+            data-testid="schools-hero-title"
+          >
+            {t("skoly.hero_title")}
+          </h1>
 
-      <p
-        className="mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg"
-        data-testid="schools-hero-subtitle"
-      >
-        {t("skoly.hero_subtitle")}
-      </p>
+          <p
+            className="mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg"
+            data-testid="schools-hero-subtitle"
+          >
+            {t("skoly.hero_subtitle")}
+          </p>
 
-      <ul
-        className="mt-5 flex flex-wrap gap-2"
-        aria-label="audience"
-        data-testid="schools-hero-personas"
-      >
-        {personas.map(({ slug, key }) => {
-          const Icon = PERSONA_ICONS[slug];
-          return (
-            <li
-              key={slug}
-              className="inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-card/60 px-3 py-1.5 text-xs font-semibold text-foreground"
-              data-testid={`schools-hero-persona-${slug}`}
+          <ul
+            className="mt-5 flex flex-wrap gap-2"
+            aria-label="audience"
+            data-testid="schools-hero-personas"
+          >
+            {personas.map(({ slug, key }) => {
+              const Icon = PERSONA_ICONS[slug];
+              return (
+                <li
+                  key={slug}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-card/60 px-3 py-1.5 text-xs font-semibold text-foreground"
+                  data-testid={`schools-hero-persona-${slug}`}
+                >
+                  <Icon className="size-3.5 text-success" aria-hidden="true" />
+                  {t(key)}
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <Link
+              to={ROUTES.builder}
+              className="inline-flex items-center gap-1.5 rounded-full bg-success px-6 py-3 text-sm font-bold text-success-foreground shadow-md transition-transform hover:-translate-y-0.5 hover:shadow-lg"
+              data-testid="schools-hero-cta"
             >
-              <Icon className="size-3.5 text-success" aria-hidden="true" />
-              {t(key)}
-            </li>
-          );
-        })}
-      </ul>
-
-      <div className="mt-7 flex flex-wrap items-center gap-3">
-        <Link
-          to={ROUTES.builder}
-          className="inline-flex items-center gap-1.5 rounded-full bg-success px-6 py-3 text-sm font-bold text-success-foreground shadow-md transition-transform hover:-translate-y-0.5 hover:shadow-lg"
-          data-testid="schools-hero-cta"
-        >
-          {t("skoly.hero_cta")}
-          <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
-        <Link
-          to={ROUTES.test}
-          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted/60"
-          data-testid="schools-hero-cta-secondary"
-        >
-          {t("skoly.hero_cta_secondary")}
-        </Link>
+              {t("skoly.hero_cta")}
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+            <Link
+              to={ROUTES.test}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted/60"
+              data-testid="schools-hero-cta-secondary"
+            >
+              {t("skoly.hero_cta_secondary")}
+            </Link>
+          </div>
+        </div>
+        <ScamPhone3D className="hidden lg:block" />
       </div>
 
       <div

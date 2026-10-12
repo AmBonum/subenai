@@ -207,21 +207,295 @@ odkazom; výsledky respondentov potom vidíš vo svojom účte.
 Na uloženie a zdieľanie vlastných testov je potrebné **prihlásenie**.`,
   },
   {
+    slug: "skolenie-za-5-minut",
+    title: "Ako spustiť školenie pre firmu alebo školu za 5 minút",
+    description:
+      "Od reálneho prípadu v šablónach cez odkaz pre respondentov až po výsledky — krok za krokom.",
+    order: 8.1,
+    category: "Pre firmy",
+    body: `Celé školenie má tri kroky: **šablóna** s reálnym prípadom podvodu,
+**odkaz** pre respondentov a **výsledky** (s plateným plánom aj doklad o
+preškolení). Na vytvorenie testu potrebuješ účet; respondenti účet
+nepotrebujú.
+
+[[scene3d:campaign-flow|Tri kroky kampane: šablóna, odkaz respondentom a doklad.]]
+
+## 1. Vyber reálny prípad
+
+1. Otvor katalóg **[Šablóny](/sablony)** a prejdi si šablóny podľa témy
+   alebo publika.
+2. Pri šablóne, ktorá ťa zaujala, klikni na **„Detail →"** — uvidíš otázky,
+   témy a sekciu **„Autor a licencia"**.
+
+## 2. Prispôsob test
+
+3. Prihlás sa a v aplikácii otvor v menu **„Šablóny"**, záložku
+   **„Verejné"**. Pri vybranej šablóne klikni na **„Použiť"**.
+4. Otvorí sa sprievodca **„Nový test"** (štyri kroky). V kroku **„Základy"**
+   vyplň **„Názov testu"** (napríklad „Phishing — október") a krátky
+   **„Popis"** pre respondentov, potom **„Ďalej"**.
+5. V kroku **„Cieľová skupina"** môžeš vybrať **„Skupinu respondentov"**
+   (nepovinné) a pokračovať **„Ďalej"**.
+6. V kroku **„Otázky"** sú predvyplnené otázky zo šablóny (označené
+   **„Z šablóny"**). Môžeš ich preusporiadať, odstrániť alebo cez
+   **„Pridať otázky"** doplniť ďalšie z knižnice.
+
+## 3. Zverejni a pošli odkaz
+
+7. Klikni na **„Publikovať"**. V kroku **„Zdieľanie"** dostaneš odkaz —
+   skopíruj ho tlačidlom **„Skopírovať odkaz"**.
+8. Ak budeš chcieť výsledky s menami (napríklad pre doklad o preškolení),
+   ešte pred rozoslaním otvor test v **„Moje testy"**, záložku
+   **„Nastavenia"** a v časti **„Údaje respondenta"** zapni **„Meno"** a
+   **„E-mail"**.
+9. Pošli odkaz respondentom vlastným e-mailom, cez Teams, Slack alebo
+   intranet. Podrobnosti o hesle a pozvánkach nájdeš v návode
+   [Zdieľanie testu a pozvánky](/docs/zdielanie-testu).
+
+## 4. Sleduj výsledky
+
+10. Výsledky respondentov nájdeš v teste v záložke **„Výsledky"** — pozri
+    [Výsledky a export](/docs/vysledky-a-export).
+11. S plateným plánom z nich vytvoríš
+    [doklad o preškolení](/docs/doklad-o-preskoleni).
+
+**Tip:** školy môžu použiť aj edu mód bez účtov pre žiakov — pozri návod
+[Pre školy](/docs/pre-skoly).`,
+  },
+  {
+    slug: "zdielanie-testu",
+    title: "Zdieľanie testu a pozvánky",
+    description: "Ako poslať test respondentom, chrániť ho heslom a zbierať mená.",
+    order: 8.2,
+    category: "Pre firmy",
+    body: `Každý publikovaný test má **verejný odkaz**. Kto ho má, môže test
+vyplniť na mobile aj počítači — bez registrácie. Koncept (draft) respondenti
+vyplniť nemôžu, kým ho nepublikuješ.
+
+[[scene3d:scam-phone|Telefón s upozorneniami, jedno z nich je označené ako podvod.]]
+
+## Skopíruj odkaz
+
+1. V aplikácii otvor **„Moje testy"**.
+2. Pri teste klikni na **„Zdieľať"** (alebo otvor test a klikni na
+   **„Zdieľať"** v jeho hlavičke).
+3. V okne **„Zdieľať test"** skopíruj **„Verejný odkaz"** tlačidlom
+   **„Skopírovať"**.
+
+## Chráň test heslom
+
+4. V teste otvor záložku **„Nastavenia"** a časť **„Heslo pre
+   respondentov"**.
+5. Zadaj heslo (aspoň 8 znakov), zopakuj ho a klikni na **„Nastaviť
+   heslo"**. Respondenti ho potom musia zadať pred vyplnením testu.
+6. Heslo kedykoľvek zmeníš (**„Zmeniť heslo"**) alebo zrušíš (**„Zrušiť
+   heslo"**). Pri zmene sa rozpracované relácie respondentov zneplatnia.
+
+**Pozor:** heslo pošli **iným kanálom** ako odkaz — napríklad odkaz
+e-mailom a heslo ústne alebo v chate.
+
+## Zbieraj mená a e-maily
+
+7. V **„Nastaveniach"** v časti **„Údaje respondenta"** vyber **„Meno"** a
+   **„E-mail"** a označ, či sú **„Povinné"**. Bez nich sú výsledky
+   anonymné. Mená potrebuješ, ak chceš
+   [doklad o preškolení](/docs/doklad-o-preskoleni) s menným zoznamom.
+
+## Pozvánky e-mailom
+
+Tlačidlo **„Pozvánky e-mailom"** v teste zatiaľ pripravujeme. Dovtedy pošli
+odkaz zo svojej schránky — funguje to úplne rovnako. Napríklad:
+
+> Ahoj, prosím, vyplň do piatku krátky test o online podvodoch (asi 5 minút):
+> [odkaz]. Výsledok uvidíš hneď po dokončení.`,
+  },
+  {
+    slug: "vysledky-a-export",
+    title: "Výsledky a export",
+    description: "Kde nájdeš výsledky respondentov a ako ich stiahneš do CSV.",
+    order: 8.3,
+    category: "Pre firmy",
+    body: `Výsledky testu vidíš v aplikácii, len čo ho respondenti začnú
+vypĺňať. Surové výsledky aj CSV export sú **zadarmo** v každom pláne.
+
+[[scene3d:shield-stack|Vrstvený štít so zelenou fajkou.]]
+
+## Prehľad a respondenti
+
+1. Otvor **„Moje testy"** a klikni na test.
+2. Záložka **„Výsledky"** ukazuje súhrn **„Spolu respondentov"**,
+   **„Dokončené"** a **„Priemerné skóre"**.
+3. Pod ním je zoznam **„Respondenti"**. Filtruješ ho podľa stavu
+   (**„Prebiehajúce"**, **„Dokončené"**, **„Opustené"**), hľadáš podľa mena
+   alebo e-mailu a triediš podľa dátumu alebo skóre.
+4. Pri respondentovi klikni na **„Otvoriť detail"** — uvidíš jeho odpovede
+   a pri každej otázke, či odpovedal správne. Podľa chybných odpovedí vieš,
+   čomu sa venovať na ďalšom školení.
+
+## Export do CSV
+
+5. V záložke **„Výsledky"** klikni na **„Exportovať CSV"**.
+6. Súbor otvoríš v Exceli, Google Sheets alebo LibreOffice. Jeden export
+   obsahuje najviac 5 000 respondentov.
+
+Stĺpce v CSV:
+
+| Stĺpec | Význam |
+|---|---|
+| session_id | ID relácie respondenta |
+| respondent_name, respondent_email | meno a e-mail (ak ich zbieraš) |
+| status | stav relácie |
+| score | skóre |
+| started_at, finished_at | začiatok a koniec |
+| duration_seconds | trvanie v sekundách |
+| segment | segment respondenta |
+| ip_hash_last6 | posledných 6 znakov hashu IP adresy (nie samotná IP) |
+
+**Pozor:** CSV s menami a e-mailami obsahuje osobné údaje. Ukladaj ho len
+tam, kam majú prístup oprávnené osoby.
+
+Edu testy pre triedy majú vlastnú stránku výsledkov s exportom do CSV,
+JSON a PDF — pozri [Pre školy](/docs/pre-skoly).`,
+  },
+  {
+    slug: "doklad-o-preskoleni",
+    title: "Doklad o preškolení a certifikáty",
+    description:
+      "Tlačový doklad o absolvovaní testu s certifikátmi a verejným overením (platené plány).",
+    order: 8.4,
+    category: "Pre firmy",
+    body: `S plateným plánom vytvoríš z výsledkov testu **doklad o preškolení**:
+prehľad, kto test absolvoval, kedy a s akým výsledkom, plus **certifikát**
+pre každého úspešného respondenta. Doklad slúži ako **podklad (evidencia) k
+preukázaniu vzdelávania zamestnancov**, ktoré vyžaduje vyhláška NBÚ
+č. 227/2025 Z. z.
+
+[[scene3d:evidence-report|Doklad o preškolení a certifikát s pečaťou.]]
+
+**Dôležité:** doklad pomáha preukázať, že vzdelávanie prebehlo. Nie je to
+certifikácia systému riadenia informačnej bezpečnosti a sám osebe
+nezaručuje súlad s predpismi.
+
+## Čo potrebuješ
+
+- aktívny platený plán — pozri [Predplatné a faktúry](/docs/predplatne-a-faktury),
+- test, v ktorom zbieraš **„Meno"** (a ideálne aj **„E-mail"**) v časti
+  **„Údaje respondenta"**,
+- respondentov, ktorí test dokončili.
+
+## Ako doklad vytvoríš
+
+1. Otvor test v **„Moje testy"**.
+2. Prejdi na stránku dokladu tohto testu (adresa
+   **/app/tests/<id testu>/doklad**).
+3. Skontroluj obsah dokladu:
+   - organizácia, názov a verzia testu, pokryté témy,
+   - pri každom respondentovi dátum dokončenia a skóre,
+   - hranica úspešnosti,
+   - jedinečné ID dokladu a odkaz na jeho overenie,
+   - na ďalších stranách certifikát pre každého úspešného respondenta.
+4. Otvor tlač prehliadača (**Ctrl+P**, na Macu **Cmd+P**), ako tlačiareň
+   vyber **„Uložiť ako PDF"** a súbor ulož. Stránka je pripravená na
+   formát A4.
+5. PDF založ k internej dokumentácii o vzdelávaní.
+
+## Overenie dokladu
+
+6. Každý doklad má jedinečné ID a odtlačok obsahu (SHA-256). Na adrese
+   **/overenie/<id dokladu>** si ktokoľvek — napríklad audítor — overí, že
+   doklad existuje.
+7. Overovacia stránka ukazuje len názov testu, dátum, počet respondentov a
+   odtlačok. **Žiadne osobné údaje** na nej nie sú.
+
+**Poznámka:** do dokladov za jeden fakturačný rok môžeš zahrnúť toľko
+respondentov, koľko dovoľuje tvoj plán (25, 100 alebo 250).`,
+  },
+  {
+    slug: "predplatne-a-faktury",
+    title: "Predplatné a faktúry",
+    description: "Ročné plány Štart, Firma a Firma+, platba, faktúry a zrušenie predplatného.",
+    order: 8.5,
+    category: "Pre firmy",
+    body: `Testy, výsledky a CSV export sú zadarmo. Platíš len za **doklady o
+preškolení** — a to ročne, podľa počtu respondentov, ktorých do dokladov
+zahrnieš.
+
+[[scene3d:evidence-report|Doklad o preškolení a certifikát s pečaťou.]]
+
+| Plán | Respondenti v dokladoch za rok | Cena za rok |
+|---|---|---|
+| Zadarmo | 0 (testy, výsledky a CSV ostávajú) | 0 € |
+| Štart | 25 | 149 € |
+| Firma | 100 | 390 € |
+| Firma+ | 250 | 790 € |
+| Viac ako 250 | individuálne | na dopyt |
+
+## Ako si plán kúpiš
+
+1. Otvor stránku **[Cenník](/cennik)** a vyber plán.
+2. Prihlás sa (alebo si vytvor účet).
+3. Pred platbou potvrdíš dva samostatné súhlasy: **obchodné podmienky** a
+   **výslovnú žiadosť o okamžité začatie poskytovania služby**, pri ktorej
+   berieš na vedomie stratu práva na odstúpenie od zmluvy.
+4. Zaplatíš cez platobnú bránu **Stripe**. Po úspešnej platbe sa plán
+   aktivuje automaticky.
+
+Pre viac ako 250 respondentov nám napíš cez
+**[kontaktný formulár](/contact-form)**.
+
+## Správa predplatného
+
+5. Svoj plán spravuješ v aplikácii na stránke **/app/billing**.
+6. Odtiaľ otvoríš **zákaznícky portál Stripe**, kde si stiahneš **faktúry**
+   a predplatné **zrušíš**.
+
+**Poznámka:** cena a limit sa pri kúpe zafixujú. Ak neskôr zmeníme cenník,
+tvoje zaplatené obdobie sa nemení.`,
+  },
+  {
     slug: "pre-skoly",
     title: "Pre školy",
-    description: "Vzdelávacie testy a materiály pre žiakov a učiteľov.",
+    description: "Edu testy pre triedy zadarmo — bez účtov pre žiakov, s výsledkami a exportom.",
     order: 9,
     category: "Vzdelávanie",
-    body: `subenai ponúka **vzdelávacie testy a materiály pre školy** — pomáhajú
-žiakom naučiť sa rozpoznávať podvody bezpečným, interaktívnym spôsobom.
+    body: `Školy používajú subenai **zadarmo**. Edu mód nevyžaduje účty pre
+žiakov, výsledky sa uchovávajú 12 mesiacov a potom sa anonymizujú.
+Šablóny s reálnymi prípadmi pre školy sú tiež zadarmo.
 
 ![Stránka „Pre školy": nadpis „Otestuj triedu na rozpoznávanie scamov — bez registrácií, bez ceny", role riaditeľ/DPO, IT koordinátor, učiteľ/lektor a štatistiky 0 €, 3 min, GDPR, retencia 12 mesiacov.](/img/docs/schools.png#themed)
 
-Edu mód je **zadarmo**, **bez registrácie žiakov** a **GDPR-čistý** (čisté
-roly, retencia 12 mesiacov, CSV export). Učiteľ pripraví test pre triedu,
-žiaci ho urobia a učiteľ hneď vidí, kto na čom zlyhal — a nadviaže
-[kurzmi](/docs/kurzy). Detaily a DPA pre školy nájdeš v sekcii
-**[Školy](/schools)**.`,
+[[scene3d:scam-phone|Telefón s upozorneniami, jedno z nich je označené ako podvod.]]
+
+## Vytvor test pre triedu
+
+1. Na stránke **[Školy](/schools)** klikni na **„Vytvoriť test pre
+   triedu"**.
+2. V editore vyber **predefinovanú sadu** alebo otázky cez **„Vybrať z
+   banky"** (aspoň 5 otázok).
+3. V časti **„Nastavenia"** zapni **„Zbierať odpovede s menom a e-mailom"**
+   a zadaj **„Heslo na pozeranie výsledkov"** (aspoň 8 znakov). Voliteľne
+   nastav **„Prah úspešnosti"**.
+4. Klikni na **„Vytvoriť edu test →"**. V okne **„Edu test vytvorený"**
+   nájdeš **„Link pre respondentov"**, **„Link na výsledky (pre teba)"** a
+   heslo. Ulož si ich, potvrď zaškrtávacie políčko a zavri okno.
+
+**Pozor:** heslo k výsledkom sa nedá obnoviť e-mailom. Ulož si ho hneď.
+
+## Žiaci vyplnia test
+
+5. Pošli žiakom link pre respondentov (napríklad cez EduPage alebo Teams).
+6. Žiak vyplní meno, e-mail a súhlas a pokračuje na test — bez registrácie.
+
+## Výsledky
+
+7. Otvor link na výsledky a zadaj heslo.
+8. Výsledky stiahneš tlačidlami **„Stiahnuť CSV"**, **„Stiahnuť JSON"** a
+   **„Stiahnuť PDF"**.
+9. Ak si pri otvorení výsledkov prihlásený, test sa pripojí k tvojmu účtu
+   a nájdeš ho v menu **„Moje edu testy"**.
+
+Na výsledky nadviaž [kurzmi](/docs/kurzy). Spracovanie údajov a DPA pre
+školy nájdeš v sekcii **[Školy](/schools)**.`,
   },
   {
     slug: "akademia",

@@ -602,7 +602,9 @@ const DocsAppSlugRoute = DocsAppSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => DocsAppRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/docs.app.$slug.lazy').then((d) => d.Route),
+)
 const DocsAdminSlugRoute = DocsAdminSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
