@@ -76,6 +76,12 @@ function makeMockSupabase() {
           state.updatedSponsors.push({ id: value, patch: pendingUpdate });
           return Promise.resolve({ data: null, error: null });
         }
+        if (table === "donations" && column === "refund_of_donation_id") {
+          const rows = state.insertedDonations.filter(
+            (d) => (d as { refund_of_donation_id?: string }).refund_of_donation_id === value,
+          );
+          return Promise.resolve({ data: rows, error: null });
+        }
         return builder;
       }),
       single: vi.fn(async () => {
@@ -97,7 +103,13 @@ function makeMockSupabase() {
         }
         if (table === "donations" && pendingInsert) {
           const pi = pendingInsert.stripe_payment_intent_id as string | null;
-          if (pi && state.donationsByPaymentIntent.has(pi)) {
+          const refundId = pendingInsert.stripe_refund_id as string | undefined;
+          const refundIdTaken =
+            refundId !== undefined &&
+            state.insertedDonations.some(
+              (d) => (d as { stripe_refund_id?: string }).stripe_refund_id === refundId,
+            );
+          if ((pi && state.donationsByPaymentIntent.has(pi)) || refundIdTaken) {
             return {
               data: null,
               error: { code: "23505", message: "duplicate key" },
@@ -383,6 +395,107 @@ describe("processEvent — charge.refunded", () => {
       refund_of_donation_id: "donation-1",
       stripe_payment_intent_id: null,
     });
+  });
+
+  async function seedOriginal(supabase: ReturnType<typeof makeMockSupabase>) {
+    await processEvent(
+      makeEvent("checkout.session.completed", {
+        mode: "payment",
+        customer: "cus_partial",
+        payment_intent: "pi_partial",
+        amount_total: 5000,
+        currency: "eur",
+      }),
+      supabase as never,
+    );
+  }
+
+  function refundRows() {
+    return state.insertedDonations.filter((d) => (d as { kind?: string }).kind === "refund");
+  }
+
+  it("ignores a redelivered charge.refunded event", async () => {
+    const supabase = makeMockSupabase();
+    await seedOriginal(supabase);
+    const event = makeEvent("charge.refunded", {
+      id: "ch_dup",
+      payment_intent: "pi_partial",
+      amount_refunded: 1000,
+      currency: "eur",
+      refunds: { data: [{ id: "re_1", amount: 1000 }] },
+    });
+
+    await processEvent(event, supabase as never);
+    const second = await processEvent(event, supabase as never);
+
+    expect(second.status).toBe(200);
+    expect(refundRows()).toHaveLength(1);
+    expect(refundRows()[0]).toMatchObject({ stripe_refund_id: "re_1", amount_eur: -10 });
+  });
+
+  it("records only the delta for successive partial refunds (cumulative amount_refunded)", async () => {
+    const supabase = makeMockSupabase();
+    await seedOriginal(supabase);
+
+    await processEvent(
+      makeEvent("charge.refunded", {
+        id: "ch_partial",
+        payment_intent: "pi_partial",
+        amount_refunded: 1000,
+        currency: "eur",
+        refunds: { data: [{ id: "re_1", amount: 1000 }] },
+      }),
+      supabase as never,
+    );
+    await processEvent(
+      makeEvent("charge.refunded", {
+        id: "ch_partial",
+        payment_intent: "pi_partial",
+        amount_refunded: 3000,
+        currency: "eur",
+        refunds: {
+          data: [
+            { id: "re_2", amount: 2000 },
+            { id: "re_1", amount: 1000 },
+          ],
+        },
+      }),
+      supabase as never,
+    );
+
+    expect(refundRows().map((r) => (r as { amount_eur: number }).amount_eur)).toEqual([-10, -20]);
+    expect(refundRows().map((r) => (r as { stripe_refund_id: string }).stripe_refund_id)).toEqual([
+      "re_1",
+      "re_2",
+    ]);
+  });
+
+  it("skips a stale out-of-order delivery whose cumulative total is already recorded", async () => {
+    const supabase = makeMockSupabase();
+    await seedOriginal(supabase);
+
+    await processEvent(
+      makeEvent("charge.refunded", {
+        id: "ch_ooo",
+        payment_intent: "pi_partial",
+        amount_refunded: 3000,
+        currency: "eur",
+      }),
+      supabase as never,
+    );
+    const stale = await processEvent(
+      makeEvent("charge.refunded", {
+        id: "ch_ooo",
+        payment_intent: "pi_partial",
+        amount_refunded: 1000,
+        currency: "eur",
+      }),
+      supabase as never,
+    );
+
+    expect(stale.body).toMatchObject({ already_recorded: true });
+    expect(refundRows()).toHaveLength(1);
+    expect(refundRows()[0]).toMatchObject({ amount_eur: -30, stripe_refund_id: "ch_ooo:3000" });
   });
 
   it("returns 200 when refund event has no matching original donation", async () => {

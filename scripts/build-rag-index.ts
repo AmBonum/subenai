@@ -214,6 +214,12 @@ function renderCourseSection(section: CourseSection): string {
       return `## ${section.heading}\n\n${section.story}\n\nSprávny postup: ${section.right_action}`;
     case "embed":
       return `## ${section.heading}\n\n${section.audio.title} (${section.audio.sourceName})`;
+    default: {
+      const unhandled: never = section;
+      throw new Error(
+        `renderCourseSection: unhandled CourseSection kind ${JSON.stringify(unhandled)}`,
+      );
+    }
   }
 }
 

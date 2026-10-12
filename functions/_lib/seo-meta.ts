@@ -73,14 +73,7 @@ export function escapeHtml(value: string): string {
 }
 
 type RouteKind =
-  | "blog"
-  | "cms"
-  | "share-result"
-  | "respondent"
-  | "template"
-  | "pack"
-  | "course"
-  | "static-index";
+  "blog" | "cms" | "share-result" | "respondent" | "template" | "pack" | "course" | "static-index";
 
 export interface RouteMatch {
   kind: RouteKind;
@@ -493,8 +486,7 @@ export async function applyMetaToResponse(
   );
 
   const HR = (globalThis as { HTMLRewriter?: unknown }).HTMLRewriter as
-    | (new () => HtmlRewriterLike)
-    | undefined;
+    (new () => HtmlRewriterLike) | undefined;
 
   if (!HR) {
     const text = await response.text();

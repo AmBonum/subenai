@@ -269,15 +269,28 @@ async function handleChargeRefunded(
   if (lookupErr) throw new Error(`refund lookup failed: ${lookupErr.message}`);
   if (!original) return { status: 200, body: { received: true, no_original: true } };
 
-  const refundAmountEur = centsToEur(charge.amount_refunded ?? 0);
-  if (refundAmountEur <= 0) return { status: 200, body: { received: true, zero_refund: true } };
+  const { data: priorRefunds, error: priorErr } = await supabase
+    .from("donations")
+    .select("amount_eur")
+    .eq("refund_of_donation_id", original.id);
+  if (priorErr) throw new Error(`refund history lookup failed: ${priorErr.message}`);
 
+  const recordedCents = (priorRefunds ?? []).reduce(
+    (sum, row) => sum + Math.round(Math.abs(Number(row.amount_eur)) * 100),
+    0,
+  );
+  const deltaCents = (charge.amount_refunded ?? 0) - recordedCents;
+  if (deltaCents <= 0) return { status: 200, body: { received: true, already_recorded: true } };
+
+  const refundAmountEur = centsToEur(deltaCents);
+  const refundId = latestRefundKey(charge);
   const currency = (charge.currency ?? "eur").toUpperCase();
   const { error: insertErr } = await supabase
     .from("donations")
     .insert({
       sponsor_id: original.sponsor_id,
       stripe_payment_intent_id: null,
+      stripe_refund_id: refundId,
       amount_eur: -refundAmountEur,
       currency,
       kind: "refund",
@@ -285,7 +298,12 @@ async function handleChargeRefunded(
     })
     .select("id")
     .single();
-  if (insertErr) throw new Error(`refund insert failed: ${insertErr.message}`);
+  if (insertErr) {
+    if (isUniqueViolation(insertErr.code)) {
+      return { status: 200, body: { received: true, idempotent: true } };
+    }
+    throw new Error(`refund insert failed: ${insertErr.message}`);
+  }
 
   console.warn("stripe-webhook refund", {
     paymentIntentId,
@@ -294,6 +312,7 @@ async function handleChargeRefunded(
   });
 
   await notifyOpsAboutRefund(env, {
+    refundId,
     paymentIntentId,
     refundedEur: refundAmountEur,
     sponsorId: original.sponsor_id as string,
@@ -306,6 +325,7 @@ async function handleChargeRefunded(
 async function notifyOpsAboutRefund(
   env: Env | undefined,
   input: {
+    refundId: string;
     paymentIntentId: string;
     refundedEur: number;
     sponsorId: string;
@@ -327,7 +347,7 @@ async function notifyOpsAboutRefund(
       subject,
       html,
       text,
-      idempotencyKey: `refund-${input.paymentIntentId}`,
+      idempotencyKey: `refund-${input.refundId}`,
     },
   );
   if (!result.ok) {
@@ -394,6 +414,12 @@ async function insertDonation(
     throw new Error(`donation insert failed: ${error.message}`);
   }
   return { id: data.id as string, idempotent: false };
+}
+
+// Webhook payloads on API versions >= 2022-11-15 omit `charge.refunds`
+// unless expanded; the cumulative refunded total then identifies the step.
+function latestRefundKey(charge: Stripe.Charge): string {
+  return charge.refunds?.data?.[0]?.id ?? `${charge.id}:${charge.amount_refunded}`;
 }
 
 function readId(value: string | { id: string } | null | undefined): string | null {

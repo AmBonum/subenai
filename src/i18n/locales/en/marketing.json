@@ -213,7 +213,7 @@
     "display_message_counter": "{remaining} characters remaining",
     "show_in_footer": "Also show me in the page footer",
     "show_in_footer_disabled": "Show me in the footer (required: one-off ≥ {oneoff} € or monthly ≥ {monthly} €)",
-    "consent_immediate": "I agree to the immediate start of service and acknowledge the loss of the right of withdrawal (§ 7(6) of Act No. 102/2014).",
+    "consent_immediate": "I agree to the immediate start of service and acknowledge the loss of the right of withdrawal (Slovak Act No. 108/2024 Coll. on consumer protection).",
     "consent_data_prefix": "I acknowledge the processing of my personal data under the ",
     "consent_data_link": "Privacy policy",
     "error_prefix": "Something went wrong: ",

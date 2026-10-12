@@ -72,7 +72,7 @@ export const defaultSupportConfig: SupportConfig = {
   page_subtitle:
     "Pomáhaš nám učiť ľudí rozoznávať podvody. Ďakujeme za každý príspevok.",
   consent_invoice_text:
-    "Súhlasím so začatím poskytovania okamžite a beriem na vedomie stratu práva na odstúpenie (§ 7 ods. 6 zákona č. 102/2014 Z. z.).",
+    "Súhlasím so začatím poskytovania okamžite a beriem na vedomie stratu práva na odstúpenie (zákon č. 108/2024 Z. z. o ochrane spotrebiteľa).",
   consent_privacy_text:
     "Beriem na vedomie spracovanie mojich osobných údajov per Zásady ochrany súkromia.",
   footer_disclaimer:

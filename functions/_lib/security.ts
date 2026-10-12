@@ -153,6 +153,17 @@ export function readClientIp(request: Request): string {
   );
 }
 
+export function rateLimitedResponse(retryAfterSeconds: number): Response {
+  return new Response(JSON.stringify({ error: "rate_limited" }), {
+    status: 429,
+    headers: {
+      "content-type": "application/json",
+      "cache-control": "no-store",
+      "retry-after": String(retryAfterSeconds),
+    },
+  });
+}
+
 export function parsePositiveInt(value: string | undefined, fallback: number): number {
   if (!value) return fallback;
   const n = Number.parseInt(value, 10);

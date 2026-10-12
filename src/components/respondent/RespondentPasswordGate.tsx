@@ -26,11 +26,7 @@ interface Props {
 }
 
 type ErrorKey =
-  | "wrong_password"
-  | "rate_limited"
-  | "share_locked"
-  | "submit_failed"
-  | "missing_password";
+  "wrong_password" | "rate_limited" | "share_locked" | "submit_failed" | "missing_password";
 
 interface VerifyResponseBody {
   ok?: true;

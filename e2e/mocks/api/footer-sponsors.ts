@@ -27,9 +27,7 @@ export interface FooterSponsor {
 }
 
 export type FooterSponsorsStub =
-  | { status: 200; rows: FooterSponsor[] }
-  | { status: 500 }
-  | { abort: true };
+  { status: 200; rows: FooterSponsor[] } | { status: 500 } | { abort: true };
 
 export async function stubFooterSponsors(page: Page, stub: FooterSponsorsStub): Promise<void> {
   await page.route("**/rest/v1/footer_sponsors*", async (route) => {

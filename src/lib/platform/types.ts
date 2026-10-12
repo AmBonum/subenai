@@ -5,11 +5,7 @@ export type Role = "owner" | "editor" | "viewer";
 export type TestStatus = "draft" | "published" | "archived";
 export type QuestionOrderMode = "fixed" | "random";
 export type GdprPurpose =
-  | "marketing"
-  | "research"
-  | "recruitment"
-  | "education"
-  | "internal_training";
+  "marketing" | "research" | "recruitment" | "education" | "internal_training";
 
 export type QuestionType =
   | "single"
@@ -68,13 +64,7 @@ export interface Question {
 }
 
 export type IntakeFieldType =
-  | "text"
-  | "email"
-  | "phone"
-  | "select"
-  | "checkbox"
-  | "date"
-  | "number";
+  "text" | "email" | "phone" | "select" | "checkbox" | "date" | "number";
 
 export interface IntakeField {
   id: string;
@@ -200,11 +190,7 @@ export interface Session {
 }
 
 export type BehavioralEventType =
-  | "question_view"
-  | "question_answer"
-  | "drop_off"
-  | "focus_loss"
-  | "resume";
+  "question_view" | "question_answer" | "drop_off" | "focus_loss" | "resume";
 
 export interface BehavioralEvent {
   id: string;
@@ -238,12 +224,7 @@ export interface AuditLogEntry {
 }
 
 export type DSRType =
-  | "access"
-  | "rectification"
-  | "erase"
-  | "restriction"
-  | "portability"
-  | "objection";
+  "access" | "rectification" | "erase" | "restriction" | "portability" | "objection";
 
 export interface DSRRequest {
   id: string;

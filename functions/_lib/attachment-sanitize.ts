@@ -222,8 +222,7 @@ export function sanitizeFilename(input: string): string | null {
  *     do for PDFs; the safe move is to reject the upload.
  */
 export type PdfStripResult =
-  | { ok: true; bytes: Uint8Array }
-  | { ok: false; error: "pdf_parse_failed" | "pdf_risky_filter" };
+  { ok: true; bytes: Uint8Array } | { ok: false; error: "pdf_parse_failed" | "pdf_risky_filter" };
 
 const RISKY_PDF_FILTERS = new Set(["JBIG2Decode", "JPXDecode"]);
 
