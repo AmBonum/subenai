@@ -48,7 +48,7 @@ Schools use the free plan; real-case school templates are free.
 - `/cennik` public pricing page, `/app/billing` plan management.
 
 ### ~~E66.2 Training evidence ("Doklad o preškolení")~~ ✅
-- `GET /api/billing/evidence?testId=` — owner + active plan + in-period cap
+- `POST /api/billing/evidence` `{ testId, orgName }` — owner + active plan + in-period cap
   check; returns the report payload, writes an `evidence_reports` row
   (content SHA-256) + `audit_log`.
 - `/app/tests/$testId/doklad` — report preview + generated PDF (React-PDF, Noto Sans):
