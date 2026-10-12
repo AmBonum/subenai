@@ -9,184 +9,117 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SupportRouteImport } from './routes/support'
-import { Route as SponsorsRouteImport } from './routes/sponsors'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as SchoolsRouteImport } from './routes/schools'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as PomocnikRouteImport } from './routes/pomocnik'
-import { Route as ManageSupportRouteImport } from './routes/manage-support'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
-import { Route as CookiesRouteImport } from './routes/cookies'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as ChangelogRouteImport } from './routes/changelog'
-import { Route as AppRouteImport } from './routes/app'
-import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TestsIndexRouteImport } from './routes/tests.index'
-import { Route as TestIndexRouteImport } from './routes/test.index'
-import { Route as SablonyIndexRouteImport } from './routes/sablony.index'
-import { Route as DocsIndexRouteImport } from './routes/docs.index'
-import { Route as ContactFormIndexRouteImport } from './routes/contact-form.index'
-import { Route as AppIndexRouteImport } from './routes/app.index'
-import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as ChangelogRouteImport } from './routes/changelog'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ManageSupportRouteImport } from './routes/manage-support'
+import { Route as PomocnikRouteImport } from './routes/pomocnik'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SchoolsRouteImport } from './routes/schools'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SponsorsRouteImport } from './routes/sponsors'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as AcademyIndexRouteImport } from './routes/academy.index'
-import { Route as ThankYouSessionIdRouteImport } from './routes/thank-you.$sessionId'
-import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
-import { Route as TestBuilderRouteImport } from './routes/test.builder'
-import { Route as TShareIdRouteImport } from './routes/t.$shareId'
-import { Route as SponsorsAllRouteImport } from './routes/sponsors_.all'
-import { Route as SchoolsDpaRouteImport } from './routes/schools_.dpa'
-import { Route as SablonySlugRouteImport } from './routes/sablony.$slug'
-import { Route as SSlugRouteImport } from './routes/s.$slug'
-import { Route as RShareIdRouteImport } from './routes/r.$shareId'
-import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
-import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
-import { Route as DocsAppRouteImport } from './routes/docs.app'
-import { Route as DocsAdminRouteImport } from './routes/docs.admin'
-import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
-import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
-import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
-import { Route as AppTemplatesRouteImport } from './routes/app.templates'
-import { Route as AppTeamsRouteImport } from './routes/app.teams'
-import { Route as AppRetestRouteImport } from './routes/app.retest'
-import { Route as AppRecommendationsRouteImport } from './routes/app.recommendations'
-import { Route as AppPeerRouteImport } from './routes/app.peer'
-import { Route as AppOnboardingRouteImport } from './routes/app.onboarding'
-import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
-import { Route as AppLibraryRouteImport } from './routes/app.library'
-import { Route as AppInsightsRouteImport } from './routes/app.insights'
-import { Route as AppHistoryRouteImport } from './routes/app.history'
-import { Route as AppHelpRouteImport } from './routes/app.help'
-import { Route as AppDigestRouteImport } from './routes/app.digest'
-import { Route as AppAudiencesRouteImport } from './routes/app.audiences'
-import { Route as AdminUsersRouteImport } from './routes/admin/users'
-import { Route as AdminTrainingsRouteImport } from './routes/admin/trainings'
-import { Route as AdminTicketsRouteImport } from './routes/admin/tickets'
-import { Route as AdminTestsRouteImport } from './routes/admin/tests'
-import { Route as AdminTemplatesRouteImport } from './routes/admin/templates'
-import { Route as AdminSupportRouteImport } from './routes/admin/support'
-import { Route as AdminShareCardRouteImport } from './routes/admin/share-card'
-import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
-import { Route as AdminSecurityRouteImport } from './routes/admin/security'
-import { Route as AdminRespondentsRouteImport } from './routes/admin/respondents'
-import { Route as AdminReportsRouteImport } from './routes/admin/reports'
-import { Route as AdminQuickTestRouteImport } from './routes/admin/quick-test'
-import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
-import { Route as AdminPagesRouteImport } from './routes/admin/pages'
-import { Route as AdminNavigationRouteImport } from './routes/admin/navigation'
-import { Route as AdminHeaderRouteImport } from './routes/admin/header'
-import { Route as AdminFooterRouteImport } from './routes/admin/footer'
-import { Route as AdminDsrRouteImport } from './routes/admin/dsr'
-import { Route as AdminDpaRequestsRouteImport } from './routes/admin/dpa-requests'
-import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
-import { Route as AdminAuditRouteImport } from './routes/admin/audit'
-import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
 import { Route as AcademySlugRouteImport } from './routes/academy.$slug'
-import { Route as TestBuilderIndexRouteImport } from './routes/test.builder.index'
-import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
-import { Route as AppEduTestsIndexRouteImport } from './routes/app.edu-tests.index'
-import { Route as AdminTestsIndexRouteImport } from './routes/admin/tests.index'
-import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
-import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
-import { Route as AdminAnswerSetsIndexRouteImport } from './routes/admin/answer-sets.index'
-import { Route as TestBuilderIdRouteImport } from './routes/test.builder.$id'
-import { Route as DocsAppSlugRouteImport } from './routes/docs.app.$slug'
-import { Route as DocsAdminSlugRouteImport } from './routes/docs.admin.$slug'
-import { Route as ContactFormTicketIdRouteImport } from './routes/contact-form.ticket.$id'
-import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
-import { Route as AppTestsTestIdRouteImport } from './routes/app.tests.$testId'
-import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
-import { Route as AppHelpContactRouteImport } from './routes/app.help.contact'
-import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
-import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
-import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users.$userId'
-import { Route as AdminTicketsTicketIdRouteImport } from './routes/admin/tickets.$ticketId'
-import { Route as AdminTestsTestIdRouteImport } from './routes/admin/tests.$testId'
-import { Route as AdminSettingsNotificationsRouteImport } from './routes/admin/settings.notifications'
-import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$pageId'
-import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
-import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
-import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
-import { Route as AcademyCategorySlugRouteImport } from './routes/academy.category.$slug'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminAnswerSetsRouteImport } from './routes/admin/answer-sets'
+import { Route as AdminAuditRouteImport } from './routes/admin/audit'
+import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
+import { Route as AdminDpaRequestsRouteImport } from './routes/admin/dpa-requests'
+import { Route as AdminDsrRouteImport } from './routes/admin/dsr'
+import { Route as AdminFooterRouteImport } from './routes/admin/footer'
+import { Route as AdminHeaderRouteImport } from './routes/admin/header'
+import { Route as AdminNavigationRouteImport } from './routes/admin/navigation'
+import { Route as AdminPagesRouteImport } from './routes/admin/pages'
+import { Route as AdminQuestionsRouteImport } from './routes/admin/questions'
+import { Route as AdminQuickTestRouteImport } from './routes/admin/quick-test'
+import { Route as AdminReportsRouteImport } from './routes/admin/reports'
+import { Route as AdminRespondentsRouteImport } from './routes/admin/respondents'
+import { Route as AdminSecurityRouteImport } from './routes/admin/security'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
+import { Route as AdminShareCardRouteImport } from './routes/admin/share-card'
+import { Route as AdminSupportRouteImport } from './routes/admin/support'
+import { Route as AdminTemplatesRouteImport } from './routes/admin/templates'
+import { Route as AdminTestsRouteImport } from './routes/admin/tests'
+import { Route as AdminTicketsRouteImport } from './routes/admin/tickets'
+import { Route as AdminTrainingsRouteImport } from './routes/admin/trainings'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppAudiencesRouteImport } from './routes/app.audiences'
+import { Route as AppDigestRouteImport } from './routes/app.digest'
+import { Route as AppHelpRouteImport } from './routes/app.help'
+import { Route as AppHistoryRouteImport } from './routes/app.history'
+import { Route as AppInsightsRouteImport } from './routes/app.insights'
+import { Route as AppLibraryRouteImport } from './routes/app.library'
+import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
+import { Route as AppOnboardingRouteImport } from './routes/app.onboarding'
+import { Route as AppPeerRouteImport } from './routes/app.peer'
+import { Route as AppRecommendationsRouteImport } from './routes/app.recommendations'
+import { Route as AppRetestRouteImport } from './routes/app.retest'
+import { Route as AppTeamsRouteImport } from './routes/app.teams'
+import { Route as AppTemplatesRouteImport } from './routes/app.templates'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
+import { Route as ContactFormIndexRouteImport } from './routes/contact-form.index'
+import { Route as DocsIndexRouteImport } from './routes/docs.index'
+import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
+import { Route as DocsAdminRouteImport } from './routes/docs.admin'
+import { Route as DocsAppRouteImport } from './routes/docs.app'
+import { Route as LoginEnroll2faRouteImport } from './routes/login_.enroll-2fa'
+import { Route as LoginVerify2faRouteImport } from './routes/login_.verify-2fa'
+import { Route as RShareIdRouteImport } from './routes/r.$shareId'
+import { Route as SSlugRouteImport } from './routes/s.$slug'
+import { Route as SablonyIndexRouteImport } from './routes/sablony.index'
+import { Route as SablonySlugRouteImport } from './routes/sablony.$slug'
+import { Route as SchoolsDpaRouteImport } from './routes/schools_.dpa'
+import { Route as SponsorsAllRouteImport } from './routes/sponsors_.all'
+import { Route as TShareIdRouteImport } from './routes/t.$shareId'
+import { Route as TestIndexRouteImport } from './routes/test.index'
+import { Route as TestBuilderRouteImport } from './routes/test.builder'
+import { Route as TestsIndexRouteImport } from './routes/tests.index'
+import { Route as TestsSlugRouteImport } from './routes/tests.$slug'
+import { Route as ThankYouSessionIdRouteImport } from './routes/thank-you.$sessionId'
 import { Route as AcademyAuthorSlugRouteImport } from './routes/academy.author.$slug'
+import { Route as AcademyCategorySlugRouteImport } from './routes/academy.category.$slug'
+import { Route as AdminAnswerSetsIndexRouteImport } from './routes/admin/answer-sets.index'
+import { Route as AdminAnswerSetsSetIdRouteImport } from './routes/admin/answer-sets.$setId'
+import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
+import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
+import { Route as AdminBlogNewRouteImport } from './routes/admin/blog/new'
+import { Route as AdminPagesIndexRouteImport } from './routes/admin/pages.index'
+import { Route as AdminPagesPageIdRouteImport } from './routes/admin/pages.$pageId'
+import { Route as AdminSettingsNotificationsRouteImport } from './routes/admin/settings.notifications'
+import { Route as AdminTestsIndexRouteImport } from './routes/admin/tests.index'
+import { Route as AdminTestsTestIdRouteImport } from './routes/admin/tests.$testId'
+import { Route as AdminTicketsTicketIdRouteImport } from './routes/admin/tickets.$ticketId'
+import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users.$userId'
+import { Route as AppAccountProfileRouteImport } from './routes/app.account.profile'
+import { Route as AppAccountSecurityRouteImport } from './routes/app.account.security'
+import { Route as AppEduTestsIndexRouteImport } from './routes/app.edu-tests.index'
+import { Route as AppHelpContactRouteImport } from './routes/app.help.contact'
+import { Route as AppLegalDsrRouteImport } from './routes/app.legal.dsr'
+import { Route as AppTestsIndexRouteImport } from './routes/app.tests.index'
+import { Route as AppTestsTestIdRouteImport } from './routes/app.tests.$testId'
+import { Route as AppTestsNewRouteImport } from './routes/app.tests.new'
+import { Route as ContactFormTicketIdRouteImport } from './routes/contact-form.ticket.$id'
+import { Route as DocsAdminSlugRouteImport } from './routes/docs.admin.$slug'
+import { Route as DocsAppSlugRouteImport } from './routes/docs.app.$slug'
+import { Route as TestBuilderIndexRouteImport } from './routes/test.builder.index'
+import { Route as TestBuilderIdRouteImport } from './routes/test.builder.$id'
 import { Route as TestBuilderIdIndexRouteImport } from './routes/test.builder.$id.index'
 import { Route as TestBuilderIdResultsRouteImport } from './routes/test.builder.$id.results'
-import { Route as TestBuilderIdResultsAttemptIdRouteImport } from './routes/test.builder.$id.results.$attemptId'
 import { Route as AppTestsTestIdSessionsSessionIdRouteImport } from './routes/app.tests.$testId.sessions.$sessionId'
+import { Route as TestBuilderIdResultsAttemptIdRouteImport } from './routes/test.builder.$id.results.$attemptId'
 
-const SupportRoute = SupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/support.lazy').then((d) => d.Route))
-const SponsorsRoute = SponsorsRouteImport.update({
-  id: '/sponsors',
-  path: '/sponsors',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/sponsors.lazy').then((d) => d.Route))
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/signup.lazy').then((d) => d.Route))
-const SchoolsRoute = SchoolsRouteImport.update({
-  id: '/schools',
-  path: '/schools',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/privacy.lazy').then((d) => d.Route))
-const PomocnikRoute = PomocnikRouteImport.update({
-  id: '/pomocnik',
-  path: '/pomocnik',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ManageSupportRoute = ManageSupportRouteImport.update({
-  id: '/manage-support',
-  path: '/manage-support',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() =>
-  import('./routes/manage-support.lazy').then((d) => d.Route),
-)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
-const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CookiesRoute = CookiesRouteImport.update({
-  id: '/cookies',
-  path: '/cookies',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/cookies.lazy').then((d) => d.Route))
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChangelogRoute = ChangelogRouteImport.update({
-  id: '/changelog',
-  path: '/changelog',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/changelog.lazy').then((d) => d.Route))
-const AppRoute = AppRouteImport.update({
-  id: '/app',
-  path: '/app',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -194,156 +127,263 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TestsIndexRoute = TestsIndexRouteImport.update({
-  id: '/tests/',
-  path: '/tests/',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/tests.index.lazy').then((d) => d.Route))
-const TestIndexRoute = TestIndexRouteImport.update({
-  id: '/test/',
-  path: '/test/',
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SablonyIndexRoute = SablonyIndexRouteImport.update({
-  id: '/sablony/',
-  path: '/sablony/',
+const ChangelogRoute = ChangelogRouteImport.update({
+  id: '/changelog',
+  path: '/changelog',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/sablony.index.lazy').then((d) => d.Route))
-const DocsIndexRoute = DocsIndexRouteImport.update({
-  id: '/docs/',
-  path: '/docs/',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/docs.index.lazy').then((d) => d.Route))
-const ContactFormIndexRoute = ContactFormIndexRouteImport.update({
-  id: '/contact-form/',
-  path: '/contact-form/',
+} as any).lazy(() => import('./routes/changelog.lazy').then((d) => d.Route))
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppIndexRoute = AppIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppRoute,
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/cookies.lazy').then((d) => d.Route))
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/index.lazy').then((d) => d.Route))
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+const ManageSupportRoute = ManageSupportRouteImport.update({
+  id: '/manage-support',
+  path: '/manage-support',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/manage-support.lazy').then((d) => d.Route),
+)
+const PomocnikRoute = PomocnikRouteImport.update({
+  id: '/pomocnik',
+  path: '/pomocnik',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/privacy.lazy').then((d) => d.Route))
+const SchoolsRoute = SchoolsRouteImport.update({
+  id: '/schools',
+  path: '/schools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/signup.lazy').then((d) => d.Route))
+const SponsorsRoute = SponsorsRouteImport.update({
+  id: '/sponsors',
+  path: '/sponsors',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/sponsors.lazy').then((d) => d.Route))
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/support.lazy').then((d) => d.Route))
 const AcademyIndexRoute = AcademyIndexRouteImport.update({
   id: '/academy/',
   path: '/academy/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/academy.index.lazy').then((d) => d.Route))
-const ThankYouSessionIdRoute = ThankYouSessionIdRouteImport.update({
-  id: '/thank-you/$sessionId',
-  path: '/thank-you/$sessionId',
+const AcademySlugRoute = AcademySlugRouteImport.update({
+  id: '/academy/$slug',
+  path: '/academy/$slug',
   getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/academy.$slug.lazy').then((d) => d.Route))
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/admin/index.lazy').then((d) => d.Route))
+const AdminAnswerSetsRoute = AdminAnswerSetsRouteImport.update({
+  id: '/answer-sets',
+  path: '/answer-sets',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/admin/audit.lazy').then((d) => d.Route))
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
 } as any).lazy(() =>
-  import('./routes/thank-you.$sessionId.lazy').then((d) => d.Route),
+  import('./routes/admin/categories.lazy').then((d) => d.Route),
 )
-const TestsSlugRoute = TestsSlugRouteImport.update({
-  id: '/tests/$slug',
-  path: '/tests/$slug',
-  getParentRoute: () => rootRouteImport,
+const AdminDpaRequestsRoute = AdminDpaRequestsRouteImport.update({
+  id: '/dpa-requests',
+  path: '/dpa-requests',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/dpa-requests.lazy').then((d) => d.Route),
+)
+const AdminDsrRoute = AdminDsrRouteImport.update({
+  id: '/dsr',
+  path: '/dsr',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/admin/dsr.lazy').then((d) => d.Route))
+const AdminFooterRoute = AdminFooterRouteImport.update({
+  id: '/footer',
+  path: '/footer',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/admin/footer.lazy').then((d) => d.Route))
+const AdminHeaderRoute = AdminHeaderRouteImport.update({
+  id: '/header',
+  path: '/header',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/admin/header.lazy').then((d) => d.Route))
+const AdminNavigationRoute = AdminNavigationRouteImport.update({
+  id: '/navigation',
+  path: '/navigation',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/navigation.lazy').then((d) => d.Route),
+)
+const AdminPagesRoute = AdminPagesRouteImport.update({
+  id: '/pages',
+  path: '/pages',
+  getParentRoute: () => AdminRoute,
 } as any)
-const TestBuilderRoute = TestBuilderRouteImport.update({
-  id: '/test/builder',
-  path: '/test/builder',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/test.builder.lazy').then((d) => d.Route))
-const TShareIdRoute = TShareIdRouteImport.update({
-  id: '/t/$shareId',
-  path: '/t/$shareId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SponsorsAllRoute = SponsorsAllRouteImport.update({
-  id: '/sponsors_/all',
-  path: '/sponsors/all',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SchoolsDpaRoute = SchoolsDpaRouteImport.update({
-  id: '/schools_/dpa',
-  path: '/schools/dpa',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SablonySlugRoute = SablonySlugRouteImport.update({
-  id: '/sablony/$slug',
-  path: '/sablony/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/sablony.$slug.lazy').then((d) => d.Route))
-const SSlugRoute = SSlugRouteImport.update({
-  id: '/s/$slug',
-  path: '/s/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RShareIdRoute = RShareIdRouteImport.update({
-  id: '/r/$shareId',
-  path: '/r/$shareId',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/r.$shareId.lazy').then((d) => d.Route))
-const LoginVerify2faRoute = LoginVerify2faRouteImport.update({
-  id: '/login_/verify-2fa',
-  path: '/login/verify-2fa',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginEnroll2faRoute = LoginEnroll2faRouteImport.update({
-  id: '/login_/enroll-2fa',
-  path: '/login/enroll-2fa',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsAppRoute = DocsAppRouteImport.update({
-  id: '/docs/app',
-  path: '/docs/app',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsAdminRoute = DocsAdminRouteImport.update({
-  id: '/docs/admin',
-  path: '/docs/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsSlugRoute = DocsSlugRouteImport.update({
-  id: '/docs/$slug',
-  path: '/docs/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/docs.$slug.lazy').then((d) => d.Route))
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/auth/reset-password',
-  path: '/auth/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/auth/callback',
-  path: '/auth/callback',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppTemplatesRoute = AppTemplatesRouteImport.update({
+const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
+  id: '/questions',
+  path: '/questions',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/questions.lazy').then((d) => d.Route),
+)
+const AdminQuickTestRoute = AdminQuickTestRouteImport.update({
+  id: '/quick-test',
+  path: '/quick-test',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/quick-test.lazy').then((d) => d.Route),
+)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/admin/reports.lazy').then((d) => d.Route))
+const AdminRespondentsRoute = AdminRespondentsRouteImport.update({
+  id: '/respondents',
+  path: '/respondents',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/respondents.lazy').then((d) => d.Route),
+)
+const AdminSecurityRoute = AdminSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/security.lazy').then((d) => d.Route),
+)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/settings.lazy').then((d) => d.Route),
+)
+const AdminShareCardRoute = AdminShareCardRouteImport.update({
+  id: '/share-card',
+  path: '/share-card',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/share-card.lazy').then((d) => d.Route),
+)
+const AdminSupportRoute = AdminSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/admin/support.lazy').then((d) => d.Route))
+const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/templates.lazy').then((d) => d.Route),
+)
+const AdminTestsRoute = AdminTestsRouteImport.update({
+  id: '/tests',
+  path: '/tests',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTicketsRoute = AdminTicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/admin/tickets.lazy').then((d) => d.Route))
+const AdminTrainingsRoute = AdminTrainingsRouteImport.update({
+  id: '/trainings',
+  path: '/trainings',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() =>
+  import('./routes/admin/trainings.lazy').then((d) => d.Route),
+)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any).lazy(() => import('./routes/admin/users.lazy').then((d) => d.Route))
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => AppRoute,
 } as any)
-const AppTeamsRoute = AppTeamsRouteImport.update({
-  id: '/teams',
-  path: '/teams',
+const AppAudiencesRoute = AppAudiencesRouteImport.update({
+  id: '/audiences',
+  path: '/audiences',
   getParentRoute: () => AppRoute,
 } as any)
-const AppRetestRoute = AppRetestRouteImport.update({
-  id: '/retest',
-  path: '/retest',
+const AppDigestRoute = AppDigestRouteImport.update({
+  id: '/digest',
+  path: '/digest',
   getParentRoute: () => AppRoute,
 } as any)
-const AppRecommendationsRoute = AppRecommendationsRouteImport.update({
-  id: '/recommendations',
-  path: '/recommendations',
+const AppHelpRoute = AppHelpRouteImport.update({
+  id: '/help',
+  path: '/help',
   getParentRoute: () => AppRoute,
 } as any)
-const AppPeerRoute = AppPeerRouteImport.update({
-  id: '/peer',
-  path: '/peer',
+const AppHistoryRoute = AppHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInsightsRoute = AppInsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() => import('./routes/app.insights.lazy').then((d) => d.Route))
+const AppLibraryRoute = AppLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => AppRoute,
 } as any)
 const AppOnboardingRoute = AppOnboardingRouteImport.update({
@@ -353,217 +393,151 @@ const AppOnboardingRoute = AppOnboardingRouteImport.update({
 } as any).lazy(() =>
   import('./routes/app.onboarding.lazy').then((d) => d.Route),
 )
-const AppNotificationsRoute = AppNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
+const AppPeerRoute = AppPeerRouteImport.update({
+  id: '/peer',
+  path: '/peer',
   getParentRoute: () => AppRoute,
 } as any)
-const AppLibraryRoute = AppLibraryRouteImport.update({
-  id: '/library',
-  path: '/library',
+const AppRecommendationsRoute = AppRecommendationsRouteImport.update({
+  id: '/recommendations',
+  path: '/recommendations',
   getParentRoute: () => AppRoute,
 } as any)
-const AppInsightsRoute = AppInsightsRouteImport.update({
-  id: '/insights',
-  path: '/insights',
-  getParentRoute: () => AppRoute,
-} as any).lazy(() => import('./routes/app.insights.lazy').then((d) => d.Route))
-const AppHistoryRoute = AppHistoryRouteImport.update({
-  id: '/history',
-  path: '/history',
+const AppRetestRoute = AppRetestRouteImport.update({
+  id: '/retest',
+  path: '/retest',
   getParentRoute: () => AppRoute,
 } as any)
-const AppHelpRoute = AppHelpRouteImport.update({
-  id: '/help',
-  path: '/help',
+const AppTeamsRoute = AppTeamsRouteImport.update({
+  id: '/teams',
+  path: '/teams',
   getParentRoute: () => AppRoute,
 } as any)
-const AppDigestRoute = AppDigestRouteImport.update({
-  id: '/digest',
-  path: '/digest',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppAudiencesRoute = AppAudiencesRouteImport.update({
-  id: '/audiences',
-  path: '/audiences',
-  getParentRoute: () => AppRoute,
-} as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/users.lazy').then((d) => d.Route))
-const AdminTrainingsRoute = AdminTrainingsRouteImport.update({
-  id: '/trainings',
-  path: '/trainings',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/trainings.lazy').then((d) => d.Route),
-)
-const AdminTicketsRoute = AdminTicketsRouteImport.update({
-  id: '/tickets',
-  path: '/tickets',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/tickets.lazy').then((d) => d.Route))
-const AdminTestsRoute = AdminTestsRouteImport.update({
-  id: '/tests',
-  path: '/tests',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminTemplatesRoute = AdminTemplatesRouteImport.update({
+const AppTemplatesRoute = AppTemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/templates.lazy').then((d) => d.Route),
-)
-const AdminSupportRoute = AdminSupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/support.lazy').then((d) => d.Route))
-const AdminShareCardRoute = AdminShareCardRouteImport.update({
-  id: '/share-card',
-  path: '/share-card',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/share-card.lazy').then((d) => d.Route),
-)
-const AdminSettingsRoute = AdminSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/settings.lazy').then((d) => d.Route),
-)
-const AdminSecurityRoute = AdminSecurityRouteImport.update({
-  id: '/security',
-  path: '/security',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/security.lazy').then((d) => d.Route),
-)
-const AdminRespondentsRoute = AdminRespondentsRouteImport.update({
-  id: '/respondents',
-  path: '/respondents',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/respondents.lazy').then((d) => d.Route),
-)
-const AdminReportsRoute = AdminReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/reports.lazy').then((d) => d.Route))
-const AdminQuickTestRoute = AdminQuickTestRouteImport.update({
-  id: '/quick-test',
-  path: '/quick-test',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/quick-test.lazy').then((d) => d.Route),
-)
-const AdminQuestionsRoute = AdminQuestionsRouteImport.update({
-  id: '/questions',
-  path: '/questions',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/questions.lazy').then((d) => d.Route),
-)
-const AdminPagesRoute = AdminPagesRouteImport.update({
-  id: '/pages',
-  path: '/pages',
-  getParentRoute: () => AdminRoute,
+  getParentRoute: () => AppRoute,
 } as any)
-const AdminNavigationRoute = AdminNavigationRouteImport.update({
-  id: '/navigation',
-  path: '/navigation',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/navigation.lazy').then((d) => d.Route),
-)
-const AdminHeaderRoute = AdminHeaderRouteImport.update({
-  id: '/header',
-  path: '/header',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/header.lazy').then((d) => d.Route))
-const AdminFooterRoute = AdminFooterRouteImport.update({
-  id: '/footer',
-  path: '/footer',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/footer.lazy').then((d) => d.Route))
-const AdminDsrRoute = AdminDsrRouteImport.update({
-  id: '/dsr',
-  path: '/dsr',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/dsr.lazy').then((d) => d.Route))
-const AdminDpaRequestsRoute = AdminDpaRequestsRouteImport.update({
-  id: '/dpa-requests',
-  path: '/dpa-requests',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/dpa-requests.lazy').then((d) => d.Route),
-)
-const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
-  id: '/categories',
-  path: '/categories',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/categories.lazy').then((d) => d.Route),
-)
-const AdminAuditRoute = AdminAuditRouteImport.update({
-  id: '/audit',
-  path: '/audit',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() => import('./routes/admin/audit.lazy').then((d) => d.Route))
-const AdminAnswerSetsRoute = AdminAnswerSetsRouteImport.update({
-  id: '/answer-sets',
-  path: '/answer-sets',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AcademySlugRoute = AcademySlugRouteImport.update({
-  id: '/academy/$slug',
-  path: '/academy/$slug',
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/academy.$slug.lazy').then((d) => d.Route))
-const TestBuilderIndexRoute = TestBuilderIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => TestBuilderRoute,
-} as any).lazy(() =>
-  import('./routes/test.builder.index.lazy').then((d) => d.Route),
-)
-const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/auth/reset-password',
+  path: '/auth/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactFormIndexRoute = ContactFormIndexRouteImport.update({
+  id: '/contact-form/',
+  path: '/contact-form/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsIndexRoute = DocsIndexRouteImport.update({
+  id: '/docs/',
+  path: '/docs/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/docs.index.lazy').then((d) => d.Route))
+const DocsSlugRoute = DocsSlugRouteImport.update({
+  id: '/docs/$slug',
+  path: '/docs/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/docs.$slug.lazy').then((d) => d.Route))
+const DocsAdminRoute = DocsAdminRouteImport.update({
+  id: '/docs/admin',
+  path: '/docs/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsAppRoute = DocsAppRouteImport.update({
+  id: '/docs/app',
+  path: '/docs/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginEnroll2faRoute = LoginEnroll2faRouteImport.update({
+  id: '/login_/enroll-2fa',
+  path: '/login/enroll-2fa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginVerify2faRoute = LoginVerify2faRouteImport.update({
+  id: '/login_/verify-2fa',
+  path: '/login/verify-2fa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RShareIdRoute = RShareIdRouteImport.update({
+  id: '/r/$shareId',
+  path: '/r/$shareId',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/r.$shareId.lazy').then((d) => d.Route))
+const SSlugRoute = SSlugRouteImport.update({
+  id: '/s/$slug',
+  path: '/s/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SablonyIndexRoute = SablonyIndexRouteImport.update({
+  id: '/sablony/',
+  path: '/sablony/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/sablony.index.lazy').then((d) => d.Route))
+const SablonySlugRoute = SablonySlugRouteImport.update({
+  id: '/sablony/$slug',
+  path: '/sablony/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/sablony.$slug.lazy').then((d) => d.Route))
+const SchoolsDpaRoute = SchoolsDpaRouteImport.update({
+  id: '/schools_/dpa',
+  path: '/schools/dpa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SponsorsAllRoute = SponsorsAllRouteImport.update({
+  id: '/sponsors_/all',
+  path: '/sponsors/all',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TShareIdRoute = TShareIdRouteImport.update({
+  id: '/t/$shareId',
+  path: '/t/$shareId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestIndexRoute = TestIndexRouteImport.update({
+  id: '/test/',
+  path: '/test/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestBuilderRoute = TestBuilderRouteImport.update({
+  id: '/test/builder',
+  path: '/test/builder',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/test.builder.lazy').then((d) => d.Route))
+const TestsIndexRoute = TestsIndexRouteImport.update({
   id: '/tests/',
   path: '/tests/',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/tests.index.lazy').then((d) => d.Route))
+const TestsSlugRoute = TestsSlugRouteImport.update({
+  id: '/tests/$slug',
+  path: '/tests/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AppEduTestsIndexRoute = AppEduTestsIndexRouteImport.update({
-  id: '/edu-tests/',
-  path: '/edu-tests/',
-  getParentRoute: () => AppRoute,
+const ThankYouSessionIdRoute = ThankYouSessionIdRouteImport.update({
+  id: '/thank-you/$sessionId',
+  path: '/thank-you/$sessionId',
+  getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
-  import('./routes/app.edu-tests.index.lazy').then((d) => d.Route),
+  import('./routes/thank-you.$sessionId.lazy').then((d) => d.Route),
 )
-const AdminTestsIndexRoute = AdminTestsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminTestsRoute,
+const AcademyAuthorSlugRoute = AcademyAuthorSlugRouteImport.update({
+  id: '/academy/author/$slug',
+  path: '/academy/author/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
-  import('./routes/admin/tests.index.lazy').then((d) => d.Route),
+  import('./routes/academy.author.$slug.lazy').then((d) => d.Route),
 )
-const AdminPagesIndexRoute = AdminPagesIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminPagesRoute,
+const AcademyCategorySlugRoute = AcademyCategorySlugRouteImport.update({
+  id: '/academy/category/$slug',
+  path: '/academy/category/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
-  import('./routes/admin/pages.index.lazy').then((d) => d.Route),
-)
-const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
-  getParentRoute: () => AdminRoute,
-} as any).lazy(() =>
-  import('./routes/admin/blog/index.lazy').then((d) => d.Route),
+  import('./routes/academy.category.$slug.lazy').then((d) => d.Route),
 )
 const AdminAnswerSetsIndexRoute = AdminAnswerSetsIndexRouteImport.update({
   id: '/',
@@ -572,80 +546,47 @@ const AdminAnswerSetsIndexRoute = AdminAnswerSetsIndexRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/answer-sets.index.lazy').then((d) => d.Route),
 )
-const TestBuilderIdRoute = TestBuilderIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => TestBuilderRoute,
+const AdminAnswerSetsSetIdRoute = AdminAnswerSetsSetIdRouteImport.update({
+  id: '/$setId',
+  path: '/$setId',
+  getParentRoute: () => AdminAnswerSetsRoute,
 } as any).lazy(() =>
-  import('./routes/test.builder.$id.lazy').then((d) => d.Route),
+  import('./routes/admin/answer-sets.$setId.lazy').then((d) => d.Route),
 )
-const DocsAppSlugRoute = DocsAppSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => DocsAppRoute,
-} as any)
-const DocsAdminSlugRoute = DocsAdminSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => DocsAdminRoute,
-} as any)
-const ContactFormTicketIdRoute = ContactFormTicketIdRouteImport.update({
-  id: '/contact-form/ticket/$id',
-  path: '/contact-form/ticket/$id',
-  getParentRoute: () => rootRouteImport,
+const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => AdminRoute,
 } as any).lazy(() =>
-  import('./routes/contact-form.ticket.$id.lazy').then((d) => d.Route),
+  import('./routes/admin/blog/index.lazy').then((d) => d.Route),
 )
-const AppTestsNewRoute = AppTestsNewRouteImport.update({
-  id: '/tests/new',
-  path: '/tests/new',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppTestsTestIdRoute = AppTestsTestIdRouteImport.update({
-  id: '/tests/$testId',
-  path: '/tests/$testId',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppLegalDsrRoute = AppLegalDsrRouteImport.update({
-  id: '/legal/dsr',
-  path: '/legal/dsr',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppHelpContactRoute = AppHelpContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => AppHelpRoute,
-} as any)
-const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
-  id: '/account/security',
-  path: '/account/security',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppAccountProfileRoute = AppAccountProfileRouteImport.update({
-  id: '/account/profile',
-  path: '/account/profile',
-  getParentRoute: () => AppRoute,
-} as any)
-const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
-  id: '/$userId',
-  path: '/$userId',
-  getParentRoute: () => AdminUsersRoute,
+const AdminBlogIdRoute = AdminBlogIdRouteImport.update({
+  id: '/blog/$id',
+  path: '/blog/$id',
+  getParentRoute: () => AdminRoute,
 } as any).lazy(() =>
-  import('./routes/admin/users.$userId.lazy').then((d) => d.Route),
+  import('./routes/admin/blog/$id.lazy').then((d) => d.Route),
 )
-const AdminTicketsTicketIdRoute = AdminTicketsTicketIdRouteImport.update({
-  id: '/$ticketId',
-  path: '/$ticketId',
-  getParentRoute: () => AdminTicketsRoute,
+const AdminBlogNewRoute = AdminBlogNewRouteImport.update({
+  id: '/blog/new',
+  path: '/blog/new',
+  getParentRoute: () => AdminRoute,
 } as any).lazy(() =>
-  import('./routes/admin/tickets.$ticketId.lazy').then((d) => d.Route),
+  import('./routes/admin/blog/new.lazy').then((d) => d.Route),
 )
-const AdminTestsTestIdRoute = AdminTestsTestIdRouteImport.update({
-  id: '/$testId',
-  path: '/$testId',
-  getParentRoute: () => AdminTestsRoute,
+const AdminPagesIndexRoute = AdminPagesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminPagesRoute,
 } as any).lazy(() =>
-  import('./routes/admin/tests.$testId.lazy').then((d) => d.Route),
+  import('./routes/admin/pages.index.lazy').then((d) => d.Route),
+)
+const AdminPagesPageIdRoute = AdminPagesPageIdRouteImport.update({
+  id: '/$pageId',
+  path: '/$pageId',
+  getParentRoute: () => AdminPagesRoute,
+} as any).lazy(() =>
+  import('./routes/admin/pages.$pageId.lazy').then((d) => d.Route),
 )
 const AdminSettingsNotificationsRoute =
   AdminSettingsNotificationsRouteImport.update({
@@ -655,47 +596,106 @@ const AdminSettingsNotificationsRoute =
   } as any).lazy(() =>
     import('./routes/admin/settings.notifications.lazy').then((d) => d.Route),
   )
-const AdminPagesPageIdRoute = AdminPagesPageIdRouteImport.update({
-  id: '/$pageId',
-  path: '/$pageId',
-  getParentRoute: () => AdminPagesRoute,
+const AdminTestsIndexRoute = AdminTestsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminTestsRoute,
 } as any).lazy(() =>
-  import('./routes/admin/pages.$pageId.lazy').then((d) => d.Route),
+  import('./routes/admin/tests.index.lazy').then((d) => d.Route),
 )
-const AdminBlogNewRoute = AdminBlogNewRouteImport.update({
-  id: '/blog/new',
-  path: '/blog/new',
-  getParentRoute: () => AdminRoute,
+const AdminTestsTestIdRoute = AdminTestsTestIdRouteImport.update({
+  id: '/$testId',
+  path: '/$testId',
+  getParentRoute: () => AdminTestsRoute,
 } as any).lazy(() =>
-  import('./routes/admin/blog/new.lazy').then((d) => d.Route),
+  import('./routes/admin/tests.$testId.lazy').then((d) => d.Route),
 )
-const AdminBlogIdRoute = AdminBlogIdRouteImport.update({
-  id: '/blog/$id',
-  path: '/blog/$id',
-  getParentRoute: () => AdminRoute,
+const AdminTicketsTicketIdRoute = AdminTicketsTicketIdRouteImport.update({
+  id: '/$ticketId',
+  path: '/$ticketId',
+  getParentRoute: () => AdminTicketsRoute,
 } as any).lazy(() =>
-  import('./routes/admin/blog/$id.lazy').then((d) => d.Route),
+  import('./routes/admin/tickets.$ticketId.lazy').then((d) => d.Route),
 )
-const AdminAnswerSetsSetIdRoute = AdminAnswerSetsSetIdRouteImport.update({
-  id: '/$setId',
-  path: '/$setId',
-  getParentRoute: () => AdminAnswerSetsRoute,
+const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
+  id: '/$userId',
+  path: '/$userId',
+  getParentRoute: () => AdminUsersRoute,
 } as any).lazy(() =>
-  import('./routes/admin/answer-sets.$setId.lazy').then((d) => d.Route),
+  import('./routes/admin/users.$userId.lazy').then((d) => d.Route),
 )
-const AcademyCategorySlugRoute = AcademyCategorySlugRouteImport.update({
-  id: '/academy/category/$slug',
-  path: '/academy/category/$slug',
+const AppAccountProfileRoute = AppAccountProfileRouteImport.update({
+  id: '/account/profile',
+  path: '/account/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAccountSecurityRoute = AppAccountSecurityRouteImport.update({
+  id: '/account/security',
+  path: '/account/security',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppEduTestsIndexRoute = AppEduTestsIndexRouteImport.update({
+  id: '/edu-tests/',
+  path: '/edu-tests/',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() =>
+  import('./routes/app.edu-tests.index.lazy').then((d) => d.Route),
+)
+const AppHelpContactRoute = AppHelpContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => AppHelpRoute,
+} as any)
+const AppLegalDsrRoute = AppLegalDsrRouteImport.update({
+  id: '/legal/dsr',
+  path: '/legal/dsr',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTestsIndexRoute = AppTestsIndexRouteImport.update({
+  id: '/tests/',
+  path: '/tests/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTestsTestIdRoute = AppTestsTestIdRouteImport.update({
+  id: '/tests/$testId',
+  path: '/tests/$testId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTestsNewRoute = AppTestsNewRouteImport.update({
+  id: '/tests/new',
+  path: '/tests/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const ContactFormTicketIdRoute = ContactFormTicketIdRouteImport.update({
+  id: '/contact-form/ticket/$id',
+  path: '/contact-form/ticket/$id',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() =>
-  import('./routes/academy.category.$slug.lazy').then((d) => d.Route),
+  import('./routes/contact-form.ticket.$id.lazy').then((d) => d.Route),
 )
-const AcademyAuthorSlugRoute = AcademyAuthorSlugRouteImport.update({
-  id: '/academy/author/$slug',
-  path: '/academy/author/$slug',
-  getParentRoute: () => rootRouteImport,
+const DocsAdminSlugRoute = DocsAdminSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => DocsAdminRoute,
+} as any)
+const DocsAppSlugRoute = DocsAppSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => DocsAppRoute,
+} as any)
+const TestBuilderIndexRoute = TestBuilderIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TestBuilderRoute,
 } as any).lazy(() =>
-  import('./routes/academy.author.$slug.lazy').then((d) => d.Route),
+  import('./routes/test.builder.index.lazy').then((d) => d.Route),
+)
+const TestBuilderIdRoute = TestBuilderIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => TestBuilderRoute,
+} as any).lazy(() =>
+  import('./routes/test.builder.$id.lazy').then((d) => d.Route),
 )
 const TestBuilderIdIndexRoute = TestBuilderIdIndexRouteImport.update({
   id: '/',
@@ -711,6 +711,12 @@ const TestBuilderIdResultsRoute = TestBuilderIdResultsRouteImport.update({
 } as any).lazy(() =>
   import('./routes/test.builder.$id.results.lazy').then((d) => d.Route),
 )
+const AppTestsTestIdSessionsSessionIdRoute =
+  AppTestsTestIdSessionsSessionIdRouteImport.update({
+    id: '/sessions/$sessionId',
+    path: '/sessions/$sessionId',
+    getParentRoute: () => AppTestsTestIdRoute,
+  } as any)
 const TestBuilderIdResultsAttemptIdRoute =
   TestBuilderIdResultsAttemptIdRouteImport.update({
     id: '/$attemptId',
@@ -721,12 +727,6 @@ const TestBuilderIdResultsAttemptIdRoute =
       (d) => d.Route,
     ),
   )
-const AppTestsTestIdSessionsSessionIdRoute =
-  AppTestsTestIdSessionsSessionIdRouteImport.update({
-    id: '/sessions/$sessionId',
-    path: '/sessions/$sessionId',
-    getParentRoute: () => AppTestsTestIdRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -1419,102 +1419,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/support': {
-      id: '/support'
-      path: '/support'
-      fullPath: '/support'
-      preLoaderRoute: typeof SupportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sponsors': {
-      id: '/sponsors'
-      path: '/sponsors'
-      fullPath: '/sponsors'
-      preLoaderRoute: typeof SponsorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schools': {
-      id: '/schools'
-      path: '/schools'
-      fullPath: '/schools'
-      preLoaderRoute: typeof SchoolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pomocnik': {
-      id: '/pomocnik'
-      path: '/pomocnik'
-      fullPath: '/pomocnik'
-      preLoaderRoute: typeof PomocnikRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/manage-support': {
-      id: '/manage-support'
-      path: '/manage-support'
-      fullPath: '/manage-support'
-      preLoaderRoute: typeof ManageSupportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forgot-password': {
-      id: '/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof ForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cookies': {
-      id: '/cookies'
-      path: '/cookies'
-      fullPath: '/cookies'
-      preLoaderRoute: typeof CookiesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/changelog': {
-      id: '/changelog'
-      path: '/changelog'
-      fullPath: '/changelog'
-      preLoaderRoute: typeof ChangelogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/app': {
-      id: '/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -1524,61 +1433,103 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tests/': {
-      id: '/tests/'
-      path: '/tests'
-      fullPath: '/tests/'
-      preLoaderRoute: typeof TestsIndexRouteImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/test/': {
-      id: '/test/'
-      path: '/test'
-      fullPath: '/test/'
-      preLoaderRoute: typeof TestIndexRouteImport
+    '/changelog': {
+      id: '/changelog'
+      path: '/changelog'
+      fullPath: '/changelog'
+      preLoaderRoute: typeof ChangelogRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sablony/': {
-      id: '/sablony/'
-      path: '/sablony'
-      fullPath: '/sablony/'
-      preLoaderRoute: typeof SablonyIndexRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/docs/': {
-      id: '/docs/'
-      path: '/docs'
-      fullPath: '/docs/'
-      preLoaderRoute: typeof DocsIndexRouteImport
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/contact-form/': {
-      id: '/contact-form/'
-      path: '/contact-form'
-      fullPath: '/contact-form/'
-      preLoaderRoute: typeof ContactFormIndexRouteImport
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/app/': {
-      id: '/app/'
-      path: '/'
-      fullPath: '/app/'
-      preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppRoute
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
+    '/manage-support': {
+      id: '/manage-support'
+      path: '/manage-support'
+      fullPath: '/manage-support'
+      preLoaderRoute: typeof ManageSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pomocnik': {
+      id: '/pomocnik'
+      path: '/pomocnik'
+      fullPath: '/pomocnik'
+      preLoaderRoute: typeof PomocnikRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schools': {
+      id: '/schools'
+      path: '/schools'
+      fullPath: '/schools'
+      preLoaderRoute: typeof SchoolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sponsors': {
+      id: '/sponsors'
+      path: '/sponsors'
+      fullPath: '/sponsors'
+      preLoaderRoute: typeof SponsorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/academy/': {
       id: '/academy/'
@@ -1587,354 +1538,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AcademyIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/thank-you/$sessionId': {
-      id: '/thank-you/$sessionId'
-      path: '/thank-you/$sessionId'
-      fullPath: '/thank-you/$sessionId'
-      preLoaderRoute: typeof ThankYouSessionIdRouteImport
+    '/academy/$slug': {
+      id: '/academy/$slug'
+      path: '/academy/$slug'
+      fullPath: '/academy/$slug'
+      preLoaderRoute: typeof AcademySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tests/$slug': {
-      id: '/tests/$slug'
-      path: '/tests/$slug'
-      fullPath: '/tests/$slug'
-      preLoaderRoute: typeof TestsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/test/builder': {
-      id: '/test/builder'
-      path: '/test/builder'
-      fullPath: '/test/builder'
-      preLoaderRoute: typeof TestBuilderRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/t/$shareId': {
-      id: '/t/$shareId'
-      path: '/t/$shareId'
-      fullPath: '/t/$shareId'
-      preLoaderRoute: typeof TShareIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sponsors_/all': {
-      id: '/sponsors_/all'
-      path: '/sponsors/all'
-      fullPath: '/sponsors/all'
-      preLoaderRoute: typeof SponsorsAllRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/schools_/dpa': {
-      id: '/schools_/dpa'
-      path: '/schools/dpa'
-      fullPath: '/schools/dpa'
-      preLoaderRoute: typeof SchoolsDpaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sablony/$slug': {
-      id: '/sablony/$slug'
-      path: '/sablony/$slug'
-      fullPath: '/sablony/$slug'
-      preLoaderRoute: typeof SablonySlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/s/$slug': {
-      id: '/s/$slug'
-      path: '/s/$slug'
-      fullPath: '/s/$slug'
-      preLoaderRoute: typeof SSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/r/$shareId': {
-      id: '/r/$shareId'
-      path: '/r/$shareId'
-      fullPath: '/r/$shareId'
-      preLoaderRoute: typeof RShareIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login_/verify-2fa': {
-      id: '/login_/verify-2fa'
-      path: '/login/verify-2fa'
-      fullPath: '/login/verify-2fa'
-      preLoaderRoute: typeof LoginVerify2faRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login_/enroll-2fa': {
-      id: '/login_/enroll-2fa'
-      path: '/login/enroll-2fa'
-      fullPath: '/login/enroll-2fa'
-      preLoaderRoute: typeof LoginEnroll2faRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs/app': {
-      id: '/docs/app'
-      path: '/docs/app'
-      fullPath: '/docs/app'
-      preLoaderRoute: typeof DocsAppRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs/admin': {
-      id: '/docs/admin'
-      path: '/docs/admin'
-      fullPath: '/docs/admin'
-      preLoaderRoute: typeof DocsAdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs/$slug': {
-      id: '/docs/$slug'
-      path: '/docs/$slug'
-      fullPath: '/docs/$slug'
-      preLoaderRoute: typeof DocsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/auth/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/callback': {
-      id: '/auth/callback'
-      path: '/auth/callback'
-      fullPath: '/auth/callback'
-      preLoaderRoute: typeof AuthCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/app/templates': {
-      id: '/app/templates'
-      path: '/templates'
-      fullPath: '/app/templates'
-      preLoaderRoute: typeof AppTemplatesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/teams': {
-      id: '/app/teams'
-      path: '/teams'
-      fullPath: '/app/teams'
-      preLoaderRoute: typeof AppTeamsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/retest': {
-      id: '/app/retest'
-      path: '/retest'
-      fullPath: '/app/retest'
-      preLoaderRoute: typeof AppRetestRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/recommendations': {
-      id: '/app/recommendations'
-      path: '/recommendations'
-      fullPath: '/app/recommendations'
-      preLoaderRoute: typeof AppRecommendationsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/peer': {
-      id: '/app/peer'
-      path: '/peer'
-      fullPath: '/app/peer'
-      preLoaderRoute: typeof AppPeerRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/onboarding': {
-      id: '/app/onboarding'
-      path: '/onboarding'
-      fullPath: '/app/onboarding'
-      preLoaderRoute: typeof AppOnboardingRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/notifications': {
-      id: '/app/notifications'
-      path: '/notifications'
-      fullPath: '/app/notifications'
-      preLoaderRoute: typeof AppNotificationsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/library': {
-      id: '/app/library'
-      path: '/library'
-      fullPath: '/app/library'
-      preLoaderRoute: typeof AppLibraryRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/insights': {
-      id: '/app/insights'
-      path: '/insights'
-      fullPath: '/app/insights'
-      preLoaderRoute: typeof AppInsightsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/history': {
-      id: '/app/history'
-      path: '/history'
-      fullPath: '/app/history'
-      preLoaderRoute: typeof AppHistoryRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/help': {
-      id: '/app/help'
-      path: '/help'
-      fullPath: '/app/help'
-      preLoaderRoute: typeof AppHelpRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/digest': {
-      id: '/app/digest'
-      path: '/digest'
-      fullPath: '/app/digest'
-      preLoaderRoute: typeof AppDigestRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/audiences': {
-      id: '/app/audiences'
-      path: '/audiences'
-      fullPath: '/app/audiences'
-      preLoaderRoute: typeof AppAudiencesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/trainings': {
-      id: '/admin/trainings'
-      path: '/trainings'
-      fullPath: '/admin/trainings'
-      preLoaderRoute: typeof AdminTrainingsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/tickets': {
-      id: '/admin/tickets'
-      path: '/tickets'
-      fullPath: '/admin/tickets'
-      preLoaderRoute: typeof AdminTicketsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/tests': {
-      id: '/admin/tests'
-      path: '/tests'
-      fullPath: '/admin/tests'
-      preLoaderRoute: typeof AdminTestsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/templates': {
-      id: '/admin/templates'
-      path: '/templates'
-      fullPath: '/admin/templates'
-      preLoaderRoute: typeof AdminTemplatesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/support': {
-      id: '/admin/support'
-      path: '/support'
-      fullPath: '/admin/support'
-      preLoaderRoute: typeof AdminSupportRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/share-card': {
-      id: '/admin/share-card'
-      path: '/share-card'
-      fullPath: '/admin/share-card'
-      preLoaderRoute: typeof AdminShareCardRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/settings': {
-      id: '/admin/settings'
-      path: '/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminSettingsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/security': {
-      id: '/admin/security'
-      path: '/security'
-      fullPath: '/admin/security'
-      preLoaderRoute: typeof AdminSecurityRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/respondents': {
-      id: '/admin/respondents'
-      path: '/respondents'
-      fullPath: '/admin/respondents'
-      preLoaderRoute: typeof AdminRespondentsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/reports': {
-      id: '/admin/reports'
-      path: '/reports'
-      fullPath: '/admin/reports'
-      preLoaderRoute: typeof AdminReportsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/quick-test': {
-      id: '/admin/quick-test'
-      path: '/quick-test'
-      fullPath: '/admin/quick-test'
-      preLoaderRoute: typeof AdminQuickTestRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/questions': {
-      id: '/admin/questions'
-      path: '/questions'
-      fullPath: '/admin/questions'
-      preLoaderRoute: typeof AdminQuestionsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/pages': {
-      id: '/admin/pages'
-      path: '/pages'
-      fullPath: '/admin/pages'
-      preLoaderRoute: typeof AdminPagesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/navigation': {
-      id: '/admin/navigation'
-      path: '/navigation'
-      fullPath: '/admin/navigation'
-      preLoaderRoute: typeof AdminNavigationRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/header': {
-      id: '/admin/header'
-      path: '/header'
-      fullPath: '/admin/header'
-      preLoaderRoute: typeof AdminHeaderRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/footer': {
-      id: '/admin/footer'
-      path: '/footer'
-      fullPath: '/admin/footer'
-      preLoaderRoute: typeof AdminFooterRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/dsr': {
-      id: '/admin/dsr'
-      path: '/dsr'
-      fullPath: '/admin/dsr'
-      preLoaderRoute: typeof AdminDsrRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/dpa-requests': {
-      id: '/admin/dpa-requests'
-      path: '/dpa-requests'
-      fullPath: '/admin/dpa-requests'
-      preLoaderRoute: typeof AdminDpaRequestsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/categories': {
-      id: '/admin/categories'
-      path: '/categories'
-      fullPath: '/admin/categories'
-      preLoaderRoute: typeof AdminCategoriesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/audit': {
-      id: '/admin/audit'
-      path: '/audit'
-      fullPath: '/admin/audit'
-      preLoaderRoute: typeof AdminAuditRouteImport
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/answer-sets': {
@@ -1944,54 +1559,411 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnswerSetsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/academy/$slug': {
-      id: '/academy/$slug'
-      path: '/academy/$slug'
-      fullPath: '/academy/$slug'
-      preLoaderRoute: typeof AcademySlugRouteImport
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/dpa-requests': {
+      id: '/admin/dpa-requests'
+      path: '/dpa-requests'
+      fullPath: '/admin/dpa-requests'
+      preLoaderRoute: typeof AdminDpaRequestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/dsr': {
+      id: '/admin/dsr'
+      path: '/dsr'
+      fullPath: '/admin/dsr'
+      preLoaderRoute: typeof AdminDsrRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/footer': {
+      id: '/admin/footer'
+      path: '/footer'
+      fullPath: '/admin/footer'
+      preLoaderRoute: typeof AdminFooterRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/header': {
+      id: '/admin/header'
+      path: '/header'
+      fullPath: '/admin/header'
+      preLoaderRoute: typeof AdminHeaderRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/navigation': {
+      id: '/admin/navigation'
+      path: '/navigation'
+      fullPath: '/admin/navigation'
+      preLoaderRoute: typeof AdminNavigationRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/pages': {
+      id: '/admin/pages'
+      path: '/pages'
+      fullPath: '/admin/pages'
+      preLoaderRoute: typeof AdminPagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/questions': {
+      id: '/admin/questions'
+      path: '/questions'
+      fullPath: '/admin/questions'
+      preLoaderRoute: typeof AdminQuestionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/quick-test': {
+      id: '/admin/quick-test'
+      path: '/quick-test'
+      fullPath: '/admin/quick-test'
+      preLoaderRoute: typeof AdminQuickTestRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/respondents': {
+      id: '/admin/respondents'
+      path: '/respondents'
+      fullPath: '/admin/respondents'
+      preLoaderRoute: typeof AdminRespondentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/security': {
+      id: '/admin/security'
+      path: '/security'
+      fullPath: '/admin/security'
+      preLoaderRoute: typeof AdminSecurityRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/share-card': {
+      id: '/admin/share-card'
+      path: '/share-card'
+      fullPath: '/admin/share-card'
+      preLoaderRoute: typeof AdminShareCardRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/support': {
+      id: '/admin/support'
+      path: '/support'
+      fullPath: '/admin/support'
+      preLoaderRoute: typeof AdminSupportRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/templates': {
+      id: '/admin/templates'
+      path: '/templates'
+      fullPath: '/admin/templates'
+      preLoaderRoute: typeof AdminTemplatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tests': {
+      id: '/admin/tests'
+      path: '/tests'
+      fullPath: '/admin/tests'
+      preLoaderRoute: typeof AdminTestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tickets': {
+      id: '/admin/tickets'
+      path: '/tickets'
+      fullPath: '/admin/tickets'
+      preLoaderRoute: typeof AdminTicketsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/trainings': {
+      id: '/admin/trainings'
+      path: '/trainings'
+      fullPath: '/admin/trainings'
+      preLoaderRoute: typeof AdminTrainingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/audiences': {
+      id: '/app/audiences'
+      path: '/audiences'
+      fullPath: '/app/audiences'
+      preLoaderRoute: typeof AppAudiencesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/digest': {
+      id: '/app/digest'
+      path: '/digest'
+      fullPath: '/app/digest'
+      preLoaderRoute: typeof AppDigestRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/help': {
+      id: '/app/help'
+      path: '/help'
+      fullPath: '/app/help'
+      preLoaderRoute: typeof AppHelpRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/history': {
+      id: '/app/history'
+      path: '/history'
+      fullPath: '/app/history'
+      preLoaderRoute: typeof AppHistoryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/insights': {
+      id: '/app/insights'
+      path: '/insights'
+      fullPath: '/app/insights'
+      preLoaderRoute: typeof AppInsightsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/library': {
+      id: '/app/library'
+      path: '/library'
+      fullPath: '/app/library'
+      preLoaderRoute: typeof AppLibraryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/notifications': {
+      id: '/app/notifications'
+      path: '/notifications'
+      fullPath: '/app/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/onboarding': {
+      id: '/app/onboarding'
+      path: '/onboarding'
+      fullPath: '/app/onboarding'
+      preLoaderRoute: typeof AppOnboardingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/peer': {
+      id: '/app/peer'
+      path: '/peer'
+      fullPath: '/app/peer'
+      preLoaderRoute: typeof AppPeerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/recommendations': {
+      id: '/app/recommendations'
+      path: '/recommendations'
+      fullPath: '/app/recommendations'
+      preLoaderRoute: typeof AppRecommendationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/retest': {
+      id: '/app/retest'
+      path: '/retest'
+      fullPath: '/app/retest'
+      preLoaderRoute: typeof AppRetestRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/teams': {
+      id: '/app/teams'
+      path: '/teams'
+      fullPath: '/app/teams'
+      preLoaderRoute: typeof AppTeamsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/templates': {
+      id: '/app/templates'
+      path: '/templates'
+      fullPath: '/app/templates'
+      preLoaderRoute: typeof AppTemplatesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/test/builder/': {
-      id: '/test/builder/'
-      path: '/'
-      fullPath: '/test/builder/'
-      preLoaderRoute: typeof TestBuilderIndexRouteImport
-      parentRoute: typeof TestBuilderRoute
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/auth/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/app/tests/': {
-      id: '/app/tests/'
+    '/contact-form/': {
+      id: '/contact-form/'
+      path: '/contact-form'
+      fullPath: '/contact-form/'
+      preLoaderRoute: typeof ContactFormIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/': {
+      id: '/docs/'
+      path: '/docs'
+      fullPath: '/docs/'
+      preLoaderRoute: typeof DocsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/$slug': {
+      id: '/docs/$slug'
+      path: '/docs/$slug'
+      fullPath: '/docs/$slug'
+      preLoaderRoute: typeof DocsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/admin': {
+      id: '/docs/admin'
+      path: '/docs/admin'
+      fullPath: '/docs/admin'
+      preLoaderRoute: typeof DocsAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs/app': {
+      id: '/docs/app'
+      path: '/docs/app'
+      fullPath: '/docs/app'
+      preLoaderRoute: typeof DocsAppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login_/enroll-2fa': {
+      id: '/login_/enroll-2fa'
+      path: '/login/enroll-2fa'
+      fullPath: '/login/enroll-2fa'
+      preLoaderRoute: typeof LoginEnroll2faRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login_/verify-2fa': {
+      id: '/login_/verify-2fa'
+      path: '/login/verify-2fa'
+      fullPath: '/login/verify-2fa'
+      preLoaderRoute: typeof LoginVerify2faRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/r/$shareId': {
+      id: '/r/$shareId'
+      path: '/r/$shareId'
+      fullPath: '/r/$shareId'
+      preLoaderRoute: typeof RShareIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/$slug': {
+      id: '/s/$slug'
+      path: '/s/$slug'
+      fullPath: '/s/$slug'
+      preLoaderRoute: typeof SSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sablony/': {
+      id: '/sablony/'
+      path: '/sablony'
+      fullPath: '/sablony/'
+      preLoaderRoute: typeof SablonyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sablony/$slug': {
+      id: '/sablony/$slug'
+      path: '/sablony/$slug'
+      fullPath: '/sablony/$slug'
+      preLoaderRoute: typeof SablonySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schools_/dpa': {
+      id: '/schools_/dpa'
+      path: '/schools/dpa'
+      fullPath: '/schools/dpa'
+      preLoaderRoute: typeof SchoolsDpaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sponsors_/all': {
+      id: '/sponsors_/all'
+      path: '/sponsors/all'
+      fullPath: '/sponsors/all'
+      preLoaderRoute: typeof SponsorsAllRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/t/$shareId': {
+      id: '/t/$shareId'
+      path: '/t/$shareId'
+      fullPath: '/t/$shareId'
+      preLoaderRoute: typeof TShareIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test/': {
+      id: '/test/'
+      path: '/test'
+      fullPath: '/test/'
+      preLoaderRoute: typeof TestIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test/builder': {
+      id: '/test/builder'
+      path: '/test/builder'
+      fullPath: '/test/builder'
+      preLoaderRoute: typeof TestBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tests/': {
+      id: '/tests/'
       path: '/tests'
-      fullPath: '/app/tests/'
-      preLoaderRoute: typeof AppTestsIndexRouteImport
-      parentRoute: typeof AppRoute
+      fullPath: '/tests/'
+      preLoaderRoute: typeof TestsIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/app/edu-tests/': {
-      id: '/app/edu-tests/'
-      path: '/edu-tests'
-      fullPath: '/app/edu-tests/'
-      preLoaderRoute: typeof AppEduTestsIndexRouteImport
-      parentRoute: typeof AppRoute
+    '/tests/$slug': {
+      id: '/tests/$slug'
+      path: '/tests/$slug'
+      fullPath: '/tests/$slug'
+      preLoaderRoute: typeof TestsSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/admin/tests/': {
-      id: '/admin/tests/'
-      path: '/'
-      fullPath: '/admin/tests/'
-      preLoaderRoute: typeof AdminTestsIndexRouteImport
-      parentRoute: typeof AdminTestsRoute
+    '/thank-you/$sessionId': {
+      id: '/thank-you/$sessionId'
+      path: '/thank-you/$sessionId'
+      fullPath: '/thank-you/$sessionId'
+      preLoaderRoute: typeof ThankYouSessionIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/admin/pages/': {
-      id: '/admin/pages/'
-      path: '/'
-      fullPath: '/admin/pages/'
-      preLoaderRoute: typeof AdminPagesIndexRouteImport
-      parentRoute: typeof AdminPagesRoute
+    '/academy/author/$slug': {
+      id: '/academy/author/$slug'
+      path: '/academy/author/$slug'
+      fullPath: '/academy/author/$slug'
+      preLoaderRoute: typeof AcademyAuthorSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/admin/blog/': {
-      id: '/admin/blog/'
-      path: '/blog'
-      fullPath: '/admin/blog/'
-      preLoaderRoute: typeof AdminBlogIndexRouteImport
-      parentRoute: typeof AdminRoute
+    '/academy/category/$slug': {
+      id: '/academy/category/$slug'
+      path: '/academy/category/$slug'
+      fullPath: '/academy/category/$slug'
+      preLoaderRoute: typeof AcademyCategorySlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/answer-sets/': {
       id: '/admin/answer-sets/'
@@ -2000,116 +1972,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAnswerSetsIndexRouteImport
       parentRoute: typeof AdminAnswerSetsRoute
     }
-    '/test/builder/$id': {
-      id: '/test/builder/$id'
-      path: '/$id'
-      fullPath: '/test/builder/$id'
-      preLoaderRoute: typeof TestBuilderIdRouteImport
-      parentRoute: typeof TestBuilderRoute
+    '/admin/answer-sets/$setId': {
+      id: '/admin/answer-sets/$setId'
+      path: '/$setId'
+      fullPath: '/admin/answer-sets/$setId'
+      preLoaderRoute: typeof AdminAnswerSetsSetIdRouteImport
+      parentRoute: typeof AdminAnswerSetsRoute
     }
-    '/docs/app/$slug': {
-      id: '/docs/app/$slug'
-      path: '/$slug'
-      fullPath: '/docs/app/$slug'
-      preLoaderRoute: typeof DocsAppSlugRouteImport
-      parentRoute: typeof DocsAppRoute
-    }
-    '/docs/admin/$slug': {
-      id: '/docs/admin/$slug'
-      path: '/$slug'
-      fullPath: '/docs/admin/$slug'
-      preLoaderRoute: typeof DocsAdminSlugRouteImport
-      parentRoute: typeof DocsAdminRoute
-    }
-    '/contact-form/ticket/$id': {
-      id: '/contact-form/ticket/$id'
-      path: '/contact-form/ticket/$id'
-      fullPath: '/contact-form/ticket/$id'
-      preLoaderRoute: typeof ContactFormTicketIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/app/tests/new': {
-      id: '/app/tests/new'
-      path: '/tests/new'
-      fullPath: '/app/tests/new'
-      preLoaderRoute: typeof AppTestsNewRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/tests/$testId': {
-      id: '/app/tests/$testId'
-      path: '/tests/$testId'
-      fullPath: '/app/tests/$testId'
-      preLoaderRoute: typeof AppTestsTestIdRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/legal/dsr': {
-      id: '/app/legal/dsr'
-      path: '/legal/dsr'
-      fullPath: '/app/legal/dsr'
-      preLoaderRoute: typeof AppLegalDsrRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/help/contact': {
-      id: '/app/help/contact'
-      path: '/contact'
-      fullPath: '/app/help/contact'
-      preLoaderRoute: typeof AppHelpContactRouteImport
-      parentRoute: typeof AppHelpRoute
-    }
-    '/app/account/security': {
-      id: '/app/account/security'
-      path: '/account/security'
-      fullPath: '/app/account/security'
-      preLoaderRoute: typeof AppAccountSecurityRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/app/account/profile': {
-      id: '/app/account/profile'
-      path: '/account/profile'
-      fullPath: '/app/account/profile'
-      preLoaderRoute: typeof AppAccountProfileRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/admin/users/$userId': {
-      id: '/admin/users/$userId'
-      path: '/$userId'
-      fullPath: '/admin/users/$userId'
-      preLoaderRoute: typeof AdminUsersUserIdRouteImport
-      parentRoute: typeof AdminUsersRoute
-    }
-    '/admin/tickets/$ticketId': {
-      id: '/admin/tickets/$ticketId'
-      path: '/$ticketId'
-      fullPath: '/admin/tickets/$ticketId'
-      preLoaderRoute: typeof AdminTicketsTicketIdRouteImport
-      parentRoute: typeof AdminTicketsRoute
-    }
-    '/admin/tests/$testId': {
-      id: '/admin/tests/$testId'
-      path: '/$testId'
-      fullPath: '/admin/tests/$testId'
-      preLoaderRoute: typeof AdminTestsTestIdRouteImport
-      parentRoute: typeof AdminTestsRoute
-    }
-    '/admin/settings/notifications': {
-      id: '/admin/settings/notifications'
-      path: '/notifications'
-      fullPath: '/admin/settings/notifications'
-      preLoaderRoute: typeof AdminSettingsNotificationsRouteImport
-      parentRoute: typeof AdminSettingsRoute
-    }
-    '/admin/pages/$pageId': {
-      id: '/admin/pages/$pageId'
-      path: '/$pageId'
-      fullPath: '/admin/pages/$pageId'
-      preLoaderRoute: typeof AdminPagesPageIdRouteImport
-      parentRoute: typeof AdminPagesRoute
-    }
-    '/admin/blog/new': {
-      id: '/admin/blog/new'
-      path: '/blog/new'
-      fullPath: '/admin/blog/new'
-      preLoaderRoute: typeof AdminBlogNewRouteImport
+    '/admin/blog/': {
+      id: '/admin/blog/'
+      path: '/blog'
+      fullPath: '/admin/blog/'
+      preLoaderRoute: typeof AdminBlogIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/blog/$id': {
@@ -2119,26 +1993,152 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBlogIdRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/answer-sets/$setId': {
-      id: '/admin/answer-sets/$setId'
-      path: '/$setId'
-      fullPath: '/admin/answer-sets/$setId'
-      preLoaderRoute: typeof AdminAnswerSetsSetIdRouteImport
-      parentRoute: typeof AdminAnswerSetsRoute
+    '/admin/blog/new': {
+      id: '/admin/blog/new'
+      path: '/blog/new'
+      fullPath: '/admin/blog/new'
+      preLoaderRoute: typeof AdminBlogNewRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/academy/category/$slug': {
-      id: '/academy/category/$slug'
-      path: '/academy/category/$slug'
-      fullPath: '/academy/category/$slug'
-      preLoaderRoute: typeof AcademyCategorySlugRouteImport
+    '/admin/pages/': {
+      id: '/admin/pages/'
+      path: '/'
+      fullPath: '/admin/pages/'
+      preLoaderRoute: typeof AdminPagesIndexRouteImport
+      parentRoute: typeof AdminPagesRoute
+    }
+    '/admin/pages/$pageId': {
+      id: '/admin/pages/$pageId'
+      path: '/$pageId'
+      fullPath: '/admin/pages/$pageId'
+      preLoaderRoute: typeof AdminPagesPageIdRouteImport
+      parentRoute: typeof AdminPagesRoute
+    }
+    '/admin/settings/notifications': {
+      id: '/admin/settings/notifications'
+      path: '/notifications'
+      fullPath: '/admin/settings/notifications'
+      preLoaderRoute: typeof AdminSettingsNotificationsRouteImport
+      parentRoute: typeof AdminSettingsRoute
+    }
+    '/admin/tests/': {
+      id: '/admin/tests/'
+      path: '/'
+      fullPath: '/admin/tests/'
+      preLoaderRoute: typeof AdminTestsIndexRouteImport
+      parentRoute: typeof AdminTestsRoute
+    }
+    '/admin/tests/$testId': {
+      id: '/admin/tests/$testId'
+      path: '/$testId'
+      fullPath: '/admin/tests/$testId'
+      preLoaderRoute: typeof AdminTestsTestIdRouteImport
+      parentRoute: typeof AdminTestsRoute
+    }
+    '/admin/tickets/$ticketId': {
+      id: '/admin/tickets/$ticketId'
+      path: '/$ticketId'
+      fullPath: '/admin/tickets/$ticketId'
+      preLoaderRoute: typeof AdminTicketsTicketIdRouteImport
+      parentRoute: typeof AdminTicketsRoute
+    }
+    '/admin/users/$userId': {
+      id: '/admin/users/$userId'
+      path: '/$userId'
+      fullPath: '/admin/users/$userId'
+      preLoaderRoute: typeof AdminUsersUserIdRouteImport
+      parentRoute: typeof AdminUsersRoute
+    }
+    '/app/account/profile': {
+      id: '/app/account/profile'
+      path: '/account/profile'
+      fullPath: '/app/account/profile'
+      preLoaderRoute: typeof AppAccountProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/account/security': {
+      id: '/app/account/security'
+      path: '/account/security'
+      fullPath: '/app/account/security'
+      preLoaderRoute: typeof AppAccountSecurityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/edu-tests/': {
+      id: '/app/edu-tests/'
+      path: '/edu-tests'
+      fullPath: '/app/edu-tests/'
+      preLoaderRoute: typeof AppEduTestsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/help/contact': {
+      id: '/app/help/contact'
+      path: '/contact'
+      fullPath: '/app/help/contact'
+      preLoaderRoute: typeof AppHelpContactRouteImport
+      parentRoute: typeof AppHelpRoute
+    }
+    '/app/legal/dsr': {
+      id: '/app/legal/dsr'
+      path: '/legal/dsr'
+      fullPath: '/app/legal/dsr'
+      preLoaderRoute: typeof AppLegalDsrRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/tests/': {
+      id: '/app/tests/'
+      path: '/tests'
+      fullPath: '/app/tests/'
+      preLoaderRoute: typeof AppTestsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/tests/$testId': {
+      id: '/app/tests/$testId'
+      path: '/tests/$testId'
+      fullPath: '/app/tests/$testId'
+      preLoaderRoute: typeof AppTestsTestIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/tests/new': {
+      id: '/app/tests/new'
+      path: '/tests/new'
+      fullPath: '/app/tests/new'
+      preLoaderRoute: typeof AppTestsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/contact-form/ticket/$id': {
+      id: '/contact-form/ticket/$id'
+      path: '/contact-form/ticket/$id'
+      fullPath: '/contact-form/ticket/$id'
+      preLoaderRoute: typeof ContactFormTicketIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/academy/author/$slug': {
-      id: '/academy/author/$slug'
-      path: '/academy/author/$slug'
-      fullPath: '/academy/author/$slug'
-      preLoaderRoute: typeof AcademyAuthorSlugRouteImport
-      parentRoute: typeof rootRouteImport
+    '/docs/admin/$slug': {
+      id: '/docs/admin/$slug'
+      path: '/$slug'
+      fullPath: '/docs/admin/$slug'
+      preLoaderRoute: typeof DocsAdminSlugRouteImport
+      parentRoute: typeof DocsAdminRoute
+    }
+    '/docs/app/$slug': {
+      id: '/docs/app/$slug'
+      path: '/$slug'
+      fullPath: '/docs/app/$slug'
+      preLoaderRoute: typeof DocsAppSlugRouteImport
+      parentRoute: typeof DocsAppRoute
+    }
+    '/test/builder/': {
+      id: '/test/builder/'
+      path: '/'
+      fullPath: '/test/builder/'
+      preLoaderRoute: typeof TestBuilderIndexRouteImport
+      parentRoute: typeof TestBuilderRoute
+    }
+    '/test/builder/$id': {
+      id: '/test/builder/$id'
+      path: '/$id'
+      fullPath: '/test/builder/$id'
+      preLoaderRoute: typeof TestBuilderIdRouteImport
+      parentRoute: typeof TestBuilderRoute
     }
     '/test/builder/$id/': {
       id: '/test/builder/$id/'
@@ -2154,19 +2154,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TestBuilderIdResultsRouteImport
       parentRoute: typeof TestBuilderIdRoute
     }
-    '/test/builder/$id/results/$attemptId': {
-      id: '/test/builder/$id/results/$attemptId'
-      path: '/$attemptId'
-      fullPath: '/test/builder/$id/results/$attemptId'
-      preLoaderRoute: typeof TestBuilderIdResultsAttemptIdRouteImport
-      parentRoute: typeof TestBuilderIdResultsRoute
-    }
     '/app/tests/$testId/sessions/$sessionId': {
       id: '/app/tests/$testId/sessions/$sessionId'
       path: '/sessions/$sessionId'
       fullPath: '/app/tests/$testId/sessions/$sessionId'
       preLoaderRoute: typeof AppTestsTestIdSessionsSessionIdRouteImport
       parentRoute: typeof AppTestsTestIdRoute
+    }
+    '/test/builder/$id/results/$attemptId': {
+      id: '/test/builder/$id/results/$attemptId'
+      path: '/$attemptId'
+      fullPath: '/test/builder/$id/results/$attemptId'
+      preLoaderRoute: typeof TestBuilderIdResultsAttemptIdRouteImport
+      parentRoute: typeof TestBuilderIdResultsRoute
     }
   }
 }
