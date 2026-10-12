@@ -1603,6 +1603,37 @@ export function useLibraryQuestions(branchSlug?: string) {
   });
 }
 
+export type PlatformQuestionMeta = Pick<LibraryQuestion, "prompt" | "branch_slug" | "difficulty">;
+
+export async function resolvePlatformQuestionMeta(
+  ids: readonly string[],
+): Promise<Map<string, PlatformQuestionMeta>> {
+  const [{ getDbUuidToBankIdMap }, { QUESTIONS }] = await Promise.all([
+    import("@/lib/quiz/bank/db-ids"),
+    import("@/lib/quiz/bank/questions"),
+  ]);
+  const toBankId = await getDbUuidToBankIdMap();
+  const byBankId = new Map(QUESTIONS.map((q) => [q.id, q]));
+  const out = new Map<string, PlatformQuestionMeta>();
+  for (const id of ids) {
+    const q = byBankId.get(toBankId.get(id) ?? "");
+    if (q) out.set(id, { prompt: q.prompt, branch_slug: q.category, difficulty: q.difficulty });
+  }
+  return out;
+}
+
+// Platform-bank questions (status 'published', no author) are hidden from
+// regular users by questions RLS, so useLibraryQuestions never returns them.
+// Templates are built from them, so their labels resolve from the static bank.
+export function usePlatformQuestionMeta(ids: readonly string[]) {
+  return useQuery({
+    queryKey: ["platform", "question_meta", [...ids].sort()],
+    enabled: ids.length > 0,
+    staleTime: Infinity,
+    queryFn: () => resolvePlatformQuestionMeta(ids),
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Respondents (RLS scopes to owners of the parent test / team)
 // ---------------------------------------------------------------------------

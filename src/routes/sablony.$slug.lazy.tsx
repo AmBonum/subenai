@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AUDIENCE_LABEL, REAL_CASE_TEMPLATE_BY_SLUG } from "@/content/templates/real-cases";
 import { usePublicTemplateBySlug } from "@/lib/platform/queries";
 import { buildTemplateCreativeWorkJsonLd } from "@/lib/seo/templates-jsonld";
 import { jsonLdString } from "@/lib/seo/json-ld";
@@ -57,6 +58,7 @@ function SablonyDetailPage() {
   }
 
   const t = data;
+  const realCase = REAL_CASE_TEMPLATE_BY_SLUG.get(t.slug ?? slug);
   const jsonLd = buildTemplateCreativeWorkJsonLd({
     slug: t.slug ?? slug,
     title: t.title,
@@ -87,6 +89,9 @@ function SablonyDetailPage() {
 
       <header className="mb-8 space-y-4">
         <div className="flex flex-wrap items-center gap-2">
+          {realCase && realCase.audience !== "verejnost" ? (
+            <Badge data-testid="sablony-detail-audience">{AUDIENCE_LABEL[realCase.audience]}</Badge>
+          ) : null}
           <Badge variant="outline" data-testid="sablony-detail-age">
             {AGE_RATING_LABEL[t.age_rating]}
           </Badge>
@@ -116,17 +121,41 @@ function SablonyDetailPage() {
           <div>
             <p className="font-medium">Pustiť tento test svojim ľuďom</p>
             <p className="text-sm text-muted-foreground">
-              Otvorí sa v buildri — pridáš si vlastnú prahovú hodnotu a zdieľaš link.
+              Po prihlásení sa otvorí sprievodca testom s predvyplnenými otázkami — upravíš ich a
+              zdieľaš link.
             </p>
           </div>
           <Button asChild size="lg" data-testid="sablony-detail-cta-use">
-            <a href={`/test/builder?templateId=${t.id}`}>
+            <a href={`/app/tests/new?step=1&templateId=${t.id}`}>
               Použiť šablónu
               <ExternalLink className="ml-2 h-4 w-4" />
             </a>
           </Button>
         </CardContent>
       </Card>
+
+      {realCase && realCase.sources.length > 0 ? (
+        <section className="mb-10 space-y-2" data-testid="sablony-detail-sources">
+          <h2 className="text-xl font-semibold" data-testid="sablony-detail-sources-heading">
+            Podľa skutočného prípadu
+          </h2>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+            {realCase.sources.map((s, i) => (
+              <li key={s.url} data-testid={`sablony-detail-source-${i}`}>
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="underline"
+                  data-testid={`sablony-detail-source-${i}-link`}
+                >
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section className="mb-10 space-y-2" data-testid="sablony-detail-author">
         <h2 className="text-xl font-semibold">Autor a licencia</h2>
