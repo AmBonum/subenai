@@ -6,11 +6,11 @@ import { tFor } from "@/i18n/billing";
 const t = tFor("terms");
 const tObj = tFor.object("terms");
 
-interface TermsSection {
+type TermsSection = {
   id: string;
   heading: string;
   paragraphs: string[];
-}
+};
 
 export const Route = createFileRoute("/obchodne-podmienky")({
   head: () => {
