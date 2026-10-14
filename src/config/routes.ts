@@ -43,6 +43,7 @@ export const ROUTES = {
   spravovat: "/manage-support",
   privacy: "/privacy",
   cookies: "/cookies",
+  obchodnePodmienky: "/obchodne-podmienky",
   oProjecte: "/about",
   zmeny: "/changelog",
   contact: "/contact",

@@ -48,6 +48,10 @@
         "label": "Notifications",
         "tip": "New sessions, completions, retest reminders."
       },
+      "billing": {
+        "label": "Subscription",
+        "tip": "Plan, training evidence and invoices."
+      },
       "teams": {
         "label": "Team & roles",
         "tip": "Invite colleagues as Editor or Viewer."

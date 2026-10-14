@@ -11,11 +11,17 @@
 // App slugs whose name maps 1:1 to an explainer key are upgraded to
 // "explainer"; granular sub-slugs (audiences-tags, tests-create, …) stay
 // stubs until dedicated content lands.
+//   - { kind: "guide" }     → E66.5: renders the public Markdown guide
+//     /docs/<docSlug> (src/content/docs) in place, one source for both trees
 
-export type DocEntry = { kind: "stub" } | { kind: "explainer"; explainerKey: string };
+export type DocEntry =
+  | { kind: "stub" }
+  | { kind: "explainer"; explainerKey: string }
+  | { kind: "guide"; docSlug: string };
 
 const STUB: DocEntry = { kind: "stub" };
 const explainer = (explainerKey: string): DocEntry => ({ kind: "explainer", explainerKey });
+const guide = (docSlug: string): DocEntry => ({ kind: "guide", docSlug });
 
 export const ADMIN_DOCS: Record<string, DocEntry> = {
   aal2: STUB,
@@ -65,7 +71,7 @@ export const APP_DOCS: Record<string, DocEntry> = {
   dashboard: explainer("dashboard"),
   digest: STUB,
   "edu-tests": explainer("edu_tests"),
-  "edu-tests-claim": STUB,
+  "edu-tests-claim": guide("pre-skoly"),
   help: explainer("help"),
   "help-support": STUB,
   history: explainer("history"),
@@ -83,7 +89,7 @@ export const APP_DOCS: Record<string, DocEntry> = {
   templates: explainer("templates"),
   "templates-gdpr": STUB,
   "tests-create": explainer("tests"),
-  "tests-sharing": STUB,
+  "tests-sharing": guide("zdielanie-testu"),
 };
 
 export function lookupDoc(area: "admin" | "app", slug: string): DocEntry | null {

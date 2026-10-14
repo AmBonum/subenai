@@ -14,6 +14,7 @@ export type FooterNavSlug =
   | "zmeny"
   | "privacy"
   | "cookies"
+  | "obchodne-podmienky"
   | "spravovat-podporu";
 
 /**

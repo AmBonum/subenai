@@ -41,12 +41,7 @@ export const STATUS_BADGE_CLASS: Record<string, string> = {
 };
 
 export type TicketStatus =
-  | "new"
-  | "in_progress"
-  | "waiting_user"
-  | "resolved"
-  | "reopened"
-  | "archived";
+  "new" | "in_progress" | "waiting_user" | "resolved" | "reopened" | "archived";
 
 export type TransitionSeverity = "default" | "success" | "warning" | "destructive";
 

@@ -10,6 +10,21 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
 ## [Unreleased]
 
 ### Pridané
+- **Doklad o preškolení pre firmy a organizácie.** Z detailu testu vystavíte PDF so
+  zoznamom absolventov, ich skóre a certifikátom pre každého úspešného. Pravosť dokladu
+  si ktokoľvek overí na odkaze uvedenom v päte. Hodí sa ako podklad k povinnému
+  vzdelávaniu zamestnancov v kybernetickej bezpečnosti.
+- **Cenník a predplatné.** Testy, výsledky aj CSV export ostávajú zadarmo; plány Štart,
+  Firma a Firma+ (od 149 € ročne) pridávajú doklady s certifikátmi a faktúru s IČO a DIČ.
+  Predplatné spravujete a rušíte v sekcii *Predplatné*. Podmienky nájdete na stránke
+  [Obchodné podmienky](/obchodne-podmienky).
+- **Hotové šablóny podľa skutočných podvodov.** Všetky šablóny v `/sablony` majú teraz
+  otázky a pribudlo 17 nových — pre firmy (falošná faktúra a zmena IBAN, Microsoft 365
+  phishing, falošný IT support, deepfake hlas šéfa, QR kódy, ročné preškolenie…) aj pre
+  školy (súťaže na Instagrame a TikToku, Discord, falošné e-shopy, EduPage). Pri šablóne
+  vidíte, pre koho je, a zdroje skutočného prípadu.
+- **Návody pre firmy a školy** v dokumentácii — od spustenia školenia za 5 minút cez
+  zdieľanie a výsledky až po doklad a faktúry, s priestorovými ilustráciami.
 - **Nová sekcia Akadémie „Bezpečná práca s AI".** Jedenásť článkov a nový kurz o tom,
   ako používať ChatGPT, Gemini, Copilot či AI agentov bez úniku dát — v dvoch úrovniach:
   *pre každého* (čo nikdy nepísať do chatbota, ako overiť odpoveď, nastavenia súkromia,
@@ -27,6 +42,13 @@ Verzie idú od najnovšej. Drobné úpravy textov a interné práce neuvádzame.
   automaticky presmerujeme na novú Akadémiu.
 - **Anglické pojmy majú slovenské vysvetlenie.** Pri prvom použití slov ako
   phishing, smishing či scam nájdete v zátvorke ich význam po slovensky.
+
+### Opravené
+- **„Použiť šablónu" otvorí test s otázkami šablóny** namiesto prázdneho testu.
+- **Po prihlásení sa vrátite tam, kam ste smerovali** (napríklad do predplatného alebo
+  k vybranej šablóne), nie na úvodnú stránku aplikácie.
+- **Anonymizácia starých údajov podľa zásad ochrany súkromia** sa odteraz spúšťa
+  automaticky každý deň.
 
 ## [1.15.0] — 2026-06-13
 

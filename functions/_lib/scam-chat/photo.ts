@@ -28,10 +28,7 @@ const PHOTO_SIGNATURES: Record<PhotoMime, readonly number[]> = {
 };
 
 export type PhotoSniffError =
-  | "size_zero"
-  | "size_too_large"
-  | "mime_not_allowed"
-  | "magic_mismatch";
+  "size_zero" | "size_too_large" | "mime_not_allowed" | "magic_mismatch";
 
 export interface PhotoSniffResult {
   ok: boolean;

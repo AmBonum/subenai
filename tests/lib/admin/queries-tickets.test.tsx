@@ -197,7 +197,9 @@ describe("useTicketsNeedingAttentionCount", () => {
       } as never)
       .catch(async () => {
         // Fallback: call the supabase-backed body shape directly.
-        const { count } = await (await import("@/integrations/supabase/client")).supabase
+        const { count } = await (
+          await import("@/integrations/supabase/client")
+        ).supabase
           .from("support_tickets")
           .select("id", { count: "exact", head: true })
           .in("status", ["new", "reopened"])

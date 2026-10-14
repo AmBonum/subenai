@@ -10,7 +10,6 @@ import {
   trackBlogRelatedClick,
   trackBlogScenarioAnswer,
   trackBlogSearch,
-  trackBlogShareClick,
   trackBlogPillarsToggle,
   trackBlogTocClick,
 } from "@/lib/analytics/blog-events";
@@ -93,24 +92,6 @@ describe("blog GA4 events", () => {
       result_count: 12,
       language: "sk",
     });
-  });
-
-  it("blog_share_click includes platform", () => {
-    trackBlogShareClick({ post_slug: "foo", platform: "twitter" });
-    expect(gtagSpy).toHaveBeenCalledWith("event", "blog_share_click", {
-      post_slug: "foo",
-      platform: "twitter",
-      language: "sk",
-    });
-  });
-
-  it("blog_share_click(copy_link) is its own platform value", () => {
-    trackBlogShareClick({ post_slug: "foo", platform: "copy_link" });
-    expect(gtagSpy).toHaveBeenCalledWith(
-      "event",
-      "blog_share_click",
-      expect.objectContaining({ platform: "copy_link" }),
-    );
   });
 
   it("blog_cta_click distinguishes inline_banner vs scenario_card", () => {

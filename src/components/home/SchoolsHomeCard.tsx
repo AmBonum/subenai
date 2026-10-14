@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
+import { ShieldStack3D } from "@/components/three-d/ShieldStack3D";
 import { ROUTES } from "@/config/routes";
 import { tFor } from "@/i18n/marketing";
 
@@ -50,6 +51,7 @@ export function SchoolsHomeCard() {
             {t("home.schools_card.body")}
           </p>
         </div>
+        <ShieldStack3D className="hidden w-36 shrink-0 lg:block" />
         <Link
           to={ROUTES.skoly}
           className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl border border-success/60 bg-success/10 px-6 py-3 text-base font-bold text-foreground transition-colors hover:bg-success/20"

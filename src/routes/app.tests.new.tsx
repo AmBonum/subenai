@@ -46,6 +46,7 @@ import {
   useCreateTest,
   useCurrentProfile,
   useLibraryQuestions,
+  usePlatformQuestionMeta,
   usePublishTest,
   useReplaceTestQuestions,
   useTemplates,
@@ -120,6 +121,7 @@ function WizardPage() {
   const [description, setDescription] = useState(initialFromTemplate?.description ?? "");
   const [groupId, setGroupId] = useState<string>("none");
   const [questionIds, setQuestionIds] = useState<string[]>(initialFromTemplate?.questionIds ?? []);
+  const platformMetaQ = usePlatformQuestionMeta(questionIds);
   const [createdShareId, setCreatedShareId] = useState<string | null>(null);
   const [createdTestId, setCreatedTestId] = useState<string | null>(null);
   const [publishing, setPublishing] = useState(false);
@@ -414,7 +416,7 @@ function WizardPage() {
             ) : (
               <ul className="space-y-2" data-testid="new-test-wizard-step-3-questions-list">
                 {questionIds.map((qid, idx) => {
-                  const q = libraryById.get(qid);
+                  const q = libraryById.get(qid) ?? platformMetaQ.data?.get(qid);
                   const isFirst = idx === 0;
                   const isLast = idx === questionIds.length - 1;
                   const fromTemplate = templateQuestionIds.has(qid);

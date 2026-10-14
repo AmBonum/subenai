@@ -76,8 +76,7 @@ function isBackForwardNavigation(): boolean {
   if (typeof window === "undefined") return false;
   try {
     const entry = window.performance.getEntriesByType("navigation")[0] as
-      | PerformanceNavigationTiming
-      | undefined;
+      PerformanceNavigationTiming | undefined;
     return entry?.type === "back_forward";
   } catch {
     return false;

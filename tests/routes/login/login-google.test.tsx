@@ -13,6 +13,7 @@ vi.mock("@tanstack/react-router", async () => {
     createFileRoute: () => (config: unknown) => config,
     createLazyFileRoute: () => (config: unknown) => config,
     useNavigate: () => vi.fn(),
+    useSearch: () => ({}),
     Link: ({ children, ...props }: { children: React.ReactNode } & Record<string, unknown>) => (
       <a {...props}>{children}</a>
     ),

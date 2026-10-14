@@ -54,7 +54,7 @@ All TCs in this plan share the following environment unless a TC overrides it:
 **and** clicks the preset chip labelled "25 €"
 **and** fills the field labelled "E-mail" with `donor-tc01@example.com`
 **and** fills the field labelled "Meno alebo firma" with `Test Donor`
-**and** ticks the checkbox labelled "Súhlasím so začatím poskytovania okamžite a beriem na vedomie stratu práva na odstúpenie (§ 7 ods. 6 zákona č. 102/2014 Z. z.)."
+**and** ticks the checkbox labelled "Súhlasím so začatím poskytovania okamžite a beriem na vedomie stratu práva na odstúpenie (zákon č. 108/2024 Z. z. o ochrane spotrebiteľa)."
 **and** ticks the checkbox labelled "Beriem na vedomie spracovanie mojich osobných údajov per Zásady ochrany súkromia."
 **and** clicks the submit button (labelled "Pokračovať na platbu — 25 €")
 **Then** the browser is redirected to `https://checkout.stripe.com/c/pay/cs_test_…` (Stripe-hosted Checkout, locale `sk`)

@@ -48,6 +48,10 @@
         "label": "Notifikácie",
         "tip": "Nové sedenia, dokončenia, pripomienky retestov."
       },
+      "billing": {
+        "label": "Predplatné",
+        "tip": "Plán, doklady o preškolení a faktúry."
+      },
       "teams": {
         "label": "Tím a roly",
         "tip": "Pozvi kolegov ako Editor alebo Viewer."

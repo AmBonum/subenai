@@ -52,6 +52,11 @@ const COLUMN_DEFS: FooterColumnDef[] = [
       { to: ROUTES.privacy, labelKey: "columns.pravne.links.privacy", slug: "privacy" },
       { to: ROUTES.cookies, labelKey: "columns.pravne.links.cookies", slug: "cookies" },
       {
+        to: ROUTES.obchodnePodmienky,
+        labelKey: "columns.pravne.links.terms",
+        slug: "obchodne-podmienky",
+      },
+      {
         to: ROUTES.spravovat,
         labelKey: "columns.pravne.links.spravovat_podporu",
         slug: "spravovat-podporu",

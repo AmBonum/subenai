@@ -47,6 +47,10 @@ const LOCALSTORAGE_KEYS: DeclaredStorage[] = [
   },
   { key: "INTRO_KEY", declaredAt: "/cookies s2 row `prefs` (E40) — dashboard intro flag" },
   {
+    key: "ORG_NAME_STORAGE_KEY",
+    declaredAt: "/cookies s2 row `prefs` (E66) — `subenai.evidence.orgName`, consent-gated",
+  },
+  {
     key: "dismissKey",
     declaredAt:
       "/cookies s2 row `prefs` (E40) — `subenai.profile-banner.dismissed.*` per-user dismissal",

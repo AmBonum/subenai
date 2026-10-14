@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 
 const navigate = vi.fn();
+const search: { redirect?: string } = {};
 const signInWithPassword = vi.fn();
 const signInWithOAuth = vi.fn();
 const rpc = vi.fn();
@@ -15,6 +16,7 @@ vi.mock("@tanstack/react-router", async () => {
     createFileRoute: () => (config: unknown) => config,
     createLazyFileRoute: () => (config: unknown) => config,
     useNavigate: () => navigate,
+    useSearch: () => search,
     Link: ({ children, ...props }: { children: React.ReactNode } & Record<string, unknown>) => (
       <a {...props}>{children}</a>
     ),
@@ -42,6 +44,7 @@ const Page = (Route as unknown as RouteConfig).component;
 
 describe("/login — email/password form", () => {
   beforeEach(() => {
+    delete search.redirect;
     navigate.mockReset();
     signInWithPassword.mockReset();
     signInWithOAuth.mockReset();
@@ -150,5 +153,26 @@ describe("/login — email/password form", () => {
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith({ to: "/app" });
     });
+  });
+  it.each([
+    ["/app/billing?plan=firma", { href: "/app/billing?plan=firma" }],
+    ["//evil.example/app", { to: "/app" }],
+    ["/admin", { to: "/app" }],
+  ])("AUTH-LOGIN-07: ?redirect=%s for a regular user → %j", async (redirect, expected) => {
+    search.redirect = redirect;
+    rpc.mockResolvedValue({ data: false, error: null });
+    signInWithPassword.mockResolvedValue({
+      data: { session: { user: { id: "u1" } }, user: { id: "u1" } },
+      error: null,
+    });
+    render(<Page />);
+    fireEvent.change(screen.getByTestId("login-email-input"), {
+      target: { value: "user@example.com" },
+    });
+    fireEvent.change(screen.getByTestId("login-password-input"), {
+      target: { value: "correct-horse" },
+    });
+    fireEvent.click(screen.getByTestId("login-submit-button"));
+    await waitFor(() => expect(navigate).toHaveBeenCalledWith(expected));
   });
 });

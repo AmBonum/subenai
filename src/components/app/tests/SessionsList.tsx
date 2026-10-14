@@ -24,6 +24,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { tFor } from "@/i18n/tests";
+import { tFor as tBilling } from "@/i18n/billing";
 import {
   useTestSessions,
   useExportTestSessionsCsv,
@@ -63,6 +64,7 @@ function formatStartedAt(iso: string): string {
 export function SessionsList({ testId, status, shareId, onRequestPublish }: Props) {
   const t = tFor("editor");
   const tSd = tFor("session_detail");
+  const tEvidence = tBilling("evidence");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState<number>(20);
   const [sort, setSort] = useState<TestSessionsSort>("started_at_desc");
@@ -198,6 +200,11 @@ export function SessionsList({ testId, status, shareId, onRequestPublish }: Prop
           data-testid="test-sessions-list-export-csv-button"
         >
           {exportMut.isPending ? "…" : t("export_csv_button")}
+        </Button>
+        <Button asChild size="sm" data-testid="test-sessions-list-evidence-button">
+          <Link to="/app/tests/$testId/doklad" params={{ testId }}>
+            {tEvidence("entry_button")}
+          </Link>
         </Button>
       </div>
 

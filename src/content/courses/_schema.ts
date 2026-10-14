@@ -3,15 +3,7 @@ import type { Visual } from "@/lib/quiz/bank/questions";
 import type { AudioEmbed } from "@/lib/academy/audio-shortcode";
 
 export type CourseCategory =
-  | "sms"
-  | "email"
-  | "voice"
-  | "marketplace"
-  | "investicie"
-  | "vztahy"
-  | "data"
-  | "obecne"
-  | "ai";
+  "sms" | "email" | "voice" | "marketplace" | "investicie" | "vztahy" | "data" | "obecne" | "ai";
 
 export type CourseDifficulty = "začiatočník" | "pokročilý";
 

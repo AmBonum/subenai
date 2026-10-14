@@ -100,6 +100,7 @@
         "links": {
           "privacy": "Soukromí",
           "cookies": "Cookies",
+          "terms": "Obchodní podmínky",
           "spravovat_podporu": "Spravovat podporu (sponzoři)"
         }
       },
@@ -213,7 +214,7 @@
     "display_message_counter": "zbývá {remaining} znaků",
     "show_in_footer": "Zobrazit mě i v patičce stránky",
     "show_in_footer_disabled": "Zobrazit mě v patičce (potřeba: jednorázově ≥ {oneoff} € nebo měsíčně ≥ {monthly} €)",
-    "consent_immediate": "Souhlasím se zahájením poskytování okamžitě a beru na vědomí ztrátu práva na odstoupení (§ 7 odst. 6 zákona č. 102/2014 Z. z.).",
+    "consent_immediate": "Souhlasím se zahájením poskytování okamžitě a beru na vědomí ztrátu práva na odstoupení (zákon č. 108/2024 Z. z. o ochraně spotřebitele).",
     "consent_data_prefix": "Beru na vědomí zpracování svých osobních údajů dle ",
     "consent_data_link": "Zásad ochrany soukromí",
     "error_prefix": "Něco se pokazilo: ",

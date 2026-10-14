@@ -376,6 +376,29 @@
   100% { opacity: 1; transform: none; }
 }
 
+/* E66.4 — dependency-free CSS 3D scenes (src/components/three-d). Layers own
+   `transform` (depth); the idle float uses the independent `translate`
+   property so the two compose. Only transform/translate animate. */
+.s3d-root { perspective: 1100px; }
+.s3d-stage, .s3d-rig, .s3d-layer { transform-style: preserve-3d; }
+.s3d-rig {
+  transform: rotateX(calc(var(--s3d-pose-x, 0deg) + var(--s3d-tilt-x, 0deg)))
+    rotateY(calc(var(--s3d-pose-y, 0deg) + var(--s3d-tilt-y, 0deg)));
+}
+.s3d-rig-animated { transition: transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes s3d-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -7px; }
+}
+.s3d-float { animation: s3d-float 6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .s3d-float { animation: none; }
+  .s3d-rig-animated { transition: none; }
+}
+@media print {
+  .s3d-root { display: none !important; }
+}
+
 /* E52 a11y — reduced motion. Keyed off the `.reduce-motion` class ONLY:
    AccessibilityProvider (and the index.html no-flash bootstrap) resolve the
    OS `prefers-reduced-motion` preference into this class when the stored

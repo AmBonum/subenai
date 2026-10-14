@@ -27,9 +27,7 @@ export interface PublicSponsorRow {
 }
 
 export type PublicSponsorsStub =
-  | { status: 200; rows: PublicSponsorRow[] }
-  | { status: 500 }
-  | { abort: true };
+  { status: 200; rows: PublicSponsorRow[] } | { status: 500 } | { abort: true };
 
 export async function stubPublicSponsors(page: Page, stub: PublicSponsorsStub): Promise<void> {
   await page.route("**public_sponsors**", async (route) => {

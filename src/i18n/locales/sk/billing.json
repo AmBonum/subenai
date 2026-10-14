@@ -1,0 +1,255 @@
+{
+  "pricing": {
+    "meta_title": "Cenník pre firmy a organizácie — doklad o preškolení | subenai",
+    "meta_description": "Testy, kampane a výsledky zadarmo. Za doklad o preškolení zamestnancov s certifikátmi a overením pravosti platíte od 149 € ročne.",
+    "kicker": "Pre firmy, úrady a dodávateľov",
+    "title": "Doklad o preškolení zamestnancov bez drahého LMS",
+    "lead": "Testy podľa skutočných podvodov, kampane a výsledky sú zadarmo. Platíte len za formálny doklad s certifikátmi, ktorý predložíte pri audite — napríklad ako podklad k vyhláške NBÚ č. 227/2025 Z. z.",
+    "cta_primary": "Vybrať plán",
+    "cta_secondary": "Pozrieť hotové šablóny",
+    "per_year": "/ rok",
+    "respondents": "{count} respondentov v doklade ročne",
+    "per_person": "≈ {price} € za človeka a rok",
+    "recommended": "Najčastejšia voľba",
+    "buy": "Pokračovať k platbe",
+    "free_name": "Zadarmo",
+    "free_tagline": "Školy, rodiny a vyskúšanie",
+    "free_price": "0 €",
+    "free_points": [
+      "Neobmedzené testy a kampane",
+      "Šablóny podľa skutočných prípadov",
+      "Výsledky respondentov a CSV export"
+    ],
+    "free_cta": "Začať zadarmo",
+    "paid_points": [
+      "Všetko zo Zadarmo",
+      "Doklad o preškolení v PDF",
+      "Certifikát pre každého úspešného",
+      "Verejné overenie pravosti dokladu",
+      "Faktúra s IČO a DIČ"
+    ],
+    "custom_name": "250+ ľudí",
+    "custom_text": "Väčšie organizácie a skupiny firiem — individuálna cena od 2,50 € za človeka a rok.",
+    "custom_cta": "Napísať nám",
+    "free_forever_title": "Čo zostane navždy zadarmo",
+    "free_forever_text": "Kvíz pre verejnosť, akadémia, tvorba testov, zdieľanie odkazu respondentom, ich výsledky aj CSV export. Respondent nikdy neuvidí platobnú bránu — limit plánu sa týka len vystavenia dokladu.",
+    "evidence_title": "Čo obsahuje doklad",
+    "evidence_points": [
+      "Názov organizácie, test a jeho verzia, dátum vystavenia",
+      "Zoznam absolventov s dátumom dokončenia a skóre",
+      "Hranica úspešnosti a súhrnné štatistiky",
+      "Certifikát na každého úspešného absolventa",
+      "Kontrolný odtlačok SHA-256 a odkaz na verejné overenie"
+    ],
+    "faq_title": "Časté otázky",
+    "faq": [
+      {
+        "q": "Je to certifikácia NIS2?",
+        "a": "Nie. Doklad je podklad, ktorým preukážete, že zamestnanci absolvovali vzdelávanie v oblasti kybernetickej bezpečnosti. Certifikáciu systému riadenia bezpečnosti nenahrádza."
+      },
+      {
+        "q": "Koho započítavame do limitu?",
+        "a": "Každého respondenta, ktorý sa v predplatnom období prvýkrát objaví v niektorom doklade. Opätovné vystavenie dokladu tých istých ľudí limit neznižuje."
+      },
+      {
+        "q": "Čo keď limit prekročím?",
+        "a": "Testy a výsledky bežia ďalej bez obmedzenia. Doklad pre ďalších ľudí vystavíte po prechode na vyšší plán alebo v ďalšom období."
+      },
+      {
+        "q": "Dostanem faktúru?",
+        "a": "Áno. Údaje firmy vrátane IČO a DIČ zadáte pri platbe a faktúru dostanete e-mailom. Všetky faktúry nájdete v správe predplatného."
+      },
+      {
+        "q": "Dá sa predplatné zrušiť?",
+        "a": "Kedykoľvek v správe predplatného. Zostane aktívne do konca zaplateného obdobia a ďalej sa už nestrhne."
+      },
+      {
+        "q": "Platia školy?",
+        "a": "Nie. Školy používajú testy, triedy a výsledky zadarmo. Doklad s certifikátmi je určený organizáciám, ktoré ho potrebujú pri audite."
+      }
+    ],
+    "checkout_cancelled": "Platba bola zrušená. Plán si môžete vybrať kedykoľvek znova.",
+    "hero_visual_caption": "Ukážka dokladu o preškolení s certifikátom a pečaťou overenia."
+  },
+  "billing": {
+    "title": "Predplatné a doklady",
+    "lead": "Spravujte plán, sledujte čerpanie limitu a otvorte faktúry.",
+    "status_active": "Aktívny plán {plan}",
+    "status_renews": "Obnoví sa {date}",
+    "status_ends": "Končí {date} — automatické obnovenie je vypnuté",
+    "usage": "V dokladoch tohto obdobia: {used} z {cap} respondentov",
+    "manage": "Faktúry a správa predplatného",
+    "manage_loading": "Otváram správu predplatného…",
+    "upgrade_hint": "Potrebujete vyšší limit? Napíšte nám na {email} — zmenu plánu urobíme bez straty zaplateného obdobia.",
+    "none_title": "Zatiaľ nemáte plán",
+    "none_text": "Testy a výsledky máte zadarmo. Plán potrebujete len na vystavenie dokladu o preškolení s certifikátmi.",
+    "choose": "Vyberte plán",
+    "consent_terms": "Súhlasím s obchodnými podmienkami a beriem na vedomie zásady ochrany osobných údajov.",
+    "consent_immediate": "Žiadam o začatie poskytovania služby hneď po zaplatení, pred uplynutím 14-dňovej lehoty na odstúpenie. Ak kupujem ako spotrebiteľ a odstúpim, uhradím pomernú časť ceny.",
+    "pay": "Zaplatiť {price} € a aktivovať",
+    "paying": "Presmerúvam na platobnú bránu…",
+    "success_pending": "Platba prijatá. Aktivujem predplatné — zvyčajne to trvá pár sekúnd.",
+    "success_done": "Predplatné {plan} je aktívne. Doklad vystavíte v detaile ľubovoľného testu.",
+    "load_error": "Stav predplatného sa nepodarilo načítať. Obnovte stránku; ak problém pretrvá, napíšte nám na {email}.",
+    "errors": {
+      "missing_consent_terms": "Na pokračovanie potvrďte súhlas s obchodnými podmienkami.",
+      "missing_consent_immediate": "Na pokračovanie potvrďte žiadosť o začatie poskytovania služby.",
+      "already_subscribed": "Už máte aktívne predplatné. Zmenu plánu vyriešime cez {email}.",
+      "rate_limited": "Príliš veľa pokusov. Skúste to znova o hodinu.",
+      "not_signed_in": "Platnosť prihlásenia vypršala. Prihláste sa znova a pokračujte.",
+      "unauthorized": "Platnosť prihlásenia vypršala. Prihláste sa znova a pokračujte.",
+      "no_subscription": "K účtu zatiaľ nie je priradené žiadne predplatné.",
+      "default": "Platbu sa nepodarilo spustiť. Skúste to znova; ak problém pretrvá, napíšte nám na {email}."
+    },
+    "consent_terms_link": "Obchodné podmienky",
+    "consent_privacy_link": "Ochrana osobných údajov"
+  },
+  "evidence": {
+    "title": "Doklad o preškolení",
+    "lead": "Vystaví PDF so zoznamom absolventov, certifikátmi a odkazom na overenie pravosti.",
+    "back": "Späť na test",
+    "org_label": "Názov organizácie na doklade",
+    "org_hint": "Napríklad „Účtovníctvo Novák, s.r.o.“ — uvedie sa na doklade aj na certifikátoch.",
+    "generate": "Vystaviť doklad",
+    "generating": "Vystavujem doklad…",
+    "download": "Stiahnuť doklad (PDF)",
+    "downloading": "Pripravujem PDF…",
+    "issued": "Doklad vystavený: {count} absolventov, z toho {passed} úspešne. Čerpanie plánu: {used} z {cap}.",
+    "summary_respondents": "absolvovalo",
+    "summary_passed": "úspešne (≥ {score} %)",
+    "summary_average": "priemerné skóre",
+    "col_name": "Absolvent",
+    "col_date": "Dokončené",
+    "col_score": "Skóre",
+    "col_result": "Výsledok",
+    "passed": "úspešne",
+    "failed": "zopakovať",
+    "anonymous": "Respondent č. {n}",
+    "certificates_note": "Certifikát sa vystaví každému úspešnému absolventovi, ktorý pri teste uviedol meno.",
+    "verify_label": "Overenie pravosti",
+    "no_plan_title": "Doklad je súčasťou platených plánov",
+    "no_plan_text": "Test, výsledky aj CSV export máte zadarmo. Na vystavenie dokladu s certifikátmi si vyberte plán od 149 € ročne.",
+    "no_plan_cta": "Pozrieť cenník",
+    "cap_title": "Limit plánu by sa prekročil",
+    "cap_text": "Tento doklad by pridal {requested} nových respondentov, v období ich už máte {used} z {cap}. Respondentov už zahrnutých v doklade nezapočítavame znova.",
+    "cap_cta": "Zvýšiť limit",
+    "empty_title": "Test zatiaľ nikto nedokončil",
+    "empty_text": "Pošlite respondentom odkaz na test. Doklad vystavíte, keď ho aspoň jeden človek dokončí.",
+    "errors": {
+      "invalid_org_name": "Zadajte názov organizácie (2 až 160 znakov).",
+      "not_owner": "Doklad môže vystaviť iba autor testu.",
+      "test_not_found": "Test sa nenašiel. Mohol byť zmazaný.",
+      "rate_limited": "Príliš veľa dokladov za krátky čas. Skúste to znova o hodinu.",
+      "unauthorized": "Platnosť prihlásenia vypršala. Prihláste sa znova.",
+      "not_signed_in": "Platnosť prihlásenia vypršala. Prihláste sa znova.",
+      "pdf_failed": "PDF sa nepodarilo vytvoriť. Skúste to znova v inom prehliadači.",
+      "default": "Doklad sa nepodarilo vystaviť. Skúste to znova; ak problém pretrvá, napíšte nám na {email}."
+    },
+    "entry_button": "Doklad o preškolení"
+  },
+  "verify": {
+    "meta_title": "Overenie dokladu o preškolení | subenai",
+    "title": "Overenie dokladu o preškolení",
+    "loading": "Overujem doklad…",
+    "valid_title": "Doklad je pravý",
+    "valid_text": "Tento doklad vystavil subenai.sk. Porovnajte kontrolný odtlačok s odtlačkom v päte dokladu — ak sa líšia, dokument bol upravený.",
+    "org": "Organizácia",
+    "test": "Školenie",
+    "version": "verzia {version}",
+    "issued": "Vystavené",
+    "respondents": "Absolventi",
+    "passed": "z toho úspešne",
+    "hash": "Kontrolný odtlačok SHA-256",
+    "invalid_title": "Doklad sa nenašiel",
+    "invalid_text": "Takýto doklad sme nevystavili alebo bol zmazaný spolu s účtom organizácie. Skontrolujte, či ste odkaz prepísali presne.",
+    "error_text": "Overenie sa teraz nepodarilo. Skúste to o chvíľu znova.",
+    "privacy_note": "Overenie zobrazuje len súhrn — mená absolventov ani ich výsledky nezverejňujeme."
+  },
+  "terms": {
+    "meta_title": "Obchodné podmienky platených plánov | subenai",
+    "meta_description": "Obchodné podmienky plánov Štart, Firma a Firma+ na subenai.sk: predmet, cena, ročné predplatné, zrušenie, odstúpenie a reklamácie.",
+    "title": "Obchodné podmienky platených plánov",
+    "effective": "Účinné od 12. 10. 2026",
+    "back": "Späť na cenník",
+    "sections": [
+      {
+        "id": "uvod",
+        "heading": "1. Úvodné ustanovenia",
+        "paragraphs": [
+          "Tieto obchodné podmienky upravujú predaj platených plánov Štart, Firma a Firma+ služby subenai.sk medzi poskytovateľom a objednávateľom.",
+          "Poskytovateľ: am.bonum s. r. o., Škultétyho 1560/3, 052 01 Spišská Nová Ves, IČO: 55 055 290, DIČ: 2121850005, zapísaná v Obchodnom registri Mestského súdu Košice, oddiel Sro, vložka č. 55453/V. Kontakt: {email}.",
+          "Bezplatné funkcie (testy, kampane, výsledky, export CSV, kurzy a Akadémia) sú dostupné bez platby a predmetom týchto podmienok nie sú."
+        ]
+      },
+      {
+        "id": "predmet",
+        "heading": "2. Predmet zmluvy",
+        "paragraphs": [
+          "Plán oprávňuje objednávateľa počas zaplateného ročného obdobia vystavovať doklady o preškolení: súhrnný PDF doklad, certifikát pre každého respondenta, ktorý test absolvoval, a verejné overenie pravosti dokladu na adrese /overenie.",
+          "Limit plánu je počet rôznych respondentov zahrnutých v dokladoch v jednom období (Štart 25, Firma 100, Firma+ 250). Opätovné vystavenie dokladu pre už započítaných respondentov limit nečerpá. Nevyčerpaný limit sa do ďalšieho obdobia neprenáša.",
+          "Po vyčerpaní limitu testy a výsledky fungujú ďalej a respondentov nikdy neblokujeme. Doklad nad limit vystavíte po prechode na vyšší plán.",
+          "Doklad je podklad k preukázaniu vzdelávania zamestnancov, napríklad podľa vyhlášky NBÚ č. 227/2025 Z. z. Nie je certifikáciou systému riadenia informačnej bezpečnosti a sám osebe nezaručuje súlad s právnymi predpismi."
+        ]
+      },
+      {
+        "id": "objednavka",
+        "heading": "3. Objednávka a uzavretie zmluvy",
+        "paragraphs": [
+          "Plán objednáte po prihlásení v sekcii Predplatné (/app/billing): vyberiete plán, potvrdíte súhlasy a zaplatíte cez platobnú bránu Stripe. Zmluva vzniká úspešným zaplatením; potvrdenie a faktúru dostanete e-mailom.",
+          "Za správnosť fakturačných údajov (názov, adresa, IČO, DIČ) zodpovedá objednávateľ."
+        ]
+      },
+      {
+        "id": "cena",
+        "heading": "4. Cena a platobné podmienky",
+        "paragraphs": [
+          "Ceny sú uvedené na stránke /cennik v eurách za 12 mesiacov. Poskytovateľ nie je platiteľom DPH, uvedené ceny sú konečné.",
+          "Platí sa vopred platobnou kartou alebo iným spôsobom, ktorý ponúkne Stripe Checkout. Platby spracúva Stripe; údaje o karte poskytovateľ nevidí ani neukladá.",
+          "Faktúry vystavujeme elektronicky a sú dostupné aj v správe predplatného."
+        ]
+      },
+      {
+        "id": "trvanie",
+        "heading": "5. Trvanie, obnovenie a zrušenie",
+        "paragraphs": [
+          "Predplatné trvá 12 mesiacov od zaplatenia a automaticky sa obnovuje na ďalších 12 mesiacov za rovnakú cenu. Zmenu ceny pre ďalšie obdobie oznámime e-mailom najmenej 30 dní vopred.",
+          "Predplatné zrušíte kedykoľvek v sekcii Predplatné cez „Faktúry a správa predplatného“. Platí potom do konca zaplateného obdobia a ďalej sa neobnoví. Za nevyčerpanú časť obdobia cenu nevraciame, ak tieto podmienky alebo zákon neustanovujú inak.",
+          "Prechod na vyšší plán vybavíme na {email} bez straty zaplateného obdobia.",
+          "Ak sa obnovovacia platba nepodarí ani po opakovaných pokusoch, predplatné skončí. Už vystavené doklady a ich verejné overenie zostávajú platné, kým objednávateľ nezruší svoj účet."
+        ]
+      },
+      {
+        "id": "odstupenie",
+        "heading": "6. Odstúpenie od zmluvy",
+        "paragraphs": [
+          "Objednávateľ, ktorý plán kupuje v rámci svojej podnikateľskej alebo inej profesijnej činnosti (napríklad firma, škola či iná organizácia), nie je spotrebiteľom a právo na odstúpenie podľa zákona č. 108/2024 Z. z. nemá.",
+          "Spotrebiteľ môže od zmluvy odstúpiť bez udania dôvodu do 14 dní od jej uzavretia, a to e-mailom na {email}. Keďže pri objednávke výslovne žiada o začatie poskytovania služby pred uplynutím tejto lehoty, uhradí pomernú časť ceny za obdobie do odstúpenia. Zvyšok ceny vrátime do 14 dní rovnakým platobným prostriedkom, akým bola platba uhradená."
+        ]
+      },
+      {
+        "id": "reklamacie",
+        "heading": "7. Reklamácie a riešenie sporov",
+        "paragraphs": [
+          "Vady služby (napríklad doklad sa nedá vystaviť alebo obsahuje nesprávne údaje) reklamujte na {email}. Reklamáciu vybavíme bez zbytočného odkladu, najneskôr do 30 dní. Pri oprávnenej reklamácii vadu odstránime, a ak to nie je možné, primerane predĺžime obdobie alebo vrátime pomernú časť ceny.",
+          "Dozor nad dodržiavaním predpisov na ochranu spotrebiteľa vykonáva Slovenská obchodná inšpekcia (www.soi.sk). Spotrebiteľ má právo na alternatívne riešenie sporu podľa zákona č. 391/2015 Z. z., najmä prostredníctvom Slovenskej obchodnej inšpekcie."
+        ]
+      },
+      {
+        "id": "zodpovednost",
+        "heading": "8. Zodpovednosť a osobné údaje",
+        "paragraphs": [
+          "Za obsah testov, výber respondentov a použitie dokladu zodpovedá objednávateľ. Službu poskytujeme s odbornou starostlivosťou; nepretržitú dostupnosť však zaručiť nevieme.",
+          "Pri vystavení dokladu spracúvame osobné údaje respondentov ako sprostredkovateľ objednávateľa. Podrobnosti sú v zásadách ochrany osobných údajov (/privacy)."
+        ]
+      },
+      {
+        "id": "zaver",
+        "heading": "9. Záverečné ustanovenia",
+        "paragraphs": [
+          "Právne vzťahy sa riadia právom Slovenskej republiky: medzi podnikateľmi Obchodným zákonníkom, so spotrebiteľmi Občianskym zákonníkom a zákonom č. 108/2024 Z. z.",
+          "Zmenu týchto podmienok oznámime e-mailom najmenej 30 dní pred jej účinnosťou. Ak so zmenou nesúhlasíte, môžete predplatné zrušiť; počas už zaplateného obdobia sa zmena v neprospech objednávateľa neuplatní."
+        ]
+      }
+    ]
+  }
+}

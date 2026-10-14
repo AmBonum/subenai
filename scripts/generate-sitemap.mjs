@@ -31,6 +31,8 @@ const STATIC_ROUTES = [
   { loc: "/changelog", priority: "0.4", changefreq: "weekly" },
   { loc: "/test/builder", priority: "0.7", changefreq: "monthly" },
   { loc: "/schools", priority: "0.7", changefreq: "monthly" },
+  { loc: "/cennik", priority: "0.8", changefreq: "monthly" },
+  { loc: "/obchodne-podmienky", priority: "0.3", changefreq: "yearly" },
   { loc: "/sablony", priority: "0.8", changefreq: "weekly" },
   // E54 — public docs portal. Keep these slugs in sync with the registry in
   // src/content/docs/index.ts (asserted by tests/seo/docs-sitemap.test.ts).
@@ -43,6 +45,11 @@ const STATIC_ROUTES = [
   { loc: "/docs/faq", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/firemne-testy", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/vlastne-testy", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/skolenie-za-5-minut", priority: "0.6", changefreq: "monthly" },
+  { loc: "/docs/zdielanie-testu", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/vysledky-a-export", priority: "0.5", changefreq: "monthly" },
+  { loc: "/docs/doklad-o-preskoleni", priority: "0.6", changefreq: "monthly" },
+  { loc: "/docs/predplatne-a-faktury", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/pre-skoly", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/akademia", priority: "0.5", changefreq: "monthly" },
   { loc: "/docs/vymazanie-udajov", priority: "0.5", changefreq: "monthly" },

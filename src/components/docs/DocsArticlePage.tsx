@@ -1,9 +1,9 @@
-import { BlogPostBody } from "@/components/blog/BlogPostBody";
+import { DocBody } from "@/components/docs/DocBody";
 import { DocsLayout } from "@/components/docs/DocsLayout";
 import type { PublicDoc } from "@/content/docs/types";
 
 // E54.4 — a public /docs/<slug> page. Renders inside the public DocsLayout
-// (category sidebar) and reuses the blog Markdown renderer for the body.
+// (category sidebar) and renders the body via DocBody (Markdown + 3D scenes).
 
 export interface DocsArticlePageProps {
   doc: PublicDoc;
@@ -22,7 +22,7 @@ export function DocsArticlePage({ doc }: DocsArticlePageProps) {
         >
           {doc.title}
         </h1>
-        <BlogPostBody mdx={doc.body} />
+        <DocBody body={doc.body} />
       </article>
     </DocsLayout>
   );
