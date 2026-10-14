@@ -5,12 +5,7 @@
 import { isValidLuhn } from "./luhn";
 
 export type TrapFieldId =
-  | "birth_number"
-  | "card_number"
-  | "card_cvv"
-  | "iban"
-  | "password"
-  | "otp_code";
+  "birth_number" | "card_number" | "card_cvv" | "iban" | "password" | "otp_code";
 
 export type TrapMatcher = (value: string) => boolean;
 

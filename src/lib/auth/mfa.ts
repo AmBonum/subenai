@@ -118,8 +118,7 @@ export async function getAALStatus(): Promise<AalStatus> {
   // consume_mfa_backup_code() propagates the new timestamp.
   const { data: sessionData } = await supabase.auth.getSession();
   const meta = sessionData.session?.user.app_metadata as
-    | { aal2_via_backup_until?: unknown }
-    | undefined;
+    { aal2_via_backup_until?: unknown } | undefined;
   const expiry = meta?.aal2_via_backup_until;
   if (typeof expiry === "string") {
     const expiryDate = new Date(expiry);

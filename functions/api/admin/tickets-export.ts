@@ -35,13 +35,7 @@ interface RequestContext {
 type TicketStatus = "new" | "in_progress" | "waiting_user" | "resolved" | "reopened" | "archived";
 
 type TicketCategory =
-  | "bug"
-  | "question"
-  | "feature_request"
-  | "abuse_report"
-  | "billing"
-  | "gdpr"
-  | "other";
+  "bug" | "question" | "feature_request" | "abuse_report" | "billing" | "gdpr" | "other";
 
 type ExportScope = "selected" | "filter" | "all";
 type SortOrder = "recency-desc" | "recency-asc" | "status" | "category";

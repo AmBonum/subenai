@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 
 import { STRIPE_API_VERSION } from "./stripe-webhook";
+import { ipRateLimit, rateLimitedResponse, readClientIp } from "../_lib/security";
 
 interface Env {
   STRIPE_SECRET_KEY: string;
@@ -30,6 +31,8 @@ export interface PortalEligibilityInput {
 }
 
 export const PORTAL_SESSION_MAX_AGE_SECONDS = 24 * 60 * 60;
+export const PORTAL_PER_IP_PER_HOUR = 20;
+const RATE_WINDOW_S = 60 * 60;
 
 // A checkout session id is a bearer credential here — anyone holding it
 // can open the customer's billing portal (payment details, cancellation).
@@ -52,6 +55,11 @@ export function checkPortalEligibility(
 
 export async function onRequestPost(ctx: RequestContext): Promise<Response> {
   const { request, env } = ctx;
+
+  const ip = readClientIp(request);
+  if (!ipRateLimit.consume(`customer-portal:ip:${ip}`, PORTAL_PER_IP_PER_HOUR, RATE_WINDOW_S)) {
+    return rateLimitedResponse(RATE_WINDOW_S);
+  }
 
   let body: { session_id?: string };
   try {

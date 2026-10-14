@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 
 import { STRIPE_API_VERSION } from "./stripe-webhook";
+import { ipRateLimit, rateLimitedResponse, readClientIp } from "../_lib/security";
 import { PROD_SUPABASE_URL } from "../_lib/supabase-url";
 
 interface Env {
@@ -14,6 +15,10 @@ interface RequestContext {
   request: Request;
   env: Env;
 }
+
+// The thank-you page polls every 3 s for ~30 s, so one checkout costs ~10 calls.
+export const DONATION_STATUS_PER_IP_PER_WINDOW = 60;
+const RATE_WINDOW_S = 10 * 60;
 
 export type DonationStatus = "ready" | "pending" | "unpaid" | "not_found";
 
@@ -48,6 +53,18 @@ function jsonResponse(status: number, body: DonationStatusBody | { error: string
 
 export async function onRequestGet(ctx: RequestContext): Promise<Response> {
   const { request, env } = ctx;
+
+  const ip = readClientIp(request);
+  if (
+    !ipRateLimit.consume(
+      `donation-status:ip:${ip}`,
+      DONATION_STATUS_PER_IP_PER_WINDOW,
+      RATE_WINDOW_S,
+    )
+  ) {
+    return rateLimitedResponse(RATE_WINDOW_S);
+  }
+
   const url = new URL(request.url);
   const sessionId = url.searchParams.get("session_id") ?? "";
 

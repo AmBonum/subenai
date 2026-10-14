@@ -37,10 +37,7 @@ export type CheckoutValidation =
   | {
       ok: false;
       error:
-        | "invalid_payload"
-        | "invalid_plan"
-        | "missing_consent_terms"
-        | "missing_consent_immediate";
+        "invalid_payload" | "invalid_plan" | "missing_consent_terms" | "missing_consent_immediate";
     };
 
 export function validateOrgCheckout(raw: unknown): CheckoutValidation {
@@ -131,8 +128,7 @@ export function readSubscriptionPeriod(
 ): { start: number; end: number } | null {
   const legacy = sub as unknown as { current_period_start?: number; current_period_end?: number };
   const item = sub.items?.data?.[0] as
-    | { current_period_start?: number; current_period_end?: number }
-    | undefined;
+    { current_period_start?: number; current_period_end?: number } | undefined;
   const start = item?.current_period_start ?? legacy.current_period_start;
   const end = item?.current_period_end ?? legacy.current_period_end;
   return typeof start === "number" && typeof end === "number" ? { start, end } : null;

@@ -3,13 +3,7 @@ import type { Locator } from "@playwright/test";
 import { BasePage } from "../BasePage";
 
 export type SupportCategoryKey =
-  | "bug"
-  | "question"
-  | "feature_request"
-  | "abuse_report"
-  | "billing"
-  | "gdpr"
-  | "other";
+  "bug" | "question" | "feature_request" | "abuse_report" | "billing" | "gdpr" | "other";
 
 export type DigestCadence = "instant" | "hourly" | "daily" | "off";
 

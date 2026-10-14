@@ -30,9 +30,7 @@ export interface ChatReply {
 }
 
 export type SendChatResult =
-  | { kind: "ok"; data: ChatReply }
-  | { kind: "quota" }
-  | { kind: "error" };
+  { kind: "ok"; data: ChatReply } | { kind: "quota" } | { kind: "error" };
 
 async function authHeader(): Promise<Record<string, string>> {
   try {

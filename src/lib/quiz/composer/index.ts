@@ -32,8 +32,7 @@ export interface ComposerConfig {
 }
 
 export type ComposerValidation =
-  | { ok: true }
-  | { ok: false; reason: ComposerValidationError; detail?: string };
+  { ok: true } | { ok: false; reason: ComposerValidationError; detail?: string };
 
 export type ComposerValidationError =
   | "too_few_questions"

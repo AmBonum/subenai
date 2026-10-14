@@ -1,8 +1,7 @@
 import type { Page } from "@playwright/test";
 
 export type DpaRequestStub =
-  | { status: 200; body: DpaRequestSuccessBody }
-  | { status: number; body?: { error?: string } };
+  { status: 200; body: DpaRequestSuccessBody } | { status: number; body?: { error?: string } };
 
 export interface DpaRequestSuccessBody {
   ok: true;

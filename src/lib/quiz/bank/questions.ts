@@ -2889,7 +2889,7 @@ export const QUESTIONS: Question[] = [
       ok("b", "Refund len na pôvodný IBAN použitý pri platbe; požiadam o doloženie zo skladu"),
     ],
     explanation:
-      "Account-takeover scam: útočník ukradol email reálnej zákazníčky a snaží sa presmerovať refund na svoj účet. Pravidlo: refund výlučne na rovnakú metódu ako platba (§ 7 zákona č. 102/2014). Nikdy nemeň IBAN na základe e-mailovej požiadavky — over telefonicky cez číslo z objednávky a skontroluj pickup foto skladu.",
+      "Account-takeover scam: útočník ukradol email reálnej zákazníčky a snaží sa presmerovať refund na svoj účet. Pravidlo: refund výlučne na rovnakú metódu ako platba (zákon č. 108/2024 Z. z. o ochrane spotrebiteľa). Nikdy nemeň IBAN na základe e-mailovej požiadavky — over telefonicky cez číslo z objednávky a skontroluj pickup foto skladu.",
   },
   {
     id: "p-eshop-iban-switch-1",

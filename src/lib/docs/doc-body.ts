@@ -15,8 +15,7 @@ export const SCENE3D_NAMES = [
 export type Scene3DName = (typeof SCENE3D_NAMES)[number];
 
 export type DocBlock =
-  | { kind: "md"; text: string }
-  | { kind: "scene3d"; name: Scene3DName; caption?: string };
+  { kind: "md"; text: string } | { kind: "scene3d"; name: Scene3DName; caption?: string };
 
 export const SCENE3D_LINE = /^\[\[scene3d:([a-z0-9-]+)(?:\|([^\]]+))?\]\]$/;
 
