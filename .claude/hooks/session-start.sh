@@ -1,21 +1,28 @@
 #!/usr/bin/env bash
-# SessionStart hook — surfaces the unfinished story backlog to Claude
-# so a fresh session can pick up the next logical task without a full
-# re-discovery pass over tasks/.
+# SessionStart hook — surfaces the open story backlog and git status so a
+# fresh session can pick up the next task without re-discovering tasks/.
 #
 # Stdout is prepended to the session as additional context.
+# Repo root comes from $CLAUDE_PROJECT_DIR (set by Claude Code); falls back
+# to the script's own location so worktrees under .claude/worktrees/ work.
 
 set -u
-REPO="/Users/lubomir/Desktop/internetiq"
 
-echo "=== Internet IQ Test session context ==="
+if [ -n "${CLAUDE_PROJECT_DIR:-}" ]; then
+  REPO="$CLAUDE_PROJECT_DIR"
+else
+  REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+fi
+
+echo "=== subenai session context ==="
 echo
 
-PLAN="$REPO/tasks/PLAN-2026-04-25-rast-a-vzdelavanie.md"
-if [ -f "$PLAN" ]; then
-  echo "--- Open stories (from PLAN index, status != Done) ---"
-  # Match table rows where status column is not ✅ Done. Print ID + title.
-  grep -E "^\| \[E[0-9]+\.[0-9]+\]" "$PLAN" \
+# Newest dated PLAN index (tasks/PLAN-<yyyy-mm-dd>-*.md). Print rows whose
+# status column is not "✅ Done".
+PLAN="$(ls -1 "$REPO"/tasks/PLAN-20[0-9][0-9]-*.md 2>/dev/null | sort | tail -n 1)"
+if [ -n "$PLAN" ] && [ -f "$PLAN" ]; then
+  echo "--- Open stories (${PLAN#"$REPO"/}, status != Done) ---"
+  grep -E "^\| \[E[0-9]+(\.[0-9]+)?\]" "$PLAN" \
     | grep -v "✅ Done" \
     | awk -F'|' '{ printf("  %s — %s [%s]\n", $2, $3, $6) }' \
     | sed 's/  *|//g' \
@@ -23,8 +30,14 @@ if [ -f "$PLAN" ]; then
   echo
 fi
 
+if [ -f "$REPO/tasks/BACKLOG.md" ]; then
+  echo "--- Backlog: $REPO/tasks/BACKLOG.md ---"
+  echo
+fi
+
 echo "--- Git status (top 20 lines) ---"
-git -C "$REPO" status --short | head -20 || true
+git -C "$REPO" status --short 2>/dev/null | head -20 || true
 echo
 
-echo "=== end Internet IQ Test context ==="
+echo "=== end subenai context ==="
+exit 0
