@@ -35,7 +35,7 @@ on:
 jobs:
   smoke:
     name: Prod smoke — /kontakt full pipeline
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # Playwright 1.60 has no chromium build for ubuntu-latest (26.04) yet
     timeout-minutes: 10
     steps:
       - name: Checkout

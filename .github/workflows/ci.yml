@@ -33,8 +33,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # Covers both projects: app/tests (tsconfig.json) + e2e/playwright/scripts
-      # (tsconfig.e2e.json).
+      # Covers all three projects: app/tests (tsconfig.json), e2e/playwright/
+      # scripts (tsconfig.e2e.json) and the Cloudflare Pages Functions
+      # (functions/tsconfig.json — WebWorker lib + workers-types).
       - name: Typecheck
         run: npm run typecheck:all
 

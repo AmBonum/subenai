@@ -1,206 +1,79 @@
 # subenai
 
-> Test your scam-detection skills and see how internet-smart you really are.
+Scam-awareness platform for Slovakia: interactive quizzes that test how well
+people spot phishing, fake e-shops, scam SMS and social engineering, an
+academy with lessons and articles, a test composer for teachers and schools,
+and an AI scam helper. Production: **https://subenai.sk**.
 
-subenai is an interactive web app that teaches people how to recognize online scams — and lets them test their real-world awareness in a fast, fun, and shareable way.
+## Stack
 
----
+- **Frontend** — TanStack Start + Vite, React 19, TypeScript (strict),
+  Tailwind v4, shadcn/ui. File-based routes in `src/routes/**`.
+- **API** — Cloudflare Pages Functions in `functions/api/**` (Stripe
+  checkout/webhooks/portal, support tickets, edu attempts, scam-chat via
+  Cloudflare Workers AI, template precheck via Anthropic).
+- **Data** — Supabase (Postgres + RLS + Storage). Migrations in
+  `supabase/migrations/`, mirrored into `DEPLOY_SETUP.sql`.
+- **Tests** — Vitest + Testing Library (`tests/**`), live-DB integration
+  suite, Playwright (`e2e/**`, page objects in `e2e/poms/**`), test plans in
+  `specs/**`.
 
-## 🚀 What is subenai?
+## Local development
 
-Every day, people fall for:
-- phishing emails and fake URLs
-- scam SMS messages
-- fraudulent e-shops
-- social engineering attacks
-
-subenai helps you:
-- learn how these scams work
-- recognize warning signs
-- test your ability to detect them
-
-All in just a few minutes.
-
----
-
-## 🧠 How it works
-
-### 🎓 Learn
-Short, practical lessons with real-world examples:
-- phishing URLs
-- scam messages
-- fake websites
-- manipulation techniques
-- safe use of AI tools (ChatGPT, agents) — one track for everyday users, one for professionals
-
----
-
-### 🧪 Test
-Take a quick interactive quiz:
-- real-life scenarios
-- simple decisions (safe vs scam)
-- no technical knowledge required
-
----
-
-### 📊 Results
-Get a personalized breakdown:
-- your score
-- what you got right/wrong
-- explanations for each answer
-
-Plus a fun rating like:
-- 🟢 Internet Ninja  
-- 🟡 Careful User  
-- 🔴 Scam Magnet 😄  
-
----
-
-### 🔗 Share
-Challenge your friends:
-
-> “I scored 82 on subenai — can you beat me?”
-
----
-
-## 🎯 Who is this for?
-
-- everyday internet users
-- students
-- parents and families
-- non-technical users
-- anyone who wants to avoid scams
-
----
-
-## 💡 Why this matters
-
-Online scams are increasing — and most people are not prepared.
-
-subenai focuses on:
-- practical awareness (not theory)
-- real-world scenarios
-- fast learning through interaction
-
-The goal is simple:
-
-> Help people avoid getting scammed.
-
----
-
-## 🧑‍💻 Local development
-
-The app is split into a Vite SPA (`src/`) and Cloudflare Pages Functions (`functions/`). Vite alone cannot serve `/api/*` — those run inside the CF runtime.
-
-**Two-terminal workflow:**
+`/api/*` only runs inside the Cloudflare runtime, so the full app needs two
+terminals:
 
 ```bash
-# Terminal 1 — start the API server (rebuilds + wrangler on :8788)
-npm run dev:api
+npm ci
+cp .env.example .env            # Supabase URL + anon key, Turnstile site key
+cp .dev.vars.example .dev.vars  # server secrets for wrangler (gitignored)
 
-# Terminal 2 — start Vite (HMR + UI on :8080, proxies /api/* to :8788)
-npm run dev
+npm run dev:api   # terminal 1 — build + wrangler pages dev on :8788
+npm run dev       # terminal 2 — Vite on :8080, proxies /api/* to :8788
 ```
 
-Then open **http://localhost:8080**.
+UI-only work: `npm run dev` alone is enough (`/api/*` returns 504).
 
-`/api/*` calls from the browser are auto-proxied to wrangler — you get hot-reload for the UI and a real CF runtime for functions, with secrets read from `.dev.vars` (gitignored). When you change a function file, restart Terminal 1 (no HMR for functions).
-
-If you only need the UI (no edu / Stripe / portal flows), `npm run dev` alone works fine — `/api/*` calls will return 504 from the proxy.
-
-**Quick start (UI-only):**
+## Verification
 
 ```bash
-npm install
-cp .env.example .env  # fill in SUPABASE_URL + anon key
-npm run dev
+npm run lint             # eslint — 0 errors / 0 warnings
+npm run typecheck:all    # tsc for app + tests, e2e, functions/
+npm test                 # vitest
+npm run build            # Cloudflare Pages SSR bundle
+npm run check:bundle-no-secrets && npm run check:bundle-no-mocks && npm run audit:bundle
+npm run e2e              # Playwright (see playwright.config.ts for projects)
 ```
 
-## ✅ Verification
+Test surface as of 2026-10: `npm test` runs 392 Vitest test files
+(3,952 tests; a further 6 files under `tests/integration` need a live
+Supabase and run via `npm run test:integration`), plus 157 Playwright spec
+files under `e2e/` (`find e2e -name '*.spec.ts' | wc -l`). CI
+(`.github/workflows/ci.yml`) runs lint, typecheck, Vitest with coverage,
+build and the bundle guards on every push and pull request.
 
-Every change must keep these green before it ships:
+## Deployment
 
-```bash
-npm run lint               # 0 errors / 0 warnings
-npm test                   # Vitest + RTL — full suite
-npm run build              # Cloudflare Pages SSR bundle
-npm run check:bundle-no-mocks  # asserts no admin-hub mock-store leaked into prod bundle
-```
+- `main` is production. Cloudflare Pages builds and deploys every push to
+  `main` to `subenai.sk`; every other branch gets a preview URL.
+- Database schema is applied manually after a migration PR is merged (SQL
+  editor in the Supabase dashboard). A fresh project is bootstrapped with
+  [`DEPLOY_SETUP.sql`](./DEPLOY_SETUP.sql).
+- Secrets and bindings live in the Cloudflare Pages dashboard — see
+  [`DEPLOYMENT.md`](./DEPLOYMENT.md).
 
-Current test count: **749** (must not regress).
+## Contributing
 
-## 🚢 Production deployment
+Issues and pull requests are welcome for scam scenarios, explanations and
+bug reports. Please read `.claude/CLAUDE.md` for repo conventions (POM-only
+e2e, no service-role client in the frontend, migrations mirrored into
+`DEPLOY_SETUP.sql`).
 
-- Hosted on **Cloudflare Pages**, auto-deployed on every push to `main`
-  (production domain: `subenai.sk`). Feature branches get preview deploys.
-- Supabase backend (free tier). Bootstrap a fresh project with
-  [`DEPLOY_SETUP.sql`](./DEPLOY_SETUP.sql) — see the file header for
-  step-by-step instructions and post-apply tasks (enable TOTP, wire
-  `SUPABASE_SERVICE_ROLE_KEY` in CF Pages env, promote first admin).
-- **2FA is enforced for the `admin` role** (see AH-12). Bootstrap admin
-  must enroll TOTP on first login before write actions unlock.
-- **Self-serve signup + Google OAuth + password recovery** (AH-13). Before
-  going live, configure the Supabase project's auth surface:
-  - Supabase Dashboard → **Authentication → Providers** → enable
-    **Email** and **Google** (Google needs OAuth Client ID + Secret from
-    Google Cloud Console).
-  - **Authentication → URL Configuration** → set **Site URL** to
-    `https://subenai.sk` and add
-    `https://subenai.sk/auth/callback` plus
-    `https://subenai.sk/auth/reset-password` to **Redirect URLs**.
-  - Email templates (verification, password reset) — review the Slovak
-    copy under Authentication → Email Templates.
-- End-to-end production checks live in
-  [`tasks/AH-11-production-runbook.md`](./tasks/AH-11-production-runbook.md).
+## Support
 
-## 🛠️ Project status
+The project is free to use and funded by donations: https://subenai.sk/support
 
-🚧 Early-stage project — actively being developed
+## License
 
-Planned:
-- more scam scenarios
-- smarter evaluation
-- improved explanations
-- localization (multiple languages)
-- mobile-friendly experience
-
----
-
-## 🤝 Contributing
-
-You can help improve subenai by:
-
-- suggesting new scam scenarios
-- improving explanations
-- reporting issues
-- sharing feedback and ideas
-
-For collaborations or partnerships, please contact the author.
-
----
-
-## ❤️ Support this project
-
-If you find this project useful, consider sponsoring its development.
-
-Your support helps:
-- keep the app free and accessible
-- add new learning content
-- improve scam detection scenarios
-- reach more people
-
-👉 https://github.com/sponsors/YOUR_USERNAME
-
----
-
-## 🌍 Vision
-
-subenai aims to make basic digital safety knowledge accessible to everyone — not just technical users.
-
-Because avoiding scams shouldn’t require expert knowledge.
-
----
-
-## 📄 License
-
-MIT
+All rights reserved — see [`LICENSE`](./LICENSE). The code is public for
+transparency, not open source.

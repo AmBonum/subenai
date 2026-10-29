@@ -170,6 +170,20 @@ function todayKey(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
+// Audit 2026-10 (rate-limit degradation): the in-memory fallback is silent,
+// so an unbound namespace in production looks identical to a healthy one.
+// Log once per isolate so the gap shows up in the CF Pages Functions log
+// stream instead of only in a traffic post-mortem. Binding steps:
+// tasks/E48-runbook.md §3 (dashboard → Settings → Bindings, prod + preview).
+let warnedUnboundKv = false;
+function warnUnboundKvOnce(scope: string): void {
+  if (warnedUnboundKv) return;
+  warnedUnboundKv = true;
+  console.warn(
+    `[security] SUPPORT_RATE_LIMIT_KV is not bound — "${scope}" rate limit degrades to per-isolate memory (see tasks/E48-runbook.md §3)`,
+  );
+}
+
 /**
  * Consume one slot from a daily rate-limit bucket. Returns true if the
  * caller is allowed, false if the cap is hit.
@@ -188,6 +202,7 @@ export async function consumeRateLimit(
   if (!kv) {
     // Fallback to per-isolate Map — better than nothing in dev, but the
     // production deploy MUST bind a KV namespace (runbook §3).
+    warnUnboundKvOnce(scope);
     return ipRateLimit.consume(`${scope}:${identity}`, limit, windowSeconds);
   }
   const key = `rl:${scope}:${identity}:${todayKey()}`;
@@ -214,6 +229,7 @@ export async function consumeCooldown(
   ttlSeconds: number,
 ): Promise<boolean> {
   if (!kv) {
+    warnUnboundKvOnce(scope);
     return emailCooldown.consume(`${scope}:${identity}`, ttlSeconds);
   }
   const key = `cd:${scope}:${identity}`;

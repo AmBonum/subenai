@@ -115,7 +115,8 @@
       "all_link": "all sponsors →"
     },
     "copyright": "© {year} subenai · All rights reserved.",
-    "cookies_button": "Cookie settings"
+    "cookies_button": "Cookie settings",
+    "preferred_source": "Add subenai as a preferred source on Google"
   },
   "consent": {
     "banner": {

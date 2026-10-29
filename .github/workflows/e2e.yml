@@ -47,7 +47,7 @@ jobs:
   # spec-path-derivation steps.
   changes:
     name: Detect changed paths
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # Playwright 1.60 has no chromium build for ubuntu-latest (26.04) yet
     # Always run; pre-merge skip logic is in the playwright job's `if`.
     outputs:
       full: ${{ steps.filter.outputs.full }}
@@ -163,7 +163,7 @@ jobs:
   # ── Step 2: build once + run filtered specs ──────────────────────────────
   playwright:
     name: Playwright (chromium)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # Playwright 1.60 has no chromium build for ubuntu-latest (26.04) yet
     timeout-minutes: 30
     needs: changes
     # Browser tests are OPT-IN. The chromium suite is expensive (~3-8
@@ -275,7 +275,7 @@ jobs:
   # explicitly labels e2e:skip (and even then runs on push/dispatch).
   integration:
     name: Playwright (integration)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # Playwright 1.60 has no chromium build for ubuntu-latest (26.04) yet
     timeout-minutes: 10
     if: |
       github.event_name == 'push' ||

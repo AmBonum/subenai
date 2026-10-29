@@ -88,3 +88,15 @@ describe("Footer Platforma column (AH-9.8)", () => {
     expect(screen.getByTestId("footer-column-pravne")).toBeInTheDocument();
   });
 });
+
+describe("Footer Google preferred-source link", () => {
+  it("renders a domain-level deeplink that opens in a new tab", () => {
+    authStateRef.current = { isAuthenticated: false, isAdmin: false };
+    render(<Footer />);
+    const link = screen.getByTestId("footer-preferred-source-link");
+    expect(link).toHaveAttribute("href", "https://www.google.com/preferences/source?q=subenai.sk");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link.textContent).toBe("Pridať subenai medzi preferované zdroje v Google");
+  });
+});
