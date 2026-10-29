@@ -71,7 +71,7 @@ This plan covers the **positive and complementary-negative** scenarios for the E
 | Persona | Identity | Auth mechanism | Cleanup |
 |---|---|---|---|
 | Anonymous submitter | No account | No cookie, no JWT | n/a — no DB write via this persona without service-role seeding |
-| Regular user (audit-bot) | `audit-bot@subenai.test` / `AuditBot-2026-secure` | Real sign-in at `/login` via `primeAuthSession` or production Supabase | No cleanup needed (read-only assertions only; seeded tickets use seed prefix) |
+| Regular user (audit-bot) | `audit-bot@subenai.test` / in 1Password ("subenai audit-bot") | Real sign-in at `/login` via `primeAuthSession` or production Supabase | No cleanup needed (read-only assertions only; seeded tickets use seed prefix) |
 | Admin (mocked) | `admin@e2e.test` / `ADMIN_SESSION` from `e2e/fixtures/auth.ts` | `primeAuthSession(context, page, ADMIN_SESSION)` in `beforeEach` via `setupAppShell` | No DB writes via mocked session; all real mutations use service-role seed |
 | Admin (AAL1, mocked) | `admin@e2e.test` / `ADMIN_AAL1_SESSION` | `primeAuthSession(context, page, ADMIN_AAL1_SESSION)` | n/a |
 | Non-admin authenticated (User B) | `respondent@e2e.test` / `RESPONDENT_SESSION` | `primeAuthSession(context, page, RESPONDENT_SESSION)` | n/a |
