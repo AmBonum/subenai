@@ -9920,3 +9920,12 @@ ALTER TABLE public.blog_posts
   ADD COLUMN IF NOT EXISTS estimated_minutes integer,
   ADD COLUMN IF NOT EXISTS hero_emoji text;
 CREATE INDEX IF NOT EXISTS idx_blog_posts_content_type ON public.blog_posts (content_type);
+
+-- ============================================================================
+-- SEC-2026-10 — drop anon INSERT on test_sets (mirror of
+-- supabase/migrations/20261029100000_drop_test_sets_anon_insert.sql)
+-- ============================================================================
+-- The only write path is functions/api/test-sets.ts (service role, validates
+-- question_ids + per-IP rate limit). An anon WITH CHECK (true) INSERT policy
+-- let any holder of the public anon key bypass it via PostgREST.
+DROP POLICY IF EXISTS test_sets_anon_insert ON public.test_sets;

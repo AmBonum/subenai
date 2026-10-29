@@ -12,6 +12,10 @@ const MIGRATION_SQL = readFileSync(
   resolve(__dirname, "../../supabase/migrations/20260428000000_test_sets.sql"),
   "utf8",
 );
+const DROP_ANON_INSERT_SQL = readFileSync(
+  resolve(__dirname, "../../supabase/migrations/20261029100000_drop_test_sets_anon_insert.sql"),
+  "utf8",
+);
 
 describe("E8.1 — test_sets schema", () => {
   it("Insert type accepts the minimum required fields", () => {
@@ -58,15 +62,28 @@ describe("E8.1 — test_sets schema", () => {
     }
   });
 
-  it("RLS is enabled with anon SELECT + INSERT but no UPDATE/DELETE", () => {
+  it("RLS is enabled with anon SELECT but no anon INSERT/UPDATE/DELETE", () => {
     for (const sql of [DEPLOY_SQL, MIGRATION_SQL]) {
       expect(sql).toMatch(/ALTER TABLE public\.test_sets ENABLE ROW LEVEL SECURITY/);
       expect(sql).toMatch(/CREATE POLICY test_sets_anon_select[\s\S]+FOR SELECT[\s\S]+TO anon/);
-      expect(sql).toMatch(/CREATE POLICY test_sets_anon_insert[\s\S]+FOR INSERT[\s\S]+TO anon/);
       // Negative: no anon UPDATE / DELETE policy.
       expect(sql).not.toMatch(/CREATE POLICY[^\n]+test_sets[^\n]+FOR UPDATE/);
       expect(sql).not.toMatch(/CREATE POLICY[^\n]+test_sets[^\n]+FOR DELETE/);
     }
+  });
+
+  it("SEC-2026-10: anon INSERT policy is dropped (writes go through /api/test-sets only)", () => {
+    // Historical: the 20260428 migration created the policy, so it must be
+    // dropped by a later migration AND the bootstrap file's final state
+    // must not re-create it after the drop.
+    expect(DROP_ANON_INSERT_SQL).toMatch(
+      /DROP POLICY IF EXISTS test_sets_anon_insert ON public\.test_sets;/,
+    );
+    const lastDrop = DEPLOY_SQL.lastIndexOf(
+      "DROP POLICY IF EXISTS test_sets_anon_insert ON public.test_sets;",
+    );
+    expect(lastDrop).toBeGreaterThan(-1);
+    expect(DEPLOY_SQL.slice(lastDrop)).not.toMatch(/CREATE POLICY test_sets_anon_insert/);
   });
 
   it("attempts.test_set_id is added with ON DELETE SET NULL", () => {
