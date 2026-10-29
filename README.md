@@ -45,11 +45,12 @@ npm run check:bundle-no-secrets && npm run check:bundle-no-mocks && npm run audi
 npm run e2e              # Playwright (see playwright.config.ts for projects)
 ```
 
-Test surface as of 2026-10: 398 Vitest test files under `tests/`, 157
-Playwright spec files under `e2e/` (`find tests -name '*.test.ts*' | wc -l`,
-`find e2e -name '*.spec.ts' | wc -l`). CI (`.github/workflows/ci.yml`)
-runs lint, typecheck, Vitest with coverage, build and the bundle guards on
-every push and pull request.
+Test surface as of 2026-10: `npm test` runs 392 Vitest test files
+(3,952 tests; a further 6 files under `tests/integration` need a live
+Supabase and run via `npm run test:integration`), plus 157 Playwright spec
+files under `e2e/` (`find e2e -name '*.spec.ts' | wc -l`). CI
+(`.github/workflows/ci.yml`) runs lint, typecheck, Vitest with coverage,
+build and the bundle guards on every push and pull request.
 
 ## Deployment
 
