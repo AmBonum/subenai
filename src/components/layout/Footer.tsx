@@ -9,6 +9,11 @@ import { tFor } from "@/i18n/marketing";
 
 const CURRENT_VERSION = LATEST_CHANGELOG_VERSION || "—";
 
+// Google "Preferred sources" deeplink (no JS SDK — keeps the CSP allowlist
+// and the consent gate untouched). Only domain-level sites are eligible.
+// https://developers.google.com/search/docs/appearance/preferred-sources
+const GOOGLE_PREFERRED_SOURCE_URL = "https://www.google.com/preferences/source?q=subenai.sk";
+
 interface FooterLinkDef {
   to: string;
   labelKey: string;
@@ -233,14 +238,25 @@ export function Footer() {
         <p data-testid="footer-copyright" className="text-xs text-muted-foreground">
           {t("copyright", { year: new Date().getFullYear() })}
         </p>
-        <button
-          data-testid="footer-cookies-button"
-          type="button"
-          onClick={openPreferences}
-          className="text-xs text-muted-foreground underline-offset-2 transition-colors hover:text-foreground hover:underline"
-        >
-          {t("cookies_button")}
-        </button>
+        <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
+          <a
+            data-testid="footer-preferred-source-link"
+            href={GOOGLE_PREFERRED_SOURCE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-muted-foreground underline-offset-2 transition-colors hover:text-foreground hover:underline"
+          >
+            {t("preferred_source")}
+          </a>
+          <button
+            data-testid="footer-cookies-button"
+            type="button"
+            onClick={openPreferences}
+            className="text-xs text-muted-foreground underline-offset-2 transition-colors hover:text-foreground hover:underline"
+          >
+            {t("cookies_button")}
+          </button>
+        </div>
       </div>
 
       <p className="mt-6 text-center text-xs text-muted-foreground">
