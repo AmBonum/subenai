@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 8080",
-    "dev:api": "npm run build && wrangler pages dev dist/client --compatibility-date=2024-09-01 --port 8788",
-    "dev:cf": "npm run build && wrangler pages dev dist/client --compatibility-date=2024-09-01 --port 8788",
+    "dev:api": "npm run build && wrangler pages dev dist/client --compatibility-date=2024-09-01 --port 8788 --kv=SUPPORT_RATE_LIMIT_KV",
+    "dev:cf": "npm run build && wrangler pages dev dist/client --compatibility-date=2024-09-01 --port 8788 --kv=SUPPORT_RATE_LIMIT_KV",
     "dev:stripe": "./scripts/dev-stripe.sh",
     "build": "node scripts/parse-changelog.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-blog-rss.mjs && node scripts/generate-og-default.mjs && vite build && node scripts/extract-csp-hashes.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
