@@ -41,7 +41,9 @@ on:
 jobs:
   e49-prod-smoke:
     name: E49 prod-smoke — /app/tests respondent drill-down
-    runs-on: ubuntu-latest
+    # Pinned: Playwright 1.60 cannot install chromium system deps on ubuntu-26.04,
+    # which ubuntu-latest resolves to since November 2026. Unpin with a Playwright bump.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout

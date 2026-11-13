@@ -163,7 +163,9 @@ jobs:
   # ── Step 2: build once + run filtered specs ──────────────────────────────
   playwright:
     name: Playwright (chromium)
-    runs-on: ubuntu-latest
+    # Pinned: Playwright 1.60 cannot install chromium system deps on ubuntu-26.04,
+    # which ubuntu-latest resolves to since November 2026. Unpin with a Playwright bump.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     needs: changes
     # Browser tests are OPT-IN. The chromium suite is expensive (~3-8
