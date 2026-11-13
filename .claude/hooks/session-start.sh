@@ -6,7 +6,7 @@
 # Stdout is prepended to the session as additional context.
 
 set -u
-REPO="/Users/lubomir/Desktop/internetiq"
+REPO="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
 
 echo "=== Internet IQ Test session context ==="
 echo

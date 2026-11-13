@@ -88,7 +88,7 @@ fi
 case "$lc" in
   *".claude/settings.json"*)
     case "$lc" in
-      *"cat "*|*"head "*|*"tail "*|*"grep "*|*"jq "*|*"less "*|*"more "*) ;;
+      *"cat "*|*"head "*|*"tail "*|*"grep "*|*"jq "*|*"less "*|*"more "*|*"git "*) ;;
       *) block "writing .claude/settings.json via Bash" ;;
     esac
     ;;
