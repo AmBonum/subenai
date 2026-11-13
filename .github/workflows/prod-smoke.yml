@@ -35,7 +35,9 @@ on:
 jobs:
   smoke:
     name: Prod smoke — /kontakt full pipeline
-    runs-on: ubuntu-latest
+    # Pinned: Playwright 1.60 cannot install chromium system deps on ubuntu-26.04,
+    # which ubuntu-latest resolves to since November 2026. Unpin with a Playwright bump.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout
