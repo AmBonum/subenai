@@ -9,8 +9,9 @@
 
 set -u
 
-REPO="/Users/lubomir/Desktop/internetiq"
-LOG=/tmp/iiq_eslint.log
+REPO="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
+LOG="$(mktemp -t iiq_eslint.XXXXXX)"
+trap 'rm -f "$LOG"' EXIT
 
 input="$(cat)"
 file_path="$(printf '%s' "$input" | python3 -c '
@@ -31,10 +32,12 @@ case "$file_path" in
 esac
 
 cd "$REPO" || exit 0
+# No local eslint (fresh worktree without npm ci): skip instead of failing every edit.
+[ -x node_modules/.bin/eslint ] || exit 0
 
 # Fast path: file-scoped eslint with --fix. Hook fails the tool call
 # only if eslint surfaces something non-fixable (real errors / warnings).
-if ! npx --no-install eslint --no-error-on-unmatched-pattern --fix \
+if ! node_modules/.bin/eslint --no-error-on-unmatched-pattern --fix \
       "$file_path" >"$LOG" 2>&1; then
   {
     echo "post-edit-lint: eslint flagged $file_path"
